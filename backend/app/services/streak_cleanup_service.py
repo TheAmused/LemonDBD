@@ -1,6 +1,7 @@
 # backend/app/services/streak_cleanup_service.py
 import logging
-from datetime import timedelta
+from collections.abc import Callable
+from datetime import datetime, timedelta
 
 from sqlalchemy import select, text
 
@@ -15,6 +16,25 @@ from app.services.page_streak.runs import apply_inactivity_loss as apply_page_st
 logger = logging.getLogger(__name__)
 
 _ADVISORY_LOCK_KEY = 851193001
+
+type _RunModel = type[GauntletRun] | type[ChaosRun] | type[HistoryRun] | type[PageStreakRun]
+
+
+def _sweep(model: _RunModel, apply_loss: Callable[[int, datetime], bool], cutoff: datetime) -> int:
+    """Applies an inactivity loss to every in-progress run of `model` idle since before `cutoff`; returns how many
+    it applied. The list is built before any run is locked, so `apply_loss` checks the run is still idle once it
+    holds the lock. One run failing is logged and skipped, it does not stop the rest of the sweep."""
+    run_ids = db.session.scalars(
+        select(model.id).where(model.status == "in_progress", model.updated_at < cutoff)
+    ).all()
+    applied = 0
+    for run_id in run_ids:
+        try:
+            applied += apply_loss(run_id, cutoff)
+        except Exception:
+            db.session.rollback()
+            logger.exception("Inactivity loss failed for %s run %d", model.__tablename__, run_id)
+    return applied
 
 
 def apply_inactivity_losses(inactive_after_days: int = 90) -> dict[str, int]:
@@ -35,38 +55,12 @@ def apply_inactivity_losses(inactive_after_days: int = 90) -> dict[str, int]:
 
     try:
         cutoff = utcnow() - timedelta(days=inactive_after_days)
-        affected: dict[str, int] = {}
-
-        gauntlet_service = GauntletService()
-        stale_gauntlet = db.session.scalars(
-            select(GauntletRun).where(GauntletRun.status == "in_progress", GauntletRun.updated_at < cutoff)
-        ).all()
-        for run in stale_gauntlet:
-            gauntlet_service.submit_result(run.user_id, run.id, "loss", triggered_by="inactivity")
-        affected["gauntlet_runs"] = len(stale_gauntlet)
-
-        chaos_service = ChaosService()
-        stale_chaos = db.session.scalars(
-            select(ChaosRun).where(ChaosRun.status == "in_progress", ChaosRun.updated_at < cutoff)
-        ).all()
-        for run in stale_chaos:
-            chaos_service.apply_inactivity_loss(run.id)
-        affected["chaos_runs"] = len(stale_chaos)
-
-        history_service = HistoryService()
-        stale_history = db.session.scalars(
-            select(HistoryRun).where(HistoryRun.status == "in_progress", HistoryRun.updated_at < cutoff)
-        ).all()
-        for run in stale_history:
-            history_service.apply_inactivity_loss(run.id)
-        affected["history_runs"] = len(stale_history)
-
-        stale_page_streak = db.session.scalars(
-            select(PageStreakRun).where(PageStreakRun.status == "in_progress", PageStreakRun.updated_at < cutoff)
-        ).all()
-        for run in stale_page_streak:
-            apply_page_streak_inactivity_loss(run.id)
-        affected["page_streak_runs"] = len(stale_page_streak)
+        affected = {
+            "gauntlet_runs": _sweep(GauntletRun, GauntletService().apply_inactivity_loss, cutoff),
+            "chaos_runs": _sweep(ChaosRun, ChaosService().apply_inactivity_loss, cutoff),
+            "history_runs": _sweep(HistoryRun, HistoryService().apply_inactivity_loss, cutoff),
+            "page_streak_runs": _sweep(PageStreakRun, apply_page_streak_inactivity_loss, cutoff),
+        }
 
         for table_name, count in affected.items():
             if count:

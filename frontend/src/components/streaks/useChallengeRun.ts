@@ -4,8 +4,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ChallengeCompletion } from '@/types/challengeCompletion';
 import { useAuth } from '@/context/AuthContext';
-
-type RequestChannel = 'run' | 'stats' | 'completions';
+import { createRunRequestTracker } from './runRequestTracker';
 
 export interface ChallengeRunConfig<TRun, TStats> {
   /** Changes whenever the run being shown changes (role, mode, killer...), which reloads everything. */
@@ -28,10 +27,8 @@ export function useChallengeRun<TRun, TStats>(config: ChallengeRunConfig<TRun, T
   // The fetchers are closures over the caller's arguments; `scope` is what says they changed.
   const configRef = useRef(config);
   configRef.current = config;
-  // The scope of the server action in flight, set the moment it starts so a second click before the next render
-  // cannot start another one. Another run's action is not blocked by it.
-  const mutatingScopeRef = useRef<string | null>(null);
-  const requestCounts = useRef<Record<RequestChannel, number>>({ run: 0, stats: 0, completions: 0 });
+  // Decides which answers are still worth showing and blocks a second click while an action is in flight.
+  const [tracker] = useState(() => createRunRequestTracker(() => configRef.current.scope));
 
   const [run, setRun] = useState<TRun | null>(null);
   const [stats, setStats] = useState<TStats | null>(null);
@@ -40,44 +37,36 @@ export function useChallengeRun<TRun, TStats>(config: ChallengeRunConfig<TRun, T
   const [busy, setBusy] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  /** Starts a request. Its answer is only worth showing while no newer request on the channel has started
-   *  and the player is still on the run it was made for. */
-  const startRequest = useCallback((channel: RequestChannel, requestScope: string) => {
-    const id = ++requestCounts.current[channel];
-    return () => requestCounts.current[channel] === id && configRef.current.scope === requestScope;
-  }, []);
-
-  // Moving to another run leaves the old run's action behind: it no longer blocks or marks anything busy here.
+  // Moving to another run leaves the old run's action behind: it no longer marks anything busy here.
   useEffect(() => {
-    mutatingScopeRef.current = null;
-    setBusy(false);
-  }, [scope]);
+    setBusy(tracker.isActing(scope));
+  }, [scope, tracker]);
 
   const loadStats = useCallback(async () => {
     if (!token) return;
-    const isLatest = startRequest('stats', scope);
+    const isLatest = tracker.begin('stats', scope);
     try {
       const loaded = await configRef.current.fetchStats(token);
       if (isLatest()) setStats(loaded);
     } catch (err) {
       console.error(`Failed to load ${label} stats:`, err);
     }
-  }, [token, scope, label, startRequest]);
+  }, [token, scope, label, tracker]);
 
   const loadCompletions = useCallback(async () => {
     if (!token) return;
-    const isLatest = startRequest('completions', scope);
+    const isLatest = tracker.begin('completions', scope);
     try {
       const loaded = await configRef.current.fetchCompletions(token);
       if (isLatest()) setCompletions(loaded);
     } catch (err) {
       console.error(`Failed to load ${label} completion history:`, err);
     }
-  }, [token, scope, label, startRequest]);
+  }, [token, scope, label, tracker]);
 
   const load = useCallback(async () => {
     if (!token) return;
-    const isLatest = startRequest('run', scope);
+    const isLatest = tracker.begin('run', scope);
     setLoading(true);
     setError(null);
     try {
@@ -88,7 +77,7 @@ export function useChallengeRun<TRun, TStats>(config: ChallengeRunConfig<TRun, T
     } finally {
       if (isLatest()) setLoading(false);
     }
-  }, [token, scope, startRequest]);
+  }, [token, scope, tracker]);
 
   useEffect(() => {
     load();
@@ -101,28 +90,25 @@ export function useChallengeRun<TRun, TStats>(config: ChallengeRunConfig<TRun, T
   const mutate = useCallback(
     async (action: () => Promise<TRun>, failureMessage = 'That did not go through. Try again.') => {
       const requestScope = configRef.current.scope;
-      if (!token || mutatingScopeRef.current === requestScope) return undefined;
-      mutatingScopeRef.current = requestScope;
+      if (!token || !tracker.startAction(requestScope)) return undefined;
       setBusy(true);
       setError(null);
       try {
         const updated = await action();
-        // The answer is the newest state of the run, so a load that started before it must not overwrite it.
-        if (!startRequest('run', requestScope)()) return undefined;
+        if (!tracker.acceptRunAnswer(requestScope)) return undefined;
         setRun(updated);
+        // A load that this answer replaced never gets to clear the flag itself.
         setLoading(false);
         return updated;
       } catch (err) {
         if (configRef.current.scope === requestScope) setError(err instanceof Error ? err.message : failureMessage);
         return undefined;
       } finally {
-        if (mutatingScopeRef.current === requestScope) {
-          mutatingScopeRef.current = null;
-          setBusy(false);
-        }
+        tracker.finishAction(requestScope);
+        setBusy(tracker.isActing(configRef.current.scope));
       }
     },
-    [token, startRequest]
+    [token, tracker]
   );
 
   return { token, run, stats, completions, loading, busy, error, load, loadStats, loadCompletions, mutate };

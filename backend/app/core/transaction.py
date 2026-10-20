@@ -8,6 +8,7 @@ committing on block exit and rolling back on unhandled exceptions.
 from collections.abc import Generator
 from contextlib import contextmanager
 import logging
+from sqlalchemy import Select
 from sqlalchemy.orm import Session
 
 from app.core.extensions import db
@@ -43,6 +44,18 @@ def transaction() -> Generator[Session, None, None]:
             except Exception:
                 sess.rollback()
                 raise
+
+
+def lock_for_update[T](query: Select[tuple[T]]) -> Select[tuple[T]]:
+    """Locks the selected rows until the transaction ends, and reloads them even when the session already
+    holds a copy, so a lookup that had to wait for the lock never reads the state from before it."""
+    return query.with_for_update().execution_options(populate_existing=True)
+
+
+def end_transaction() -> None:
+    """Ends the open transaction without writing anything. A lookup that locked a row and found nothing to
+    change calls this, so the lock does not outlive the check. Nothing may be pending in the session."""
+    db.session.rollback()
 
 
 # Attach to db extension for convenience

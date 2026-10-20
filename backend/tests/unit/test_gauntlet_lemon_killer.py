@@ -265,6 +265,18 @@ class TestLemonKillerTokens:
         statement = self.service._run_by_id_query(self.user_id, self.run["id"])
         assert "FOR UPDATE" in str(statement.compile(dialect=postgresql.dialect()))
 
+    def test_rolling_a_new_target_locks_the_run_first(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        locks: list[bool] = []
+        real_find_run = self.service._find_run
+
+        def spy(*variant: object, lock: bool = False):
+            locks.append(lock)
+            return real_find_run(*variant, lock=lock)
+
+        monkeypatch.setattr(self.service, "_find_run", spy)
+        self.service.roll(self.user_id, "killer")
+        assert True in locks
+
     def test_picking_the_killer_already_in_play_is_refused_and_free(self) -> None:
         self._set(tokens=6)
         with pytest.raises(ValueError, match="That character is already in play"):

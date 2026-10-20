@@ -1,5 +1,6 @@
 # backend/app/services/history_service.py
 import logging
+from datetime import datetime
 
 from app.core.extensions import db
 from app.models import HistoryMatchLog, HistoryRun
@@ -203,10 +204,11 @@ class HistoryService(StreakRunService):
         data["row_cleared"] = row_cleared
         return data
 
-    def apply_inactivity_loss(self, run_id: int) -> None:
-        run = self._load_run_for_inactivity(run_id)
+    def apply_inactivity_loss(self, run_id: int, idle_before: datetime | None = None) -> bool:
+        """Counts a loss for a run nobody has played since `idle_before`. False when there was nothing to do."""
+        run = self._load_run_for_inactivity(run_id, idle_before)
         if not run:
-            return
+            return False
 
         streak_before = run.total_killers_beaten
         row_index_for_log = run.current_row_index
@@ -230,6 +232,7 @@ class HistoryService(StreakRunService):
             triggered_by="inactivity",
         ))
         db.session.commit()
+        return True
 
     def get_stats(self, user_id: int, mode: str) -> StreakStats[HistoryMatchLogDict]:
         return fetch_history_user_stats(user_id, mode)

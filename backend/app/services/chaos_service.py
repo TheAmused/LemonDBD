@@ -1,5 +1,6 @@
 # backend/app/services/chaos_service.py
 import logging
+from datetime import datetime
 
 from app.core.extensions import db
 from app.models import ChaosMatchLog, ChaosRun
@@ -219,10 +220,11 @@ class ChaosService(StreakRunService):
 
         return self._state(r)
 
-    def apply_inactivity_loss(self, run_id: int) -> None:
-        r = self._load_run_for_inactivity(run_id)
+    def apply_inactivity_loss(self, run_id: int, idle_before: datetime | None = None) -> bool:
+        """Counts a loss for a run nobody has played since `idle_before`. False when there was nothing to do."""
+        r = self._load_run_for_inactivity(run_id, idle_before)
         if not r:
-            return
+            return False
 
         self._freeze_pools_if_needed(r)
 
@@ -257,6 +259,7 @@ class ChaosService(StreakRunService):
 
         self._redraw_and_maybe_refreeze(r, used_perks, streak_after)
         db.session.commit()
+        return True
 
     def get_stats(self, user_id: int, difficulty: str) -> StreakStats[ChaosMatchLogDict]:
         return fetch_chaos_user_stats(user_id, difficulty)

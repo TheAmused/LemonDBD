@@ -72,3 +72,13 @@ def test_an_admin_cannot_reset_their_own_two_factor_here(client: FlaskClient, ad
     """The profile's own switch needs the password and a code; this reset needs neither."""
     (alpha, headers), _ = admins
     assert client.post(f"/api/v1/users/{alpha.id}/two-factor/reset", json={"current_password": PASSWORD}, headers=headers).status_code == 400
+
+
+@pytest.mark.unit
+def test_a_refused_disable_changes_nothing_else(client: FlaskClient, admins) -> None:
+    """Banning an admin is refused; the rename sent with it used to be saved anyway."""
+    (_, headers), (bravo, _) = admins
+    res = client.put(f"/api/v1/users/{bravo.id}", json={"username": "renamed", "is_active": False}, headers=headers)
+    assert res.status_code == 400
+    db.session.expire_all()
+    assert db.session.get(User, bravo.id).username == "bravo"

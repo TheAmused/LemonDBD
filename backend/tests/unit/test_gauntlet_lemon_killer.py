@@ -265,6 +265,27 @@ class TestLemonKillerTokens:
         statement = self.service._run_by_id_query(self.user_id, self.run["id"])
         assert "FOR UPDATE" in str(statement.compile(dialect=postgresql.dialect()))
 
+    def test_rolling_a_new_target_locks_the_run_before_drawing_it(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        import app.services.gauntlet_service as gauntlet_module
+
+        calls: list[str] = []
+        real_find_run = self.service._find_run
+        real_draw = gauntlet_module.roll_gauntlet_target
+
+        def spy_find_run(*variant: object, lock: bool = False):
+            calls.append("lock" if lock else "read")
+            return real_find_run(*variant, lock=lock)
+
+        def spy_draw(*args: object, **kwargs: object):
+            calls.append("draw")
+            return real_draw(*args, **kwargs)
+
+        monkeypatch.setattr(self.service, "_find_run", spy_find_run)
+        monkeypatch.setattr(gauntlet_module, "roll_gauntlet_target", spy_draw)
+        self.service.roll(self.user_id, "killer")
+        assert "lock" in calls and "draw" in calls
+        assert calls.index("lock") < calls.index("draw")
+
     def test_picking_the_killer_already_in_play_is_refused_and_free(self) -> None:
         self._set(tokens=6)
         with pytest.raises(ValueError, match="That character is already in play"):

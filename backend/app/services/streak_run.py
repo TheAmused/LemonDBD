@@ -7,12 +7,14 @@ find-or-create flow, abandon, the guards in front of `submit_result`, the
 inactivity-loss lookup, lazy pool freezing and the completion record.
 """
 from collections.abc import Callable
+from datetime import datetime
 from typing import Any
 
 from sqlalchemy import inspect as sa_inspect, select
 
 from app.core.extensions import db
-from app.core.transaction import transaction
+from app.core.transaction import end_transaction, lock_for_update, transaction
+from app.models.challenge_mixins import ChallengeRunMixin
 from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.challenge_completions import fetch_challenge_completions, record_challenge_completion
 from app.services.roster_milestone import get_full_roster_milestone
@@ -20,6 +22,20 @@ from app.services.roster_milestone import get_full_roster_milestone
 
 #: Run columns that outlive an abandoned run: its identity, its attempt bookkeeping and its lifetime totals.
 _KEPT_ON_ABANDON = frozenset({"id", "user_id", "created_at", "updated_at", "attempt", "attempts", "total_wins", "total_losses"})
+
+
+def load_idle_run_locked[M: ChallengeRunMixin](model: type[M], run_id: int, idle_before: datetime | None = None) -> M | None:
+    """The run an inactivity loss applies to, locked, or None when there is nothing to do: it is gone, completed,
+    or was played after `idle_before` (the cleanup picked it from a list built earlier). When there is nothing to
+    do the transaction is ended, so the lock does not outlive the check."""
+    query = select(model).where(model.id == run_id)
+    if idle_before is not None:
+        query = query.where(model.updated_at < idle_before)
+    run = db.session.scalars(lock_for_update(query)).first()
+    if not run or run.status == "completed":
+        end_transaction()
+        return None
+    return run
 
 
 class StreakRunService:
@@ -34,17 +50,21 @@ class StreakRunService:
 
     # -- lookup -----------------------------------------------------------
 
-    def _find_run(self, user_id: int, *variant: Any):
+    def _find_run(self, user_id: int, *variant: Any, lock: bool = False):
         model = self.run_model
         conditions = [model.user_id == user_id]
         conditions += [getattr(model, field) == value for field, value in zip(self.variant_fields, variant)]
-        return db.session.scalars(select(model).where(*conditions)).first()
+        query = select(model).where(*conditions)
+        return db.session.scalars(lock_for_update(query) if lock else query).first()
+
+    def _run_by_id_query(self, user_id: int, run_id: int):
+        # Locked, so two parallel requests (a double click, two tabs) cannot both read
+        # the same state and each count the same match.
+        model = self.run_model
+        return lock_for_update(select(model).where(model.id == run_id, model.user_id == user_id))
 
     def _find_run_by_id(self, user_id: int, run_id: int):
-        model = self.run_model
-        return db.session.scalars(
-            select(model).where(model.id == run_id, model.user_id == user_id)
-        ).first()
+        return db.session.scalars(self._run_by_id_query(user_id, run_id)).first()
 
     # -- find-or-create / abandon ---------------------------------------------
 
@@ -74,7 +94,7 @@ class StreakRunService:
         brand new run starts with; the best streak is a record, so it is left alone.
         """
         assert_challenge_mode_enabled(self.mode)
-        run = self._find_run(user_id, *variant)
+        run = self._find_run(user_id, *variant, lock=True)
         if not run:
             raise ValueError("Run not found")
         with transaction():
@@ -133,12 +153,9 @@ class StreakRunService:
             raise ValueError("This run is already completed. Abandon it to play again.")
         return run
 
-    def _load_run_for_inactivity(self, run_id: int):
-        """The run an inactivity loss applies to, or None when there is nothing to do."""
-        run = db.session.scalars(select(self.run_model).where(self.run_model.id == run_id)).first()
-        if not run or run.status == "completed":
-            return None
-        return run
+    def _load_run_for_inactivity(self, run_id: int, idle_before: datetime | None = None):
+        """The run an inactivity loss applies to, locked, or None when there is nothing to do."""
+        return load_idle_run_locked(self.run_model, run_id, idle_before)
 
     # -- pools / completion ----------------------------------------------------
 

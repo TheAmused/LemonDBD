@@ -3,6 +3,7 @@ import random
 from typing import Any
 
 from sqlalchemy import select
+from sqlalchemy.orm import joinedload
 
 from app.core.extensions import db
 from app.models import Perk
@@ -11,6 +12,8 @@ from app.services.ownership.characters import get_owned_killers, resolve_killer_
 from app.services.ownership_service import OwnershipService
 
 __all__ = ["resolve_killer_names_by_ids"]
+
+_OWNER = (joinedload(Perk.survivor), joinedload(Perk.killer))
 
 
 def get_owned_killer_names(user_id: int, ownership_service: OwnershipService) -> list[str]:
@@ -39,7 +42,11 @@ def resolve_perks_by_names(names: list[str]) -> list[dict[str, Any]]:
     """Turns a frozen name list back into full perk dicts (icon, description)."""
     if not names:
         return []
-    perks = db.session.scalars(select(Perk).where(Perk.name.in_(names), Perk.role == "Killer")).all()
+    # Perk.to_dict() reads the owner (survivor or killer): load both with the perks, not one
+    # SELECT per distinct killer.
+    perks = db.session.scalars(
+        select(Perk).options(*_OWNER).where(Perk.name.in_(names), Perk.role == "Killer")
+    ).all()
     by_name = {p.name: p.to_dict() for p in perks}
     return [by_name[n] for n in names if n in by_name]
 
@@ -48,7 +55,7 @@ def resolve_perks_by_ids(ids: list[int]) -> list[dict[str, Any]]:
     """Turns a frozen perk id list back into full perk dicts (icon, description)."""
     if not ids:
         return []
-    perks = db.session.scalars(select(Perk).where(Perk.id.in_(ids), Perk.role == "Killer")).all()
+    perks = db.session.scalars(select(Perk).options(*_OWNER).where(Perk.id.in_(ids), Perk.role == "Killer")).all()
     by_id = {p.id: p.to_dict() for p in perks}
     return [by_id[i] for i in ids if i in by_id]
 

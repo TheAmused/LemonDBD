@@ -36,6 +36,7 @@ $RECYCLE.BIN/
 .env
 .env.*
 !.env.example
+!.env.prod.example
 
 # Docker Overrides & Global Logs
 docker-compose.override.yml

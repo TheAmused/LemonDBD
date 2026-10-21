@@ -9,6 +9,8 @@ export default {
   smashOrPass: "Smash or Pass",
   trophies: "Osiągnięcia",
   about: "O nas",
+  privacyPolicy: "Prywatność",
+  termsOfService: "Regulamin",
   navigation: "Nawigacja",
   others: "Inne",
   admin: "ADMINISTRATOR",

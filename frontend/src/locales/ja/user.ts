@@ -77,9 +77,10 @@ export default {
   failedToRequestPasswordReset: "パスワードリセットのリクエストに失敗しました。",
   invalidCredentials: "認証情報が無効です。",
   registrationFailed: "登録に失敗しました。",
-  acceptLegalLabel: "{terms}と{rules}を読み、同意します",
+  acceptLegalLabel: "{terms}と{rules}を読み、同意します。また、{privacy}を読みました",
   acceptTermsLink: "利用規約",
   acceptRulesLink: "ルール",
+  acceptPrivacyLink: "プライバシーポリシー",
   legalNotAccepted: "アカウントを作成するには、利用規約とルールに同意してください。",
   unexpectedError: "予期しないエラーが発生しました。",
 

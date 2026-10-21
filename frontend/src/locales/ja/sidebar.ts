@@ -9,6 +9,8 @@ export default {
   smashOrPass: "スマッシュ・オア・パス",
   trophies: "トロフィー",
   about: "私たちについて",
+  privacyPolicy: "プライバシー",
+  termsOfService: "利用規約",
   navigation: "ナビゲーション",
   others: "その他",
   admin: "管理者",

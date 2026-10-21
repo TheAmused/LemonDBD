@@ -56,7 +56,7 @@ export interface AnalyticsEvents {
   login: { method: 'password' | 'google' | 'two_factor' };
   email_verified: undefined;
   forgot_password_request: undefined;
-  legal_preview_open: { doc: 'terms' | 'rules' };
+  legal_preview_open: { doc: 'terms' | 'rules' | 'privacy' };
 }
 
 export type EventName = keyof AnalyticsEvents;

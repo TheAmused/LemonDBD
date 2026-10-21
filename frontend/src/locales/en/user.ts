@@ -77,9 +77,10 @@ export default {
   failedToRequestPasswordReset: "Failed to request password reset",
   invalidCredentials: "Invalid credentials",
   registrationFailed: "Registration failed",
-  acceptLegalLabel: "I have read and accept the {terms} and the {rules}",
+  acceptLegalLabel: "I have read and accept the {terms} and the {rules}, and I have read the {privacy}",
   acceptTermsLink: "Terms of Service",
   acceptRulesLink: "Rules",
+  acceptPrivacyLink: "Privacy Policy",
   legalNotAccepted: "Please accept the Terms of Service and the Rules to create an account.",
   unexpectedError: "An unexpected error occurred.",
 

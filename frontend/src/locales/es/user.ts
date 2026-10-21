@@ -77,9 +77,10 @@ export default {
   failedToRequestPasswordReset: "No se pudo solicitar el restablecimiento de contraseña.",
   invalidCredentials: "Credenciales inválidas.",
   registrationFailed: "Registro fallido.",
-  acceptLegalLabel: "He leído y acepto los {terms} y las {rules}",
+  acceptLegalLabel: "He leído y acepto los {terms} y las {rules}, y he leído la {privacy}",
   acceptTermsLink: "Términos del servicio",
   acceptRulesLink: "Normas",
+  acceptPrivacyLink: "Política de privacidad",
   legalNotAccepted: "Acepta los Términos del servicio y las Normas para crear una cuenta.",
   unexpectedError: "Ocurrió un error inesperado.",
 

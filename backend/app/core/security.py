@@ -138,6 +138,22 @@ def hash_password(password: str) -> str:
     return generate_password_hash(password)
 
 
+_dummy_password_hash: str | None = None
+
+
+def spend_password_check(password: str) -> None:
+    """Does the work of one password check against a throwaway hash and discards the result.
+
+    Called when there is no hash to check (unknown login, or an account with no password), so a
+    failed sign-in takes as long whether or not the account exists -- the timing no longer tells
+    an attacker which logins and e-mail addresses are registered.
+    """
+    global _dummy_password_hash
+    if _dummy_password_hash is None:
+        _dummy_password_hash = generate_password_hash(secrets.token_urlsafe(16))
+    check_password_hash(_dummy_password_hash, password or "")
+
+
 def verify_password(password: str, password_hash: str | None) -> bool:
     """Verify a plaintext password against a stored password hash."""
     if not password or not password_hash:

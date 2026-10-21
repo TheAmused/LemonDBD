@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/tier-lists/creator/CreatorPreview.tsx
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Modal } from '@/components/common/Modal';
 import type { StoredCustomList, TierDefinition, TierListDocumentItem } from '@/types/tierList';
 import { documentItemsToItems } from '@/utils/tierLists/items';
@@ -33,9 +33,10 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
   // -- same component the hub actually shows, in its `disabled` (no
   // navigation, no delete button) mode, so this preview can never drift
   // from what "My Custom Lists" really renders.
+  // Stamped once: the preview's "created" date need not tick while the list is edited.
+  const [now] = useState(() => Date.now());
   const cardPreviewList: StoredCustomList = useMemo(
     () => {
-      const now = Date.now();
       return {
         id: 'preview',
         title,
@@ -49,7 +50,7 @@ export function CreatorPreview({ title, description, tiers, items, backgroundIma
         ...(isNsfw ? { is_nsfw: true } : {}),
       };
     },
-    [title, description, tiers, items, backgroundImage, isNsfw]
+    [title, description, tiers, items, backgroundImage, isNsfw, now]
   );
 
   return (

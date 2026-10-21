@@ -1,5 +1,5 @@
 // frontend/scripts/verify-sidebar-all-pages.ts
-import { chromium, Browser, Page } from 'playwright';
+import { chromium, Browser } from 'playwright';
 import { spawn, ChildProcess } from 'child_process';
 import http from 'http';
 
@@ -445,9 +445,8 @@ async function main() {
     }
   );
 
-  serverProcess.stdout?.on('data', (data) => {
-    // console.log(`[Next.js] ${data}`);
-  });
+  // Drain the dev server's output so its pipe never fills up.
+  serverProcess.stdout?.on('data', () => {});
 
   serverProcess.stderr?.on('data', (data) => {
     console.error(`[Next.js err] ${data}`);

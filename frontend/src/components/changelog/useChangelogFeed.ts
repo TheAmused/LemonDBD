@@ -71,9 +71,10 @@ export function useChangelogFeed(): ChangelogFeed {
   }, [authLoading, storageKey]);
 
   // Entries older than the account are history, not news: "new" starts at sign-up.
+  const createdAt = user?.created_at;
   const readState = useMemo<ChangelogReadState | undefined>(
-    () => (readIds && user?.created_at ? { baseline: user.created_at, read: readIds } : undefined),
-    [readIds, user?.created_at]
+    () => (readIds && createdAt ? { baseline: createdAt, read: readIds } : undefined),
+    [readIds, createdAt]
   );
 
   const fetchPage = useCallback(

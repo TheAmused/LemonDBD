@@ -1,5 +1,4 @@
 // frontend/scripts/check-global-styles.ts
-import fs from "node:fs";
 import { readGlobalCss } from "./lib/globalCss";
 import { Project, SyntaxKind, Node } from "ts-morph";
 

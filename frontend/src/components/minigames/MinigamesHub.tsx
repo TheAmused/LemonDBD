@@ -4,7 +4,7 @@ import { logger } from '@/utils/logger';
 import { getErrorMessage } from "@/utils/api";
 // frontend/src/components/minigames/MinigamesHub.tsx
 import { Button, buttonClassName } from '@/components/common/Button';
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -66,7 +66,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
     if (!hasSeenNsfwOnboarding()) setOnboardingOpen(true);
   }, []);
 
-  const todayStr = useMemo(() => new Date().toISOString().slice(0, 10), []);
+  const [todayStr] = useState(() => new Date().toISOString().slice(0, 10));
   const isCompletedToday = wonDailyOn(streakData, todayStr);
 
   const ensureSignedTrial = async (trial: ChallengeDefinition): Promise<ChallengeDefinition> => {

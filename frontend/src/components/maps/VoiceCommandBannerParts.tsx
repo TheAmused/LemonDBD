@@ -131,7 +131,7 @@ export function renderHoldKeyHint(template: string | undefined, key: string): Re
   const trimmedBefore = before.trimEnd();
   // Check if `after` starts with punctuation (e.g. ", aby mówić...")
   // so the punctuation stays attached to the <kbd> chip and never wraps onto a new line by itself.
-  const punctMatch = after.match(/^([,\.\?!;:、。])\s*(.*)$/);
+  const punctMatch = after.match(/^([,.?!;:、。])\s*(.*)$/);
   const trailingPunct = punctMatch ? punctMatch[1] : '';
   const remainingAfter = punctMatch ? punctMatch[2] : after.trimStart();
   const needsSpace = !punctMatch && after.startsWith(' ');

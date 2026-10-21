@@ -76,9 +76,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
   const [shareSuccess, setShareSuccess] = useState(false);
 
   // Admin publish state
-  const [officialDate, setOfficialDate] = useState(
-    new Date().toISOString().slice(0, 10)
-  );
+  const [officialDate, setOfficialDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [isPublishingOfficial, setIsPublishingOfficial] = useState(false);
 
   const handleAddRound = () => {

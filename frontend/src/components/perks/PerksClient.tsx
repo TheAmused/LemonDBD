@@ -76,7 +76,6 @@ function PerksContent() {
   const [survivorOwnedCount, setSurvivorOwnedCount] = useState<number>(0);
   const [killerOwnedCount, setKillerOwnedCount] = useState<number>(0);
   const [characterCount, setCharacterCount] = useState<number>(0);
-  const [ownedPerksCount, setOwnedPerksCount] = useState<number>(0);
 
   const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
 
@@ -235,7 +234,6 @@ function PerksContent() {
     setKillerOwnedCount(
       fullList.filter((p) => p.category === 'Killer' && p.is_owned !== false).length
     );
-    setOwnedPerksCount(fullList.filter((p) => p.is_owned !== false).length);
   }, [allPerksList, prefetchPerkIcons]);
 
   useEffect(() => {

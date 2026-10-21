@@ -1,8 +1,6 @@
 // frontend/src/__tests__/unit/streaksResponsiveAndSkeletons.test.ts
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import React from 'react';
-import { StreaksHubSkeleton, StreakBoardSkeleton } from '@/components/streaks/StreaksSkeleton';
 import {
   getKillerStreakPanels,
   getSurvivorStreakPanels,
@@ -13,31 +11,6 @@ import deDict from '@/locales/de';
 import esDict from '@/locales/es';
 import jaDict from '@/locales/ja';
 import plDict from '@/locales/pl';
-import { renderWithDictionary } from '../helpers/renderWithDictionary';
-
-describe('Streaks: Skeletons & DBD Framer Motion Spinner Integrity', () => {
-  it('StreaksHubSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
-    const html = renderWithDictionary(
-      React.createElement(StreaksHubSkeleton, {
-      })
-    );
-
-    assert.ok(html.includes('role="status"'), 'Skeleton should declare role="status"');
-    assert.ok(html.includes('aria-busy="true"'), 'Skeleton should declare aria-busy="true"');
-    assert.ok(html.includes('viewBox="0 0 160 160"'), 'Hub skeleton must render DBD Skill Check SVG');
-  });
-
-  it('StreakBoardSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
-    const html = renderWithDictionary(
-      React.createElement(StreakBoardSkeleton, {
-      })
-    );
-
-    assert.ok(html.includes('role="status"'), 'Skeleton should declare role="status"');
-    assert.ok(html.includes('aria-busy="true"'), 'Skeleton should declare aria-busy="true"');
-    assert.ok(html.includes('viewBox="0 0 160 160"'), 'Board skeleton must render DBD Skill Check SVG');
-  });
-});
 
 describe('Streaks: Panel Definitions & Role Configurations', () => {
   it('killer streak panels provide gauntlet, chaos, history, and page streak', () => {

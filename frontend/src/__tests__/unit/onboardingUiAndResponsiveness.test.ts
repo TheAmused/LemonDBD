@@ -1,5 +1,5 @@
 // frontend/src/__tests__/unit/onboardingUiAndResponsiveness.test.ts
-import test, { describe, it } from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import path from 'node:path';
 import { readFeatureSource } from '../helpers/readFeatureSource';

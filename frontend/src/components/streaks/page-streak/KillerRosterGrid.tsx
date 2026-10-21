@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/streaks/page-streak/KillerRosterGrid.tsx
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { Check } from 'lucide-react';
 import type { RosterEntry } from '@/types/pageStreak';

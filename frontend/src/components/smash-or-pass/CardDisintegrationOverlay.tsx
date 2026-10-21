@@ -30,14 +30,6 @@ interface Particle {
   sparkles?: Array<{ dx: number; dy: number; alpha: number }>;
 }
 
-interface DigitalGlitchSlice {
-  y: number;
-  height: number;
-  offsetX: number;
-  color: string;
-  alpha: number;
-}
-
 export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps> = ({
   exitType,
   duration: durationProp = 480,
@@ -45,7 +37,6 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const completedRef = useRef(false);
-  const variantRef = useRef<number>(Math.floor(Math.random() * 3));
 
   useEffect(() => {
     completedRef.current = false;
@@ -60,7 +51,6 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
 
     const startTime = performance.now();
     const duration = durationProp;
-    const variant = variantRef.current;
 
     // Fallback watchdog timer
     const fallbackTimer = setTimeout(() => {

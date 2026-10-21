@@ -5,7 +5,6 @@ import React from 'react';
 import {
   ImageUploadDropzone,
   processImageFile,
-  type ImageUploadDropzoneProps,
 } from '@/components/common/ImageUploadDropzone';
 import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';

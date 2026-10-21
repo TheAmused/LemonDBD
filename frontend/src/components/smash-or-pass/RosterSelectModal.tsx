@@ -52,7 +52,6 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       onDeleteRoster,
       onExportRoster,
       onReportRoster,
-      locale = 'en',
     }) => {
   const dict = useDictionary();
   const { isAuthenticated } = useAuth();

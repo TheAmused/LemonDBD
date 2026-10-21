@@ -17,7 +17,6 @@ interface TerrorRadiusModalProps {
 export const TerrorRadiusModal: React.FC<TerrorRadiusModalProps> = ({
   isOpen,
   onClose,
-  character,
   killerTerrorRadius,
   killerTRMeters,
   killerSpeed,

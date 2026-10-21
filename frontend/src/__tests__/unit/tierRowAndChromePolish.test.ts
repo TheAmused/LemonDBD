@@ -18,7 +18,6 @@ const itemsByKey = new Map<string, TierItem>([['perk:1', sampleItem]]);
 
 describe('Tier Row Clear Button & Chrome Polish', () => {
   it('Test 1: TierRow renders Eraser clear button when keys.length > 0 and onClearRow is provided', () => {
-    let clearedTierId: string | null = null;
     const expectedLabel = formatMessage((en.tierLists as any).clearTierAria, { label: sampleTier.label });
 
     const html = renderWithDictionary(
@@ -35,9 +34,7 @@ describe('Tier Row Clear Button & Chrome Polish', () => {
           onSelect: () => {},
           onPreview: () => {},
           onMoveSelectedHere: () => {},
-          onClearRow: (id: string) => {
-            clearedTierId = id;
-          },
+          onClearRow: () => {},
         })
       )
     );

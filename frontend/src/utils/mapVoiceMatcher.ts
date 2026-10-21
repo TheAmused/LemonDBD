@@ -25,7 +25,6 @@ import {
   ACTION_COMMAND_RULES,
   type CanonicalMapDefinition,
 } from './mapVoiceData';
-export { MAP_VARIANT_GROUPS };
 // ─── Normalization & Levenshtein Distance ──────────────────────────────────────
 // ─── Main Match Function ──────────────────────────────────────────────────────
 

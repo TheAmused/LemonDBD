@@ -18,7 +18,6 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
   isOpen,
   onClose,
   killerPower,
-  character,
   backendBase,
   t,
 }) => {

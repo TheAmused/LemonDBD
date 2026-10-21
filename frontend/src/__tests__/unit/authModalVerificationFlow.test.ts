@@ -1,5 +1,5 @@
 // frontend/src/__tests__/unit/authModalVerificationFlow.test.ts
-import test, { describe, it } from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import fs from 'node:fs';
 import path from 'node:path';

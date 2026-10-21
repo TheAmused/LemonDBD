@@ -6,7 +6,7 @@ import { Button } from '@/components/common/Button';
 import { AUDIO_ENDPOINT_PATTERN } from '@/utils/minigames/jsonExportImport';
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import Image from 'next/image';
-import { Volume2, VolumeX, Play, Pause, Activity, Check, X, Disc3 } from 'lucide-react';
+import { Volume2, VolumeX, Play, Pause, Check, X, Disc3 } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter } from '@/types/minigame';
 import { soundEngine } from '@/utils/minigames/MinigameSoundEngine';
 import { staticUrl } from '@/utils/api';
@@ -36,7 +36,6 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const synthTimerRef = useRef<NodeJS.Timeout | null>(null);
   const t = dict.minigames;
-  const mode = roundConfig.mode;
 
   const targetChar = useMemo(() => {
     if (roundConfig.target_type) {

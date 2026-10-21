@@ -1,7 +1,7 @@
 // frontend/src/components/streaks/page-streak/PerkTile.tsx
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { DIAMOND_CLIP } from '@/components/ui/DiamondSlot';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';

@@ -23,7 +23,7 @@ import { SidebarNavLink } from './sidebar/SidebarNavLink';
 import { adminOnlyPageFromPathname } from '@/utils/adminOnlyPages';
 import { SidebarUserSection } from './sidebar/SidebarUserSection';
 import { SidebarBottomControls } from './sidebar/SidebarBottomControls';
-import { i18n, type Locale } from '@/i18n/config';
+import { i18n } from '@/i18n/config';
 import { WhatsNewLauncher } from '@/components/changelog/WhatsNewLauncher';
 import { useChangelogFeed } from '@/components/changelog/useChangelogFeed';
 import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, AdeptBadgeIcon } from '@/components/icons/DbdIcons';
@@ -57,10 +57,6 @@ interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({
       currentLocale: propLocale,
       activeCategory,
-      totalPerksCount,
-      survivorCount,
-      killerCount,
-      characterCount,
     }) => {
   const dict = useDictionary();
   const pathname = usePathname() || '';

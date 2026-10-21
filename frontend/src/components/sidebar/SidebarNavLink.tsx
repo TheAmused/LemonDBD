@@ -3,7 +3,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import type { LucideIcon } from 'lucide-react';
+
 
 export interface SidebarNavLinkProps {
   id: string;
@@ -19,7 +19,6 @@ export interface SidebarNavLinkProps {
 }
 
 const SidebarNavLinkBase: React.FC<SidebarNavLinkProps> = ({
-  id,
   label,
   icon: Icon,
   color,

@@ -76,20 +76,11 @@ const PerkArt: React.FC<{ perk: Perk; size: string }> = ({ perk, size }) => {
 
 type SlotSize = 'large' | 'small' | 'compact';
 
-const SLOT_ICON_BASE: Record<SlotSize, string> = {
-  large: 'w-11 h-11 sm:w-14 sm:h-14 xl:w-18 xl:h-18',
-  small: 'w-11 h-11 xl:w-16 xl:h-16',
-  compact: 'w-10 h-10 xl:w-12 xl:h-12',
-};
-
 const CAPTION_CLASS: Record<SlotSize, string> = {
   large: 'mt-4 w-20 sm:w-24 xl:mt-5 xl:w-28',
   small: 'mt-3 w-20 xl:mt-4 xl:w-24',
   compact: 'mt-3 w-20',
 };
-
-const slotIconBase = (size: SlotSize) =>
-  `${SLOT_ICON_BASE[size]} shrink-0 rounded-chip rotate-45 flex items-center justify-center border relative`;
 
 const BADGE_TEXT_SIZE: Record<SlotSize, string> = {
   large: 'text-micro',

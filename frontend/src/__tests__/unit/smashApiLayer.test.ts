@@ -38,7 +38,7 @@ test('SmashOrPass: API Service Layer & Types', async (t) => {
       },
     ];
 
-    globalThis.fetch = async (url: any, opts: any) => {
+    globalThis.fetch = async (url: any, _opts: any) => {
       assert.ok(String(url).includes('/api/v1/smash-or-pass/rosters'));
       return {
         ok: true,
@@ -158,7 +158,7 @@ test('SmashOrPass: API Service Layer & Types', async (t) => {
       },
     ];
 
-    globalThis.fetch = async (url: any, opts: any) => {
+    globalThis.fetch = async (url: any, _opts: any) => {
       assert.ok(String(url).includes('/api/v1/smash-or-pass/rosters/canon/leaderboard'));
       return {
         ok: true,

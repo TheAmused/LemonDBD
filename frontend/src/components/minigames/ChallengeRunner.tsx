@@ -8,11 +8,8 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   Trophy,
   ArrowRight,
-  RotateCcw,
   CheckCircle2,
   XCircle,
-  HelpCircle,
-  EyeOff,
   Flame,
 } from 'lucide-react';
 import type {

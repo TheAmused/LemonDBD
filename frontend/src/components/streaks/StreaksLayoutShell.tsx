@@ -1,20 +1,19 @@
 'use client';
 // frontend/src/components/streaks/StreaksLayoutShell.tsx
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 import { MailWarning } from 'lucide-react';
 import { Sidebar } from '@/components/Sidebar';
 import { RoleTabs } from '@/components/streaks/RoleTabs';
-import { StreaksHubSkeleton } from '@/components/streaks/StreaksSkeleton';
-import { Locale } from '@/i18n/config';
+
+
 import { useAuth } from '@/context/AuthContext';
 import { useSiteConfig } from '@/context/SiteConfigContext';
 import { mustConfirmEmail } from '@/utils/emailVerification';
 import { DisplayNamesProvider } from '@/context/DisplayNamesContext';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
-import { getBackendBaseUrl } from '@/utils/api';
 
 import { Button } from '@/components/common/Button';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
@@ -32,7 +31,6 @@ export function StreaksLayoutShell({ children }: { children: React.ReactNode }) 
   const dict = useDictionary();
 
 
-  const backendBase = getBackendBaseUrl();
 
 
   const handleSelectCategory = () => {

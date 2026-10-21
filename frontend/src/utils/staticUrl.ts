@@ -1,5 +1,5 @@
 // frontend/src/utils/staticUrl.ts
-import { getBackendBaseUrl, apiUrl, staticUrl, backendBase } from './api';
+import { getBackendBaseUrl, staticUrl, backendBase } from './api';
 
 export { staticUrl, backendBase };
 

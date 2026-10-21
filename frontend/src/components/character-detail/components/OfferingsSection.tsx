@@ -157,9 +157,6 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
   );
   const [isDrawerOpen, toggleDrawer] = usePersistentDrawer('lemondbd_drawer_offerings', true);
 
-  const activeCategoryConfig =
-    categories.find((c) => c.key === selectedCategory) || categories[0];
-
   const sortedAndFilteredOfferings = useMemo(() => {
     return offerings
       .filter((off) => {

@@ -14,7 +14,6 @@ import {
   Shield,
   Compass,
   Link as LinkIcon,
-  Palette,
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import type { ArchetypeRule, CustomRomanceArchetype } from '@/types/smashOrPass';

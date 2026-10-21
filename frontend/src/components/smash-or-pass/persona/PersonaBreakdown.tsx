@@ -1,6 +1,6 @@
 'use client';
 // frontend/src/components/smash-or-pass/persona/PersonaBreakdown.tsx
-import { Check, Compass, Gamepad2, Heart, RotateCcw, Share2 } from 'lucide-react';
+import { Compass, Gamepad2, Heart, RotateCcw, Share2 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
 import { tip } from '@/components/common/Tooltip';
@@ -18,14 +18,13 @@ interface PersonaBreakdownProps {
   persona: RomancePersonaResult;
   /** A persona opened from someone's share link, rather than the viewer's own. */
   isSharedView: boolean;
-  copied: boolean;
   onShare: () => void;
   onClose: () => void;
   onResetAll?: () => void;
 }
 
 /** The persona's result: the badge, the dating-psychology read, the numbers, and the role affinity bar. */
-export function PersonaBreakdown({ persona, isSharedView, copied, onShare, onClose, onResetAll }: PersonaBreakdownProps) {
+export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onResetAll }: PersonaBreakdownProps) {
   const dict = useDictionary();
   const text = dict.smashOrPass;
   const backendBase = getBackendBaseUrl();
@@ -205,8 +204,8 @@ export function PersonaBreakdown({ persona, isSharedView, copied, onShare, onClo
               onClick={onShare}
               className="flex-1"
             >
-              {copied ? <Check className="h-4 w-4 stroke-[3]" /> : <Share2 className="h-4 w-4" />}
-              <span>{copied ? text.copiedToClipboard : text.shareArchetype}</span>
+              <Share2 className="h-4 w-4" />
+              <span>{text.shareArchetype}</span>
             </Button>
 
             {onResetAll && (

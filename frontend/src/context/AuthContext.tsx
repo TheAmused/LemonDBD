@@ -87,7 +87,7 @@ interface AuthContextType {
 
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import type { CharacterOwnershipUpdate } from '@/utils/characterUtils';
-import { SESSION_MARKER, authHeaders, setSessionFlag, getErrorMessage, isAbortError } from '@/utils/api';
+import { SESSION_MARKER, authHeaders, setSessionFlag, getErrorMessage } from '@/utils/api';
 import { trackEvent } from '@/utils/analytics';
 import { invalidate } from '@/services/dataCache';
 import { blockedFromResponse, warningsFromResponse } from '@/utils/moderationResponse';

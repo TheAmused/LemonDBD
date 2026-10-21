@@ -4,7 +4,7 @@
 import React from 'react';
 import { ImageOff, EyeOff } from 'lucide-react';
 import { Perk, RoleCategory } from '@/types/perks';
-import { Dictionary } from '@/locales/types';
+
 import { cn } from '@/utils/cn';
 import { PerkCard } from '@/components/PerkCard';
 import { useDictionary } from "@/context/DictionaryContext";

@@ -223,7 +223,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
   };
 
   // The label holds {terms} and {rules}; each becomes a link that previews that document.
-  const legalLabelParts = dict.user.acceptLegalLabel.split(/(\{terms\}|\{rules\})/);
+  const legalLabelParts = dict.user.acceptLegalLabel.split(/(\{terms\}|\{rules\}|\{privacy\})/);
   const showLegalError = legalAttempted && !acceptedLegal;
   // While the ALTCHA challenge is being solved the form can't be submitted, so the whole body gives way to the loader.
   const showSecurityCheck = !notice && isAltchaVerifying;
@@ -427,7 +427,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
               >
                 <span className="type-body text-text-secondary">
                   {legalLabelParts.map((part, i) =>
-                    part === '{terms}' || part === '{rules}' ? (
+                    part === '{privacy}' ? (
+                      // The privacy policy is information, not something to accept: open the page
+                      // itself in a new tab instead of the accept-terms preview.
+                      <InlineLink
+                        key={i}
+                        onClick={() => {
+                          trackEvent('legal_preview_open', { doc: 'privacy' });
+                          window.open(`/${pathname?.split('/')[1] || 'en'}/privacy-policy`, '_blank', 'noopener');
+                        }}
+                      >
+                        {dict.user.acceptPrivacyLink}
+                      </InlineLink>
+                    ) : part === '{terms}' || part === '{rules}' ? (
                       <InlineLink
                         key={i}
                         onClick={() => {

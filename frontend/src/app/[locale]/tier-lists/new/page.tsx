@@ -4,10 +4,12 @@ import { PageShell } from '@/components/layout/PageShell';
 import { TierListCreator, TierListSkeleton } from '@/features/tier-lists';
 import type { Locale } from '@/i18n/config';
 
-export const generateMetadata = pageMetadata('/tier-lists', (d) => ({
-  title: d.tierLists.pageTitle,
-  description: d.tierLists.metaDescription,
-}));
+export const generateMetadata = pageMetadata(
+  '/tier-lists/new',
+  (d) => ({ title: d.tierLists.pageTitle, description: d.tierLists.metaDescription }),
+  // The editor itself: nothing for a search engine to index.
+  { noindex: true }
+);
 
 export default async function NewTierListPage({
   params,

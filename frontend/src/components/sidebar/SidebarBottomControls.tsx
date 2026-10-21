@@ -265,6 +265,17 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           <FitText minScale={0.6} maxLines={2} className="min-w-0 text-center">{dict.sidebar.buyCoffee}</FitText>
         </Button>
       </div>
+
+      {/* Legal pages, reachable from every page (not only from About). */}
+      <nav aria-label={dict.sidebar.about} className="flex items-center justify-center gap-3 pt-1 type-caption text-text-muted">
+        <Link href={`/${currentLocale}/privacy-policy`} className={`hover:text-text-primary ${FOCUS_RING}`}>
+          {dict.sidebar.privacyPolicy}
+        </Link>
+        <span aria-hidden="true">·</span>
+        <Link href={`/${currentLocale}/terms-of-service`} className={`hover:text-text-primary ${FOCUS_RING}`}>
+          {dict.sidebar.termsOfService}
+        </Link>
+      </nav>
     </div>
   );
 };

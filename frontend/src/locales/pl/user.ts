@@ -77,9 +77,10 @@ export default {
   failedToRequestPasswordReset: "Nie udało się zażądać resetu hasła.",
   invalidCredentials: "Nieprawidłowe dane logowania.",
   registrationFailed: "Rejestracja nie powiodła się.",
-  acceptLegalLabel: "Akceptuję {terms} oraz {rules}",
+  acceptLegalLabel: "Akceptuję {terms} oraz {rules} i zapoznałem się z {privacy}",
   acceptTermsLink: "Regulamin serwisu",
   acceptRulesLink: "Zasady społeczności",
+  acceptPrivacyLink: "Polityką prywatności",
   legalNotAccepted: "Zaakceptuj Regulamin serwisu i Zasady społeczności, aby utworzyć konto.",
   unexpectedError: "Wystąpił nieoczekiwany błąd.",
 

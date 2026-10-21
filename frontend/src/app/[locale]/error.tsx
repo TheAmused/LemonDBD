@@ -6,9 +6,13 @@
 // "Try again" re-renders the segment that failed. Errors in the locale layout itself are caught
 // by app/global-error.tsx.
 
-import { logger } from '@/utils/logger';
 import { useEffect } from 'react';
-import { ErrorPage } from '@/components/layout/ErrorPage';
+import dynamic from 'next/dynamic';
+import { logger } from '@/utils/logger';
+
+// Loaded only when something has actually crashed: this boundary is part of every page's bundle,
+// and ErrorPage (with the page shell it renders) would otherwise add ~10KB gzip to each of them.
+const ErrorPage = dynamic(() => import('@/components/layout/ErrorPage').then((m) => m.ErrorPage));
 
 export default function LocaleError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => {

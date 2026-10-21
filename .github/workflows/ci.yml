@@ -1,0 +1,74 @@
+# .github/workflows/ci.yml -- runs on every push and pull request.
+# The same checks run_tests.py runs locally, minus the live (Postgres) and k6 suites.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+          cache: pip
+          cache-dependency-path: |
+            backend/requirements.lock
+            backend/requirements-dev.txt
+      - name: Install dependencies (hash-checked, as in the image)
+        run: |
+          python -m pip install --require-hashes -r requirements.lock
+          python -m pip install --no-deps --ignore-requires-python --require-hashes -r requirements-ocr.txt
+          python -m pip install -r requirements-dev.txt
+      - name: pytest (unit)
+        run: python -m pytest tests/unit -q
+
+  frontend:
+    name: Frontend checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - name: Type-check
+        run: npx tsc --noEmit -p .
+      - name: Lint (oxlint; errors fail the build)
+        run: npm run lint
+      - name: i18n and style guards
+        run: |
+          npm run check:i18n
+          npm run check:styles
+      - name: Compose env for the docker guard test
+        # dockerGuards.test.ts validates the prod compose file, which needs .env.prod and the
+        # required passwords. Throwaway values, never used to run anything.
+        working-directory: .
+        run: |
+          cp .env.example .env.prod
+          sed -i -E 's/^(POSTGRES_PASSWORD|UMAMI_APP_SECRET|PGADMIN_DEFAULT_PASSWORD|UMAMI_ADMIN_PASSWORD)=\r?$/\1=ci-only/' .env.prod
+      - name: Unit tests
+        run: npm run test:unit
+      - name: Production build
+        run: npm run build

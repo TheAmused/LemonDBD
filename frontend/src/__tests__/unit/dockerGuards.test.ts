@@ -101,16 +101,23 @@ describe('docker: service healthchecks', () => {
 });
 
 describe('docker: compose config validation', () => {
-  it('docker compose config succeeds with exit code 0 when docker is available', () => {
+  it('docker compose config succeeds with exit code 0 when docker is available', (t) => {
     try {
       execSync('docker --version', { stdio: 'ignore' });
     } catch {
       // Docker CLI not available in environment, skip execution check
+      t.skip('docker CLI not available');
+      return;
+    }
+    // Production runs as `docker compose -f docker-compose.prod.yml`, whose include reads
+    // .env.prod (it holds the required passwords). Without that file there is nothing to check.
+    if (!fs.existsSync(path.join(ROOT, '.env.prod'))) {
+      t.skip('.env.prod not present');
       return;
     }
 
     const result = execSync(
-      `docker compose -f "${BASE_COMPOSE}" -f "${PROD_COMPOSE}" config`,
+      `docker compose -f "${PROD_COMPOSE}" config`,
       { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }
     );
     assert.ok(result.length > 0, 'docker compose config must return non-empty validated output');

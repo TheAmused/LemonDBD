@@ -285,6 +285,11 @@ class TestingConfig(Config):
     SQLALCHEMY_ENGINE_OPTIONS: dict[str, Any] = {}
     RATELIMIT_ENABLED: bool = False
     ALTCHA_ENFORCED: bool = False
+    # Off unless a test turns it on (monkeypatch.setitem(app.config, "REQUIRE_EMAIL_VERIFICATION", True)):
+    # most tests sign a freshly registered user straight in. It used to inherit the production
+    # default (True), so whether those tests passed depended on which earlier test had last
+    # assigned the flag without restoring it.
+    REQUIRE_EMAIL_VERIFICATION: bool = False
     SCHEDULER_ENABLED: bool = False
     SANCTION_EMAIL_ASYNC: bool = False
     SITE_SETTINGS_CACHE_SECONDS: int = 0

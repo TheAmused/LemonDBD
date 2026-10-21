@@ -130,7 +130,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({ round, index, 
     onUpdate({
       ...round,
       custom_data: {
-        ...(round.custom_data || {}),
+        ...round.custom_data,
         [key]: value,
       },
     });

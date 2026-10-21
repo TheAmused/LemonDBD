@@ -50,7 +50,6 @@ export function getRuntimePublicUrl(): string {
   const raw =
     process.env['UMAMI_PUBLIC_URL'] ||
     process.env['NEXT_PUBLIC_UMAMI_URL'] ||
-    process.env.NEXT_PUBLIC_UMAMI_URL ||
     '';
   return raw.trim().replace(/\/+$/, '');
 }
@@ -58,7 +57,6 @@ export function getRuntimePublicUrl(): string {
 async function umamiFetch(path: string, init?: RequestInit) {
   const internalUrl = (
     process.env['UMAMI_INTERNAL_URL'] ||
-    process.env.UMAMI_INTERNAL_URL ||
     'http://umami:3000'
   ).replace(/\/+$/, '');
 
@@ -76,13 +74,13 @@ async function umamiFetch(path: string, init?: RequestInit) {
 
 export async function provisionWebsite(): Promise<string | null> {
   const adminUsername =
-    process.env['UMAMI_ADMIN_USERNAME'] || process.env.UMAMI_ADMIN_USERNAME || 'admin';
+    process.env['UMAMI_ADMIN_USERNAME'] || 'admin';
   const adminPassword =
-    process.env['UMAMI_ADMIN_PASSWORD'] || process.env.UMAMI_ADMIN_PASSWORD || 'umami';
+    process.env['UMAMI_ADMIN_PASSWORD'] || 'umami';
   const siteName =
-    process.env['UMAMI_SITE_NAME'] || process.env.UMAMI_SITE_NAME || 'LemonDBD';
+    process.env['UMAMI_SITE_NAME'] || 'LemonDBD';
   const rawDomain =
-    process.env['UMAMI_SITE_DOMAIN'] || process.env.UMAMI_SITE_DOMAIN || 'localhost';
+    process.env['UMAMI_SITE_DOMAIN'] || 'localhost';
   const siteDomain = getSanitizedDomain(rawDomain);
 
   const login = await umamiFetch('/api/auth/login', {

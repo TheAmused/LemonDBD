@@ -20,7 +20,7 @@ $RECYCLE.BIN/
 *.swp
 *.swo
 
-# Superpowers & Tooling Cache
+# Superpowers & Tooling Cache (local only, never committed)
 .superpowers/
 
 # Local AI Assistant Notes
@@ -37,6 +37,10 @@ $RECYCLE.BIN/
 .env.*
 !.env.example
 !.env.prod.example
+*.pem
+*.key
+*.p12
+*.pfx
 
 # Docker Overrides & Global Logs
 docker-compose.override.yml
@@ -47,21 +51,27 @@ docker-compose.override.yml
 .coverage
 coverage/
 htmlcov/
+test-results/
+playwright-report/
 k6/reports/*
 !k6/reports/.gitkeep
+
+# Dependencies, bytecode and virtual environments, wherever they appear
+# (backend, frontend, k6, scripts...)
+node_modules/
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.venv*/
+venv/
+.ruff_cache/
+.mypy_cache/
 
 # ==========================================
 # Backend Service (/backend)
 # ==========================================
-# Python Bytecode & Cache
-backend/**/__pycache__/
-backend/**/*.py[cod]
-backend/*$py.class
-
-# Virtual Environments
-backend/venv/
-backend/.venv/
-backend/.venv*/
+# Virtual Environments (the unscoped venv/.venv rules above cover the rest)
 backend/env/
 
 # Test & Coverage Reports
@@ -77,9 +87,6 @@ backend/data/
 # ==========================================
 # Frontend Application (/frontend)
 # ==========================================
-# Dependencies
-frontend/node_modules/
-
 # Next.js Build & Cache Outputs
 frontend/.next/
 frontend/out/

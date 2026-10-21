@@ -5,9 +5,6 @@ from typing import Any
 import pytest
 from flask import Flask
 from flask.testing import FlaskClient
-from sqlalchemy import select
-from app.core.extensions import db
-from app.models.user import User
 
 
 def solve_altcha_pow(challenge_data: dict[str, Any]) -> dict[str, Any]:

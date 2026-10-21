@@ -1,11 +1,9 @@
 # backend/tests/unit/test_minigame_models.py
 from datetime import date, datetime, timezone
-import pytest
 from app.core.extensions import db
 from app.models.minigame import (
     MinigameDailyChallenge,
     MinigameRepeatableChallenge,
-    MinigameUserStat,
 )
 
 def test_create_minigame_daily_challenge(app, test_db):

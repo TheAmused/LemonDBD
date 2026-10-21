@@ -5,7 +5,6 @@ from flask.testing import FlaskClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.core.extensions import db
 from app.core.security import generate_token
 from app.models.admin import AdminAuditLog
 from app.models.content_moderation import ContentReport, ContentRevocation

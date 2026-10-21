@@ -1,6 +1,5 @@
 # backend/app/routes/perks.py
 import logging
-from dataclasses import asdict
 
 from flask import Blueprint, jsonify, request
 
@@ -181,7 +180,6 @@ def list_chapters():
     """Retrieve all chapter/DLC banner images for client-side name matching."""
     from app.core.extensions import db
     from app.models import Chapter
-    from sqlalchemy import select
 
     rows = db.session.scalars(select(Chapter)).all()
     return jsonify({"chapters": [r.to_dict() for r in rows]}), 200
@@ -198,7 +196,7 @@ def stats_summary():
     navigation, to display three integers. This does the same work as a few
     grouped COUNT(*) queries and returns a payload of about 100 bytes.
     """
-    from sqlalchemy import func, select
+    from sqlalchemy import func
 
     from app.core.extensions import db
     from app.models import Killer, Perk, Survivor

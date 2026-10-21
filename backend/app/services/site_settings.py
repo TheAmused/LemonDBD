@@ -419,6 +419,7 @@ def list_settings() -> list[dict[str, Any]]:
     try:
         overrides = _stored_overrides()
     except Exception:
+        logger.warning("Could not read the stored settings; listing defaults", exc_info=True)
         if has_app_context():
             db.session.rollback()
         overrides = {}

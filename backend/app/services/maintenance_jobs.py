@@ -121,7 +121,7 @@ def run_locked(job: MaintenanceJob, trigger: str = "admin") -> int:
     try:
         is_pg = db.engine.dialect.name in ("postgresql", "postgres")
     except Exception:
-        pass
+        logger.debug("Could not read the database dialect", exc_info=True)
     if job.lock_id is None or not is_pg:
         affected = job.run()
     else:

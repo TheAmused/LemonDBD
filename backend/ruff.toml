@@ -1,0 +1,12 @@
+# backend/ruff.toml -- run `ruff check .` from backend/ (CI does).
+target-version = "py314"
+line-length = 120
+
+[lint]
+# Pyflakes (unused imports and variables, undefined names, redefinitions) and syntax errors.
+select = ["F", "E9"]
+
+[lint.per-file-ignores]
+# pytest fixtures are imported into a test module and then requested by name as parameters,
+# which pyflakes reads as a redefinition of the import.
+"tests/**" = ["F811"]

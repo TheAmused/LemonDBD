@@ -549,7 +549,7 @@ class TestAdminSide:
 
     def test_admin_user_list_shows_who_has_it_on(self, client: FlaskClient, db_session) -> None:
         admin = _make_user("boss", role="admin")
-        on, off = _make_user("with2fa"), _make_user("without2fa")
+        on, _off = _make_user("with2fa"), _make_user("without2fa")
         _enrol(client, on)
         users = client.get("/api/v1/users", headers=_bearer(admin)).get_json()["users"]
         flags = {u["username"]: u["two_factor_enabled"] for u in users}

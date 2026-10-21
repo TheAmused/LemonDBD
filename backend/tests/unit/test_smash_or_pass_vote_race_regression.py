@@ -36,7 +36,6 @@ import pytest
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.core.extensions import db
 from app.models.base import utcnow
 from app.models.smash_or_pass import Entity, Roster, Vote
 from app.seeds.smash_roster_seeder import seed_smash_rosters

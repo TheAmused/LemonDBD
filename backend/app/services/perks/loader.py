@@ -34,6 +34,7 @@ def load_fallback_files(service) -> None:
             with open(service.characters_path, "r", encoding="utf-8") as f:
                 service._characters_cache = json.load(f)
         except Exception:
+            logger.warning("Could not read the fallback characters file", exc_info=True)
             service._characters_cache = []
     if service.data_path.exists():
         try:
@@ -44,6 +45,7 @@ def load_fallback_files(service) -> None:
                         p["description"] = clean_description(p["description"])
                 service._cache = raw_data
         except Exception:
+            logger.warning("Could not read the fallback perks file", exc_info=True)
             service._cache = []
     if service.items_path.exists():
         try:
@@ -54,6 +56,7 @@ def load_fallback_files(service) -> None:
                         i["description"] = clean_description(i["description"])
                 service._items_cache = raw_items
         except Exception:
+            logger.warning("Could not read the fallback items file", exc_info=True)
             service._items_cache = []
     if service.addons_path.exists():
         try:
@@ -64,12 +67,14 @@ def load_fallback_files(service) -> None:
                         a["description"] = clean_description(a["description"])
                 service._addons_cache = raw_addons
         except Exception:
+            logger.warning("Could not read the fallback add-ons file", exc_info=True)
             service._addons_cache = []
     if service.maps_path.exists():
         try:
             with open(service.maps_path, "r", encoding="utf-8") as f:
                 service._maps_cache = json.load(f)
         except Exception:
+            logger.warning("Could not read the fallback maps file", exc_info=True)
             service._maps_cache = []
 
 

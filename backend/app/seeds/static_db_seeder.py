@@ -245,7 +245,7 @@ def import_update_file(file_path: Path) -> dict[str, Any]:
         from app.services.perks import reload_service_data
         reload_service_data(None)
     except Exception:
-        pass
+        logger.warning("[static_seeder] Reloading the perk service after an update failed", exc_info=True)
 
     logger.info(f"[static_seeder] Successfully applied update from {file_path.name}: {summary}")
     return {"status": "success", "file": str(file_path), "summary": summary}
@@ -262,7 +262,7 @@ def apply_pending_updates() -> dict[str, Any]:
         # Ensure seed_update_logs table exists
         db.create_all()
     except Exception:
-        pass
+        logger.warning("[static_seeder] create_all() before applying updates failed", exc_info=True)
 
     applied_files = []
     summaries: dict[str, Any] = {}
@@ -333,7 +333,7 @@ def apply_pending_updates() -> dict[str, Any]:
             from app.services.perks import reload_service_data
             reload_service_data(None)
         except Exception:
-            pass
+            logger.warning("[static_seeder] Reloading the perk service after updates failed", exc_info=True)
         # PerkService().reload_data() only refreshes this process. The catalog
         # cache is shared by every worker, and it has just been made wrong.
         bump_catalog_version()
@@ -353,7 +353,7 @@ def seed_from_static_json(force: bool = False) -> dict[str, Any]:
     try:
         db.create_all()
     except Exception:
-        pass
+        logger.warning("[static_seeder] create_all() before seeding failed", exc_info=True)
 
     char_count = 0
     try:
@@ -390,14 +390,14 @@ def seed_from_static_json(force: bool = False) -> dict[str, Any]:
                     chash = compute_file_hash(json_file)
                     _record_file_update(rel_id, chash, {"initial": True})
                 except Exception:
-                    pass
+                    logger.warning("[static_seeder] Could not record the baseline hash of a seed file", exc_info=True)
 
         _sync_all_postgres_sequences()
         try:
             from app.services.perks import reload_service_data
             reload_service_data(None)
         except Exception:
-            pass
+            logger.warning("[static_seeder] Reloading the perk service after seeding failed", exc_info=True)
 
         # Anything cached before this point was computed against an empty or
         # stale catalog, so it is discarded here rather than left to its TTL.

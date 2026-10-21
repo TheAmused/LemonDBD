@@ -1,4 +1,3 @@
-import pytest
 from flask import Flask
 from app.core.http_cache import _is_personal
 from app.core.redis_cache import bump_catalog_version, catalog_version

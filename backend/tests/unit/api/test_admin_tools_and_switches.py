@@ -4,7 +4,6 @@ the admin's edit of an account and the audit-log filter."""
 from unittest.mock import patch
 
 import pytest
-from flask import Flask
 from flask.testing import FlaskClient
 
 from app.core.security import generate_token

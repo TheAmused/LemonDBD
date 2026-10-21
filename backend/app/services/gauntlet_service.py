@@ -5,7 +5,7 @@ from datetime import datetime
 
 from app.core.extensions import db
 from app.models import GauntletMatchLog, GauntletRun
-from app.schemas.gauntlet import BoostName, GauntletLoadout, GauntletMatchLogDict, GauntletRunState, TierInfo
+from app.schemas.gauntlet import BoostName, GauntletMatchLogDict, GauntletRunState, TierInfo
 from app.schemas.streak import ChallengeCompletionDict, StreakStats
 from app.services.admin_control_service import assert_challenge_mode_enabled
 from app.services.gauntlet import (

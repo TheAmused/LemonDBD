@@ -6,6 +6,7 @@ switched off on purpose), "error" (configured but failing). `detail` is a techni
 (engine, provider); `latency_ms` is set for the database ping and `last_run_at` for the scheduler,
 which runs in its own process and is only visible through the runs it records.
 """
+import logging
 import time
 from datetime import datetime, timezone
 from typing import Any
@@ -19,6 +20,8 @@ from app.services import discord_webhook, scoreboard_ocr, site_settings
 from app.services.maintenance_jobs import SCHEDULER_STALE_AFTER, last_scheduled_run
 from app.utils.privacy_info import mail_provider_name
 
+logger = logging.getLogger(__name__)
+
 
 def _check(key: str, state: str, detail: str | None = None, **extra: Any) -> dict[str, Any]:
     return {"key": key, "state": state, "detail": detail or None, **extra}
@@ -29,6 +32,7 @@ def _database() -> dict[str, Any]:
     try:
         db.session.execute(text("SELECT 1"))
     except Exception:
+        logger.warning("Database status check failed", exc_info=True)
         db.session.rollback()
         return _check("database", "error", db.engine.dialect.name)
     latency = round((time.perf_counter() - started) * 1000, 1)

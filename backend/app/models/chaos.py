@@ -7,7 +7,7 @@ from app.models.challenge_mixins import StreakLogMixin, StreakRunMixin
 from app.models.base import ColumnDictMixin, JSON_LIST
 
 if TYPE_CHECKING:
-    from app.schemas.chaos import ChaosMatchLogDict, ChaosRunDict
+    from app.schemas.chaos import ChaosMatchLogDict, ChaosRunDict  # noqa: F401 -- named in the ColumnDictMixin["..."] string generic
 
 
 class ChaosRun(StreakRunMixin, ColumnDictMixin["ChaosRunDict"], Base):

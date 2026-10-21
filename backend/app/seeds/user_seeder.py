@@ -163,6 +163,7 @@ def seed_default_users() -> None:
                 try:
                     hash_is_valid = verify_password(udata["password"], existing.password_hash)
                 except Exception:
+                    logger.warning("Could not check the seeded account's password hash", exc_info=True)
                     hash_is_valid = False
                 if not hash_is_valid:
                     try:

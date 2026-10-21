@@ -64,7 +64,7 @@ def set_session_cookie(response, token: str):
 
         max_age = int(session_lifetime().total_seconds())
     except Exception:
-        pass
+        logger.debug("Admin session lifetime unavailable; using the default", exc_info=True)
     return _write_session_cookie(response, token, max_age)
 
 
@@ -223,7 +223,7 @@ def generate_token(
 
             expires_delta = session_lifetime()
         except Exception:
-            pass
+            logger.debug("Admin session lifetime unavailable; using the configured default", exc_info=True)
         secret_key = current_app.config.get("JWT_SECRET_KEY") or current_app.config.get("SECRET_KEY") or DEFAULT_SECRET_KEY
         algorithm = current_app.config.get("JWT_ALGORITHM") or DEFAULT_JWT_ALGORITHM
     else:

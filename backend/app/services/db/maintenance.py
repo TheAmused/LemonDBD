@@ -1,8 +1,11 @@
 # backend/app/services/db/maintenance.py
+import logging
 from flask import current_app
 from sqlalchemy import select
 from app.core.extensions import db
 from app.models import GauntletRun, PageStreakRun
+
+logger = logging.getLogger(__name__)
 
 
 def prune_stale_character_rows(valid_names: set[str] | None, get_conn_fn) -> dict[str, int]:
@@ -32,7 +35,7 @@ def prune_stale_character_rows(valid_names: set[str] | None, get_conn_fn) -> dic
             try:
                 conn.close()
             except Exception:
-                pass
+                logger.debug("Closing the sqlite connection failed", exc_info=True)
 
     try:
         if current_app:
@@ -53,6 +56,6 @@ def prune_stale_character_rows(valid_names: set[str] | None, get_conn_fn) -> dic
             db.session.commit()
             return deleted
     except Exception:
-        pass
+        logger.warning("Pruning runs of removed characters failed", exc_info=True)
 
     return deleted

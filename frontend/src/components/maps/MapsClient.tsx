@@ -39,12 +39,12 @@ function MapsClientInner() {
     mapId?: number;
     timestamp: number;
     via?: 'voice' | 'link';
-  }>({
+  }>(() => ({
     mapName: initialMapName,
     mapId: initialMapId,
     timestamp: Date.now(),
     via: 'link',
-  });
+  }));
   useEffect(() => {
     if (initialMapName || initialMapId !== undefined) {
       setSelectedMap({ mapName: initialMapName, mapId: initialMapId, timestamp: Date.now(), via: 'link' });

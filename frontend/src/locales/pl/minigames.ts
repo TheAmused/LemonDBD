@@ -3,6 +3,8 @@ export default {
   pageTitle: "LemonDBD - Minigry i DBD Idle",
   creatorPageTitle: 'LemonDBD - Kreator wyzwań próby',
   idlePageTitle: 'LemonDBD - DBD Idle: klasyczny zgadywacz mgły',
+  // Caption track of the Terror Radius guesser's audio: describes the sound, never names the Killer.
+  audioCaption: '[Promień grozy Zabójcy: bicie serca i muzyka pościgu]',
   metaDescription: "Graj w codzienne wyzwania zgadywania Dead by Daylight, quizy map i dźwięków lub twórz i udostępniaj własne wyzwania.",
   hubTitle: "Minigry Dead by Daylight",
   hubSubtitle: "Sprawdź swoją wiedzę o Mgle w codziennych próbach, swobodnym treningu lub wyzwaniach społeczności.",

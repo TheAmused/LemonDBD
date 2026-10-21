@@ -154,7 +154,7 @@ test('Live: Archetype deep-link encoding and decoding produces valid shareable U
   assert.strictEqual(decoded.v, persona.totalVotes);
 
   // Verify the encoded param is a valid URL-safe string
-  assert.ok(!/[^A-Za-z0-9%._~\-]/.test(param), 'Encoded param should be URL-safe');
+  assert.ok(!/[^A-Za-z0-9%._~-]/.test(param), 'Encoded param should be URL-safe');
 });
 
 // ─────────────────────────────────────────────────────────────

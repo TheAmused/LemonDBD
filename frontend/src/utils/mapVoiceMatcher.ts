@@ -40,7 +40,7 @@ export function matchVoiceQuery(
   if (!spokenText || typeof spokenText !== 'string') return null;
 
   const rawLower = normalizeString(spokenText)
-    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"']/g, ' ')
+    .replace(/[.,/#!$%^&*;:{}=\-_`~()?"']/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 

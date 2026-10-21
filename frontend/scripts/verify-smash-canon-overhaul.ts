@@ -1,5 +1,5 @@
 // frontend/scripts/verify-smash-canon-overhaul.ts
-import { chromium, Browser, Page } from 'playwright';
+import { chromium, Page } from 'playwright';
 import { spawn, ChildProcess } from 'child_process';
 import http from 'http';
 import path from 'path';

@@ -34,13 +34,6 @@ interface FullscreenMapEngineProps {
 export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ mapId, onClose, availableMaps = [], backendBase }) => {
   const dict = useDictionary();
   const [imageFailed, setImageFailed] = useState<boolean>(false);
-
-  useEffect(() => {
-    setImageFailed(false);
-    setZoom(1.0);
-    setPan({ x: 0, y: 0 });
-  }, [mapId]);
-
   const activeMap = useMemo(
     () => availableMaps.find((m) => m.id === mapId) || null,
     [availableMaps, mapId]
@@ -54,6 +47,16 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
 
   const [initialPinchDistance, setInitialPinchDistance] = useState<number | null>(null);
   const [initialZoom, setInitialZoom] = useState<number>(1.0);
+
+  // Another map: start from a fresh view. Done while rendering (not in an effect), so the new
+  // map never paints with the previous one's zoom and pan first.
+  const [viewedMapId, setViewedMapId] = useState(mapId);
+  if (viewedMapId !== mapId) {
+    setViewedMapId(mapId);
+    setImageFailed(false);
+    setZoom(1.0);
+    setPan({ x: 0, y: 0 });
+  }
 
   const containerRef = useRef<HTMLDivElement>(null);
   const pointerDownPosRef = useRef<{ x: number; y: number } | null>(null);

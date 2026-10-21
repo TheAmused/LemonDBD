@@ -217,7 +217,7 @@ export function getVariantsForMap(mapName: string): string[] {
  */
 export function cleanSpokenQuery(spoken: string): string {
   let cleaned = normalizeString(spoken)
-    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"']/g, ' ')
+    .replace(/[.,/#!$%^&*;:{}=\-_`~()?"']/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 

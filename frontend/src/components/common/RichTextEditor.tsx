@@ -102,8 +102,9 @@ export function RichTextEditor({
   const highlightAnchor = useRef<HTMLDivElement>(null);
   const linkAnchor = useRef<HTMLDivElement>(null);
 
+  // `editorEl` only signals that the surface exists; the DOM is written through the ref.
   useEffect(() => {
-    if (editorEl) editorEl.innerHTML = initialHtml;
+    if (editorEl && editorRef.current) editorRef.current.innerHTML = initialHtml;
   }, [editorEl, initialHtml]);
 
   const emitChange = () => onChange(editorRef.current?.innerHTML ?? '');

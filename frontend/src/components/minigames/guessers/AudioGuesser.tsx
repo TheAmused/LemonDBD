@@ -12,7 +12,7 @@ import { soundEngine } from '@/utils/minigames/MinigameSoundEngine';
 import { staticUrl } from '@/utils/api';
 
 import { tip } from '@/components/common/Tooltip';
-import { useDictionary } from "@/context/DictionaryContext";
+import { useDictionary, useLocale } from "@/context/DictionaryContext";
 import { InfoChip } from '@/components/common/InfoChip';
 import { Surface } from '@/components/common/Surface';
 
@@ -26,6 +26,7 @@ interface AudioGuesserProps {
 
 export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, characters, guesses, isSolved, children }) => {
   const dict = useDictionary();
+  const captionLang = useLocale();
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioProgress, setAudioProgress] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -144,6 +145,10 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
     return `${m}:${s < 10 ? '0' : ''}${s}`;
   };
 
+  const captionTrack = useMemo(
+    () => `data:text/vtt;charset=utf-8,${encodeURIComponent(`WEBVTT\n\n00:00:00.000 --> 99:59:59.000\n${t.audioCaption}\n`)}`,
+    [t.audioCaption]
+  );
   const rawAvatarUrl = targetChar?.avatar_url || '';
   const avatarUrl = staticUrl(rawAvatarUrl) || rawAvatarUrl;
 
@@ -161,7 +166,10 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
             logger.warn('[AudioGuesser] Audio source error, switching to synthetic fallback.');
             setUseFallback(true);
           }}
-        />
+        >
+          {/* A text description of the sound (it is music, not speech) that never names the Killer. */}
+          <track kind="captions" srcLang={captionLang} label={t.audioCaption} src={captionTrack} default />
+        </audio>
       )}
 
       {/* Audio Player Clue Card */}

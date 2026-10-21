@@ -352,7 +352,7 @@ class TestUserAndOwnership:
         assert any(u["username"] == "regular" for u in users)
 
         update_res = client.put(
-            f"/api/v1/users/{user.id}", json={"role": "admin"}, headers=admin_headers
+            f"/api/v1/users/{user.id}", json={"role": "admin", "current_password": admin_password}, headers=admin_headers
         )
         assert update_res.status_code == 200
         assert update_res.get_json()["user"]["role"] == "admin"

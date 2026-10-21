@@ -100,6 +100,8 @@ services:
       # Signs session tokens. Empty falls back to SECRET_KEY.
       - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}
       - JWT_EXPIRATION_HOURS=${JWT_EXPIRATION_HOURS:-24}
+      # "auto" marks the session cookie Secure when nginx reports HTTPS; set "true" in production.
+      - SESSION_COOKIE_SECURE=${SESSION_COOKIE_SECURE:-auto}
       # Optional two-factor sign-in: replace with a fresh Fernet key in .env.prod for production.
       - TWO_FACTOR_ENCRYPTION_KEY=${TWO_FACTOR_ENCRYPTION_KEY:-}
       - TWO_FACTOR_ISSUER=${TWO_FACTOR_ISSUER:-LemonDBD}

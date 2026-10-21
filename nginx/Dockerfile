@@ -18,6 +18,7 @@ RUN mkdir -p /var/log/nginx && \
     chown -R nginx:nginx /var/log/nginx && \
     chmod -R 755 /var/log/nginx
 
+COPY security-headers.conf /etc/nginx/snippets/security-headers.conf
 COPY default.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80 443

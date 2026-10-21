@@ -13,6 +13,7 @@ import { LABEL, TOUCH_BTN, TOUCH_FIELD } from '../styles';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Img } from '@/components/common/Img';
 
 interface TierItemEditModalProps {
   item: TierListDocumentItem | null;
@@ -95,7 +96,7 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave }: TierItemEdi
         <div className="flex flex-col items-center justify-center text-center">
           <div className="relative h-20 w-20 sm:h-24 sm:w-24 overflow-hidden rounded-card border-2 border-border-color bg-bg-elevated shadow-md flex items-center justify-center transition-all">
             {safeImage ? (
-              <img
+              <Img
                 src={safeImage}
                 alt={trimmedName || item.name}
                 referrerPolicy="no-referrer"

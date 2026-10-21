@@ -27,6 +27,7 @@ import { EmptyState } from '@/components/common/EmptyState';
 import { isKiller as isKillerRole } from '@/utils/characterUtils';
 import { AccordionSection } from '@/components/common/AccordionSection';
 import { TileButton } from '@/components/common/TileButton';
+import { Img } from '@/components/common/Img';
 const KILLER_OFFERING_KEYS = ['special', 'mori', 'bloodpoint', 'map', 'shroud', 'ward'] as const;
 const SURVIVOR_OFFERING_KEYS = ['special', 'bloodpoint', 'luck', 'map', 'shroud', 'blueprint', 'chest', 'ward'] as const;
 
@@ -346,7 +347,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                     style={rarityStyle.style}
                     aria-label={`${t.inspectOfferingPrefix} ${offering.name}`}
                   >
-                    <img
+                    <Img
                       src={getAssetUrl(backendBase, offering.icon_local_path, offering.icon_url)}
                       alt={offering.name}
                       className="h-full w-full object-contain"

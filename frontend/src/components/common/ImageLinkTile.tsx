@@ -4,6 +4,7 @@
 import React from 'react';
 import { ExternalLink } from 'lucide-react';
 import { cn } from '@/utils/cn';
+import { Img } from '@/components/common/Img';
 
 export interface ImageLinkTileProps {
   href: string;
@@ -26,7 +27,7 @@ export function ImageLinkTile({ href, src, label, className }: ImageLinkTileProp
         className
       )}
     >
-      <img src={src} alt={label} className="h-full w-full object-cover transition-opacity group-hover:opacity-80" />
+      <Img src={src} alt={label} className="h-full w-full object-cover transition-opacity group-hover:opacity-80" />
       <ExternalLink className="icon-md absolute right-2 top-2 text-text-inverted opacity-0 drop-shadow transition-opacity group-hover:opacity-100" aria-hidden="true" />
     </a>
   );

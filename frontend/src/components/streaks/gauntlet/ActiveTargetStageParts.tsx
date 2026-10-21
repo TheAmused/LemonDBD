@@ -12,6 +12,7 @@ import { PerkIcon } from '@/components/ui/PerkIcon';
 import { DiamondSlot } from '@/components/ui/DiamondSlot';
 import { useDictionary } from '@/context/DictionaryContext';
 import { baseSlots } from '@/utils/perkSlots';
+import { Img } from '@/components/common/Img';
 
 const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[] = []) => {
   if (!name) return null;
@@ -45,7 +46,7 @@ export const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPh
   }
 
   return (
-    <img
+    <Img
       src={src}
       alt=""
       aria-hidden="true"
@@ -273,7 +274,7 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
       className={`${sizeClass} shrink-0 rounded-card bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden`}
     >
       {avatarSrc && !avatarError ? (
-        <img
+        <Img
           src={avatarSrc}
           alt={displayName}
           className="w-full h-full max-w-none object-cover"

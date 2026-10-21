@@ -8,6 +8,7 @@ import { Input } from '@/components/common/Field';
 import { cn } from '@/utils/cn';
 import { useDictionary } from '@/context/DictionaryContext';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
+import { Img } from '@/components/common/Img';
 
 /** Reads a file's raw bytes back out as a `data:...;base64,...` URL. */
 async function fileToDataUrl(file: File): Promise<string | null> {
@@ -192,7 +193,7 @@ export function ImageUploadDropzone({
             invalid && 'border-accent-red'
           )}
         >
-          <img
+          <Img
             src={value}
             alt=""
             referrerPolicy="no-referrer"

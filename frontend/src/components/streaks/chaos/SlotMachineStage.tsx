@@ -15,6 +15,7 @@ import { Spinner } from '@/components/common/Spinner';
 import { useDictionary } from "@/context/DictionaryContext";
 import { useChallengeAnimations } from '../useChallengeAnimations';
 import { TileButton } from '@/components/common/TileButton';
+import { Img } from '@/components/common/Img';
 
 const REEL_DIRECTIONS: ReelDirection[] = ['up', 'down', 'down', 'up'];
 const STRIP_LENGTH = 16;
@@ -133,7 +134,7 @@ const RarityBadge: React.FC<{ rarity: AddonRarity; visible: boolean }> = ({ rari
   if (!visible) return <div className="h-9 w-28 sm:h-10" />;
   return (
     <span className="chaos-badge-pop inline-flex items-center gap-1.5 rounded-chip border border-accent-red/30 bg-bg-surface/80 pl-1 pr-2.5 py-1 type-card-title text-text-primary sm:gap-2 sm:pr-3">
-      <img
+      <Img
         src={ADDON_RARITY_ICONS[rarity]}
         alt=""
         className="h-7 w-7 rounded-chip object-cover border border-border-color sm:h-9 sm:w-9"

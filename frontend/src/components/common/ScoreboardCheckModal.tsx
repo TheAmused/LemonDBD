@@ -17,6 +17,7 @@ import { formatMessage } from '@/utils/i18nFormat';
 import { cn } from '@/utils/cn';
 import { analyzeScoreboard, type ScoreboardReport } from '@/services/scoreboardApi';
 import { Table, TableBody, TableHead, TableRow, Td, Th } from '@/components/common/Table';
+import { Img } from '@/components/common/Img';
 
 interface ScoreboardCheckModalProps {
   isOpen: boolean;
@@ -181,7 +182,7 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
             />
             {previewUrl ? (
               <div className="relative overflow-hidden rounded-card border border-border-color bg-bg-elevated">
-                <img src={previewUrl} alt={t.previewAlt} className="mx-auto max-h-72 w-auto object-contain" />
+                <Img src={previewUrl} alt={t.previewAlt} className="mx-auto max-h-72 w-auto object-contain" />
                 <Button
                   size="sm"
                   className="absolute right-2 top-2"

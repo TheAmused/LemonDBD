@@ -4,6 +4,7 @@ import { X } from 'lucide-react';
 import { CharacterItem, getAvatarUrl, CharacterDetailDictionary } from '../types';
 import { Modal, useModal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
+import { Img } from '@/components/common/Img';
 
 interface Model3DModalProps {
   isOpen: boolean;
@@ -28,7 +29,7 @@ const Model3DContent: React.FC<{ src: string; closeLabel: string }> = ({ src, cl
       >
         <X className="w-5 h-5" />
       </Button>
-      <img
+      <Img
         src={src}
         alt=""
         className="max-h-dvh-72 w-auto max-w-full object-contain rounded-card select-none"

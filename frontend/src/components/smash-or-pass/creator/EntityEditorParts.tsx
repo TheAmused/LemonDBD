@@ -12,6 +12,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { Badge } from '@/components/common/Badge';
 
 import { Button } from '@/components/common/Button';
+import { Img } from '@/components/common/Img';
 export interface DraftEntity {
   /** Stable client-only key -- never sent anywhere, just for React lists and
    * keying this entity's translation overrides. */
@@ -140,7 +141,7 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
 
                   {/* Edge-to-edge tile image or dark initials placeholder */}
                   {safeMedia ? (
-                    <img
+                    <Img
                       src={safeMedia}
                       alt={entity.name}
                       loading="lazy"

@@ -13,6 +13,7 @@ import { Surface } from '@/components/common/Surface';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { paletteColor } from '@/utils/themeColor';
+import { Img } from '@/components/common/Img';
 
 interface CoverImageCropModalProps {
   isOpen: boolean;
@@ -302,7 +303,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
             style={{ touchAction: 'none' }}
           >
             {currentUrl && !imageError ? (
-              <img
+              <Img
                 ref={imgRef}
                 src={currentUrl}
                 alt={cm.previewAlt}

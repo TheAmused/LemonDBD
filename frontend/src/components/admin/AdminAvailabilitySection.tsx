@@ -34,6 +34,7 @@ import { getErrorMessage, staticUrl } from '@/utils/api';
 import { cn } from '@/utils/cn';
 import { formatMessage } from '@/utils/i18nFormat';
 import type { ActionMessage, AdminCharacterRow, AdminPerkRow, ChallengeMode, ChallengeModeSetting } from '@/types/admin';
+import { Img } from '@/components/common/Img';
 
 const KINDS = ['characters', 'perks'] as const;
 const ROLES = ['Survivor', 'Killer'] as const;
@@ -239,7 +240,7 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
                         )}
                       >
                         {image ? (
-                          <img
+                          <Img
                             src={staticUrl(image)}
                             alt=""
                             loading="lazy"

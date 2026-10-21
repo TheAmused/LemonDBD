@@ -10,6 +10,8 @@ import { RoleTabs } from '@/components/streaks/RoleTabs';
 import { StreaksHubSkeleton } from '@/components/streaks/StreaksSkeleton';
 import { Locale } from '@/i18n/config';
 import { useAuth } from '@/context/AuthContext';
+import { useSiteConfig } from '@/context/SiteConfigContext';
+import { mustConfirmEmail } from '@/utils/emailVerification';
 import { DisplayNamesProvider } from '@/context/DisplayNamesContext';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { getBackendBaseUrl } from '@/utils/api';
@@ -23,6 +25,7 @@ export function StreaksLayoutShell({ children }: { children: React.ReactNode }) 
   const locale = useLocale();
   const pathname = usePathname();
   const { user, isAuthenticated, isLoading: authLoading } = useAuth();
+  const verificationRequired = useSiteConfig().features.emailVerificationRequired;
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [authModalIntent, setAuthModalIntent] = useState<'login' | 'verify'>('login');
 
@@ -68,7 +71,7 @@ export function StreaksLayoutShell({ children }: { children: React.ReactNode }) 
           <p className="py-10 text-center text-xs text-text-muted">
             {dict.streaks.loadingStreak}
           </p>
-        ) : isAuthenticated && user?.is_verified ? (
+        ) : isAuthenticated && user && !mustConfirmEmail(user, verificationRequired) ? (
           <DisplayNamesProvider locale={locale}>{children}</DisplayNamesProvider>
         ) : isAuthenticated ? (
           <div className="flex flex-col items-center justify-center rounded-card border border-dashed border-border-color bg-bg-surface/60 px-6 py-20 text-center">

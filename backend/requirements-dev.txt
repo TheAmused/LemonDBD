@@ -1,0 +1,5 @@
+# backend/requirements-dev.txt -- test and lint tools; never installed in the image.
+# Install after the app dependencies:
+#   pip install --require-hashes -r requirements.lock
+#   pip install -r requirements-dev.txt
+pytest==9.1.1

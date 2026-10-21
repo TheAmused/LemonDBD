@@ -365,6 +365,9 @@ def test_expired_evidence_purge_is_scheduled_and_wipes_payloads() -> None:
 
     class SchedulerConfig(TestingConfig):
         TESTING = False
+        # TESTING is off, so create_app() runs the production key checks: give it real keys.
+        SECRET_KEY = JWT_SECRET_KEY = "scheduler-test-" + "k" * 40
+        TWO_FACTOR_ENCRYPTION_KEY = ""
         SCHEDULER_ENABLED = True
         SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
 

@@ -23,6 +23,9 @@ class TestSchedulerConfig:
 
         class CustomConfig(TestingConfig):
             TESTING = False
+            # TESTING is off, so create_app() runs the production key checks: give it real keys.
+            SECRET_KEY = JWT_SECRET_KEY = "scheduler-test-" + "k" * 40
+            TWO_FACTOR_ENCRYPTION_KEY = ""
             SCHEDULER_ENABLED = True
             SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
 
@@ -35,6 +38,9 @@ class TestSchedulerConfig:
     def test_scheduler_not_initialized_when_disabled(self, mock_scheduler_cls: MagicMock) -> None:
         class DisabledConfig(TestingConfig):
             TESTING = False
+            # TESTING is off, so create_app() runs the production key checks: give it real keys.
+            SECRET_KEY = JWT_SECRET_KEY = "scheduler-test-" + "k" * 40
+            TWO_FACTOR_ENCRYPTION_KEY = ""
             SCHEDULER_ENABLED = False
             SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
 

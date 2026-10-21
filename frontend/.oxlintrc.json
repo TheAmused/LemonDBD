@@ -1,0 +1,56 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  // oxlint instead of ESLint: typescript-eslint needs the TypeScript JS compiler API, which
+  // TypeScript 7 (this project) no longer ships, so ESLint linted no .ts/.tsx file at all.
+  // Errors fail `npm run lint` and CI. Rules set to "warn" below flag existing debt that is being
+  // paid down; move a rule to "error" once its count reaches zero.
+  "plugins": ["typescript", "react", "nextjs", "jsx-a11y", "import", "unicorn", "oxc"],
+  "categories": { "correctness": "error" },
+  "env": { "browser": true, "node": true, "es2024": true },
+  "ignorePatterns": [".next/**", "node_modules/**", "public/**", "next-env.d.ts"],
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["@/features/*/*"],
+            "message": "Deep imports into feature internals are forbidden. Import from the feature barrel (@/features/<name>) instead."
+          }
+        ]
+      }
+    ],
+
+    "no-unused-vars": "warn",
+    "no-useless-escape": "warn",
+    "react/set-state-in-effect": "warn",
+    "react/refs": "warn",
+    "react/purity": "warn",
+    "react/immutability": "warn",
+    "react/preserve-manual-memoization": "warn",
+    "nextjs/no-img-element": "warn",
+    "jsx-a11y/prefer-tag-over-role": "warn",
+    "jsx-a11y/no-static-element-interactions": "warn",
+    "jsx-a11y/click-events-have-key-events": "warn",
+    "jsx-a11y/no-autofocus": "warn",
+    "jsx-a11y/role-has-required-aria-props": "warn",
+    "jsx-a11y/no-noninteractive-element-interactions": "warn",
+    "jsx-a11y/control-has-associated-label": "warn",
+    "jsx-a11y/aria-role": "warn",
+    "jsx-a11y/no-noninteractive-element-to-interactive-role": "warn",
+    "jsx-a11y/no-aria-hidden-on-focusable": "warn",
+    "jsx-a11y/media-has-caption": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["src/__tests__/**", "scripts/**"],
+      "rules": {
+        "react/globals": "off",
+        "react/no-children-prop": "off",
+        "unicorn/prefer-string-starts-ends-with": "off"
+      }
+    }
+  ]
+}

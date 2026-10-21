@@ -9,6 +9,7 @@ import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { Badge } from '@/components/common/Badge';
+import { Img } from '@/components/common/Img';
 export type CharacterHeroAvatarTranslations = Pick<CharacterDetailDictionary, 'view3DModel' | 'dlcLicensed' | 'dlcOriginal'>;
 
 interface CharacterHeroAvatarProps {
@@ -43,7 +44,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
         aria-label={heroAriaLabel}
       >
         {!imgFailed ? (
-          <img
+          <Img
             src={getAvatarUrl(backendBase, character, isSurvivor)}
             alt={character.name}
             loading="eager"

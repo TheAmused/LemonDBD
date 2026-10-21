@@ -29,6 +29,7 @@ import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
 import { Collapsible } from '@/components/common/Collapsible';
 import { TileButton } from '@/components/common/TileButton';
+import { Img } from '@/components/common/Img';
 
 interface UserBugReportsListProps {
   reports: UserBugReport[];
@@ -217,7 +218,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                               className="group relative h-16 w-16 sm:h-20 sm:w-20 rounded-control border border-border-color bg-bg-elevated overflow-hidden shadow-xs hover:border-accent-red/60 hover:shadow-md transition-all"
                               aria-label={`${t.attachments} ${i + 1}`}
                             >
-                              <img
+                              <Img
                                 src={src}
                                 alt={`${t.attachments} ${i + 1}`}
                                 draggable={false}
@@ -286,7 +287,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
           <PreviewCloseButton label={dict.modal.close} />
           <div className="relative max-h-dvh-82 w-auto max-w-full overflow-hidden rounded-card border border-border-color/80 shadow-2xl bg-bg-primary/60 flex items-center justify-center">
             {previewImage && (
-              <img
+              <Img
                 src={previewImage}
                 alt={t.attachmentPreview}
                 className="max-h-dvh-82 max-w-full w-auto h-auto object-contain rounded-card"

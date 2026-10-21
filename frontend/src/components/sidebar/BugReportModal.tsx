@@ -24,6 +24,7 @@ import { IconLabel } from '@/components/common/IconLabel';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
+import { Img } from '@/components/common/Img';
 
 export interface BugReportModalProps {
   isOpen: boolean;
@@ -312,7 +313,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
               key={idx}
               tone="elevated" padding="none" className="relative h-16 w-16 overflow-hidden shadow-sm group"
             >
-              <img
+              <Img
                 src={imgSrc}
                 alt={`${t.bugScreenshotAlt} #${idx + 1}`}
                 className="h-full w-full object-cover"

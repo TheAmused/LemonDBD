@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { ImageOff } from 'lucide-react';
 import type { Perk } from '@/types/perks';
 import { getPerkIconUrl } from '@/utils/perkUtils';
+import { Img } from '@/components/common/Img';
 
 export interface PerkIconProps {
   perk?: (Pick<Perk, 'name'> & Partial<Pick<Perk, 'icon_local_path' | 'icon_url' | 'id'>>) | null;
@@ -53,7 +54,7 @@ export const PerkIcon: React.FC<PerkIconProps> = ({
       className={`relative flex items-center justify-center ${className}`}
       style={size !== undefined ? { width: size, height: size } : undefined}
     >
-      <img
+      <Img
         src={iconSrc}
         alt={altText}
         onError={() => setFailed(true)}

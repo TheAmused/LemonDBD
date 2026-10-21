@@ -1,5 +1,6 @@
 // frontend/src/components/LemonIcon.tsx
 import React from 'react';
+import { Img } from '@/components/common/Img';
 
 interface LemonIconProps {
   className?: string;
@@ -17,7 +18,7 @@ export const LemonIcon: React.FC<LemonIconProps> = ({
   const dimension = size || 24;
 
   return (
-    <img
+    <Img
       src="/logo.webp"
       alt={alt}
       className={`select-none object-contain pointer-events-none inline-block ${className}`}

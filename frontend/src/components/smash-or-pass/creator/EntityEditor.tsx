@@ -22,6 +22,7 @@ import { tip } from '@/components/common/Tooltip';
 import { GENDER_QUICK_PICKS, ROLE_QUICK_PICKS } from '@/utils/smashOrPass/constants';
 import { Badge } from '@/components/common/Badge';
 import { ToggleChip } from '@/components/common/ToggleChip';
+import { Img } from '@/components/common/Img';
 
 export interface CandidateFormInputsProps {
   entity: DraftEntity;
@@ -101,7 +102,7 @@ export function CandidateFormInputs({
           <div className="flex flex-col items-center gap-2 shrink-0">
             <div className="relative w-48 sm:w-56 md:w-60 2xl:max-wide-2k:w-68 wide-2k:w-80 aspect-[3/4] rounded-card border-2 border-dashed border-border-color bg-bg-primary overflow-hidden flex items-center justify-center shadow-md">
               {safeMedia ? (
-                <img
+                <Img
                   src={safeMedia}
                   alt={entity.name}
                   loading="lazy"

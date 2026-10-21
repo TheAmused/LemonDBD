@@ -30,6 +30,7 @@ import { tip } from '@/components/common/Tooltip';
 import { EmptyState } from '@/components/common/EmptyState';
 import { AccordionSection } from '@/components/common/AccordionSection';
 import { TileButton } from '@/components/common/TileButton';
+import { Img } from '@/components/common/Img';
 interface SurvivorEquipmentSectionProps {
   items?: EquipmentItem[];
   addons?: (AddonItem | EquipmentItem)[];
@@ -235,7 +236,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                         style={rarityStyle.style}
                         aria-label={`${t.inspectItemPrefix} ${item.name}`}
                       >
-                        <img
+                        <Img
                           src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
                           alt={item.name}
                           className="h-full w-full object-contain"
@@ -291,7 +292,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                         style={rarityStyle.style}
                         aria-label={`${t.inspectAddonPrefix} ${displayItem.name}`}
                       >
-                        <img
+                        <Img
                           src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
                           alt={displayItem.name}
                           className="h-full w-full object-contain filter drop-shadow-md"

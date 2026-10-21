@@ -15,6 +15,7 @@ import { StageIdleColumn, StagePrompt, StageProp } from '../shared/StageIdle';
 import { playCardFlip } from '@/utils/perkAudio';
 import { useDictionary } from "@/context/DictionaryContext";
 import { TileButton } from '@/components/common/TileButton';
+import { Img } from '@/components/common/Img';
 
 export interface TarotDeckStageProps {
   role: RoleCategory;
@@ -100,7 +101,7 @@ const CardImage: React.FC<{ type: TarotType; side: TarotSide }> = ({ type, side 
   if (errored) return null;
 
   return (
-    <img
+    <Img
       src={tarotImageUrl(type, side)}
       alt=""
       aria-hidden="true"

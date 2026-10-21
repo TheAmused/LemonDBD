@@ -11,6 +11,7 @@ import { EmptyState } from '@/components/common/EmptyState';
 import { Button } from '@/components/common/Button';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Img } from '@/components/common/Img';
 
 interface CreatorItemsProps {
   items: TierListDocumentItem[];
@@ -58,7 +59,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear 
               <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-chip border border-border-color bg-bg-elevated transition-all duration-150 hover:border-accent-red/80 hover:shadow-md group-hover/item:border-accent-red/60 select-none">
                 {/* Edge-to-edge tile image or dark initials placeholder */}
                 {item.image ? (
-                  <img
+                  <Img
                     src={item.image}
                     alt={item.name}
                     loading="lazy"

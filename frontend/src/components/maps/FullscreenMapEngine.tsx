@@ -22,6 +22,7 @@ import { formatNumber } from '@/utils/format';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Surface } from '@/components/common/Surface';
+import { Img } from '@/components/common/Img';
 
 interface FullscreenMapEngineProps {
   mapId: number;
@@ -255,7 +256,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
         className="relative flex-1 min-h-0 w-full cursor-default overflow-hidden flex items-center justify-center bg-bg-primary pt-4 pb-20 px-4"
       >
         {imageSrc && !imageFailed ? (
-          <img
+          <Img
             src={imageSrc}
             alt={activeMap?.name || ''}
             draggable={false}

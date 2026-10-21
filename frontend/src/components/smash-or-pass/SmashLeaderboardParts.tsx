@@ -15,6 +15,7 @@ import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 import { formatMessage } from '@/utils/i18nFormat';
 import { Surface } from '@/components/common/Surface';
 import { TileButton } from '@/components/common/TileButton';
+import { Img } from '@/components/common/Img';
 
 export interface TierConfig {
   name: string;
@@ -149,7 +150,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
 
         {/* Avatar Portrait */}
         <Surface tone="elevated" padding="none" className="relative h-13 w-13 sm:h-14 sm:w-14 overflow-hidden shrink-0 shadow-inner group-hover:border-accent-red/50 transition-colors">
-          <img
+          <Img
             src={avatarSrc}
             alt=""
             loading="lazy"

@@ -7,6 +7,7 @@ import { type ChapterGroup, type OnboardingCharacter, resolveOnboardingAvatar } 
 import { Surface } from '@/components/common/Surface';
 import { Badge } from '@/components/common/Badge';
 import { TileButton } from "@/components/common/TileButton";
+import { Img } from '@/components/common/Img';
 
 interface ChapterCharacterPanelProps {
   group: ChapterGroup;
@@ -45,7 +46,7 @@ export function ChapterCharacterPanel({
               onClick={() => setCharacterOwned(c.id, c.category, !isOwned)}
               className="relative aspect-[3/4] w-full cursor-pointer"
             >
-              <img
+              <Img
                 src={resolveOnboardingAvatar(backendBase, c)}
                 alt=""
                 aria-hidden="true"

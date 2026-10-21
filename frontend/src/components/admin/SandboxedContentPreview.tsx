@@ -9,6 +9,7 @@ import { cn } from '@/utils/cn';
 import { formatMessage } from '@/utils/i18nFormat';
 import { backendBase } from '@/utils/staticUrl';
 import { buildEvidencePreview, isSafeLocalPreviewImage, isSafePreviewImage, parseEvidence } from '@/utils/contentPreview';
+import { Img } from '@/components/common/Img';
 
 const RAW_LIMIT = 20_000;
 
@@ -77,7 +78,7 @@ export function SandboxedContentPreview({ evidence }: { evidence: string }) {
           {showImages ? (
             <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
               {loadable.map((src, index) => (
-                <img
+                <Img
                   key={index}
                   src={src}
                   alt=""

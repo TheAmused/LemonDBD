@@ -60,6 +60,14 @@
       "rules": {
         "jsx-a11y/prefer-tag-over-role": "off"
       }
+    },
+    {
+      // Img is the one <img>: the optimizer next/image exists for can't fetch this site's pictures
+      // (see the file), so the native element is the right one here and everywhere else uses Img.
+      "files": ["src/components/common/Img.tsx"],
+      "rules": {
+        "nextjs/no-img-element": "off"
+      }
     }
   ]
 }

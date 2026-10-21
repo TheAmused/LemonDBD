@@ -13,6 +13,7 @@ import { sanitizeImageUrl } from '@/utils/smashOrPass/codec';
 import type { RomancePersonaResult } from '@/utils/smashPersona';
 import { PersonaIcon } from './PersonaIcon';
 import { Badge } from '@/components/common/Badge';
+import { Img } from '@/components/common/Img';
 
 interface PersonaBreakdownProps {
   persona: RomancePersonaResult;
@@ -116,7 +117,7 @@ export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onRe
           <Surface padding="none" className="col-span-2 sm:col-span-1 p-3.5 border-border-color/60 flex items-center gap-3 shadow-xs">
             {favoriteCharAvatar && (
               <div className="h-10 w-10 rounded-chip overflow-hidden bg-bg-primary border border-accent-red/40 shrink-0">
-                <img src={favoriteCharAvatar} alt="" className="h-full w-full object-cover" />
+                <Img src={favoriteCharAvatar} alt="" className="h-full w-full object-cover" />
               </div>
             )}
             <div className="min-w-0">

@@ -8,6 +8,7 @@ import { cn } from '@/utils/cn';
 import { getPerkIconUrl } from '@/utils/perkUtils';
 import type { MachinePhase, Reel } from './slotMachineTypes';
 import { TileButton } from "@/components/common/TileButton";
+import { Img } from '@/components/common/Img';
 
 export interface SlotReelProps {
   reel: Reel;
@@ -82,7 +83,7 @@ export function SlotReelRowMobile({
               {cell.broken ? (
                 <Ban className="text-accent-red" style={{ height: cellPx * 0.65, width: cellPx * 0.65 }} />
               ) : cell.perk ? (
-                <img
+                <Img
                   src={getPerkIconUrl(cell.perk, backendBase) || ''}
                   alt=""
                   className="object-contain drop-shadow-md"

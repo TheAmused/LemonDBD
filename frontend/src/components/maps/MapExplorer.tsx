@@ -29,6 +29,7 @@ import { trackEvent } from '@/utils/analytics';
 import { Surface } from '@/components/common/Surface';
 import { Badge } from '@/components/common/Badge';
 import { TileButton } from '@/components/common/TileButton';
+import { Img } from '@/components/common/Img';
 
 // Sentinel dropdown value for "no filter"; real attribute values never collide with it.
 // Also what "no filter" persists as in localStorage, since the filter fields
@@ -454,7 +455,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   className={`group relative aspect-square w-full min-h-12 touch-manipulation overflow-hidden rounded-control border-2 text-left duration-200 ${expanded ? 'border-accent-red' : 'border-border-color hover:border-accent-red/60'}`}
                 >
                   {bannerSrc ? (
-                    <img
+                    <Img
                       src={bannerSrc}
                       alt={realm}
                       loading="lazy"

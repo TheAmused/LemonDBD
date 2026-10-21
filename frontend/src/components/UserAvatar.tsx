@@ -7,6 +7,7 @@ import { LemonIcon } from '@/components/LemonIcon';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
+import { Img } from '@/components/common/Img';
 interface UserAvatarProps {
   user?: {
     username?: string;
@@ -123,9 +124,9 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
         className={`relative flex items-center justify-center overflow-hidden ${containerClasses} ${defaultBorder}`}
       >
         {isCustomAvatar ? (
-          <img
+          <Img
             src={finalSrc}
-            alt={alt || user?.username}
+            alt={alt || user?.username || ''}
             onError={() => {
               logger.warn('Avatar image failed to load from:', finalSrc);
               setImgError(true);

@@ -6,6 +6,7 @@ import { Modal } from '@/components/common/Modal';
 import { PerkDescription } from '@/components/PerkDescription';
 import type { TierItem } from '@/types/tierList';
 import { Surface } from '@/components/common/Surface';
+import { Img } from '@/components/common/Img';
 
 interface TierItemPreviewModalProps {
   /** The tile that was double-clicked/double-tapped, or null to stay closed. */
@@ -48,7 +49,7 @@ export function TierItemPreviewModal({ item, onClose }: TierItemPreviewModalProp
           // modal or viewport, while `w-auto h-auto` let it shrink no
           // further than the image and its container actually need.
           <div className="flex w-full items-center justify-center">
-            <img
+            <Img
               src={(item.fullImage ?? item.image) as string}
               alt={item.name}
               className="h-auto max-h-vh-65 w-auto max-w-full rounded-card border border-border-color bg-bg-elevated object-contain"

@@ -27,6 +27,7 @@ import { ToggleChip } from '@/components/common/ToggleChip';
 import { Badge } from '@/components/common/Badge';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Surface } from '@/components/common/Surface';
+import { Img } from '@/components/common/Img';
 
 const ICON_PRESETS: Array<{ name: string; icon: React.ComponentType<{ className?: string }> }> = [
   { name: 'sparkles', icon: Sparkles },
@@ -162,7 +163,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                   <div className="pointer-events-none flex items-center gap-3 min-w-0">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-card bg-bg-primary border border-border-color overflow-hidden">
                       {arch.icon_url ? (
-                        <img src={arch.icon_url} alt="" className="h-full w-full object-cover" />
+                        <Img src={arch.icon_url} alt="" className="h-full w-full object-cover" />
                       ) : (
                         <Heart className="h-4 w-4 text-accent-red" />
                       )}

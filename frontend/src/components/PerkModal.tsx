@@ -14,6 +14,7 @@ import { tip } from '@/components/common/Tooltip';
 import { Modal } from '@/components/common/Modal';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Img } from '@/components/common/Img';
 
 /** Perk icon and owner avatar share this size. */
 const SLOT_SIZE = 'h-14 w-14 phone-lg:h-20 phone-lg:w-20 md:h-24 md:w-24';
@@ -78,7 +79,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose }) => {
         )}
       >
         {!isGeneral && avatarSrc && !avatarError ? (
-          <img
+          <Img
             src={avatarSrc}
             alt={perk.character}
             onError={() => setAvatarError(true)}

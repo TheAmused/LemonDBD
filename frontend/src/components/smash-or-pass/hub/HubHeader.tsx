@@ -25,6 +25,7 @@ import { rosterCoverUrl } from '../roster-select/rosterDisplay';
 import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
 import { MenuItem } from '@/components/common/MenuItem';
+import { Img } from '@/components/common/Img';
 
 /** Square icon buttons: 44px to touch, a little smaller where a pointer is precise. */
 const DOCK_BUTTON =
@@ -135,7 +136,7 @@ export function HubHeader({
             variant="soft" size="md" className="min-w-0 max-w-full gap-2.5"
           >
             <span className="relative flex h-6 w-6 items-center justify-center rounded-chip overflow-hidden border border-accent-red/60 shrink-0">
-              <img
+              <Img
                 src={rosterCoverUrl(activeRoster)}
                 alt=""
                 onError={(e) => {

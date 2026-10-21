@@ -8,6 +8,7 @@ import { DisabledBadge } from '@/components/DisabledBadge';
 import { DisabledReasonModal } from '@/components/DisabledReasonModal';
 import { tip } from '@/components/common/Tooltip';
 import { TileButton } from '@/components/common/TileButton';
+import { Img } from '@/components/common/Img';
 
 interface CharacterPerksSectionProps {
   perks: PerkItem[];
@@ -54,7 +55,7 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
               className="flex w-full max-w-40 flex-col items-center gap-2 rounded-control p-1 transition-all duration-300"
               aria-label={`${perk.name} - ${t.clickToInspect}`}
             >
-              <img
+              <Img
                 src={iconSrc}
                 alt=""
                 className={`aspect-square w-full object-contain ${

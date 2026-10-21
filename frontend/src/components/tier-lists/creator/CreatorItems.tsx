@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { Pencil, Trash2, X } from 'lucide-react';
 import type { TierListDocumentItem } from '@/types/tierList';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
-import { TOUCH_BTN } from '../styles';
+
 import { TierItemEditModal } from './TierItemEditModal';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Button } from '@/components/common/Button';

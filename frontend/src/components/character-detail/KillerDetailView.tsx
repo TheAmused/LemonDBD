@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/character-detail/KillerDetailView.tsx
 
-import React, { useState, Suspense } from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { BookOpen, Flame, Bookmark, Calendar, ShieldCheck } from 'lucide-react';
 import {
@@ -20,7 +20,7 @@ import { KillerCombatStats } from './components/KillerCombatStats';
 import { CharacterPerksSection } from './components/CharacterPerksSection';
 import { KillerEquipmentSection } from './components/KillerEquipmentSection';
 import { OfferingsSection } from './components/OfferingsSection';
-import { Perk, PerkDictionary } from '@/types/perks';
+import { Perk } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 import { tip } from '@/components/common/Tooltip';

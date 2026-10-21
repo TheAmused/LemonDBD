@@ -9,7 +9,7 @@ import { getPerkIconUrl } from '@/utils/perkUtils';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useJackpotCelebration } from '../../shared/useJackpotCelebration';
 import { drawWheel } from './wheelDrawing';
-import { pickTargetSlot } from './wheelSpin';
+
 import { useEmberDrift } from './useEmberDrift';
 import { pickRandomLoadout } from '../../lib/perkPicker';
 

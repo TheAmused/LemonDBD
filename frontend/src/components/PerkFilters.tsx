@@ -18,7 +18,6 @@ import {
   SortField,
   SortOrder,
   PerkSuggestion,
-  PerkDictionary,
 } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
@@ -86,7 +85,6 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       setSortBy,
       order,
       setOrder,
-      onReset,
       locale,
       survivorCount,
       killerCount,

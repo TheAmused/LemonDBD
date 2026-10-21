@@ -12,7 +12,6 @@ import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
-import { defaultRosterThemeColor } from '@/utils/smashOrPass/constants';
 import { paletteColor } from '@/utils/themeColor';
 
 interface CoverImageCropModalProps {
@@ -24,7 +23,7 @@ interface CoverImageCropModalProps {
   isAdmin?: boolean;
 }
 
-export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen, onClose, imageUrl, onApplyCrop, themeColor = defaultRosterThemeColor(), isAdmin = false }) => {
+export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen, onClose, imageUrl, onApplyCrop, isAdmin = false }) => {
   const dict = useDictionary();
   const cm = dict.smashOrPass.cropModal || {
     title: 'Crop & Frame Cover Image',

@@ -1,6 +1,6 @@
 // frontend/src/components/character-detail/components/KillerCombatStats.tsx
 import React from 'react';
-import { Activity, Gauge, Radio, ArrowUpDown, Eye } from 'lucide-react';
+import { Activity, Gauge, Radio, ArrowUpDown } from 'lucide-react';
 import type { CharacterDetailDictionary } from '../types';
 import { Surface } from '@/components/common/Surface';
 
@@ -29,7 +29,6 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
   killerSpeed,
   killerTerrorRadius,
   killerHeight,
-  onOpenTerrorRadiusModal,
   t,
 }) => {
   return (

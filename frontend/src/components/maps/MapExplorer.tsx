@@ -5,7 +5,7 @@ import { SearchInput } from '@/components/common/Field';
 import { Button } from '@/components/common/Button';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Search, ImageOff, Compass, Maximize2, ArrowDownAZ, X } from 'lucide-react';
+import { ImageOff, Compass, Maximize2, ArrowDownAZ, X } from 'lucide-react';
 import type { MapRealm } from '@/types/map';
 import { useMapExplorerData } from '@/hooks/useMapExplorerData';
 import { useResponsiveGridColumns } from '@/hooks/useResponsiveGridColumns';
@@ -205,6 +205,19 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   const [renderedRealms, setRenderedRealms] = useState<Set<string>>(new Set());
   const [openRealms, setOpenRealms] = useState<Set<string>>(new Set());
   const exitTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
+  const enterFrames = useRef<Set<number>>(new Set());
+
+  // Unmounting mid-transition must not leave a timer or frame that sets state afterwards.
+  useEffect(() => {
+    const timers = exitTimers.current;
+    const frames = enterFrames.current;
+    return () => {
+      timers.forEach((timer) => clearTimeout(timer));
+      timers.clear();
+      frames.forEach((frame) => cancelAnimationFrame(frame));
+      frames.clear();
+    };
+  }, []);
 
   useEffect(() => {
     const toEnter = [...activeRealms].filter((r) => !renderedRealms.has(r));
@@ -226,8 +239,10 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
         return next;
       });
       // Double rAF: guarantees the closed state actually paints before flipping open, or the transition can silently skip.
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
+      const outer = requestAnimationFrame(() => {
+        enterFrames.current.delete(outer);
+        const inner = requestAnimationFrame(() => {
+          enterFrames.current.delete(inner);
           setOpenRealms((prev) => {
             const next = new Set(prev);
             // Re-check against the latest activeRealms: if the user toggled this
@@ -238,7 +253,9 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
             return next;
           });
         });
+        enterFrames.current.add(inner);
       });
+      enterFrames.current.add(outer);
     }
 
     if (toExit.length > 0) {

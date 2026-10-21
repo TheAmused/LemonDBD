@@ -79,6 +79,7 @@ describe('usePersistentDrawer Hook', () => {
 
     renderWithDictionary(React.createElement(TestClientComp));
     assert.equal(accountExpanded, false); // initial SSR render is false
+    assert.equal(loadoutsExpanded, true); // and the default, not the stored "false", for loadouts
   });
 
   it('handles corrupted or restricted localStorage gracefully', () => {

@@ -77,7 +77,6 @@ export async function solveAltchaPoW(
 }
 
 export function useAltcha(autoSolve: boolean = true) {
-  const [challenge, setChallenge] = useState<AltchaChallenge | null>(null);
   const [altchaPayload, setAltchaPayload] = useState<AltchaPayload | null>(null);
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [isVerified, setIsVerified] = useState<boolean>(false);
@@ -96,7 +95,6 @@ export function useAltcha(autoSolve: boolean = true) {
       if (signal?.aborted) return null;
       const data: AltchaChallenge = await res.json();
       if (signal?.aborted) return null;
-      setChallenge(data);
       return data;
     } catch (err) {
       if (signal?.aborted || isAbortError(err)) {
@@ -141,7 +139,6 @@ export function useAltcha(autoSolve: boolean = true) {
 
     setIsVerified(false);
     setAltchaPayload(null);
-    setChallenge(null);
     setError(null);
 
     const ch = await fetchChallenge(controller.signal);
@@ -161,7 +158,6 @@ export function useAltcha(autoSolve: boolean = true) {
       setIsVerifying(false);
       setIsVerified(false);
       setAltchaPayload(null);
-      setChallenge(null);
     }
 
     return () => {

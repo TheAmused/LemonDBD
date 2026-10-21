@@ -6,8 +6,6 @@ import {
   Heart,
   Flame,
   Quote,
-  CheckCircle2,
-  AlertTriangle,
   ThumbsDown,
 } from 'lucide-react';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -135,8 +133,6 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
   const globalRankLabel = rawSmashDict.statsDetail.rank;
   const loreQuoteLabel = rawSmashDict.loreLabels.signatureQuote;
   const loreProfileLabel = rawSmashDict.loreLabels.bio;
-  const greenFlagsLabel = rawSmashDict.loreLabels.greenFlag;
-  const redFlagsLabel = rawSmashDict.loreLabels.redFlag;
   const turnOnLabel = rawSmashDict.loreLabels.turn_on;
   const dealbreakerLabel = rawSmashDict.loreLabels.dealbreaker;
   const percentSign = rawSmashDict.percentSign;

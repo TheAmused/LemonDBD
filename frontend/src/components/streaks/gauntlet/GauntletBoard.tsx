@@ -1,6 +1,6 @@
 'use client';
 // frontend/src/components/streaks/gauntlet/GauntletBoard.tsx
-import { Button } from '@/components/common/Button';
+
 import type { Dictionary } from '@/locales/types';
 import React, { useState, useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
@@ -65,7 +65,6 @@ interface GauntletBoardProps {
 }
 
 export const GauntletBoard: React.FC<GauntletBoardProps> = ({
-  locale,
   role,
   gameMode = DEFAULT_GAUNTLET_GAME_MODE,
 }) => {

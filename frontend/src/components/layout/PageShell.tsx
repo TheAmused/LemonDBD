@@ -2,7 +2,6 @@
 // frontend/src/components/layout/PageShell.tsx
 import type { ReactNode } from 'react';
 import { Sidebar } from '@/components/Sidebar';
-import { useDictionary } from "@/context/DictionaryContext";
 
 /**
  * The 4 padding scales actually in use across pages: tight (dense grids like
@@ -63,7 +62,6 @@ export function PageShell({
       outerClassName,
       children,
     }: PageShellProps) {
-  const dict = useDictionary();
   // The flush margin variant (`lemon-shell-main--flush`) is keyed off
   // `padding`, not `customPadding` -- `customPadding` overrides only the
   // spacing classes (see mainClasses below), so a page can still combine

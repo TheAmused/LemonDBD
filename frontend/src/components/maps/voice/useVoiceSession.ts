@@ -174,7 +174,7 @@ export function useVoiceSession({
     if (result.action === 'switch_source' && result.actionPayload) {
       setVoiceStatus('matched');
       if (isSoundOn) playMatchSuccessSound();
-      triggerSourceChange(result.actionPayload as MapSource);
+      triggerSourceChange?.(result.actionPayload as MapSource);
       if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
       resetTimerRef.current = setTimeout(() => {
         setVoiceStatus('idle');

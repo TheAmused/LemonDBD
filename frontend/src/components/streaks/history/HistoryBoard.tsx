@@ -1,6 +1,6 @@
 'use client';
 // frontend/src/components/streaks/history/HistoryBoard.tsx
-import { Button } from '@/components/common/Button';
+
 
 import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';

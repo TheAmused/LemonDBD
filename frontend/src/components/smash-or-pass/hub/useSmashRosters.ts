@@ -31,7 +31,7 @@ const canonPlaceholder = (): RosterItem => ({
  * NSFW acknowledgment. The picker and `activeRoster` never distinguish the two kinds beyond
  * `is_local` -- see utils/smashOrPass/localRoster.ts.
  */
-export function useSmashRosters(locale: string) {
+export function useSmashRosters(_locale: string) {
   const { state: customRosterStore } = useSmashRosterStore();
 
   const [rosters, setRosters] = useState<RosterItem[]>([]);

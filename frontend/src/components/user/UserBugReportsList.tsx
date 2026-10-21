@@ -265,7 +265,6 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
             totalResults={totalCount}
             limit={perPage}
             onPageChange={onPageChange}
-            onLimitChange={() => {}}
           />
         </div>
       )}

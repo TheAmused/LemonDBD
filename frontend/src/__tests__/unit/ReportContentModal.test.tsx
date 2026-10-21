@@ -1,5 +1,5 @@
 // frontend/src/__tests__/unit/ReportContentModal.test.tsx
-import { afterEach, beforeEach, describe, it } from 'node:test';
+import { afterEach, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
 import fs from 'node:fs';
@@ -8,11 +8,9 @@ import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import type { ContentManifest } from '@/utils/contentSigning';
 import en from '@/locales/en';
 import {
-  ReportContentModal,
   ReportContentModalBody,
   REPORT_REASONS,
   submitContentReport,
-  type ReportReason,
 } from '@/components/common/ReportContentModal';
 
 const MOCK_MANIFEST: ContentManifest = {

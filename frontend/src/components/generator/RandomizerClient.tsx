@@ -7,7 +7,6 @@ import { PageShell } from '@/components/layout/PageShell';
 import { PageShellFallback } from '@/components/layout/PageShellFallback';
 import { GeneratorPage } from '@/components/generator/GeneratorPage';
 import { RandomizerPageSkeleton } from '@/components/generator/RandomizerSkeleton';
-import { useAuth } from '@/context/AuthContext';
 import { Perk, CharacterItem } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
@@ -19,7 +18,6 @@ const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.P
 
 function RandomizerContent() {
   const locale = useLocale();
-  const { user } = useAuth();
   const backendBase = getBackendBaseUrl();
 
   const dict = useDictionary();

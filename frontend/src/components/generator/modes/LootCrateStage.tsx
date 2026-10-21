@@ -7,7 +7,7 @@ import { Lock } from 'lucide-react';
 import { DbdButton } from '@/components/common/Button';
 import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
-import { Dictionary } from '@/locales/types';
+
 import { pickRandomLoadout, buildDrawnSlots } from '../lib/perkPicker';
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
@@ -109,7 +109,6 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
       onRevealSlot,
       onSelectPerk,
       isBlind = false,
-      backendBase,
     }) => {
   const dict = useDictionary();
   const [phase, setPhase] = useState<CratePhase>('closed');

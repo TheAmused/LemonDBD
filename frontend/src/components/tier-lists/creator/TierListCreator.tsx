@@ -11,7 +11,7 @@ import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useTierListStore } from '@/hooks/useTierListStore';
 import { useTierListTemplate } from '@/hooks/useTierListTemplates';
 import { createOfficialTierList, updateOfficialTierList } from '@/services/tierListApi';
-import { apiUrl, authFetch, staticUrl } from '@/utils/api';
+import { staticUrl } from '@/utils/api';
 import { cn } from '@/utils/cn';
 import { resolveTiers } from '@/utils/tierLists/board';
 import { normalizePlacements, sanitizeImageUrl } from '@/utils/tierLists/codec';

@@ -13,7 +13,7 @@ import {
   Users,
 } from 'lucide-react';
 import type { LeaderboardItem } from '@/types/smashOrPass';
-import { localizedProfile } from '@/utils/entityProfile';
+
 import { Modal } from '@/components/common/Modal';
 import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
 import { Tooltip } from '@/components/common/Tooltip';
@@ -50,7 +50,6 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       userSmashes = [],
       onSelectCharacter,
       editionName = '',
-      isAuthenticated = false,
       locale = 'en',
     }) => {
   const dict = useDictionary();

@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { ArrowUp, ArrowDown, Check, X } from 'lucide-react';
+import { ArrowUp, ArrowDown, Check } from 'lucide-react';
 import type { AttributeEvaluation, GuessRecord, NumericAttributeResult } from '@/types/minigame';
 import { staticUrl } from '@/utils/api';
 import { useDictionary } from "@/context/DictionaryContext";

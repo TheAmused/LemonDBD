@@ -1,7 +1,7 @@
 // frontend/src/components/generator/GeneratorPage.tsx
 'use client';
 
-import React, { useState, useEffect, useMemo, useCallback, useRef, Suspense } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { AlertTriangle, RotateCcw } from 'lucide-react';
 import {
@@ -10,7 +10,7 @@ import {
   RoleCategory,
   GeneratorMode,
 } from '@/types/perks';
-import { Dictionary } from '@/locales/types';
+
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAudioEnabled, setAudioEnabled } from '@/utils/perkAudio';

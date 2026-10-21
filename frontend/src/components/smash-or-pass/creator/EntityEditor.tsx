@@ -370,7 +370,6 @@ export function CandidateFormInputs({
 }
 
 /** Backward compatibility alias */
-const EntityEditor = CandidateFormInputs;
 
 export { emptyDraftEntity, CandidateTiles } from "./EntityEditorParts";
 export type { DraftEntity, EntityTranslationDraft, CandidateTilesProps } from "./EntityEditorParts";

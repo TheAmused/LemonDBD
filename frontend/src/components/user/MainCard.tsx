@@ -38,8 +38,6 @@ const LOADOUT_SIZE = `calc(var(--perk-size) * ${1 + 2 * SLOT_OFFSET})`;
 export const MainCard: React.FC<MainCardProps> = ({
       role,
       loadout,
-      onCharacterChange,
-      onPrestigeChange,
       onPerkChange,
       onOpenCharacterModal,
       onOpenPerkModal,

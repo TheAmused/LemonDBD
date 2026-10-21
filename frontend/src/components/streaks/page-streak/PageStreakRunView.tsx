@@ -1,6 +1,6 @@
 'use client';
 // frontend/src/components/streaks/page-streak/PageStreakRunView.tsx
-import { Button } from '@/components/common/Button';
+
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { usePageStreakRun } from './usePageStreakRun';
 import { RunHeader } from './RunHeader';

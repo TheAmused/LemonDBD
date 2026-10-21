@@ -56,7 +56,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
   const dict = useDictionary();
   const t = dict.smashOrPass;
   const c = t.creator;
-  const { isAdmin, token, user, isAuthenticated, isLoading: authLoading } = useAuth();
+  const { isAdmin, user, isAuthenticated, isLoading: authLoading } = useAuth();
   const isUserAdmin = Boolean(isAdmin || user?.role === 'admin');
   const { state: storeState, hydrated: storeHydrated } = useSmashRosterStore();
   const { roles: taxonomyRoles, genders: taxonomyGenders, registerTerm } = useSmashTaxonomies();

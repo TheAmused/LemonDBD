@@ -117,7 +117,6 @@ export function playMatchSuccessSound() {
 
 const HOLD_KEY_HINT_FALLBACK = 'Hold {key} to talk, or tap the mic and say a map name';
 
-const TAP_HINT_FALLBACK = 'Tap the mic and say a map name';
 
 /** Splits a "...{key}..." hint string around the `{key}` placeholder and
  * renders the key as a styled <kbd> chip inline, so it reads as part of

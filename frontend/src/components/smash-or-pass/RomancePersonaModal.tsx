@@ -43,7 +43,6 @@ interface RomancePersonaModalProps {
 
 export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen, onClose, votes, sharedPayload, onResetAll, locale = 'en', customArchetypes }) => {
   const dict = useDictionary();
-  const [copied, setCopied] = useState<boolean>(false);
   const [isSharingView, setIsSharingView] = useState<boolean>(false);
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
   const [feedbackNotice, setFeedbackNotice] = useState<string | null>(null);
@@ -221,7 +220,6 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
           <PersonaBreakdown
             persona={persona}
             isSharedView={isSharedView}
-            copied={copied}
             onShare={handleShare}
             onClose={onClose}
             onResetAll={onResetAll}

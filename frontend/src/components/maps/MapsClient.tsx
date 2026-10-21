@@ -73,7 +73,6 @@ function MapsClientInner() {
 
   const router = useRouter();
 
-  const handleSourceChange = useCallback(() => {}, []);
   const handleSelectMap = useCallback((name: string, mapId?: number) => {
     setSelectedMap({ mapName: name, mapId, timestamp: Date.now(), via: 'voice' });
   }, []);
@@ -100,7 +99,6 @@ function MapsClientInner() {
       <VoiceCommandBanner
         locale={locale}
         currentSource="hens333"
-        onSourceChange={handleSourceChange}
         onSelectMap={handleSelectMap}
         onAction={handleAction}
         availableMaps={availableMaps}
@@ -109,7 +107,7 @@ function MapsClientInner() {
         embedded={true}
       />
     ),
-    [locale, handleSourceChange, handleSelectMap, handleAction, availableMaps, searchMode, toggleSwitchElement]
+    [locale, handleSelectMap, handleAction, availableMaps, searchMode, toggleSwitchElement]
   );
 
   const handleSelectCategory = useCallback(() => {

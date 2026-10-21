@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { LemonIcon } from '@/components/LemonIcon';
-import type { Dictionary } from '@/locales/types';
+
 import { resolveDictionaryPath, type DictionaryPath } from '@/utils/dictionaryPath';
 import { useDictionary } from "@/context/DictionaryContext";
 

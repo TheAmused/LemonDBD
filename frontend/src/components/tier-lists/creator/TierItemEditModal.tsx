@@ -2,13 +2,13 @@
 // frontend/src/components/tier-lists/creator/TierItemEditModal.tsx
 
 import React, { useEffect, useState } from 'react';
-import { Check, Image as ImageIcon, ImageOff } from 'lucide-react';
+import { Check, ImageOff } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import type { TierListDocumentItem } from '@/types/tierList';
 import { cn } from '@/utils/cn';
 import { sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
-import { TierItemTile } from '../TierItemTile';
+
 import { LABEL, TOUCH_BTN, TOUCH_FIELD } from '../styles';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';

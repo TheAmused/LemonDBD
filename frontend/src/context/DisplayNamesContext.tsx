@@ -3,6 +3,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { backendBase } from '@/utils/staticUrl';
+import { logger } from '@/utils/logger';
 
 interface NamedRecord {
   description?: string;
@@ -98,19 +99,27 @@ export const DisplayNamesProvider: React.FC<{ locale: string; children: React.Re
 
     let cancelled = false;
 
-    buildDisplayMap(
-      `${backendBase}/api/v1/characters?category=all&lang=en`,
-      `${backendBase}/api/v1/characters?category=all&lang=${locale}`
-    ).then((map) => {
-      if (!cancelled) setCharacterMap(map);
-    });
+    // A failed or malformed response leaves the English names in place (EMPTY_MAPS) instead of
+    // becoming an unhandled rejection.
+    const load = async (canonicalUrl: string, translatedUrl: string, apply: (map: DisplayMaps) => void) => {
+      try {
+        const map = await buildDisplayMap(canonicalUrl, translatedUrl);
+        if (!cancelled) apply(map);
+      } catch (err) {
+        logger.warn('Could not load localized display names', err);
+      }
+    };
 
-    buildDisplayMap(
+    void load(
+      `${backendBase}/api/v1/characters?category=all&lang=en`,
+      `${backendBase}/api/v1/characters?category=all&lang=${locale}`,
+      setCharacterMap
+    );
+    void load(
       `${backendBase}/api/v1/perks?limit=1000&lang=en`,
-      `${backendBase}/api/v1/perks?limit=1000&lang=${locale}`
-    ).then((map) => {
-      if (!cancelled) setPerkMap(map);
-    });
+      `${backendBase}/api/v1/perks?limit=1000&lang=${locale}`,
+      setPerkMap
+    );
 
     return () => {
       cancelled = true;

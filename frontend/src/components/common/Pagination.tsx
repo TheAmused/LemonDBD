@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
-import { PerkDictionary } from '@/types/perks';
+
 import { useDictionary } from "@/context/DictionaryContext";
 import { cn } from '@/utils/cn';
 import { Input, Select } from '@/components/common/Field';

@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { motion, type TargetAndTransition, type Transition } from 'framer-motion';
+import { type TargetAndTransition, type Transition } from 'framer-motion';
 
 /* ------------------------------------------------------------------ *
  * Config - the single place modal looks and numbers live.

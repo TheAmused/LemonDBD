@@ -481,6 +481,19 @@ def _check_combination(cleaned: dict[str, str | int | bool | None]) -> None:
         raise ValueError("Write the banner text (English) before switching the banner on.")
 
 
+def _redate_existing_records(cleaned: dict[str, Any]) -> None:
+    """A new warning lifetime or ban-list retention applies to the records already stored too."""
+    from app.services import retention
+
+    now = datetime.now(timezone.utc)
+    for key, redate in (("warning_lifetime_days", retention.redate_warnings), ("ban_list_retention_days", retention.redate_ban_list)):
+        if key in cleaned:
+            days = int(default_value(key) if cleaned[key] is None else cleaned[key])
+            changed = redate(days, now)
+            if changed:
+                logger.info("%s set to %s days: %s existing record(s) re-dated", key, days, changed)
+
+
 def update_settings(
     changes: dict[str, Any], *, confirm_risky: bool = False, reason: str = ""
 ) -> dict[str, Any]:
@@ -532,6 +545,8 @@ def update_settings(
                     row.value = text
                 else:
                     db.session.add(SiteSetting(key=key, value=text))
+            # In the same transaction: a new period reaches existing records, or nothing changes.
+            _redate_existing_records(cleaned)
     finally:
         invalidate_cache()
 

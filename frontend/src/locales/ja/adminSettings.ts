@@ -104,7 +104,7 @@ export default {
   config_rate_auth_per_minute: "ログインと新規登録",
   config_rate_auth_per_minute_desc: "1 つのアドレスからの 1 分あたりのリクエスト数（ログイン、新規登録、Google ログイン）。攻撃を受けたときは下げてください。",
   config_rate_recovery_per_minute: "パスワードのリセット",
-  config_rate_recovery_per_minute_desc: "1 つのアドレスからの 1 分あたりのリクエスト数（リセットリンクの請求と使用）。攻撃を受けたときは下げてください。",
+  config_rate_recovery_per_minute_desc: "1 つのアドレスからの 1 分あたりのリクエスト数（リセットリンクの請求と使用、メール確認コードの入力と再送）。攻撃を受けたときは下げてください。",
   config_rate_two_factor_per_minute: "2 段階認証",
   config_rate_two_factor_per_minute_desc: "1 つのアドレスからの 1 分あたりのリクエスト数（2 段階認証のエンドポイント）。攻撃を受けたときは下げてください。",
   config_rate_bug_report_per_minute: "バグ報告",

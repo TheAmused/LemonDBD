@@ -1,6 +1,7 @@
 # frontend/Dockerfile
 # Stage 1: Base Alpine Setup
-FROM node:alpine AS base
+# Node LTS on a fixed Alpine release: `node:alpine` followed whatever "current" Node was.
+FROM node:24-alpine3.24 AS base
 ENV NPM_CONFIG_UPDATE_NOTIFIER=false
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
@@ -9,8 +10,10 @@ WORKDIR /app
 FROM base AS deps
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
-RUN npm ci --include=dev || npm install --include=dev
+# The lockfile is required and must match package.json: `npm install` as a fallback would
+# silently resolve new versions instead of failing the build.
+COPY package.json package-lock.json ./
+RUN npm ci --include=dev
 
 # Stage 3: Next.js Production Build
 FROM base AS builder

@@ -7,11 +7,14 @@ services:
     command: postgres -c max_connections=200
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      # No default: a well-known database password is one typo away from a public database.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env.dev / .env.prod}
       POSTGRES_DB: ${POSTGRES_DB:-dbd_db}
       PGDATA: /var/lib/postgresql/18/docker
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      # Loopback only (live tests and local tools still reach it on localhost). Set
+      # POSTGRES_BIND=0.0.0.0 only on a machine whose firewall you control.
+      - "${POSTGRES_BIND:-127.0.0.1}:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
       - ./docker/postgres-init:/docker-entrypoint-initdb.d:ro
@@ -80,10 +83,10 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: dbd_backend
+    # Reached only through nginx (rate limits, bot filter, body limits). The dev overlay
+    # publishes it on loopback for debugging; production never publishes it.
     expose:
       - "5000"
-    ports:
-      - "${BACKEND_PORT:-5000}:5000"
     volumes:
       - backend_data:/app/data
       - ./backend/app/static:/app/app/static
@@ -100,7 +103,7 @@ services:
       # Ban-evasion e-mail list (off by default; see .env.example before enabling).
       - BAN_LIST_ENABLED=${BAN_LIST_ENABLED:-false}
       - BAN_LIST_PEPPERS=${BAN_LIST_PEPPERS:-}
-      - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/dbd_db}
+      - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-dbd_db}}
       - DB_POOL_SIZE=${DB_POOL_SIZE:-10}
       - DB_MAX_OVERFLOW=${DB_MAX_OVERFLOW:-5}
       # Unset this and the app still boots: the catalog cache falls back to a
@@ -152,7 +155,7 @@ services:
       - ./data/updates:/app/updates
     environment:
       - FLASK_ENV=${FLASK_ENV:-production}
-      - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/dbd_db}
+      - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-dbd_db}}
       - DB_POOL_SIZE=2
       - DB_MAX_OVERFLOW=1
       # The catalog-cache maintenance job bumps the shared generation from here.
@@ -179,9 +182,9 @@ services:
     container_name: dbd_umami
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/umami
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@db:5432/umami
       DATABASE_TYPE: postgresql
-      APP_SECRET: ${UMAMI_APP_SECRET:-change-this-to-a-random-secret-in-production}
+      APP_SECRET: ${UMAMI_APP_SECRET:?set UMAMI_APP_SECRET to a long random value}
     healthcheck:
       test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3000/api/heartbeat').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
       interval: 4s
@@ -202,7 +205,7 @@ services:
     restart: unless-stopped
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@lemondbd.com}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:?set PGADMIN_DEFAULT_PASSWORD}
       # Server mode: pgAdmin asks for PGADMIN_DEFAULT_EMAIL / PGADMIN_DEFAULT_PASSWORD. Desktop mode
       # ('False') has no login at all, which is a database console for anyone who reaches the port.
       PGADMIN_CONFIG_SERVER_MODE: 'True'
@@ -243,7 +246,9 @@ services:
       - NEXT_PUBLIC_PGADMIN_URL=${NEXT_PUBLIC_PGADMIN_URL:-https://localhost:5050}
       - UMAMI_INTERNAL_URL=http://umami:3000
       - UMAMI_ADMIN_USERNAME=${UMAMI_ADMIN_USERNAME:-admin}
-      - UMAMI_ADMIN_PASSWORD=${UMAMI_ADMIN_PASSWORD:-umami}
+      # Must match the Umami admin password: change Umami's built-in admin/umami login in its
+      # dashboard first, then put the new password here.
+      - UMAMI_ADMIN_PASSWORD=${UMAMI_ADMIN_PASSWORD:?set UMAMI_ADMIN_PASSWORD (and change it in Umami)}
       - UMAMI_SITE_NAME=${UMAMI_SITE_NAME:-LemonDBD}
       - UMAMI_SITE_DOMAIN=${UMAMI_SITE_DOMAIN:-localhost}
     depends_on:

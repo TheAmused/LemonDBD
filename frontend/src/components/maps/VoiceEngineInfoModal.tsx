@@ -85,7 +85,6 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
       {/* Native Web Speech Framework */}
       <SelectableCard
-        role="radio"
         selected={currentEngine === 'web-speech'}
         disabled={!hasNativeWebSpeech}
         onClick={() => onSelectEngine('web-speech')}
@@ -115,7 +114,6 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
 
       {/* Client-Side Fallback Model */}
       <SelectableCard
-        role="radio"
         selected={currentEngine === 'client-model'}
         onClick={() => onSelectEngine('client-model')}
         className="space-y-2.5 p-4"
@@ -147,11 +145,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
     <Surface tone="elevated" padding="none" className="p-4 space-y-3">
       <IconLabel icon={Gauge} variant="heading">{t.accuracyTitle || ''}</IconLabel>
 
-      <div
-        className="grid grid-cols-1 sm:grid-cols-2 gap-2.5"
-        role="radiogroup"
-        aria-label={t.accuracyTitle || ''}
-      >
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
         {(['fast', 'accurate'] as const).map((quality) => {
           const isSelected = modelQuality === quality;
           const label = quality === 'fast' ? t.accuracyFast : t.accuracyAccurate;
@@ -161,7 +155,6 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
           return (
             <SelectableCard
               key={quality}
-              role="radio"
               selected={isSelected}
               disabled={!onSelectModelQuality}
               onClick={() => onSelectModelQuality?.(quality)}

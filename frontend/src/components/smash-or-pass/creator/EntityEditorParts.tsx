@@ -117,16 +117,24 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
               <li key={entity.key} className="group/item relative flex flex-col items-center">
                 {/* Crisp Square Tile Container */}
                 <div
-                  onClick={() => onSelect(entity.key)}
                   className={cn(
-                    'relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-chip border transition-all duration-150 cursor-pointer select-none',
+                    'relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-chip border transition-all duration-150 select-none',
                     isSelected
                       ? 'border-accent-red ring-2 ring-accent-red/80 bg-bg-surface shadow-md'
                       : 'border-border-color bg-bg-elevated hover:border-accent-red/60 hover:shadow-xs'
                   )}
                 >
+                  {/* The whole tile selects the candidate; the delete button sits above it. */}
+                  <button
+                    type="button"
+                    onClick={() => onSelect(entity.key)}
+                    aria-pressed={isSelected}
+                    aria-label={entity.name || `#${displayIndex}`}
+                    className="absolute inset-0 z-5 cursor-pointer rounded-chip focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red"
+                  />
+
                   {/* Number badge on top-left of tile */}
-                  <Badge tone="overlay" size="xs" className="absolute top-1 left-1 z-10">
+                  <Badge tone="overlay" size="xs" className="pointer-events-none absolute top-1 left-1 z-10">
                     #{displayIndex}
                   </Badge>
 
@@ -158,10 +166,7 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
                   {/* Top-right delete button */}
                   <Button
                     type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onRemove(entity.key);
-                    }}
+                    onClick={() => onRemove(entity.key)}
                     aria-label={formatMessage(c.removeCandidateAria, { name: entity.name || displayIndex })}
                     variant="overlay" size="xs" icon pill className="absolute top-1 right-1 z-10 opacity-80 sm:opacity-0 group-hover/item:opacity-100 hover:opacity-100"
                   >

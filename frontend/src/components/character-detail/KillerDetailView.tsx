@@ -194,7 +194,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
       {/* 4. Dedicated Killer Offerings Section */}
       <OfferingsSection
         offerings={offerings}
-        role="Killer"
+        characterRole="Killer"
         backendBase={backendBase}
         onSelectOffering={(item) => setSelectedEquipment(item as unknown as EquipmentItem)}
         t={t}

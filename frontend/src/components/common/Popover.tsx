@@ -7,12 +7,12 @@
 // clamp, and repositions on scroll / resize.
 //
 //   const triggerRef = useRef<HTMLButtonElement>(null);
-//   <button ref={triggerRef} {...popoverTriggerProps(open, 'listbox')} onClick={toggle} />
+//   <button ref={triggerRef} {...popoverTriggerProps(open, 'menu')} onClick={toggle} />
 //   <Popover open={open} anchorRef={triggerRef} onClose={() => setOpen(false)}>…</Popover>
 //
 // Behaviour: outside pointerdown + Escape call `onClose` (both optional),
-// focus returns to the trigger when the panel closes while focus was inside
-// it, and the layer sits above <Modal> (z 120) but below tooltips.
+// a control marked data-autofocus takes focus on open, focus returns to the
+// trigger when the panel closes while focus was inside it, and the layer sits above <Modal> (z 120) but below tooltips.
 // `Popover` never owns the open state: the caller does.
 
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
@@ -114,13 +114,14 @@ export const computePopoverPosition = (input: PopoverPositionInput): PopoverPosi
   return { top, left, side, width, maxHeight: Number.isFinite(clampedMax) ? clampedMax : height };
 };
 
-/** ARIA wiring for the trigger element. */
+/** ARIA wiring for the trigger element. `false` is a plain disclosure (a panel of ordinary buttons
+ * or links, the current one marked aria-current): no aria-haspopup, just aria-expanded. */
 export const popoverTriggerProps = (
   open: boolean,
-  haspopup: 'listbox' | 'menu' | 'dialog' | 'true' = 'dialog',
+  haspopup: 'listbox' | 'menu' | 'dialog' | 'true' | false = 'dialog',
   panelId?: string
 ) => ({
-  'aria-haspopup': haspopup,
+  'aria-haspopup': haspopup === false ? undefined : haspopup,
   'aria-expanded': open,
   'aria-controls': open ? panelId : undefined,
 });
@@ -151,6 +152,8 @@ export interface PopoverProps {
   zIndex?: number | string;
   id?: string;
   role?: string;
+  /** `fieldset` for a panel that groups related controls (its implicit role is group). */
+  as?: 'div' | 'fieldset';
   ariaLabel?: string;
   className?: string;
   style?: React.CSSProperties;
@@ -176,11 +179,14 @@ export const Popover: React.FC<PopoverProps> = ({
   zIndex = POPOVER_CONFIG.zIndex,
   id,
   role,
+  as = 'div',
   ariaLabel,
   className,
   style,
 }) => {
   const panelRef = useRef<HTMLDivElement>(null);
+  // Typed as a div: the panel only ever uses what every element has (contains, focus, bounds).
+  const Panel = as as 'div';
   const [mounted, setMounted] = useState(false);
   const [present, setPresent] = useState(open);
   const [leaving, setLeaving] = useState(false);
@@ -286,6 +292,15 @@ export const Popover: React.FC<PopoverProps> = ({
     };
   }, [open, closeOnOutsideClick, closeOnEscape, anchorRef]);
 
+  /* focus in: a control marked data-autofocus (the URL box of a "link" panel) takes focus on open */
+  useEffect(() => {
+    if (!open || !present) return;
+    const raf = requestAnimationFrame(() => {
+      panelRef.current?.querySelector<HTMLElement>('[data-autofocus]')?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [open, present]);
+
   /* focus return */
   useEffect(() => {
     if (open) {
@@ -309,7 +324,7 @@ export const Popover: React.FC<PopoverProps> = ({
   const anchorWidth = anchorRef.current?.getBoundingClientRect().width;
 
   return createPortal(
-    <div
+    <Panel
       ref={panelRef}
       id={id}
       role={role}
@@ -332,13 +347,14 @@ export const Popover: React.FC<PopoverProps> = ({
       }}
       className={cn(
         'w-max overflow-y-auto',
+        as === 'fieldset' && 'min-w-0',
         passive && 'pointer-events-none',
         animate && pos && !leaving && 'animate-in fade-in zoom-in-95 duration-150',
         className
       )}
     >
       {children}
-    </div>,
+    </Panel>,
     document.body
   );
 };

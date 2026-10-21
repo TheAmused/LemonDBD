@@ -69,3 +69,28 @@ export const Switch: React.FC<SwitchProps> = ({ checked, onChange, ariaLabel, cl
     </button>
   );
 };
+
+const SWITCH_LABEL = 'type-strong-fluid text-text-primary transition-colors group-hover:text-accent-red';
+
+/**
+ * A switch and its visible label as one control: the whole row is the button, so
+ * clicking the words toggles it and keyboard users get a single tab stop.
+ */
+export const LabeledSwitch: React.FC<{
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  label: React.ReactNode;
+  labelClassName?: string;
+  className?: string;
+}> = ({ checked, onChange, label, labelClassName = SWITCH_LABEL, className = '' }) => (
+  <button
+    type="button"
+    role="switch"
+    aria-checked={checked}
+    onClick={() => onChange(!checked)}
+    className={`group flex cursor-pointer select-none items-center gap-2.5 rounded-control text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red ${className}`}
+  >
+    <SwitchTrack checked={checked} />
+    <span className={labelClassName}>{label}</span>
+  </button>
+);

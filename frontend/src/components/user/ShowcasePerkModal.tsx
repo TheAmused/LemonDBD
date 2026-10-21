@@ -123,7 +123,7 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, ro
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={dict.filters.searchPlaceholder}
-          autoFocus
+          data-autofocus
         />
       </div>
 

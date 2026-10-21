@@ -14,8 +14,7 @@ export const AdminPanelSkeleton: React.FC<AdminPanelSkeletonProps> = ({ classNam
   const loadingLabel = dict.admin.verifyingAdminAccess;
 
   return (
-    <div
-      role="status"
+    <output
       aria-busy="true"
       aria-label={loadingLabel}
       className={`min-h-screen text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-200 ${className}`}
@@ -34,6 +33,6 @@ export const AdminPanelSkeleton: React.FC<AdminPanelSkeletonProps> = ({ classNam
           label={loadingLabel}
         />
       </main>
-    </div>
+    </output>
   );
 };

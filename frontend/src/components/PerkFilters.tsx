@@ -352,10 +352,6 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           pill
           fieldSize="sm"
           value={search}
-          role="combobox"
-          aria-expanded={isPerkSuggestionsOpen && perkSuggestions.length > 0}
-          aria-controls="perk-suggestions-listbox"
-          aria-autocomplete="list"
           onFocus={() => setIsPerkSuggestionsOpen(true)}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -388,15 +384,13 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         )}
 
         {isPerkSuggestionsOpen && perkSuggestions.length > 0 && (
+          // Suggestions are ordinary buttons under the search box (Tab reaches them), not a listbox.
           <Surface
-            id="perk-suggestions-listbox"
-            role="listbox"
             padding="none" className="absolute top-full left-0 right-0 mt-2 max-h-60 overflow-y-auto shadow-2xl z-50 p-1.5 flex flex-col gap-1"
           >
             {perkSuggestions.map((item, idx) => (
               <MenuItem className="justify-between"
                 key={`${item.name}-${idx}`}
-                role="option"
                 onClick={() => {
                   setSearch(item.name);
                   setIsPerkSuggestionsOpen(false);

@@ -243,7 +243,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
       <RulesHowItWorks tone="red" title={rawStreaks.howItWorks} items={howItWorks} />
 
       <RulesSection title={rawStreaks.progressiveTierRestrictions}>
-        <div className="grid grid-cols-1 gap-2.5" role="list">
+        <ul className="grid grid-cols-1 gap-2.5">
           {tiers.map((tier) => {
             const tierName = rawStreaks[tier.nameKey];
             const streakRange = isTeam && role === 'survivor' ? TEAM_STREAK_RANGES[tier.level] : tier.streakRange;
@@ -255,29 +255,30 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
                 : `${tier.perkLimit} ${tier.perkLimit > 1 ? rawStreaks.perksAllowedPlural : rawStreaks.perksAllowedSingular}`;
 
             return (
-              <Surface
-                key={tier.level}
-                tone="elevated" padding="none" className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 gap-3 shadow-sm"
-              >
-                <div className="flex items-center gap-3">
-                  <span className={`px-2.5 py-1 rounded-chip text-xs font-bold border ${tier.badgeColor} whitespace-nowrap`}>
-                    {rawStreaks.tierLabel || ''} {tier.level}{tierName ? `: ${tierName}` : ''}
-                  </span>
-                  <span className="text-xs font-medium text-text-muted">
-                    ({streakRange})
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
-                  <div className="flex items-center gap-1.5 type-strong text-text-secondary whitespace-nowrap">
-                    <Lock className="w-3.5 h-3.5" aria-hidden="true" />
-                    <span>{perkLimitText}</span>
+              <li key={tier.level}>
+                <Surface
+                  tone="elevated" padding="none" className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 gap-3 shadow-sm"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className={`px-2.5 py-1 rounded-chip text-xs font-bold border ${tier.badgeColor} whitespace-nowrap`}>
+                      {rawStreaks.tierLabel || ''} {tier.level}{tierName ? `: ${tierName}` : ''}
+                    </span>
+                    <span className="text-xs font-medium text-text-muted">
+                      ({streakRange})
+                    </span>
                   </div>
-                </div>
-              </Surface>
+  
+                  <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
+                    <div className="flex items-center gap-1.5 type-strong text-text-secondary whitespace-nowrap">
+                      <Lock className="w-3.5 h-3.5" aria-hidden="true" />
+                      <span>{perkLimitText}</span>
+                    </div>
+                  </div>
+                </Surface>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </RulesSection>
 
       <RulesModalFooterSections

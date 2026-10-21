@@ -70,26 +70,6 @@ export function RosterCarouselCard({
 
   return (
     <div
-      role="button"
-      tabIndex={0}
-      aria-label={rosterLabel}
-      onClick={(e) => {
-        e.stopPropagation();
-        if (!isCenter) {
-          onJump();
-          SmashSounds.playHoverTick();
-        } else if (isRosterEnabled) {
-          onCommit();
-        } else {
-          SmashSounds.playHoverTick();
-        }
-      }}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          if (isRosterEnabled) onCommit();
-        }
-      }}
       className={`absolute w-[var(--card-w)] h-[var(--card-h)] rounded-card overflow-hidden cursor-pointer ${isCenter
         ? isRosterEnabled
           ? 'border-2 sm:border-3 border-accent-red'
@@ -111,6 +91,24 @@ export function RosterCarouselCard({
         backfaceVisibility: 'hidden',
       }}
     >
+      {/* The whole card is one button (an overlay, so the NSFW "reveal" button inside the card
+          stays a separate control): a side card jumps to the centre, the centre one is chosen. */}
+      <button
+        type="button"
+        aria-label={rosterLabel}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (!isCenter) {
+            onJump();
+            SmashSounds.playHoverTick();
+          } else if (isRosterEnabled) {
+            onCommit();
+          } else {
+            SmashSounds.playHoverTick();
+          }
+        }}
+        className="absolute inset-0 z-10 cursor-pointer rounded-card focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red"
+      />
       <img
         src={coverUrl}
         alt=""

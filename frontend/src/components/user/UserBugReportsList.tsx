@@ -146,25 +146,28 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                 key={report.id}
                 padding="none" className="text-text-primary overflow-hidden shadow-xs transition-all hover:border-accent-red/40"
               >
-                {/* Individual Droppable Drawer Header */}
+                {/* Individual Droppable Drawer Header: the accordion pattern, a heading holding the button */}
+                <h3>
                 <button
                   type="button"
                   onClick={() => toggleReport(report)}
                   aria-expanded={isOpen}
+                  aria-labelledby={`bug-report-${report.id}-title`}
+                  aria-describedby={`bug-report-${report.id}-date bug-report-${report.id}-status`}
                   className="w-full p-3.5 sm:p-4 text-left flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 cursor-pointer select-none hover:bg-bg-elevated/40 transition-colors"
                 >
-                  <div className="space-y-1 min-w-0 flex-1">
-                    <h3 className="text-sm sm:text-base font-black text-text-primary truncate">
+                  <span className="block space-y-1 min-w-0 flex-1">
+                    <span id={`bug-report-${report.id}-title`} className="block text-sm sm:text-base font-black text-text-primary truncate">
                       {report.title}
-                    </h3>
-                    <div className="type-caption text-text-secondary">
+                    </span>
+                    <span id={`bug-report-${report.id}-date`} className="block type-caption text-text-secondary">
                       {t.reportedOn}{' '}
                       {formatDate(report.created_at)}
-                    </div>
-                  </div>
+                    </span>
+                  </span>
 
-                  <div className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
-                    <span className="relative inline-flex">
+                  <span className="flex items-center justify-between sm:justify-end gap-3 shrink-0">
+                    <span id={`bug-report-${report.id}-status`} className="relative inline-flex">
                       {getStatusBadge(report.status)}
                       {report.feedback_unread && (
                         <UnreadDot
@@ -173,15 +176,16 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                         />
                       )}
                     </span>
-                    <div className="p-1 rounded-chip bg-bg-elevated/80 text-accent-red">
+                    <span className="p-1 rounded-chip bg-bg-elevated/80 text-accent-red">
                       <ChevronDown
                         className={`h-4 w-4 transition-transform duration-300 ease-in-out ${
                           isOpen ? 'rotate-180' : 'rotate-0'
                         }`}
                       />
-                    </div>
-                  </div>
+                    </span>
+                  </span>
                 </button>
+                </h3>
 
                 {/* Individual Droppable Content Body */}
                 <Collapsible

@@ -25,7 +25,7 @@ describe('QrCode', () => {
   const html = renderWithDictionary(React.createElement(QrCode, { value: uri, label: 'scan me' }));
 
   it('is an accessible image drawn locally as SVG', () => {
-    assert.match(html, /<svg[^>]*role="img"[^>]*aria-label="scan me"/);
+    assert.match(html, /<svg[^>]*aria-labelledby="([^"]+)"[\s\S]*<title id="\1">scan me<\/title>/);
     assert.match(html, /viewBox="0 0 (\d+) (\d+)"/);
   });
 
@@ -49,7 +49,7 @@ describe('QrCode', () => {
     assert.match(html, /width="192"/);
     assert.match(html, /height="192"/);
     const empty = renderWithDictionary(React.createElement(QrCode, { value: '', label: 'empty' }));
-    assert.match(empty, /<svg[^>]*role="img"/);
+    assert.match(empty, /<svg[^>]*aria-labelledby=[^>]*>.*<title[^>]*>empty<\/title>/);
   });
 
   it('never sends the secret anywhere: no network call in the module', () => {

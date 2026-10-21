@@ -173,70 +173,78 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, disp
           {dict.streaks.goesInBare}
         </p>
       )}
-      <div className={large ? 'flex items-start gap-5 sm:gap-7 xl:gap-12' : size === 'compact' ? 'flex items-start gap-4 xl:gap-6' : 'flex items-start gap-5 xl:gap-10'} role="list">
+      <ul className={large ? 'flex items-start gap-5 sm:gap-7 xl:gap-12' : size === 'compact' ? 'flex items-start gap-4 xl:gap-6' : 'flex items-start gap-5 xl:gap-10'}>
         {slots.map((idx) => {
           if (idx === 0 && perkLimit === 0 && randomPerks.length > 0) {
             const perk = randomPerks[0];
             return (
-              <SlotChip
-                key="random-perk"
-                size={size}
-                iconClassName="border-transparent"
-                caption={perkDisplayName(perk.name)}
-              >
-                <PerkArt perk={perk} size={perkArtSize} />
-              </SlotChip>
+              <li key="random-perk">
+                <SlotChip
+                  size={size}
+                  iconClassName="border-transparent"
+                  caption={perkDisplayName(perk.name)}
+                >
+                  <PerkArt perk={perk} size={perkArtSize} />
+                </SlotChip>
+              </li>
             );
           }
 
           if (idx >= ownSlots && idx < ownSlots + bonusSlots) {
             // A slot bought with tokens: any perk the player likes, so it looks like a survivor's free slot.
             return (
-              <SlotChip
-                key={`bonus-${idx}`}
-                size={size}
-                iconClassName="bg-bg-elevated border-border-color text-text-muted"
-              >
-                <HelpCircle className={iconSize} />
-              </SlotChip>
+              <li key={`bonus-${idx}`}>
+                <SlotChip
+                  size={size}
+                  iconClassName="bg-bg-elevated border-border-color text-text-muted"
+                >
+                  <HelpCircle className={iconSize} />
+                </SlotChip>
+              </li>
             );
           }
 
           if (idx >= perkLimit) {
             return (
-              <SlotChip
-                key={`locked-${idx}`}
-                size={size}
-                iconClassName="bg-bg-elevated/60 border-dashed border-border-color opacity-60 text-text-muted"
-              >
-                <Lock className={iconSize} />
-              </SlotChip>
+              <li key={`locked-${idx}`}>
+                <SlotChip
+                  size={size}
+                  iconClassName="bg-bg-elevated/60 border-dashed border-border-color opacity-60 text-text-muted"
+                >
+                  <Lock className={iconSize} />
+                </SlotChip>
+              </li>
             );
           }
 
           if (charactersPerksOnly) {
             // Every filled slot is one of the killer's own teachables, and which ones is the player's pick,
             // so it is drawn as the generic teachable slot rather than a specific perk that would look assigned.
-            return <TeachableSlot key={`char-slot-${idx}`} size={size} accent={teachableAccent} />;
+            return <li key={`char-slot-${idx}`}>
+              <TeachableSlot size={size} accent={teachableAccent} />
+            </li>;
           }
 
           if (idx === 0) {
             // One of several choices, not a specific assigned perk -- a symbol
             // for "your character's own unique perk goes here", not a preview.
-            return <TeachableSlot key="character-slot" size={size} accent={teachableAccent} />;
+            return <li key="character-slot">
+              <TeachableSlot size={size} accent={teachableAccent} />
+            </li>;
           }
 
           return (
-            <SlotChip
-              key={`free-${idx}`}
-              size={size}
-              iconClassName="bg-bg-elevated border-border-color text-text-muted"
-            >
-              <HelpCircle className={iconSize} />
-            </SlotChip>
+            <li key={`free-${idx}`}>
+              <SlotChip
+                size={size}
+                iconClassName="bg-bg-elevated border-border-color text-text-muted"
+              >
+                <HelpCircle className={iconSize} />
+              </SlotChip>
+            </li>
           );
         })}
-      </div>
+      </ul>
     </div>
   );
 };

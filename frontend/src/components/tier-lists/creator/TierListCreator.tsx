@@ -29,7 +29,7 @@ import { CreatorItems } from './CreatorItems';
 import { CreatorPreviewModal } from './CreatorPreview';
 import { type IncomingItem, ItemSources } from './ItemSources';
 import { LadderEditor } from './LadderEditor';
-import { Switch } from '@/components/common/Switch';
+import { LabeledSwitch } from '@/components/common/Switch';
 import { NsfwSwitch } from '@/components/common/NsfwSwitch';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
@@ -409,30 +409,14 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
                 hint={t.nsfw.hint}
               />
               {isAdmin && !officialSlug && (
-                <div
-                  onClick={() => setOfficial(!official)}
-                  className="flex cursor-pointer select-none items-center gap-2.5 group"
-                >
-                  <Switch checked={official} onChange={setOfficial} ariaLabel={c.official} />
-                  <span className="type-strong-fluid text-text-primary transition-colors group-hover:text-accent-red">
-                    {c.official}
-                  </span>
-                </div>
+                <LabeledSwitch checked={official} onChange={setOfficial} label={c.official} />
               )}
               {isAdmin && (official || Boolean(officialSlug)) && (
-                <div
-                  onClick={() => patch({ is_active: !(draft.is_active ?? true) })}
-                  className="flex cursor-pointer select-none items-center gap-2.5 group"
-                >
-                  <Switch
-                    checked={draft.is_active ?? true}
-                    onChange={(checked) => patch({ is_active: checked })}
-                    ariaLabel={c.publishedLabel}
-                  />
-                  <span className="type-strong-fluid text-text-primary transition-colors group-hover:text-accent-red">
-                    {c.publishedLabel}
-                  </span>
-                </div>
+                <LabeledSwitch
+                  checked={draft.is_active ?? true}
+                  onChange={(checked) => patch({ is_active: checked })}
+                  label={c.publishedLabel}
+                />
               )}
             </div>
             <label className="md:col-span-1">
@@ -491,9 +475,9 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
           <div className="flex flex-col gap-6 2xl:gap-8">
             <ItemSources onAdd={addItems} existingIds={existingIds} locale={locale} />
             {skipped > 0 && (
-              <p role="status" className="text-xs 2xl:text-sm font-semibold text-accent-amber">
+              <output className="block text-xs 2xl:text-sm font-semibold text-accent-amber">
                 {formatMessage(c.itemsSkipped, { count: skipped }, locale)}
-              </p>
+              </output>
             )}
             <CreatorItems
               items={draft.items}

@@ -137,7 +137,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           )}
         </div>
 
-        <div
+        <section
           ref={containerRef}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
@@ -149,7 +149,6 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
             ['--card-h' as string]: 'clamp(340px, calc(94dvh - 330px), 760px)',
             ['--card-w' as string]: 'calc(var(--card-h) * 0.685)',
           }}
-          role="region"
           aria-label={selectRosterTitle}
         >
           {N > 0 && (
@@ -218,7 +217,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
               ))}
             </div>
           )}
-        </div>
+        </section>
 
         <div className="text-center pt-2 pb-1 space-y-2 sm:space-y-3">
           {dict.smashOrPass.dwellHint && (

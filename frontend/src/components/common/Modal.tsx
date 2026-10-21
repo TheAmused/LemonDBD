@@ -303,8 +303,8 @@ export const Modal: React.FC<ModalProps> = ({
   const content = (
     <AnimatePresence onExitComplete={onAfterClose}>
       {isOpen && (
-        <div
-          role="dialog"
+        <dialog
+          open
           aria-modal="true"
           aria-labelledby={hasTitleText ? titleId : undefined}
           aria-label={hasTitleText ? undefined : ariaLabel}
@@ -313,6 +313,9 @@ export const Modal: React.FC<ModalProps> = ({
           data-testid={testId}
           data-modal-variant={variant}
           className={cn(
+            // <dialog> (shown with `open`, not showModal(): focus and Escape are handled here) with
+            // the browser's dialog box styles undone, so it is just the full-screen layer.
+            'm-0 h-full max-h-none w-full max-w-none border-0 bg-transparent p-0 text-inherit',
             'fixed inset-0 flex',
             zClass,
             fullscreenOnMobile ? 'max-sm:items-stretch max-sm:p-0' : null,
@@ -442,7 +445,7 @@ export const Modal: React.FC<ModalProps> = ({
               </div>
             )}
           </motion.div>
-        </div>
+        </dialog>
       )}
     </AnimatePresence>
   );

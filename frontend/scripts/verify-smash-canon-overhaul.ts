@@ -274,7 +274,7 @@ async function verifySmashPage(page: Page, isMobile: boolean) {
   await page.keyboard.press('ArrowUp');
   await page.waitForTimeout(600);
 
-  const modal = page.locator('[role="dialog"], div[aria-modal="true"]').first();
+  const modal = page.getByRole('dialog').first();
   await modal.waitFor({ state: 'visible', timeout: 5000 });
 
   const modalGreenFlags = modal.locator('.bg-accent-green\\/10 ul li');

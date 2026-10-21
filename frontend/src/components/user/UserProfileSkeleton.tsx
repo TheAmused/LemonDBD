@@ -13,8 +13,7 @@ export const UserProfileSkeleton: React.FC<UserProfileSkeletonProps> = ({ classN
   const loadingLabel = dict.characterDetail.loading;
 
   return (
-    <div
-      role="status"
+    <output
       aria-busy="true"
       aria-label={loadingLabel}
       className={`min-h-screen text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300 ${className}`}
@@ -31,6 +30,6 @@ export const UserProfileSkeleton: React.FC<UserProfileSkeletonProps> = ({ classN
           sublabel={dict.user.loadingProfileSub}
         />
       </main>
-    </div>
+    </output>
   );
 };

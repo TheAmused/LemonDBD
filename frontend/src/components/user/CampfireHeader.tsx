@@ -69,13 +69,14 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
           {/* Avatar Column with feedback */}
           <div className="flex flex-col items-center shrink-0 gap-1.5">
             {/* Square-ish avatar with single clean border and click-to-change hover */}
-            <div
-              className="relative group cursor-pointer shrink-0"
+            <button
+              type="button"
+              className="relative group cursor-pointer shrink-0 rounded-card focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
               onClick={onAvatarClick}
               {...tip(dict.user.changeAvatar, undefined, 'action')}
               aria-label={dict.user.changeAvatar}
             >
-              <div className="relative rounded-card p-0.5 border-2 border-accent-red/60 bg-bg-surface shadow-md">
+              <span className="relative block rounded-card p-0.5 border-2 border-accent-red/60 bg-bg-surface shadow-md">
                 <UserAvatar
                   user={user}
                   previewUrl={previewUrl}
@@ -84,19 +85,19 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                   showAdminBadge={true}
                   borderClassName="border-0"
                 />
-                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-bg-primary/80 text-text-inverted opacity-0 group-hover:opacity-100 transition-opacity rounded-card">
+                <span className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-bg-primary/80 text-text-inverted opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity rounded-card">
                   <Camera className="h-5 w-5 sm:h-6 sm:w-6 mb-1 text-accent-red" />
                   <span className="text-micro sm:text-tiny font-bold uppercase tracking-wider">
                     {dict.user.changeAvatar}
                   </span>
-                </div>
+                </span>
                 {isUploadingAvatar && (
-                  <div className="absolute inset-0 z-20 flex items-center justify-center rounded-card bg-bg-primary/70 backdrop-blur-xs">
+                  <span className="absolute inset-0 z-20 flex items-center justify-center rounded-card bg-bg-primary/70 backdrop-blur-xs">
                     <Spinner size="lg" tone="accent" className="h-7 w-7" />
-                  </div>
+                  </span>
                 )}
-              </div>
-            </div>
+              </span>
+            </button>
 
             {avatarFeedback && (
               <p

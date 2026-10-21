@@ -293,7 +293,7 @@ async function runMobileTests(browser: Browser) {
     await page.waitForTimeout(300);
 
     // Drawer dialog
-    const drawerDialog = page.locator('div[role="dialog"].lg\\:hidden');
+    const drawerDialog = page.locator('dialog.lg\\:hidden');
     const isDrawerOpen = await drawerDialog.isVisible();
     if (!isDrawerOpen) {
       throw new Error(`[${route}] Mobile drawer failed to open on hamburger click`);

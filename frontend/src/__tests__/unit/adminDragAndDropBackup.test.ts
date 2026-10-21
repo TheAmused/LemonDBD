@@ -44,11 +44,13 @@ describe('Admin Database Backup: Drag and Drop Import Modal', () => {
     );
   });
 
-  it('renders the import dropzone with accessible role, tabIndex, and keyboard handler', () => {
+  it('renders the import dropzone with a real button that opens the file picker', () => {
     // The shared <Modal> portals on the client, so the dropzone is verified at source level.
-    assert.ok(modalSource.includes('role="button"'), 'Dropzone must have role="button"');
-    assert.ok(modalSource.includes('tabIndex={0}'), 'Dropzone must have tabIndex=0 for keyboard accessibility');
-    assert.ok(modalSource.includes('onKeyDown'), 'Dropzone must handle keyboard activation');
+    assert.ok(
+      /<button\s+type="button"\s+aria-label=\{dict\.admin\.clickOrDragBackup\}\s+onClick=\{\(\) => fileInputRef\.current\?\.click\(\)\}/.test(modalSource),
+      'Dropzone must be covered by a native <button> (keyboard-operable without custom handlers) that opens the file picker'
+    );
+    assert.ok(!modalSource.includes('role="button"'), 'No div with role="button" stands in for the native button');
     assert.ok(
       modalSource.includes('dict.admin.dropFilePrompt'),
       'Dropzone must render the localized drop prompt'

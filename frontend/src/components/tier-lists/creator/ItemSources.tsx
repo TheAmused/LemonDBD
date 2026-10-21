@@ -190,9 +190,9 @@ function UploadSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
         />
       </div>
       {processing && (
-        <p role="status" className="type-strong text-text-muted text-center">
+        <output className="block type-strong text-text-muted text-center">
           {c.processing}
-        </p>
+        </output>
       )}
       {!processing && skipped > 0 && (
         <p role="alert" className="type-strong text-accent-red text-center">
@@ -436,7 +436,7 @@ function CatalogSource({ onAdd, existingIds, locale }: {
   return (
     <div className="flex flex-col gap-3">
       {/* Wide screens: every type as a pill. Phones: a dropdown next to the search box, to save rows. */}
-      <div className="hidden sm:flex flex-wrap justify-center gap-2" role="group" aria-label={c.catalogSource}>
+      <fieldset className="hidden min-w-0 sm:flex flex-wrap justify-center gap-2" aria-label={c.catalogSource}>
         {CATALOG_KINDS.map((k) => (
           <ToggleChip pressed={kind === k} size="md"
             key={k}
@@ -448,7 +448,7 @@ function CatalogSource({ onAdd, existingIds, locale }: {
             {t.kinds[k]}
           </ToggleChip>
         ))}
-      </div>
+      </fieldset>
 
       <div className="flex flex-col gap-2 sm:flex-row">
         <div className="flex gap-2 sm:contents">

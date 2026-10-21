@@ -173,7 +173,7 @@ export function CandidateFormInputs({
                   />
                   <datalist id={`role-picks-${entity.key}`}>
                     {availableRoles.map((r) => (
-                      <option key={r} value={r} />
+                      <option key={r} value={r}>{r}</option>
                     ))}
                   </datalist>
                 </label>
@@ -212,7 +212,7 @@ export function CandidateFormInputs({
                   />
                   <datalist id={`gender-picks-${entity.key}`}>
                     {availableGenders.map((g) => (
-                      <option key={g} value={g} />
+                      <option key={g} value={g}>{g}</option>
                     ))}
                   </datalist>
                 </label>

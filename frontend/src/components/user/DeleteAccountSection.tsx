@@ -123,7 +123,7 @@ export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnl
                 if (e.key === 'Enter') confirm();
               }}
               invalid={!!error}
-              autoFocus
+              data-autofocus
             />
           )}
           {requiresCode ? (

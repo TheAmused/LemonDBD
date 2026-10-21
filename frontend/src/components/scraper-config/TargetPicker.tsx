@@ -8,6 +8,7 @@ import { ALL_TARGETS, TARGET_GROUPS_CONFIG, type TargetItem } from './scraperTar
 
 import { Button } from '@/components/common/Button';
 import { InfoChip } from '@/components/common/InfoChip';
+import { Checkbox } from '@/components/common/Checkbox';
 interface TargetPickerProps {
   heading: string;
   selected: string[];
@@ -85,27 +86,29 @@ export function TargetPicker({
                 {groupTargets.map((target) => {
                   const isSelected = selected.includes(target.id);
                   return (
-                    <div
+                    <Checkbox
                       key={target.id}
-                      onClick={() => onToggleTarget(target.id)}
-                      className={`flex items-start gap-2.5 p-2.5 rounded-card border cursor-pointer transition-all ${
+                      checked={isSelected}
+                      onChange={() => onToggleTarget(target.id)}
+                      boxClassName="sr-only"
+                      className={`flex items-start gap-2.5 p-2.5 rounded-card border transition-all has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent-red ${
                         isSelected
                           ? 'border-accent-red/50 bg-accent-red/10 text-accent-red'
                           : 'border-border-color bg-bg-surface hover:border-border-subtle'
                       }`}
                     >
-                      <div className="pt-0.5">
+                      <span className="pt-0.5" aria-hidden="true">
                         {isSelected ? (
                           <SelectedIcon className="h-4 w-4 text-accent-red" />
                         ) : (
                           <UnselectedIcon className="h-4 w-4 text-text-muted" />
                         )}
-                      </div>
-                      <div>
-                        <p className="type-strong">{target.label}</p>
-                        <p className="type-micro text-text-muted line-clamp-1">{target.desc}</p>
-                      </div>
-                    </div>
+                      </span>
+                      <span>
+                        <span className="block type-strong">{target.label}</span>
+                        <span className="block type-micro text-text-muted line-clamp-1">{target.desc}</span>
+                      </span>
+                    </Checkbox>
                   );
                 })}
               </div>

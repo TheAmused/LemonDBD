@@ -138,6 +138,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
     <>
       <div
         ref={cardRef}
+        // Swipe/drag for pointers; the Smash/Pass buttons and their key bindings are the keyboard controls.
+        role="presentation"
         data-smash-card={isTopCard ? 'top' : undefined}
         data-flipped={isTopCard && isTurned ? 'true' : undefined}
         onMouseMove={handleMouseMove}

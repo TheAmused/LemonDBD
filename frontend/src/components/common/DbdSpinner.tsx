@@ -188,8 +188,7 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
   const emblemSize = Math.max(20, Math.round(dimension * 0.31));
 
   return (
-    <div
-      role="status"
+    <output
       aria-live="polite"
       aria-busy="true"
       aria-label={resolvedLabel}
@@ -360,6 +359,6 @@ export const DbdSpinner: React.FC<DbdSpinnerProps> = ({
       )}
 
       {resolvedLabel && <span className="sr-only">{resolvedLabel}</span>}
-    </div>
+    </output>
   );
 };

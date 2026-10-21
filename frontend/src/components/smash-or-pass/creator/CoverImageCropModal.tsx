@@ -291,6 +291,8 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
         <div className="relative rounded-card border-2 border-accent-red/40 bg-bg-primary overflow-hidden shadow-2xl">
           <div
             ref={containerRef}
+            // Drag-to-pan and wheel-zoom for pointers; the zoom slider and buttons are the keyboard controls.
+            role="presentation"
             onMouseDown={handleMouseDown}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}

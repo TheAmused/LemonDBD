@@ -11,14 +11,34 @@ from flask_limiter.util import get_remote_address
 logger = logging.getLogger(__name__)
 
 
+def _is_trusted_proxy(address: str | None) -> bool:
+    """True when the TCP peer is on the docker / loopback network, i.e. it is nginx.
+
+    Only such a peer may tell us who the client is. The backend port is not published
+    outside the host, so a public client never connects to it directly; if it ever were,
+    its forwarding headers are ignored rather than believed.
+    """
+    try:
+        ip = ipaddress.ip_address((address or "").strip())
+    except ValueError:
+        return False
+    return any(ip in net for net in _LOCAL_NETWORKS)
+
+
 def get_client_ip() -> str:
     """
     Retrieves the client's real IP address.
-    Checks X-Real-IP header first (which Nginx sets directly from $remote_addr and cannot be client-spoofed),
-    then falls back to X-Forwarded-For (first comma-separated IP),
-    and finally Flask-Limiter's get_remote_address.
+
+    X-Real-IP (set by nginx from $remote_addr) and then the first X-Forwarded-For entry are
+    honoured only when the request itself came from a trusted proxy (nginx on the docker
+    network). Anything else is keyed on the TCP peer, so a forged header cannot pick another
+    client's bucket or claim to be local traffic and skip every limit.
     """
     try:
+        peer = get_remote_address()
+        if not _is_trusted_proxy(peer):
+            return peer
+
         real_ip = request.headers.get("X-Real-IP")
         if real_ip and real_ip.strip():
             return real_ip.strip()
@@ -29,7 +49,7 @@ def get_client_ip() -> str:
                 ips = [ip.strip() for ip in entry.split(",") if ip.strip()]
                 if ips:
                     return ips[0]
-        return get_remote_address()
+        return peer
     except Exception:
         return "127.0.0.1"
 

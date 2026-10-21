@@ -232,6 +232,8 @@ class TestWeakSecretWarnings:
             TESTING = False
             SECRET_KEY = "short-but-unique"
             JWT_SECRET_KEY = "short-but-unique"
+            # The test suite's Fernet key is the public dev key, which production refuses outright.
+            TWO_FACTOR_ENCRYPTION_KEY = ""
 
         monkeypatch.setenv("FLASK_ENV", "production")
         with caplog.at_level("WARNING"):

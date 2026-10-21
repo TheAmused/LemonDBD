@@ -39,7 +39,9 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     if fatal:
         raise RuntimeError(
             "Refusing to start: " + "; ".join(fatal) + ". Set SECRET_KEY and JWT_SECRET_KEY to long random "
-            "values (python -c \"import secrets; print(secrets.token_urlsafe(48))\")."
+            "values (python -c \"import secrets; print(secrets.token_urlsafe(48))\"), give "
+            "TWO_FACTOR_ENCRYPTION_KEY a fresh Fernet key or leave it empty, and list the exact "
+            "CORS_ORIGINS (or leave it empty to allow only FRONTEND_URL)."
         )
 
     for problem in weak_secret_warnings(flask_app.config):

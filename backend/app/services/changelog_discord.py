@@ -4,10 +4,10 @@ when the entry is edited and deletes it when the entry is taken down."""
 import logging
 from typing import Literal, NamedTuple
 
-from curl_cffi import requests
 
 from app.models import ChangelogPost
 from app.services.site_settings import get_secret
+from app.utils import webhook_http as requests
 from app.utils.discord_markdown import html_to_discord
 
 logger = logging.getLogger(__name__)
@@ -54,7 +54,6 @@ def announce_post(post: ChangelogPost) -> Announcement:
             webhook,
             params={"wait": "true"},
             json={"username": "LemonDBD Updates", "embeds": [_embed(post)]},
-            impersonate="chrome120",
             timeout=8,
             headers=_HEADERS,
         )
@@ -83,7 +82,6 @@ def update_announcement(post: ChangelogPost) -> AnnounceResult:
         resp = requests.patch(
             f"{webhook}/messages/{post.discord_message_id}",
             json={"embeds": [_embed(post)]},
-            impersonate="chrome120",
             timeout=8,
             headers=_HEADERS,
         )
@@ -108,7 +106,6 @@ def delete_announcement(post: ChangelogPost) -> AnnounceResult:
     try:
         resp = requests.delete(
             f"{webhook}/messages/{post.discord_message_id}",
-            impersonate="chrome120",
             timeout=8,
         )
     except Exception:

@@ -82,7 +82,7 @@ export default {
   config_site_banner_text_ja: "Treść banera (日本語)",
   config_site_banner_text_ja_desc: "Opcjonalne tłumaczenie. Puste pole oznacza tekst angielski.",
   config_email_verification_required: "Wymagaj potwierdzenia e-maila",
-  config_email_verification_required_desc: "Nowe konta muszą potwierdzić adres kodem, zanim będą mogły śledzić wyzwania lub zmieniać, co posiadają (zalogować się mogą wcześniej). Gdy to jest wyłączone, każdy, kto się zaloguje, zostaje oznaczony jako potwierdzony. Wyłącz tylko na czas awarii wysyłki poczty.",
+  config_email_verification_required_desc: "Konta muszą potwierdzić adres kodem, zanim będą mogły się zalogować. Gdy to jest wyłączone, każdy, kto się zaloguje, zostaje oznaczony jako potwierdzony. Wyłącz tylko na czas awarii wysyłki poczty.",
   config_altcha_enforced: "Wymagaj zabezpieczenia (ALTCHA)",
   config_altcha_enforced_desc: "Rejestracja, logowanie, reset hasła i zgłoszenia błędów od gości wymagają rozwiązanego testu. Wyłącz tylko, gdy sam test nie działa.",
   config_google_sign_in_enabled: "Logowanie przez Google",

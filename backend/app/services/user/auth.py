@@ -149,6 +149,38 @@ def claim_guest_bug_reports(user: User) -> int:
     return int(result.rowcount or 0)
 
 
+#: What a sign-in or sign-up that still needs the e-mail code returns instead of a session.
+VERIFICATION_PENDING_TYPE = "verify"
+VERIFICATION_PENDING_LIFETIME = timedelta(hours=1)
+
+
+def needs_email_verification(user: User) -> bool:
+    """True while the site requires a confirmed address and this account has not confirmed one."""
+    return email_verification_required() and not user.is_verified
+
+
+def create_verification_pending_token(user: User) -> str:
+    """Proof that the password step passed for `user`, good only for finishing sign-in with the e-mail code."""
+    return generate_token(user.id, user.role, token_type=VERIFICATION_PENDING_TYPE, lifetime=VERIFICATION_PENDING_LIFETIME)
+
+
+def user_from_verification_pending_token(token: str | None) -> User | None:
+    """The account a still-valid pending-verification token belongs to (same credentials version), else None."""
+    from app.core.security import decode_token
+
+    payload = decode_token(token or "") if token else None
+    if not payload or payload.get("typ") != VERIFICATION_PENDING_TYPE:
+        return None
+    try:
+        user = db.session.get(User, int(payload["sub"]))
+        version = int(payload.get("ver", 0))
+    except (KeyError, TypeError, ValueError):
+        return None
+    if user is None or version != int(user.token_version or 0):
+        return None
+    return user
+
+
 def verify_email_code(email: str, code: str) -> tuple[User | None, str | None]:
     """Consume a verification code and mark the matching user as verified."""
     clean_email = (email or "").strip().lower()

@@ -82,7 +82,7 @@ export default {
   config_site_banner_text_ja: "Texto del banner (日本語)",
   config_site_banner_text_ja_desc: "Traducción opcional. Vacío usa el inglés.",
   config_email_verification_required: "Exigir confirmación del correo",
-  config_email_verification_required_desc: "Las cuentas nuevas deben confirmar su dirección con un código antes de poder seguir desafíos o cambiar lo que poseen (pueden iniciar sesión antes). Mientras esté desactivado, todo el que inicie sesión queda marcado como confirmado. Desactívalo solo mientras falle el envío de correo.",
+  config_email_verification_required_desc: "Las cuentas deben confirmar su dirección con un código antes de poder iniciar sesión. Mientras esté desactivado, todo el que inicie sesión queda marcado como confirmado. Desactívalo solo mientras falle el envío de correo.",
   config_altcha_enforced: "Exigir la comprobación de seguridad (ALTCHA)",
   config_altcha_enforced_desc: "El registro, el inicio de sesión, el restablecimiento de contraseña y los informes de errores de invitados necesitan la comprobación resuelta. Desactívalo solo si la propia comprobación falla.",
   config_google_sign_in_enabled: "Inicio de sesión con Google",

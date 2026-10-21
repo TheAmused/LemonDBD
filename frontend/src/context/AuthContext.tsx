@@ -27,7 +27,14 @@ type SignInResult = {
   twoFactorToken?: string;
   /** Set when the account is banned or suspended: the sign-in must show why instead of an error. */
   blocked?: BlockedInfo;
+  /**
+   * Set when the site requires a confirmed e-mail address and this one is not confirmed yet: there is
+   * no session, and entering the e-mailed code with this token finishes the sign-in (see verifyEmail).
+   */
+  verification?: PendingVerification;
 };
+
+export type PendingVerification = { email: string; token: string };
 
 export interface OwnershipSummary {
   survivors: {
@@ -61,10 +68,11 @@ interface AuthContextType {
   login: (loginOrEmail: string, password: string, extra?: Record<string, unknown>) => Promise<SignInResult>;
   loginWithGoogle: (credential: string) => Promise<SignInResult>;
   completeTwoFactorLogin: (twoFactorToken: string, code: string) => Promise<SignInResult & { errorCode?: string }>;
-  register: (login: string, username: string, email: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
+  register: (login: string, username: string, email: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile; verification?: PendingVerification }>;
   logout: () => void;
   resendVerification: (email: string) => Promise<{ success: boolean; error?: string }>;
-  verifyEmail: (email: string, code: string) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
+  /** With `verificationToken` (from a sign-in that waited for the code) a correct code also signs in. */
+  verifyEmail: (email: string, code: string, verificationToken?: string) => Promise<SignInResult>;
   forgotPassword: (email: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string }>;
   resetPassword: (token: string, newPassword: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string }>;
   refreshUser: () => Promise<void>;
@@ -133,6 +141,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     fetchCurrentUser();
   }, [fetchCurrentUser]);
 
+  /** A response that carries a new session (its cookie is already set): adopt the identity it names. */
+  const adoptSession = (data: { user: UserProfile; ownership?: OwnershipSummary }) => {
+    setToken(SESSION_MARKER);
+    setSessionFlag(true);
+    setUser(data.user);
+    setWarnings(warningsFromResponse(data));
+    if (data.ownership) setOwnership(data.ownership);
+    onIdentityChanged();
+  };
+
   const login = async (loginOrEmail: string, password: string, extra?: Record<string, unknown>) => {
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/login`, {
@@ -143,6 +161,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       const data = await res.json();
       if (!res.ok) {
+        if (data.error_code === 'email_not_verified' && data.verification_token) {
+          // Password accepted, but the address must be confirmed first (a code has been e-mailed).
+          return { success: false, verification: { email: data.email as string, token: data.verification_token as string } };
+        }
         const blocked = blockedFromResponse(res.status, data);
         return blocked ? { success: false, blocked } : { success: false, error: data.error || 'Login failed' };
       }
@@ -150,12 +172,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Password accepted but there is no session yet: the caller asks for the authenticator code.
         return { success: false, twoFactorToken: data.two_factor_token as string };
       }
-      setToken(SESSION_MARKER);
-      setSessionFlag(true);
-      setUser(data.user);
-      setWarnings(warningsFromResponse(data));
-      if (data.ownership) setOwnership(data.ownership);
-      onIdentityChanged();
+      adoptSession(data);
       trackEvent('login', { method: 'password' });
       return { success: true, user: data.user as UserProfile };
     } catch (err) {
@@ -179,12 +196,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (data.status === 'two_factor_required' && data.two_factor_token) {
         return { success: false, twoFactorToken: data.two_factor_token as string };
       }
-      setToken(SESSION_MARKER);
-      setSessionFlag(true);
-      setUser(data.user);
-      setWarnings(warningsFromResponse(data));
-      if (data.ownership) setOwnership(data.ownership);
-      onIdentityChanged();
+      adoptSession(data);
       // The API has no "new account" flag; a user without a finished onboarding is the one
       // the app sends to /welcome, so that is what counts as a signup.
       if (data.user?.onboarding_completed_at) trackEvent('login', { method: 'google' });
@@ -209,12 +221,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (blocked) return { success: false, blocked };
         return { success: false, error: data.error as string | undefined, errorCode: data.error_code as string | undefined };
       }
-      setToken(SESSION_MARKER);
-      setSessionFlag(true);
-      setUser(data.user);
-      setWarnings(warningsFromResponse(data));
-      if (data.ownership) setOwnership(data.ownership);
-      onIdentityChanged();
+      adoptSession(data);
       trackEvent('login', { method: 'two_factor' });
       return { success: true, user: data.user as UserProfile };
     } catch (err) {
@@ -234,12 +241,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!res.ok) {
         return { success: false, error: data.error || 'Registration failed' };
       }
-      setToken(SESSION_MARKER);
-      setSessionFlag(true);
-      setUser(data.user);
-      if (data.ownership) setOwnership(data.ownership);
-      onIdentityChanged();
       trackEvent('signup', { method: 'password' });
+      if (data.status === 'verification_required' && data.verification_token) {
+        // The account exists but gets no session until its address is confirmed.
+        const verification = { email: (data.user?.email as string) || email, token: data.verification_token as string };
+        return { success: true, user: data.user as UserProfile, verification };
+      }
+      adoptSession(data);
       return { success: true, user: data.user as UserProfile };
     } catch (err) {
       return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
@@ -263,18 +271,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const verifyEmail = async (email: string, code: string) => {
+  const verifyEmail = async (email: string, code: string, verificationToken?: string): Promise<SignInResult> => {
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/verify-email`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code }),
+        body: JSON.stringify({ email, code, verification_token: verificationToken }),
       });
       const data = await res.json();
       if (!res.ok) {
-        return { success: false, error: data.message || 'Invalid verification code.' };
+        const blocked = blockedFromResponse(res.status, data);
+        return blocked ? { success: false, blocked } : { success: false, error: data.message || data.error || 'Invalid verification code.' };
       }
       trackEvent('email_verified');
+      if (data.status === 'two_factor_required' && data.two_factor_token) {
+        // Address confirmed; the sign-in still needs the authenticator code.
+        return { success: false, twoFactorToken: data.two_factor_token as string };
+      }
+      // A verification that finished a sign-in carries the new session.
+      if (data.token && data.user) adoptSession(data);
       return { success: true, user: data.user as UserProfile };
     } catch (err) {
       return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
@@ -518,7 +534,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         handlersRef.current.register(login, username, email, password, extra),
       logout: () => handlersRef.current.logout(),
       resendVerification: (email: string) => handlersRef.current.resendVerification(email),
-      verifyEmail: (email: string, code: string) => handlersRef.current.verifyEmail(email, code),
+      verifyEmail: (email: string, code: string, verificationToken?: string) =>
+        handlersRef.current.verifyEmail(email, code, verificationToken),
       forgotPassword: (email: string, extra?: Record<string, unknown>) =>
         handlersRef.current.forgotPassword(email, extra),
       resetPassword: (token: string, newPassword: string, extra?: Record<string, unknown>) =>

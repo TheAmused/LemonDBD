@@ -43,8 +43,9 @@ interface AuthModalProps {
 
 type AuthMode = 'login' | 'register' | 'forgot';
 type Notice =
-  | { type: 'verify-reminder'; email: string }
-  | { type: 'register-success'; email: string }
+  // `token` is set when there is no session yet: the code then finishes the sign-in.
+  | { type: 'verify-reminder'; email: string; token?: string }
+  | { type: 'register-success'; email: string; token?: string }
   | { type: 'forgot-sent' }
   | { type: 'two-factor'; token: string }
   | { type: 'blocked'; blocked: BlockedInfo };
@@ -136,6 +137,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
         if (res.twoFactorToken) {
           setPassword('');
           setNotice({ type: 'two-factor', token: res.twoFactorToken });
+        } else if (res.verification) {
+          setPassword('');
+          setNotice({ type: 'verify-reminder', email: res.verification.email, token: res.verification.token });
         } else if (res.blocked) {
           setPassword('');
           setNotice({ type: 'blocked', blocked: res.blocked });
@@ -156,7 +160,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
         });
         if (res.success) {
           setPassword('');
-          if (res.user && !res.user.is_verified) {
+          if (res.verification) {
+            setNotice({ type: 'register-success', email: res.verification.email, token: res.verification.token });
+          } else if (res.user && !res.user.is_verified) {
             setNotice({ type: 'register-success', email: res.user?.email || email });
           } else {
             onClose();
@@ -264,6 +270,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
         <div className="animate-in fade-in duration-150">
           <EmailVerificationForm
             email={notice.email}
+            verificationToken={notice.token}
+            onTwoFactor={(token) => setNotice({ type: 'two-factor', token })}
+            onBlocked={(blocked) => setNotice({ type: 'blocked', blocked })}
             onVerified={(verifiedUser) => {
               onClose();
               if (verifiedUser && !verifiedUser.onboarding_completed_at) {

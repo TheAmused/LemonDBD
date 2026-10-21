@@ -12,7 +12,7 @@ from app.core.extensions import db
 from app.core.limiter import get_client_ip
 from app.core.security import admin_required, get_current_user
 from app.models.smash_or_pass import Roster
-from app.schemas.smash_or_pass import SmashRosterAdminCreate
+from app.schemas.smash_or_pass import MAX_SMASH_KEY_LENGTH, SmashRosterAdminCreate, SmashSessionRequest
 from app.services import site_settings
 from app.services.admin_control_service import log_admin_action
 from app.services.smash_or_pass_service import SmashOrPassService
@@ -245,8 +245,7 @@ def get_roster_feed(slug: str):
 
 
 VOTE_TYPES = ("smash", "pass", "super_smash")
-#: Longest client-supplied identifier accepted (slugs, guest session ids).
-MAX_VOTE_KEY_LENGTH = 128
+MAX_VOTE_KEY_LENGTH = MAX_SMASH_KEY_LENGTH
 
 
 def _vote_request(payload: dict[str, Any]) -> dict[str, Any]:
@@ -364,112 +363,103 @@ def get_roster_leaderboard(slug: str):
         return api_error("Something went wrong. Please try again.", 500)
 
 
+def _session_request() -> SmashSessionRequest:
+    """The session / roster / user a reset or sync names, from the body, the query string, the
+    `X-Session-ID` header or the `session_id` cookie (first one set wins), validated.
+
+    `roster_slug` and `edition` are aliases of each other. Raises ValidationError.
+    """
+    body = request.get_json(silent=True)
+    body = body if isinstance(body, dict) else {}
+
+    def first(*values: Any) -> Any:
+        return next((v for v in values if v not in (None, "")), None)
+
+    return SmashSessionRequest.model_validate({
+        "session_id": first(
+            body.get("session_id"), request.args.get("session_id"),
+            request.headers.get("X-Session-ID"), request.cookies.get("session_id"),
+        ),
+        "roster_slug": first(body.get("roster_slug"), body.get("edition"), request.args.get("roster_slug"), request.args.get("edition")),
+        "edition": first(body.get("edition"), body.get("roster_slug"), request.args.get("edition"), request.args.get("roster_slug")),
+        "user_id": first(body.get("user_id"), request.args.get("user_id")),
+    })
+
+
+def _invalid_session_request(err: ValidationError):
+    return api_error("Validation failed", 400, details=err.errors(include_url=False, include_context=False))
+
+
 @smash_or_pass_bp.route("/session/reset", methods=["POST"])
 def reset_session():
     """Reset and unwind votes cast in a session."""
-    payload = request.get_json(silent=True) or {}
-    session_id = (
-        payload.get("session_id")
-        or request.args.get("session_id")
-        or request.headers.get("X-Session-ID")
-        or request.cookies.get("session_id")
-    )
-    roster_slug = (
-        payload.get("roster_slug")
-        or payload.get("edition")
-        or request.args.get("roster_slug")
-        or request.args.get("edition")
-    )
-
-    if not session_id:
+    try:
+        req = _session_request()
+    except ValidationError as err:
+        return _invalid_session_request(err)
+    if not req.session_id:
         return api_error("Field 'session_id' is required to reset session votes", 400)
 
     try:
-        result = smash_service.reset_session_votes(
-            session_id=session_id, roster_slug=roster_slug
-        )
+        result = smash_service.reset_session_votes(session_id=req.session_id, roster_slug=req.roster_slug)
         return jsonify({"data": result, "status": "success"}), 200
     except Exception as e:
-        logger.error(f"Error resetting session votes: {e}")
+        logger.error(f"Error resetting session votes: {e}", exc_info=True)
         return api_error("Something went wrong. Please try again.", 500)
 
 
 @smash_or_pass_bp.route("/sync-session", methods=["POST"])
 def sync_session():
     """Synchronize and migrate guest session votes to an authenticated user account."""
-    payload = request.get_json(silent=True) or {}
-    session_id = (
-        payload.get("session_id")
-        or request.headers.get("X-Session-ID")
-        or request.cookies.get("session_id")
-    )
-    roster_slug = (
-        payload.get("roster_slug")
-        or payload.get("edition")
-        or request.args.get("roster_slug")
-        or request.args.get("edition")
-    )
-
     current_user = get_current_user()
     if not current_user:
         return api_error("Authentication required to sync guest session votes to an account", 401)
-
-    if not session_id:
+    try:
+        req = _session_request()
+    except ValidationError as err:
+        return _invalid_session_request(err)
+    if not req.session_id:
         return api_error("Field 'session_id' is required", 400)
 
     try:
         result = smash_service.sync_session_votes(
             user_id=current_user.id,
-            session_id=session_id,
-            roster_slug=roster_slug,
+            session_id=req.session_id,
+            roster_slug=req.roster_slug,
         )
         return jsonify({"data": result, "status": "success"}), 200
     except Exception as e:
-        logger.error(f"Error syncing session votes: {e}")
+        logger.error(f"Error syncing session votes: {e}", exc_info=True)
         return api_error("Something went wrong. Please try again.", 500)
-
 
 
 @smash_or_pass_bp.route("/user-votes/reset", methods=["POST"])
 def reset_user_votes():
     """Reset and wipe all votes for a specific user and recalculate stats."""
-    payload = request.get_json(silent=True) or {}
-    requested_user_id = payload.get("user_id") or request.args.get("user_id", type=int)
-    roster_slug = (
-        payload.get("roster_slug")
-        or payload.get("edition")
-        or request.args.get("roster_slug")
-        or request.args.get("edition")
-    )
-    edition = (
-        payload.get("edition")
-        or payload.get("roster_slug")
-        or request.args.get("edition")
-        or request.args.get("roster_slug")
-    )
+    try:
+        req = _session_request()
+    except ValidationError as err:
+        return _invalid_session_request(err)
 
     current_user = get_current_user()
-    if current_user:
-        if requested_user_id and requested_user_id != current_user.id and current_user.role != "admin":
-            return api_error("Forbidden: Cannot reset votes for another user", 403)
-        target_user_id = requested_user_id if (current_user.role == "admin" and requested_user_id) else current_user.id
-    else:
-        if requested_user_id:
+    if not current_user:
+        if req.user_id:
             return api_error("Authentication required to reset user votes", 401)
         return api_error("Field 'user_id' is required to reset user votes", 400)
+    if req.user_id and req.user_id != current_user.id and current_user.role != "admin":
+        return api_error("Forbidden: Cannot reset votes for another user", 403)
+    target_user_id = req.user_id if (current_user.role == "admin" and req.user_id) else current_user.id
 
     try:
         result = smash_service.reset_user_votes(
             user_id=target_user_id,
-            roster_slug=roster_slug,
-            edition=edition,
+            roster_slug=req.roster_slug,
+            edition=req.edition,
         )
         return jsonify({"data": result, "status": "success"}), 200
     except Exception as e:
-        logger.error(f"Error resetting user smash-or-pass votes: {e}")
+        logger.error(f"Error resetting user smash-or-pass votes: {e}", exc_info=True)
         return api_error("Something went wrong. Please try again.", 500)
-
-
 
 
 @smash_or_pass_bp.route("/user-votes", methods=["GET"])

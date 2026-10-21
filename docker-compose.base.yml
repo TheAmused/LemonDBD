@@ -95,7 +95,7 @@ services:
       - GUNICORN_THREADS=${GUNICORN_THREADS:-8}
       - SECRET_KEY=${SECRET_KEY:-dev-secret-key-dbd-lemon-2026}
       # Optional two-factor sign-in: replace with a fresh Fernet key in .env.prod for production.
-      - TWO_FACTOR_ENCRYPTION_KEY=${TWO_FACTOR_ENCRYPTION_KEY:-TZbfxN8fCG2Pccx-bBsj2fxcyN4dwABgUsIutMVLx4Y=}
+      - TWO_FACTOR_ENCRYPTION_KEY=${TWO_FACTOR_ENCRYPTION_KEY:-}
       - TWO_FACTOR_ISSUER=${TWO_FACTOR_ISSUER:-LemonDBD}
       # Ban-evasion e-mail list (off by default; see .env.example before enabling).
       - BAN_LIST_ENABLED=${BAN_LIST_ENABLED:-false}
@@ -109,7 +109,7 @@ services:
       # Rate-limit counters and ALTCHA replay records (never evicted).
       - LIMITS_REDIS_URL=${LIMITS_REDIS_URL:-redis://redis-limits:6379/0}
       - CATALOG_CACHE_TTL=${CATALOG_CACHE_TTL:-86400}
-      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+      - CORS_ORIGINS=${CORS_ORIGINS:-}
       - MAIL_SERVER=${MAIL_SERVER:-smtp.gmail.com}
       - MAIL_PORT=${MAIL_PORT:-587}
       - MAIL_USE_TLS=${MAIL_USE_TLS:-true}

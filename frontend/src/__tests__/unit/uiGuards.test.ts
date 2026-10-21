@@ -35,7 +35,7 @@ describe('ui: accessible names', () => {
 
 describe('ui: shared primitives', () => {
   it('modals and dialogs go through the shared <Modal>, never a hand-rolled role="dialog"', () => {
-    const bad = scanLines(/role=["']dialog["']|aria-modal/, (m) => m.file === 'components/common/Modal.tsx');
+    const bad = scanLines(/role=["']dialog["']|aria-modal|<dialog\b/, (m) => m.file === 'components/common/Modal.tsx');
     assert.deepEqual(bad, [], `Hand-rolled dialog:\n${bad.join('\n')}`);
   });
 

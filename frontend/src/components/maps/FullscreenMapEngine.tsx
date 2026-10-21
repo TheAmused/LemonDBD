@@ -240,6 +240,8 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
 
       <div
         ref={containerRef}
+        // Drag-to-pan for pointers; the zoom and reset buttons below are the keyboard controls.
+        role="presentation"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}

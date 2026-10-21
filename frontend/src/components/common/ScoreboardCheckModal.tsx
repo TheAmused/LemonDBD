@@ -161,10 +161,10 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
         )}
 
         {switchedOff && !error && (
-          <div role="status" className="flex items-start gap-2 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3 text-accent-amber">
+          <output className="flex items-start gap-2 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3 text-accent-amber">
             <CircleSlash className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
             <p className="type-body">{t.switchedOff}</p>
-          </div>
+          </output>
         )}
 
         {!report && (

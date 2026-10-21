@@ -420,6 +420,8 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       {/* Leaderboard Content with Smooth PC Drag-to-Scroll & Grab Physics */}
       <div
         ref={scrollContainerRef}
+        // Grab-to-scroll for mice; keyboard and touch scroll the list natively.
+        role="presentation"
         onScroll={handleScroll}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -464,7 +466,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
                   </span>
                 </div>
 
-                <div className="space-y-2.5 pl-1" role="list">
+                <ul className="space-y-2.5 pl-1">
                   {tierList.map((item, idx) => {
                     const itemSlug = item.slug || item.character_slug || '';
                     const totalVotes = item.total_votes ?? item.stat?.total_votes ?? 0;
@@ -473,34 +475,35 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
                     const tier = tierKey ? tierMetadata[tierKey] : null;
 
                     return (
-                      <CandidateRow
-                        key={itemSlug}
-                        item={item}
-                        index={idx}
-                        isTop3={false}
-                        hasUserSmashed={userVotedSet.has(itemSlug)}
-                        tier={tier}
-                        locale={locale}
-                        backendBase={backendBase}
-                        rawSmashDict={rawSmashDict}
-                        survivorsLabel={survivorsLabel}
-                        killersLabel={killersLabel}
-                        unratedLabel={unratedLabel}
-                        noVotesDesc={noVotesDesc}
-                        percentSign={percentSign}
-                        votesWord={votesWord}
-                        onSelectCharacter={onSelectCharacter}
-                        onDragStateCheck={checkDragState}
-                        onMouseDownCheck={checkMouseDown}
-                      />
+                      <li key={itemSlug}>
+                        <CandidateRow
+                          item={item}
+                          index={idx}
+                          isTop3={false}
+                          hasUserSmashed={userVotedSet.has(itemSlug)}
+                          tier={tier}
+                          locale={locale}
+                          backendBase={backendBase}
+                          rawSmashDict={rawSmashDict}
+                          survivorsLabel={survivorsLabel}
+                          killersLabel={killersLabel}
+                          unratedLabel={unratedLabel}
+                          noVotesDesc={noVotesDesc}
+                          percentSign={percentSign}
+                          votesWord={votesWord}
+                          onSelectCharacter={onSelectCharacter}
+                          onDragStateCheck={checkDragState}
+                          onMouseDownCheck={checkMouseDown}
+                        />
+                      </li>
                     );
                   })}
-                </div>
+                </ul>
               </div>
             );
           })
         ) : (
-          <div className="space-y-2.5" role="list">
+          <ul className="space-y-2.5">
             {filteredItems.slice(0, visibleCount).map((item, index) => {
               const itemSlug = item.slug || item.character_slug || '';
               const totalVotes = item.total_votes ?? item.stat?.total_votes ?? 0;
@@ -510,29 +513,30 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
               const tier = tierKey ? tierMetadata[tierKey] : null;
 
               return (
-                <CandidateRow
-                  key={itemSlug}
-                  item={item}
-                  index={index}
-                  isTop3={isTop3}
-                  hasUserSmashed={userVotedSet.has(itemSlug)}
-                  tier={tier}
-                  locale={locale}
-                  backendBase={backendBase}
-                  rawSmashDict={rawSmashDict}
-                  survivorsLabel={survivorsLabel}
-                  killersLabel={killersLabel}
-                  unratedLabel={unratedLabel}
-                  noVotesDesc={noVotesDesc}
-                  percentSign={percentSign}
-                  votesWord={votesWord}
-                  onSelectCharacter={onSelectCharacter}
-                  onDragStateCheck={checkDragState}
-                  onMouseDownCheck={checkMouseDown}
-                />
+                <li key={itemSlug}>
+                  <CandidateRow
+                    item={item}
+                    index={index}
+                    isTop3={isTop3}
+                    hasUserSmashed={userVotedSet.has(itemSlug)}
+                    tier={tier}
+                    locale={locale}
+                    backendBase={backendBase}
+                    rawSmashDict={rawSmashDict}
+                    survivorsLabel={survivorsLabel}
+                    killersLabel={killersLabel}
+                    unratedLabel={unratedLabel}
+                    noVotesDesc={noVotesDesc}
+                    percentSign={percentSign}
+                    votesWord={votesWord}
+                    onSelectCharacter={onSelectCharacter}
+                    onDragStateCheck={checkDragState}
+                    onMouseDownCheck={checkMouseDown}
+                  />
+                </li>
               );
             })}
-          </div>
+          </ul>
         )}
       </div>
     </Modal>

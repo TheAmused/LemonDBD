@@ -19,8 +19,7 @@ export const MapsPageSkeleton: React.FC<MapsSkeletonProps> = ({ className = '', 
   const loadingLabel = ariaLabel || dict.maps.initializingTacticalMap;
 
   return (
-    <div
-      role="status"
+    <output
       aria-label={loadingLabel}
       aria-busy="true"
       className={`w-full min-h-115 select-none flex flex-col items-center justify-center p-6 ${className}`}
@@ -32,6 +31,6 @@ export const MapsPageSkeleton: React.FC<MapsSkeletonProps> = ({ className = '', 
         needleSpeed={1.6}
         label={loadingLabel}
       />
-    </div>
+    </output>
   );
 };

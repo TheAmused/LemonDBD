@@ -136,7 +136,7 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({ currentLo
 
       <OfferingsSection
         offerings={offerings}
-        role="Survivor"
+        characterRole="Survivor"
         backendBase={backendBase}
         onSelectOffering={(item) => setSelectedEquipment(item as unknown as EquipmentItem)}
         t={t}

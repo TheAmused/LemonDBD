@@ -321,9 +321,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           />
 
           {mode === 'register' && !features.registrationOpen ? (
-            <p role="status" className="type-body font-medium text-accent-amber">
+            <output className="block type-body font-medium text-accent-amber">
               {dict.user.registrationClosedNotice}
-            </p>
+            </output>
           ) : null}
 
           <Button

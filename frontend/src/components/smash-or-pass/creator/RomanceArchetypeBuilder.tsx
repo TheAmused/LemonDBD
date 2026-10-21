@@ -16,6 +16,7 @@ import {
   Link as LinkIcon,
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
+import { formatMessage } from '@/utils/i18nFormat';
 import type { ArchetypeRule, CustomRomanceArchetype } from '@/types/smashOrPass';
 import { LABEL } from './styles';
 import { Checkbox } from '@/components/common/Checkbox';
@@ -149,12 +150,16 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                 key={arch.id}
                 tone="elevated" padding="none" className="bg-bg-elevated/50 overflow-hidden transition-all"
               >
-                {/* Accordion Bar */}
-                <div
-                  onClick={() => setExpandedId(isExpanded ? null : arch.id)}
-                  className="flex items-center justify-between p-3.5 sm:p-4 cursor-pointer hover:bg-bg-elevated/80 transition-colors"
-                >
-                  <div className="flex items-center gap-3 min-w-0">
+                {/* Accordion Bar: a full-size toggle button sits under the delete button. */}
+                <div className="relative flex items-center justify-between p-3.5 sm:p-4 hover:bg-bg-elevated/80 transition-colors">
+                  <button
+                    type="button"
+                    aria-expanded={isExpanded}
+                    aria-label={arch.title || `${ab.titleLabel} #${idx + 1}`}
+                    onClick={() => setExpandedId(isExpanded ? null : arch.id)}
+                    className="absolute inset-0 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red"
+                  />
+                  <div className="pointer-events-none flex items-center gap-3 min-w-0">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-card bg-bg-primary border border-border-color overflow-hidden">
                       {arch.icon_url ? (
                         <img src={arch.icon_url} alt="" className="h-full w-full object-cover" />
@@ -177,13 +182,14 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                  <div className="pointer-events-none flex items-center gap-1.5 shrink-0 ml-2">
                     <Button
                       variant="ghost" size="sm" icon
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        removeArchetype(arch.id);
-                      }}
+                      className="pointer-events-auto relative"
+                      aria-label={formatMessage(dict.smashOrPass.creator.removeCandidateAria, {
+                        name: arch.title || `${ab.titleLabel} #${idx + 1}`,
+                      })}
+                      onClick={() => removeArchetype(arch.id)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -362,12 +368,12 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
 
                           <datalist id={`roles-list-${arch.id}`}>
                             {availableRoles.map((r) => (
-                              <option key={r} value={r} />
+                              <option key={r} value={r}>{r}</option>
                             ))}
                           </datalist>
                           <datalist id={`genders-list-${arch.id}`}>
                             {availableGenders.map((g) => (
-                              <option key={g} value={g} />
+                              <option key={g} value={g}>{g}</option>
                             ))}
                           </datalist>
 

@@ -54,7 +54,7 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
           <div className="grid grid-cols-1 xl:grid-cols-2 divide-y xl:divide-y-0 xl:divide-x divide-border-color">
         {/* Survivor Main Column */}
         <MainCard
-          role="Survivor"
+          characterRole="Survivor"
           loadout={showcase.survivorMain}
           onCharacterChange={onSurvivorCharacterChange}
           onPrestigeChange={onSurvivorPrestigeChange}
@@ -66,7 +66,7 @@ export const DualMainsShowcase: React.FC<DualMainsShowcaseProps> = ({
 
         {/* Killer Main Column */}
         <MainCard
-          role="Killer"
+          characterRole="Killer"
           loadout={showcase.killerMain}
           onCharacterChange={onKillerCharacterChange}
           onPrestigeChange={onKillerPrestigeChange}

@@ -154,7 +154,6 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
             type="button"
             onClick={() => !isSwitchingLang && setIsLangMenuOpen((v) => !v)}
             aria-label={dict.sidebar.switchLanguage}
-            aria-haspopup="listbox"
             aria-expanded={isLangMenuOpen}
             aria-disabled={isSwitchingLang}
             className={isSwitchingLang ? 'w-full pointer-events-none opacity-60' : 'w-full'}
@@ -165,15 +164,15 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
 
           {isLangMenuOpen && (
             <Surface
-              role="listbox"
               padding="none" className="absolute bottom-full left-0 z-50 mb-2 w-44 overflow-hidden shadow-lg"
             >
               {LANGUAGES.map((lang) => (
                 <Link
                   key={lang.code}
                   href={redirectedPathName(lang.code)}
-                  role="option"
-                  aria-selected={lang.code === currentLocale}
+                  hrefLang={lang.code}
+                  lang={lang.code}
+                  aria-current={lang.code === currentLocale ? 'true' : undefined}
                   onClick={(e) => {
                     if (isSwitchingLang) {
                       e.preventDefault();
@@ -204,7 +203,6 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
             type="button"
             onClick={() => setIsThemeMenuOpen((v) => !v)}
             aria-label={dict.sidebar.toggleTheme}
-            aria-haspopup="listbox"
             aria-expanded={isThemeMenuOpen}
             className="w-full min-w-0"
           >
@@ -220,14 +218,11 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
 
           {isThemeMenuOpen && (
             <Surface
-              role="listbox"
-              aria-label={dict.sidebar.toggleTheme}
               padding="none" className="absolute bottom-full right-0 z-50 mb-2 w-56 overflow-hidden shadow-lg"
             >
               {THEME_OPTIONS.map((opt) => (
                 <MenuItem selected={isMounted && theme === opt.id} flush
                   key={opt.id}
-                  role="option"
                   onClick={() => {
                     setTheme(opt.id);
                     setIsThemeMenuOpen(false);

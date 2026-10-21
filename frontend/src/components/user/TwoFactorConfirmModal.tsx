@@ -113,7 +113,7 @@ export const TwoFactorConfirmModal: React.FC<TwoFactorConfirmModalProps> = ({ ac
             placeholder={t.passwordLabel}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            autoFocus
+            data-autofocus
           />
           <Input
             type="text"

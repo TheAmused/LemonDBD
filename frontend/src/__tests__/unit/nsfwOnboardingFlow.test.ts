@@ -51,8 +51,8 @@ describe('NSFW Onboarding & Global Sync Flow', () => {
     const creatorPath = path.resolve(__dirname, '../../components/tier-lists/creator/TierListCreator.tsx');
     const source = fs.readFileSync(creatorPath, 'utf8');
     assert.ok(!source.includes('Checkbox'), 'TierListCreator should not import or use Checkbox');
-    assert.ok(source.includes("ariaLabel={c.official}"), 'Official switch must be present');
-    assert.ok(source.includes("ariaLabel={c.publishedLabel}"), 'Published switch must be present');
+    assert.ok(source.includes("<LabeledSwitch checked={official} onChange={setOfficial} label={c.official} />"), 'Official switch must be present');
+    assert.ok(source.includes("label={c.publishedLabel}"), 'Published switch must be present');
   });
 
   it('ItemSources catalog container allows natural multi-line wrapping and page scroll with no horizontal scroll', () => {

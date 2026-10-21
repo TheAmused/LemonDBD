@@ -51,6 +51,15 @@
         "react/no-children-prop": "off",
         "unicorn/prefer-string-starts-ends-with": "off"
       }
+    },
+    {
+      // Widgets with no native tag: an autocomplete whose options carry images and badges
+      // (<select>/<datalist> can hold only text), and a rich-text contentEditable region
+      // (<textarea> can't hold formatting). Both implement the ARIA pattern for their role.
+      "files": ["src/components/minigames/CharacterAutocomplete.tsx", "src/components/common/RichTextEditor.tsx"],
+      "rules": {
+        "jsx-a11y/prefer-tag-over-role": "off"
+      }
     }
   ]
 }

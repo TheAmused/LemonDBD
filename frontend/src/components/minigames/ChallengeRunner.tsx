@@ -486,7 +486,6 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
                 disabled={isSubmitting}
                 placeholder={t.guessPlaceholder}
                 excludeKeys={excludeKeys}
-                autoFocus={false}
               />
             </div>
           ) : (

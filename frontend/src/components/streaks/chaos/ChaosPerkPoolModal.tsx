@@ -91,11 +91,13 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({ isOpen, 
               : dict.streaks.perkPoolEmptyFreshCycle}
           </p>
         ) : (
-          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2" role="list">
+          <ul className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
             {shown.map((perk) => (
-              <PerkTile key={perk.id ?? perk.name} perk={perk} displayName={displayName(perk.name)} />
+              <li key={perk.id ?? perk.name}>
+                <PerkTile perk={perk} displayName={displayName(perk.name)} />
+              </li>
             ))}
-          </div>
+          </ul>
         )}
       </TabPanel>
     </Modal>

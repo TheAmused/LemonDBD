@@ -164,10 +164,8 @@ export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onRe
 
         <div
           className="h-2.5 w-full bg-bg-elevated rounded-full overflow-hidden flex border border-border-color/60 shadow-inner"
-          role="progressbar"
-          aria-valuenow={persona.survivorAffinity}
-          aria-valuemin={0}
-          aria-valuemax={100}
+          // The survivor / killer split drawn as a bar; both percentages are in the text above it.
+          aria-hidden="true"
         >
           {persona.survivorAffinity === 0 && persona.killerAffinity === 0 ? (
             <div className="h-full w-full bg-bg-surface" />

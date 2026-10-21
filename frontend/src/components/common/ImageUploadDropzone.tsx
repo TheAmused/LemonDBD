@@ -186,19 +186,8 @@ export function ImageUploadDropzone({
 
       {hasValue ? (
         <div
-          onClick={onPreviewClick}
-          onKeyDown={(e) => {
-            if (onPreviewClick && (e.key === 'Enter' || e.key === ' ')) {
-              e.preventDefault();
-              onPreviewClick();
-            }
-          }}
-          tabIndex={onPreviewClick ? 0 : undefined}
-          role={onPreviewClick ? 'button' : undefined}
-          aria-label={onPreviewClick ? dict.tierLists.editDetails : undefined}
           className={cn(
             'relative group overflow-hidden rounded-card border border-border-color bg-bg-elevated w-full mx-auto shadow-xs',
-            onPreviewClick && 'cursor-pointer focus:outline-none focus:ring-1 focus:ring-accent-red',
             aspectRatio === 'square' ? 'aspect-square max-w-xs' : 'aspect-video max-w-md 2xl:max-w-lg',
             invalid && 'border-accent-red'
           )}
@@ -209,6 +198,15 @@ export function ImageUploadDropzone({
             referrerPolicy="no-referrer"
             className="h-full w-full object-cover"
           />
+          {/* The preview opens the editor; the remove button sits above this layer. */}
+          {onPreviewClick && (
+            <button
+              type="button"
+              onClick={onPreviewClick}
+              aria-label={dict.tierLists.editDetails}
+              className="absolute inset-0 cursor-pointer rounded-card focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-accent-red"
+            />
+          )}
           {previewOverlay}
           <div className="absolute top-2 right-2 flex items-center gap-1.5 z-10">
             {previewActions || actions}
@@ -219,10 +217,7 @@ export function ImageUploadDropzone({
               icon
               pill
               disabled={disabled}
-              onClick={(e) => {
-                e.stopPropagation();
-                onChange('');
-              }}
+              onClick={() => onChange('')}
               aria-label={resolvedRemoveLabel}
             >
               <Trash2 className="h-3.5 w-3.5" />

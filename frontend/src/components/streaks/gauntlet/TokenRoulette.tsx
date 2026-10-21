@@ -75,13 +75,14 @@ export const TokenRoulette: React.FC<TokenRouletteProps> = ({ roll, onDone }) =>
 
   return (
     <div
-      role="img"
-      aria-label={String(roll)}
       className={`relative box-content h-24 w-36 overflow-hidden rounded-card border-2 border-accent-amber/60 bg-bg-elevated shadow-inner ${
         landed ? 'gn-land-glow' : ''
       }`}
     >
+      {/* The spinning strip is decoration; assistive tech gets just the number it lands on. */}
+      <span className="sr-only">{roll}</span>
       <div
+        aria-hidden="true"
         className="flex flex-col"
         style={{
           transform: spinning ? `translateY(-${restOffset}%)` : 'translateY(0)',

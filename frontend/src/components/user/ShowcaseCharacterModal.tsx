@@ -162,7 +162,7 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({ 
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={dict.user.searchCharacters}
-          autoFocus
+          data-autofocus
         />
       </div>
 

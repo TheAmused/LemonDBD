@@ -75,9 +75,8 @@ export const AuthField: React.FC<AuthFieldProps> = ({ label, type, value, onChan
 export const ForgotSentNotice: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const dict = useDictionary();
   return (
-    <div
-      role="status"
-      className="mb-4 space-y-3 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3.5 text-xs text-accent-amber animate-in fade-in duration-150 shadow-xs"
+    <output
+      className="block mb-4 space-y-3 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3.5 text-xs text-accent-amber animate-in fade-in duration-150 shadow-xs"
     >
       <div className="flex items-start gap-2.5">
         <MailWarning className="h-4 w-4 shrink-0 mt-0.5" />
@@ -88,7 +87,7 @@ export const ForgotSentNotice: React.FC<{ onClose: () => void }> = ({ onClose })
           {dict.modal.close}
         </Button>
       )}
-    </div>
+    </output>
   );
 };
 
@@ -98,7 +97,7 @@ export const SecurityCheck: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-12">
       <Spinner tone="accent" className="h-14 w-14 border-4" />
-      <p role="status" className="type-body text-text-secondary">{dict.user.authSecurityCheck}</p>
+      <output className="block type-body text-text-secondary">{dict.user.authSecurityCheck}</output>
     </div>
   );
 };
@@ -180,10 +179,10 @@ export const GoogleSignInSection: React.FC<{ clientId: string; onCredential: (cr
   const dict = useDictionary();
   return (
     <div className="mt-4 space-y-3">
-      <div className="flex items-center gap-3" role="separator">
-        <span className="h-px flex-1 bg-border-color" />
+      <div className="flex items-center gap-3">
+        <span className="h-px flex-1 bg-border-color" aria-hidden="true" />
         <span className="type-label-2xs text-text-muted">{dict.user.googleOrDivider}</span>
-        <span className="h-px flex-1 bg-border-color" />
+        <span className="h-px flex-1 bg-border-color" aria-hidden="true" />
       </div>
       <GoogleSignInButton clientId={clientId} onCredential={onCredential} />
     </div>

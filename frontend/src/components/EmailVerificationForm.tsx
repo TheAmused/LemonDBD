@@ -77,7 +77,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({ em
           {error}
         </p>
       )}
-      <CodeInput value={code} onChange={setCode} autoFocus />
+      <CodeInput value={code} onChange={setCode} focusOnMount />
       <Button
         type="submit"
         variant="primary"

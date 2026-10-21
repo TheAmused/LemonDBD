@@ -209,12 +209,12 @@ export function RichTextEditor({
           open={panel === 'link'}
           anchorRef={linkAnchor}
           onClose={closePanel}
-          role="group"
+          as="fieldset"
           ariaLabel={labels.link}
           className={cn(panelClassName, 'flex w-72 max-w-viewport-sm items-center gap-1.5')}
         >
           <Input
-            autoFocus
+            data-autofocus
             fieldSize="sm"
             type="url"
             value={linkUrl}
@@ -246,7 +246,7 @@ export function RichTextEditor({
           open={panel === 'color'}
           anchorRef={colorAnchor}
           onClose={closePanel}
-          role="group"
+          as="fieldset"
           ariaLabel={labels.textColor}
           className={cn(panelClassName, 'flex items-center gap-1.5')}
         >
@@ -267,7 +267,7 @@ export function RichTextEditor({
           open={panel === 'highlight'}
           anchorRef={highlightAnchor}
           onClose={closePanel}
-          role="group"
+          as="fieldset"
           ariaLabel={labels.highlight}
           className={cn(panelClassName, 'flex items-center gap-1.5')}
         >

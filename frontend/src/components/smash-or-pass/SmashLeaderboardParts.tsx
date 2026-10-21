@@ -14,6 +14,7 @@ import { formatNumber } from '@/utils/format';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 import { formatMessage } from '@/utils/i18nFormat';
 import { Surface } from '@/components/common/Surface';
+import { TileButton } from '@/components/common/TileButton';
 
 export interface TierConfig {
   name: string;
@@ -99,9 +100,8 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
     : `${itemName} #${index + 1} (${smashRate}%)`;
 
   return (
-    <div
-      role="button"
-      tabIndex={0}
+    <TileButton
+      press={false}
       onClick={() => {
         if (onDragStateCheck()) return;
         SmashSounds.playHoverTick();
@@ -115,14 +115,8 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
       onMouseDown={() => {
         SmashSounds.playCardGrabSound();
       }}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onSelectCharacter?.({ ...item, slug: itemSlug, name: itemName });
-        }
-      }}
       aria-label={candidateAriaLabel}
-      className={`group relative flex flex-col sm:flex-row items-stretch sm:items-center justify-between p-3.5 sm:p-4 rounded-card border transition-all duration-150 cursor-pointer select-none hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red gap-3.5 sm:gap-4 ${
+      className={`group relative flex w-full flex-col sm:flex-row items-stretch sm:items-center justify-between p-3.5 sm:p-4 rounded-card border text-left transition-all duration-150 select-none hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red gap-3.5 sm:gap-4 ${
         hasUserSmashed
           ? 'bg-accent-red/10 border-accent-red/50 hover:border-accent-red'
           : 'bg-bg-surface border-border-color hover:border-border-subtle hover:bg-bg-elevated hover:shadow-lg'
@@ -274,6 +268,6 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
           </div>
         </div>
       </div>
-    </div>
+    </TileButton>
   );
 });

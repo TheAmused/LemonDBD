@@ -13,8 +13,7 @@ export const UserBugReportsSkeleton: React.FC<UserBugReportsSkeletonProps> = () 
   const loadingLabel = dict.user.loadingReports;
 
   return (
-    <div
-      role="status"
+    <output
       aria-busy="true"
       aria-label={loadingLabel}
       className="space-y-6 w-full min-h-80 flex items-center justify-center p-6"
@@ -26,6 +25,6 @@ export const UserBugReportsSkeleton: React.FC<UserBugReportsSkeletonProps> = () 
         needleSpeed={1.3}
         label={loadingLabel}
       />
-    </div>
+    </output>
   );
 };

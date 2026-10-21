@@ -26,12 +26,14 @@ import { tip } from '@/components/common/Tooltip';
 import { EmptyState } from '@/components/common/EmptyState';
 import { isKiller as isKillerRole } from '@/utils/characterUtils';
 import { AccordionSection } from '@/components/common/AccordionSection';
+import { TileButton } from '@/components/common/TileButton';
 const KILLER_OFFERING_KEYS = ['special', 'mori', 'bloodpoint', 'map', 'shroud', 'ward'] as const;
 const SURVIVOR_OFFERING_KEYS = ['special', 'bloodpoint', 'luck', 'map', 'shroud', 'blueprint', 'chest', 'ward'] as const;
 
 interface OfferingsSectionProps {
   offerings?: OfferingItem[];
-  role: 'Killer' | 'Survivor';
+  /** The character's side (not an ARIA role). */
+  characterRole: 'Killer' | 'Survivor';
   backendBase: string;
   onSelectOffering?: (item: OfferingItem) => void;
   t: CharacterDetailDictionary;
@@ -47,7 +49,7 @@ interface OfferingCategoryConfig {
 
 export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
   offerings = [],
-  role,
+  characterRole: role,
   backendBase,
   onSelectOffering,
   t,
@@ -330,40 +332,33 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         {sortedAndFilteredOfferings.length === 0 ? (
           <EmptyState variant="inline" title={t.noOfferingsFound} />
         ) : (
-          <div className="flex flex-wrap items-center justify-center gap-3.5" role="list">
+          <ul className="flex flex-wrap items-center justify-center gap-3.5">
             {sortedAndFilteredOfferings.map((offering, idx) => {
               const id = `offering-${offering.name}-${idx}`;
               const rarityStyle = getRarityTileStyle(offering.rarity);
 
               return (
-                <div
-                  key={id}
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => onSelectOffering?.(offering)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      onSelectOffering?.(offering);
-                    }
-                  }}
-                  {...tip(offering.name, undefined, 'item')}
-                  className={`relative group rounded-card border-2 p-2 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
-                  style={rarityStyle.style}
-                  aria-label={`${t.inspectOfferingPrefix} ${offering.name}`}
-                >
-                  <img
-                    src={getAssetUrl(backendBase, offering.icon_local_path, offering.icon_url)}
-                    alt={offering.name}
-                    className="h-full w-full object-contain"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = 'none';
-                    }}
-                  />
-                </div>
+                <li key={id}>
+                  <TileButton
+                    onClick={() => onSelectOffering?.(offering)}
+                    {...tip(offering.name, undefined, 'item')}
+                    className={`relative group rounded-card border-2 p-2 flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus-visible:ring-accent-red h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                    style={rarityStyle.style}
+                    aria-label={`${t.inspectOfferingPrefix} ${offering.name}`}
+                  >
+                    <img
+                      src={getAssetUrl(backendBase, offering.icon_local_path, offering.icon_url)}
+                      alt={offering.name}
+                      className="h-full w-full object-contain"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  </TileButton>
+                </li>
               );
             })}
-          </div>
+          </ul>
         )}
     </AccordionSection>
   );

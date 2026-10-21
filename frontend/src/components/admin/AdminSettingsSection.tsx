@@ -392,9 +392,9 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
 
       {/* Save bar: stays in view while the form scrolls */}
       <div className="sticky bottom-0 z-10 flex flex-wrap items-center justify-between gap-3 rounded-b-card border-t border-border-color bg-bg-surface/95 px-4 py-3 backdrop-blur-md sm:px-6">
-        <p role="status" className={cn('type-strong', changed.length > 0 ? 'text-accent-amber' : 'text-text-muted')}>
+        <output className={cn('block type-strong', changed.length > 0 ? 'text-accent-amber' : 'text-text-muted')}>
           {changed.length > 0 ? formatMessage(t.configUnsaved, { count: changed.length }) : t.configAllSaved}
-        </p>
+        </output>
         <div className="flex items-center gap-2">
           <Button
             variant="secondary"

@@ -112,7 +112,9 @@ class TestPasswordChangeSignsOutOtherSessions:
 
         user = _make_user()
         old_token = generate_token(user.id, user.role)
-        user.reset_token = "reset-me"
+        from app.services.user.auth import hash_reset_token
+
+        user.reset_token = hash_reset_token("reset-me")
         user.reset_token_expires_at = datetime.now(timezone.utc) + timedelta(minutes=5)
         db.session.commit()
 

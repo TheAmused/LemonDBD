@@ -1,4 +1,5 @@
 # backend/app/services/user/auth.py
+import hashlib
 import logging
 import secrets
 from datetime import datetime, timedelta, timezone
@@ -13,6 +14,7 @@ from app.core.security import (
     generate_token,
     token_matches_user,
     hash_password,
+    spend_password_check,
     verify_password,
 )
 from app.models import BugReport, User
@@ -272,6 +274,13 @@ def resend_verification_email(email: str) -> tuple[bool, str | None]:
     return True, None
 
 
+def hash_reset_token(token: str) -> str:
+    """What is stored for a reset token: its SHA-256. The link carries the token itself, so a copy of
+    the database alone cannot be used to reset anyone's password. A plain hash is enough here: the
+    token is 256 random bits, single use and short-lived, so there is nothing to brute-force."""
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+
 def request_password_reset(email: str) -> tuple[bool, str | None]:
     """Generate a reset token and email it, if an account with this email exists."""
     clean_email = (email or "").strip().lower()
@@ -292,12 +301,13 @@ def request_password_reset(email: str) -> tuple[bool, str | None]:
         return True, None
 
     now = datetime.now(timezone.utc)
+    token = secrets.token_urlsafe(32)
     with transaction():
-        user.reset_token = secrets.token_urlsafe(32)
+        user.reset_token = hash_reset_token(token)
         user.reset_token_expires_at = now + reset_lifetime()
         user.reset_sent_at = now
 
-    send_password_reset_email(user)
+    send_password_reset_email(user, token)
     return True, None
 
 
@@ -311,7 +321,7 @@ def reset_password_with_token(token: str, new_password: str) -> tuple[User | Non
         return None, f"Password must be at least {min_length} characters long."
 
     user = db.session.scalars(
-        select(User).where(User.reset_token == clean_token)
+        select(User).where(User.reset_token == hash_reset_token(clean_token))
     ).first()
     if not user:
         return None, "Invalid or already used reset link."
@@ -366,7 +376,8 @@ def authenticate_user_credentials(
         )
     ).first()
 
-    if not user:
+    if not user or not user.password_hash:
+        spend_password_check(password)  # same cost as a real check: timing must not reveal the account
         return None, None
 
     if verify_password(password, user.password_hash):

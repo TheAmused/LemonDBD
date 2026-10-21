@@ -172,16 +172,16 @@ def test_passwordless_account_cannot_log_in_with_a_password_or_change_it(
 def test_passwordless_account_can_set_a_password_by_reset_link(
     client: FlaskClient, as_google, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    monkeypatch.setattr("app.services.user.auth.send_password_reset_email", lambda user: None)
+    sent: list[str] = []
+    monkeypatch.setattr("app.services.user.auth.send_password_reset_email", lambda user, token: sent.append(token))
     as_google("sub-r", "rita@example.com")
     client.post(URL, json={"credential": "x"})
     user = db.session.query(User).filter_by(email="rita@example.com").one()
 
     assert client.post("/api/v1/auth/forgot-password", json={"email": "rita@example.com"}).status_code == 200
-    db.session.refresh(user)
     res = client.post(
         "/api/v1/auth/reset-password",
-        json={"token": user.reset_token, "new_password": "brandnew123"},
+        json={"token": sent[0], "new_password": "brandnew123"},
     )
     assert res.status_code == 200
     assert client.post(

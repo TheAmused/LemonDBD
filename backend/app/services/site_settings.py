@@ -262,8 +262,9 @@ def registration_open() -> bool:
 
 
 def email_verification_required() -> bool:
-    """Whether an account must confirm its e-mail address before it may track challenges or edit
-    what it owns (it can sign in before that). While off, accounts are confirmed on sign-in."""
+    """Whether an account must confirm its e-mail address before it can sign in (sign-up and
+    sign-in hand out a verification token instead of a session). While off, accounts are
+    confirmed on sign-in."""
     return bool(get_setting("email_verification_required"))
 
 

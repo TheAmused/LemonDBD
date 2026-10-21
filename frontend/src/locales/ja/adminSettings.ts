@@ -82,7 +82,7 @@ export default {
   config_site_banner_text_ja: "バナーの文面（日本語）",
   config_site_banner_text_ja_desc: "任意の翻訳。空欄の場合は英語が表示されます。",
   config_email_verification_required: "メール認証を必須にする",
-  config_email_verification_required_desc: "新しいアカウントは、チャレンジの記録や所持データの編集の前に、コードでメールアドレスを確認する必要があります（ログインはその前でも可能です）。オフの間にログインした人は全員、確認済みになります。メール送信が止まっている間だけオフにしてください。",
+  config_email_verification_required_desc: "アカウントは、ログインする前にコードでメールアドレスを確認する必要があります。オフの間にログインした人は全員、確認済みになります。メール送信が止まっている間だけオフにしてください。",
   config_altcha_enforced: "セキュリティチェック（ALTCHA）を必須にする",
   config_altcha_enforced_desc: "新規登録、ログイン、パスワードのリセット、ゲストのバグ報告にはチェックの完了が必要です。チェック自体が壊れているときだけオフにしてください。",
   config_google_sign_in_enabled: "Google ログイン",

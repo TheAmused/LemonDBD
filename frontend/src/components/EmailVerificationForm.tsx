@@ -9,13 +9,19 @@ import { CODE_LENGTH, CodeInput } from '@/components/auth/CodeInput';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { useSiteConfig } from '@/context/SiteConfigContext';
+import type { BlockedInfo } from '@/types/moderation';
 
 interface EmailVerificationFormProps {
   email: string;
+  /** From a sign-in or sign-up that waited for the code: with it, a correct code also signs in. */
+  verificationToken?: string;
   onVerified?: (user?: UserProfile) => void;
+  /** The address is confirmed but the account has two-factor sign-in: ask for that code next. */
+  onTwoFactor?: (twoFactorToken: string) => void;
+  onBlocked?: (blocked: BlockedInfo) => void;
 }
 
-export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({ email, onVerified }) => {
+export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({ email, verificationToken, onVerified, onTwoFactor, onBlocked }) => {
   const dict = useDictionary();
   const t = dict.user;
   const { verifyEmail, resendVerification, refreshUser } = useAuth();
@@ -36,10 +42,14 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({ em
     e.preventDefault();
     setError(null);
     setVerifying(true);
-    const res = await verifyEmail(email, code);
+    const res = await verifyEmail(email, code, verificationToken);
     setVerifying(false);
 
-    if (res.success) {
+    if (res.twoFactorToken && onTwoFactor) {
+      onTwoFactor(res.twoFactorToken);
+    } else if (res.blocked && onBlocked) {
+      onBlocked(res.blocked);
+    } else if (res.success) {
       await refreshUser();
       onVerified?.(res.user);
     } else {

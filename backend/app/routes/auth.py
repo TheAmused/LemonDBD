@@ -4,7 +4,7 @@ import os
 from flask import Blueprint, current_app, g, jsonify, make_response, request, send_from_directory
 from pydantic import ValidationError
 
-from app.core.account_state import AccountBlockedError
+from app.core.account_state import AccountBlockedError, is_blocked
 from app.core.config import demo_accounts_enabled
 from app.core.altcha_guard import require_altcha
 from app.core.limiter import limiter, validate_honeypot
@@ -25,6 +25,9 @@ from app.services.user import (
     authenticate_user_credentials,
     clear_user_avatar,
     create_user_account,
+    create_verification_pending_token,
+    needs_email_verification,
+    user_from_verification_pending_token,
     delete_own_account,
     export_filename,
     export_user_data,
@@ -79,6 +82,15 @@ def register():
         return api_error(err, 400)
 
     ownership_service.seed_default_ownership_for_new_user(user.id)
+    if needs_email_verification(user):
+        # "New accounts must confirm their address before signing in": no session yet. The code
+        # form finishes the sign-in with this token once the code checks out.
+        return jsonify({
+            "status": "verification_required",
+            "message": "Account created. Enter the code we sent to your e-mail address to sign in.",
+            "user": UserResponse.model_validate(user).model_dump(),
+            "verification_token": create_verification_pending_token(user),
+        }), 201
     token = generate_token(user.id, user.role)
     summary = ownership_service.get_user_ownership_summary(user.id)
 
@@ -137,6 +149,9 @@ def login():
     if not user:
         return api_error("Invalid credentials", 401)
 
+    if needs_email_verification(user):
+        return _verification_required_response(user)
+
     if two_factor.is_enabled(user.id):
         # Password accepted, but no session yet: the client must finish with POST /auth/login/two-factor.
         return jsonify({
@@ -148,6 +163,18 @@ def login():
     return session_response(user, token or generate_token(user.id, user.role), "Login successful")
 
 
+def _verification_required_response(user):
+    """The password was right, but the address is not confirmed yet: no session, a code and a token instead."""
+    resend_verification_email(user.email)  # a fresh code unless one went out within the cooldown
+    return jsonify({
+        "error": "Confirm your e-mail address to sign in. Enter the code we sent you.",
+        "error_code": "email_not_verified",
+        "status": 403,
+        "email": user.email,
+        "verification_token": create_verification_pending_token(user),
+    }), 403
+
+
 @auth_bp.route("/verify-email", methods=["POST"])
 @limiter.limit(per_minute("rate_recovery_per_minute"))
 def verify_email():
@@ -157,6 +184,19 @@ def verify_email():
     user, err = verify_email_code(email, code)
     if err:
         return jsonify({"status": "error", "message": err}), 400
+
+    # Finishing a sign-in that waited for the code (the token proves the password step passed).
+    pending = user_from_verification_pending_token(data.get("verification_token"))
+    if pending is not None and pending.id == user.id:
+        if two_factor.is_enabled(user.id):
+            return jsonify({
+                "status": "two_factor_required",
+                "two_factor_token": two_factor.create_challenge(user),
+                "methods": ["totp", "recovery"],
+            }), 200
+        if is_blocked(user):
+            return blocked_response(user)
+        return session_response(user, generate_token(user.id, user.role), "Email verified successfully.")
 
     return jsonify({
         "status": "success",

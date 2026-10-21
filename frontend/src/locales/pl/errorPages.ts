@@ -17,4 +17,11 @@ export default {
     title: 'Strona zablokowana',
     text: 'Ta strona nie jest teraz dostępna dla odwiedzających.',
   },
+  error: {
+    code: 'Błąd',
+    title: 'Coś poszło nie tak',
+    text: 'Na tej stronie wystąpił nieoczekiwany błąd. Spróbuj ponownie, a jeśli to się powtarza, wróć na stronę główną.',
+    retry: 'Spróbuj ponownie',
+    reference: 'Kod zgłoszenia',
+  },
 } as const;

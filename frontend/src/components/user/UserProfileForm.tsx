@@ -11,6 +11,7 @@ import { Input } from '@/components/common/Field';
 import { tip } from '@/components/common/Tooltip';
 import { DownloadDataSection } from '@/components/user/DownloadDataSection';
 import { DeleteAccountSection } from '@/components/user/DeleteAccountSection';
+import { SignOutEverywhereSection } from '@/components/user/SignOutEverywhereSection';
 import { useDictionary } from "@/context/DictionaryContext";
 import { useAuth } from '@/context/AuthContext';
 import { twoFactorErrorMessage } from '@/utils/twoFactorErrors';
@@ -389,6 +390,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 shrink-0">
             <DownloadDataSection iconOnly />
+            <SignOutEverywhereSection />
             <DeleteAccountSection iconOnly />
           </div>
           <Button type="submit" variant="primary" size="sm" loading={isUpdating} className="flex-1 sm:flex-none min-w-0">

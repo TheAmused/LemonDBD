@@ -394,6 +394,8 @@ export default {
   maintMinigameSessionsDesc: "Elimina las rondas de práctica de más de 24 horas (cada hora).",
   maintBugReportFiles: "Eliminar capturas huérfanas de informes de errores",
   maintBugReportFilesDesc: "Borra las capturas a las que ya no se refiere ningún informe de error (a diario).",
+  maintRevokedSessions: "Olvidar cierres de sesión caducados",
+  maintRevokedSessionsDesc: "Borra el registro de sesiones cerradas cuando su token ya habría caducado de todos modos (a diario).",
   maintCache: "Vaciar la caché del catálogo",
   maintCacheDesc: "Sirve perks, personajes y mapas actualizados después de editar la base de datos directamente.",
   databaseTitle: "Base de datos",

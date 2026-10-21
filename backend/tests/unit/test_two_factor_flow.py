@@ -507,7 +507,7 @@ class TestSensitiveActionsAskForTheCode:
         dis = client.post(
             "/api/v1/auth/two-factor/disable",
             json={"password": PASSWORD, "code": _next_code(secret)},
-            headers=post_enrol_headers,
+            headers={**post_enrol_headers, "X-Return-Token": "1"},
         )
         assert dis.status_code == 200 and dis.get_json().get("token")
         assert client.get("/api/v1/auth/me", headers=post_enrol_headers).get_json()["authenticated"] is False

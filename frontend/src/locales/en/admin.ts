@@ -394,6 +394,8 @@ export default {
   maintMinigameSessionsDesc: "Deletes practice rounds older than 24 hours (hourly).",
   maintBugReportFiles: "Remove orphaned bug report screenshots",
   maintBugReportFilesDesc: "Deletes screenshots no bug report refers to any more (daily).",
+  maintRevokedSessions: "Forget expired sign-outs",
+  maintRevokedSessionsDesc: "Deletes the record of signed-out sessions once their token would have expired anyway (daily).",
   maintCache: "Clear the catalog cache",
   maintCacheDesc: "Serves fresh perks, characters and maps after you edit the database directly.",
   databaseTitle: "Database",

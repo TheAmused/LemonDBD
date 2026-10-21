@@ -94,7 +94,7 @@ class TestPasswordChangeSignsOutOtherSessions:
         res = client.put(
             "/api/v1/auth/profile",
             json={"new_password": "brand-new-pass", "current_password": PASSWORD},
-            headers=_bearer(old_token),
+            headers={**_bearer(old_token), "X-Return-Token": "1"},
         )
         assert res.status_code == 200
         body = res.get_json()
@@ -121,7 +121,11 @@ class TestPasswordChangeSignsOutOtherSessions:
         )
         assert res.status_code == 200
         assert client.get("/api/v1/auth/me", headers=_bearer(old_token)).get_json()["authenticated"] is False
-        login = client.post("/api/v1/auth/login", json={"login": user.username, "password": "another-pass"})
+        login = client.post(
+            "/api/v1/auth/login",
+            json={"login": user.username, "password": "another-pass"},
+            headers={"X-Return-Token": "1"},
+        )
         assert login.status_code == 200
         assert decode_token(login.get_json()["token"])["ver"] == 1
 

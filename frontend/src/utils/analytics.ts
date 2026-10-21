@@ -32,6 +32,7 @@ export interface AnalyticsEvents {
   showcase_complete: { role: Role };
   avatar_upload: undefined;
   data_download: undefined;
+  sign_out_everywhere: undefined;
   account_delete: undefined;
   two_factor_change: { action: 'enabled' | 'disabled' };
   // Smash or Pass

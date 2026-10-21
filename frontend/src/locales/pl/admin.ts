@@ -394,6 +394,8 @@ export default {
   maintMinigameSessionsDesc: "Usuwa rundy treningowe starsze niż 24 godziny (co godzinę).",
   maintBugReportFiles: "Usuń osierocone zrzuty ekranu ze zgłoszeń",
   maintBugReportFilesDesc: "Usuwa zrzuty ekranu, do których nie odnosi się już żadne zgłoszenie błędu (codziennie).",
+  maintRevokedSessions: "Usuń wygasłe wylogowania",
+  maintRevokedSessionsDesc: "Usuwa zapis wylogowanych sesji, gdy ich token i tak już by wygasł (codziennie).",
   maintCache: "Wyczyść pamięć podręczną katalogu",
   maintCacheDesc: "Serwuje świeże perki, postacie i mapy po bezpośredniej edycji bazy danych.",
   databaseTitle: "Baza danych",

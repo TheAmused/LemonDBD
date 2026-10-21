@@ -59,6 +59,12 @@ def _bug_report_files() -> int:
     return sweep_orphans()
 
 
+def _revoked_sessions() -> int:
+    from app.core.security import purge_expired_revocations
+
+    return purge_expired_revocations()
+
+
 def _catalog_cache() -> int:
     from app.core.redis_cache import bump_catalog_version
 
@@ -83,6 +89,7 @@ JOBS: tuple[MaintenanceJob, ...] = (
     MaintenanceJob("ban_list", _ban_list, 8882030, "Removed %d expired entr(ies) from the ban-evasion list"),
     MaintenanceJob("minigame_sessions", _minigame_sessions, 8882031, "Deleted %d expired practice minigame session(s)"),
     MaintenanceJob("bug_report_files", _bug_report_files, 8882032, "Deleted %d bug report screenshot(s) no report refers to"),
+    MaintenanceJob("revoked_sessions", _revoked_sessions, 8882033, "Forgot %d signed-out session(s) past their expiry"),
     MaintenanceJob("catalog_cache", _catalog_cache, None, "Cleared the catalog cache"),
 )
 JOB_BY_KEY: dict[str, MaintenanceJob] = {job.key: job for job in JOBS}
@@ -181,6 +188,8 @@ SCHEDULE: tuple[tuple[str, str, dict[str, Any]], ...] = (
     ("purge_expired_minigame_sessions", "minigame_sessions", {"trigger": "cron", "minute": 41}),
     # Screenshots left behind by a purge, a replace import or a crash between commit and delete.
     ("sweep_bug_report_files", "bug_report_files", {"trigger": "cron", "hour": 3, "minute": 40}),
+    # Signed-out session ids are only needed until the token would have expired anyway.
+    ("purge_expired_revoked_sessions", "revoked_sessions", {"trigger": "cron", "hour": 3, "minute": 50}),
 )
 SCHEDULER_STALE_AFTER = timedelta(hours=1)
 

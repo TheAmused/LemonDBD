@@ -121,7 +121,10 @@ class TestAdminEditUser:
 class TestMaintenance:
     def test_lists_jobs(self, client: FlaskClient, admin: User) -> None:
         keys = [j["key"] for j in client.get("/api/v1/admin/maintenance", headers=_headers(admin)).get_json()["jobs"]]
-        assert keys == ["streak_inactivity", "content_evidence", "sanction_emails", "ban_list", "minigame_sessions", "bug_report_files", "catalog_cache"]
+        assert keys == [
+            "streak_inactivity", "content_evidence", "sanction_emails", "ban_list",
+            "minigame_sessions", "bug_report_files", "revoked_sessions", "catalog_cache",
+        ]
 
     def test_runs_a_job_and_audits_it(self, client: FlaskClient, admin: User, db_session) -> None:
         res = client.post("/api/v1/admin/maintenance/catalog_cache", headers=_headers(admin))

@@ -74,6 +74,7 @@ class TestAuthLiveComprehensiveWorkflow:
         # Log in with the lemon admin credentials
         login_res = live_client.post(
             "/api/v1/auth/login",
+            headers={"X-Return-Token": "1"},
             json={
                 "username_or_email": admin_account["login"],
                 "password": admin_account["password"],

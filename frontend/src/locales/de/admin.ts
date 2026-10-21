@@ -394,6 +394,8 @@ export default {
   maintMinigameSessionsDesc: "Löscht Übungsrunden, die älter als 24 Stunden sind (stündlich).",
   maintBugReportFiles: "Verwaiste Screenshots von Fehlerberichten entfernen",
   maintBugReportFilesDesc: "Löscht Screenshots, auf die kein Fehlerbericht mehr verweist (täglich).",
+  maintRevokedSessions: "Abgelaufene Abmeldungen entfernen",
+  maintRevokedSessionsDesc: "Löscht den Eintrag abgemeldeter Sitzungen, sobald ihr Token ohnehin abgelaufen wäre (täglich).",
   maintCache: "Katalog-Cache leeren",
   maintCacheDesc: "Liefert frische Perks, Charaktere und Karten, nachdem du die Datenbank direkt bearbeitet hast.",
   databaseTitle: "Datenbank",

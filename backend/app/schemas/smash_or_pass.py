@@ -1,7 +1,7 @@
 # backend/app/schemas/smash_or_pass.py
 from datetime import datetime
-from typing import Any
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from typing import Annotated, Any
+from pydantic import BaseModel, ConfigDict, Field, PositiveInt, StringConstraints, field_validator
 
 from app.models.smash_or_pass import TRANSLATABLE_LOCALES, clean_media_display
 from app.schemas.common import CleanImageUrl
@@ -212,6 +212,23 @@ class SmashRosterAdminCreate(BaseModel):
     @classmethod
     def _filter_translations(cls, value: Any) -> dict[str, Any]:
         return _filter_known_locales(value)
+
+
+#: Longest client-supplied identifier accepted (roster slugs, guest session ids).
+MAX_SMASH_KEY_LENGTH = 128
+SmashKey = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=MAX_SMASH_KEY_LENGTH)]
+
+
+class SmashSessionRequest(BaseModel):
+    """Whose votes a reset / sync is about, and in which roster (every field optional here; each
+    route says which it needs). The legacy aliases are resolved before validation."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    session_id: SmashKey | None = None
+    roster_slug: SmashKey | None = None
+    edition: SmashKey | None = None
+    user_id: PositiveInt | None = None
 
 
 class SmashPreferenceIn(BaseModel):

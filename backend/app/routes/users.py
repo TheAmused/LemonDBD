@@ -6,7 +6,15 @@ from pydantic import ValidationError
 from app.core.limiter import limiter
 from app.core.reauth import reauth_error
 from app.core.security import admin_required, login_required
-from app.schemas.user import UserCreate, UserResponse, UserUpdate
+from app.schemas.user import (
+    BulkCharacterOwnershipRequest,
+    BulkPerkOwnershipRequest,
+    CharacterOwnershipSet,
+    PerkOwnershipSet,
+    UserCreate,
+    UserResponse,
+    UserUpdate,
+)
 from app.utils.pagination import paginate_args
 from app.services.admin_control_service import log_admin_action
 from app.services.ownership.characters import normalize_role, positive_id
@@ -59,6 +67,10 @@ def _unverified_owner_error(user_id: int) -> tuple[Response, int] | None:
     if email_verification_required():
         return api_error("Verify your email address before changing what you own.", 403, code="email_not_verified")
     return None
+
+
+def _invalid_body(err: ValidationError) -> tuple[Response, int]:
+    return api_error("Validation failed", 400, details=err.errors(include_url=False, include_context=False))
 
 
 def _self_or_admin_error(user_id: int, message: str = "Unauthorized.") -> tuple[Response, int] | None:
@@ -294,21 +306,22 @@ def set_single_character_ownership(user_id: int):
     if err_resp := _unverified_owner_error(user_id):
         return err_resp
 
-    data = request.get_json(silent=True) or {}
-    character_id = positive_id(data.get("character_id"))
-    is_owned = bool(data.get("is_owned", True))
-
+    try:
+        change = CharacterOwnershipSet.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return _invalid_body(err)
+    character_id = positive_id(change.character_id)
     if character_id is None:
         return api_error("character_id is required.", 400)
     # Never guessed: survivor 7 and killer 7 are different characters, and the guess used to
     # prefer the killer whenever both existed.
     try:
-        role = normalize_role(data.get("role"))
+        role = normalize_role(change.role)
     except ValueError:
         return api_error("role is required and must be 'survivor' or 'killer'.", 400)
 
     try:
-        result = ownership_service.set_character_ownership(user_id, character_id, is_owned, role=role)
+        result = ownership_service.set_character_ownership(user_id, character_id, change.is_owned, role=role)
         return jsonify({"status": "success", "data": result}), 200
     except ValueError as ve:
         return api_error(str(ve), 404)
@@ -323,11 +336,13 @@ def bulk_set_character_ownership(user_id: int):
     if err_resp := _unverified_owner_error(user_id):
         return err_resp
 
-    data = request.get_json(silent=True) or {}
-    updates = data.get("updates", [])
+    try:
+        bulk = BulkCharacterOwnershipRequest.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return _invalid_body(err)
 
     try:
-        result = ownership_service.bulk_set_character_ownership(user_id, updates)
+        result = ownership_service.bulk_set_character_ownership(user_id, [u.model_dump() for u in bulk.updates])
     except ValueError as err:
         return api_error(str(err), 400)
     return jsonify({"status": "success", "data": result}), 200
@@ -404,15 +419,16 @@ def set_single_perk_ownership(user_id: int):
     if err_resp := _unverified_owner_error(user_id):
         return err_resp
 
-    data = request.get_json(silent=True) or {}
-    perk_id = positive_id(data.get("perk_id"))
-    is_unlocked = bool(data.get("is_unlocked", True))
-
+    try:
+        change = PerkOwnershipSet.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return _invalid_body(err)
+    perk_id = positive_id(change.perk_id)
     if perk_id is None:
         return api_error("perk_id is required.", 400)
 
     try:
-        result = ownership_service.set_perk_ownership(user_id, perk_id, is_unlocked)
+        result = ownership_service.set_perk_ownership(user_id, perk_id, change.is_unlocked)
         return jsonify({"status": "success", "data": result}), 200
     except ValueError as ve:
         return api_error(str(ve), 404)
@@ -427,11 +443,13 @@ def bulk_set_perk_ownership(user_id: int):
     if err_resp := _unverified_owner_error(user_id):
         return err_resp
 
-    data = request.get_json(silent=True) or {}
-    updates = data.get("updates", [])
+    try:
+        bulk = BulkPerkOwnershipRequest.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return _invalid_body(err)
 
     try:
-        result = ownership_service.bulk_set_perk_ownership(user_id, updates)
+        result = ownership_service.bulk_set_perk_ownership(user_id, [u.model_dump() for u in bulk.updates])
     except ValueError as err:
         return api_error(str(err), 400)
     return jsonify({"status": "success", "data": result}), 200

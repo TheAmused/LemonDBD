@@ -1,5 +1,6 @@
 'use client';
 // frontend/src/components/maps/voice/useStartListening.ts
+import { logger } from '@/utils/logger';
 import { useCallback } from 'react';
 import type { Dispatch, RefObject, SetStateAction } from 'react';
 import { AudioCaptureSession, initClientSpeechModel, type VoiceEngineType } from '@/services/clientSpeechModel';
@@ -246,7 +247,7 @@ export function useStartListening(ctx: StartListeningContext) {
               recognition.start();
               return;
             } catch (e: unknown) {
-              console.warn('[VoiceNav] Auto-restart failed:', e);
+              logger.warn('[VoiceNav] Auto-restart failed:', e);
               isHoldingRef.current = false;
               isListeningRef.current = false;
             }

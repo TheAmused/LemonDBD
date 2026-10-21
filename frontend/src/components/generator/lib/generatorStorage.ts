@@ -1,4 +1,5 @@
 // frontend/src/components/generator/lib/generatorStorage.ts
+import { logger } from '@/utils/logger';
 import { RoleCategory, DrawnSlot, GeneratorMode } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { getLocalStorage } from '@/utils/safeStorage';
@@ -47,7 +48,7 @@ export function safeSetJSON(key: string, value: unknown): boolean {
     storage.setItem(key, serialized);
     return true;
   } catch (err: unknown) {
-    console.warn(`[generatorStorage] Failed saving to localStorage (${key}):`, err);
+    logger.warn(`[generatorStorage] Failed saving to localStorage (${key}):`, err);
     return false;
   }
 }

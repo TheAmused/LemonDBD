@@ -1,6 +1,7 @@
 // frontend/src/components/user/ShowcaseCharacterModal.tsx
 'use client';
 
+import { logger } from '@/utils/logger';
 import React, { useState, useMemo, useEffect } from 'react';
 import { SearchInput } from '@/components/common/Field';
 import Image from 'next/image';
@@ -120,7 +121,7 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({ 
         setCharacters(list);
       })
       .catch((err) => {
-        console.error('Failed to load characters for showcase modal:', err);
+        logger.error('Failed to load characters for showcase modal:', err);
       })
       .finally(() => {
         setLoading(false);

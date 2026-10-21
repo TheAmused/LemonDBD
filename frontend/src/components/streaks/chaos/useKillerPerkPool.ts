@@ -1,6 +1,7 @@
 // frontend/src/components/streaks/chaos/useKillerPerkPool.ts
 'use client';
 
+import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useState } from 'react';
 import { Perk } from '@/types/gauntletStreak';
 import { useAuth } from '@/context/AuthContext';
@@ -24,7 +25,7 @@ export function useKillerPerkPool() {
         setPool(unlocked);
       }
     } catch (err) {
-      console.error('Failed to load killer perk pool:', err);
+      logger.error('Failed to load killer perk pool:', err);
     } finally {
       setLoading(false);
     }

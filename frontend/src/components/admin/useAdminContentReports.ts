@@ -2,6 +2,7 @@
 // frontend/src/components/admin/useAdminContentReports.ts
 //
 // The content-report queue: the filtered, paged list, the selected report's evidence, and its decision.
+import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ADMIN_STORAGE, CONTENT_REPORT_FILTERS, oneOf } from '@/components/admin/adminStorage';
 import { DEFAULT_PAGE_SIZE, lastPage } from '@/constants/pagination';
@@ -83,7 +84,7 @@ export function useAdminContentReports({ enabled, refreshKey, notify, onChanged 
         if (request === latestDetailRequest.current) setDetail(body);
       })
       .catch((err: unknown) => {
-        console.error('Failed to load the content report:', err);
+        logger.error('Failed to load the content report:', err);
         if (request === latestDetailRequest.current) setDetail(null);
       })
       .finally(() => {

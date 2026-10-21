@@ -1,6 +1,7 @@
 // frontend/src/components/streaks/useOwnedRoster.ts
 'use client';
 
+import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { sortByReleaseNumber } from '@/utils/characterUtils';
@@ -67,7 +68,7 @@ export function useOwnedRoster(role: OwnedRosterRole, rosterLimit?: number) {
         setCharacters(next.characters);
       }
     } catch (err) {
-      console.error(`Failed to load owned ${role.toLowerCase()}s:`, err);
+      logger.error(`Failed to load owned ${role.toLowerCase()}s:`, err);
     } finally {
       setLoading(false);
     }

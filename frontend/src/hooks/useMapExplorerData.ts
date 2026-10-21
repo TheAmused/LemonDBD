@@ -1,6 +1,7 @@
 // frontend/src/hooks/useMapExplorerData.ts
 'use client';
 
+import { logger } from '@/utils/logger';
 import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { MapRealm, Realm } from '@/types/map';
@@ -141,7 +142,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
           onAvailableMapsLoadedRef.current?.(loaded);
         }
       } catch (err) {
-        console.error('Failed loading maps:', err);
+        logger.error('Failed loading maps:', err);
       } finally {
         if (!isCancelled) {
           setLoading(false);
@@ -167,7 +168,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
           setRealmImages(byName);
         }
       } catch (err) {
-        console.error('Failed loading realm images:', err);
+        logger.error('Failed loading realm images:', err);
       }
     }
     loadRealms();

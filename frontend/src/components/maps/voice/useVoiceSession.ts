@@ -1,5 +1,6 @@
 'use client';
 // frontend/src/components/maps/voice/useVoiceSession.ts
+import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createDeduper, trackEvent } from '@/utils/analytics';
 import {
@@ -284,7 +285,7 @@ export function useVoiceSession({
               }
             }
           } catch (err: unknown) {
-            console.error('[VoiceNav] Client-side transcription error:', err);
+            logger.error('[VoiceNav] Client-side transcription error:', err);
           }
         }
 
@@ -302,7 +303,7 @@ export function useVoiceSession({
       try {
         recognitionRef.current.stop();
       } catch (e: unknown) {
-        console.warn('[VoiceNav] Error stopping recognition in stopListeningAndProcess:', e);
+        logger.warn('[VoiceNav] Error stopping recognition in stopListeningAndProcess:', e);
       }
     }
 

@@ -1,4 +1,5 @@
 // frontend/src/utils/minigames/storage.ts
+import { logger } from '@/utils/logger';
 import type { ChallengeDefinition, ChallengeProgress } from '@/types/minigame';
 import { getLocalStorage } from '@/utils/safeStorage';
 
@@ -15,7 +16,7 @@ export function getCustomChallenges(): ChallengeDefinition[] {
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed : [];
   } catch (err) {
-    console.error('Error reading custom minigames from storage:', err);
+    logger.error('Error reading custom minigames from storage:', err);
     return [];
   }
 }
@@ -44,7 +45,7 @@ export function saveCustomChallenge(challenge: ChallengeDefinition): ChallengeDe
     }
     storage.setItem(CUSTOM_CHALLENGES_KEY, JSON.stringify(list));
   } catch (err) {
-    console.error('Error saving custom minigame to storage:', err);
+    logger.error('Error saving custom minigame to storage:', err);
   }
 
   return updated;
@@ -59,7 +60,7 @@ export function deleteCustomChallenge(id: string | number): void {
     storage.setItem(CUSTOM_CHALLENGES_KEY, JSON.stringify(filtered));
     clearChallengeProgress(id);
   } catch (err) {
-    console.error('Error deleting custom minigame from storage:', err);
+    logger.error('Error deleting custom minigame from storage:', err);
   }
 }
 
@@ -71,7 +72,7 @@ export function getChallengeProgress(challengeId: string | number): ChallengePro
     if (!raw) return null;
     return JSON.parse(raw) as ChallengeProgress;
   } catch (err) {
-    console.error('Error reading challenge progress:', err);
+    logger.error('Error reading challenge progress:', err);
     return null;
   }
 }
@@ -85,7 +86,7 @@ export function saveChallengeProgress(progress: ChallengeProgress): void {
       JSON.stringify(progress)
     );
   } catch (err) {
-    console.error('Error saving challenge progress:', err);
+    logger.error('Error saving challenge progress:', err);
   }
 }
 
@@ -95,7 +96,7 @@ export function clearChallengeProgress(challengeId: string | number): void {
   try {
     storage.removeItem(`${PROGRESS_KEY_PREFIX}${challengeId}`);
   } catch (err) {
-    console.error('Error clearing challenge progress:', err);
+    logger.error('Error clearing challenge progress:', err);
   }
 }
 
@@ -168,7 +169,7 @@ export function recordDailyCompletion(dateStr: string): DailyStreakData {
     try {
       storage.setItem(DAILY_STREAK_KEY, JSON.stringify(updated));
     } catch (err) {
-      console.error('Error saving daily streak:', err);
+      logger.error('Error saving daily streak:', err);
     }
   }
 
@@ -192,7 +193,7 @@ export function recordDailyLoss(dateStr: string): DailyStreakData {
     try {
       storage.setItem(DAILY_STREAK_KEY, JSON.stringify(updated));
     } catch (err) {
-      console.error('Error saving daily loss:', err);
+      logger.error('Error saving daily loss:', err);
     }
   }
 

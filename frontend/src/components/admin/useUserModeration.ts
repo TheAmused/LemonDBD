@@ -3,6 +3,7 @@
 //
 // One user's moderation history and the decisions an admin can take about them.
 
+import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDictionary } from '@/context/DictionaryContext';
 import {
@@ -46,7 +47,7 @@ export function useUserModeration({ userId, username, onChanged, onActionMessage
       const body = await fetchUserSanctions(userId);
       if (request === latestRequest.current) setLoaded({ userId, data: body });
     } catch (err: unknown) {
-      console.error('Failed to load the moderation history:', err);
+      logger.error('Failed to load the moderation history:', err);
       if (request === latestRequest.current) setLoadFailed(true);
     } finally {
       if (request === latestRequest.current) setLoading(false);

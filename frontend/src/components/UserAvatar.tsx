@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/UserAvatar.tsx
 
+import { logger } from '@/utils/logger';
 import React, { useState, useEffect } from 'react';
 import { LemonIcon } from '@/components/LemonIcon';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
@@ -126,7 +127,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
             src={finalSrc}
             alt={alt || user?.username}
             onError={() => {
-              console.warn('Avatar image failed to load from:', finalSrc);
+              logger.warn('Avatar image failed to load from:', finalSrc);
               setImgError(true);
             }}
             className="h-full w-full object-cover"

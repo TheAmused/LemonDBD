@@ -1,5 +1,6 @@
 'use client';
 // frontend/src/components/characters/hub/useCharacterOwnership.ts
+import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   buildCharacterOwnershipDraft,
@@ -161,7 +162,7 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
       setOwnershipMode(true);
       trackEvent('ownership_mode_enter');
     } catch (err: unknown) {
-      console.error('Failed to load ownership state:', err);
+      logger.error('Failed to load ownership state:', err);
       setOwnershipLoadError(dict.characterDetail.loadOwnershipError);
     } finally {
       setOwnershipLoading(false);
@@ -244,7 +245,7 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
         }, 150);
       });
     } catch (err: unknown) {
-      console.error('Failed to save ownership changes:', err);
+      logger.error('Failed to save ownership changes:', err);
       setOwnershipSaveError(dict.characterDetail.saveOwnershipError);
     } finally {
       setOwnershipSaving(false);

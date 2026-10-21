@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/character-detail/CharacterDetailClient.tsx
 
+import { logger } from '@/utils/logger';
 import React, { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, UserX } from 'lucide-react';
@@ -48,7 +49,7 @@ export function CharacterDetailClient({ slug }: { slug: string }) {
 
   useEffect(() => {
     if (detailError) {
-      console.error('Failed to fetch character detail:', detailError);
+      logger.error('Failed to fetch character detail:', detailError);
       setNotFound(true);
       return;
     }

@@ -1,6 +1,7 @@
 // frontend/src/components/smash-or-pass/creator/CoverImageCropModal.tsx
 'use client';
 
+import { logger } from '@/utils/logger';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ZoomIn, ZoomOut, RotateCcw, Check, Upload, AlertCircle, Image as ImageIcon } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
@@ -233,7 +234,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
           onApplyCrop(croppedDataUrl);
           onClose();
         } catch (err) {
-          console.warn('Canvas export tainted by external CORS:', err);
+          logger.warn('Canvas export tainted by external CORS:', err);
           setCorsError(true);
         }
       };

@@ -1,6 +1,7 @@
 // frontend/src/context/AuthContext.tsx
 'use client';
 
+import { logger } from '@/utils/logger';
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
 
 export interface UserProfile {
@@ -130,7 +131,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setWarnings([]);
       setSessionFlag(false);
     } catch (err) {
-      console.error('Failed to fetch auth state:', err);
+      logger.error('Failed to fetch auth state:', err);
     } finally {
       setIsLoading(false);
     }
@@ -367,7 +368,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await acknowledgeWarningRequest(sanctionId);
     } catch (err) {
-      console.error('Failed to acknowledge the warning:', err);
+      logger.error('Failed to acknowledge the warning:', err);
     }
   };
 
@@ -391,7 +392,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return false;
     } catch (err) {
-      console.error('Failed to bulk update character ownership:', err);
+      logger.error('Failed to bulk update character ownership:', err);
       return false;
     }
   };
@@ -413,7 +414,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return false;
     } catch (err) {
-      console.error('Failed to update perk ownership:', err);
+      logger.error('Failed to update perk ownership:', err);
       return false;
     }
   };
@@ -437,7 +438,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return false;
     } catch (err) {
-      console.error('Failed to bulk update perk ownership:', err);
+      logger.error('Failed to bulk update perk ownership:', err);
       return false;
     }
   };
@@ -455,7 +456,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return false;
     } catch (err) {
-      console.error('Failed to mark onboarding complete:', err);
+      logger.error('Failed to mark onboarding complete:', err);
       return false;
     }
   };
@@ -474,7 +475,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return false;
     } catch (err) {
-      console.error('Failed to set preferred language:', err);
+      logger.error('Failed to set preferred language:', err);
       return false;
     }
   };

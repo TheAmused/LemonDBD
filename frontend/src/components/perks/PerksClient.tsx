@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/perks/PerksClient.tsx
 
+import { logger } from '@/utils/logger';
 import React, { useEffect, useState, useCallback, useRef, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
@@ -184,7 +185,7 @@ function PerksContent() {
         setTotalResults(result.pagination.total);
       }
     } catch (err: unknown) {
-      console.error('Failed fetching perks:', err);
+      logger.error('Failed fetching perks:', err);
       if (requestId === fetchSeqRef.current) {
         setFetchError(err instanceof Error ? err.message : 'Failed fetching perks');
       }

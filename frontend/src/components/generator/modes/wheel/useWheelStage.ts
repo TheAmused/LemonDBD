@@ -1,5 +1,6 @@
 'use client';
 // frontend/src/components/generator/modes/wheel/useWheelStage.ts
+import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import type { ChaosMutator } from '@/types/chaos';
@@ -302,7 +303,7 @@ export function useWheelStage({
       // unexpected error -- without this, isSpinning could stay true
       // forever with no visible feedback, which looks exactly like "the
       // button does nothing."
-      console.error('Wheel spin failed:', err);
+      logger.error('Wheel spin failed:', err);
       if (isMountedRef.current) {
         stopEmberDrift();
         setIsSpinning(false);

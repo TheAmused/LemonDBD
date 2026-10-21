@@ -21,6 +21,19 @@ RUN mkdir -p /var/log/nginx && \
 COPY security-headers.conf /etc/nginx/snippets/security-headers.conf
 COPY default.conf /etc/nginx/conf.d/default.conf
 
+# Run as the unprivileged `nginx` user instead of root (the layout nginx-unprivileged uses): no
+# `user` switch, the pid file and temp dirs somewhere that user can write, and the key it reads.
+# Docker lets a non-root process bind 80/443 inside the container (ip_unprivileged_port_start=0,
+# set explicitly in docker-compose.base.yml).
+RUN sed -i -e '/^user /d' -e 's#^pid .*#pid /tmp/nginx.pid;#' /etc/nginx/nginx.conf && \
+    chown -R nginx:nginx /var/cache/nginx /etc/nginx/certs && \
+    chmod 600 /etc/nginx/certs/localhost.key
+USER nginx
+
 EXPOSE 80 443
+
+# Answered by the plain-HTTP localhost server (location /nginx-health in default.conf).
+HEALTHCHECK --interval=10s --timeout=3s --start-period=10s --retries=5 \
+    CMD wget -q -O /dev/null --header "Host: localhost" http://127.0.0.1/nginx-health || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]

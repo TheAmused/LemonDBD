@@ -1,6 +1,7 @@
 // frontend/src/components/minigames/guessers/AudioGuesser.tsx
 'use client';
 
+import { logger } from '@/utils/logger';
 import { Button } from '@/components/common/Button';
 import { AUDIO_ENDPOINT_PATTERN } from '@/utils/minigames/jsonExportImport';
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
@@ -111,7 +112,7 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
       audioRef.current
         .play()
         .catch((err) => {
-          console.warn('[AudioGuesser] HTML5 audio play failed, falling back to Web Audio synth:', err);
+          logger.warn('[AudioGuesser] HTML5 audio play failed, falling back to Web Audio synth:', err);
           setUseFallback(true);
           soundEngine.playHeartbeat(32, 6);
           synthTimerRef.current = setTimeout(() => setIsPlaying(false), 6000);
@@ -158,7 +159,7 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
           onTimeUpdate={handleTimeUpdate}
           onEnded={() => setIsPlaying(false)}
           onError={() => {
-            console.warn('[AudioGuesser] Audio source error, switching to synthetic fallback.');
+            logger.warn('[AudioGuesser] Audio source error, switching to synthetic fallback.');
             setUseFallback(true);
           }}
         />

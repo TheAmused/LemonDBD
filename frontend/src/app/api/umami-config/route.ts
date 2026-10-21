@@ -22,6 +22,7 @@
 // change too), creates or reuses the website, and caches the ID in memory
 // for the life of this container -- self-healing on every reset with zero
 // manual steps, and with no build-time dependency at all.
+import { logger } from '@/utils/logger';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
@@ -129,7 +130,7 @@ export async function getWebsiteId(): Promise<string | null> {
       .catch((err) => {
         // Best-effort: Umami might just not be up yet right after a reset.
         // Don't cache the failure -- the next request tries again.
-        console.warn(
+        logger.warn(
           '[umami-config] website provisioning notice:',
           err instanceof Error ? err.message : err,
         );

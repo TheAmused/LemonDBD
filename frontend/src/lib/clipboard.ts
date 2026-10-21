@@ -1,4 +1,5 @@
 // frontend/src/lib/clipboard.ts
+import { logger } from '@/utils/logger';
 /**
  * Robust clipboard copy with fallback to document.execCommand('copy').
  */
@@ -12,7 +13,7 @@ export async function copyTextWithFallback(text: string): Promise<boolean> {
       await navigator.clipboard.writeText(text);
       return true;
     } catch (err) {
-      console.warn('navigator.clipboard.writeText failed, trying execCommand fallback:', err);
+      logger.warn('navigator.clipboard.writeText failed, trying execCommand fallback:', err);
     }
   }
 
@@ -33,7 +34,7 @@ export async function copyTextWithFallback(text: string): Promise<boolean> {
       document.body.removeChild(textarea);
       return Boolean(successful);
     } catch (err) {
-      console.error('execCommand copy fallback failed:', err);
+      logger.error('execCommand copy fallback failed:', err);
       return false;
     }
   }

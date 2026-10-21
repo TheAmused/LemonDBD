@@ -5,6 +5,7 @@
 // <html>/<body>, no providers (dictionary, theme, auth). The copy comes from i18n/errorPageCopy,
 // picked by the URL's locale prefix.
 
+import { logger } from '@/utils/logger';
 import { useEffect, useState } from 'react';
 import { buttonClassName } from '@/components/common/Button';
 import {
@@ -21,7 +22,7 @@ export function GlobalErrorDocument({ error, reset }: { error: Error & { digest?
   const [locale, setLocale] = useState<Locale>(i18n.defaultLocale);
   useEffect(() => {
     setLocale(localeOfPath(window.location.pathname));
-    console.error(error);
+    logger.error(error);
   }, [error]);
   const copy = errorPageCopy(locale);
 

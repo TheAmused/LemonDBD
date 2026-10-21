@@ -1,6 +1,7 @@
 // frontend/src/components/minigames/ChallengeRunner.tsx
 'use client';
 
+import { logger } from '@/utils/logger';
 import { lookup } from '@/utils/lookup';
 import { Button } from '@/components/common/Button';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
@@ -218,7 +219,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
         persistState(currentRoundIndex, updatedGuesses, newRoundStatus, false, updatedAnswers);
       }
     } catch (err) {
-      console.error('Error evaluating guess:', err);
+      logger.error('Error evaluating guess:', err);
       setGuessError(true);
     } finally {
       setIsSubmitting(false);
@@ -236,7 +237,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
         const result = await submitGuess({ ...guessRequest(), give_up: true });
         if (result.answer) answer = result.answer;
       } catch (err) {
-        console.error('Error giving up the round:', err);
+        logger.error('Error giving up the round:', err);
         setGuessError(true);
         setIsSubmitting(false);
         return;

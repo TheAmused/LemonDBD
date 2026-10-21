@@ -1,5 +1,6 @@
 'use client';
 
+import { logger } from '@/utils/logger';
 import { getErrorMessage } from "@/utils/api";
 // frontend/src/components/minigames/MinigamesHub.tsx
 import { Button, buttonClassName } from '@/components/common/Button';
@@ -99,7 +100,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
       setCopiedId(trial.id);
       setTimeout(() => setCopiedId(null), 3000);
     } catch (err) {
-      console.error('Failed to create share link:', err);
+      logger.error('Failed to create share link:', err);
       setImportError(getErrorMessage(err, dict.tierLists.signFailed));
     } finally {
       setShareLoadingId(null);

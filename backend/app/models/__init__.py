@@ -27,6 +27,7 @@ from app.models.gauntlet import (
 from app.models.map import MapRealm, MapSource, Realm
 from app.models.page_streak import PageStreakPageLog, PageStreakRun
 from app.models.perk import Perk
+from app.models.revoked_session import RevokedSession
 from app.models.tier_list import TierList
 from app.models.smash_or_pass import (
     Entity,
@@ -64,6 +65,7 @@ __all__ = [
     "Survivor",
     "Killer",
     "Perk",
+    "RevokedSession",
     "Item",
     "ItemCategory",
     "KillerAddon",

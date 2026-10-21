@@ -52,6 +52,7 @@ const JOB_KEYS = {
   ban_list: ['maintBanList', 'maintBanListDesc'],
   minigame_sessions: ['maintMinigameSessions', 'maintMinigameSessionsDesc'],
   bug_report_files: ['maintBugReportFiles', 'maintBugReportFilesDesc'],
+  revoked_sessions: ['maintRevokedSessions', 'maintRevokedSessionsDesc'],
   catalog_cache: ['maintCache', 'maintCacheDesc'],
 } as const;
 

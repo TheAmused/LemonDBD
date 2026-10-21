@@ -289,8 +289,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Address confirmed; the sign-in still needs the authenticator code.
         return { success: false, twoFactorToken: data.two_factor_token as string };
       }
-      // A verification that finished a sign-in carries the new session.
-      if (data.token && data.user) adoptSession(data);
+      // A verification that finished a sign-in carries the new session (set as the HttpOnly cookie).
+      if (data.session && data.user) adoptSession(data);
       return { success: true, user: data.user as UserProfile };
     } catch (err) {
       return { success: false, error: getErrorMessage(err, 'Network error occurred.') };

@@ -15,9 +15,12 @@ from app.core.security import (
     clear_session_cookie,
     get_current_user,
     login_required,
+    request_token,
+    revoke_token,
     set_session_cookie,
     widen_legacy_session_cookie,
 )
+from app.core.transaction import transaction
 from app.schemas.user import UserRegister, UserResponse
 from app.services import site_settings
 from app.services.altcha_service import AltchaService
@@ -51,6 +54,18 @@ logger = logging.getLogger(__name__)
 auth_bp = Blueprint("auth_bp", __name__, url_prefix="/api/v1/auth")
 
 ownership_service = OwnershipService()
+
+# API clients that authenticate with `Authorization: Bearer` send this header to get the session
+# token in the JSON body. Browsers never do: their session is the HttpOnly cookie, and a token in
+# a response body is readable by any script running on the page, which would undo HttpOnly.
+TOKEN_IN_BODY_HEADER = "X-Return-Token"
+
+
+def token_fields(token: str) -> dict:
+    """`{"token", "token_type"}` for an API client that asked for them, else nothing."""
+    if request.headers.get(TOKEN_IN_BODY_HEADER, "").strip() == "1":
+        return {"token": token, "token_type": "Bearer"}
+    return {}
 
 
 @auth_bp.route("/register", methods=["POST"])
@@ -97,8 +112,8 @@ def register():
     response = make_response(jsonify({
         "status": "success",
         "message": "User registered successfully",
-        "token": token,
-        "token_type": "Bearer",
+        "session": True,
+        **token_fields(token),
         "user": UserResponse.model_validate(user).model_dump(),
         "ownership": summary,
     }), 201)
@@ -110,8 +125,9 @@ def session_response(user, token: str, message: str, status: int = 200, extra: d
     response = make_response(jsonify({
         "status": "success",
         "message": message,
-        "token": token,
-        "token_type": "Bearer",
+        # A signed-in session was started (the cookie carries it).
+        "session": True,
+        **token_fields(token),
         "user": UserResponse.model_validate(user).model_dump(),
         "ownership": ownership_service.get_user_ownership_summary(user.id),
         "moderation": {"warnings": pending_warnings(user.id)},
@@ -258,7 +274,23 @@ def reset_password():
 
 @auth_bp.route("/logout", methods=["POST"])
 def logout():
+    # Deleting the cookie is not enough: a copy of the token would stay valid until it expired.
+    revoke_token(request_token())
     response = make_response(jsonify({"status": "success", "message": "Logged out successfully"}), 200)
+    return clear_session_cookie(response)
+
+
+@auth_bp.route("/logout-all", methods=["POST"])
+@limiter.limit("10 per hour")
+@login_required
+def logout_everywhere():
+    """Sign out every session of this account, on every device (this one included)."""
+    user = g.current_user
+    with transaction():
+        user.token_version = int(user.token_version or 0) + 1
+    response = make_response(
+        jsonify({"status": "success", "message": "Signed out on every device."}), 200
+    )
     return clear_session_cookie(response)
 
 
@@ -333,8 +365,7 @@ def update_profile():
 
     # The password changed, so every older session was just signed out: hand this one a fresh token.
     token = generate_token(updated_user.id, updated_user.role)
-    body["token"] = token
-    body["token_type"] = "Bearer"
+    body.update(token_fields(token))
     return set_session_cookie(make_response(jsonify(body), 200), token)
 
 

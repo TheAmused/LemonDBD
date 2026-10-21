@@ -389,8 +389,10 @@ def authenticate_user_credentials(
 
 def retrieve_user_from_jwt(token: str) -> User | None:
     """Decode incoming JWT and fetch corresponding active User entity."""
+    from app.core.security import is_revoked
+
     payload = decode_token(token)
-    if not payload or "sub" not in payload:
+    if not payload or "sub" not in payload or is_revoked(payload):
         return None
     try:
         user_id = int(payload["sub"])

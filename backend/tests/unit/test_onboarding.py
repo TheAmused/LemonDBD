@@ -8,6 +8,7 @@ from app.core.extensions import db
 def test_fresh_user_has_no_onboarding_timestamp(client: FlaskClient) -> None:
     reg_res = client.post(
         "/api/v1/auth/register",
+        headers={"X-Return-Token": "1"},
         json={
             "login": "onboardcheck",
             "username": "onboardcheck",
@@ -30,6 +31,7 @@ def test_fresh_user_has_no_onboarding_timestamp(client: FlaskClient) -> None:
 def test_mark_onboarding_complete_endpoint(client: FlaskClient) -> None:
     reg_res = client.post(
         "/api/v1/auth/register",
+        headers={"X-Return-Token": "1"},
         json={
             "login": "onboardmarker",
             "username": "onboardmarker",
@@ -55,10 +57,12 @@ def test_mark_onboarding_complete_endpoint(client: FlaskClient) -> None:
 def test_mark_onboarding_complete_rejects_other_users(client: FlaskClient) -> None:
     reg_a = client.post(
         "/api/v1/auth/register",
+        headers={"X-Return-Token": "1"},
         json={"login": "userA", "username": "userA", "email": "usera@example.com", "password": "password123"},
     ).get_json()
     reg_b = client.post(
         "/api/v1/auth/register",
+        headers={"X-Return-Token": "1"},
         json={"login": "userB", "username": "userB", "email": "userb@example.com", "password": "password123"},
     ).get_json()
 
@@ -72,6 +76,7 @@ def test_mark_onboarding_complete_rejects_other_users(client: FlaskClient) -> No
 def test_set_preferred_language_endpoint(client: FlaskClient) -> None:
     reg_res = client.post(
         "/api/v1/auth/register",
+        headers={"X-Return-Token": "1"},
         json={
             "login": "langpicker",
             "username": "langpicker",
@@ -99,6 +104,7 @@ def test_set_preferred_language_endpoint(client: FlaskClient) -> None:
 def test_set_preferred_language_rejects_unsupported_locale(client: FlaskClient) -> None:
     reg_res = client.post(
         "/api/v1/auth/register",
+        headers={"X-Return-Token": "1"},
         json={
             "login": "badlangpicker",
             "username": "badlangpicker",
@@ -120,10 +126,12 @@ def test_set_preferred_language_rejects_unsupported_locale(client: FlaskClient) 
 def test_set_preferred_language_rejects_other_users(client: FlaskClient) -> None:
     reg_a = client.post(
         "/api/v1/auth/register",
+        headers={"X-Return-Token": "1"},
         json={"login": "langA", "username": "langA", "email": "langa@example.com", "password": "password123"},
     ).get_json()
     reg_b = client.post(
         "/api/v1/auth/register",
+        headers={"X-Return-Token": "1"},
         json={"login": "langB", "username": "langB", "email": "langb@example.com", "password": "password123"},
     ).get_json()
 

@@ -394,6 +394,8 @@ export default {
   maintMinigameSessionsDesc: "24時間を過ぎた練習ラウンドを削除します（毎時）。",
   maintBugReportFiles: "孤立したバグ報告のスクリーンショットを削除",
   maintBugReportFilesDesc: "どのバグ報告からも参照されなくなったスクリーンショットを削除します（毎日）。",
+  maintRevokedSessions: "期限切れのログアウト記録を削除",
+  maintRevokedSessionsDesc: "トークンの有効期限が切れたログアウト済みセッションの記録を削除します（毎日）。",
   maintCache: "カタログのキャッシュを消去",
   maintCacheDesc: "データベースを直接編集した後、最新のパーク・キャラクター・マップを表示します。",
   databaseTitle: "データベース",

@@ -269,6 +269,7 @@ class TestUserAndOwnership:
     ) -> None:
         reg_res = client.post(
             "/api/v1/auth/register",
+            headers={"X-Return-Token": "1"},
             json={
                 "login": "apicheck",
                 "username": "apicheck",

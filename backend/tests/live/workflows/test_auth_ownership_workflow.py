@@ -21,6 +21,7 @@ class TestAuthOwnershipWorkflow:
     ) -> None:
         reg_res = live_client.post(
             "/api/v1/auth/register",
+            headers={"X-Return-Token": "1"},
             json={
                 "login": "workflow_owner_1",
                 "username": "workflow_owner_1",

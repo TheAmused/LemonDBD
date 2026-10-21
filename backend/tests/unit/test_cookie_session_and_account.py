@@ -12,10 +12,12 @@ from app.models import AdminAuditLog, BugReport, SmashUserPreference, User
 PASSWORD = "password123"
 
 
-def _register(client: FlaskClient, name: str) -> dict:
+def _register(client: FlaskClient, name: str, *, api_client: bool = False) -> dict:
+    """Register `name`. An API client asks for the token in the body (X-Return-Token: 1)."""
     res = client.post(
         "/api/v1/auth/register",
         json={"login": name, "username": name, "email": f"{name}@example.com", "password": PASSWORD},
+        headers={"X-Return-Token": "1"} if api_client else {},
     )
     assert res.status_code == 201
     return res
@@ -98,7 +100,7 @@ class TestCookieSession:
         assert allowed.status_code != 403
 
     def test_bearer_requests_are_not_blocked_by_origin_guard(self, client: FlaskClient, app: Flask) -> None:
-        token = _register(client, "apiclient").get_json()["token"]
+        token = _register(client, "apiclient", api_client=True).get_json()["token"]
         res = client.put(
             "/api/v1/auth/profile",
             json={"email": "apiclient2@example.com"},
@@ -110,7 +112,7 @@ class TestCookieSession:
 @pytest.mark.unit
 class TestAdminSettings:
     def test_requires_admin(self, client: FlaskClient) -> None:
-        token = _register(client, "plain").get_json()["token"]
+        token = _register(client, "plain", api_client=True).get_json()["token"]
         res = client.get("/api/v1/admin/settings", headers={"Authorization": f"Bearer {token}"})
         assert res.status_code == 403
 

@@ -406,6 +406,18 @@ class TestRateLimitProvider:
             current["n"] = 50  # a new number is a new window: honest traffic recovers at once
             assert client.get("/ping").status_code == 200
 
+    def test_every_email_code_endpoint_has_a_request_limit(self) -> None:
+        """verify-email and resend-verification had none, so no Abuse-limit setting covered them."""
+        import inspect
+        import re
+
+        from app.routes import auth
+
+        source = inspect.getsource(auth)
+        for path in ("/verify-email", "/resend-verification", "/forgot-password", "/reset-password"):
+            block = re.search(rf'@auth_bp.route\("{re.escape(path)}".*?\ndef ', source, re.S).group(0)
+            assert 'per_minute("rate_recovery_per_minute")' in block, path
+
     def test_routes_use_the_dynamic_provider(self) -> None:
         import inspect
 

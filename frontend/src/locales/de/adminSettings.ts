@@ -104,7 +104,7 @@ export default {
   config_rate_auth_per_minute: "Anmeldung & Registrierung",
   config_rate_auth_per_minute_desc: "Anfragen pro Minute von einer Adresse zum Anmelden, Registrieren und für Google-Anmeldung. Bei einem Angriff senken.",
   config_rate_recovery_per_minute: "Passwort-Reset",
-  config_rate_recovery_per_minute_desc: "Anfragen pro Minute von einer Adresse zum Anfordern oder Nutzen eines Reset-Links. Bei einem Angriff senken.",
+  config_rate_recovery_per_minute_desc: "Anfragen pro Minute von einer Adresse zum Anfordern oder Nutzen eines Reset-Links oder zum Eingeben oder erneuten Senden eines E-Mail-Bestätigungscodes. Bei einem Angriff senken.",
   config_rate_two_factor_per_minute: "Zwei-Faktor-Anfragen",
   config_rate_two_factor_per_minute_desc: "Anfragen pro Minute von einer Adresse an die Zwei-Faktor-Endpunkte. Bei einem Angriff senken.",
   config_rate_bug_report_per_minute: "Fehlermeldungen",

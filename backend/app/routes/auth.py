@@ -149,6 +149,7 @@ def login():
 
 
 @auth_bp.route("/verify-email", methods=["POST"])
+@limiter.limit(per_minute("rate_recovery_per_minute"))
 def verify_email():
     data = request.get_json(silent=True) or {}
     email = data.get("email")
@@ -165,6 +166,7 @@ def verify_email():
 
 
 @auth_bp.route("/resend-verification", methods=["POST"])
+@limiter.limit(per_minute("rate_recovery_per_minute"))
 def resend_verification():
     data = request.get_json(silent=True) or {}
     email = data.get("email")

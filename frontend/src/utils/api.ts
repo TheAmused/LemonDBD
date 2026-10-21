@@ -57,14 +57,20 @@ export function staticUrl(rawPath?: string | null): string | undefined {
   return base ? `${base}/static/${cleanPath}` : `/static/${cleanPath}`;
 }
 
+/** A stored attachment path: the private route, or the public path older reports still carry. */
+const BUG_ATTACHMENT_PATH =
+  /^\/?(?:static\/uploads\/bug_reports\/|api\/v1\/bug-reports\/attachments\/)([A-Za-z0-9_-]{1,80}\.(?:webp|png|jpe?g|gif))$/;
+
 /**
  * The URL of a bug-report screenshot the server stored itself, or undefined for anything else.
- * Older reports may hold remote URLs a reporter typed in; those are never loaded (they would tell
- * their host when an admin opened the ticket).
+ * Screenshots can show personal data, so they are served only by the backend's attachment route
+ * (to an admin or the reporter; the session cookie goes along with the image request), whichever
+ * of the two path shapes the report holds. Older reports may hold remote URLs a reporter typed
+ * in; those are never loaded (they would tell their host when an admin opened the ticket).
  */
 export function bugAttachmentUrl(rawPath?: string | null): string | undefined {
-  if (!rawPath || !/^\/?(static\/)?uploads\/bug_reports\/[A-Za-z0-9_-]+\.(webp|png|jpe?g|gif)$/.test(rawPath)) return undefined;
-  return staticUrl(rawPath);
+  const match = rawPath ? BUG_ATTACHMENT_PATH.exec(rawPath) : null;
+  return match ? apiUrl(`/api/v1/bug-reports/attachments/${match[1]}`) : undefined;
 }
 
 export const backendBase = typeof window !== 'undefined' ? '' : (process.env.INTERNAL_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://backend:5000');

@@ -71,6 +71,8 @@ backend/htmlcov/
 
 # Flask Instance
 backend/instance/
+# Private uploads (bug report screenshots) when the backend runs outside Docker.
+backend/data/
 
 # ==========================================
 # Frontend Application (/frontend)

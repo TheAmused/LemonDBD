@@ -184,6 +184,9 @@ class Config:
     # The one exception: an admin database import (a backup with its images is far over 20 MB).
     # nginx allows the same on that one path (nginx/default.conf).
     DATABASE_IMPORT_MAX_MB: int = int(os.getenv("DATABASE_IMPORT_MAX_MB", "512"))
+    # Private folder for bug report screenshots (not under static/: they can show personal data).
+    # Empty = backend/data/uploads/bug_reports, which is the persistent data volume in Docker.
+    BUG_REPORT_UPLOAD_DIR: str = os.getenv("BUG_REPORT_UPLOAD_DIR", "").strip()
     # Comma-separated list of the exact origins allowed to call the API with cookies. Unset means
     # "the frontend's own origin" only; `*` is refused at startup outside development.
     CORS_ORIGINS: str = os.getenv("CORS_ORIGINS", "").strip() or FRONTEND_URL.rstrip("/")

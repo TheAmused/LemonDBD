@@ -1,10 +1,10 @@
 # backend/app/routes/bug_reports.py
 import base64
 import logging
+import mimetypes
 import uuid
-from pathlib import Path
 
-from flask import Blueprint, current_app, g, jsonify, request
+from flask import Blueprint, g, jsonify, request, send_file
 from sqlalchemy import ColumnElement, case, desc, func, or_, select
 
 from app.core.altcha_guard import altcha_rejection
@@ -38,13 +38,14 @@ MAX_BUG_REPORT_IMAGE_SIDE = 2560
 MAX_ADMIN_NOTES_LENGTH = 5000
 
 
-def _save_base64_image(b64_data: str, base_dir: Path) -> str | None:
+def _save_base64_image(b64_data: str) -> str | None:
     """Decode one screenshot, check it really is an image, and store a re-encoded WebP copy.
 
     The bytes used to be written as sent under whatever extension the header claimed, so a guest
     could host any file on this domain. Now only something Pillow can decode is kept, at most
     `MAX_BUG_REPORT_IMAGE_BYTES` and `MAX_BUG_REPORT_IMAGE_PIXELS`, re-encoded (which also drops
-    metadata such as GPS tags). Returns the public path, or None when the payload is refused.
+    metadata such as GPS tags), in the private attachment folder (bug_report_files). Returns the
+    stored path (the attachment route), or None when the payload is refused.
     """
     from io import BytesIO
 
@@ -69,12 +70,12 @@ def _save_base64_image(b64_data: str, base_dir: Path) -> str | None:
             frame = frame.convert("RGBA" if frame.mode in ("RGBA", "LA", "P") else "RGB")
             frame.thumbnail((MAX_BUG_REPORT_IMAGE_SIDE, MAX_BUG_REPORT_IMAGE_SIDE))
 
-            upload_dir = base_dir / "static" / "uploads" / "bug_reports"
+            upload_dir = bug_report_files.upload_dir()
             upload_dir.mkdir(parents=True, exist_ok=True)
             filename = f"bug_{uuid.uuid4().hex[:12]}.webp"
             frame.save(upload_dir / filename, format="WEBP", quality=85, method=4)
 
-        return f"/static/uploads/bug_reports/{filename}"
+        return bug_report_files.attachment_path(filename)
     except Exception as err:
         logger.warning(f"Refused a bug report screenshot that is not a readable image: {err}")
         return None
@@ -116,7 +117,6 @@ def submit_bug_report():
             return jsonify({"error": "Email address is required for guest bug reports."}), 400
 
     processed_images: list[str] = []
-    base_dir = Path(current_app.root_path)
 
     # Only uploaded screenshots are kept. A remote URL (or any other string) used to be stored
     # as-is and then loaded by every admin who opened the ticket: a tracking pixel anyone could plant.
@@ -124,7 +124,7 @@ def submit_bug_report():
         raw_images = []
     for img in raw_images[:MAX_BUG_REPORT_IMAGES]:
         if isinstance(img, str) and img.startswith("data:image"):
-            saved_path = _save_base64_image(img, base_dir)
+            saved_path = _save_base64_image(img)
             if saved_path:
                 processed_images.append(saved_path)
 
@@ -219,6 +219,34 @@ def get_my_bug_reports():
     except Exception as e:
         logger.error(f"Error fetching user bug reports: {e}", exc_info=True)
         return error_response("bug_reports_fetch_failed", 500, lang=lang)
+
+
+@bug_reports_bp.route("/bug-reports/attachments/<name>", methods=["GET"])
+@limiter.limit("240 per minute")
+def get_bug_report_attachment(name: str):
+    """One screenshot, for an admin or for the account that filed the report it belongs to.
+
+    Anyone else gets the same 404 as for a name that does not exist, so a guessed name reveals
+    nothing. Sent `private` so no shared cache keeps a copy.
+    """
+    user = get_current_user()
+    if not user:
+        return error_response("auth_required", 401, lang=extract_lang())
+    not_found = (jsonify({"error": "Not found", "status": 404}), 404)
+    if not bug_report_files.NAME_PATTERN.match(name):
+        return not_found
+    # `name` is a validated hex file name, so it cannot carry LIKE wildcards.
+    references = BugReport.images_json.contains(name)
+    visible = references if user.role == "admin" else (references & _owned_by(user))
+    if db.session.scalar(select(BugReport.id).where(visible).limit(1)) is None:
+        return not_found
+    path = bug_report_files.stored_file(name)
+    if path is None:
+        return not_found
+    mimetype = mimetypes.guess_type(path.name)[0] or "application/octet-stream"
+    response = send_file(path, mimetype=mimetype, conditional=True, max_age=3600)
+    response.headers["Cache-Control"] = "private, max-age=3600"
+    return response
 
 
 @bug_reports_bp.route("/bug-reports/<int:report_id>/seen", methods=["POST"])

@@ -126,14 +126,16 @@ test('about page: Terms, Privacy Policy and Rules pills sit in one wrapping row,
 });
 
 test('registration: the required checkbox covers both documents and gates sign-up', () => {
-  const auth = code('components/AuthModal.tsx');
+  // The consent field itself lives in AuthModalParts; the gate on submit stays in AuthModal.
+  const auth = code('components/AuthModal.tsx') + code('components/auth/AuthModalParts.tsx');
   assert.match(auth, /<Checkbox[\s\S]*?invalid=\{showLegalError\}/, 'an unticked box is flagged with the site error style');
   assert.ok(!/<Checkbox[^>]*\brequired\b/.test(auth), 'no native validation bubble');
   assert.ok(auth.includes('<LegalDocModal'), 'the preview dialog is mounted');
   assert.match(auth, /if \(!acceptedLegal\)\s*\{\s*setLegalAttempted\(true\);\s*return;/, 'submit is blocked');
   assert.match(auth, /role="alert"[^>]*>\s*\{dict\.user\.legalNotAccepted\}/, 'with an inline message under the checkbox');
   assert.ok(auth.indexOf('!acceptedLegal') < auth.indexOf('await register('), 'the check runs before the request');
-  assert.ok(auth.includes("setLegalDoc(part === '{terms}' ? 'terms' : 'rules')"), 'each link previews its own document');
+  assert.ok(auth.includes("onPreview(part === '{terms}' ? 'terms' : 'rules')"), 'each link previews its own document');
+  assert.ok(auth.includes('onPreview={setLegalDoc}'), 'into the preview dialog');
   assert.ok(auth.includes("mode === 'register'"), 'only the register form shows it');
 });
 

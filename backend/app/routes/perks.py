@@ -192,30 +192,20 @@ def stats_summary():
         ("Survivor", db.session.scalar(select(func.count(Survivor.id))) or 0),
         ("Killer", db.session.scalar(select(func.count(Killer.id))) or 0),
     ]
+    return jsonify({"perks": _role_counts(perk_rows), "characters": _role_counts(character_rows)}), 200
 
-    def _pick(rows, wanted: str) -> int:
-        for key, count in rows:
-            if (key or "").lower() == wanted:
-                return int(count)
-        return 0
 
-    return (
-        jsonify(
-            {
-                "perks": {
-                    "total": sum(int(count) for _, count in perk_rows),
-                    "survivor": _pick(perk_rows, "survivor"),
-                    "killer": _pick(perk_rows, "killer"),
-                },
-                "characters": {
-                    "total": sum(int(count) for _, count in character_rows),
-                    "survivor": _pick(character_rows, "survivor"),
-                    "killer": _pick(character_rows, "killer"),
-                },
-            }
-        ),
-        200,
-    )
+def _role_counts(rows) -> dict:
+    """`{"total", "survivor", "killer"}` from `(role, count)` rows; a missing role counts 0."""
+    by_role: dict[str, int] = {}
+    for key, count in rows:
+        role = (key or "").lower()
+        by_role[role] = by_role.get(role, 0) + int(count)
+    return {
+        "total": sum(by_role.values()),
+        "survivor": by_role.get("survivor", 0),
+        "killer": by_role.get("killer", 0),
+    }
 
 
 @perks_bp.route("/api/v1/characters/<string:character_name>/detail", methods=["GET"])

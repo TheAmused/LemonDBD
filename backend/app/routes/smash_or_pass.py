@@ -3,6 +3,7 @@ import logging
 import threading
 import time
 from collections import defaultdict
+from typing import Any
 from flask import Blueprint, g, jsonify, request
 from pydantic import ValidationError
 from sqlalchemy import select
@@ -112,6 +113,30 @@ def register_taxonomy():
         return api_error("Something went wrong. Please try again.", 500)
 
 
+def _roster_entities(payload: SmashRosterAdminCreate) -> list[dict[str, Any]]:
+    """The entities of a roster creation request as plain dicts, translations included."""
+    return [
+        {
+            **e.model_dump(exclude={"translations"}, exclude_none=True),
+            "translations": {loc: t.model_dump(exclude_none=True) for loc, t in e.translations.items()},
+        }
+        for e in payload.entities
+    ]
+
+
+def _created_roster_response(row: Roster) -> dict[str, Any]:
+    """`Roster.to_dict()` never carries its entities -- every other read path fetches them through
+    a separate Entity/EntityStat select (get_feed, get_characters_with_stats) instead of
+    eager-loading the relationship on every roster row. The creator UI wants confirmation of what
+    it just built, so this one response assembles both by hand rather than adding entities to the
+    model's own general-purpose `to_dict()`."""
+    data = row.to_dict()
+    data["entity_count"] = len(row.entities)
+    data["character_count"] = len(row.entities)
+    data["entities"] = [e.to_dict() for e in row.entities]
+    return data
+
+
 @smash_or_pass_bp.route("/rosters", methods=["POST"])
 @admin_required
 def create_roster():
@@ -136,15 +161,7 @@ def create_roster():
             is_nsfw=payload.is_nsfw,
             is_active=payload.is_active,
             translations={k: v.model_dump(exclude_none=True) for k, v in payload.translations.items()},
-            entities=[
-                {
-                    **e.model_dump(exclude={"translations"}, exclude_none=True),
-                    "translations": {
-                        loc: t.model_dump(exclude_none=True) for loc, t in e.translations.items()
-                    },
-                }
-                for e in payload.entities
-            ],
+            entities=_roster_entities(payload),
         )
     except ValueError as err:
         return api_error(str(err), 400)
@@ -156,17 +173,7 @@ def create_roster():
         target_id=row.id,
         details={"slug": row.slug, "name": row.name, "entity_count": len(payload.entities)},
     )
-    # `Roster.to_dict()` never carries its entities -- every other read path
-    # fetches them through a separate Entity/EntityStat select (get_feed,
-    # get_characters_with_stats) instead of eager-loading the relationship on
-    # every roster row. The creator UI wants confirmation of what it just
-    # built, so this one response assembles both by hand rather than adding
-    # entities to the model's own general-purpose `to_dict()`.
-    data = row.to_dict()
-    data["entity_count"] = len(row.entities)
-    data["character_count"] = len(row.entities)
-    data["entities"] = [e.to_dict() for e in row.entities]
-    return jsonify({"status": "success", "data": data}), 201
+    return jsonify({"status": "success", "data": _created_roster_response(row)}), 201
 
 
 @smash_or_pass_bp.route("/admin/rosters/<slug>", methods=["DELETE"])
@@ -237,23 +244,52 @@ def get_roster_feed(slug: str):
         return api_error("Something went wrong. Please try again.", 500)
 
 
+VOTE_TYPES = ("smash", "pass", "super_smash")
+#: Longest client-supplied identifier accepted (slugs, guest session ids).
+MAX_VOTE_KEY_LENGTH = 128
+
+
+def _vote_request(payload: dict[str, Any]) -> dict[str, Any]:
+    """The vote fields, with the legacy aliases (`slug`, `vote`, `edition`) resolved."""
+    def text(*keys: str) -> str | None:
+        for key in keys:
+            value = payload.get(key)
+            if isinstance(value, str) and value.strip():
+                return value.strip()
+        return None
+
+    entity_id = payload.get("entity_id")
+    return {
+        "entity_id": entity_id if isinstance(entity_id, (str, int)) and not isinstance(entity_id, bool) else None,
+        "character_slug": text("character_slug", "slug"),
+        "vote_type": text("vote_type", "vote"),
+        "roster_slug": text("roster_slug", "edition") or "canon",
+        "edition": text("edition", "roster_slug") or "canon",
+        "session_id": text("session_id") or request.headers.get("X-Session-ID") or request.cookies.get("session_id"),
+    }
+
+
+def _vote_problem(vote: dict[str, Any], user_id: int | None) -> str | None:
+    """Why this vote request is invalid, or None."""
+    if not vote["entity_id"] and not vote["character_slug"]:
+        return "Fields 'entity_id' or 'character_slug' and 'vote_type' are required"
+    if not vote["vote_type"]:
+        return "Field 'vote_type' is required"
+    if vote["vote_type"] not in VOTE_TYPES:
+        return f"Invalid vote_type '{vote['vote_type']}'. Must be one of ('smash', 'pass', 'super_smash')"
+    if not user_id and not vote["session_id"]:
+        return "Field 'session_id' is required for a guest vote"
+    for key in ("character_slug", "roster_slug", "edition", "session_id"):
+        if vote[key] and len(str(vote[key])) > MAX_VOTE_KEY_LENGTH:
+            return f"Field '{key}' is too long"
+    return None
+
+
 @smash_or_pass_bp.route("/vote", methods=["POST"])
 def cast_vote():
     """Cast a vote (smash, pass, super_smash) for an entity or character."""
-    payload = request.get_json(silent=True) or {}
-    entity_id = payload.get("entity_id")
-    character_slug = payload.get("character_slug") or payload.get("slug")
-    vote_type = payload.get("vote_type") or payload.get("vote")
-    roster_slug = payload.get("roster_slug") or payload.get("edition") or "canon"
-    edition = payload.get("edition") or payload.get("roster_slug") or "canon"
-    session_id = (
-        payload.get("session_id")
-        or request.headers.get("X-Session-ID")
-        or request.cookies.get("session_id")
-    )
-
-    lang = _extract_lang()
-
+    payload = request.get_json(silent=True)
+    vote = _vote_request(payload if isinstance(payload, dict) else {})
     current_user = get_current_user()
     user_id = current_user.id if current_user else None
 
@@ -261,41 +297,30 @@ def cast_vote():
     # otherwise the IP. The guest `session_id` is client-chosen, so keying on
     # it let a script mint a fresh limit per request.
     client_key = f"user:{user_id}" if user_id else f"ip:{get_client_ip()}"
-
     if not vote_rate_limiter.is_allowed(client_key):
         return api_error("Rate limit exceeded. Maximum 60 votes per minute allowed.", 429)
-
-    if not entity_id and not character_slug:
-        return api_error("Fields 'entity_id' or 'character_slug' and 'vote_type' are required", 400)
-
-    if not vote_type:
-        return api_error("Field 'vote_type' is required", 400)
-
-    if vote_type not in {"smash", "pass", "super_smash"}:
-        return api_error(f"Invalid vote_type '{vote_type}'. Must be one of ('smash', 'pass', 'super_smash')", 400)
-
-    if not user_id and not session_id:
-        return api_error("Field 'session_id' is required for a guest vote", 400)
+    if problem := _vote_problem(vote, user_id):
+        return api_error(problem, 400)
 
     try:
         result = smash_service.cast_vote(
-            entity_id=entity_id,
-            character_slug=character_slug,
-            vote_type=vote_type,
+            entity_id=vote["entity_id"],
+            character_slug=vote["character_slug"],
+            vote_type=vote["vote_type"],
             # A signed-in vote belongs to the account alone. Storing the device's
             # guest session on it too let whoever used that browser next see and
             # reset it.
-            session_id=None if user_id else session_id,
+            session_id=None if user_id else vote["session_id"],
             user_id=user_id,
-            roster_slug=roster_slug,
-            edition=edition,
-            lang=lang,
+            roster_slug=vote["roster_slug"],
+            edition=vote["edition"],
+            lang=_extract_lang(),
         )
         return jsonify({"data": result, "status": "success"}), 200
     except ValueError as val_err:
         return api_error(str(val_err), 400)
     except Exception as e:
-        logger.error(f"Error casting smash-or-pass vote: {e}")
+        logger.error(f"Error casting smash-or-pass vote: {e}", exc_info=True)
         return api_error("Something went wrong. Please try again.", 500)
 
 

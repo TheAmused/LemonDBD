@@ -175,16 +175,8 @@ def update_user_by_admin(user_id: int):
     except ValidationError as err:
         return api_error("Validation failed", 400, details=err.errors())
 
-    # Taking the admin role from another admin, or granting it to anyone, needs the acting admin to
-    # re-authenticate (banning an admin is refused by the sanctions themselves).
-    new_role = (validated_data.role or "").lower()
-    target = fetch_user_by_id(user_id)
-    if new_role == "user":
-        if err_resp := _other_admin_confirmation_error(target, payload):
-            return err_resp
-    elif new_role == "admin" and target is not None and target.role != "admin":
-        if err_resp := reauth_error(g.current_user, payload):
-            return err_resp
+    if err_resp := _role_change_confirmation_error(user_id, validated_data.role, payload):
+        return err_resp
 
     user, err = admin_modify_user(
         user_id=user_id,
@@ -210,6 +202,18 @@ def update_user_by_admin(user_id: int):
         "message": "User updated successfully",
         "user": UserResponse.model_validate(user).model_dump(),
     }), 200
+
+
+def _role_change_confirmation_error(user_id: int, role: str | None, payload: dict):
+    """Taking the admin role from another admin, or granting it to anyone, needs the acting admin to
+    re-authenticate (banning an admin is refused by the sanctions themselves). None when allowed."""
+    new_role = (role or "").lower()
+    target = fetch_user_by_id(user_id)
+    if new_role == "user":
+        return _other_admin_confirmation_error(target, payload)
+    if new_role == "admin" and target is not None and target.role != "admin":
+        return reauth_error(g.current_user, payload)
+    return None
 
 
 @users_bp.route("/users/<int:user_id>/two-factor/reset", methods=["POST"])

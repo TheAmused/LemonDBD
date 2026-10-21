@@ -5,6 +5,7 @@ import mimetypes
 import uuid
 
 from flask import Blueprint, g, jsonify, request, send_file
+from pydantic import ValidationError
 from sqlalchemy import ColumnElement, case, desc, func, or_, select
 
 from app.core.altcha_guard import altcha_rejection
@@ -16,9 +17,10 @@ from app.core.security import admin_required, get_current_user
 from app.core.transaction import transaction
 from app.models import BugReport, User
 from app.utils.api_i18n import error_response
+from app.utils.responses import api_error
 from app.utils.lang import extract_lang
 from app.utils.pagination import paginate_args
-from app.schemas.community import BugReportResponse
+from app.schemas.community import BugReportResponse, BugReportSubmitDTO
 from app.services import bug_report_files, discord_webhook, site_settings
 from app.services.admin_control_service import log_admin_action
 
@@ -81,12 +83,46 @@ def _save_base64_image(b64_data: str) -> str | None:
         return None
 
 
+def _reporter(user: User | None, dto: BugReportSubmitDTO) -> tuple[str, str | None, int | None]:
+    """(name, e-mail, user id) for the report: the account's own, or what a guest typed."""
+    if user:
+        return user.username, user.email, user.id
+    return dto.reporter_name or "Guest Player", dto.reporter_email, None
+
+
+def _store_screenshots(raw_images: list[object]) -> list[str]:
+    """Store the uploaded screenshots (at most MAX_BUG_REPORT_IMAGES) and return their paths.
+
+    Only uploaded screenshots are kept. A remote URL (or any other string) used to be stored
+    as-is and then loaded by every admin who opened the ticket: a tracking pixel anyone could plant.
+    """
+    stored: list[str] = []
+    for img in raw_images[:MAX_BUG_REPORT_IMAGES]:
+        if isinstance(img, str) and img.startswith("data:image"):
+            saved_path = _save_base64_image(img)
+            if saved_path:
+                stored.append(saved_path)
+    return stored
+
+
+def _announce(report: BugReport, images: list[str]) -> None:
+    if site_settings.bug_report_discord_enabled():
+        discord_webhook.announce_bug_report({
+            "id": report.id,
+            "title": report.title,
+            "message": report.message,
+            "status": report.status,
+            "reporter_name": report.reporter_name,
+            "reporter_email": report.reporter_email,
+            "images": images,
+        })
+
+
 @bug_reports_bp.route("/bug-reports", methods=["POST"])
 @limiter.limit(per_minute("rate_bug_report_per_minute"))
 def submit_bug_report():
     """Submits a new bug report from authenticated users or guest players."""
     data = request.get_json(silent=True) or {}
-
     if not validate_honeypot(data):
         return jsonify({"error": "Spam detected.", "status": 400}), 400
 
@@ -98,71 +134,42 @@ def submit_bug_report():
         if rejected is not None:
             return rejected
 
-    title = data.get("title", "").strip()
-    message = data.get("message", "").strip()
-    raw_images = data.get("images", [])
-
-    if not title or not message:
+    try:
+        dto = BugReportSubmitDTO.model_validate(data)
+    except ValidationError as err:
+        return api_error("Validation failed", 400, details=err.errors(include_url=False, include_context=False))
+    if not dto.title or not dto.message:
         return jsonify({"error": "Title and description are required."}), 400
+    reporter_name, reporter_email, user_id = _reporter(user, dto)
+    if not user and not reporter_email:
+        return jsonify({"error": "Email address is required for guest bug reports."}), 400
 
-    if user:
-        reporter_name = user.username
-        reporter_email = user.email
-        user_id = user.id
-    else:
-        reporter_name = data.get("reporter_name", "").strip() or "Guest Player"
-        reporter_email = data.get("reporter_email", "").strip() or None
-        user_id = None
-        if not reporter_email:
-            return jsonify({"error": "Email address is required for guest bug reports."}), 400
-
-    processed_images: list[str] = []
-
-    # Only uploaded screenshots are kept. A remote URL (or any other string) used to be stored
-    # as-is and then loaded by every admin who opened the ticket: a tracking pixel anyone could plant.
-    if not isinstance(raw_images, list):
-        raw_images = []
-    for img in raw_images[:MAX_BUG_REPORT_IMAGES]:
-        if isinstance(img, str) and img.startswith("data:image"):
-            saved_path = _save_base64_image(img)
-            if saved_path:
-                processed_images.append(saved_path)
-
-    new_report = BugReport(
+    report = BugReport(
         user_id=user_id,
         reporter_name=reporter_name,
         reporter_email=reporter_email,
-        title=title,
-        message=message,
-        images_json=safe_json_dumps(processed_images, default_val="[]"),
+        title=dto.title,
+        message=dto.message,
         status="pending",
     )
+    return _save_report(report, _store_screenshots(dto.images))
 
+
+def _save_report(report: BugReport, images: list):
+    """Saves a new report and announces it; a failed save deletes the screenshots already stored."""
+    report.images_json = safe_json_dumps(images, default_val="[]")
     try:
         with transaction():
-            db.session.add(new_report)
-
-
-        report_dict = {
-            "id": new_report.id,
-            "title": new_report.title,
-            "message": new_report.message,
-            "status": new_report.status,
-            "reporter_name": new_report.reporter_name,
-            "reporter_email": new_report.reporter_email,
-            "images": processed_images,
-        }
-
-        if site_settings.bug_report_discord_enabled():
-            discord_webhook.announce_bug_report(report_dict)
-
+            db.session.add(report)
+        _announce(report, images)
         return jsonify({
             "message": "Bug report submitted successfully!",
-            "report": BugReportResponse.model_validate(new_report).model_dump(),
+            "report": BugReportResponse.model_validate(report).model_dump(),
         }), 201
     except Exception as e:
         db.session.rollback()
         logger.error(f"Failed to save bug report: {e}", exc_info=True)
+        bug_report_files.delete_files(images)
         return jsonify({"error": "Internal server error while saving bug report."}), 500
 
 
@@ -196,29 +203,29 @@ def get_my_bug_reports():
         return error_response("invalid_pagination", 400, lang=lang)
 
     try:
-        owned = _owned_by(user)
-        stmt = select(BugReport).where(owned).order_by(desc(BugReport.created_at), desc(BugReport.id))
-
-        total = db.session.scalar(select(func.count()).select_from(stmt.subquery())) or 0
-        unread_count = db.session.scalar(
-            select(func.count()).select_from(BugReport).where(owned, BugReport.feedback_unread.is_(True))
-        ) or 0
-        paginated_stmt = stmt.offset((page - 1) * per_page).limit(per_page)
-        reports = db.session.scalars(paginated_stmt).all()
-
-        total_pages = max(1, (total + per_page - 1) // per_page)
-
-        return jsonify({
-            "reports": [BugReportResponse.model_validate(r).model_dump() for r in reports],
-            "total": total,
-            "unread_count": unread_count,
-            "page": page,
-            "per_page": per_page,
-            "total_pages": total_pages,
-        }), 200
+        return jsonify(_my_reports_page(user, page, per_page)), 200
     except Exception as e:
         logger.error(f"Error fetching user bug reports: {e}", exc_info=True)
         return error_response("bug_reports_fetch_failed", 500, lang=lang)
+
+
+def _my_reports_page(user: User, page: int, per_page: int) -> dict:
+    """One page of the user's reports (newest first) with the total and unread counts."""
+    owned = _owned_by(user)
+    stmt = select(BugReport).where(owned).order_by(desc(BugReport.created_at), desc(BugReport.id))
+    total = db.session.scalar(select(func.count()).select_from(stmt.subquery())) or 0
+    unread_count = db.session.scalar(
+        select(func.count()).select_from(BugReport).where(owned, BugReport.feedback_unread.is_(True))
+    ) or 0
+    reports = db.session.scalars(stmt.offset((page - 1) * per_page).limit(per_page)).all()
+    return {
+        "reports": [BugReportResponse.model_validate(r).model_dump() for r in reports],
+        "total": total,
+        "unread_count": unread_count,
+        "page": page,
+        "per_page": per_page,
+        "total_pages": max(1, (total + per_page - 1) // per_page),
+    }
 
 
 @bug_reports_bp.route("/bug-reports/attachments/<name>", methods=["GET"])
@@ -270,6 +277,39 @@ def mark_bug_report_seen(report_id: int):
     return jsonify({"report": BugReportResponse.model_validate(report).model_dump()}), 200
 
 
+BUG_REPORT_STATUSES = ("pending", "in_progress", "resolved", "rejected")
+
+
+def _admin_report_filter(status: str, search: str) -> list[ColumnElement[bool]]:
+    """WHERE clauses for the admin list: one status (or all) and a case-insensitive text search."""
+    clauses: list[ColumnElement[bool]] = []
+    if status and status != "all":
+        clauses.append(func.lower(BugReport.status) == status)
+    if search:
+        pattern = f"%{search.lower()}%"
+        clauses.append(
+            or_(
+                func.lower(BugReport.title).like(pattern),
+                func.lower(BugReport.message).like(pattern),
+                func.lower(BugReport.reporter_name).like(pattern),
+                func.lower(BugReport.reporter_email).like(pattern),
+            )
+        )
+    return clauses
+
+
+def _status_counts() -> dict[str, int]:
+    """How many reports there are in total and per status, in one query."""
+    row = db.session.execute(
+        select(
+            func.count(BugReport.id),
+            *(func.count(case((BugReport.status == status, 1))) for status in BUG_REPORT_STATUSES),
+        )
+    ).one()
+    total, *per_status = row
+    return {"total": total or 0, **{status: count or 0 for status, count in zip(BUG_REPORT_STATUSES, per_status)}}
+
+
 @bug_reports_bp.route("/admin/bug-reports", methods=["GET"])
 @admin_required
 def admin_get_bug_reports():
@@ -278,52 +318,36 @@ def admin_get_bug_reports():
     status = request.args.get("status", "all").strip().lower()
     search = request.args.get("search", "").strip()
 
-    stmt = select(BugReport)
-
-    if status and status != "all":
-        stmt = stmt.where(func.lower(BugReport.status) == status)
-
-    if search:
-        search_fmt = f"%{search.lower()}%"
-        stmt = stmt.where(
-            or_(
-                func.lower(BugReport.title).like(search_fmt),
-                func.lower(BugReport.message).like(search_fmt),
-                func.lower(BugReport.reporter_name).like(search_fmt),
-                func.lower(BugReport.reporter_email).like(search_fmt),
-            )
-        )
-
-    stmt = stmt.order_by(desc(BugReport.created_at), desc(BugReport.id))
-
+    stmt = (
+        select(BugReport)
+        .where(*_admin_report_filter(status, search))
+        .order_by(desc(BugReport.created_at), desc(BugReport.id))
+    )
     total = db.session.scalar(select(func.count()).select_from(stmt.subquery())) or 0
-    paginated_stmt = stmt.offset((page - 1) * per_page).limit(per_page)
-    reports = db.session.scalars(paginated_stmt).all()
-
-    total_count, pending_count, in_progress_count, resolved_count, rejected_count = db.session.execute(
-        select(
-            func.count(BugReport.id),
-            func.count(case((BugReport.status == "pending", 1))),
-            func.count(case((BugReport.status == "in_progress", 1))),
-            func.count(case((BugReport.status == "resolved", 1))),
-            func.count(case((BugReport.status == "rejected", 1))),
-        )
-    ).one()
-    stats = {
-        "total": total_count or 0,
-        "pending": pending_count or 0,
-        "in_progress": in_progress_count or 0,
-        "resolved": resolved_count or 0,
-        "rejected": rejected_count or 0,
-    }
+    reports = db.session.scalars(stmt.offset((page - 1) * per_page).limit(per_page)).all()
 
     return jsonify({
         "reports": [BugReportResponse.model_validate(r).model_dump() for r in reports],
-        "stats": stats,
+        "stats": _status_counts(),
         "total": total,
         "page": page,
         "per_page": per_page,
     }), 200
+
+
+def _admin_update_problem(new_status: object, admin_notes: object) -> str | None:
+    """Why an admin update body is invalid, or None.
+
+    Checked before use: a number or a list here used to be a 500 (AttributeError on .lower())."""
+    if new_status is not None and not isinstance(new_status, str):
+        return "status must be a string."
+    if admin_notes is not None and not isinstance(admin_notes, str):
+        return "admin_notes must be a string."
+    if isinstance(admin_notes, str) and len(admin_notes) > MAX_ADMIN_NOTES_LENGTH:
+        return f"admin_notes must be at most {MAX_ADMIN_NOTES_LENGTH} characters."
+    if new_status and new_status.lower() not in BUG_REPORT_STATUSES:
+        return f"Invalid status. Must be one of {list(BUG_REPORT_STATUSES)}."
+    return None
 
 
 @bug_reports_bp.route("/admin/bug-reports/<int:report_id>", methods=["PUT"])
@@ -335,29 +359,15 @@ def admin_update_bug_report(report_id: int):
         return jsonify({"error": "Bug report not found."}), 404
 
     data = request.get_json(silent=True)
-    if not isinstance(data, dict):
-        data = {}
-    new_status = data.get("status")
-    admin_notes = data.get("admin_notes")
-
-    # Checked before use: a number or a list here used to be a 500 (AttributeError on .lower()).
-    if new_status is not None and not isinstance(new_status, str):
-        return jsonify({"error": "status must be a string."}), 400
-    if admin_notes is not None and not isinstance(admin_notes, str):
-        return jsonify({"error": "admin_notes must be a string."}), 400
-    if admin_notes is not None and len(admin_notes) > MAX_ADMIN_NOTES_LENGTH:
-        return jsonify({"error": f"admin_notes must be at most {MAX_ADMIN_NOTES_LENGTH} characters."}), 400
-
-    if new_status:
-        valid_statuses = ["pending", "in_progress", "resolved", "rejected"]
-        if new_status.lower() not in valid_statuses:
-            return jsonify({"error": f"Invalid status. Must be one of {valid_statuses}."}), 400
+    data = data if isinstance(data, dict) else {}
+    new_status, admin_notes = data.get("status"), data.get("admin_notes")
+    if problem := _admin_update_problem(new_status, admin_notes):
+        return jsonify({"error": problem}), 400
 
     try:
         with transaction():
             if new_status:
                 report.status = new_status.lower()
-
             if admin_notes is not None and admin_notes.strip() != (report.admin_notes or ""):
                 report.admin_notes = admin_notes.strip()
                 report.feedback_unread = bool(report.admin_notes)
@@ -374,7 +384,7 @@ def admin_update_bug_report(report_id: int):
             "report": BugReportResponse.model_validate(report).model_dump(),
         }), 200
     except Exception as e:
-        logger.error(f"Error updating bug report #{report_id}: {e}")
+        logger.error(f"Error updating bug report #{report_id}: {e}", exc_info=True)
         return jsonify({"error": "Failed to update bug report."}), 500
 
 

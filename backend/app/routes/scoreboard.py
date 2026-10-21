@@ -62,22 +62,8 @@ def analyze():
     if len(data) > max_bytes:
         return _no_store({"error": "Image is too large.", "code": "too_large", "status": 413}, 413)
 
-    role = _ROLES.get((request.form.get("expected_role") or "").strip().lower())
     try:
-        kills_for_win = int(request.form.get("kills_for_win") or 3)
-    except ValueError:
-        kills_for_win = 3
-    kills_for_win = min(max(kills_for_win, 1), 4)
-
-    try:
-        report = scoreboard_ocr.analyze_scoreboard(
-            data,
-            known_characters=_character_names(),
-            expected_player=(request.form.get("expected_player") or "").strip() or None,
-            expected_role=role,
-            expected_character=(request.form.get("expected_character") or "").strip() or None,
-            kills_for_win=kills_for_win,
-        )
+        report = scoreboard_ocr.analyze_scoreboard(data, known_characters=_character_names(), **_expectations())
     except ScoreboardError as err:
         return _no_store({"error": str(err), "code": err.code, "status": 400}, 400)
     except Exception:  # noqa: BLE001 - never leak internals or image content
@@ -87,3 +73,17 @@ def analyze():
         del data, upload
 
     return _no_store({"status": 200, **report}, 200)
+
+
+def _expectations() -> dict:
+    """What the form says the screenshot should show; `kills_for_win` is clamped to 1-4 (default 3)."""
+    try:
+        kills_for_win = int(request.form.get("kills_for_win") or 3)
+    except ValueError:
+        kills_for_win = 3
+    return {
+        "expected_player": (request.form.get("expected_player") or "").strip() or None,
+        "expected_role": _ROLES.get((request.form.get("expected_role") or "").strip().lower()),
+        "expected_character": (request.form.get("expected_character") or "").strip() or None,
+        "kills_for_win": min(max(kills_for_win, 1), 4),
+    }

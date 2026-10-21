@@ -8,31 +8,22 @@ import { useAltcha } from '@/hooks/useAltcha';
 import { useDemoAccounts, type DemoAccount } from '@/hooks/useDemoAccounts';
 import { useSiteConfig } from '@/context/SiteConfigContext';
 import { useGoogleClientId } from '@/hooks/useGoogleConfig';
-import { GoogleSignInButton } from '@/components/auth/GoogleSignInButton';
 import { AltchaWidget } from '@/components/common/AltchaWidget';
-import { Spinner } from '@/components/common/Spinner';
-import {
-  Mail,
-  LogIn,
-  UserPlus,
-  AlertCircle,
-  ShieldAlert,
-  Sparkles,
-  MailWarning,
-} from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { EmailVerificationForm } from '@/components/EmailVerificationForm';
 import { TwoFactorChallengeForm } from '@/components/auth/TwoFactorChallengeForm';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
-import { Checkbox } from '@/components/common/Checkbox';
-import { FieldLabel, Input } from '@/components/common/Field';
 import { LegalDocModal } from '@/components/legal/LegalDocModal';
 import type { LegalDocId } from '@/components/legal/legalDocs';
 import { useDictionary } from "@/context/DictionaryContext";
 import { trackEvent } from '@/utils/analytics';
-import { InlineLink } from '@/components/common/InlineLink';
 import { AccountBlockedNotice } from '@/components/moderation/AccountBlockedNotice';
-import type { BlockedInfo } from '@/types/moderation';
+import type { UserProfile } from '@/context/AuthContext';
+import {
+  AuthField, authModalTitle, DemoAccountButtons, ForgotSentNotice, GoogleSignInSection, LegalConsentField, ModeSwitchLink,
+  SecurityCheck, SubmitLabel, type AuthMode, type Notice,
+} from '@/components/auth/AuthModalParts';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -40,15 +31,6 @@ interface AuthModalProps {
   initialMode?: 'login' | 'register';
   verifyEmailFor?: string;
 }
-
-type AuthMode = 'login' | 'register' | 'forgot';
-type Notice =
-  // `token` is set when there is no session yet: the code then finishes the sign-in.
-  | { type: 'verify-reminder'; email: string; token?: string }
-  | { type: 'register-success'; email: string; token?: string }
-  | { type: 'forgot-sent' }
-  | { type: 'two-factor'; token: string }
-  | { type: 'blocked'; blocked: BlockedInfo };
 
 export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'login', verifyEmailFor }) => {
   const dict = useDictionary();
@@ -91,6 +73,15 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       setNotice(verifyEmailFor ? { type: 'verify-reminder', email: verifyEmailFor } : null);
     }
   }, [isOpen, initialMode, verifyEmailFor]);
+
+  const locale = pathname?.split('/')[1] || 'en';
+
+  // Signed in with a confirmed address: close, and send an account that has not finished
+  // onboarding to the welcome page.
+  const closeSignedIn = (signedIn?: Pick<UserProfile, 'onboarding_completed_at'> | null) => {
+    onClose();
+    if (signedIn && !signedIn.onboarding_completed_at) router.push(`/${locale}/welcome`);
+  };
 
   const switchMode = (next: AuthMode) => {
     setMode(next);
@@ -165,11 +156,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           } else if (res.user && !res.user.is_verified) {
             setNotice({ type: 'register-success', email: res.user?.email || email });
           } else {
-            onClose();
-            if (res.user && !res.user.onboarding_completed_at) {
-              const locale = pathname?.split('/')[1] || 'en';
-              router.push(`/${locale}/welcome`);
-            }
+            closeSignedIn(res.user);
           }
         } else {
           setError(res.error || dict.user.registrationFailed);
@@ -199,11 +186,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       } else if (res.blocked) {
         setNotice({ type: 'blocked', blocked: res.blocked });
       } else if (res.success) {
-        onClose();
-        if (res.user && !res.user.onboarding_completed_at) {
-          const locale = pathname?.split('/')[1] || 'en';
-          router.push(`/${locale}/welcome`);
-        }
+        closeSignedIn(res.user);
       } else {
         setError(res.error || dict.user.googleSignInFailed);
       }
@@ -222,8 +205,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
     setPassword(account.password);
   };
 
-  // The label holds {terms} and {rules}; each becomes a link that previews that document.
-  const legalLabelParts = dict.user.acceptLegalLabel.split(/(\{terms\}|\{rules\}|\{privacy\})/);
   const showLegalError = legalAttempted && !acceptedLegal;
   // While the ALTCHA challenge is being solved the form can't be submitted, so the whole body gives way to the loader.
   const showSecurityCheck = !notice && isAltchaVerifying;
@@ -235,23 +216,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       onClose={onClose}
       variant="dialog"
       size="md"
-      title={
-        notice?.type === 'verify-reminder' || notice?.type === 'register-success'
-          ? dict.user.authVerifyEmailTitle
-          : notice?.type === 'two-factor'
-            ? dict.twoFactor.challengeTitle
-          : notice?.type === 'blocked'
-            ? notice.blocked.code === 'account_banned'
-              ? dict.moderation.blocked.bannedTitle
-              : dict.moderation.blocked.suspendedTitle
-          : notice?.type === 'forgot-sent'
-            ? dict.user.resetPassword
-            : mode === 'login'
-              ? dict.user.authSignInTitle
-              : mode === 'register'
-                ? dict.user.authRegisterTitle
-                : dict.user.resetPassword
-      }
+      title={authModalTitle(dict, notice, mode)}
       ariaLabel="Authentication"
       closeButtonAriaLabel={dict.modal.close}
       padded
@@ -273,13 +238,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
             verificationToken={notice.token}
             onTwoFactor={(token) => setNotice({ type: 'two-factor', token })}
             onBlocked={(blocked) => setNotice({ type: 'blocked', blocked })}
-            onVerified={(verifiedUser) => {
-              onClose();
-              if (verifiedUser && !verifiedUser.onboarding_completed_at) {
-                const locale = pathname?.split('/')[1] || 'en';
-                router.push(`/${locale}/welcome`);
-              }
-            }}
+            onVerified={closeSignedIn}
           />
         </div>
       )}
@@ -302,33 +261,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
         <AccountBlockedNotice blocked={notice.blocked} onClose={onClose} />
       )}
 
-      {notice && notice.type === 'forgot-sent' && (
-        <div
-          role="status"
-          className="mb-4 space-y-3 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3.5 text-xs text-accent-amber animate-in fade-in duration-150 shadow-xs"
-        >
-          <div className="flex items-start gap-2.5">
-            <MailWarning className="h-4 w-4 shrink-0 mt-0.5" />
-            <span>{dict.user.forgotSentNotice}</span>
-          </div>
-          {dict.modal.close && (
-            <Button
-              type="button"
-              onClick={onClose}
-              variant="amberSoft" size="sm" className="block w-full"
-            >
-              {dict.modal.close}
-            </Button>
-          )}
-        </div>
-      )}
+      {notice && notice.type === 'forgot-sent' && <ForgotSentNotice onClose={onClose} />}
 
-      {showSecurityCheck && (
-        <div className="flex flex-col items-center justify-center gap-4 py-12">
-          <Spinner tone="accent" className="h-14 w-14 border-4" />
-          <p role="status" className="type-body text-text-secondary">{dict.user.authSecurityCheck}</p>
-        </div>
-      )}
+      {showSecurityCheck && <SecurityCheck />}
 
       {showAuthBody && (
         <form onSubmit={handleSubmit} className="space-y-3.5">
@@ -337,70 +272,22 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           )}
 
           {mode !== 'forgot' && (
-            <div>
-              <FieldLabel>
-                {mode === 'register' ? dict.user.loginLabel : dict.user.loginOrEmailLabel}
-              </FieldLabel>
-              <Input
-                type="text"
-                required
-                value={loginName}
-                onChange={(e) => setLoginName(e.target.value)}
-                className="bg-bg-primary px-3.5 shadow-inner"
-              />
-            </div>
+            <AuthField
+              label={mode === 'register' ? dict.user.loginLabel : dict.user.loginOrEmailLabel}
+              type="text" value={loginName} onChange={setLoginName}
+            />
           )}
-
           {mode === 'register' && (
-            <div>
-              <FieldLabel>
-                {dict.user.usernameLabel}
-              </FieldLabel>
-              <Input
-                type="text"
-                required
-                minLength={3}
-                maxLength={50}
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className="bg-bg-primary px-3.5 shadow-inner"
-              />
-            </div>
+            <AuthField label={dict.user.usernameLabel} type="text" minLength={3} maxLength={50} value={username} onChange={setUsername} />
           )}
-
           {(mode === 'register' || mode === 'forgot') && (
-            <div>
-              {(dict.user.emailLabel) && (
-                <FieldLabel>
-                  {dict.user.emailLabel}
-                </FieldLabel>
-              )}
-              <Input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="bg-bg-primary px-3.5 shadow-inner"
-              />
-            </div>
+            <AuthField label={dict.user.emailLabel} type="email" value={email} onChange={setEmail} />
           )}
-
           {mode !== 'forgot' && (
-            <div>
-              {(dict.user.passwordLabel) && (
-                <FieldLabel>
-                  {dict.user.passwordLabel}
-                </FieldLabel>
-              )}
-              <Input
-                type="password"
-                required
-                minLength={mode === 'register' ? limits.passwordMinLength : undefined}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="bg-bg-primary px-3.5 shadow-inner"
-              />
-            </div>
+            <AuthField
+              label={dict.user.passwordLabel} type="password" value={password} onChange={setPassword}
+              minLength={mode === 'register' ? limits.passwordMinLength : undefined}
+            />
           )}
 
           {mode === 'login' && dict.user.forgotPasswordLink && (
@@ -416,51 +303,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           )}
 
           {mode === 'register' && (
-            <div>
-              <Checkbox
-                checked={acceptedLegal}
-                onChange={setAcceptedLegal}
-                invalid={showLegalError}
-                ariaDescribedBy={showLegalError ? 'accept-legal-error' : undefined}
-                className="items-start"
-                boxClassName="mt-0.5"
-              >
-                <span className="type-body text-text-secondary">
-                  {legalLabelParts.map((part, i) =>
-                    part === '{privacy}' ? (
-                      // The privacy policy is information, not something to accept: open the page
-                      // itself in a new tab instead of the accept-terms preview.
-                      <InlineLink
-                        key={i}
-                        onClick={() => {
-                          trackEvent('legal_preview_open', { doc: 'privacy' });
-                          window.open(`/${pathname?.split('/')[1] || 'en'}/privacy-policy`, '_blank', 'noopener');
-                        }}
-                      >
-                        {dict.user.acceptPrivacyLink}
-                      </InlineLink>
-                    ) : part === '{terms}' || part === '{rules}' ? (
-                      <InlineLink
-                        key={i}
-                        onClick={() => {
-                          trackEvent('legal_preview_open', { doc: part === '{terms}' ? 'terms' : 'rules' });
-                          setLegalDoc(part === '{terms}' ? 'terms' : 'rules');
-                        }}
-                      >
-                        {part === '{terms}' ? dict.user.acceptTermsLink : dict.user.acceptRulesLink}
-                      </InlineLink>
-                    ) : (
-                      <React.Fragment key={i}>{part}</React.Fragment>
-                    )
-                  )}
-                </span>
-              </Checkbox>
-              {showLegalError ? (
-                <p id="accept-legal-error" role="alert" className="mt-1.5 pl-6 text-xs font-medium text-accent-red">
-                  {dict.user.legalNotAccepted}
-                </p>
-              ) : null}
-            </div>
+            <LegalConsentField
+              accepted={acceptedLegal}
+              onChange={setAcceptedLegal}
+              showLegalError={showLegalError}
+              onPreview={setLegalDoc}
+              locale={locale}
+            />
           )}
 
           <AltchaWidget
@@ -484,92 +333,18 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
             disabled={!isAltchaVerified || (mode === 'register' && !features.registrationOpen)}
             className="w-full mt-2 min-h-10"
           >
-            {loading ? null : mode === 'login' ? (
-              <>
-                <LogIn className="h-4 w-4" />
-                <span>{dict.user.signIn}</span>
-              </>
-            ) : mode === 'register' ? (
-              <>
-                <UserPlus className="h-4 w-4" />
-                <span>{dict.user.createAccount}</span>
-              </>
-            ) : (
-              <>
-                <Mail className="h-4 w-4" />
-                <span>{dict.user.sendResetLink}</span>
-              </>
-            )}
+            {loading ? null : <SubmitLabel mode={mode} />}
           </Button>
         </form>
       )}
 
       {showAuthBody && mode !== 'forgot' && googleClientId && (
-        <div className="mt-4 space-y-3">
-          <div className="flex items-center gap-3" role="separator">
-            <span className="h-px flex-1 bg-border-color" />
-            <span className="type-label-2xs text-text-muted">{dict.user.googleOrDivider}</span>
-            <span className="h-px flex-1 bg-border-color" />
-          </div>
-          <GoogleSignInButton
-            clientId={googleClientId}
-            onCredential={handleGoogleCredential}
-          />
-        </div>
+        <GoogleSignInSection clientId={googleClientId} onCredential={handleGoogleCredential} />
       )}
 
-      {showAuthBody && mode !== 'forgot' && demoAccounts.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-border-color">
-          {dict.user.quickDemoAccounts && (
-            <p className="type-label-2xs text-text-muted mb-2 text-center">
-              {dict.user.quickDemoAccounts}
-            </p>
-          )}
-          <div className="grid grid-cols-2 gap-2">
-            <Button variant="soft" size="xs" onClick={() => handleFillDemo('admin')} leftIcon={<ShieldAlert className="h-3 w-3" />}>
-              <span>{dict.user.adminDemo}</span>
-            </Button>
-            <Button
-              type="button"
-              onClick={() => handleFillDemo('player')}
-              variant="amberSoft" size="sm"
-            >
-              <Sparkles className="h-3 w-3 text-accent-amber" />
-              <span>{dict.user.userDemo}</span>
-            </Button>
-          </div>
-        </div>
-      )}
+      {showAuthBody && mode !== 'forgot' && demoAccounts.length > 0 && <DemoAccountButtons onFill={handleFillDemo} />}
 
-      {showAuthBody && (
-        <div className="mt-4 text-center">
-          <Button
-            type="button"
-            onClick={() => switchMode(mode === 'register' ? 'login' : mode === 'forgot' ? 'login' : 'register')}
-            variant="linkMuted" size="sm"
-          >
-            {mode === 'forgot' ? (
-              <span className="font-bold text-accent-amber">
-                {dict.user.backToSignIn}
-              </span>
-            ) : mode === 'register' ? (
-              <>
-                {dict.user.alreadyHaveAccount}{' '}
-                <span className="font-bold text-accent-amber">
-                  {dict.user.signIn}
-                </span>
-              </>
-            ) : (
-              <>
-                {dict.user.dontHaveAccount}{' '}
-                <span className="font-bold text-accent-amber">
-                  {dict.user.register}
-                </span>
-              </>
-            )}
-          </Button>
-        </div>
-      )}
+      {showAuthBody && <ModeSwitchLink mode={mode} onSwitch={switchMode} />}
 
       <LegalDocModal doc={legalDoc} onClose={() => setLegalDoc(null)} />
     </Modal>

@@ -10,6 +10,8 @@ import {
   ownsPerk,
 } from '@/utils/characterUtils';
 import { useAuth } from '@/context/AuthContext';
+import { useSiteConfig } from '@/context/SiteConfigContext';
+import { mustConfirmEmail } from '@/utils/emailVerification';
 import { useDictionary } from '@/context/DictionaryContext';
 import { catalogKey, invalidate } from '@/services/dataCache';
 import { authHeaders } from '@/utils/api';
@@ -51,6 +53,7 @@ interface CharacterOwnershipInput {
 export function useCharacterOwnership({ locale, onLoginRequired, onVerificationRequired }: CharacterOwnershipInput) {
   const dict = useDictionary();
   const { isAuthenticated, token, user, bulkUpdateCharacterOwnership, bulkUpdatePerkOwnership } = useAuth();
+  const verificationRequired = useSiteConfig().features.emailVerificationRequired;
   const backendBase = getBackendBaseUrl();
 
   const [ownershipMode, setOwnershipMode] = useState<boolean>(false);
@@ -122,7 +125,7 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
       onLoginRequired();
       return;
     }
-    if (!user.is_verified) {
+    if (mustConfirmEmail(user, verificationRequired)) {
       trackEvent('ownership_blocked', { reason: 'verify' });
       onVerificationRequired();
       return;

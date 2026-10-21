@@ -97,6 +97,9 @@ services:
       - GUNICORN_WORKERS=${GUNICORN_WORKERS:-4}
       - GUNICORN_THREADS=${GUNICORN_THREADS:-8}
       - SECRET_KEY=${SECRET_KEY:-dev-secret-key-dbd-lemon-2026}
+      # Signs session tokens. Empty falls back to SECRET_KEY.
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}
+      - JWT_EXPIRATION_HOURS=${JWT_EXPIRATION_HOURS:-24}
       # Optional two-factor sign-in: replace with a fresh Fernet key in .env.prod for production.
       - TWO_FACTOR_ENCRYPTION_KEY=${TWO_FACTOR_ENCRYPTION_KEY:-}
       - TWO_FACTOR_ISSUER=${TWO_FACTOR_ISSUER:-LemonDBD}
@@ -155,6 +158,16 @@ services:
       - ./data/updates:/app/updates
     environment:
       - FLASK_ENV=${FLASK_ENV:-production}
+      # create_app() runs the same production checks here as in the backend, so this process
+      # needs the same keys: without them it refuses to start and no housekeeping job runs.
+      # TWO_FACTOR_ENCRYPTION_KEY also decrypts admin "secret" settings the mail jobs read.
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-dbd-lemon-2026}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}
+      - TWO_FACTOR_ENCRYPTION_KEY=${TWO_FACTOR_ENCRYPTION_KEY:-}
+      - CORS_ORIGINS=${CORS_ORIGINS:-}
+      - BAN_LIST_ENABLED=${BAN_LIST_ENABLED:-false}
+      - BAN_LIST_PEPPERS=${BAN_LIST_PEPPERS:-}
+      - STREAK_INACTIVITY_PRUNE_DAYS=${STREAK_INACTIVITY_PRUNE_DAYS:-90}
       - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-dbd_db}}
       - DB_POOL_SIZE=2
       - DB_MAX_OVERFLOW=1

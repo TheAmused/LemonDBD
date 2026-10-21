@@ -188,7 +188,8 @@ class Config:
     # "the frontend's own origin" only; `*` is refused at startup outside development.
     CORS_ORIGINS: str = os.getenv("CORS_ORIGINS", "").strip() or FRONTEND_URL.rstrip("/")
 
-    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", SECRET_KEY)
+    # An empty value (compose passes `${JWT_SECRET_KEY:-}`) falls back to SECRET_KEY too.
+    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "").strip() or SECRET_KEY
     JWT_ALGORITHM: str = os.getenv("JWT_ALGORITHM", "HS256")
     # "auto" marks the session cookie Secure whenever the request arrived over HTTPS.
     SESSION_COOKIE_SECURE_MODE: str = os.getenv("SESSION_COOKIE_SECURE", "auto")

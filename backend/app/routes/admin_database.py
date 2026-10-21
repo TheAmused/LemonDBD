@@ -142,6 +142,51 @@ def export_database():
     )
 
 
+class _BadImportRequest(Exception):
+    """A 400 for the import route, with the message to show the admin."""
+
+
+def _import_form(uploaded: Any) -> tuple[dict[str, Any], dict[str, Any]]:
+    """(form fields, JSON body): fields come from the multipart form for a file upload, else the body."""
+    body: dict[str, Any] = {}
+    if uploaded is None:
+        parsed = request.get_json(silent=True)
+        if (parsed is None and request.get_data(cache=True)) or (parsed is not None and not isinstance(parsed, dict)):
+            raise _BadImportRequest("Invalid JSON payload: root must be an object.")
+        body = parsed or {}
+    return (request.form.to_dict() if uploaded is not None else body), body
+
+
+def _import_options(fields: dict[str, Any]) -> tuple[str, list[str] | None]:
+    """(mode, targets) from the form or the query string, validated."""
+    mode = fields.get("mode") or request.args.get("mode") or "merge"
+    if mode not in IMPORT_MODES:
+        raise _BadImportRequest("mode must be 'merge' or 'replace'.")
+    try:
+        targets = _target_list(fields.get("targets", request.args.get("targets")))
+    except ValueError as err:
+        raise _BadImportRequest(str(err)) from err
+    if targets and (unknown := unknown_targets(targets, SUPPORTED_EXPORT_TARGETS)):
+        raise _BadImportRequest(f"Unknown import target(s): {', '.join(unknown)}.")
+    return mode, targets
+
+
+def _import_payload(uploaded: Any, body: dict[str, Any]) -> dict[str, Any]:
+    """The backup itself: the uploaded file's JSON, or the body's `data` (or the body)."""
+    if uploaded is not None:
+        if not uploaded.filename:
+            raise _BadImportRequest("Uploaded file is empty.")
+        try:
+            payload = safe_json_loads(uploaded.read().decode("utf-8"))
+        except Exception as err:
+            raise _BadImportRequest("The file is not valid JSON.") from err
+    else:
+        payload = body.get("data", body)
+    if not payload or not isinstance(payload, dict):
+        raise _BadImportRequest("No valid JSON payload provided for import.")
+    return payload
+
+
 @admin_control_bp.route("/database/import", methods=["POST"])
 @limiter.limit("6 per minute")
 @admin_required
@@ -152,42 +197,16 @@ def import_database():
     only, checked above before anything is read) accepts up to DATABASE_IMPORT_MAX_MB.
     """
     request.max_content_length = int(current_app.config.get("DATABASE_IMPORT_MAX_MB", 512)) * 1024 * 1024
-
     uploaded = request.files.get("file")
-    body: dict[str, Any] = {}
-    if uploaded is None:
-        parsed = request.get_json(silent=True)
-        if (parsed is None and request.get_data(cache=True)) or (parsed is not None and not isinstance(parsed, dict)):
-            return api_error("Invalid JSON payload: root must be an object.", 400)
-        body = parsed or {}
-    fields: dict[str, Any] = request.form.to_dict() if uploaded is not None else body
-
-    # An import can rewrite accounts in bulk: the acting admin re-authenticates first.
-    if err_resp := reauth_error(g.current_user, fields):
-        return err_resp
-
-    mode = fields.get("mode") or request.args.get("mode") or "merge"
-    if mode not in IMPORT_MODES:
-        return api_error("mode must be 'merge' or 'replace'.", 400)
     try:
-        targets = _target_list(fields.get("targets", request.args.get("targets")))
-    except ValueError as err:
+        fields, body = _import_form(uploaded)
+        # An import can rewrite accounts in bulk: the acting admin re-authenticates first.
+        if err_resp := reauth_error(g.current_user, fields):
+            return err_resp
+        mode, targets = _import_options(fields)
+        payload = _import_payload(uploaded, body)
+    except _BadImportRequest as err:
         return api_error(str(err), 400)
-    if targets and (unknown := unknown_targets(targets, SUPPORTED_EXPORT_TARGETS)):
-        return api_error(f"Unknown import target(s): {', '.join(unknown)}.", 400)
-
-    if uploaded is not None:
-        if not uploaded.filename:
-            return api_error("Uploaded file is empty.", 400)
-        try:
-            payload = safe_json_loads(uploaded.read().decode("utf-8"))
-        except Exception:
-            return api_error("The file is not valid JSON.", 400)
-    else:
-        payload = body.get("data", body)
-
-    if not payload or not isinstance(payload, dict):
-        return api_error("No valid JSON payload provided for import.", 400)
 
     try:
         result = DatabaseExportImportService.import_database(payload=payload, mode=mode, targets=targets)

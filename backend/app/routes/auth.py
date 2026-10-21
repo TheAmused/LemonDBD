@@ -98,26 +98,19 @@ def register():
 
     ownership_service.seed_default_ownership_for_new_user(user.id)
     if needs_email_verification(user):
-        # "New accounts must confirm their address before signing in": no session yet. The code
-        # form finishes the sign-in with this token once the code checks out.
-        return jsonify({
-            "status": "verification_required",
-            "message": "Account created. Enter the code we sent to your e-mail address to sign in.",
-            "user": UserResponse.model_validate(user).model_dump(),
-            "verification_token": create_verification_pending_token(user),
-        }), 201
-    token = generate_token(user.id, user.role)
-    summary = ownership_service.get_user_ownership_summary(user.id)
+        return _account_created_response(user)
+    return session_response(user, generate_token(user.id, user.role), "User registered successfully", status=201)
 
-    response = make_response(jsonify({
-        "status": "success",
-        "message": "User registered successfully",
-        "session": True,
-        **token_fields(token),
+
+def _account_created_response(user):
+    """"New accounts must confirm their address before signing in": no session yet. The code form
+    finishes the sign-in with this token once the code checks out."""
+    return jsonify({
+        "status": "verification_required",
+        "message": "Account created. Enter the code we sent to your e-mail address to sign in.",
         "user": UserResponse.model_validate(user).model_dump(),
-        "ownership": summary,
-    }), 201)
-    return set_session_cookie(response, token)
+        "verification_token": create_verification_pending_token(user),
+    }), 201
 
 
 def session_response(user, token: str, message: str, status: int = 200, extra: dict | None = None):

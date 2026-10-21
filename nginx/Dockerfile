@@ -1,5 +1,5 @@
 # nginx/Dockerfile
-FROM nginx:alpine
+FROM nginx:1.31-alpine3.24
 
 # Install OpenSSL
 RUN apk add --no-cache openssl

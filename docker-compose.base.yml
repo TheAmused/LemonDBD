@@ -1,7 +1,8 @@
 # docker-compose.base.yml - Shared core services for LemonDBD
 services:
   db:
-    image: postgres:alpine
+    # Major pinned to match PGDATA (/var/lib/postgresql/18/...): a new major refuses the old data directory.
+    image: postgres:18-alpine3.24
     container_name: dbd_db
     restart: unless-stopped
     command: postgres -c max_connections=200
@@ -34,7 +35,7 @@ services:
   # persisting it would only risk serving a stale generation. `allkeys-lru`
   # evicts instead of refusing writes, which would take the API down with it.
   redis:
-    image: redis:7-alpine
+    image: redis:7.4-alpine
     container_name: dbd_redis
     restart: unless-stopped
     command: >
@@ -58,7 +59,7 @@ services:
   # under allkeys-lru a burst of cache traffic would evict exactly these (limits
   # reset early, a solved challenge can be replayed). `noeviction` never drops a key.
   redis-limits:
-    image: redis:7-alpine
+    image: redis:7.4-alpine
     container_name: dbd_redis_limits
     restart: unless-stopped
     command: >
@@ -193,7 +194,7 @@ services:
       - dbd_network
 
   umami:
-    image: docker.umami.is/umami-software/umami:postgresql-latest
+    image: ghcr.io/umami-software/umami:3.3
     container_name: dbd_umami
     restart: unless-stopped
     environment:
@@ -215,7 +216,7 @@ services:
       - dbd_network
 
   pgadmin:
-    image: dpage/pgadmin4:latest
+    image: dpage/pgadmin4:9.18
     container_name: dbd_pgadmin
     restart: unless-stopped
     environment:

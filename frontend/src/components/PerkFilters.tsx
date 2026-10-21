@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/PerkFilters.tsx
 
+import { logger } from '@/utils/logger';
 import React, { useState, useEffect, useRef } from 'react';
 import {
   SlidersHorizontal,
@@ -136,7 +137,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         }
       } catch (err: unknown) {
         if (!(err instanceof Error && err.name === 'AbortError')) {
-          console.error('Failed fetching perk suggestions:', err);
+          logger.error('Failed fetching perk suggestions:', err);
         }
       }
     }, 180);

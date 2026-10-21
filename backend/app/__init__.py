@@ -12,6 +12,7 @@ from app.core.config import Config, fatal_secret_problems, weak_secret_warnings
 from app.core.extensions import db, mail, migrate
 from app.core.json_provider import ORJSONProvider
 from app.core.limiter import limiter
+from app.core.logging_setup import configure_logging, init_request_ids
 from app.core.static_files import static_max_age
 import app.models  # noqa: F401
 
@@ -30,10 +31,8 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     else:
         flask_app.config.from_object(config_class)
 
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-    )
+    configure_logging()
+    init_request_ids(flask_app)
 
     fatal = fatal_secret_problems(flask_app.config)
     if fatal:

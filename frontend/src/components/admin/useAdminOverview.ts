@@ -3,6 +3,7 @@
 //
 // The admin panel's counts (users per role and standing, pending reports). One small request, made
 // when the panel opens and again after anything that changes those counts.
+import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useState } from 'react';
 import { fetchOverview } from '@/services/adminApi';
 import type { AdminOverview } from '@/types/admin';
@@ -14,7 +15,7 @@ export function useAdminOverview(enabled: boolean) {
     try {
       setOverview(await fetchOverview());
     } catch (err: unknown) {
-      console.error('Failed to load the admin overview:', err);
+      logger.error('Failed to load the admin overview:', err);
     }
   }, []);
 

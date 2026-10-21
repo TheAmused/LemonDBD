@@ -6,12 +6,13 @@
 // "Try again" re-renders the segment that failed. Errors in the locale layout itself are caught
 // by app/global-error.tsx.
 
+import { logger } from '@/utils/logger';
 import { useEffect } from 'react';
 import { ErrorPage } from '@/components/layout/ErrorPage';
 
 export default function LocaleError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => {
-    console.error(error);
+    logger.error(error);
   }, [error]);
 
   return <ErrorPage variant="error" onRetry={reset} reference={error.digest} />;

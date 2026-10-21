@@ -15,6 +15,10 @@ COPY --from=cloudflare/cloudflared:2026.10.1 /usr/local/bin/cloudflared /usr/loc
 
 # Copy entrypoint script and normalize line endings
 COPY entrypoint.sh /entrypoint.sh
-RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
+RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh && \
+    adduser -D -H -u 10001 tunnel
+
+# Nothing here needs root: cloudflared makes outbound connections only and logs to /tmp.
+USER tunnel
 
 ENTRYPOINT ["/entrypoint.sh"]

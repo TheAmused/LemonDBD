@@ -22,7 +22,7 @@ from app.services.perks import (
 )
 from app.utils.lang import extract_lang as _extract_lang
 from app.utils.pagination import paginate_args
-from sqlalchemy import select
+from sqlalchemy import select, text
 
 logger = logging.getLogger(__name__)
 perks_bp = Blueprint("perks", __name__)
@@ -58,6 +58,26 @@ def health_check():
         "service": "dbd-backend-api",
         "cache": redis_cache.stats(),
     }), 200
+
+
+@perks_bp.route("/api/v1/readyz", methods=["GET"])
+def readiness_check():
+    """Readiness, not just liveness: 200 only when the database answers and the rate-limit Redis
+    (when one is configured) does. The cache Redis is reported but optional -- without it each
+    worker falls back to its own in-process cache, so the site still works."""
+    checks: dict[str, str] = {}
+    try:
+        db.session.execute(text("SELECT 1"))
+        checks["database"] = "up"
+    except Exception as exc:
+        logger.warning("Readiness: database check failed: %s", exc)
+        db.session.rollback()
+        checks["database"] = "down"
+    checks.update(redis_cache.readiness())
+    ready = checks["database"] == "up" and checks["limits"] != "down"
+    response = jsonify({"status": "ready" if ready else "unavailable", "checks": checks})
+    response.headers["Cache-Control"] = "no-store"
+    return response, 200 if ready else 503
 
 
 @perks_bp.route("/api/v1/perks", methods=["GET"])

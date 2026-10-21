@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/user/UserProfileClient.tsx
 
+import { logger } from '@/utils/logger';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Button } from '@/components/common/Button';
 import dynamic from 'next/dynamic';
@@ -74,7 +75,7 @@ export function UserProfileClient() {
       setReportsTotalPages(result.totalPages);
     } catch (err) {
       if (err instanceof DOMException && err.name === 'AbortError') return;
-      console.error('Failed to fetch user bug reports:', err);
+      logger.error('Failed to fetch user bug reports:', err);
     } finally {
       if (reportsRequestRef.current === controller) setLoadingReports(false);
     }
@@ -103,7 +104,7 @@ export function UserProfileClient() {
   const handleReportSeen = useCallback((id: number) => {
     setMyReports((prev) => prev.map((r) => (r.id === id ? { ...r, feedback_unread: false } : r)));
     setUnreadReports((count) => Math.max(0, count - 1));
-    markBugReportSeen(id).catch((err) => console.error('Failed to mark bug report as seen:', err));
+    markBugReportSeen(id).catch((err) => logger.error('Failed to mark bug report as seen:', err));
   }, []);
 
   const handleAvatarFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

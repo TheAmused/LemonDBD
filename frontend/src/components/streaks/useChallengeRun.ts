@@ -1,6 +1,7 @@
 // frontend/src/components/streaks/useChallengeRun.ts
 'use client';
 
+import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ChallengeCompletion } from '@/types/challengeCompletion';
 import { useAuth } from '@/context/AuthContext';
@@ -45,7 +46,7 @@ export function useChallengeRun<TRun, TStats>(config: ChallengeRunConfig<TRun, T
       const loaded = await configRef.current.fetchStats(token);
       if (isLatest()) setStats(loaded);
     } catch (err) {
-      console.error(`Failed to load ${label} stats:`, err);
+      logger.error(`Failed to load ${label} stats:`, err);
     }
   }, [token, scope, label, tracker]);
 
@@ -56,7 +57,7 @@ export function useChallengeRun<TRun, TStats>(config: ChallengeRunConfig<TRun, T
       const loaded = await configRef.current.fetchCompletions(token);
       if (isLatest()) setCompletions(loaded);
     } catch (err) {
-      console.error(`Failed to load ${label} completion history:`, err);
+      logger.error(`Failed to load ${label} completion history:`, err);
     }
   }, [token, scope, label, tracker]);
 

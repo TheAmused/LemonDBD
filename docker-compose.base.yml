@@ -116,6 +116,8 @@ services:
       - DB_POOL_TIMEOUT=${DB_POOL_TIMEOUT:-30}
       - GUNICORN_TIMEOUT=${GUNICORN_TIMEOUT:-60}
       - GUNICORN_LOGLEVEL=${GUNICORN_LOGLEVEL:-info}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - LOG_FORMAT=${LOG_FORMAT:-text}
       # Request body ceilings (bytes / MB); keep them in step with nginx client_max_body_size.
       - MAX_CONTENT_LENGTH=${MAX_CONTENT_LENGTH:-20971520}
       - DATABASE_IMPORT_MAX_MB=${DATABASE_IMPORT_MAX_MB:-512}
@@ -159,7 +161,8 @@ services:
       redis-limits:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1/health"]
+      # Readiness, not liveness: the database (and the rate-limit Redis) must answer too.
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1/readyz"]
       interval: 4s
       timeout: 3s
       retries: 10
@@ -205,6 +208,15 @@ services:
       - MAIL_DEFAULT_SENDER=${MAIL_DEFAULT_SENDER:-}
       - PRIVACY_CONTACT_EMAIL=${PRIVACY_CONTACT_EMAIL:-}
       - FRONTEND_URL=${FRONTEND_URL:-https://localhost}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - LOG_FORMAT=${LOG_FORMAT:-text}
+    # run_scheduler.py touches the heartbeat file every minute; three missed beats is unhealthy.
+    healthcheck:
+      test: ["CMD", "python", "-c", "import os, sys, time; sys.exit(0 if time.time() - os.path.getmtime('/tmp/scheduler.heartbeat') < 180 else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
     depends_on:
       db:
         condition: service_healthy
@@ -287,6 +299,12 @@ services:
       - UMAMI_ADMIN_PASSWORD=${UMAMI_ADMIN_PASSWORD:?set UMAMI_ADMIN_PASSWORD (and change it in Umami)}
       - UMAMI_SITE_NAME=${UMAMI_SITE_NAME:-LemonDBD}
       - UMAMI_SITE_DOMAIN=${UMAMI_SITE_DOMAIN:-localhost}
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/healthz').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
     depends_on:
       backend:
         condition: service_healthy
@@ -310,11 +328,16 @@ services:
       - "${PGADMIN_BIND:-127.0.0.1}:${PGADMIN_PORT:-5050}:5050"
     volumes:
       - nginx_logs:/var/log/nginx
+    # nginx runs as its own unprivileged user (nginx/Dockerfile); this lets it bind 80 and 443
+    # inside the container. Docker already defaults to it -- stated so it does not depend on that.
+    # The image's HEALTHCHECK probes /nginx-health.
+    sysctls:
+      - net.ipv4.ip_unprivileged_port_start=0
     depends_on:
       backend:
         condition: service_healthy
       frontend:
-        condition: service_started
+        condition: service_healthy
       umami:
         condition: service_started
       pgadmin:

@@ -1,7 +1,8 @@
 #!/bin/sh
 # docker/tunnel/entrypoint.sh
 
-DISCORD_WEBHOOK="${DISCORD_TUNNEL_WEBHOOK:-https://discord.com/api/webhooks/1545340434585227316/oDf4oyzf83pHiKmL49SjVct7VZ6Uhpwhbl5m6vkTw7f6tXLYWqSiGiokqjICBA195HeS}"
+# The webhook URL is a credential: it only ever comes from the environment (.env.dev).
+DISCORD_WEBHOOK="${DISCORD_TUNNEL_WEBHOOK:-}"
 WEBHOOK_ENABLED_RAW="${DISCORD_TUNNEL_WEBHOOK_ENABLED:-${DISCORD_TUNNEL_NOTIFY_ENABLED:-${TUNNEL_WEBHOOK_ENABLED:-false}}}"
 WEBHOOK_ENABLED=$(echo "$WEBHOOK_ENABLED_RAW" | tr '[:upper:]' '[:lower:]')
 TUNNEL_URL="${TUNNEL_TARGET_URL:-http://nginx:80}"

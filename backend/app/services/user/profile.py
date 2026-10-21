@@ -276,6 +276,7 @@ def get_or_create_user_showcase(user_id: int) -> UserShowcase | None:
         try:
             db.session.commit()
         except Exception:
+            logger.debug("Showcase insert lost a race; reading the existing row", exc_info=True)
             db.session.rollback()
             showcase = db.session.scalars(
                 select(UserShowcase).where(UserShowcase.user_id == user_id)

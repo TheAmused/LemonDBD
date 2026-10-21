@@ -1,7 +1,7 @@
 # backend/app/models/community.py
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text, false
+from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text, false
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
 from app.core.json_provider import safe_json_loads, safe_json_dumps

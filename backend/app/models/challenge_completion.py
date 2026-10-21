@@ -7,7 +7,7 @@ from app.core.extensions import Base
 from app.models.base import ColumnDictMixin, utcnow
 
 if TYPE_CHECKING:
-    from app.schemas.streak import ChallengeCompletionDict
+    from app.schemas.streak import ChallengeCompletionDict  # noqa: F401 -- named in the ColumnDictMixin["..."] string generic
 
 
 class ChallengeCompletionRecord(Base, ColumnDictMixin["ChallengeCompletionDict"]):

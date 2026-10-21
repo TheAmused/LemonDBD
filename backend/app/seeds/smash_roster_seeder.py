@@ -1,7 +1,6 @@
 # backend/app/seeds/smash_roster_seeder.py
 import json
 import logging
-import os
 from pathlib import Path
 import uuid
 from typing import Any, Dict, List, Tuple

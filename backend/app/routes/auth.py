@@ -9,7 +9,6 @@ from app.core.config import demo_accounts_enabled
 from app.core.altcha_guard import require_altcha
 from app.core.limiter import limiter, validate_honeypot
 from app.core.rate_limits import per_minute
-from app.core.static_files import USER_CONTENT_MAX_AGE as AVATAR_MAX_AGE
 from app.core.security import (
     generate_token,
     clear_session_cookie,

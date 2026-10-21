@@ -3,8 +3,7 @@ import pytest
 from flask.testing import FlaskClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.core.extensions import db
-from app.models import Killer, Perk, Survivor, User, UserCharacterOwnership, UserPerkOwnership
+from app.models import Killer, Perk, Survivor
 from tests.unit.conftest import make_chapter
 from app.services.ownership_service import OwnershipService
 from app.services.user import UserService

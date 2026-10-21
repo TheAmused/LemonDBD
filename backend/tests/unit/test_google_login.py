@@ -176,7 +176,7 @@ def test_passwordless_account_can_set_a_password_by_reset_link(
     monkeypatch.setattr("app.services.user.auth.send_password_reset_email", lambda user, token: sent.append(token))
     as_google("sub-r", "rita@example.com")
     client.post(URL, json={"credential": "x"})
-    user = db.session.query(User).filter_by(email="rita@example.com").one()
+    assert db.session.query(User).filter_by(email="rita@example.com").one()  # the Google sign-in made it
 
     assert client.post("/api/v1/auth/forgot-password", json={"email": "rita@example.com"}).status_code == 200
     res = client.post(

@@ -1,6 +1,5 @@
 # backend/tests/unit/api/test_generator_routes.py
 import pytest
-from flask import Flask
 from flask.testing import FlaskClient
 from app import create_app
 

@@ -1,5 +1,4 @@
 # backend/tests/unit/test_smash_models.py
-import sqlite3
 import pytest
 from sqlalchemy.orm import Session
 from app.models.smash_or_pass import (

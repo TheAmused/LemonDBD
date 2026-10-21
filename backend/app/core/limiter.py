@@ -50,7 +50,7 @@ def get_client_ip() -> str:
                 if ips:
                     return ips[0]
         return peer
-    except Exception:
+    except RuntimeError:
         return "127.0.0.1"
 
 

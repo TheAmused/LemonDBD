@@ -2,7 +2,6 @@
 from unittest.mock import patch
 import pytest
 from flask import Flask
-from app.services.user.auth import create_user_account
 from app.services.user import UserService
 
 

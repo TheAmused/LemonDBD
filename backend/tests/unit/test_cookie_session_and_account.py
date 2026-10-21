@@ -57,7 +57,6 @@ class TestCookieSession:
         assert any(h.startswith(SESSION_COOKIE_NAME) for h in login.headers.getlist("Set-Cookie"))
 
     def test_me_upgrades_a_legacy_api_scoped_cookie_without_extending_it(self, client: FlaskClient) -> None:
-        from app.core.security import generate_token
 
         user, token = _make_admin()
         client.set_cookie(SESSION_COOKIE_NAME, token, path="/api")

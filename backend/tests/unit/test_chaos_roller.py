@@ -5,7 +5,6 @@ from app.models import Killer, Perk, Survivor
 from tests.unit.conftest import make_chapter
 from app.services.chaos.constants import (
     ADDON_RARITY_POOL,
-    CHAOS_CHECKPOINT_INTERVAL,
     DIFFICULTIES,
     checkpoint_interval,
 )

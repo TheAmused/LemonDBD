@@ -2,10 +2,13 @@
 
 Used for user-generated content moderation (e.g. tier lists, builds).
 """
+import logging
 import hashlib
 import hmac
 import json
 from typing import Any
+
+logger = logging.getLogger(__name__)
 
 
 def canonicalize_payload(payload: dict[str, Any]) -> str:
@@ -104,5 +107,6 @@ def verify_content_signature(
         expected_sig = sign_content(user_id, clean_hash, secret_key)
         return hmac.compare_digest(signature.strip().lower(), expected_sig.lower())
     except Exception:
+        logger.debug("Content signature check failed on malformed input", exc_info=True)
         return False
 

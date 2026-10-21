@@ -1,8 +1,6 @@
 # backend/tests/unit/test_onboarding.py
 from flask.testing import FlaskClient
 
-from app.models import User
-from app.core.extensions import db
 
 
 def test_fresh_user_has_no_onboarding_timestamp(client: FlaskClient) -> None:

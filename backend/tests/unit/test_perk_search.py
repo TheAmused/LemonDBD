@@ -1,5 +1,4 @@
 # backend/tests/unit/test_perk_search.py
-import pytest
 from app.services.perks.utils import normalize_search_key
 from app.services.perks.queries_perk import perk_search_prefilter
 

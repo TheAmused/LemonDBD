@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 
 from app.core.extensions import db
 from app.models.base import column_dict
@@ -222,7 +223,11 @@ def build_export(target_set: set[str], include_assets: bool, static_dir: Path) -
 
     if "rosters" in target_set:
         login_by_user_id = {u.id: u.login for u in db.session.scalars(select(User)).all()}
-        rosters = db.session.scalars(select(Roster).order_by(Roster.id)).all()
+        # Entities and their votes in two IN queries (stats are selectin-loaded by the model),
+        # not one query per roster plus one per entity.
+        rosters = db.session.scalars(
+            select(Roster).options(selectinload(Roster.entities).selectinload(Entity.votes)).order_by(Roster.id)
+        ).all()
         export_data["rosters"] = [serialize_roster(r, login_by_user_id) for r in rosters]
         counts["rosters"] = len(export_data["rosters"])
 

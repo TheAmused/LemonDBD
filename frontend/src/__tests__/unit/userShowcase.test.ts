@@ -8,7 +8,6 @@ import {
   PLAYER_TITLES,
   GRADE_EMBLEMS,
   type UserShowcaseState,
-  type MainLoadout,
 } from '@/types/userShowcase';
 import {
   useUserShowcase,

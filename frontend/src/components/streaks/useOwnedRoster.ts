@@ -1,6 +1,7 @@
 // frontend/src/components/streaks/useOwnedRoster.ts
 'use client';
 
+import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { sortByReleaseNumber } from '@/utils/characterUtils';
@@ -51,33 +52,34 @@ export function useOwnedRoster(role: OwnedRosterRole, rosterLimit?: number) {
   const { token, user } = useAuth();
   const [characters, setCharacters] = useState<OwnedCharacterItem[]>([]);
   const [releaseOrder, setReleaseOrder] = useState<Map<string, number>>(new Map());
-  const [loading, setLoading] = useState<boolean>(true);
+  const userId = user?.id;
+  const [reloadCount, setReloadCount] = useState(0);
+  // Loading until the request for this account, role and cutoff has settled (and while signed out).
+  const requestKey = token && userId != null ? `${userId}|${role}|${rosterLimit ?? ''}|${reloadCount}` : null;
+  const [settledKey, setSettledKey] = useState<string | null>(null);
+  const loading = requestKey === null || settledKey !== requestKey;
 
-  const load = useCallback(async () => {
-    if (!token || !user) return;
-    setLoading(true);
-    try {
-      const res = await fetch(`${backendBase}/api/v1/users/${user.id}/characters?role=${role}`, {
-        credentials: 'include',
-      });
-      if (res.ok) {
-        const data = await res.json();
+  useEffect(() => {
+    if (requestKey === null) return;
+    let cancelled = false;
+    fetch(`${backendBase}/api/v1/users/${userId}/characters?role=${role}`, { credentials: 'include' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (cancelled || !data) return;
         const next = selectOwnedRoster(data.data || [], rosterLimit);
         setReleaseOrder(next.releaseOrder);
         setCharacters(next.characters);
-      }
-    } catch (err) {
-      console.error(`Failed to load owned ${role.toLowerCase()}s:`, err);
-    } finally {
-      setLoading(false);
-    }
-  }, [token, user?.id, role, rosterLimit]);
+      })
+      .catch((err: unknown) => logger.error(`Failed to load owned ${role.toLowerCase()}s:`, err))
+      .finally(() => !cancelled && setSettledKey(requestKey));
+    return () => {
+      cancelled = true;
+    };
+  }, [requestKey, userId, role, rosterLimit]);
 
-  useEffect(() => {
-    load();
-  }, [load]);
+  const reload = useCallback(() => setReloadCount((count) => count + 1), []);
 
-  return { characters, loading, releaseOrder, reload: load };
+  return { characters, loading, releaseOrder, reload };
 }
 
 /**

@@ -23,7 +23,6 @@ import pytest
 from flask import Flask
 from sqlalchemy.orm import Session
 
-from app.core.extensions import db
 from app.models.smash_or_pass import Entity, Roster
 from app.seeds.smash_roster_seeder import seed_smash_rosters
 from app.services.smash_or_pass_service import SmashOrPassService

@@ -25,7 +25,7 @@ describe('QrCode', () => {
   const html = renderWithDictionary(React.createElement(QrCode, { value: uri, label: 'scan me' }));
 
   it('is an accessible image drawn locally as SVG', () => {
-    assert.match(html, /<svg[^>]*role="img"[^>]*aria-label="scan me"/);
+    assert.match(html, /<svg[^>]*aria-labelledby="([^"]+)"[\s\S]*<title id="\1">scan me<\/title>/);
     assert.match(html, /viewBox="0 0 (\d+) (\d+)"/);
   });
 
@@ -49,7 +49,7 @@ describe('QrCode', () => {
     assert.match(html, /width="192"/);
     assert.match(html, /height="192"/);
     const empty = renderWithDictionary(React.createElement(QrCode, { value: '', label: 'empty' }));
-    assert.match(empty, /<svg[^>]*role="img"/);
+    assert.match(empty, /<svg[^>]*aria-labelledby=[^>]*>.*<title[^>]*>empty<\/title>/);
   });
 
   it('never sends the secret anywhere: no network call in the module', () => {
@@ -169,8 +169,16 @@ describe('two-factor wiring', () => {
 
   it('no session is stored until the second step succeeds', () => {
     const ctx = src('context/AuthContext.tsx');
-    const login = ctx.slice(ctx.indexOf('const login ='), ctx.indexOf('const completeTwoFactorLogin'));
-    assert.ok(login.indexOf("two_factor_required") < login.indexOf('setSessionFlag(true)'));
+    const login = ctx.slice(ctx.indexOf('const login ='), ctx.indexOf('const loginWithGoogle'));
+    assert.ok(login.indexOf('two_factor_required') > 0 && login.indexOf('two_factor_required') < login.indexOf('adoptSession('));
+    // Nor while the e-mail address still has to be confirmed (sign-in, sign-up and the code step itself).
+    assert.ok(login.indexOf('email_not_verified') > 0 && login.indexOf('email_not_verified') < login.indexOf('adoptSession('));
+    const register = ctx.slice(ctx.indexOf('const register ='), ctx.indexOf('const resendVerification'));
+    assert.ok(register.indexOf('verification_required') > 0 && register.indexOf('verification_required') < register.indexOf('adoptSession('));
+    const verify = ctx.slice(ctx.indexOf('const verifyEmail ='), ctx.indexOf('const forgotPassword'));
+    assert.ok(verify.indexOf('two_factor_required') > 0 && verify.indexOf('two_factor_required') < verify.indexOf('adoptSession('));
+    // The only place a session is adopted is the shared helper.
+    assert.equal((ctx.match(/setSessionFlag\(true\)/g) || []).length, 2, 'fetchCurrentUser and adoptSession');
   });
 
   it('password-gated actions ask for a code proactively when two_factor_enabled is true or when the server says so', () => {

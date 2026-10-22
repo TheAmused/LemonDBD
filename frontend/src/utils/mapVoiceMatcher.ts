@@ -25,7 +25,6 @@ import {
   ACTION_COMMAND_RULES,
   type CanonicalMapDefinition,
 } from './mapVoiceData';
-export { MAP_VARIANT_GROUPS };
 // ─── Normalization & Levenshtein Distance ──────────────────────────────────────
 // ─── Main Match Function ──────────────────────────────────────────────────────
 
@@ -41,7 +40,7 @@ export function matchVoiceQuery(
   if (!spokenText || typeof spokenText !== 'string') return null;
 
   const rawLower = normalizeString(spokenText)
-    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"']/g, ' ')
+    .replace(/[.,/#!$%^&*;:{}=\-_`~()?"']/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 

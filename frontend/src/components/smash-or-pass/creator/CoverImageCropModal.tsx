@@ -1,6 +1,7 @@
 // frontend/src/components/smash-or-pass/creator/CoverImageCropModal.tsx
 'use client';
 
+import { logger } from '@/utils/logger';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { ZoomIn, ZoomOut, RotateCcw, Check, Upload, AlertCircle, Image as ImageIcon } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
@@ -11,8 +12,9 @@ import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
-import { defaultRosterThemeColor } from '@/utils/smashOrPass/constants';
 import { paletteColor } from '@/utils/themeColor';
+import { Img } from '@/components/common/Img';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface CoverImageCropModalProps {
   isOpen: boolean;
@@ -23,7 +25,7 @@ interface CoverImageCropModalProps {
   isAdmin?: boolean;
 }
 
-export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen, onClose, imageUrl, onApplyCrop, themeColor = defaultRosterThemeColor(), isAdmin = false }) => {
+export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen, onClose, imageUrl, onApplyCrop, isAdmin = false }) => {
   const dict = useDictionary();
   const cm = dict.smashOrPass.cropModal || {
     title: 'Crop & Frame Cover Image',
@@ -62,15 +64,19 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
   const imgRef = useRef<HTMLImageElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  // Each opening (or a new image while open) starts from the image as given, unzoomed (while rendering).
+  useOnValueChange(isOpen ? `open:${imageUrl}` : null, (opened) => {
+    if (opened === null) return;
+    setCurrentUrl(imageUrl);
+    setZoom(1);
+    setOffset({ x: 0, y: 0 });
+    setCorsError(false);
+    setImageError(false);
+    setImageLoaded(false);
+  });
+
   useEffect(() => {
     if (isOpen) {
-      setCurrentUrl(imageUrl);
-      setZoom(1);
-      setOffset({ x: 0, y: 0 });
-      setCorsError(false);
-      setImageError(false);
-      setImageLoaded(false);
-
       // Preemptively fetch via proxy to turn into a clean local dataUrl
       if (imageUrl && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))) {
         const proxied = `/api/v1/smash-or-pass/proxy-image?url=${encodeURIComponent(imageUrl)}`;
@@ -233,7 +239,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
           onApplyCrop(croppedDataUrl);
           onClose();
         } catch (err) {
-          console.warn('Canvas export tainted by external CORS:', err);
+          logger.warn('Canvas export tainted by external CORS:', err);
           setCorsError(true);
         }
       };
@@ -291,6 +297,8 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
         <div className="relative rounded-card border-2 border-accent-red/40 bg-bg-primary overflow-hidden shadow-2xl">
           <div
             ref={containerRef}
+            // Drag-to-pan and wheel-zoom for pointers; the zoom slider and buttons are the keyboard controls.
+            role="presentation"
             onMouseDown={handleMouseDown}
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
@@ -300,7 +308,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
             style={{ touchAction: 'none' }}
           >
             {currentUrl && !imageError ? (
-              <img
+              <Img
                 ref={imgRef}
                 src={currentUrl}
                 alt={cm.previewAlt}

@@ -1,13 +1,15 @@
 'use client';
 // frontend/src/components/common/ImageUploadDropzone.tsx
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Check, ImagePlus, Trash2, Upload } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { cn } from '@/utils/cn';
 import { useDictionary } from '@/context/DictionaryContext';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
+import { Img } from '@/components/common/Img';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 /** Reads a file's raw bytes back out as a `data:...;base64,...` URL. */
 async function fileToDataUrl(file: File): Promise<string | null> {
@@ -145,9 +147,7 @@ export function ImageUploadDropzone({
   const [processing, setProcessing] = useState<boolean>(false);
   const [urlInput, setUrlInput] = useState<string>(value || '');
 
-  useEffect(() => {
-    setUrlInput(value || '');
-  }, [value]);
+  useOnValueChange(value, (next) => setUrlInput(next || ''));
 
   const commitUrl = () => {
     const trimmed = urlInput.trim();
@@ -186,29 +186,27 @@ export function ImageUploadDropzone({
 
       {hasValue ? (
         <div
-          onClick={onPreviewClick}
-          onKeyDown={(e) => {
-            if (onPreviewClick && (e.key === 'Enter' || e.key === ' ')) {
-              e.preventDefault();
-              onPreviewClick();
-            }
-          }}
-          tabIndex={onPreviewClick ? 0 : undefined}
-          role={onPreviewClick ? 'button' : undefined}
-          aria-label={onPreviewClick ? dict.tierLists.editDetails : undefined}
           className={cn(
             'relative group overflow-hidden rounded-card border border-border-color bg-bg-elevated w-full mx-auto shadow-xs',
-            onPreviewClick && 'cursor-pointer focus:outline-none focus:ring-1 focus:ring-accent-red',
             aspectRatio === 'square' ? 'aspect-square max-w-xs' : 'aspect-video max-w-md 2xl:max-w-lg',
             invalid && 'border-accent-red'
           )}
         >
-          <img
+          <Img
             src={value}
             alt=""
             referrerPolicy="no-referrer"
             className="h-full w-full object-cover"
           />
+          {/* The preview opens the editor; the remove button sits above this layer. */}
+          {onPreviewClick && (
+            <button
+              type="button"
+              onClick={onPreviewClick}
+              aria-label={dict.tierLists.editDetails}
+              className="absolute inset-0 cursor-pointer rounded-card focus:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-accent-red"
+            />
+          )}
           {previewOverlay}
           <div className="absolute top-2 right-2 flex items-center gap-1.5 z-10">
             {previewActions || actions}
@@ -219,10 +217,7 @@ export function ImageUploadDropzone({
               icon
               pill
               disabled={disabled}
-              onClick={(e) => {
-                e.stopPropagation();
-                onChange('');
-              }}
+              onClick={() => onChange('')}
               aria-label={resolvedRemoveLabel}
             >
               <Trash2 className="h-3.5 w-3.5" />

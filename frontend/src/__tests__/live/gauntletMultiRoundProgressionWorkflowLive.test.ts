@@ -19,7 +19,7 @@ test("Live Frontend Workflow: Gauntlet Streak Multi-Round Boss Run", async () =>
 
   const runRes = await fetch(`${API_BASE}/api/v1/gauntlet-streak/run?role=killer`, { headers });
   assert.strictEqual(runRes.status, 200);
-  const run = (await runRes.json()).run;
+  await runRes.json();
 
   const statsRes = await fetch(`${API_BASE}/api/v1/gauntlet-streak/stats?role=killer`, { headers });
   assert.strictEqual(statsRes.status, 200);

@@ -133,23 +133,17 @@ def _stored_round(challenge_type: str, challenge_id: Any, round_index: int) -> d
 def submit_guess():
     """Grades a guess.
 
-    An official round (daily/repeatable) is graded against the round the server
-    stored -- whatever round the client sends alongside is ignored. Only a
-    custom trial, which exists solely in the player's browser, is graded
-    against the round in the request. Once the round is over (solved, out of
-    attempts, or `give_up`) the response carries `answer`, which is how the
-    client learns an answer it was never sent.
+    An official round (daily/repeatable) is graded against the round the server stored -- whatever
+    round the client sends alongside is ignored. Only a custom trial, which exists solely in the
+    player's browser, is graded against the round in the request. Once the round is over (solved,
+    out of attempts, or `give_up`) the response carries `answer`, the client's only way to learn it.
     """
     try:
         dto = MinigameGuessSubmissionDTO.model_validate(request.get_json(silent=True) or {})
     except ValidationError as err:
         return api_error("Validation failed", 400, details=err.errors())
 
-    if dto.challenge_type == "custom":
-        custom_round = dto.custom_round_config or dto.custom_round
-        round_data = custom_round if isinstance(custom_round, dict) else None
-    else:
-        round_data = _stored_round(dto.challenge_type, dto.challenge_id, dto.round_index)
+    round_data = _round_for(dto)
     if not round_data:
         return api_error("Challenge or round not found", 404)
 
@@ -175,6 +169,14 @@ def submit_guess():
     if result.get("is_correct") or dto.attempt_number >= max_attempts:
         result["answer"] = answer
     return jsonify(result), 200
+
+
+def _round_for(dto: MinigameGuessSubmissionDTO) -> dict | None:
+    """The round a guess is graded against: the stored one, or the request's own for a custom trial."""
+    if dto.challenge_type == "custom":
+        custom_round = dto.custom_round_config or dto.custom_round
+        return custom_round if isinstance(custom_round, dict) else None
+    return _stored_round(dto.challenge_type, dto.challenge_id, dto.round_index)
 
 
 @minigames_bp.route("/official", methods=["POST"])

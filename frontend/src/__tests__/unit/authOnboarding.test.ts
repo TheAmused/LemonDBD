@@ -13,6 +13,6 @@ test('AuthContext exposes onboarding fields and methods', () => {
   assert.match(source, /markOnboardingComplete: \(\) => Promise<boolean>;/);
   assert.match(
     source,
-    /verifyEmail: \(email: string, code: string\) => Promise<\{ success: boolean; error\?: string; user\?: UserProfile \}>;/
+    /verifyEmail: \(email: string, code: string, verificationToken\?: string\) => Promise<SignInResult>;/
   );
 });

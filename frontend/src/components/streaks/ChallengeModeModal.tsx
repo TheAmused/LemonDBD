@@ -1,13 +1,14 @@
 'use client';
 // frontend/src/components/streaks/ChallengeModeModal.tsx
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   ChallengeIntroModalShell,
   type ChallengeIntroTile,
 } from './ChallengeIntroModalShell';
 import { cascadeCompletedTiers, tierCompletionCount } from '@/utils/challengeTierCompletion';
 import { useDictionary } from "@/context/DictionaryContext";
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 export interface TierTileDef {
   value: string;
@@ -95,9 +96,9 @@ export const ChallengeModeModal: React.FC<ChallengeModeModalProps> = ({
     ? selectedValue
     : tiles.find((tile) => !tile.disabled)?.value;
   const [pending, setPending] = useState(defaultPending);
-  useEffect(() => {
-    if (isOpen) setPending(defaultPending);
-  }, [isOpen, defaultPending]);
+  useOnValueChange(isOpen ? `open:${defaultPending ?? ''}` : null, (opened) => {
+    if (opened !== null) setPending(defaultPending);
+  });
 
   const pendingTile = tiles.find((tile) => tile.value === pending);
   const info = modeInfo

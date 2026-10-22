@@ -17,7 +17,7 @@ describe('Maps: Skeletons & DBD Framer Motion Spinner Integrity', () => {
       })
     );
 
-    assert.ok(html.includes('role="status"'), 'Skeleton should declare role="status"');
+    assert.ok(html.includes('<output'), 'Skeleton should declare a status region (<output>)');
     assert.ok(html.includes('aria-busy="true"'), 'Skeleton should declare aria-busy="true"');
     assert.ok(html.includes('viewBox="0 0 160 160"'), 'Maps skeleton must render DBD Skill Check SVG');
   });

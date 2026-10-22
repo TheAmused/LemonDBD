@@ -1,17 +1,21 @@
 # docker-compose.base.yml - Shared core services for LemonDBD
 services:
   db:
-    image: postgres:alpine
+    # Major pinned to match PGDATA (/var/lib/postgresql/18/...): a new major refuses the old data directory.
+    image: postgres:18-alpine3.24
     container_name: dbd_db
     restart: unless-stopped
     command: postgres -c max_connections=200
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      # No default: a well-known database password is one typo away from a public database.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env.dev / .env.prod}
       POSTGRES_DB: ${POSTGRES_DB:-dbd_db}
       PGDATA: /var/lib/postgresql/18/docker
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      # Loopback only (live tests and local tools still reach it on localhost). Set
+      # POSTGRES_BIND=0.0.0.0 only on a machine whose firewall you control.
+      - "${POSTGRES_BIND:-127.0.0.1}:${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql
       - ./docker/postgres-init:/docker-entrypoint-initdb.d:ro
@@ -31,7 +35,7 @@ services:
   # persisting it would only risk serving a stale generation. `allkeys-lru`
   # evicts instead of refusing writes, which would take the API down with it.
   redis:
-    image: redis:7-alpine
+    image: redis:7.4-alpine
     container_name: dbd_redis
     restart: unless-stopped
     command: >
@@ -55,7 +59,7 @@ services:
   # under allkeys-lru a burst of cache traffic would evict exactly these (limits
   # reset early, a solved challenge can be replayed). `noeviction` never drops a key.
   redis-limits:
-    image: redis:7-alpine
+    image: redis:7.4-alpine
     container_name: dbd_redis_limits
     restart: unless-stopped
     command: >
@@ -80,10 +84,10 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: dbd_backend
+    # Reached only through nginx (rate limits, bot filter, body limits). The dev overlay
+    # publishes it on loopback for debugging; production never publishes it.
     expose:
       - "5000"
-    ports:
-      - "${BACKEND_PORT:-5000}:5000"
     volumes:
       - backend_data:/app/data
       - ./backend/app/static:/app/app/static
@@ -94,22 +98,38 @@ services:
       - GUNICORN_WORKERS=${GUNICORN_WORKERS:-4}
       - GUNICORN_THREADS=${GUNICORN_THREADS:-8}
       - SECRET_KEY=${SECRET_KEY:-dev-secret-key-dbd-lemon-2026}
+      # Signs session tokens. Empty falls back to SECRET_KEY.
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}
+      - JWT_EXPIRATION_HOURS=${JWT_EXPIRATION_HOURS:-24}
+      # "auto" marks the session cookie Secure when nginx reports HTTPS; set "true" in production.
+      - SESSION_COOKIE_SECURE=${SESSION_COOKIE_SECURE:-auto}
       # Optional two-factor sign-in: replace with a fresh Fernet key in .env.prod for production.
-      - TWO_FACTOR_ENCRYPTION_KEY=${TWO_FACTOR_ENCRYPTION_KEY:-TZbfxN8fCG2Pccx-bBsj2fxcyN4dwABgUsIutMVLx4Y=}
+      - TWO_FACTOR_ENCRYPTION_KEY=${TWO_FACTOR_ENCRYPTION_KEY:-}
       - TWO_FACTOR_ISSUER=${TWO_FACTOR_ISSUER:-LemonDBD}
       # Ban-evasion e-mail list (off by default; see .env.example before enabling).
       - BAN_LIST_ENABLED=${BAN_LIST_ENABLED:-false}
       - BAN_LIST_PEPPERS=${BAN_LIST_PEPPERS:-}
-      - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/dbd_db}
+      - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-dbd_db}}
       - DB_POOL_SIZE=${DB_POOL_SIZE:-10}
       - DB_MAX_OVERFLOW=${DB_MAX_OVERFLOW:-5}
+      - DB_POOL_RECYCLE=${DB_POOL_RECYCLE:-300}
+      - DB_POOL_TIMEOUT=${DB_POOL_TIMEOUT:-30}
+      - GUNICORN_TIMEOUT=${GUNICORN_TIMEOUT:-60}
+      - GUNICORN_LOGLEVEL=${GUNICORN_LOGLEVEL:-info}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - LOG_FORMAT=${LOG_FORMAT:-text}
+      # Request body ceilings (bytes / MB); keep them in step with nginx client_max_body_size.
+      - MAX_CONTENT_LENGTH=${MAX_CONTENT_LENGTH:-20971520}
+      - DATABASE_IMPORT_MAX_MB=${DATABASE_IMPORT_MAX_MB:-512}
+      # Empty = on only with FLASK_ENV=development (see .env.example).
+      - SEED_WRITEBACK=${SEED_WRITEBACK:-}
       # Unset this and the app still boots: the catalog cache falls back to a
       # per-worker dict and the limiter to per-worker counters.
       - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
       # Rate-limit counters and ALTCHA replay records (never evicted).
       - LIMITS_REDIS_URL=${LIMITS_REDIS_URL:-redis://redis-limits:6379/0}
       - CATALOG_CACHE_TTL=${CATALOG_CACHE_TTL:-86400}
-      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+      - CORS_ORIGINS=${CORS_ORIGINS:-}
       - MAIL_SERVER=${MAIL_SERVER:-smtp.gmail.com}
       - MAIL_PORT=${MAIL_PORT:-587}
       - MAIL_USE_TLS=${MAIL_USE_TLS:-true}
@@ -118,9 +138,19 @@ services:
       - MAIL_DEFAULT_SENDER=${MAIL_DEFAULT_SENDER:-}
       - REQUIRE_EMAIL_VERIFICATION=${REQUIRE_EMAIL_VERIFICATION:-true}
       - FRONTEND_URL=${FRONTEND_URL:-https://localhost}
+      # Shown on the Privacy Policy page; empty falls back to MAIL_USERNAME.
+      - PRIVACY_CONTACT_EMAIL=${PRIVACY_CONTACT_EMAIL:-}
+      # Starting values of the public links (the admin Settings tab overrides them).
+      - DISCORD_INVITE_URL=${DISCORD_INVITE_URL:-https://discord.gg/Veygfp6XfT}
+      - DONATION_BMC_URL=${DONATION_BMC_URL:-https://buymeacoffee.com/lemondbd}
+      - DONATION_KOFI_URL=${DONATION_KOFI_URL:-https://ko-fi.com/lemondbd}
+      - DONATION_PATREON_URL=${DONATION_PATREON_URL:-https://patreon.com/lemondbd}
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL:-}
       - DISCORD_CHANGELOG_WEBHOOK_URL=${DISCORD_CHANGELOG_WEBHOOK_URL:-}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}
       - RATELIMIT_ENABLED=${RATELIMIT_ENABLED:-true}
+      - RATELIMIT_DEFAULT=${RATELIMIT_DEFAULT:-200 per minute}
+      - STREAK_INACTIVITY_PRUNE_DAYS=${STREAK_INACTIVITY_PRUNE_DAYS:-90}
       - ALTCHA_ENFORCED=${ALTCHA_ENFORCED:-true}
       - SCHEDULER_ENABLED=${SCHEDULER_ENABLED:-false}
     depends_on:
@@ -131,7 +161,8 @@ services:
       redis-limits:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1/health"]
+      # Readiness, not liveness: the database (and the rate-limit Redis) must answer too.
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/v1/readyz"]
       interval: 4s
       timeout: 3s
       retries: 10
@@ -152,7 +183,17 @@ services:
       - ./data/updates:/app/updates
     environment:
       - FLASK_ENV=${FLASK_ENV:-production}
-      - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://postgres:postgres@db:5432/dbd_db}
+      # create_app() runs the same production checks here as in the backend, so this process
+      # needs the same keys: without them it refuses to start and no housekeeping job runs.
+      # TWO_FACTOR_ENCRYPTION_KEY also decrypts admin "secret" settings the mail jobs read.
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key-dbd-lemon-2026}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-}
+      - TWO_FACTOR_ENCRYPTION_KEY=${TWO_FACTOR_ENCRYPTION_KEY:-}
+      - CORS_ORIGINS=${CORS_ORIGINS:-}
+      - BAN_LIST_ENABLED=${BAN_LIST_ENABLED:-false}
+      - BAN_LIST_PEPPERS=${BAN_LIST_PEPPERS:-}
+      - STREAK_INACTIVITY_PRUNE_DAYS=${STREAK_INACTIVITY_PRUNE_DAYS:-90}
+      - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-dbd_db}}
       - DB_POOL_SIZE=2
       - DB_MAX_OVERFLOW=1
       # The catalog-cache maintenance job bumps the shared generation from here.
@@ -165,7 +206,17 @@ services:
       - MAIL_USERNAME=${MAIL_USERNAME:-}
       - MAIL_PASSWORD=${MAIL_PASSWORD:-}
       - MAIL_DEFAULT_SENDER=${MAIL_DEFAULT_SENDER:-}
+      - PRIVACY_CONTACT_EMAIL=${PRIVACY_CONTACT_EMAIL:-}
       - FRONTEND_URL=${FRONTEND_URL:-https://localhost}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - LOG_FORMAT=${LOG_FORMAT:-text}
+    # run_scheduler.py touches the heartbeat file every minute; three missed beats is unhealthy.
+    healthcheck:
+      test: ["CMD", "python", "-c", "import os, sys, time; sys.exit(0 if time.time() - os.path.getmtime('/tmp/scheduler.heartbeat') < 180 else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
     depends_on:
       db:
         condition: service_healthy
@@ -175,13 +226,13 @@ services:
       - dbd_network
 
   umami:
-    image: docker.umami.is/umami-software/umami:postgresql-latest
+    image: ghcr.io/umami-software/umami:3.3
     container_name: dbd_umami
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/umami
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@db:5432/umami
       DATABASE_TYPE: postgresql
-      APP_SECRET: ${UMAMI_APP_SECRET:-change-this-to-a-random-secret-in-production}
+      APP_SECRET: ${UMAMI_APP_SECRET:?set UMAMI_APP_SECRET to a long random value}
     healthcheck:
       test: ["CMD-SHELL", "node -e \"fetch('http://127.0.0.1:3000/api/heartbeat').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))\""]
       interval: 4s
@@ -197,15 +248,17 @@ services:
       - dbd_network
 
   pgadmin:
-    image: dpage/pgadmin4:latest
+    image: dpage/pgadmin4:9.18
     container_name: dbd_pgadmin
     restart: unless-stopped
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@lemondbd.com}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:?set PGADMIN_DEFAULT_PASSWORD}
+      # Server mode: pgAdmin asks for PGADMIN_DEFAULT_EMAIL / PGADMIN_DEFAULT_PASSWORD. Desktop mode
+      # ('False') has no login at all, which is a database console for anyone who reaches the port.
+      PGADMIN_CONFIG_SERVER_MODE: 'True'
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
-      PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: 'False'
+      PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: 'True'
       PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
     volumes:
       - pgadmin_data:/var/lib/pgadmin
@@ -241,9 +294,17 @@ services:
       - NEXT_PUBLIC_PGADMIN_URL=${NEXT_PUBLIC_PGADMIN_URL:-https://localhost:5050}
       - UMAMI_INTERNAL_URL=http://umami:3000
       - UMAMI_ADMIN_USERNAME=${UMAMI_ADMIN_USERNAME:-admin}
-      - UMAMI_ADMIN_PASSWORD=${UMAMI_ADMIN_PASSWORD:-umami}
+      # Must match the Umami admin password: change Umami's built-in admin/umami login in its
+      # dashboard first, then put the new password here.
+      - UMAMI_ADMIN_PASSWORD=${UMAMI_ADMIN_PASSWORD:?set UMAMI_ADMIN_PASSWORD (and change it in Umami)}
       - UMAMI_SITE_NAME=${UMAMI_SITE_NAME:-LemonDBD}
       - UMAMI_SITE_DOMAIN=${UMAMI_SITE_DOMAIN:-localhost}
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/healthz').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
     depends_on:
       backend:
         condition: service_healthy
@@ -262,14 +323,21 @@ services:
       - "80:80"
       - "443:443"
       - "${UMAMI_PORT:-8117}:8117"
-      - "${PGADMIN_PORT:-5050}:5050"
+      # Loopback only unless PGADMIN_BIND says otherwise: reach it on the server itself or through an
+      # SSH tunnel (ssh -L 5050:127.0.0.1:5050 <host>), never straight from the internet.
+      - "${PGADMIN_BIND:-127.0.0.1}:${PGADMIN_PORT:-5050}:5050"
     volumes:
       - nginx_logs:/var/log/nginx
+    # nginx runs as its own unprivileged user (nginx/Dockerfile); this lets it bind 80 and 443
+    # inside the container. Docker already defaults to it -- stated so it does not depend on that.
+    # The image's HEALTHCHECK probes /nginx-health.
+    sysctls:
+      - net.ipv4.ip_unprivileged_port_start=0
     depends_on:
       backend:
         condition: service_healthy
       frontend:
-        condition: service_started
+        condition: service_healthy
       umami:
         condition: service_started
       pgadmin:

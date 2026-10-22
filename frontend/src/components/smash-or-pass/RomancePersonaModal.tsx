@@ -24,6 +24,7 @@ import { PersonaShareView } from './persona/PersonaShareView';
 import { buildSocialLinks } from './persona/socialLinks';
 import { trackEvent } from '@/utils/analytics';
 import { Surface } from '@/components/common/Surface';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface PersonaArchetypeEntry {
   title?: string;
@@ -41,22 +42,20 @@ interface RomancePersonaModalProps {
   customArchetypes?: CustomRomanceArchetype[];
 }
 
-export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen, onClose, votes, sharedPayload, onResetAll, locale = 'en', customArchetypes }) => {
+export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen, onClose, votes, sharedPayload, onResetAll, customArchetypes }) => {
   const dict = useDictionary();
-  const [copied, setCopied] = useState<boolean>(false);
   const [isSharingView, setIsSharingView] = useState<boolean>(false);
   const [copiedLink, setCopiedLink] = useState<boolean>(false);
   const [feedbackNotice, setFeedbackNotice] = useState<string | null>(null);
   const rawSmash = dict.smashOrPass;
 
   // Reset sharing view and notices when modal closes
-  React.useEffect(() => {
-    if (!isOpen) {
-      setIsSharingView(false);
-      setCopiedLink(false);
-      setFeedbackNotice(null);
-    }
-  }, [isOpen]);
+  useOnValueChange(isOpen, (open) => {
+    if (open) return;
+    setIsSharingView(false);
+    setCopiedLink(false);
+    setFeedbackNotice(null);
+  });
 
   const showFeedbackNotice = (msg: string) => {
     setFeedbackNotice(msg);
@@ -116,7 +115,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
           await link.onClick?.(e);
         },
       })),
-    [shareUrl, shareText, shareTitle, rawSmash, locale]
+    [shareUrl, shareText, shareTitle, rawSmash]
   );
 
   const handleShare = async () => {
@@ -221,7 +220,6 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
           <PersonaBreakdown
             persona={persona}
             isSharedView={isSharedView}
-            copied={copied}
             onShare={handleShare}
             onClose={onClose}
             onResetAll={onResetAll}

@@ -6,7 +6,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
 import { renderWithDictionary } from '../helpers/renderWithDictionary';
-import { buildEvidencePreview, isSafePreviewImage, parseEvidence } from '@/utils/contentPreview';
+import { buildEvidencePreview, isSafeLocalPreviewImage, isSafePreviewImage, parseEvidence } from '@/utils/contentPreview';
 import { ContentReportDetail } from '@/components/admin/ContentReportDetail';
 import { SandboxedContentPreview } from '@/components/admin/SandboxedContentPreview';
 import { AdminQueue } from '@/components/admin/AdminQueue';
@@ -113,6 +113,24 @@ describe('contentPreview', () => {
     assert.equal(isSafePreviewImage('data:image/svg+xml;base64,PHN2Zz48L3N2Zz4='), false);
     assert.equal(isSafePreviewImage('data:text/html;base64,AAAA'), false);
   });
+
+  it('loads a /static/ path only when it is a plain raster file of our own', () => {
+    assert.equal(isSafeLocalPreviewImage('/static/tier-lists/banner.webp'), true);
+    assert.equal(isSafeLocalPreviewImage('/static/icons/perks/sprint_burst.png'), true);
+    // Each of these reaches another endpoint (with the admin's cookie) once the browser resolves it.
+    for (const evil of [
+      '/static/../api/v1/admin/database/export',
+      '/static/../api/v1/users/1/export?x=.png',
+      '/static/%2e%2e/api/v1/admin/stats.png',
+      '/static/./../api/v1/x.png',
+      '/static//evil.example/a.png',
+      '/static/a\\..\\b.png',
+      '/static/icons/perk.svg',
+      '/static/icons/',
+    ]) {
+      assert.equal(isSafeLocalPreviewImage(evil), false, evil);
+    }
+  });
 });
 
 describe('SandboxedContentPreview', () => {
@@ -150,6 +168,17 @@ describe('ContentReportDetail', () => {
     const html = renderWithDictionary(React.createElement(ContentReportDetail, { detail, resolving: false, onResolve: noop, onShowUser: showUser }));
     assert.ok(html.includes(en.admin.contentReportUnattributed));
     assert.ok(!html.includes(AUTHOR_ACTION_LABEL));
+  });
+
+  it('still offers a decision about a suspended author, but none about a banned one', () => {
+    const suspended = { ...baseDetail, author_active: false, author_standing: 'suspended' as const };
+    const suspendedHtml = renderWithDictionary(React.createElement(ContentReportDetail, { detail: suspended, resolving: false, onResolve: noop, onShowUser: showUser }));
+    assert.ok(suspendedHtml.includes(AUTHOR_ACTION_LABEL));
+    assert.ok(suspendedHtml.includes(en.admin.contentReportAuthorSuspended));
+    const banned = { ...baseDetail, author_active: false, author_standing: 'banned' as const };
+    const bannedHtml = renderWithDictionary(React.createElement(ContentReportDetail, { detail: banned, resolving: false, onResolve: noop, onShowUser: showUser }));
+    assert.ok(!bannedHtml.includes(AUTHOR_ACTION_LABEL));
+    assert.ok(bannedHtml.includes(en.admin.contentReportAuthorInactive.replace(/'/g, '&#x27;')));
   });
 
   it('never offers a decision about an admin author', () => {

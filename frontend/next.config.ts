@@ -12,9 +12,6 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: [
       'lucide-react',
-      '@tsparticles/react',
-      '@tsparticles/engine',
-      '@tsparticles/slim',
       'clsx',
       'tailwind-merge',
     ],

@@ -1,6 +1,6 @@
 'use client';
 // frontend/src/components/smash-or-pass/creator/useRosterDraft.ts
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { defaultRosterThemeColor, SMASH_ROSTER_LIMITS, TRANSLATABLE_LOCALES } from '@/utils/smashOrPass/constants';
 import type { StoredCustomRoster } from '@/types/smashOrPass';
 import { DraftEntity, emptyDraftEntity } from './EntityEditor';
@@ -15,6 +15,7 @@ import {
   newKey,
   readDraft,
 } from './SmashRosterCreatorParts';
+import { useIsClient } from '@/hooks/useIsClient';
 
 /** Whether a draft holds anything worth keeping (restoring, or saving over the stored one). */
 function draftHasContent(d: Draft): boolean {
@@ -58,17 +59,16 @@ export function useRosterDraft({ editId, editingRoster, storeHydrated }: UseRost
   const [rosterTranslations, setRosterTranslations] = useState<RosterTranslations>({});
   const [entityTranslations, setEntityTranslations] = useState<EntityTranslations>({});
   const [activeTranslationLocale, setActiveTranslationLocale] = useState<string>(TRANSLATABLE_LOCALES[0]);
-  const loaded = useRef<boolean>(false);
 
-  // Restore after mount (localStorage is client-only), then autosave -- new
-  // rosters only. Editing an existing one is seeded from the store instead
-  // (below), never through this scratch-draft key.
-  useEffect(() => {
-    if (editId) {
-      loaded.current = true;
-      return;
-    }
-    const saved = readDraft();
+  // Restore once running in the browser (localStorage is client-only, so the server and the
+  // hydrating render show the empty draft), while rendering; then autosave -- new rosters only.
+  // Editing an existing one is seeded from the store instead (below), never through this
+  // scratch-draft key.
+  const isClient = useIsClient();
+  const [draftReadFor, setDraftReadFor] = useState<string | null | undefined>(undefined);
+  if (isClient && draftReadFor !== (editId ?? null)) {
+    setDraftReadFor(editId ?? null);
+    const saved = editId ? null : readDraft();
     const hasMeaningfulContent = Boolean(saved && draftHasContent(saved));
     if (saved && hasMeaningfulContent) {
       setDraft(saved);
@@ -85,8 +85,8 @@ export function useRosterDraft({ editId, editingRoster, storeHydrated }: UseRost
       }
       setRestored(true);
     }
-    loaded.current = true;
-  }, [editId]);
+  }
+  const draftLoaded = draftReadFor !== undefined;
 
   useEffect(() => {
     if (!restored) return;
@@ -97,7 +97,7 @@ export function useRosterDraft({ editId, editingRoster, storeHydrated }: UseRost
   }, [restored]);
 
   useEffect(() => {
-    if (!loaded.current || editId || typeof window === 'undefined' || typeof localStorage === 'undefined') return;
+    if (!draftLoaded || editId || typeof window === 'undefined' || typeof localStorage === 'undefined') return;
     const timer = window.setTimeout(() => {
       try {
         const hasContent = draftHasContent(draft);
@@ -117,13 +117,16 @@ export function useRosterDraft({ editId, editingRoster, storeHydrated }: UseRost
       }
     }, 400);
     return () => window.clearTimeout(timer);
-  }, [draft, editId, rosterTranslations, entityTranslations, selectedEntityKey]);
+  }, [draft, draftLoaded, editId, rosterTranslations, entityTranslations, selectedEntityKey]);
 
-  const editSeeded = useRef<string | null>(null);
-  useEffect(() => {
-    if (!editId || !storeHydrated || editSeeded.current === editId) return;
-    editSeeded.current = editId;
-    if (!editingRoster) return;
+  // Edit mode: once the store has hydrated, the draft starts from the saved roster -- once per
+  // `editId` (adjusted while rendering, so the empty form never paints first).
+  const [seededFor, setSeededFor] = useState<string | null>(null);
+  if (editId && storeHydrated && seededFor !== editId) {
+    setSeededFor(editId);
+    if (editingRoster) seedFromRoster(editingRoster);
+  }
+  function seedFromRoster(editingRoster: StoredCustomRoster) {
     const seededEntities = editingRoster.entities.length
       ? editingRoster.entities.map(entityFromDocument)
       : [emptyDraftEntity(newKey())];
@@ -144,7 +147,7 @@ export function useRosterDraft({ editId, editingRoster, storeHydrated }: UseRost
     if (seededEntities.length > 0) {
       setSelectedEntityKey(seededEntities[0].key);
     }
-  }, [editId, storeHydrated, editingRoster]);
+  }
 
   const patch = (next: Partial<Draft>) => setDraft((d) => ({ ...d, ...next }));
   const patchEntity = (key: string, next: Partial<DraftEntity>) =>

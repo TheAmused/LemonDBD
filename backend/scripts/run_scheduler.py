@@ -8,6 +8,7 @@ import logging
 import os
 import signal
 import sys
+from pathlib import Path
 
 from apscheduler.schedulers.blocking import BlockingScheduler
 
@@ -16,10 +17,20 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")
 
 from app import create_app  # noqa: E402
 from app.core.config import Config  # noqa: E402
+from app.core.logging_setup import configure_logging  # noqa: E402
 from app.services.maintenance_jobs import register_jobs  # noqa: E402
 
-logging.basicConfig(level=logging.INFO, format="[%(asctime)s] [%(levelname)s] [scheduler] %(message)s")
+configure_logging()
 logger = logging.getLogger("scheduler")
+
+#: Touched every HEARTBEAT_SECONDS while the scheduler runs; the container healthcheck
+#: (docker-compose.base.yml) fails once it is older than three beats.
+HEARTBEAT_FILE = Path("/tmp/scheduler.heartbeat")
+HEARTBEAT_SECONDS = 60
+
+
+def beat() -> None:
+    HEARTBEAT_FILE.touch()
 
 
 class SchedulerProcessConfig(Config):
@@ -33,6 +44,8 @@ def main():
 
     scheduler = BlockingScheduler()
     register_jobs(scheduler, app)
+    beat()
+    scheduler.add_job(beat, "interval", seconds=HEARTBEAT_SECONDS, id="heartbeat", replace_existing=True)
 
     def _shutdown(signum, frame):
         logger.info("Received termination signal, shutting down scheduler...")

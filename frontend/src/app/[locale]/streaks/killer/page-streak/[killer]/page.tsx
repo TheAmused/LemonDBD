@@ -4,6 +4,10 @@ import { notFound } from 'next/navigation';
 import { PageStreakRunView } from '@/components/streaks/page-streak/PageStreakRunView';
 import { ChallengeModeGate } from '@/components/streaks/ChallengeModeGate';
 import { safeDecodeParam } from '@/utils/safeDecodeParam';
+import { pageMetadata, withSegment } from '@/i18n/metadata';
+
+// Its own canonical URL (the streaks layout's would point every challenge at /streaks).
+export const generateMetadata = pageMetadata((p) => withSegment('/streaks/killer/page-streak', p.killer), (d) => ({ title: d.app.streaksPageTitle }));
 
 export default async function PageStreakKillerPage({
   params,

@@ -39,7 +39,8 @@ export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnl
   };
 
   const usesGoogle = user?.has_password === false;
-  const googleClientId = useGoogleClientId(open && usesGoogle);
+  // Confirming with Google is not a sign-in: it keeps working while Google sign-in is switched off.
+  const googleClientId = useGoogleClientId(open && usesGoogle, 'confirm');
 
   const confirm = async (googleCredential?: string) => {
     if (busy || (usesGoogle ? !googleCredential : !password) || (requiresCode && !code.trim())) return;
@@ -122,7 +123,7 @@ export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnl
                 if (e.key === 'Enter') confirm();
               }}
               invalid={!!error}
-              autoFocus
+              data-autofocus
             />
           )}
           {requiresCode ? (

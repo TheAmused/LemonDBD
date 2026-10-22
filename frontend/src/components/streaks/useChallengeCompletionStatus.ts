@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/streaks/useChallengeCompletionStatus.ts
 
+import { logger } from '@/utils/logger';
 import { useEffect, useState } from 'react';
 import { fetchCompletionStatus } from '@/services/challengeCompletionsApi';
 import { ChallengeCompletionStatus } from '@/types/challengeCompletionStatus';
@@ -21,7 +22,7 @@ export function useChallengeCompletionStatus(): ChallengeCompletionStatus {
     if (!token) return;
     fetchCompletionStatus(token)
       .then(setStatus)
-      .catch((err) => console.error('Failed to load challenge completion status:', err));
+      .catch((err) => logger.error('Failed to load challenge completion status:', err));
   }, [token]);
 
   return status;

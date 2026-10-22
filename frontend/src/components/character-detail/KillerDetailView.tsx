@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/character-detail/KillerDetailView.tsx
 
-import React, { useState, Suspense } from 'react';
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { BookOpen, Flame, Bookmark, Calendar, ShieldCheck } from 'lucide-react';
 import {
@@ -20,7 +20,7 @@ import { KillerCombatStats } from './components/KillerCombatStats';
 import { CharacterPerksSection } from './components/CharacterPerksSection';
 import { KillerEquipmentSection } from './components/KillerEquipmentSection';
 import { OfferingsSection } from './components/OfferingsSection';
-import { Perk, PerkDictionary } from '@/types/perks';
+import { Perk } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 import { tip } from '@/components/common/Tooltip';
@@ -29,6 +29,7 @@ import { InfoChip } from '@/components/common/InfoChip';
 import { useDictionary } from "@/context/DictionaryContext";
 import { TileButton } from '@/components/common/TileButton';
 import { WrapRow } from '@/components/common/WrapRow';
+import { Img } from '@/components/common/Img';
 
 const LoreModal = dynamic(() => import('./modals/LoreModal').then((m) => m.LoreModal), { ssr: false });
 const Model3DModal = dynamic(() => import('./modals/Model3DModal').then((m) => m.Model3DModal), { ssr: false });
@@ -102,7 +103,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
                   aria-label={killerPower.name}
                 >
                   {killerPower.icon_url || killerPower.icon_local_path ? (
-                    <img
+                    <Img
                       src={getAssetUrl(backendBase, killerPower.icon_local_path, killerPower.icon_url)}
                       alt={killerPower.name}
                       className="h-full w-full object-contain group-hover:scale-105 transition-transform"
@@ -194,7 +195,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
       {/* 4. Dedicated Killer Offerings Section */}
       <OfferingsSection
         offerings={offerings}
-        role="Killer"
+        characterRole="Killer"
         backendBase={backendBase}
         onSelectOffering={(item) => setSelectedEquipment(item as unknown as EquipmentItem)}
         t={t}

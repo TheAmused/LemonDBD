@@ -28,7 +28,7 @@ export function useProgressiveList(total: number, resetKey: string, step = 32): 
   const limit = state.key === resetKey ? state.limit : step;
 
   useEffect(() => {
-    if (root) root.scrollTop = 0;
+    root?.scrollTo({ top: 0 });
   }, [root, resetKey]);
 
   useEffect(() => {

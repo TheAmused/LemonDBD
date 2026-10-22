@@ -103,3 +103,16 @@ def test_saving_an_unchanged_username_does_not_ask_for_the_password(client: Flas
     user = db.session.query(User).filter_by(login="same_name").one()
     headers = {"Authorization": f"Bearer {generate_token(user.id, user.role)}"}
     assert client.put(PROFILE, json={"username": "Same Name"}, headers=headers).status_code == 200
+
+
+def test_a_password_with_surrounding_spaces_signs_in_as_typed(client: FlaskClient) -> None:
+    """Sign-up keeps the password as typed; sign-in used to trim it, so such an account could never sign in."""
+    res = client.post(REGISTER, json={"login": "spacey", "username": "Spacey", "email": "s@example.com", "password": " password123 "})
+    assert res.status_code == 201
+    assert client.post(LOGIN, json={"login": "spacey", "password": " password123 "}).status_code == 200
+    assert client.post(LOGIN, json={"login": "spacey", "password": "password123"}).status_code == 401
+
+
+def test_a_stray_space_around_a_plain_password_is_still_forgiven(client: FlaskClient) -> None:
+    assert _register(client, "plainpw", "Plain", "p@example.com").status_code == 201
+    assert client.post(LOGIN, json={"login": "plainpw", "password": "password123 "}).status_code == 200

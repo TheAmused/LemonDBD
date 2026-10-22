@@ -12,6 +12,7 @@ import {
   draftFromSuggestion,
   isSanctionDraftValid,
   moderationState,
+  patchDraft,
   sanctionPreviewBody,
   sanctionRequestBody,
   type ModerationSuggestion,
@@ -194,4 +195,14 @@ test('an account is banned, suspended, warned or in good standing, in that order
   assert.equal(moderationState({ ...base, active_warnings: 1, suspended_until: '2026-10-20T00:00:00Z' }, now), 'suspended');
   assert.equal(moderationState({ ...base, active_warnings: 1, suspended_until: '2026-10-01T00:00:00Z' }, now), 'warned', 'a lapsed suspension no longer counts');
   assert.equal(moderationState({ banned: true, suspended_until: '2026-10-20T00:00:00Z', active_warnings: 3 }, now), 'banned');
+});
+
+test('a suspension starts at the length the admin set, unless one was already typed', () => {
+  const chosen = patchDraft(EMPTY_SANCTION_DRAFT, { kind: 'suspension' }, 30);
+  assert.equal(chosen.kind, 'suspension');
+  assert.equal(chosen.duration_days, 30);
+  const typed = patchDraft({ ...EMPTY_SANCTION_DRAFT, duration_days: 3 }, { kind: 'suspension' }, 30);
+  assert.equal(typed.duration_days, 3);
+  assert.equal(patchDraft(EMPTY_SANCTION_DRAFT, { kind: 'suspension' }).duration_days, EMPTY_SANCTION_DRAFT.duration_days);
+  assert.equal(patchDraft(chosen, { facts: 'x' }, 14).duration_days, 30);
 });

@@ -55,7 +55,7 @@ SETTING_SPECS: tuple[SettingSpec, ...] = (
     SettingSpec("google_sign_in_enabled", "bool", "access", public=True),
     SettingSpec("content_reports_open", "bool", "access", public=True),
     SettingSpec("scoreboard_ocr_enabled", "bool", "access", public=True),
-    SettingSpec("guest_bug_reports", "bool", "bug_reports"),
+    SettingSpec("guest_bug_reports", "bool", "bug_reports", public=True),
     SettingSpec("bug_report_discord", "bool", "bug_reports"),
     # Site-wide notice (a banner under the header). Text is plain; the front end never renders HTML.
     SettingSpec("site_banner_enabled", "bool", "notices", public=True),
@@ -91,7 +91,8 @@ SETTING_SPECS: tuple[SettingSpec, ...] = (
     _int_spec("password_min_length", "limits", 6, 64, public=True),
     _int_spec("scoreboard_upload_max_mb", "limits", 1, 8, public=True),
     _int_spec("smash_image_max_mb", "limits", 1, 5),
-    _int_spec("sanction_email_attempts", "limits", 1, 10),
+    # At most MAX_NOTIFY_ATTEMPTS (5, services/sanction_outbox.py): a bigger value was accepted and ignored.
+    _int_spec("sanction_email_attempts", "limits", 1, 5),
     # Retention. Ceilings are the values the Privacy Policy promises: an admin can shorten, never lengthen.
     _int_spec("content_evidence_days", "retention", 1, 14),
     _int_spec("match_log_max_entries", "retention", 10, 100),

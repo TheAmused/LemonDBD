@@ -34,11 +34,11 @@ export const AltchaWidget: React.FC<AltchaWidgetProps> = ({
   const dict = useDictionary();
   return (
     <div className={className}>
-      <input type="text" {...honeypotProps} aria-hidden="true" />
+      {/* Bot trap: hidden from people, keyboard and assistive tech alike. */}
+      <input type="text" {...honeypotProps} tabIndex={-1} aria-hidden="true" />
 
       {(showIndicator || error || isVerifying) && (
-        <div
-          role="status"
+        <output
           className="flex items-center gap-2 text-xs py-1.5 px-3 rounded-card bg-bg-surface border border-border-color text-text-secondary shadow-xs"
         >
           {isVerifying ? (
@@ -69,7 +69,7 @@ export const AltchaWidget: React.FC<AltchaWidgetProps> = ({
               )}
             </>
           ) : null}
-        </div>
+        </output>
       )}
     </div>
   );

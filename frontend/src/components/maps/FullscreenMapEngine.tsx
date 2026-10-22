@@ -22,6 +22,7 @@ import { formatNumber } from '@/utils/format';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Surface } from '@/components/common/Surface';
+import { Img } from '@/components/common/Img';
 
 interface FullscreenMapEngineProps {
   mapId: number;
@@ -34,13 +35,6 @@ interface FullscreenMapEngineProps {
 export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ mapId, onClose, availableMaps = [], backendBase }) => {
   const dict = useDictionary();
   const [imageFailed, setImageFailed] = useState<boolean>(false);
-
-  useEffect(() => {
-    setImageFailed(false);
-    setZoom(1.0);
-    setPan({ x: 0, y: 0 });
-  }, [mapId]);
-
   const activeMap = useMemo(
     () => availableMaps.find((m) => m.id === mapId) || null,
     [availableMaps, mapId]
@@ -54,6 +48,16 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
 
   const [initialPinchDistance, setInitialPinchDistance] = useState<number | null>(null);
   const [initialZoom, setInitialZoom] = useState<number>(1.0);
+
+  // Another map: start from a fresh view. Done while rendering (not in an effect), so the new
+  // map never paints with the previous one's zoom and pan first.
+  const [viewedMapId, setViewedMapId] = useState(mapId);
+  if (viewedMapId !== mapId) {
+    setViewedMapId(mapId);
+    setImageFailed(false);
+    setZoom(1.0);
+    setPan({ x: 0, y: 0 });
+  }
 
   const containerRef = useRef<HTMLDivElement>(null);
   const pointerDownPosRef = useRef<{ x: number; y: number } | null>(null);
@@ -237,6 +241,8 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
 
       <div
         ref={containerRef}
+        // Drag-to-pan for pointers; the zoom and reset buttons below are the keyboard controls.
+        role="presentation"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -250,7 +256,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
         className="relative flex-1 min-h-0 w-full cursor-default overflow-hidden flex items-center justify-center bg-bg-primary pt-4 pb-20 px-4"
       >
         {imageSrc && !imageFailed ? (
-          <img
+          <Img
             src={imageSrc}
             alt={activeMap?.name || ''}
             draggable={false}

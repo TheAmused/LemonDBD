@@ -14,6 +14,7 @@ import {
 } from '../CharacterOnboardingWizardParts';
 import type { ChapterBanner } from './useOnboardingRoster';
 import { TileButton } from "@/components/common/TileButton";
+import { Img } from '@/components/common/Img';
 
 interface ChapterCardProps {
   group: ChapterGroup;
@@ -71,7 +72,7 @@ export function ChapterCard({
           // into a differently-proportioned box left visible
           // letterboxing on the sides, reading as a small floating
           // image rather than art that fills the card.
-          <img
+          <Img
             src={bannerSrc}
             alt=""
             aria-hidden="true"

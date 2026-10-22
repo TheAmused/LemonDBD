@@ -10,6 +10,7 @@ import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from "@/context/DictionaryContext";
 import { formatMessage } from '@/utils/i18nFormat';
 import { Badge } from '@/components/common/Badge';
+import { Img } from '@/components/common/Img';
 
 const PANEL_HOVER_CLASSES = 'hover:border-accent-red/50 focus:ring-accent-red';
 
@@ -74,7 +75,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
             aria-hidden="true"
             className="dark:hidden pointer-events-none absolute -right-6 -bottom-6 h-44 w-44 rounded-full bg-bg-primary/90 blur-xl"
           />
-          <img
+          <Img
             src={image}
             alt=""
             aria-hidden="true"

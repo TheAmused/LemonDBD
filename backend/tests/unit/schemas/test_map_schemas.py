@@ -10,7 +10,6 @@ from app.schemas.map import (
     DEFAULT_IS_SHACK,
     MapRealmBase,
     MapRealmResponse,
-    MapSourceBase,
     MapSourceResponse,
     RealmBase,
     RealmResponse,

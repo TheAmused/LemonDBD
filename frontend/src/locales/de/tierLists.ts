@@ -237,6 +237,7 @@ export default {
   reportNotesPlaceholder: "Erkläre, warum dieser Inhalt unangemessen ist...",
   reportSubmit: "Meldung absenden",
   reportSubmitting: "Wird gesendet...",
+  reportPaused: "Melden ist gerade pausiert. Bitte versuche es später noch einmal.",
   reportSuccess: "Meldung gesendet. Danke, dass du LemonDBD sicher hältst.",
   reportAlreadyBanned: "Dieser Inhalt wurde bereits gesperrt und entfernt.",
   reportError: "Meldung konnte nicht gesendet werden. Bitte versuche es erneut.",

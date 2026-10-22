@@ -9,6 +9,7 @@ import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Img } from '@/components/common/Img';
 
 export interface ChaosStatsDrawerProps {
   isOpen: boolean;
@@ -34,7 +35,7 @@ export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onCl
         {dict.streaks.streakLabel} {log.streak_after}
         <span>{dict.streaks.middotSeparator}</span>
         {log.addon_rarities.map((rarity, i) => (
-          <img
+          <Img
             key={i}
             src={ADDON_RARITY_ICONS[rarity]}
             alt={rarity}

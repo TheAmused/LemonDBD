@@ -151,6 +151,26 @@ def is_enabled() -> bool:
     return get_client() is not None
 
 
+def _link_state(link: _Link) -> str:
+    """"off" when its URL is not set, else "up" or "down" after a live PING."""
+    if not os.getenv(link.env_name):
+        return "off"
+    client = link.get()
+    if client is None:
+        return "down"
+    try:
+        client.ping()
+    except Exception as exc:
+        link.mark_down(exc)
+        return "down"
+    return "up"
+
+
+def readiness() -> dict[str, str]:
+    """For the readiness probe: the state of the cache and rate-limit Redis instances."""
+    return {"cache": _link_state(_catalog_link), "limits": _link_state(_limits_link)}
+
+
 # ---------------------------------------------------------------- versioning
 
 def _read_version(client: Any) -> int:

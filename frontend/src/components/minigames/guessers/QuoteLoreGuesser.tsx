@@ -3,7 +3,7 @@
 
 import React, { useMemo } from 'react';
 import Image from 'next/image';
-import { Quote, BookOpen, Check, X, Sparkles } from 'lucide-react';
+import { Quote, BookOpen, Check, X } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter, CatalogPerk } from '@/types/minigame';
 import { staticUrl } from '@/utils/api';
 import { useDictionary } from "@/context/DictionaryContext";

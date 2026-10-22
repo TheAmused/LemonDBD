@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import { UmamiScript } from '@/components/UmamiScript';
 import { i18n, type Locale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/get-dictionary';
-import { resolveLocale, siteUrl } from '@/i18n/metadata';
+import { resolveLocale, siteJsonLd, siteUrl } from '@/i18n/metadata';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider } from '@/context/AuthContext';
 import { LocaleDictionaryProvider } from '@/context/LocaleDictionaryProvider';
@@ -68,10 +68,14 @@ export default async function RootLayout({
     i18n.locales.includes(rawLocale as Locale) ? rawLocale : i18n.defaultLocale
   ) as Locale;
 
+  const dict = await getDictionary(locale);
+
   return (
     <html lang={locale} className={playfair.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: SIDEBAR_INIT_SCRIPT }} />
+        {/* schema.org WebSite + Organization for search engines; built from the dictionary, `<` escaped. */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: siteJsonLd(locale, dict) }} />
       </head>
       <body>
         <UmamiScript />

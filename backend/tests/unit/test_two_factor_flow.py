@@ -507,7 +507,7 @@ class TestSensitiveActionsAskForTheCode:
         dis = client.post(
             "/api/v1/auth/two-factor/disable",
             json={"password": PASSWORD, "code": _next_code(secret)},
-            headers=post_enrol_headers,
+            headers={**post_enrol_headers, "X-Return-Token": "1"},
         )
         assert dis.status_code == 200 and dis.get_json().get("token")
         assert client.get("/api/v1/auth/me", headers=post_enrol_headers).get_json()["authenticated"] is False
@@ -549,7 +549,7 @@ class TestAdminSide:
 
     def test_admin_user_list_shows_who_has_it_on(self, client: FlaskClient, db_session) -> None:
         admin = _make_user("boss", role="admin")
-        on, off = _make_user("with2fa"), _make_user("without2fa")
+        on, _off = _make_user("with2fa"), _make_user("without2fa")
         _enrol(client, on)
         users = client.get("/api/v1/users", headers=_bearer(admin)).get_json()["users"]
         flags = {u["username"]: u["two_factor_enabled"] for u in users}

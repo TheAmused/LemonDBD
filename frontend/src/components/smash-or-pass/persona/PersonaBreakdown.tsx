@@ -1,6 +1,6 @@
 'use client';
 // frontend/src/components/smash-or-pass/persona/PersonaBreakdown.tsx
-import { Check, Compass, Gamepad2, Heart, RotateCcw, Share2 } from 'lucide-react';
+import { Compass, Gamepad2, Heart, RotateCcw, Share2 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
 import { tip } from '@/components/common/Tooltip';
@@ -13,19 +13,19 @@ import { sanitizeImageUrl } from '@/utils/smashOrPass/codec';
 import type { RomancePersonaResult } from '@/utils/smashPersona';
 import { PersonaIcon } from './PersonaIcon';
 import { Badge } from '@/components/common/Badge';
+import { Img } from '@/components/common/Img';
 
 interface PersonaBreakdownProps {
   persona: RomancePersonaResult;
   /** A persona opened from someone's share link, rather than the viewer's own. */
   isSharedView: boolean;
-  copied: boolean;
   onShare: () => void;
   onClose: () => void;
   onResetAll?: () => void;
 }
 
 /** The persona's result: the badge, the dating-psychology read, the numbers, and the role affinity bar. */
-export function PersonaBreakdown({ persona, isSharedView, copied, onShare, onClose, onResetAll }: PersonaBreakdownProps) {
+export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onResetAll }: PersonaBreakdownProps) {
   const dict = useDictionary();
   const text = dict.smashOrPass;
   const backendBase = getBackendBaseUrl();
@@ -117,7 +117,7 @@ export function PersonaBreakdown({ persona, isSharedView, copied, onShare, onClo
           <Surface padding="none" className="col-span-2 sm:col-span-1 p-3.5 border-border-color/60 flex items-center gap-3 shadow-xs">
             {favoriteCharAvatar && (
               <div className="h-10 w-10 rounded-chip overflow-hidden bg-bg-primary border border-accent-red/40 shrink-0">
-                <img src={favoriteCharAvatar} alt="" className="h-full w-full object-cover" />
+                <Img src={favoriteCharAvatar} alt="" className="h-full w-full object-cover" />
               </div>
             )}
             <div className="min-w-0">
@@ -165,10 +165,8 @@ export function PersonaBreakdown({ persona, isSharedView, copied, onShare, onClo
 
         <div
           className="h-2.5 w-full bg-bg-elevated rounded-full overflow-hidden flex border border-border-color/60 shadow-inner"
-          role="progressbar"
-          aria-valuenow={persona.survivorAffinity}
-          aria-valuemin={0}
-          aria-valuemax={100}
+          // The survivor / killer split drawn as a bar; both percentages are in the text above it.
+          aria-hidden="true"
         >
           {persona.survivorAffinity === 0 && persona.killerAffinity === 0 ? (
             <div className="h-full w-full bg-bg-surface" />
@@ -205,8 +203,8 @@ export function PersonaBreakdown({ persona, isSharedView, copied, onShare, onClo
               onClick={onShare}
               className="flex-1"
             >
-              {copied ? <Check className="h-4 w-4 stroke-[3]" /> : <Share2 className="h-4 w-4" />}
-              <span>{copied ? text.copiedToClipboard : text.shareArchetype}</span>
+              <Share2 className="h-4 w-4" />
+              <span>{text.shareArchetype}</span>
             </Button>
 
             {onResetAll && (

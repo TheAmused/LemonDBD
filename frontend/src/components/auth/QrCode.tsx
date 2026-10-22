@@ -4,7 +4,7 @@
 // Draws a QR code in the browser. The otpauth:// URI contains the account's TOTP secret, so it must
 // never be sent to an image-generating web service: encoding happens here, with no network call.
 
-import React, { useMemo } from 'react';
+import React, { useId, useMemo } from 'react';
 import { encode } from 'uqr';
 
 interface QrCodeProps {
@@ -32,6 +32,7 @@ function buildPath(rows: boolean[][], border: number): string {
 }
 
 export const QrCode: React.FC<QrCodeProps> = ({ value, label, className }) => {
+  const titleId = useId();
   const { path, size } = useMemo(() => {
     const border = 4; // the quiet zone scanners need around the code
     try {
@@ -46,14 +47,14 @@ export const QrCode: React.FC<QrCodeProps> = ({ value, label, className }) => {
   // fills deliberately do not follow the theme tokens.
   return (
     <svg
-      role="img"
-      aria-label={label}
+      aria-labelledby={titleId}
       width={192}
       height={192}
       viewBox={`0 0 ${size} ${size}`}
       shapeRendering="crispEdges"
       className={`rounded-chip ${className ?? ''}`}
     >
+      <title id={titleId}>{label}</title>
       <rect width={size} height={size} fill="white" />
       <path d={path} fill="black" />
     </svg>

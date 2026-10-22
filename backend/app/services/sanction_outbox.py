@@ -183,11 +183,19 @@ def queue_ended_notifications() -> int:
             UserSanction.expires_at >= now - ENDED_LOOKBACK,
         )
     ).all()
+    # Every candidate's notification events in one query, not one per sanction.
+    events_by_sanction: dict[int, set[str]] = {}
+    if candidates:
+        rows = db.session.execute(
+            select(SanctionNotification.sanction_id, SanctionNotification.event).where(
+                SanctionNotification.sanction_id.in_([s.id for s in candidates])
+            )
+        ).all()
+        for sanction_id, event in rows:
+            events_by_sanction.setdefault(sanction_id, set()).add(event)
     queued = 0
     for sanction in candidates:
-        events = set(
-            db.session.scalars(select(SanctionNotification.event).where(SanctionNotification.sanction_id == sanction.id))
-        )
+        events = events_by_sanction.get(sanction.id, set())
         # Only people who were told about the suspension are told it ended.
         if "issued" not in events or "ended" in events:
             continue

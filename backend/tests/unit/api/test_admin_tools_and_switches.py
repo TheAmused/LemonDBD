@@ -4,7 +4,6 @@ the admin's edit of an account and the audit-log filter."""
 from unittest.mock import patch
 
 import pytest
-from flask import Flask
 from flask.testing import FlaskClient
 
 from app.core.security import generate_token
@@ -121,7 +120,10 @@ class TestAdminEditUser:
 class TestMaintenance:
     def test_lists_jobs(self, client: FlaskClient, admin: User) -> None:
         keys = [j["key"] for j in client.get("/api/v1/admin/maintenance", headers=_headers(admin)).get_json()["jobs"]]
-        assert keys == ["streak_inactivity", "content_evidence", "sanction_emails", "ban_list", "minigame_sessions", "catalog_cache"]
+        assert keys == [
+            "streak_inactivity", "content_evidence", "sanction_emails", "ban_list",
+            "minigame_sessions", "bug_report_files", "revoked_sessions", "catalog_cache",
+        ]
 
     def test_runs_a_job_and_audits_it(self, client: FlaskClient, admin: User, db_session) -> None:
         res = client.post("/api/v1/admin/maintenance/catalog_cache", headers=_headers(admin))
@@ -203,6 +205,18 @@ class TestSchedulerHeartbeat:
         db_session.commit()
         checks = {c["key"]: c for c in client.get("/api/v1/admin/system", headers=_headers(admin)).get_json()["checks"]}
         assert checks["scheduler"]["state"] == "warn"
+
+    def test_a_feature_switched_off_in_settings_is_not_reported_as_ok(self, client: FlaskClient, admin: User, monkeypatch) -> None:
+        from app.services import discord_webhook, scoreboard_ocr, site_settings
+
+        monkeypatch.setattr(scoreboard_ocr, "engine_available", lambda: True)
+        monkeypatch.setattr(discord_webhook, "webhook_url", lambda: "https://discord.com/api/webhooks/1/x")
+        checks = {c["key"]: c for c in client.get("/api/v1/admin/system", headers=_headers(admin)).get_json()["checks"]}
+        assert checks["ocr"]["state"] == "ok" and checks["discord"]["state"] == "ok"
+        site_settings.update_settings({"scoreboard_ocr_enabled": False, "bug_report_discord": False})
+        checks = {c["key"]: c for c in client.get("/api/v1/admin/system", headers=_headers(admin)).get_json()["checks"]}
+        assert (checks["ocr"]["state"], checks["ocr"]["detail"]) == ("off", "switched_off")
+        assert (checks["discord"]["state"], checks["discord"]["detail"]) == ("off", "switched_off")
 
 
 @pytest.mark.unit

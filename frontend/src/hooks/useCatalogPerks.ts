@@ -1,10 +1,11 @@
 // frontend/src/hooks/useCatalogPerks.ts
 'use client';
 
-import { useMemo, useRef } from 'react';
+import { useMemo, useState } from 'react';
 import type { Perk } from '@/types/perks';
 import { useCachedData } from '@/hooks/useCachedData';
 import { CATALOG_TTL_MS, catalogKey, fetchJson, unwrapList, type ListPayload } from '@/services/dataCache';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 /**
  * The whole perk catalog through the shared cache. The key is the one /perks, the
@@ -23,9 +24,12 @@ export function useCatalogPerks(locale: string, enabled = true): { perks: Perk[]
   });
   const loaded = useMemo(() => (data === undefined ? undefined : unwrapList(data)), [data]);
 
-  const lastLoaded = useRef<Perk[]>([]);
-  if (loaded) lastLoaded.current = loaded;
-  const perks = loaded ?? lastLoaded.current;
+  // The last list that arrived stays on screen while another locale's loads.
+  const [lastLoaded, setLastLoaded] = useState<Perk[]>(() => loaded ?? []);
+  useOnValueChange(loaded, (next) => {
+    if (next) setLastLoaded(next);
+  });
+  const perks = loaded ?? lastLoaded;
 
   return { perks, loading: loading && !error && perks.length === 0 };
 }

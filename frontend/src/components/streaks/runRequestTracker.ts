@@ -4,13 +4,24 @@ export type RequestChannel = 'run' | 'stats' | 'completions';
 
 /**
  * The bookkeeping behind `useChallengeRun`, free of React so its rules can be tested on their own: which answers
- * are still worth showing, and which run already has a server action in flight.
+ * are still worth showing, and which run already has a server action in flight. `setScope` follows the run the
+ * player is on.
  */
-export function createRunRequestTracker(currentScope: () => string) {
+export function createRunRequestTracker(initialScope: string) {
   const counts: Record<RequestChannel, number> = { run: 0, stats: 0, completions: 0 };
   const actionsInFlight = new Set<string>();
+  let scopeNow = initialScope;
+  const currentScope = () => scopeNow;
 
   return {
+    /** The player moved to another run (or is still on this one). */
+    setScope(scope: string): void {
+      scopeNow = scope;
+    },
+
+    /** The run the player is on now. */
+    currentScope,
+
     /** Starts a request. The returned check says whether its answer is still worth showing: no newer request on
      *  the channel has started, and the player is still on the run it was made for. */
     begin(channel: RequestChannel, scope: string): () => boolean {

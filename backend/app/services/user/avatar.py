@@ -139,7 +139,7 @@ def process_and_save_avatar(user_id: int, file_storage) -> tuple[User | None, st
             try:
                 os.remove(destination_path)
             except Exception:
-                pass
+                logger.debug("Could not remove a half-written avatar file", exc_info=True)
         # The exception text (library internals, paths) stays in the log.
         return None, AVATAR_PROCESSING_FAILED
 

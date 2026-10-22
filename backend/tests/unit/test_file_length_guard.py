@@ -13,7 +13,9 @@ Not counted, because the line count says nothing about them:
 * Binary files (images, audio, fonts, SQLite databases) -- anything with a NUL
   byte in its first 8 KiB.
 * Dependency and tool output: virtualenvs, caches, `__pycache__`, `node_modules`,
-  `instance/` and the like.
+  `instance/` and the like, plus generated dependency lockfiles (`*.lock`, e.g.
+  `requirements.lock`): one pinned package and its hashes per entry, written by a
+  tool, never edited by hand.
 
 When this fails, split the file. Do not raise the limit or add an exception here.
 """
@@ -53,6 +55,10 @@ def _is_seed_json(relative: Path) -> bool:
     return relative.suffix.lower() == ".json" and relative.parts[: len(SEED_DATA_DIR)] == SEED_DATA_DIR
 
 
+def _is_generated_lockfile(relative: Path) -> bool:
+    return relative.suffix.lower() == ".lock"
+
+
 def _line_count(path: Path) -> int | None:
     """Physical lines in a text file, or None for a binary file."""
     data = path.read_bytes()
@@ -69,7 +75,7 @@ def find_oversized(root: Path, limit: int = MAX_LINES) -> dict[str, int]:
         for filename in filenames:
             path = Path(directory) / filename
             relative = path.relative_to(root)
-            if _is_seed_json(relative):
+            if _is_seed_json(relative) or _is_generated_lockfile(relative):
                 continue
             lines = _line_count(path)
             if lines is not None and lines > limit:
@@ -141,3 +147,11 @@ def test_guard_ignores_binary_files_and_dependency_directories(tmp_path: Path) -
     _write_lines(tmp_path / "instance" / "dump.sql", MAX_LINES * 2)
 
     assert find_oversized(tmp_path) == {}
+
+
+@pytest.mark.unit
+def test_guard_skips_generated_lockfiles(tmp_path: Path) -> None:
+    _write_lines(tmp_path / "requirements.lock", MAX_LINES + 500)
+    _write_lines(tmp_path / "requirements.txt", MAX_LINES + 1)  # the hand-edited input still counts
+
+    assert find_oversized(tmp_path) == {"requirements.txt": MAX_LINES + 1}

@@ -133,10 +133,8 @@ export function TierListEditor(props: TierListEditorProps) {
   const catalogOrder = useMemo(() => items.map((i) => i.key), [items]);
   const itemsByKey = useMemo(() => new Map(items.map((i) => [i.key, i])), [items]);
 
-  // A selection whose item vanished (removed, re-imported) is dropped.
-  useEffect(() => {
-    if (selectedKey && !visibleKeys.has(selectedKey)) setSelectedKey(null);
-  }, [selectedKey, visibleKeys]);
+  // A selection whose item vanished (removed, re-imported) is dropped (while rendering).
+  if (selectedKey && !visibleKeys.has(selectedKey)) setSelectedKey(null);
 
   useEffect(() => {
     if (!selectedKey) return;

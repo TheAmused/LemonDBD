@@ -10,9 +10,9 @@ import threading
 from datetime import datetime, timezone
 from typing import Any
 
-from curl_cffi import requests
 
 from app.services.site_settings import get_secret
+from app.utils import webhook_http as requests
 
 logger = logging.getLogger(__name__)
 
@@ -83,7 +83,6 @@ def post_embed(embed: dict[str, Any], url: str) -> int:
         url,
         # No mention in an announcement may ever ping anyone.
         json={"username": "LemonDBD Bug Watcher", "embeds": [embed], "allowed_mentions": {"parse": []}},
-        impersonate="chrome120",
         timeout=_TIMEOUT_SECONDS,
         headers={"Content-Type": "application/json"},
     )

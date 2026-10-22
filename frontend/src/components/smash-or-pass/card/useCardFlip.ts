@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/smash-or-pass/card/useCardFlip.ts
 import { useCallback, useEffect, useState } from 'react';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 /** Half of the turn: the card goes edge-on, swaps faces, and comes back. */
 const FLIP_HALF_MS = 190;
@@ -12,10 +13,10 @@ export function useCardFlip(slug: string | undefined, id: string | number | unde
   const [isFlipped, setIsFlipped] = useState<boolean>(false);
   const [turn, setTurn] = useState<Turn>('settled');
 
-  useEffect(() => {
+  useOnValueChange(`${slug}|${id}`, () => {
     setIsFlipped(false);
     setTurn('settled');
-  }, [slug, id]);
+  });
 
   const startFlip = useCallback(() => {
     setTurn((t) => (t === 'settled' ? 'out' : t));

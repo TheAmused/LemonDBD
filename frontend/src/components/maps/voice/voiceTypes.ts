@@ -4,7 +4,8 @@ import type React from 'react';
 export interface VoiceCommandBannerProps {
   locale?: string;
   currentSource: 'all' | 'hens333' | 'samoelcolt';
-  onSourceChange: (source: 'all' | 'hens333' | 'samoelcolt') => void;
+  /** Omitted where only one map source is offered: a "switch source" command then only confirms. */
+  onSourceChange?: (source: 'all' | 'hens333' | 'samoelcolt') => void;
   onSelectMap: (mapName: string, mapId?: number, source?: string) => void;
   onAction?: (action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close') => void;
   availableMaps?: Array<{ id: number; name: string; realm?: string; source?: string }>;

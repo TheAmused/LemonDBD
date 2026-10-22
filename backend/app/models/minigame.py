@@ -3,8 +3,7 @@ import uuid
 from datetime import date, datetime
 from typing import Any
 from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Index, Integer, String, Text, UniqueConstraint
-from sqlalchemy.dialects.postgresql import JSONB
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 from app.core.extensions import Base
 from app.models.base import ColumnDictMixin, JSON_DICT, JSON_LIST, utcnow
 

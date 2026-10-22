@@ -56,22 +56,33 @@ def _import_admin_audit_logs(
     summary: dict[str, dict[str, int]],
     user_map: dict[str, int],
 ) -> None:
-    """Append audit-log rows, attributing them to a known admin when possible."""
+    """Restore audit-log rows, but only into an empty audit log.
+
+    The audit log is append-only: an import must not be a way to add entries in another admin's
+    name, or to bury the real ones. Restoring a backup into a fresh database is the one case where
+    rows come in (with their original time); otherwise they are counted as skipped.
+    """
     if "admin_audit_logs" in target_keys and "admin_audit_logs" in data:
-        created = 0
-        for row in data["admin_audit_logs"]:
+        rows = [row for row in data["admin_audit_logs"] if isinstance(row, dict)]
+        if db.session.scalar(select(AdminAuditLog.id).limit(1)) is not None:
+            summary["admin_audit_logs"] = {"created": 0, "updated": 0, "skipped": len(rows)}
+            return
+        for row in rows:
             admin_login = row.get("admin_login") or row.get("admin_username")
             admin_id = user_map.get(admin_login) if admin_login else None
-            db.session.add(AdminAuditLog(
+            entry = AdminAuditLog(
                 admin_user_id=admin_id,
-                action=row.get("action", "unknown"),
+                action=str(row.get("action") or "unknown"),
                 target_type=row.get("target_type"),
                 target_id=row.get("target_id"),
                 details=row.get("details"),
-            ))
-            created += 1
+            )
+            created_at = parse_datetime(row.get("created_at")) if row.get("created_at") else None
+            if created_at:
+                entry.created_at = created_at
+            db.session.add(entry)
         db.session.flush()
-        summary["admin_audit_logs"] = {"created": created, "updated": 0}
+        summary["admin_audit_logs"] = {"created": len(rows), "updated": 0}
 
 
 def _import_changelog_posts(

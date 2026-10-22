@@ -56,6 +56,16 @@ KNOWN_PLACEHOLDER_SECRETS = frozenset(
     }
 )
 MIN_SECRET_KEY_LENGTH = 32
+# Dev-only Fernet key for two-factor sign-in. Public (it is in the repo), so it is only ever used
+# when FLASK_ENV=development and no key is configured; production refuses to start with it.
+DEV_TWO_FACTOR_ENCRYPTION_KEY = "TZbfxN8fCG2Pccx-bBsj2fxcyN4dwABgUsIutMVLx4Y="
+
+
+def wildcard_cors(raw: Any) -> bool:
+    """True when CORS_ORIGINS allows every origin (`*`, alone or in a list)."""
+    if isinstance(raw, (list, tuple, set)):
+        return any(str(o).strip() == "*" for o in raw)
+    return any(part.strip() == "*" for part in str(raw or "").split(","))
 
 
 def weak_secret_warnings(config: Mapping[str, Any]) -> list[str]:
@@ -98,6 +108,15 @@ def fatal_secret_problems(config: Mapping[str, Any]) -> list[str]:
             problems.append(f"{name} is not set")
         elif value.lower() in KNOWN_PLACEHOLDER_SECRETS:
             problems.append(f"{name} is a publicly known placeholder value")
+    # Empty is allowed (two-factor sign-in is then simply unavailable); a key from the repo is not:
+    # it encrypts every TOTP seed and every admin "secret" runtime setting.
+    two_factor_key = str(config.get("TWO_FACTOR_ENCRYPTION_KEY") or "").strip().lower()
+    if two_factor_key and any(part.strip() in KNOWN_PLACEHOLDER_SECRETS for part in two_factor_key.split(",")):
+        problems.append("TWO_FACTOR_ENCRYPTION_KEY is a publicly known placeholder value")
+    # The API answers with Access-Control-Allow-Credentials, so `*` would let any site read
+    # signed-in responses: flask-cors reflects the caller's Origin instead of sending a literal `*`.
+    if wildcard_cors(config.get("CORS_ORIGINS")):
+        problems.append("CORS_ORIGINS allows every origin (*) while credentials are allowed")
     return problems
 
 
@@ -158,23 +177,34 @@ class Config:
     ENV: str = os.getenv("FLASK_ENV", "production")
 
     SECRET_KEY: str = os.getenv("SECRET_KEY", "dbd-lemon-secret-key-2026")
+    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "https://localhost")
     # Matches nginx's `client_max_body_size 20M`, so a direct hit on the backend
     # (or a dev run without nginx) has the same ceiling instead of none.
     MAX_CONTENT_LENGTH: int = int(os.getenv("MAX_CONTENT_LENGTH", str(20 * 1024 * 1024)))
-    CORS_ORIGINS: str = os.getenv("CORS_ORIGINS", "*")
+    # The one exception: an admin database import (a backup with its images is far over 20 MB).
+    # nginx allows the same on that one path (nginx/default.conf).
+    DATABASE_IMPORT_MAX_MB: int = int(os.getenv("DATABASE_IMPORT_MAX_MB", "512"))
+    # Private folder for bug report screenshots (not under static/: they can show personal data).
+    # Empty = backend/data/uploads/bug_reports, which is the persistent data volume in Docker.
+    BUG_REPORT_UPLOAD_DIR: str = os.getenv("BUG_REPORT_UPLOAD_DIR", "").strip()
+    # Comma-separated list of the exact origins allowed to call the API with cookies. Unset means
+    # "the frontend's own origin" only; `*` is refused at startup outside development.
+    CORS_ORIGINS: str = os.getenv("CORS_ORIGINS", "").strip() or FRONTEND_URL.rstrip("/")
 
-    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", SECRET_KEY)
+    # An empty value (compose passes `${JWT_SECRET_KEY:-}`) falls back to SECRET_KEY too.
+    JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "").strip() or SECRET_KEY
     JWT_ALGORITHM: str = os.getenv("JWT_ALGORITHM", "HS256")
     # "auto" marks the session cookie Secure whenever the request arrived over HTTPS.
     SESSION_COOKIE_SECURE_MODE: str = os.getenv("SESSION_COOKIE_SECURE", "auto")
     JWT_ACCESS_TOKEN_EXPIRES: timedelta = timedelta(hours=int(os.getenv("JWT_EXPIRATION_HOURS", "24")))
 
     # Optional two-factor sign-in. TOTP secrets are stored encrypted with this Fernet key (a
-    # comma-separated list: first encrypts, all decrypt). Defaults to the dev key (flagged by
-    # weak_secret_warnings in production if not replaced).
+    # comma-separated list: first encrypts, all decrypt). Unset means two-factor sign-in is
+    # unavailable; only FLASK_ENV=development falls back to the public dev key, and production
+    # refuses to start with that key (fatal_secret_problems).
     # Generate: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
-    TWO_FACTOR_ENCRYPTION_KEY: str = (
-        os.getenv("TWO_FACTOR_ENCRYPTION_KEY") or "TZbfxN8fCG2Pccx-bBsj2fxcyN4dwABgUsIutMVLx4Y="
+    TWO_FACTOR_ENCRYPTION_KEY: str = os.getenv("TWO_FACTOR_ENCRYPTION_KEY", "").strip() or (
+        DEV_TWO_FACTOR_ENCRYPTION_KEY if demo_accounts_enabled() else ""
     )
     # Ban-evasion e-mail list: a permanent ban stores a keyed hash (HMAC-SHA256) of the account's
     # canonical e-mail, and sign-up refuses a matching address. Off until the Privacy Policy that
@@ -235,8 +265,6 @@ class Config:
         "REQUIRE_EMAIL_VERIFICATION", "true"
     ).lower() in ("true", "1", "yes")
 
-    FRONTEND_URL: str = os.getenv("FRONTEND_URL", "https://localhost")
-
     GOOGLE_CLIENT_ID: str = os.getenv("GOOGLE_CLIENT_ID", "").strip()
 
     # Public links. The admin Settings tab overrides each of them without a redeploy; these are the starting values.
@@ -251,7 +279,7 @@ class Config:
 class TestingConfig(Config):
     TESTING: bool = True
     # A throwaway key that exists only for the test suite.
-    TWO_FACTOR_ENCRYPTION_KEY: str = "TZbfxN8fCG2Pccx-bBsj2fxcyN4dwABgUsIutMVLx4Y="
+    TWO_FACTOR_ENCRYPTION_KEY: str = DEV_TWO_FACTOR_ENCRYPTION_KEY
     # Throwaway peppers that exist only for the test suite (v2 is the newest, v1 the retired one).
     BAN_LIST_ENABLED: bool = True
     BAN_LIST_PEPPERS: str = "v2:" + "a1b2c3d4e5f60718" * 4 + ",v1:" + "0f1e2d3c4b5a6978" * 4
@@ -260,6 +288,11 @@ class TestingConfig(Config):
     SQLALCHEMY_ENGINE_OPTIONS: dict[str, Any] = {}
     RATELIMIT_ENABLED: bool = False
     ALTCHA_ENFORCED: bool = False
+    # Off unless a test turns it on (monkeypatch.setitem(app.config, "REQUIRE_EMAIL_VERIFICATION", True)):
+    # most tests sign a freshly registered user straight in. It used to inherit the production
+    # default (True), so whether those tests passed depended on which earlier test had last
+    # assigned the flag without restoring it.
+    REQUIRE_EMAIL_VERIFICATION: bool = False
     SCHEDULER_ENABLED: bool = False
     SANCTION_EMAIL_ASYNC: bool = False
     SITE_SETTINGS_CACHE_SECONDS: int = 0

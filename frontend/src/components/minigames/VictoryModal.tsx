@@ -133,7 +133,6 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
       <Surface tone="elevated" padding="none" className="w-full p-4 bg-bg-elevated/70 border-border-subtle space-y-2.5">
         {challenge.rounds.map((round, idx) => {
           const guesses = roundGuesses[idx] || [];
-          const isWon = roundStatus[idx] === 'won';
           return (
             <div
               key={`modal-r-${idx}`}

@@ -20,8 +20,7 @@ export const CharactersGridSkeleton: React.FC<CharactersSkeletonProps> = ({ clas
   const loadingLabel = ariaLabel || dict.characterDetail.loading;
 
   return (
-    <div
-      role="status"
+    <output
       aria-label={loadingLabel}
       aria-busy="true"
       className={`flex min-h-115 w-full flex-1 flex-col items-center justify-center p-6 select-none ${className}`}
@@ -34,7 +33,7 @@ export const CharactersGridSkeleton: React.FC<CharactersSkeletonProps> = ({ clas
         label={loadingLabel}
         sublabel={sublabel ?? 'Loading survivor & killer dossiers'}
       />
-    </div>
+    </output>
   );
 };
 
@@ -46,8 +45,7 @@ export const CharacterDetailSkeleton: React.FC<CharactersSkeletonProps> = ({ cla
   const loadingLabel = ariaLabel || dict.characterDetail.loading;
 
   return (
-    <div
-      role="status"
+    <output
       aria-label={loadingLabel}
       aria-busy="true"
       className={`flex min-h-130 w-full flex-1 flex-col items-center justify-center p-8 select-none ${className}`}
@@ -60,6 +58,6 @@ export const CharacterDetailSkeleton: React.FC<CharactersSkeletonProps> = ({ cla
         label={loadingLabel}
         sublabel={sublabel ?? 'Loading unique perks, power stats, and bio'}
       />
-    </div>
+    </output>
   );
 };

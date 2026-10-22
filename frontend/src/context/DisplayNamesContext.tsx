@@ -3,6 +3,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { backendBase } from '@/utils/staticUrl';
+import { logger } from '@/utils/logger';
 
 interface NamedRecord {
   description?: string;
@@ -86,31 +87,38 @@ export const DisplayNamesProvider: React.FC<{ locale: string; children: React.Re
   locale,
   children,
 }) => {
-  const [characterMap, setCharacterMap] = useState<DisplayMaps>(EMPTY_MAPS);
-  const [perkMap, setPerkMap] = useState<DisplayMaps>(EMPTY_MAPS);
+  // Each map is kept with the locale it was loaded for; English (or a locale still loading) uses the names as they are.
+  const [characters, setCharacters] = useState<{ locale: string; map: DisplayMaps } | null>(null);
+  const [perks, setPerks] = useState<{ locale: string; map: DisplayMaps } | null>(null);
+  const characterMap = characters?.locale === locale ? characters.map : EMPTY_MAPS;
+  const perkMap = perks?.locale === locale ? perks.map : EMPTY_MAPS;
 
   useEffect(() => {
-    if (!locale || locale === 'en') {
-      setCharacterMap(EMPTY_MAPS);
-      setPerkMap(EMPTY_MAPS);
-      return;
-    }
+    if (!locale || locale === 'en') return;
 
     let cancelled = false;
 
-    buildDisplayMap(
-      `${backendBase}/api/v1/characters?category=all&lang=en`,
-      `${backendBase}/api/v1/characters?category=all&lang=${locale}`
-    ).then((map) => {
-      if (!cancelled) setCharacterMap(map);
-    });
+    // A failed or malformed response leaves the English names in place (EMPTY_MAPS) instead of
+    // becoming an unhandled rejection.
+    const load = async (canonicalUrl: string, translatedUrl: string, apply: (map: DisplayMaps) => void) => {
+      try {
+        const map = await buildDisplayMap(canonicalUrl, translatedUrl);
+        if (!cancelled) apply(map);
+      } catch (err) {
+        logger.warn('Could not load localized display names', err);
+      }
+    };
 
-    buildDisplayMap(
+    void load(
+      `${backendBase}/api/v1/characters?category=all&lang=en`,
+      `${backendBase}/api/v1/characters?category=all&lang=${locale}`,
+      (map) => setCharacters({ locale, map })
+    );
+    void load(
       `${backendBase}/api/v1/perks?limit=1000&lang=en`,
-      `${backendBase}/api/v1/perks?limit=1000&lang=${locale}`
-    ).then((map) => {
-      if (!cancelled) setPerkMap(map);
-    });
+      `${backendBase}/api/v1/perks?limit=1000&lang=${locale}`,
+      (map) => setPerks({ locale, map })
+    );
 
     return () => {
       cancelled = true;

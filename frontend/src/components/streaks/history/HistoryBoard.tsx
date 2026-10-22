@@ -1,8 +1,8 @@
 'use client';
 // frontend/src/components/streaks/history/HistoryBoard.tsx
-import { Button } from '@/components/common/Button';
 
-import React, { useEffect, useState } from 'react';
+
+import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { HistoryMode } from '@/types/historyStreak';
@@ -80,11 +80,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
   // that stays true for the run's whole lifetime, only resetting when
   // abandon/completion swaps in a different run id.
   const [engagedRunId, setEngagedRunId] = useState<number | null>(null);
-  useEffect(() => {
-    if (acceptedKillerId && run?.id !== engagedRunId) {
-      setEngagedRunId(run?.id ?? null);
-    }
-  }, [acceptedKillerId, run?.id, engagedRunId]);
+  if (acceptedKillerId && (run?.id ?? null) !== engagedRunId) setEngagedRunId(run?.id ?? null);
   const poolFrozen = Boolean(run?.pool_frozen) && run?.id === engagedRunId;
 
   const handleResult = async (result: 'win' | 'loss') => {

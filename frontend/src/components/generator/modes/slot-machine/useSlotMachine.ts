@@ -37,6 +37,7 @@ export function useSlotMachine({ role, activePlayablePerks, activeMutator, onRol
   const reelsRef = useRef<Reel[]>([]);
   const tickIntervalsRef = useRef<Map<number, ReturnType<typeof setInterval>>>(new Map());
   const pendingDoneRef = useRef<{ remaining: Set<number>; onAllDone: () => void } | null>(null);
+  const fallbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const resultsRef = useRef<HTMLDivElement | null>(null);
   const { celebrate } = useJackpotCelebration();
   const reduceMotion = useReducedMotion();
@@ -46,14 +47,21 @@ export function useSlotMachine({ role, activePlayablePerks, activeMutator, onRol
   }, [reels]);
 
   useEffect(() => {
+    const intervals = tickIntervalsRef.current;
     return () => {
-      tickIntervalsRef.current.forEach((interval) => clearInterval(interval));
+      intervals.forEach((interval) => clearInterval(interval));
+      if (fallbackTimerRef.current) clearTimeout(fallbackTimerRef.current);
     };
   }, []);
 
   const spinReels = (targetReels: Reel[], finalMap: Map<number, Perk | null>, onAllDone: () => void) => {
     const ids = targetReels.map((r) => r.id);
     setSpinningIds(new Set(ids));
+    // Every reel reports its landing in handleReelTransitionEnd; the last one calls onAllDone.
+    // (This registration had gone missing, so a spin never finished: the tick sound kept
+    // playing and the machine stayed in "spinning" until the fallback below -- which was
+    // dead code too, as it only fires for a registered spin.)
+    pendingDoneRef.current = { remaining: new Set(ids), onAllDone };
 
     const mobile = typeof window !== 'undefined' && window.innerWidth < 768;
     const desktopTarget = -(FINAL_INDEX - 1) * cellPx;
@@ -85,7 +93,8 @@ export function useSlotMachine({ role, activePlayablePerks, activeMutator, onRol
     });
 
     const maxDuration = Math.max(...targetReels.map((_, idx) => (reduceMotion ? 220 : 900 + idx * 180)));
-    const fallbackTimer = setTimeout(() => {
+    if (fallbackTimerRef.current) clearTimeout(fallbackTimerRef.current);
+    fallbackTimerRef.current = setTimeout(() => {
       const pending = pendingDoneRef.current;
       if (pending && pending.remaining.size > 0) {
         pending.remaining.forEach((id) => {

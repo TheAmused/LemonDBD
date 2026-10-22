@@ -45,9 +45,9 @@ function EmailPill({ email }: { email: string }) {
       >
         {copied ? dict.about.contact.emailCopied : email}
       </ActionPill>
-      <span role="status" aria-live="polite" className="sr-only">
+      <output aria-live="polite" className="sr-only">
         {copied ? dict.about.contact.emailCopied : ''}
-      </span>
+      </output>
     </>
   );
 }

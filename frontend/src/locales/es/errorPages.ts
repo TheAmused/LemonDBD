@@ -17,4 +17,11 @@ export default {
     title: 'Página bloqueada',
     text: 'Esta página no está abierta a los visitantes por ahora.',
   },
+  error: {
+    code: 'Error',
+    title: 'Algo salió mal',
+    text: 'Esta página ha tenido un error inesperado. Inténtalo de nuevo; si sigue pasando, vuelve al inicio.',
+    retry: 'Reintentar',
+    reference: 'Referencia',
+  },
 } as const;

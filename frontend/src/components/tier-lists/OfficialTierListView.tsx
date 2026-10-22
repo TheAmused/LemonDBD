@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/tier-lists/OfficialTierListView.tsx
 
+import { logger } from '@/utils/logger';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { RotateCcw, SearchX, TriangleAlert } from 'lucide-react';
@@ -68,7 +69,7 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
       await deleteOfficialTierList(slug, token);
       router.push(`/${locale}/tier-lists`);
     } catch (err) {
-      console.error('Failed to delete official tier list:', err);
+      logger.error('Failed to delete official tier list:', err);
       setDeleteFailed(true);
     }
   }, [slug, token, locale, router]);

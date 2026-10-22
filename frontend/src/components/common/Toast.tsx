@@ -40,7 +40,7 @@ export function Toast({ tone = 'amber', align = 'right', icon, message, actions,
   }, [autoDismissMs, onDismiss, message]);
   const toast = (
     <Surface
-      role="status"
+      as="output"
       aria-live="polite"
       padding="none"
       className={cn(

@@ -1,4 +1,5 @@
 # backend/app/services/perks/queries_equipment.py
+import logging
 from typing import Any
 
 from sqlalchemy import func, or_, select
@@ -6,6 +7,8 @@ from sqlalchemy import func, or_, select
 from app.core.extensions import db
 from app.models import Item, ItemAddon, ItemCategory, Killer, KillerAddon
 from app.services.perks.utils import HEADER_EXCLUSIONS
+
+logger = logging.getLogger(__name__)
 
 
 def fetch_items(
@@ -46,6 +49,7 @@ def fetch_items(
             return filtered
         return result
     except Exception:
+        logger.warning("Item query failed", exc_info=True)
         return []
 
 
@@ -138,4 +142,5 @@ def fetch_addons(
             return filtered
         return result
     except Exception:
+        logger.warning("Add-on query failed", exc_info=True)
         return []

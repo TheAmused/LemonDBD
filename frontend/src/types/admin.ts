@@ -37,15 +37,22 @@ export interface UserRow {
 }
 
 /** What an admin may change on an account (PUT /users/<id>). */
-export interface UserPatch {
+/**
+ * The acting admin's re-authentication: their own password, and a code from their authenticator
+ * app when their account has two-factor sign-in (see components/admin/ReauthFields).
+ */
+export interface Reauth {
+  current_password: string;
+  two_factor_code?: string;
+}
+
+export interface UserPatch extends Partial<Reauth> {
   username?: string;
   role?: 'user' | 'admin';
   is_verified?: boolean;
-  /** The acting admin's own password; the server requires it to demote another admin. */
-  current_password?: string;
 }
 
-export interface NewUser {
+export interface NewUser extends Partial<Reauth> {
   login: string;
   username: string;
   email: string;
@@ -198,7 +205,11 @@ export interface AdminContentReportDetail extends AdminContentReport {
   reason_breakdown: Record<string, number>;
   attributed: boolean;
   author_active: boolean | null;
+  /** Null when the report has no attributed author. */
+  author_standing?: 'active' | 'suspended' | 'banned' | null;
   author_is_admin: boolean;
+  /** Settings > Moderation's length for the author's next suspension (null without an author). */
+  author_next_suspension_days?: number | null;
 }
 
 export type SystemCheckState = 'ok' | 'warn' | 'off' | 'error';

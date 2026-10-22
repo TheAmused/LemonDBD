@@ -80,7 +80,8 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
   const locale = useLocale();
   const t = dict.moderation.admin;
   const [tab, setTab] = usePersistentString<PreviewTab>(ADMIN_STORAGE.moderationPreviewTab, 'app', oneOf(PREVIEW_TABS));
-  const [state, setState] = useState<PreviewState>({ status: 'idle', data: null });
+  // The server's last answer, for the request it answered; anything newer is still loading.
+  const [answer, setAnswer] = useState<{ key: string; status: 'ready' | 'error'; data: SanctionPreview | null } | null>(null);
   // Folded away by default and remembered; a folded preview asks the server for nothing.
   const [isOpen, toggleOpen] = usePersistentDrawer(ADMIN_STORAGE.moderationPreviewOpen, false);
 
@@ -91,21 +92,22 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
   // Reads the latest draft and target without making every keystroke in them re-run the effect below.
   const requestPreview = useEffectEvent(() => previewSanction(draft, target));
 
+  const state: PreviewState = !valid
+    ? { status: 'idle', data: null }
+    : answer?.key === requestKey
+      ? answer
+      : { status: 'loading', data: answer?.data ?? null };
+
   useEffect(() => {
-    if (!isOpen) return;
-    if (!valid) {
-      setState({ status: 'idle', data: null });
-      return;
-    }
+    if (!isOpen || !valid) return;
     let stale = false;
-    setState((previous) => ({ status: 'loading', data: previous.data }));
     const timer = setTimeout(() => {
       requestPreview().then(
         (data) => {
-          if (!stale) setState({ status: 'ready', data });
+          if (!stale) setAnswer({ key: requestKey, status: 'ready', data });
         },
         () => {
-          if (!stale) setState({ status: 'error', data: null });
+          if (!stale) setAnswer({ key: requestKey, status: 'error', data: null });
         }
       );
     }, PREVIEW_DEBOUNCE_MS);

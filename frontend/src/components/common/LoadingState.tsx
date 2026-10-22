@@ -5,9 +5,9 @@ import { DbdSpinner } from '@/components/common/DbdSpinner';
 
 export function LoadingState({ label }: { label: string }) {
   return (
-    <div role="status" className="flex flex-col items-center justify-center gap-4 p-12">
+    <output className="flex flex-col items-center justify-center gap-4 p-12">
       <DbdSpinner size="lg" />
       <p className="type-card-title text-text-muted">{label}</p>
-    </div>
+    </output>
   );
 }

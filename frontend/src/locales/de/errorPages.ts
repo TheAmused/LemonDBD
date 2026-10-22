@@ -17,4 +17,11 @@ export default {
     title: 'Seite gesperrt',
     text: 'Diese Seite ist für Besucher derzeit nicht geöffnet.',
   },
+  error: {
+    code: 'Fehler',
+    title: 'Etwas ist schiefgelaufen',
+    text: 'Auf dieser Seite ist ein unerwarteter Fehler aufgetreten. Versuche es erneut; wenn es weiter passiert, kehre zur Startseite zurück.',
+    retry: 'Erneut versuchen',
+    reference: 'Referenz',
+  },
 } as const;

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type React from 'react';
 import { SmashSounds } from '../SmashSoundEffects';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 const ZONE_THRESHOLD = 45;
 const SWIPE_THRESHOLD = 110;
@@ -31,11 +32,10 @@ export function useCardDrag({ isTopCard, isExiting, isFlipped, initialExitOffset
   const lastDragZoneRef = useRef<'neutral' | 'smash' | 'pass'>('neutral');
   const cardRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    if (isExiting && initialExitOffset) {
-      setDragOffset(initialExitOffset);
-    }
-  }, [isExiting, initialExitOffset]);
+  // A card leaving from a swipe starts its exit where the finger let go.
+  useOnValueChange(isExiting && initialExitOffset ? `${initialExitOffset.x},${initialExitOffset.y}` : null, (exitFrom) => {
+    if (exitFrom !== null && initialExitOffset) setDragOffset(initialExitOffset);
+  });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isTopCard || isDragging || isExiting || isFlipped || !cardRef.current) return;

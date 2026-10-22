@@ -9,7 +9,8 @@ const hook = readFileSync(path.join(__dirname, '../../components/admin/useUserMo
 
 test('a late answer for a previous account is dropped', () => {
   assert.match(hook, /const request = \+\+latestRequest\.current/);
-  assert.match(hook, /if \(request === latestRequest\.current\) setLoaded\(\{ userId, data: body \}\)/);
+  assert.match(hook, /const current = \(\) => request === latestRequest\.current/);
+  assert.match(hook, /if \(!current\(\)\) return;\s+setLoaded\(\{ userId: id, data: body \}\)/);
 });
 
 test('what is shown is keyed by the account it was loaded for', () => {

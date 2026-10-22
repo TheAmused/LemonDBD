@@ -30,7 +30,6 @@ from app.services.user.avatar import (
 from app.services.user.data_export import export_filename, export_user_data
 from app.services.user.profile import (
     fetch_user_by_id,
-    get_or_create_user_showcase,
     get_user_showcase,
     mark_onboarding_complete,
     modify_user_profile,

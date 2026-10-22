@@ -1,55 +1,30 @@
 'use client';
 
-﻿// frontend/src/hooks/usePersistentDrawer.ts
+// frontend/src/hooks/usePersistentDrawer.ts
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
+import { readStoredItem, useStoredItem } from '@/hooks/useStoredItem';
+
+const parse = (raw: string | null, fallback: boolean) => (raw === null ? fallback : raw === 'true');
 
 /**
  * Hook to persist the expanded / collapsed state of an accordion drawer in localStorage.
  *
- * Seeds initial state with defaultOpen so SSR and initial client hydration match,
- * then reconciles with localStorage on mount.
+ * The server render and hydration use defaultOpen (useStoredItem), then the stored state takes over.
  */
 export function usePersistentDrawer(storageKey: string, defaultOpen: boolean = false) {
-  const [isExpanded, setIsExpanded] = useState<boolean>(defaultOpen);
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(storageKey);
-      if (saved !== null) {
-        setIsExpanded(saved === 'true');
-      }
-    } catch {
-      // Storage unavailable (private mode / sandboxed iframe) - keep default state
-    }
-  }, [storageKey]);
-
-  const toggle = useCallback(() => {
-    setIsExpanded((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem(storageKey, String(next));
-      } catch {
-        // Non-fatal if localStorage is restricted
-      }
-      return next;
-    });
-  }, [storageKey]);
+  const [saved, write] = useStoredItem(storageKey);
+  const isExpanded = parse(saved, defaultOpen);
 
   const setExpanded = useCallback(
     (val: boolean | ((prev: boolean) => boolean)) => {
-      setIsExpanded((prev) => {
-        const next = typeof val === 'function' ? val(prev) : val;
-        try {
-          localStorage.setItem(storageKey, String(next));
-        } catch {
-          // Non-fatal
-        }
-        return next;
-      });
+      const next = typeof val === 'function' ? val(parse(readStoredItem(storageKey), defaultOpen)) : val;
+      write(String(next));
     },
-    [storageKey]
+    [storageKey, defaultOpen, write]
   );
+
+  const toggle = useCallback(() => setExpanded((prev) => !prev), [setExpanded]);
 
   return [isExpanded, toggle, setExpanded] as const;
 }

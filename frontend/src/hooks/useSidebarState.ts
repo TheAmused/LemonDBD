@@ -1,7 +1,7 @@
 // frontend/src/hooks/useSidebarState.ts
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useSyncExternalStore } from 'react';
 
 const SIDEBAR_COLLAPSED_KEY = 'lemon_dbd_sidebar_collapsed';
 const SIDEBAR_ATTRIBUTE = 'data-sidebar';
@@ -25,6 +25,11 @@ function applyCollapsedToDom(collapsed: boolean): void {
   }
 }
 
+function subscribe(onChange: () => void): () => void {
+  window.addEventListener(SIDEBAR_EVENT, onChange);
+  return () => window.removeEventListener(SIDEBAR_EVENT, onChange);
+}
+
 /**
  * Sidebar collapse state.
  *
@@ -36,34 +41,24 @@ function applyCollapsedToDom(collapsed: boolean): void {
  * settle until after the first render.
  *
  * `isCollapsed` remains available for non-layout concerns (labels, analytics).
- * It is intentionally seeded to `false` on both server and client so hydration
- * matches; the effect below reconciles it a tick later.
+ * It reads the attribute through useSyncExternalStore: `false` on the server and
+ * during hydration so they match, the attribute from then on.
  */
 export function useSidebarState() {
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
+  const isCollapsed = useSyncExternalStore(subscribe, readCollapsedFromDom, () => false);
 
+  // The inline script is the source of truth, but re-read storage in case it
+  // was blocked (strict CSP, script error) so the attribute still gets set.
   useEffect(() => {
-    let collapsed = readCollapsedFromDom();
-
-    // The inline script is the source of truth, but re-read storage in case it
-    // was blocked (strict CSP, script error) so the attribute still gets set.
     try {
       const saved = localStorage.getItem(SIDEBAR_COLLAPSED_KEY);
-      if (saved !== null) {
-        collapsed = saved === 'true';
-        applyCollapsedToDom(collapsed);
+      if (saved !== null && (saved === 'true') !== readCollapsedFromDom()) {
+        applyCollapsedToDom(saved === 'true');
+        window.dispatchEvent(new Event(SIDEBAR_EVENT));
       }
     } catch {
       // Storage unavailable (private mode / blocked cookies) -- keep the DOM value.
     }
-
-    setIsCollapsed(collapsed);
-  }, []);
-
-  useEffect(() => {
-    const handleCustomEvent = () => setIsCollapsed(readCollapsedFromDom());
-    window.addEventListener(SIDEBAR_EVENT, handleCustomEvent);
-    return () => window.removeEventListener(SIDEBAR_EVENT, handleCustomEvent);
   }, []);
 
   const toggleSidebar = useCallback(() => {
@@ -77,7 +72,6 @@ export function useSidebarState() {
     } catch {
       // Non-fatal: the sidebar still toggles, it just will not persist.
     }
-    setIsCollapsed(next);
     window.dispatchEvent(new Event(SIDEBAR_EVENT));
   }, []);
 

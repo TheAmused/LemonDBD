@@ -18,8 +18,7 @@ export const RandomizerPageSkeleton: React.FC<RandomizerSkeletonProps> = ({ clas
   const loadingLabel = ariaLabel || dict.app.loading;
 
   return (
-    <div
-      role="status"
+    <output
       aria-label={loadingLabel}
       aria-busy="true"
       className={`min-h-110 w-full max-w-6xl mx-auto flex flex-col items-center justify-center p-6 select-none ${className}`}
@@ -31,6 +30,6 @@ export const RandomizerPageSkeleton: React.FC<RandomizerSkeletonProps> = ({ clas
         needleSpeed={0.9}
         label={loadingLabel}
       />
-    </div>
+    </output>
   );
 };

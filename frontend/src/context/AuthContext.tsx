@@ -1,7 +1,8 @@
 // frontend/src/context/AuthContext.tsx
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { logger } from '@/utils/logger';
+import React, { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 export interface UserProfile {
   id: number;
@@ -27,7 +28,14 @@ type SignInResult = {
   twoFactorToken?: string;
   /** Set when the account is banned or suspended: the sign-in must show why instead of an error. */
   blocked?: BlockedInfo;
+  /**
+   * Set when the site requires a confirmed e-mail address and this one is not confirmed yet: there is
+   * no session, and entering the e-mailed code with this token finishes the sign-in (see verifyEmail).
+   */
+  verification?: PendingVerification;
 };
+
+export type PendingVerification = { email: string; token: string };
 
 export interface OwnershipSummary {
   survivors: {
@@ -61,10 +69,11 @@ interface AuthContextType {
   login: (loginOrEmail: string, password: string, extra?: Record<string, unknown>) => Promise<SignInResult>;
   loginWithGoogle: (credential: string) => Promise<SignInResult>;
   completeTwoFactorLogin: (twoFactorToken: string, code: string) => Promise<SignInResult & { errorCode?: string }>;
-  register: (login: string, username: string, email: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
+  register: (login: string, username: string, email: string, password: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string; user?: UserProfile; verification?: PendingVerification }>;
   logout: () => void;
   resendVerification: (email: string) => Promise<{ success: boolean; error?: string }>;
-  verifyEmail: (email: string, code: string) => Promise<{ success: boolean; error?: string; user?: UserProfile }>;
+  /** With `verificationToken` (from a sign-in that waited for the code) a correct code also signs in. */
+  verifyEmail: (email: string, code: string, verificationToken?: string) => Promise<SignInResult>;
   forgotPassword: (email: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string }>;
   resetPassword: (token: string, newPassword: string, extra?: Record<string, unknown>) => Promise<{ success: boolean; error?: string }>;
   refreshUser: () => Promise<void>;
@@ -78,7 +87,7 @@ interface AuthContextType {
 
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import type { CharacterOwnershipUpdate } from '@/utils/characterUtils';
-import { SESSION_MARKER, authHeaders, setSessionFlag, getErrorMessage, isAbortError } from '@/utils/api';
+import { SESSION_MARKER, authHeaders, setSessionFlag, getErrorMessage } from '@/utils/api';
 import { trackEvent } from '@/utils/analytics';
 import { invalidate } from '@/services/dataCache';
 import { blockedFromResponse, warningsFromResponse } from '@/utils/moderationResponse';
@@ -100,38 +109,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [warnings, setWarnings] = useState<UserWarning[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const fetchCurrentUser = useCallback(async () => {
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/auth/me`, { credentials: 'include' });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.authenticated && data.user) {
-          setToken(SESSION_MARKER);
-          setSessionFlag(true);
-          setUser(data.user);
-          setWarnings(warningsFromResponse(data));
-          if (data.ownership) {
-            setOwnership(data.ownership);
+  // State is set in the promise callbacks, so the mount effect below never renders synchronously.
+  const fetchCurrentUser = useCallback(
+    () =>
+      fetch(`${API_BASE}/api/v1/auth/me`, { credentials: 'include' })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data?.authenticated && data.user) {
+            setToken(SESSION_MARKER);
+            setSessionFlag(true);
+            setUser(data.user);
+            setWarnings(warningsFromResponse(data));
+            if (data.ownership) {
+              setOwnership(data.ownership);
+            }
+            return;
           }
-          return;
-        }
-      }
-      // No (or an expired) session cookie
-      setUser(null);
-      setToken(null);
-      setWarnings([]);
-      setSessionFlag(false);
-    } catch (err) {
-      console.error('Failed to fetch auth state:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+          // No (or an expired) session cookie
+          setUser(null);
+          setToken(null);
+          setWarnings([]);
+          setSessionFlag(false);
+        })
+        .catch((err: unknown) => {
+          logger.error('Failed to fetch auth state:', err);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        }),
+    []
+  );
 
   useEffect(() => {
     // The session cookie is HttpOnly, so ask the server who we are.
-    fetchCurrentUser();
+    void fetchCurrentUser();
   }, [fetchCurrentUser]);
+
+  /** A response that carries a new session (its cookie is already set): adopt the identity it names. */
+  const adoptSession = (data: { user: UserProfile; ownership?: OwnershipSummary }) => {
+    setToken(SESSION_MARKER);
+    setSessionFlag(true);
+    setUser(data.user);
+    setWarnings(warningsFromResponse(data));
+    if (data.ownership) setOwnership(data.ownership);
+    onIdentityChanged();
+  };
 
   const login = async (loginOrEmail: string, password: string, extra?: Record<string, unknown>) => {
     try {
@@ -143,6 +165,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       const data = await res.json();
       if (!res.ok) {
+        if (data.error_code === 'email_not_verified' && data.verification_token) {
+          // Password accepted, but the address must be confirmed first (a code has been e-mailed).
+          return { success: false, verification: { email: data.email as string, token: data.verification_token as string } };
+        }
         const blocked = blockedFromResponse(res.status, data);
         return blocked ? { success: false, blocked } : { success: false, error: data.error || 'Login failed' };
       }
@@ -150,12 +176,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Password accepted but there is no session yet: the caller asks for the authenticator code.
         return { success: false, twoFactorToken: data.two_factor_token as string };
       }
-      setToken(SESSION_MARKER);
-      setSessionFlag(true);
-      setUser(data.user);
-      setWarnings(warningsFromResponse(data));
-      if (data.ownership) setOwnership(data.ownership);
-      onIdentityChanged();
+      adoptSession(data);
       trackEvent('login', { method: 'password' });
       return { success: true, user: data.user as UserProfile };
     } catch (err) {
@@ -179,12 +200,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (data.status === 'two_factor_required' && data.two_factor_token) {
         return { success: false, twoFactorToken: data.two_factor_token as string };
       }
-      setToken(SESSION_MARKER);
-      setSessionFlag(true);
-      setUser(data.user);
-      setWarnings(warningsFromResponse(data));
-      if (data.ownership) setOwnership(data.ownership);
-      onIdentityChanged();
+      adoptSession(data);
       // The API has no "new account" flag; a user without a finished onboarding is the one
       // the app sends to /welcome, so that is what counts as a signup.
       if (data.user?.onboarding_completed_at) trackEvent('login', { method: 'google' });
@@ -209,12 +225,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (blocked) return { success: false, blocked };
         return { success: false, error: data.error as string | undefined, errorCode: data.error_code as string | undefined };
       }
-      setToken(SESSION_MARKER);
-      setSessionFlag(true);
-      setUser(data.user);
-      setWarnings(warningsFromResponse(data));
-      if (data.ownership) setOwnership(data.ownership);
-      onIdentityChanged();
+      adoptSession(data);
       trackEvent('login', { method: 'two_factor' });
       return { success: true, user: data.user as UserProfile };
     } catch (err) {
@@ -234,12 +245,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!res.ok) {
         return { success: false, error: data.error || 'Registration failed' };
       }
-      setToken(SESSION_MARKER);
-      setSessionFlag(true);
-      setUser(data.user);
-      if (data.ownership) setOwnership(data.ownership);
-      onIdentityChanged();
       trackEvent('signup', { method: 'password' });
+      if (data.status === 'verification_required' && data.verification_token) {
+        // The account exists but gets no session until its address is confirmed.
+        const verification = { email: (data.user?.email as string) || email, token: data.verification_token as string };
+        return { success: true, user: data.user as UserProfile, verification };
+      }
+      adoptSession(data);
       return { success: true, user: data.user as UserProfile };
     } catch (err) {
       return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
@@ -263,18 +275,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const verifyEmail = async (email: string, code: string) => {
+  const verifyEmail = async (email: string, code: string, verificationToken?: string): Promise<SignInResult> => {
     try {
       const res = await fetch(`${API_BASE}/api/v1/auth/verify-email`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, code }),
+        body: JSON.stringify({ email, code, verification_token: verificationToken }),
       });
       const data = await res.json();
       if (!res.ok) {
-        return { success: false, error: data.message || 'Invalid verification code.' };
+        const blocked = blockedFromResponse(res.status, data);
+        return blocked ? { success: false, blocked } : { success: false, error: data.message || data.error || 'Invalid verification code.' };
       }
       trackEvent('email_verified');
+      if (data.status === 'two_factor_required' && data.two_factor_token) {
+        // Address confirmed; the sign-in still needs the authenticator code.
+        return { success: false, twoFactorToken: data.two_factor_token as string };
+      }
+      // A verification that finished a sign-in carries the new session (set as the HttpOnly cookie).
+      if (data.session && data.user) adoptSession(data);
       return { success: true, user: data.user as UserProfile };
     } catch (err) {
       return { success: false, error: getErrorMessage(err, 'Network error occurred.') };
@@ -351,10 +371,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await acknowledgeWarningRequest(sanctionId);
     } catch (err) {
-      console.error('Failed to acknowledge the warning:', err);
+      logger.error('Failed to acknowledge the warning:', err);
     }
   };
-
 
   const bulkUpdateCharacterOwnership = async (
     updates: CharacterOwnershipUpdate[]
@@ -375,7 +394,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return false;
     } catch (err) {
-      console.error('Failed to bulk update character ownership:', err);
+      logger.error('Failed to bulk update character ownership:', err);
       return false;
     }
   };
@@ -397,7 +416,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return false;
     } catch (err) {
-      console.error('Failed to update perk ownership:', err);
+      logger.error('Failed to update perk ownership:', err);
       return false;
     }
   };
@@ -421,7 +440,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return false;
     } catch (err) {
-      console.error('Failed to bulk update perk ownership:', err);
+      logger.error('Failed to bulk update perk ownership:', err);
       return false;
     }
   };
@@ -439,7 +458,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return false;
     } catch (err) {
-      console.error('Failed to mark onboarding complete:', err);
+      logger.error('Failed to mark onboarding complete:', err);
       return false;
     }
   };
@@ -458,7 +477,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return false;
     } catch (err) {
-      console.error('Failed to set preferred language:', err);
+      logger.error('Failed to set preferred language:', err);
       return false;
     }
   };
@@ -470,25 +489,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // exposed functions keep a stable identity while still calling the freshest
   // closure (no stale `token`/`user` captures), and memoise the value on the
   // auth state that consumers actually care about.
-  const handlersRef = useRef({
-    login,
-    loginWithGoogle,
-    completeTwoFactorLogin,
-    register,
-    logout,
-    resendVerification,
-    verifyEmail,
-    forgotPassword,
-    resetPassword,
-    refreshUser,
-    acknowledgeWarning,
-    bulkUpdateCharacterOwnership,
-    updatePerkOwnership,
-    bulkUpdatePerkOwnership,
-    markOnboardingComplete,
-    setPreferredLanguage,
-  });
-  handlersRef.current = {
+  const handlers = {
     login,
     loginWithGoogle,
     completeTwoFactorLogin,
@@ -506,6 +507,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     markOnboardingComplete,
     setPreferredLanguage,
   };
+  const handlersRef = useRef(handlers);
+  useLayoutEffect(() => {
+    handlersRef.current = handlers;
+  });
 
   const actions = useMemo(
     () => ({
@@ -518,7 +523,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         handlersRef.current.register(login, username, email, password, extra),
       logout: () => handlersRef.current.logout(),
       resendVerification: (email: string) => handlersRef.current.resendVerification(email),
-      verifyEmail: (email: string, code: string) => handlersRef.current.verifyEmail(email, code),
+      verifyEmail: (email: string, code: string, verificationToken?: string) =>
+        handlersRef.current.verifyEmail(email, code, verificationToken),
       forgotPassword: (email: string, extra?: Record<string, unknown>) =>
         handlersRef.current.forgotPassword(email, extra),
       resetPassword: (token: string, newPassword: string, extra?: Record<string, unknown>) =>
@@ -554,6 +560,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
+/** The auth state when there is a provider above, else undefined (for parts that also render on their own). */
+export const useOptionalAuth = () => useContext(AuthContext);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);

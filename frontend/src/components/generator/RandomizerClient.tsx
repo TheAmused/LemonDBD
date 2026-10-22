@@ -1,13 +1,12 @@
 'use client';
 // frontend/src/components/generator/RandomizerClient.tsx
 
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { Suspense, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { PageShell } from '@/components/layout/PageShell';
 import { PageShellFallback } from '@/components/layout/PageShellFallback';
 import { GeneratorPage } from '@/components/generator/GeneratorPage';
 import { RandomizerPageSkeleton } from '@/components/generator/RandomizerSkeleton';
-import { useAuth } from '@/context/AuthContext';
 import { Perk, CharacterItem } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
@@ -19,18 +18,10 @@ const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.P
 
 function RandomizerContent() {
   const locale = useLocale();
-  const { user } = useAuth();
   const backendBase = getBackendBaseUrl();
 
   const dict = useDictionary();
-  const [allPerks, setAllPerks] = useState<Perk[]>([]);
-  const [perksLoading, setPerksLoading] = useState<boolean>(true);
   const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
-
-  const [survivorCount, setSurvivorCount] = useState<number>(0);
-  const [killerCount, setKillerCount] = useState<number>(0);
-  const [characterCount, setCharacterCount] = useState<number>(0);
-
 
   const allPerksKey = `${backendBase}/api/v1/perks?limit=1000&lang=${locale}`;
   const { data: perksResponse, loading: perksFetching, error: perksError, refresh: retryPerks } = useCachedData<{ data?: Perk[] }>(
@@ -44,17 +35,12 @@ function RandomizerContent() {
     () => fetchJson<{ data?: CharacterItem[] }>(charactersKey)
   );
 
-  useEffect(() => {
-    const fullList: Perk[] = perksResponse?.data || [];
-    setAllPerks(fullList);
-    setSurvivorCount(fullList.filter((p) => p.category === 'Survivor').length);
-    setKillerCount(fullList.filter((p) => p.category === 'Killer').length);
-    setPerksLoading(perksFetching);
-  }, [perksResponse, perksFetching]);
-
-  useEffect(() => {
-    setCharacterCount((charactersResponse?.data || []).length);
-  }, [charactersResponse]);
+  // Derived from the cached responses while rendering.
+  const allPerks = useMemo<Perk[]>(() => perksResponse?.data || [], [perksResponse]);
+  const survivorCount = useMemo(() => allPerks.filter((p) => p.category === 'Survivor').length, [allPerks]);
+  const killerCount = useMemo(() => allPerks.filter((p) => p.category === 'Killer').length, [allPerks]);
+  const characterCount = (charactersResponse?.data || []).length;
+  const perksLoading = perksFetching;
 
   return (
     <PageShell

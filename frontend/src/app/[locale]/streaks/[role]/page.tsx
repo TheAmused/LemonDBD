@@ -2,6 +2,10 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { StreakPanelGrid } from '@/features/streaks';
+import { pageMetadata, withSegment } from '@/i18n/metadata';
+
+// Its own canonical URL (the streaks layout's would point every challenge at /streaks).
+export const generateMetadata = pageMetadata((p) => withSegment('/streaks', p.role), (d) => ({ title: d.app.streaksPageTitle }));
 
 const VALID_ROLES = ['killer', 'survivor', 'challenge'] as const;
 type StreakRole = (typeof VALID_ROLES)[number];

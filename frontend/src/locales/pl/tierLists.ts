@@ -237,6 +237,7 @@ export default {
   reportNotesPlaceholder: "Opisz, dlaczego ta treść jest nieodpowiednia...",
   reportSubmit: "Wyślij zgłoszenie",
   reportSubmitting: "Wysyłanie...",
+  reportPaused: "Zgłaszanie jest teraz wstrzymane. Spróbuj ponownie później.",
   reportSuccess: "Zgłoszenie wysłane. Dziękujemy za pomoc w utrzymaniu bezpieczeństwa LemonDBD.",
   reportAlreadyBanned: "Ta treść została już zablokowana i usunięta.",
   reportError: "Nie udało się wysłać zgłoszenia. Spróbuj ponownie.",

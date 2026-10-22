@@ -9,7 +9,6 @@ import pytest
 from flask import Flask
 from flask.testing import FlaskClient
 
-from app.core.extensions import db
 from app.core.security import generate_token
 from app.models import BugReport, User
 

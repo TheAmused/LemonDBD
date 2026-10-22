@@ -4,6 +4,10 @@ import { notFound } from 'next/navigation';
 import { GauntletBoard } from '@/components/streaks/gauntlet/GauntletBoard';
 import { ChallengeModeGate } from '@/components/streaks/ChallengeModeGate';
 import { parseGauntletGameMode, Role } from '@/types/gauntletStreak';
+import { pageMetadata, withSegment } from '@/i18n/metadata';
+
+// Its own canonical URL (the streaks layout's would point every challenge at /streaks).
+export const generateMetadata = pageMetadata((p) => `${withSegment('/streaks', p.role)}/gauntlet-streak`, (d) => ({ title: d.app.streaksPageTitle }));
 
 const VALID_GAUNTLET_ROLES: Role[] = ['killer', 'survivor'];
 

@@ -15,6 +15,9 @@ from app.services.user.auth import (
     reset_password_with_token,
     retrieve_user_from_jwt,
     verify_email_code,
+    create_verification_pending_token,
+    needs_email_verification,
+    user_from_verification_pending_token,
 )
 from app.services.user.data_export import export_filename, export_user_data
 from app.services.user.avatar import (
@@ -51,6 +54,9 @@ __all__ = [
     "resend_verification_email",
     "request_password_reset",
     "reset_password_with_token",
+    "create_verification_pending_token",
+    "needs_email_verification",
+    "user_from_verification_pending_token",
     "fetch_user_by_id",
     "mark_onboarding_complete",
     "modify_user_profile",

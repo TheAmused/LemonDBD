@@ -16,8 +16,7 @@ export const PerksGridSkeleton: React.FC<PerksSkeletonProps> = ({ className = ''
   const loadingLabel = ariaLabel || dict.app.loadingPerks;
 
   return (
-    <div
-      role="status"
+    <output
       aria-label={loadingLabel}
       aria-busy="true"
       className={`flex h-full min-h-105 w-full flex-1 flex-col items-center justify-center overflow-hidden select-none p-6 ${className}`}
@@ -29,6 +28,6 @@ export const PerksGridSkeleton: React.FC<PerksSkeletonProps> = ({ className = ''
         needleSpeed={1.2}
         label={loadingLabel}
       />
-    </div>
+    </output>
   );
 };

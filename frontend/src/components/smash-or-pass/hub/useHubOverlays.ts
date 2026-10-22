@@ -1,8 +1,9 @@
 'use client';
 // frontend/src/components/smash-or-pass/hub/useHubOverlays.ts
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { EntityItem } from '@/types/smashOrPass';
 import { decodeArchetypeShare, type SharedArchetypePayload } from '@/utils/smashPersona';
+import { useOnceInBrowser } from '@/hooks/useOnceInBrowser';
 
 /** Which modals, drawers and confirmations are open on the Hub. */
 export function useHubOverlays(isPrefsOpen = false) {
@@ -18,9 +19,8 @@ export function useHubOverlays(isPrefsOpen = false) {
   const [isImportModalOpen, setIsImportModalOpen] = useState<boolean>(false);
   const [exportingRosterId, setExportingRosterId] = useState<string | null>(null);
 
-  // Decode Shared Archetype from URL query parameters if present
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
+  // Decode Shared Archetype from URL query parameters if present (only the browser has the URL).
+  useOnceInBrowser(() => {
     try {
       const searchParams = new URLSearchParams(window.location.search);
       const encodedArchetype = searchParams.get('shared_archetype');
@@ -34,7 +34,7 @@ export function useHubOverlays(isPrefsOpen = false) {
     } catch {
       // Best-effort: failure here is non-fatal.
     }
-  }, []);
+  });
 
   /** While any of these is up, the keyboard shortcuts that vote are off and the backdrop pauses. */
   const areModalsOpen =

@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/maps/voice/useVoiceSession.ts
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { logger } from '@/utils/logger';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createDeduper, trackEvent } from '@/utils/analytics';
 import {
   AudioCaptureSession,
@@ -18,6 +19,8 @@ import { getVariantsForMap, matchVoiceQuery, type MapSource, type MatchResult } 
 import { playMatchSuccessSound, type SpeechRecognitionInstance } from '@/components/maps/VoiceCommandBannerParts';
 import { useStartListening } from './useStartListening';
 import type { VoiceCommandBannerProps, VoiceStatusState } from './voiceTypes';
+import { useIsClient } from '@/hooks/useIsClient';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 type VoiceSessionOptions = Pick<
   VoiceCommandBannerProps,
@@ -84,11 +87,18 @@ export function useVoiceSession({
     };
   }, [currentSource, onSourceChange, onSelectMap, onAction, availableMaps, soundEnabled]);
 
-  useEffect(() => {
+  // Browser support is checked again once running in the browser (the server can't know it),
+  // while rendering, and picks the engine that browser does best.
+  const isClient = useIsClient();
+  const [compatChecked, setCompatChecked] = useState(false);
+  if (isClient && !compatChecked) {
+    setCompatChecked(true);
     const compat = getBrowserCompatibility();
     setBrowserInfo(compat);
     setActiveEngine(compat.recommendedEngine);
+  }
 
+  useEffect(() => {
     const unsubscribe = subscribeModelProgress((info) => {
       setModelProgress(info);
     });
@@ -138,15 +148,17 @@ export function useVoiceSession({
 
   // Kept-mounted-but-hidden banners (see the `active` prop doc) must not
   // keep listening once they're no longer the visible mode.
+  useOnValueChange(active, (isActive) => {
+    if (!isActive) setVoiceStatus('idle');
+  });
   useEffect(() => {
-    if (!active) {
-      cleanupListening();
-      setVoiceStatus('idle');
-    }
+    if (!active) cleanupListening();
   }, [active, cleanupListening]);
 
   const engineRef = useRef<VoiceEngineType>(activeEngine);
-  engineRef.current = activeEngine;
+  useLayoutEffect(() => {
+    engineRef.current = activeEngine;
+  });
   // recognition.onend can run again after stopListeningAndProcess already reported the same
   // command, so one command is reported at most once per 1.5 s.
   const outcomeDedupeRef = useRef(createDeduper(1500));
@@ -173,7 +185,7 @@ export function useVoiceSession({
     if (result.action === 'switch_source' && result.actionPayload) {
       setVoiceStatus('matched');
       if (isSoundOn) playMatchSuccessSound();
-      triggerSourceChange(result.actionPayload as MapSource);
+      triggerSourceChange?.(result.actionPayload as MapSource);
       if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
       resetTimerRef.current = setTimeout(() => {
         setVoiceStatus('idle');
@@ -284,7 +296,7 @@ export function useVoiceSession({
               }
             }
           } catch (err: unknown) {
-            console.error('[VoiceNav] Client-side transcription error:', err);
+            logger.error('[VoiceNav] Client-side transcription error:', err);
           }
         }
 
@@ -302,7 +314,7 @@ export function useVoiceSession({
       try {
         recognitionRef.current.stop();
       } catch (e: unknown) {
-        console.warn('[VoiceNav] Error stopping recognition in stopListeningAndProcess:', e);
+        logger.warn('[VoiceNav] Error stopping recognition in stopListeningAndProcess:', e);
       }
     }
 

@@ -88,7 +88,7 @@ def test_notice_says_when_the_account_was_deactivated(client, app, db_session) -
 
 
 def test_dismissing_a_report_sends_no_notice(client, app, db_session) -> None:
-    author, reporter, admin = _user(db_session, "pv_author3"), _user(db_session, "pv_rep3"), _user(db_session, "pv_admin3", "admin")
+    _author, reporter, admin = _user(db_session, "pv_author3"), _user(db_session, "pv_rep3"), _user(db_session, "pv_admin3", "admin")
     payload = {"title": "Fine content"}
     content_hash = compute_content_hash(canonicalize_payload(payload))
     created = client.post(
@@ -147,7 +147,7 @@ def test_deleting_an_account_removes_its_username_from_moderation_records(client
 
 
 def test_deleting_a_reporter_erases_their_note_but_keeps_the_report(client, app, db_session) -> None:
-    author, reporter, admin = _user(db_session, "pv_author7"), _user(db_session, "pv_rep7"), _user(db_session, "pv_admin7", "admin")
+    _author, reporter, _admin = _user(db_session, "pv_author7"), _user(db_session, "pv_rep7"), _user(db_session, "pv_admin7", "admin")
     payload = {"title": "Pending one"}
     created = client.post(
         "/api/v1/content/reports",

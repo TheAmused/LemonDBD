@@ -132,7 +132,7 @@ export default {
   boostPickHint: "下の一覧からキラーを選んでください。",
   boostConfirmPick: "指名",
   pageStreakIntro: "キラーを1人選び、そのパークの各ページで組める最高のビルドで勝とう。",
-  inactivityLossNotice: "90日間更新がない挑戦は自動的に敗北扱いとなります。",
+  inactivityLossNotice: "{days}日間更新がない挑戦は自動的に敗北扱いとなります。",
   difficultyAndCheckpoints: "難易度",
   exceptions: "例外事項",
   clarifications: "補足説明",

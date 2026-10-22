@@ -1,13 +1,14 @@
 'use client';
 // frontend/src/components/common/NsfwOnboardingModal.tsx
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/common/Button';
 import { Modal } from '@/components/common/Modal';
 import { Switch } from '@/components/common/Switch';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useGlobalNsfwPreference, markNsfwOnboardingComplete } from '@/utils/nsfwAck';
 import { defaultPrefs, prefersReducedMotion, readLocalPrefs, writeLocalPrefs, type SmashPrefs } from '@/components/smash-or-pass/prefs/smashPrefs';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface NsfwOnboardingModalProps {
   isOpen: boolean;
@@ -44,11 +45,9 @@ export function NsfwOnboardingModal({ isOpen, onClose, showWarning = false }: Ns
   const [nsfw, setNsfw] = useGlobalNsfwPreference();
   const [prefs, setPrefs] = useState<Omit<SmashPrefs, 'chosenAt'>>(() => readLocalPrefs() ?? defaultPrefs());
 
-  useEffect(() => {
-    if (isOpen) {
-      setPrefs(readLocalPrefs() ?? defaultPrefs());
-    }
-  }, [isOpen]);
+  useOnValueChange(isOpen, (open) => {
+    if (open) setPrefs(readLocalPrefs() ?? defaultPrefs());
+  });
 
   const updatePrefs = (change: Partial<Omit<SmashPrefs, 'chosenAt'>>) => {
     setPrefs((prev) => {

@@ -1,4 +1,5 @@
 // frontend/src/lib/storage.ts
+import { logger } from '@/utils/logger';
 /**
  * Generic client-only persistence and safe localStorage helpers.
  * Consolidated core infrastructure under src/lib/.
@@ -102,7 +103,7 @@ export function createVersionedStore<S>({ key, empty, migrate }: VersionedStoreC
       if (!raw) return empty;
       return migrate(JSON.parse(raw));
     } catch (err) {
-      console.warn(`[versionedStore] Corrupt data in localStorage key "${key}", falling back to empty state:`, err);
+      logger.warn(`[versionedStore] Corrupt data in localStorage key "${key}", falling back to empty state:`, err);
       return empty;
     }
   }

@@ -1,6 +1,5 @@
 # backend/app/services/perks/perk_search.py
 """Pure text-matching and localization helpers shared by the perk queries."""
-from typing import Any
 
 from sqlalchemy import and_
 

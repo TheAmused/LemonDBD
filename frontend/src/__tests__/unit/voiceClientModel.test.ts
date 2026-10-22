@@ -5,12 +5,10 @@ import assert from 'node:assert';
 import React from 'react';
 import {
   isWebSpeechSupported,
-  detectBrowser,
   getBrowserCompatibility,
   subscribeModelProgress,
   getModelProgress,
   transcribeClientAudio,
-  initClientSpeechModel,
   AudioCaptureSession,
 } from '@/utils/../services/clientSpeechModel';
 import { VoiceEngineInfoBody } from '@/utils/../components/maps/VoiceEngineInfoModal';

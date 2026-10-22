@@ -24,7 +24,7 @@ export function menuItemClassName({ selected = false, tone = 'red', flush = fals
 }
 
 export interface MenuItemProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type'> {
-  /** The current choice of a listbox. Sets `aria-selected` when the row has role="option". */
+  /** The current choice: `aria-selected` on a role="option" row, `aria-current` on a plain one. */
   selected?: boolean;
   tone?: MenuItemTone;
   flush?: boolean;
@@ -40,6 +40,7 @@ export const MenuItem = React.forwardRef<HTMLButtonElement, MenuItemProps>(funct
       type="button"
       role={role}
       aria-selected={role === 'option' ? selected : undefined}
+      aria-current={role !== 'option' && selected ? 'true' : undefined}
       className={menuItemClassName({ selected, tone, flush, className })}
       {...rest}
     >

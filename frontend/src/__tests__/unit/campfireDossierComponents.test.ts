@@ -145,7 +145,7 @@ describe('Campfire Dossier: MainCard', () => {
   it('renders Survivor main card with character name and 4 diamond slots', () => {
     const html = renderWithDictionary(
       React.createElement(MainCard, {
-        role: 'Survivor',
+        characterRole: 'Survivor',
         loadout: {
           characterName: 'Feng Min',
           prestige: 0,
@@ -169,7 +169,7 @@ describe('Campfire Dossier: MainCard', () => {
   it('renders Killer main card with character name', () => {
     const html = renderWithDictionary(
       React.createElement(MainCard, {
-        role: 'Killer',
+        characterRole: 'Killer',
         loadout: {
           characterName: 'The Blight',
           prestige: 0,

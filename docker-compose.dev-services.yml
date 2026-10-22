@@ -1,0 +1,27 @@
+# docker-compose.dev-services.yml - the dev-only parts of the stack (debug port, Cloudflare tunnel).
+# Not a stand-alone file: docker-compose.dev.yml loads it together with docker-compose.base.yml and
+# .env.dev, so the ${VARS} below are read from .env.dev (an include's env_file only applies to the
+# files listed in that include, never to services written in docker-compose.dev.yml itself).
+services:
+  backend:
+    restart: "no"
+    # Debug access to gunicorn from this machine only; requests still pass the app's own limits.
+    ports:
+      - "127.0.0.1:${BACKEND_PORT:-5000}:5000"
+
+  tunnel-notifier:
+    build:
+      context: ./docker/tunnel
+      dockerfile: Dockerfile
+    container_name: dbd_tunnel_notifier
+    restart: unless-stopped
+    environment:
+      - DISCORD_TUNNEL_WEBHOOK=${DISCORD_TUNNEL_WEBHOOK:-}
+      - DISCORD_TUNNEL_WEBHOOK_ENABLED=${DISCORD_TUNNEL_WEBHOOK_ENABLED:-false}
+      - TUNNEL_TARGET_URL=${TUNNEL_TARGET_URL:-http://nginx:80}
+      - TUNNEL_HOST_HEADER=${TUNNEL_HOST_HEADER:-}
+    depends_on:
+      nginx:
+        condition: service_started
+    networks:
+      - dbd_network

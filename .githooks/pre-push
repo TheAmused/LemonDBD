@@ -26,6 +26,13 @@ elif [ -x "$root/.venv/bin/python" ]; then py="$root/.venv/bin/python"
 elif [ -x .venv/Scripts/python.exe ]; then py=.venv/Scripts/python.exe
 elif [ -x .venv/bin/python ]; then py=.venv/bin/python
 else py=python; fi
+for mod in ruff pytest; do
+  if ! "$py" -m "$mod" --version >/dev/null 2>&1; then
+    echo "[pre-push] '$mod' is missing from $py"
+    echo "[pre-push] install the backend dev tools:  $py -m pip install -r backend/requirements-dev.txt"
+    exit 1
+  fi
+done
 "$py" -m ruff check .
 "$py" -m pytest tests/unit -q
 

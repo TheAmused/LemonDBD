@@ -1,6 +1,6 @@
 'use client';
 // frontend/src/components/streaks/StreakStatTiles.tsx
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatTile } from './ChallengePanel';
 import {
   deriveStreakStatEffects,
@@ -41,25 +41,24 @@ export const StreakStatTiles: React.FC<StreakStatTilesProps> = ({
   currentIcon,
   bestIcon,
 }) => {
-  const previous = useRef<StreakStatSnapshot | null>(null);
   const [record, setRecord] = useState(() => initialRecord({ current, best }));
   const [burstKey, setBurstKey] = useState(0);
   const [flash, setFlash] = useState<{ type: StatFlash; key: number }>({ type: null, key: 0 });
   const [bursting, setBursting] = useState(false);
 
-  useEffect(() => {
-    const before = previous.current;
-    previous.current = { current, best };
-    if (!before) return;
-    const effects = deriveStreakStatEffects(before, { current, best }, record);
+  // Each change (never the first render) is compared with the numbers before it, while rendering,
+  // so the flash and the record styling arrive with the new number itself.
+  const [previous, setPrevious] = useState<StreakStatSnapshot>({ current, best });
+  if (previous.current !== current || previous.best !== best) {
+    setPrevious({ current, best });
+    const effects = deriveStreakStatEffects(previous, { current, best }, record);
     setRecord(effects.record);
     if (effects.burst) {
       setBurstKey((k) => k + 1);
       setBursting(true);
     }
     if (effects.flash) setFlash((f) => ({ type: effects.flash, key: f.key + 1 }));
-    // `record` is state this effect owns; re-running on it would re-derive from stale snapshots.
-  }, [current, best]);
+  }
 
   useEffect(() => {
     if (!bursting) return;

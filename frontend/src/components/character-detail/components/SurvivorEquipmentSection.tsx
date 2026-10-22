@@ -29,6 +29,8 @@ import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { tip } from '@/components/common/Tooltip';
 import { EmptyState } from '@/components/common/EmptyState';
 import { AccordionSection } from '@/components/common/AccordionSection';
+import { TileButton } from '@/components/common/TileButton';
+import { Img } from '@/components/common/Img';
 interface SurvivorEquipmentSectionProps {
   items?: EquipmentItem[];
   addons?: (AddonItem | EquipmentItem)[];
@@ -220,40 +222,33 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
             {categorizedData.displayedItems.length === 0 ? (
               <EmptyState variant="inline" className="flex-1 py-8 text-center" title={t.noItemsFound} />
             ) : (
-              <div className="flex flex-wrap items-center justify-center gap-3 p-1" role="list">
+              <ul className="flex flex-wrap items-center justify-center gap-3 p-1">
                 {categorizedData.displayedItems.map((item, idx) => {
                   const id = `item-${item.name}-${idx}`;
                   const rarityStyle = getRarityTileStyle(item.rarity);
 
                   return (
-                    <div
-                      key={id}
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => onSelectEquipment(item)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          onSelectEquipment(item);
-                        }
-                      }}
-                      {...tip(item.name, undefined, 'item')}
-                      className={`relative group rounded-card border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-green h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
-                      style={rarityStyle.style}
-                      aria-label={`${t.inspectItemPrefix} ${item.name}`}
-                    >
-                      <img
-                        src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
-                        alt={item.name}
-                        className="h-full w-full object-contain"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = 'none';
-                        }}
-                      />
-                    </div>
+                    <li key={id}>
+                      <TileButton
+                        onClick={() => onSelectEquipment(item)}
+                        {...tip(item.name, undefined, 'item')}
+                        className={`relative group rounded-card border-2 p-1.5 flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus-visible:ring-accent-green h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                        style={rarityStyle.style}
+                        aria-label={`${t.inspectItemPrefix} ${item.name}`}
+                      >
+                        <Img
+                          src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
+                          alt={item.name}
+                          className="h-full w-full object-contain"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
+                        />
+                      </TileButton>
+                    </li>
                   );
                 })}
-              </div>
+              </ul>
             )}
           </div>
 
@@ -282,41 +277,34 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                 {t.noCompatibleAddons}
               </div>
             ) : (
-              <div className="flex flex-wrap items-center justify-center gap-2.5 p-1" role="list">
+              <ul className="flex flex-wrap items-center justify-center gap-2.5 p-1">
                 {categorizedData.displayedAddons.map((item, idx) => {
                   const id = `addon-${item.name}-${idx}`;
                   const rarityStyle = getRarityTileStyle(item.rarity);
                   const displayItem = { ...item, name: toTitleCase(item.name) };
 
                   return (
-                    <div
-                      key={id}
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => onSelectEquipment(displayItem)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
-                          onSelectEquipment(displayItem);
-                        }
-                      }}
-                      {...tip(displayItem.name, undefined, 'item')}
-                      className={`relative group rounded-card border-2 p-1.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-amber h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
-                      style={rarityStyle.style}
-                      aria-label={`${t.inspectAddonPrefix} ${displayItem.name}`}
-                    >
-                      <img
-                        src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
-                        alt={displayItem.name}
-                        className="h-full w-full object-contain filter drop-shadow-md"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).style.display = 'none';
-                        }}
-                      />
-                    </div>
+                    <li key={id}>
+                      <TileButton
+                        onClick={() => onSelectEquipment(displayItem)}
+                        {...tip(displayItem.name, undefined, 'item')}
+                        className={`relative group rounded-card border-2 p-1.5 flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus-visible:ring-accent-amber h-20 w-20 sm:h-24 sm:w-24 ${rarityStyle.bg}`}
+                        style={rarityStyle.style}
+                        aria-label={`${t.inspectAddonPrefix} ${displayItem.name}`}
+                      >
+                        <Img
+                          src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
+                          alt={displayItem.name}
+                          className="h-full w-full object-contain filter drop-shadow-md"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
+                        />
+                      </TileButton>
+                    </li>
                   );
                 })}
-              </div>
+              </ul>
             )}
           </div>
         </div>

@@ -7,6 +7,7 @@ import { Tooltip } from '@/components/common/Tooltip';
 import { cn } from '@/utils/cn';
 import { getPerkIconUrl } from '@/utils/perkUtils';
 import type { MachinePhase, Reel } from './slotMachineTypes';
+import { Img } from '@/components/common/Img';
 
 export interface SlotReelProps {
   reel: Reel;
@@ -35,18 +36,13 @@ export function SlotReelColumnDesktop({
   const landedBroken = reel.broken && !isSpinning;
 
   const reelWindow = (
-    <div
-      role={isClickable ? 'button' : undefined}
-      tabIndex={isClickable ? 0 : undefined}
-      onClick={isClickable ? () => toggleStage(reel.id) : undefined}
-      onKeyDown={
-        isClickable
-          ? (e) => {
-              if (e.key === 'Enter' || e.key === ' ') toggleStage(reel.id);
-            }
-          : undefined
-      }
+    <button
+      type="button"
+      disabled={!isClickable}
+      aria-pressed={isClickable ? isStaged : undefined}
+      onClick={() => toggleStage(reel.id)}
       className={cn(
+        'block disabled:cursor-default',
         'relative overflow-hidden rounded-chip border-2 shadow-inner transition-all duration-200',
         'bg-gradient-to-b from-bg-elevated/40 via-bg-surface to-bg-elevated/40',
         isClickable && 'cursor-pointer hover:scale-[1.03] active:scale-[0.98]',
@@ -85,7 +81,7 @@ export function SlotReelColumnDesktop({
               {cell.broken ? (
                 <Ban className="text-accent-red" style={{ height: cellPx * 0.58, width: cellPx * 0.58 }} />
               ) : cell.perk ? (
-                <img
+                <Img
                   src={getPerkIconUrl(cell.perk, backendBase) || ''}
                   alt=""
                   className="object-contain drop-shadow-md"
@@ -109,7 +105,7 @@ export function SlotReelColumnDesktop({
       </div>
 
       <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-b from-bg-surface/85 via-transparent to-bg-surface/85" />
-    </div>
+    </button>
   );
 
   return (

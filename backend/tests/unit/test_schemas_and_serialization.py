@@ -4,16 +4,14 @@ import pytest
 from pydantic import ValidationError
 from app.schemas.community import (
     BugReportCreate,
-    BugReportResponse,
 )
 from app.schemas.equipment import (
     ItemAddonBase,
     ItemAddonResponse,
-    ItemResponse,
     KillerAddonBase,
     KillerAddonResponse,
 )
-from app.schemas.user import UserCreate, UserResponse, UserUpdate
+from app.schemas.user import UserCreate, UserResponse
 
 
 @pytest.mark.unit

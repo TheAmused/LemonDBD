@@ -2,7 +2,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  encodeArchetypeShare,
   decodeArchetypeShare,
   buildArchetypeShareUrl,
   calculateRomancePersona,
@@ -155,7 +154,7 @@ test('Live: Archetype deep-link encoding and decoding produces valid shareable U
   assert.strictEqual(decoded.v, persona.totalVotes);
 
   // Verify the encoded param is a valid URL-safe string
-  assert.ok(!/[^A-Za-z0-9%._~\-]/.test(param), 'Encoded param should be URL-safe');
+  assert.ok(!/[^A-Za-z0-9%._~-]/.test(param), 'Encoded param should be URL-safe');
 });
 
 // ─────────────────────────────────────────────────────────────
@@ -229,7 +228,7 @@ test('Live: Encoding the same archetype payload twice produces identical URLs', 
 // LIVE TEST 6: Leaderboard stats are correct after vote casting
 // ─────────────────────────────────────────────────────────────
 test('Live: Leaderboard returns updated stats after casting votes', async () => {
-  const { slug, votedEntities } = await castVotesForSession(2, 'smash');
+  const { slug } = await castVotesForSession(2, 'smash');
 
   const leadRes = await fetch(`${API_BASE}/api/v1/smash-or-pass/rosters/${slug}/leaderboard`);
   assert.strictEqual(leadRes.status, 200);

@@ -15,7 +15,7 @@ interface AddonGuesserProps {
   children?: React.ReactNode;
 }
 
-export const AddonGuesser: React.FC<AddonGuesserProps> = ({ roundConfig, killers, guesses, isSolved, children }) => {
+export const AddonGuesser: React.FC<AddonGuesserProps> = ({ roundConfig, guesses, isSolved, children }) => {
   const dict = useDictionary();
   const attempts = guesses.length;
   const description = (roundConfig.custom_data?.description as string) || '';

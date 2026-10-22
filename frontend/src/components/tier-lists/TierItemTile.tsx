@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/tier-lists/TierItemTile.tsx
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { FitText } from '@/components/common/FitText';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import type { TierItem } from '@/types/tierList';

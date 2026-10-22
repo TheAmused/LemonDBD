@@ -50,6 +50,7 @@ class TestUserProfileLifecycleWorkflow:
 
         new_login = live_client.post(
             "/api/v1/auth/login",
+            headers={"X-Return-Token": "1"},
             json={
                 "username": "profile_user_1",
                 "password": "NewStrongPassword456!",

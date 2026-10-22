@@ -17,6 +17,7 @@ import { Badge } from '@/components/common/Badge';
 import { cn } from '@/utils/cn';
 
 import { Button } from '@/components/common/Button';
+import { Img } from '@/components/common/Img';
 const CARD =
   'group relative flex h-full flex-col overflow-hidden rounded-card border border-border-color/80 bg-bg-surface p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-accent-red/50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber';
 
@@ -140,7 +141,7 @@ export function OfficialTierListCard({ list, rankedCount, locale, showNsfw = tru
     <Link href={`/${locale}/tier-lists/${list.slug}`} className={CARD}>
       <div className="group/banner relative -mx-5 -mt-5 mb-2 h-32 w-bleed max-w-none overflow-hidden bg-bg-elevated">
         {effectiveCover && (
-          <img
+          <Img
             src={effectiveCover}
             alt=""
             loading="lazy"
@@ -264,7 +265,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled, showNsfw 
     <>
       <div className="group/banner relative -mx-5 -mt-5 mb-2 h-32 w-bleed max-w-none overflow-hidden bg-bg-elevated">
         {effectiveBackground && (
-          <img
+          <Img
             src={effectiveBackground}
             alt=""
             loading="lazy"
@@ -350,7 +351,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled, showNsfw 
             <>
               {shown.map((item) =>
                 item.image ? (
-                  <img
+                  <Img
                     key={item.id}
                     src={coverSrc(item.image) ?? undefined}
                     alt=""

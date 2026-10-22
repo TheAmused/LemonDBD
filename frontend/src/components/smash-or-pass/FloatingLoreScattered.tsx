@@ -7,7 +7,7 @@ import { EntityItem, RosterCustomLabels } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { resolveWatermarks } from '@/utils/smashWatermarks';
 import { FitText } from '@/components/common/FitText';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import { isKiller as isKillerRole, isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
@@ -25,8 +25,6 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
 
   const isSurvivor = isSurvivorRole(character.role);
   const isKiller = isKillerRole(character.role);
-  const isMonster = character.gender === 'monster_other';
-  const isFemale = character.gender === 'female';
 
   // `metadata_json` is gone from the wire (it was a duplicate of `metadata`), and so is
   // the `i18n` blob that sat next to `translations`. One profile, one locale overlay.
@@ -46,24 +44,10 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
 
   // Localized Labels
   const loreLabels = dict.smashOrPass.loreLabels;
-  const trialClassificationLabel = loreLabels.trialClassification;
   const datingArchetypeLabel = customLabels?.dating_vibe || loreLabels.datingArchetype;
-  const greenFlagLabel = loreLabels.greenFlag;
-  const redFlagLabel = loreLabels.redFlag;
-  const identityProfileLabel = loreLabels.identityProfile;
   const signatureQuoteLabel = customLabels?.quote || loreLabels.signatureQuote;
   const turnOnLabel = customLabels?.turn_on || loreLabels.turn_on;
   const dealbreakerLabel = customLabels?.dealbreaker || loreLabels.dealbreaker;
-
-  const genderLabel = isMonster
-    ? loreLabels.monster
-    : isFemale
-    ? loreLabels.female
-    : loreLabels.male;
-
-  const roleLabel = isSurvivor
-    ? dict.smashOrPass.filters.survivors
-    : dict.smashOrPass.filters.killers;
 
   const handleCardHover = () => {
     SmashSounds.playHoverTick();

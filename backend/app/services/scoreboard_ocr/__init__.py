@@ -7,6 +7,7 @@ or the database. OCR is PaddleOCR's detector/recogniser run through ONNX Runtime
 """
 from __future__ import annotations
 
+import logging
 import io
 import threading
 from typing import Iterable
@@ -17,6 +18,8 @@ from PIL import Image, UnidentifiedImageError
 
 from app.services.scoreboard_ocr.icons import classify_icon, icon_window
 from app.services.scoreboard_ocr.parse import Line, build_report
+
+logger = logging.getLogger(__name__)
 
 REF_W, REF_H = 1920, 1080
 MAX_PIXELS = 36_000_000  # 8K; anything larger is refused before decoding
@@ -43,6 +46,7 @@ def engine_available() -> bool:
     try:
         import rapidocr_onnxruntime  # noqa: F401
     except Exception:  # pragma: no cover - depends on the install
+        logger.debug("OCR engine not importable", exc_info=True)
         return False
     return True
 

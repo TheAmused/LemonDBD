@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/streaks/page-streak/BuildPanel.tsx
 
-import React, { useState } from 'react';
+import React from 'react';
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import { PerkIcon } from '@/components/ui/PerkIcon';

@@ -215,20 +215,23 @@ class SmashVotesMixin:
             affected_entity_ids = set()
 
             with transaction():
+                # The entities this account already voted on, in one query (it used to be one
+                # query per guest vote). The account's own vote wins; the guest copy is dropped.
+                entity_ids = {s_vote.entity_id for s_vote in session_votes}
+                already_voted: set[int] = (
+                    set(
+                        db.session.scalars(
+                            select(Vote.entity_id).where(Vote.user_id == user_id, Vote.entity_id.in_(entity_ids))
+                        )
+                    )
+                    if entity_ids
+                    else set()
+                )
                 for s_vote in session_votes:
-                    # Look up by primary key (entity_id, user_id) when matching: the
-                    # bare `.scalar()` picks an arbitrary one with no ORDER BY. Ordering
-                    # by `created_at desc` makes the sync target deterministic instead
-                    # of implementation-defined.
-                    existing_user_vote = db.session.scalars(
-                        select(Vote)
-                        .where(Vote.entity_id == s_vote.entity_id, Vote.user_id == user_id)
-                        .order_by(Vote.created_at.desc())
-                    ).first()
-
-                    if existing_user_vote:
+                    if s_vote.entity_id in already_voted:
                         db.session.delete(s_vote)
                     else:
+                        already_voted.add(s_vote.entity_id)
                         s_vote.user_id = user_id
                         # Claimed: the account owns it now, so the guest session id
                         # (which outlives the login on this browser) must not.

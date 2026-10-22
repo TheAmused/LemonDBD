@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/common/SegmentedControl.tsx
 
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useId, useLayoutEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { cn } from '@/utils/cn';
 import { Tooltip } from '@/components/common/Tooltip';
@@ -89,7 +89,9 @@ export function SegmentedControl<T extends string>({
   // A fixed 50%-width thumb only lines up when both options render to the
   // same width -- as soon as one side is visibly longer, it undershoots and
   // crowds that side's text. Measuring the actual active button instead.
-  const buttonRefs = useRef<(HTMLButtonElement | HTMLAnchorElement | null)[]>([]);
+  const buttonRefs = useRef<(HTMLLabelElement | HTMLAnchorElement | null)[]>([]);
+  // One radio group per control: arrow keys move between its options, as in any radio group.
+  const groupName = useId();
   const [thumbRect, setThumbRect] = useState<{ left: number; width: number } | null>(null);
 
   useLayoutEffect(() => {
@@ -182,20 +184,24 @@ export function SegmentedControl<T extends string>({
           );
         } else {
           element = (
-            <button
+            <label
               key={opt.value}
               ref={(el) => {
                 buttonRefs.current[i] = el;
               }}
-              type="button"
-              role="radio"
-              aria-checked={isActive}
-              disabled={opt.disabled}
-              onClick={() => onChange(opt.value)}
-              className={optionClassName}
+              className={cn(optionClassName, 'has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent-red')}
             >
+              <input
+                type="radio"
+                className="sr-only"
+                name={groupName}
+                value={opt.value}
+                checked={isActive}
+                disabled={opt.disabled}
+                onChange={() => onChange(opt.value)}
+              />
               {content}
-            </button>
+            </label>
           );
         }
 

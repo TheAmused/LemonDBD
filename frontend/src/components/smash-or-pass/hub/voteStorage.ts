@@ -124,7 +124,7 @@ export function clearStoredVotes(rosterSlug: string): void {
  */
 export function forgetAccountVotes(): void {
   if (typeof window === 'undefined') return;
-  for (const slug of [...pendingWrites.keys()]) {
+  for (const slug of pendingWrites.keys()) {
     if (!isLocalRosterSlug(slug)) pendingWrites.delete(slug);
   }
   try {

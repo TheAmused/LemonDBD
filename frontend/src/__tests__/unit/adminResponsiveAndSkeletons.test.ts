@@ -11,14 +11,14 @@ import { renderUsers } from '../helpers/adminFixtures';
 describe('Admin Page: Skeletons & DBD Framer Motion Spinner Integrity', () => {
   it('AdminPanelSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
     const html = renderWithDictionary(React.createElement(AdminPanelSkeleton, {}));
-    assert.ok(html.includes('role="status"'));
+    assert.ok(html.includes('<output'));
     assert.ok(html.includes('aria-busy="true"'));
     assert.ok(html.includes('viewBox="0 0 160 160"'), 'Admin panel skeleton must render DBD Skill Check SVG');
   });
 
   it('AdminTabContentSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
     const html = renderWithDictionary(React.createElement(AdminTabContentSkeleton, { rows: 3 }));
-    assert.ok(html.includes('role="status"'));
+    assert.ok(html.includes('<output'));
     assert.ok(html.includes('aria-busy="true"'));
     assert.ok(html.includes('viewBox="0 0 160 160"'), 'Admin tab content skeleton must render DBD Skill Check SVG');
   });

@@ -1,12 +1,12 @@
 'use client';
 // frontend/src/components/landing/HomePage.tsx
 
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { } from 'next/navigation';
 import { PageShell } from '@/components/layout/PageShell';
 import { LemonIcon } from '@/components/LemonIcon';
-import { i18n, type Locale } from '@/i18n/config';
+
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
 import { useImagePrefetch } from '@/components/common/ImagePreloadProvider';

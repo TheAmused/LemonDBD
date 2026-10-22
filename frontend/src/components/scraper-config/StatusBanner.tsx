@@ -13,9 +13,9 @@ export function StatusBanner({ tone, message }: { tone: 'error' | 'success'; mes
     );
   }
   return (
-    <div role="status" className="rounded-card border border-accent-green/30 bg-accent-green/10 p-3 type-strong text-accent-green flex items-center gap-2">
+    <output className="rounded-card border border-accent-green/30 bg-accent-green/10 p-3 type-strong text-accent-green flex items-center gap-2">
       <CheckCircle2 className="h-4 w-4 shrink-0" />
       <span>{message}</span>
-    </div>
+    </output>
   );
 }

@@ -28,7 +28,6 @@ entities in the six roster files before any of this was written):
 """
 import argparse
 import json
-import pathlib
 from pathlib import Path
 from typing import Any
 

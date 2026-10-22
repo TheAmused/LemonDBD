@@ -1,18 +1,20 @@
 'use client';
 // frontend/src/components/tier-lists/creator/TierItemEditModal.tsx
 
-import React, { useEffect, useState } from 'react';
-import { Check, Image as ImageIcon, ImageOff } from 'lucide-react';
+import React, { useState } from 'react';
+import { Check, ImageOff } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import type { TierListDocumentItem } from '@/types/tierList';
 import { cn } from '@/utils/cn';
 import { sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
-import { TierItemTile } from '../TierItemTile';
+
 import { LABEL, TOUCH_BTN, TOUCH_FIELD } from '../styles';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Img } from '@/components/common/Img';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface TierItemEditModalProps {
   item: TierListDocumentItem | null;
@@ -31,13 +33,13 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave }: TierItemEdi
   const [imageUrl, setImageUrl] = useState<string>(item?.image ?? '');
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (item) {
-      setName(item.name);
-      setImageUrl(item.image ?? '');
-      setError(null);
-    }
-  }, [item?.id, item?.name, item?.image]);
+  // Another item (or this one renamed elsewhere) loads into the form.
+  useOnValueChange(item ? `${item.id}|${item.name}|${item.image ?? ''}` : null, () => {
+    if (!item) return;
+    setName(item.name);
+    setImageUrl(item.image ?? '');
+    setError(null);
+  });
 
   if (!isOpen || !item) return null;
 
@@ -95,7 +97,7 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave }: TierItemEdi
         <div className="flex flex-col items-center justify-center text-center">
           <div className="relative h-20 w-20 sm:h-24 sm:w-24 overflow-hidden rounded-card border-2 border-border-color bg-bg-elevated shadow-md flex items-center justify-center transition-all">
             {safeImage ? (
-              <img
+              <Img
                 src={safeImage}
                 alt={trimmedName || item.name}
                 referrerPolicy="no-referrer"

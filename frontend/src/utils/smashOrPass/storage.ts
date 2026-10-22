@@ -137,8 +137,6 @@ const store = createVersionedStore<SmashRosterStoreState>({
   migrate: migrateSmashRosterState,
 });
 
-const loadSmashRosterState = store.load;
-const saveSmashRosterState = store.save;
 export const subscribeSmashRosterStore = store.subscribe;
 /** Cached: `useSyncExternalStore` requires the same object until something changes. */
 export const getSmashRosterSnapshot = store.getSnapshot;

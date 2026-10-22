@@ -59,18 +59,19 @@ interface TierListBoardProps {
  * change -- an endless render loop. Keyboard drags have no pointer and use the
  * nearest corners.
  */
-function createCollisionDetection(lastOver: { current: UniqueIdentifier | null }): CollisionDetection {
-  return (args) => {
-    const hits = args.pointerCoordinates ? pointerWithin(args) : [];
-    if (hits.length) {
-      const itemHits = hits.filter((hit) => parseItemDndId(hit.id) !== null);
-      const result = itemHits.length ? itemHits : hits;
-      lastOver.current = result[0].id;
-      return result;
-    }
-    if (args.pointerCoordinates) return lastOver.current === null ? [] : [{ id: lastOver.current }];
-    return closestCorners(args);
-  };
+function detectCollisions(
+  args: Parameters<CollisionDetection>[0],
+  lastOver: { current: UniqueIdentifier | null }
+): ReturnType<CollisionDetection> {
+  const hits = args.pointerCoordinates ? pointerWithin(args) : [];
+  if (hits.length) {
+    const itemHits = hits.filter((hit) => parseItemDndId(hit.id) !== null);
+    const result = itemHits.length ? itemHits : hits;
+    lastOver.current = result[0].id;
+    return result;
+  }
+  if (args.pointerCoordinates) return lastOver.current === null ? [] : [{ id: lastOver.current }];
+  return closestCorners(args);
 }
 
 function sameBoard(a: BoardContainers, b: BoardContainers): boolean {
@@ -109,7 +110,7 @@ export function TierListBoard({
   const startBoard = useRef<BoardContainers | null>(null);
   const lastOver = useRef<UniqueIdentifier | null>(null);
   const lastHop = useRef<{ from: string; to: string; at: number } | null>(null);
-  const collisionDetection = useMemo(() => createCollisionDetection(lastOver), []);
+  const collisionDetection = useCallback<CollisionDetection>((args) => detectCollisions(args, lastOver), []);
   // Mirrors `dragBoard` synchronously: dnd-kit can fire dragEnd right after a
   // dragOver, before React has re-rendered with the board that dragOver set.
   const dragBoardRef = useRef<BoardContainers | null>(null);

@@ -108,7 +108,7 @@ export function CustomDropdown<T extends string = string>({
       <button
         type="button"
         onClick={handleToggle}
-        {...popoverTriggerProps(isOpen, children ? 'true' : 'listbox')}
+        {...popoverTriggerProps(isOpen, children ? 'true' : false)}
         aria-label={ariaLabel || (typeof triggerLabel === 'string' ? triggerLabel : undefined)}
         className={`flex items-center gap-2 px-3 py-2 pointer-coarse:min-h-11 rounded-control bg-bg-surface border border-border-color ${accentClasses.hover} hover:bg-bg-elevated text-xs font-bold text-text-primary transition-all cursor-pointer shadow-xs select-none ${
           isOpen ? `${accentClasses.open} shadow-xs` : ''
@@ -132,7 +132,7 @@ export function CustomDropdown<T extends string = string>({
         align={align === 'right' ? 'end' : 'start'}
         gap={6}
         maxHeight={typeof window !== 'undefined' ? window.innerHeight * 0.7 : undefined}
-        role={children ? 'group' : 'listbox'}
+        role={children ? 'group' : undefined}
         ariaLabel={children ? (ariaLabel || (typeof triggerLabel === 'string' ? triggerLabel : undefined)) : undefined}
         className={cn(MENU_PANEL_CLASS, minWidthClass, 'custom-scrollbar', resolvedMenuClassName)}
       >
@@ -143,7 +143,6 @@ export function CustomDropdown<T extends string = string>({
                   return (
                     <MenuItem selected={isSelected} tone={accent === 'amber' ? 'amber' : 'red'} className="justify-between"
                       key={opt.value}
-                      role="option"
                       onClick={() => handleSelect(opt.value)}
                     >
                       <div className="flex items-center gap-2 min-w-0">

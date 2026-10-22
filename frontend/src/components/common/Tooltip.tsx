@@ -14,6 +14,7 @@
 // All sizing / timing / attribute names live in TOOLTIP_CONFIG below.
 
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useIsClient } from '@/hooks/useIsClient';
 import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
 
@@ -129,10 +130,8 @@ export const TooltipBubble: React.FC<TooltipBubbleProps> = ({
 }) => {
   const look = resolveVariant(variant);
   const bubbleRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const [coords, setCoords] = useState<Coords | null>(null);
-
-  useEffect(() => setMounted(true), []);
 
   const reposition = useCallback(() => {
     const bubble = bubbleRef.current;
@@ -289,26 +288,27 @@ export const Tooltip: React.FC<TooltipProps> = ({
   className,
   disabled = false,
 }) => {
-  const triggerRef = useRef<HTMLSpanElement>(null);
-  const [open, setOpen] = useState(false);
+  // The trigger the pointer or focus is on; the bubble shows while there is one.
+  const [anchor, setAnchor] = useState<HTMLSpanElement | null>(null);
+  const show = (e: React.SyntheticEvent<HTMLSpanElement>) => setAnchor(e.currentTarget);
+  const hide = () => setAnchor(null);
 
   if (disabled) return <>{children}</>;
 
   return (
     <span
-      ref={triggerRef}
       className="relative inline-flex"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-      onFocus={() => setOpen(true)}
-      onBlur={() => setOpen(false)}
-      onTouchStart={() => setOpen(true)}
-      onTouchEnd={() => setOpen(false)}
+      onMouseEnter={show}
+      onMouseLeave={hide}
+      onFocus={show}
+      onBlur={hide}
+      onTouchStart={show}
+      onTouchEnd={hide}
     >
       {children}
-      {open && (
+      {anchor && (
         <TooltipBubble
-          anchor={triggerRef.current}
+          anchor={anchor}
           title={title}
           description={description}
           placement={placement}

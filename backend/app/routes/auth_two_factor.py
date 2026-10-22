@@ -31,8 +31,10 @@ def _no_store(response):
 
 def _with_fresh_session(payload: dict):
     """Enabling or disabling 2FA bumps token_version; keep the active session signed in."""
+    from app.routes.auth import token_fields
+
     token = generate_token(g.current_user.id, g.current_user.role)
-    response = _no_store(make_response(jsonify({**payload, "token": token}), 200))
+    response = _no_store(make_response(jsonify({**payload, **token_fields(token)}), 200))
     if SESSION_COOKIE_NAME in request.cookies:
         set_session_cookie(response, token)
     return response

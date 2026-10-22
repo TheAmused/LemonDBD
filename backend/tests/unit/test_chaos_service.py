@@ -2,7 +2,7 @@
 import pytest
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.models import ChaosMatchLog, Killer, Perk, User
+from app.models import ChaosMatchLog, Killer, Perk
 from app.services.chaos_service import ChaosService
 from app.services.ownership_service import OwnershipService
 from app.services.user import UserService

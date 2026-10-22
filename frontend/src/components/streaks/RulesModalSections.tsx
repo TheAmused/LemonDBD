@@ -5,6 +5,8 @@ import React from 'react';
 import { Clock, Snowflake } from 'lucide-react';
 import { RulesModalListSection, RulesModalNotices, type RuleListEntry } from './RulesModalShell';
 import { Surface } from '@/components/common/Surface';
+import { usePrivacyInfo } from '@/hooks/usePrivacyInfo';
+import { formatMessage } from '@/utils/i18nFormat';
 
 /** The `dict.streaks` copy bag. */
 export type StreakCopy = Dictionary['streaks'];
@@ -140,6 +142,9 @@ export const RULE_ADDONS_ALLOWED: RuleEntryDef = {
   textKey: 'excAddonsAllowedText',
 };
 
+/** The streak_prune_days default, shown until /privacy-info answers. */
+const DEFAULT_INACTIVITY_DAYS = 90;
+
 export const STANDARD_EXCEPTIONS: RuleEntryDef[] = [RULE_GAME_CANCELLED, RULE_HACKERS, RULE_CRASH];
 export const STANDARD_CLARIFICATIONS: RuleEntryDef[] = [RULE_SURVIVOR_DC, RULE_NO_DODGING];
 export const STANDARD_CLARIFICATIONS_WITH_ADDONS: RuleEntryDef[] = [...STANDARD_CLARIFICATIONS, RULE_ADDONS_ALLOWED];
@@ -166,6 +171,9 @@ export const RulesModalFooterSections: React.FC<{
   voidIntro?: string;
 }> = ({ copy, tone, exceptions, clarifications, voidIntro }) => {
   const t = RULES_TONES[tone];
+  // The admin setting (Settings > Retention), as the Privacy Policy quotes it; 90 until it has loaded.
+  const privacy = usePrivacyInfo();
+  const inactivityDays = privacy ? Math.max(1, Math.round(privacy.streakPruneSeconds / 86_400)) : DEFAULT_INACTIVITY_DAYS;
   return (
     <>
       <RulesModalListSection
@@ -187,7 +195,7 @@ export const RulesModalFooterSections: React.FC<{
           },
           {
             icon: Clock,
-            text: copy.inactivityLossNotice,
+            text: formatMessage(copy.inactivityLossNotice, { days: inactivityDays }),
           },
         ]}
       />

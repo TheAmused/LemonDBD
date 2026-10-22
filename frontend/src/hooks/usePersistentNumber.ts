@@ -1,7 +1,8 @@
 'use client';
 // frontend/src/hooks/usePersistentNumber.ts
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
+import { useStoredItem } from '@/hooks/useStoredItem';
 
 /**
  * Persists a numeric choice (a page size, a zoom step) in localStorage, same pattern as
@@ -9,29 +10,10 @@ import { useState, useEffect, useCallback } from 'react';
  * offers falls back to the default instead of showing as a blank select.
  */
 export function usePersistentNumber<T extends number>(storageKey: string, defaultValue: T, allowed: readonly T[]) {
-  const [value, setValue] = useState<T>(defaultValue);
+  const [saved, write] = useStoredItem(storageKey);
+  const value = (saved === null ? undefined : allowed.find((option) => option === Number(saved))) ?? defaultValue;
 
-  useEffect(() => {
-    try {
-      const saved = Number(localStorage.getItem(storageKey));
-      const match = allowed.find((option) => option === saved);
-      if (match !== undefined) setValue(match);
-    } catch {
-      // Storage unavailable (private mode / sandboxed iframe) - keep default state
-    }
-  }, [storageKey, allowed]);
-
-  const setPersistent = useCallback(
-    (next: T) => {
-      setValue(next);
-      try {
-        localStorage.setItem(storageKey, String(next));
-      } catch {
-        // Non-fatal if localStorage is restricted
-      }
-    },
-    [storageKey]
-  );
+  const setPersistent = useCallback((next: T) => write(String(next)), [write]);
 
   return [value, setPersistent] as const;
 }

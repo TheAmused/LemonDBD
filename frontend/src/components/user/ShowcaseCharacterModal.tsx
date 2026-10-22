@@ -1,6 +1,7 @@
 // frontend/src/components/user/ShowcaseCharacterModal.tsx
 'use client';
 
+import { logger } from '@/utils/logger';
 import React, { useState, useMemo, useEffect } from 'react';
 import { SearchInput } from '@/components/common/Field';
 import Image from 'next/image';
@@ -103,7 +104,9 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({ 
   const dict = useDictionary();
   const [search, setSearch] = useState('');
   const [characters, setCharacters] = useState<CharacterItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  // Loading while open until the roster for this language has arrived (it stays for later openings).
+  const [loadedFor, setLoadedFor] = useState<string | null>(null);
+  const loading = isOpen && loadedFor !== locale;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -113,17 +116,16 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({ 
     // it lists cannot change in between.
     const url = catalogKey('characters', { category: 'all', lang: locale });
 
-    setLoading(true);
     fetchCached<ListPayload<CharacterItem>>(url, () => fetchJson<ListPayload<CharacterItem>>(url), { ttlMs: CATALOG_TTL_MS })
       .then((data) => {
         const list = unwrapList(data);
         setCharacters(list);
       })
       .catch((err) => {
-        console.error('Failed to load characters for showcase modal:', err);
+        logger.error('Failed to load characters for showcase modal:', err);
       })
       .finally(() => {
-        setLoading(false);
+        setLoadedFor(locale);
       });
   }, [isOpen, locale]);
 
@@ -161,7 +163,7 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({ 
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={dict.user.searchCharacters}
-          autoFocus
+          data-autofocus
         />
       </div>
 

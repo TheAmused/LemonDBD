@@ -3,6 +3,7 @@
 //
 // One user's moderation history and the decisions an admin can take about them.
 
+import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDictionary } from '@/context/DictionaryContext';
 import {
@@ -28,8 +29,10 @@ export function useUserModeration({ userId, username, onChanged, onActionMessage
   const t = useDictionary().moderation.admin;
   // The history is stored with the account it belongs to, and only shown for that account.
   const [loaded, setLoaded] = useState<{ userId: number; data: UserSanctions } | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [loadFailed, setLoadFailed] = useState(false);
+  const [reloading, setReloading] = useState(false);
+  // The account whose first load has settled, and the one whose last load failed.
+  const [settledFor, setSettledFor] = useState<number | null>(null);
+  const [failedFor, setFailedFor] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
   /**
    * Only the newest request may set state. Without this, opening user A and then user B could show
@@ -37,28 +40,45 @@ export function useUserModeration({ userId, username, onChanged, onActionMessage
    */
   const latestRequest = useRef(0);
 
+  /** Fetches the account's history; only the newest request's answer is kept. */
+  const fetchHistory = useCallback((id: number) => {
+    const request = ++latestRequest.current;
+    const current = () => request === latestRequest.current;
+    return fetchUserSanctions(id).then(
+      (body) => {
+        if (!current()) return;
+        setLoaded({ userId: id, data: body });
+        setFailedFor(null);
+      },
+      (err: unknown) => {
+        logger.error('Failed to load the moderation history:', err);
+        if (current()) setFailedFor(id);
+      }
+    );
+  }, []);
+
   const load = useCallback(async () => {
     if (userId === null) return;
-    const request = ++latestRequest.current;
-    setLoading(true);
-    setLoadFailed(false);
+    setReloading(true);
+    setFailedFor(null);
     try {
-      const body = await fetchUserSanctions(userId);
-      if (request === latestRequest.current) setLoaded({ userId, data: body });
-    } catch (err: unknown) {
-      console.error('Failed to load the moderation history:', err);
-      if (request === latestRequest.current) setLoadFailed(true);
+      await fetchHistory(userId);
     } finally {
-      if (request === latestRequest.current) setLoading(false);
+      setReloading(false);
     }
-  }, [userId]);
+  }, [userId, fetchHistory]);
 
   const data = loaded && loaded.userId === userId ? loaded.data : null;
+  const loading = reloading || (userId !== null && settledFor !== userId);
+  const loadFailed = userId !== null && failedFor === userId;
 
   useEffect(() => {
-    if (userId !== null) void load();
-    else latestRequest.current += 1; // the drawer closed: drop whatever is still in flight
-  }, [userId, load]);
+    if (userId === null) {
+      latestRequest.current += 1; // the drawer closed: drop whatever is still in flight
+      return;
+    }
+    void fetchHistory(userId).finally(() => setSettledFor(userId));
+  }, [userId, fetchHistory]);
 
   /** Runs one decision; true when it was saved. The server's message is shown when it refuses. */
   const run = async (action: () => Promise<unknown>, success: string): Promise<boolean> => {

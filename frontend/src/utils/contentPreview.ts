@@ -26,6 +26,23 @@ export function isSafePreviewImage(value: string): boolean {
   return /^data:image\/(png|jpe?g|webp|gif);base64,[a-z0-9+/=]+$/i.test(value);
 }
 
+/**
+ * One of the site's own raster files under /static/, and nothing else. A reported document is
+ * written by whoever reported it: "/static/../api/v1/admin/database/export" also starts with
+ * /static/, and the browser resolves the dots and sends that request with the admin's cookie. So the
+ * path must be plain (letters, digits, `_ . -` and single slashes, no `..`, no escapes), end in a
+ * raster extension, and stay the same after the browser's own normalisation.
+ */
+export function isSafeLocalPreviewImage(value: string): boolean {
+  if (!/^\/static\/(?:[A-Za-z0-9_-][A-Za-z0-9._-]*\/)*[A-Za-z0-9_-][A-Za-z0-9._-]*\.(?:png|jpe?g|webp|gif|avif)$/i.test(value)) return false;
+  if (value.split('/').some((segment) => segment === '..' || segment === '.')) return false;
+  try {
+    return new URL(value, 'https://lemondbd.invalid').pathname === value;
+  } catch {
+    return false;
+  }
+}
+
 const looksLikeImage = (value: string): boolean =>
   /^data:image\//i.test(value) || /^https?:\/\/\S+\.(png|jpe?g|webp|gif|svg|avif)(\?\S*)?$/i.test(value);
 

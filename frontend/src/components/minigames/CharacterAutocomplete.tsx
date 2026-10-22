@@ -3,7 +3,7 @@
 
 import { Input } from '@/components/common/Field';
 import { useDictionary } from '@/context/DictionaryContext';
-import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useRef, useEffect, useCallback, useId } from 'react';
 import { Search, ChevronDown, Sparkles } from 'lucide-react';
 import type { MinigameCatalog, TargetType, GuessedItem } from '@/types/minigame';
 import { staticUrl } from '@/utils/api';
@@ -22,7 +22,6 @@ interface CharacterAutocompleteProps {
   placeholder?: string;
   excludeIds?: (number | string)[];
   excludeKeys?: string[];
-  autoFocus?: boolean;
 }
 
 export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
@@ -33,7 +32,6 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
   placeholder,
   excludeIds = [],
   excludeKeys = [],
-  autoFocus = false,
 }) => {
   const dict = useDictionary();
   const [query, setQuery] = useState('');
@@ -209,6 +207,10 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
     }
   };
 
+  const listboxId = useId();
+  const optionId = (idx: number) => `${listboxId}-${idx}`;
+  const showList = isOpen && filteredItems.length > 0;
+
   return (
     <div ref={containerRef} className="relative w-full max-w-xl mx-auto z-40">
       <div className="relative flex items-center">
@@ -231,9 +233,13 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
             }
           }}
           onKeyDown={handleKeyDown}
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded={showList}
+          aria-controls={listboxId}
+          aria-activedescendant={showList && filteredItems[highlightedIndex] ? optionId(highlightedIndex) : undefined}
           disabled={disabled}
           placeholder={placeholder ?? dict.minigames.searchItemPlaceholder}
-          autoFocus={autoFocus}
           className="bg-bg-surface pl-11 pr-10 shadow-lg"
         />
         <Button
@@ -251,8 +257,9 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
         </Button>
       </div>
 
-      {isOpen && filteredItems.length > 0 && (
-        <ul
+      {showList && (
+        <div
+          id={listboxId}
           role="listbox"
           className="absolute left-0 right-0 mt-2 max-h-72 overflow-y-auto rounded-card bg-bg-surface border border-border-color shadow-2xl divide-y divide-border-color/60 z-50 backdrop-blur-md"
         >
@@ -267,12 +274,19 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
               item.image_url;
 
             return (
-              <li
+              // Focus stays in the input (the combobox pattern): options are picked on
+              // mousedown, before the input would blur, and by Enter via aria-activedescendant.
+              <div
                 key={`${item.id}-${item.name}`}
+                id={optionId(idx)}
                 role="option"
+                tabIndex={-1}
                 aria-selected={isHighlighted}
                 onMouseEnter={() => setHighlightedIndex(idx)}
-                onClick={() => handleSelect(item)}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  handleSelect(item);
+                }}
                 className={`flex items-center gap-3 px-4 py-2.5 cursor-pointer transition-colors ${
                   isHighlighted ? 'bg-accent-red/20 text-text-primary font-bold' : 'text-text-secondary hover:bg-bg-elevated'
                 }`}
@@ -293,10 +307,10 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
                     {item.role}
                   </Badge>
                 )}
-              </li>
+              </div>
             );
           })}
-        </ul>
+        </div>
       )}
     </div>
   );

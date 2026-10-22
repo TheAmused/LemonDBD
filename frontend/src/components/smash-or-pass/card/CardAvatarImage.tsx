@@ -2,6 +2,7 @@
 // frontend/src/components/smash-or-pass/card/CardAvatarImage.tsx
 import type { CSSProperties, SyntheticEvent } from 'react';
 import type { MediaDisplay } from '@/types/smashOrPass';
+import { Img } from '@/components/common/Img';
 
 interface CardAvatarImageProps {
   src: string;
@@ -59,7 +60,7 @@ export function CardAvatarImage({
   className,
 }: CardAvatarImageProps) {
   return (
-    <img
+    <Img
       src={src}
       alt={name}
       loading={priority ? 'eager' : 'lazy'}

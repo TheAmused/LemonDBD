@@ -6,6 +6,7 @@ import { fetchSmashPreferences, saveSmashPreferences } from '@/services/smashApi
 import { SmashSounds } from '../SmashSoundEffects';
 import { defaultPrefs, readLocalPrefs, reconcilePrefs, writeLocalPrefs, type SmashPrefs } from './smashPrefs';
 import { trackEvent } from '@/utils/analytics';
+import { useOnceInBrowser } from '@/hooks/useOnceInBrowser';
 
 type Choice = Omit<SmashPrefs, 'chosenAt'>;
 
@@ -22,15 +23,11 @@ function toRemote(prefs: SmashPrefs) {
 export function useSmashPrefs() {
   const { user, isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const [prefs, setPrefs] = useState<SmashPrefs | null>(null);
-  const [hasReadLocal, setHasReadLocal] = useState(false);
   const [accountCheckedFor, setAccountCheckedFor] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  // localStorage is read after mount so the server render and the first client render agree.
-  useEffect(() => {
-    setPrefs(readLocalPrefs());
-    setHasReadLocal(true);
-  }, []);
+  // localStorage is read once running in the browser, so the server render and hydration agree.
+  const hasReadLocal = useOnceInBrowser(() => setPrefs(readLocalPrefs()));
 
   const userId = isAuthenticated ? (user?.id ?? null) : null;
 
@@ -56,10 +53,8 @@ export function useSmashPrefs() {
     };
   }, [hasReadLocal, isAuthLoading, userId, accountCheckedFor]);
 
-  // A different account signing in (or out and in) is reconciled afresh.
-  useEffect(() => {
-    if (userId === null) setAccountCheckedFor(null);
-  }, [userId]);
+  // A different account signing in (or out and in) is reconciled afresh (adjusted while rendering).
+  if (userId === null && accountCheckedFor !== null) setAccountCheckedFor(null);
 
   const effects = prefs?.effects ?? false;
   const sounds = prefs?.sounds ?? false;
@@ -74,9 +69,8 @@ export function useSmashPrefs() {
 
   // The warning opens by itself for a first choice, and then stays up until it is closed -- a
   // switch flipped in it is a choice already, but the viewer should finish reading.
-  useEffect(() => {
-    if (needsChoice) setIsOpen(true);
-  }, [needsChoice]);
+  // (Adjusted while rendering; closing it makes the choice, so it never reopens itself.)
+  if (needsChoice && !isOpen) setIsOpen(true);
 
   /** What the switches show: the saved choice, or the defaults while there is none. */
   const shown: Choice = prefs ?? defaultPrefs();

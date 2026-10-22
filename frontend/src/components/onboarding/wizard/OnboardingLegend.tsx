@@ -4,6 +4,7 @@ import React from 'react';
 import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
 import { useDictionary } from '@/context/DictionaryContext';
 import { type OnboardingCharacter, resolveOnboardingAvatar } from '../CharacterOnboardingWizardParts';
+import { Img } from '@/components/common/Img';
 
 interface LegendItemProps {
   legendCharacter: OnboardingCharacter | undefined;
@@ -18,7 +19,7 @@ function LegendItem({ legendCharacter, backendBase, label, isOwned, hasPartialPe
     <div className="flex flex-col items-center text-center gap-2 w-full max-w-37.5">
       <span className="relative flex aspect-[3/4] w-14 sm:w-16 md:w-20 shrink-0 items-center justify-center overflow-hidden rounded-control border border-border-color bg-bg-surface shadow-sm">
         {legendCharacter && (
-          <img
+          <Img
             src={resolveOnboardingAvatar(backendBase, legendCharacter)}
             alt=""
             aria-hidden="true"

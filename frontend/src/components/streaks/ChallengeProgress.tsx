@@ -90,13 +90,11 @@ export const ChallengeProgress: React.FC<ChallengeProgressProps> = ({ current, t
       </div>
 
       <div className="pb-2.5 sm:pb-7">
+        {/* The native control carries the value for assistive tech; the drawn track is decoration. */}
+        <progress className="sr-only" value={cleared} max={total} aria-label={s.progressTitle} />
         <div
           ref={trackRef}
-          role="progressbar"
-          aria-valuemin={0}
-          aria-valuemax={total}
-          aria-valuenow={cleared}
-          aria-label={s.progressTitle}
+          aria-hidden="true"
           className="relative h-3 rounded-full border border-border-color bg-bg-primary/60"
         >
           <div

@@ -1,8 +1,8 @@
 // frontend/src/components/common/SelectableCard.tsx
 // A card you pick (one of several engines, a list row, a status filter). The picked card gets the
 // accent border, tint and ring; the rest stay neutral, or keep a faint tint of their own colour when
-// `tinted` (status filters whose colour is their identity). Pass `role="radio"` and `aria-checked`
-// for a one-of-many choice, otherwise it is a toggle (`aria-pressed`).
+// `tinted` (status filters whose colour is their identity). It is a toggle button (`aria-pressed`);
+// a one-of-many choice with radio semantics is a SegmentedControl.
 import React from 'react';
 import { cn } from '@/utils/cn';
 
@@ -37,7 +37,7 @@ export interface SelectableCardProps extends Omit<React.ButtonHTMLAttributes<HTM
 }
 
 export const SelectableCard = React.forwardRef<HTMLButtonElement, SelectableCardProps>(function SelectableCard(
-  { selected, tone = 'red', tinted = false, className, children, role, ...rest },
+  { selected, tone = 'red', tinted = false, className, children, ...rest },
   ref
 ) {
   const state = selected ? (tinted ? SELECTED_TINTED[tone] : SELECTED[tone]) : tinted ? TINTED_IDLE[tone] : IDLE;
@@ -45,9 +45,7 @@ export const SelectableCard = React.forwardRef<HTMLButtonElement, SelectableCard
     <button
       ref={ref}
       type="button"
-      role={role}
-      aria-pressed={role === 'radio' ? undefined : selected}
-      aria-checked={role === 'radio' ? selected : undefined}
+      aria-pressed={selected}
       className={cn(
         'rounded-control border p-3.5 text-left transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:cursor-not-allowed disabled:opacity-60',
         state,

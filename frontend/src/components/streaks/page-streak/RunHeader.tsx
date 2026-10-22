@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/streaks/page-streak/RunHeader.tsx
 
-import { Button } from '@/components/common/Button';
+
 import React from 'react';
 import { Flame } from 'lucide-react';
 import type { PageStreakRun } from '@/types/pageStreak';
@@ -10,7 +10,7 @@ import { StreakStatTiles } from '../StreakStatTiles';
 import { ChallengeHeaderLayout, StandardHeaderActions } from '../ChallengePanel';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
-import { tip } from '@/components/common/Tooltip';
+
 import { useDictionary } from "@/context/DictionaryContext";
 
 interface RunHeaderProps {

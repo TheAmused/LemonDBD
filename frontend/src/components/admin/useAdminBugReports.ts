@@ -25,13 +25,17 @@ export function useAdminBugReports({ enabled, refreshKey, notify, onChanged }: B
   const [reports, setReports] = useState<AdminBugReport[]>([]);
   const [stats, setStats] = useState<QueueStats<BugReportStatus> | null>(null);
   const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [status, setStatusState] = usePersistentString<BugReportStatus | 'all'>(ADMIN_STORAGE.bugsStatus, 'pending', oneOf(BUG_REPORT_FILTERS));
+  const [status,
+ setStatusState] = usePersistentString<BugReportStatus | 'all'>(ADMIN_STORAGE.bugsStatus, 'pending', oneOf(BUG_REPORT_FILTERS));
   const [search, setSearchState] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [page, setPage] = useState(1);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
+  // The list is loading until the request for the current filters has settled.
+  const requestKey = `${page}|${status}|${debouncedSearch}|${refreshKey}|${reloadKey}`;
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
+  const loading = loadedKey !== requestKey;
 
   useEffect(() => {
     const timer = window.setTimeout(() => setDebouncedSearch(search.trim()), SEARCH_DEBOUNCE_MS);
@@ -41,7 +45,6 @@ export function useAdminBugReports({ enabled, refreshKey, notify, onChanged }: B
   useEffect(() => {
     if (!enabled) return;
     let cancelled = false;
-    setLoading(true);
     listBugReports({ page, per_page: DEFAULT_PAGE_SIZE, status: status === 'all' ? undefined : status, search: debouncedSearch })
       .then((data) => {
         if (cancelled) return;
@@ -59,12 +62,12 @@ export function useAdminBugReports({ enabled, refreshKey, notify, onChanged }: B
         if (!cancelled) notify({ type: 'error', text: getErrorMessage(err, t.networkError) });
       })
       .finally(() => {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) setLoadedKey(requestKey);
       });
     return () => {
       cancelled = true;
     };
-  }, [enabled, page, status, debouncedSearch, refreshKey, reloadKey, notify, t.networkError]);
+  }, [enabled, page, status, debouncedSearch, requestKey, notify, t.networkError]);
 
   const act = useCallback(
     async (action: () => Promise<unknown>, success: string): Promise<boolean> => {
@@ -102,8 +105,9 @@ export function useAdminBugReports({ enabled, refreshKey, notify, onChanged }: B
     selectedId,
     setSelectedId,
     selected: reports.find((r) => r.id === selectedId) ?? null,
-    changeStatus: (id: number, next: BugReportStatus) =>
-      act(() => updateBugReport(id, { status: next }), formatMessage(t.ticketUpdatedSuccess, { id })),
+    /** A reply typed but not sent goes with the status: under a status filter the ticket leaves the list. */
+    changeStatus: (id: number, next: BugReportStatus, notes?: string) =>
+      act(() => updateBugReport(id, { status: next, ...(notes !== undefined ? { admin_notes: notes } : {}) }), formatMessage(t.ticketUpdatedSuccess, { id })),
     reply: (id: number, notes: string) =>
       act(() => updateBugReport(id, { admin_notes: notes }), formatMessage(t.ticketReplySaved, { id })),
     remove: (id: number) => act(() => deleteBugReport(id), formatMessage(t.ticketDeleteSuccess, { id })),

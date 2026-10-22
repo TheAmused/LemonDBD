@@ -106,12 +106,10 @@ describe('admin deletion API methods', () => {
     assert.equal(typeof deleteOfficialTierList, 'function');
     let calledUrl = '';
     let calledMethod = '';
-    let calledHeaders: HeadersInit | undefined;
 
     globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
       calledUrl = String(input);
       calledMethod = init?.method || '';
-      calledHeaders = init?.headers;
       return new Response(JSON.stringify({ status: 'success' }), { status: 200 });
     }) as typeof fetch;
 

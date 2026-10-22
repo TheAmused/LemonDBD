@@ -4,7 +4,7 @@ from typing import Any
 
 from flask import Blueprint, g, jsonify, request
 
-from app.core.security import login_required
+from app.core.security import get_current_user, login_required
 from app.utils.responses import api_error
 
 
@@ -51,6 +51,22 @@ def make_streak_blueprint(
     """
     bp = Blueprint(name, __name__, url_prefix=url_prefix)
     clean_value = make_value_cleaner(valid_values)
+
+    @bp.before_request
+    def _require_verified_email():
+        """With "email verification required" on, an unconfirmed account cannot track challenges.
+
+        The page already says so; the API did not, so the check was the browser's alone. Covers every
+        route on this blueprint, the hand-written `POST /result` of each mode included.
+        """
+        from app.services.site_settings import email_verification_required
+
+        if request.method == "OPTIONS" or not email_verification_required():
+            return None
+        user = get_current_user()
+        if user is not None and not user.is_verified:
+            return api_error("Verify your email address to track challenges.", 403, code="email_not_verified")
+        return None
 
     def _param_error(location: str) -> tuple[Any, int]:
         prefix = "Query parameter" if location == "query" else "Field"

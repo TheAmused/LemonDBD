@@ -157,6 +157,7 @@ def modify_user_profile(
                 user.is_verified = False
                 user.verification_code = _generate_verification_code()
                 user.verification_code_expires_at = datetime.now(timezone.utc) + verification_lifetime()
+                user.verification_sent_at = datetime.now(timezone.utc)
                 user.verification_attempts = 0
 
         if changing_username:
@@ -275,6 +276,7 @@ def get_or_create_user_showcase(user_id: int) -> UserShowcase | None:
         try:
             db.session.commit()
         except Exception:
+            logger.debug("Showcase insert lost a race; reading the existing row", exc_info=True)
             db.session.rollback()
             showcase = db.session.scalars(
                 select(UserShowcase).where(UserShowcase.user_id == user_id)

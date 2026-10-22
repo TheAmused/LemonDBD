@@ -3,8 +3,7 @@ import pytest
 from flask.testing import FlaskClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.core.extensions import db
-from app.models import Killer, Perk, Survivor, User, UserCharacterOwnership, UserPerkOwnership
+from app.models import Killer, Perk, Survivor
 from tests.unit.conftest import make_chapter
 from app.services.ownership_service import OwnershipService
 from app.services.user import UserService
@@ -269,6 +268,7 @@ class TestUserAndOwnership:
     ) -> None:
         reg_res = client.post(
             "/api/v1/auth/register",
+            headers={"X-Return-Token": "1"},
             json={
                 "login": "apicheck",
                 "username": "apicheck",
@@ -352,7 +352,7 @@ class TestUserAndOwnership:
         assert any(u["username"] == "regular" for u in users)
 
         update_res = client.put(
-            f"/api/v1/users/{user.id}", json={"role": "admin"}, headers=admin_headers
+            f"/api/v1/users/{user.id}", json={"role": "admin", "current_password": admin_password}, headers=admin_headers
         )
         assert update_res.status_code == 200
         assert update_res.get_json()["user"]["role"] == "admin"

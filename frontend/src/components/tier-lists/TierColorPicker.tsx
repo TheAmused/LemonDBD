@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/tier-lists/TierColorPicker.tsx
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ColorSwatch } from '@/components/common/ColorSwatch';
 import { HexColorInput, HexColorPicker } from 'react-colorful';
 import { Check, Pipette } from 'lucide-react';
@@ -11,6 +11,7 @@ import { paletteColor, themeColor } from '@/utils/themeColor';
 import { useDictionary } from '@/context/DictionaryContext';
 
 import { Button } from '@/components/common/Button';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 interface TierColorPickerProps {
   /** A color token (`s`, `a`...) or a `#rrggbb` hex. Only hex values are shown in the picker. */
   color: string;
@@ -39,14 +40,16 @@ export function TierColorPicker({ color, onChange, size = 'md' }: TierColorPicke
   const [open, setOpen] = useState<boolean>(false);
   const [draft, setDraft] = useState<string>(isHex ? color : themeColor('--text-muted') || paletteColor('zinc-500'));
   const timer = useRef<number | undefined>(undefined);
-  const lastEmitted = useRef<string>(color);
+  const [lastEmitted, setLastEmitted] = useState<string>(color);
   const onChangeRef = useRef(onChange);
-  onChangeRef.current = onChange;
+  useLayoutEffect(() => {
+    onChangeRef.current = onChange;
+  });
 
   // Follow the color when something else changes it (another tier, a preset), but not our own echo.
-  useEffect(() => {
-    if (HEX_COLOR_PATTERN.test(color) && color !== lastEmitted.current) setDraft(color);
-  }, [color]);
+  useOnValueChange(color, (next) => {
+    if (HEX_COLOR_PATTERN.test(next) && next !== lastEmitted) setDraft(next);
+  });
 
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
@@ -56,7 +59,7 @@ export function TierColorPicker({ color, onChange, size = 'md' }: TierColorPicke
     setDraft(hex);
     window.clearTimeout(timer.current);
     const emit = () => {
-      lastEmitted.current = hex;
+      setLastEmitted(hex);
       onChangeRef.current(hex);
     };
     if (immediate) emit();

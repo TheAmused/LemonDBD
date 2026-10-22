@@ -1,7 +1,7 @@
 // frontend/src/hooks/useCachedData.ts
 'use client';
 
-import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore } from 'react';
 import {
   DEFAULT_TTL_MS,
   fetchCached,
@@ -15,8 +15,6 @@ export interface CachedDataResult<T> {
   data: T | undefined;
   /** True only when there is nothing to show yet -- a cached value means false. */
   loading: boolean;
-  /** True while a background revalidation of already-shown data is running. */
-  validating: boolean;
   error: unknown;
   refresh: () => Promise<void>;
 }
@@ -41,7 +39,9 @@ export function useCachedData<T>(
   // Keep the latest fetcher without making it a dependency -- callers almost
   // always pass an inline arrow, which would otherwise refetch every render.
   const fetcherRef = useRef(fetcher);
-  fetcherRef.current = fetcher;
+  useLayoutEffect(() => {
+    fetcherRef.current = fetcher;
+  });
 
   // useSyncExternalStore keeps this in step with writes from other components
   // (and with invalidate()) without a subscribe/setState dance of our own.
@@ -53,22 +53,16 @@ export function useCachedData<T>(
     () => undefined
   );
 
-  const [validating, setValidating] = useState<boolean>(false);
   const [error, setError] = useState<unknown>(null);
 
   const run = useCallback(
-    async (force: boolean) => {
-      if (!active) return;
-      setValidating(true);
-      try {
-        await fetchCached<T>(key, () => fetcherRef.current(), { ttlMs, force });
-        setError(null);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setValidating(false);
-      }
-    },
+    (force: boolean): Promise<void> =>
+      active
+        ? fetchCached<T>(key, () => fetcherRef.current(), { ttlMs, force }).then(
+            () => setError(null),
+            (err: unknown) => setError(err)
+          )
+        : Promise.resolve(),
     [key, active, ttlMs]
   );
 
@@ -90,7 +84,6 @@ export function useCachedData<T>(
   return {
     data,
     loading: active && data === undefined,
-    validating,
     error,
     refresh,
   };

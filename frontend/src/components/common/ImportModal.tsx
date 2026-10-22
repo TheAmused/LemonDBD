@@ -7,6 +7,8 @@ import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { Textarea } from '@/components/common/Field';
 import { checkDocument } from '@/utils/contentRevocation';
+import { logger } from '@/utils/logger';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 type ParseResultLike = { ok: boolean };
 
@@ -44,19 +46,29 @@ export function useImportDraft<R extends ParseResultLike>({
   const [linkResult, setLinkResult] = useState<R | null>(null);
   const [fileError, setFileError] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (!isOpen) return;
+  // Each opening (or a new shared link while open) starts from an empty box.
+  useOnValueChange(isOpen ? `open:${sharePayload ?? ''}` : null, (opened) => {
+    if (opened === null) return;
     setText('');
     setFileError(false);
     setLinkResult(null);
-    if (!sharePayload) return;
+  });
+
+  useEffect(() => {
+    if (!isOpen || !sharePayload) return;
     let cancelled = false;
-    decodeShare(sharePayload).then((result) => {
-      if (cancelled) return;
-      setLinkResult(result);
-      const decoded = result.ok ? toText(result) : null;
-      if (decoded !== null) setText(decoded);
-    });
+    void (async () => {
+      try {
+        const result = await decodeShare(sharePayload);
+        if (cancelled) return;
+        setLinkResult(result);
+        const decoded = result.ok ? toText(result) : null;
+        if (decoded !== null) setText(decoded);
+      } catch (err) {
+        // A link that cannot be decoded leaves the box empty for pasting, as an empty link would.
+        logger.warn('Could not decode the shared link', err);
+      }
+    })();
     return () => {
       cancelled = true;
     };
@@ -80,10 +92,18 @@ export function useImportDraft<R extends ParseResultLike>({
     }
     let cancelled = false;
     setRevocation(null);
-    checkDocument(checkType, documentOf(result)).then(({ revoked, signed }) => {
-      // Only a definite "not signed" blocks: an unreachable server must not make importing unusable.
-      if (!cancelled) setRevocation({ text, revoked, unsigned: signed === false });
-    });
+    void (async () => {
+      // Only a definite "not signed" blocks: an unreachable server (or a failed check) must not
+      // make importing unusable.
+      let answer = { revoked: false, unsigned: false };
+      try {
+        const { revoked, signed } = await checkDocument(checkType, documentOf(result));
+        answer = { revoked, unsigned: signed === false };
+      } catch (err) {
+        logger.warn('Ban-list check failed; allowing the import', err);
+      }
+      if (!cancelled) setRevocation({ text, ...answer });
+    })();
     return () => {
       cancelled = true;
     };

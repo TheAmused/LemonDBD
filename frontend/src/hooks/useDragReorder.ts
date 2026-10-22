@@ -10,6 +10,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from 'react';
+import { useLatest } from '@/hooks/useLatest';
 
 export interface UseDragReorderOptions<Id extends string | number> {
   enabled?: boolean;
@@ -34,8 +35,7 @@ export function useDragReorder<Id extends string | number>(options: UseDragReord
   const [draggingId, setDraggingId] = useState<Id | null>(null);
   const rows = useRef(new Map<Id, HTMLElement>());
   // The window listeners outlive a render, so they read the latest callbacks from here.
-  const optionsRef = useRef(options);
-  optionsRef.current = options;
+  const optionsRef = useLatest(options);
   const detachRef = useRef<(() => void) | null>(null);
 
   useEffect(() => () => detachRef.current?.(), []);

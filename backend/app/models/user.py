@@ -1,4 +1,5 @@
 # backend/app/models/user.py
+import logging
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, cast
 from sqlalchemy import (
@@ -14,6 +15,8 @@ from sqlalchemy import (
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
 from app.models.base import ColumnDictMixin, column_dict, utcnow
+
+logger = logging.getLogger(__name__)
 
 if TYPE_CHECKING:
     from app.models.character import Killer, Survivor
@@ -39,6 +42,8 @@ class User(Base, ColumnDictMixin):
         "verification_attempts",
         "reset_token",
         "reset_token_expires_at",
+        "verification_sent_at",
+        "reset_sent_at",
         "token_version",
         "google_sub",
     })
@@ -85,6 +90,10 @@ class User(Base, ColumnDictMixin):
     reset_token_expires_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
+    #: When the last verification code / reset link was sent: the resend cooldown counts from here
+    #: (working it out from the expiry broke whenever an admin changed the lifetime).
+    verification_sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    reset_sent_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     onboarding_completed_at: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
@@ -142,6 +151,7 @@ class User(Base, ColumnDictMixin):
 
             return is_enabled(self.id) if self.id is not None else False
         except Exception:
+            logger.warning("Could not read whether two-factor sign-in is enabled", exc_info=True)
             return False
 
     @property

@@ -4,8 +4,8 @@ import assert from 'node:assert/strict';
 import { createRunRequestTracker } from '../../components/streaks/runRequestTracker';
 
 function trackerOn(initialScope: string) {
-  let scope = initialScope;
-  return { tracker: createRunRequestTracker(() => scope), moveTo: (next: string) => { scope = next; } };
+  const tracker = createRunRequestTracker(initialScope);
+  return { tracker, moveTo: (next: string) => tracker.setScope(next) };
 }
 
 describe('createRunRequestTracker', () => {

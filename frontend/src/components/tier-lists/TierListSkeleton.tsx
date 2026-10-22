@@ -15,13 +15,12 @@ export function TierListSkeleton({ label, className = '' }: TierListSkeletonProp
   const dict = useDictionary();
   const text = label || dict.tierLists.loading;
   return (
-    <div
-      role="status"
+    <output
       aria-label={text}
       aria-busy="true"
       className={`flex min-h-115 w-full select-none flex-col items-center justify-center p-6 ${className}`}
     >
       <DbdSpinner size="responsive" layout="inline" accent="blood" needleSpeed={1.6} label={text} />
-    </div>
+    </output>
   );
 }

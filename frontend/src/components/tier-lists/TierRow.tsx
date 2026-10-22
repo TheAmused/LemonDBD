@@ -57,7 +57,10 @@ export const TierRow = React.memo(function TierRow({
       aria-label={formatMessage(t.tierAria, { label: tier.label })}
       className="grid grid-cols-tier-label-xs phone-lg:grid-cols-tier-label-sm sm:max-wide-2k:grid-cols-tier-label-md wide-2k:grid-cols-tier-label-lg overflow-hidden rounded-card border border-border-color bg-bg-surface shadow-xs group-data-[fit]/board:grid-cols-[var(--badge-w)_minmax(0,1fr)]!"
     >
+      {/* Clicking the badge or the row drops the selected tile here, a pointer shortcut
+          for the row's own "Move here" button (role="presentation": no second control). */}
       <div
+        role="presentation"
         onClick={canReceiveSelection ? () => onMoveSelectedHere(tier.id) : undefined}
         className={cn(
           'relative min-h-14 phone-lg:min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-28 group-data-[fit]/board:min-h-0! overflow-hidden text-center select-none',
@@ -76,6 +79,7 @@ export const TierRow = React.memo(function TierRow({
       <div className="flex min-w-0">
       <div
         ref={setNodeRef}
+        role="presentation"
         onClick={canReceiveSelection ? () => onMoveSelectedHere(tier.id) : undefined}
         className={cn(
           'relative flex min-w-0 flex-1 min-h-14 phone-lg:min-h-18 sm:max-wide-2k:min-h-21 wide-2k:min-h-28 flex-wrap content-start items-start justify-start gap-1 phone-lg:gap-1.5 sm:gap-2 p-1.5 phone-lg:p-2 transition-colors',

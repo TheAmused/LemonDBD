@@ -1,0 +1,74 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  // oxlint instead of ESLint: typescript-eslint needs the TypeScript JS compiler API, which
+  // TypeScript 7 (this project) no longer ships, so ESLint linted no .ts/.tsx file at all.
+  // Errors fail `npm run lint` and CI. The rules below were warnings while existing code was
+  // brought in line; every one is at zero now, so they are errors and stay there. A new exception
+  // goes in an override with its reason, never in an eslint-disable comment.
+  "plugins": ["typescript", "react", "nextjs", "jsx-a11y", "import", "unicorn", "oxc"],
+  "categories": { "correctness": "error" },
+  "env": { "browser": true, "node": true, "es2024": true },
+  "ignorePatterns": [".next/**", "node_modules/**", "public/**", "next-env.d.ts"],
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error",
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["@/features/*/*"],
+            "message": "Deep imports into feature internals are forbidden. Import from the feature barrel (@/features/<name>) instead."
+          }
+        ]
+      }
+    ],
+
+    "no-unused-vars": "error",
+    "no-useless-escape": "error",
+    "react/set-state-in-effect": "error",
+    "react/refs": "error",
+    "react/purity": "error",
+    "react/immutability": "error",
+    "react/preserve-manual-memoization": "error",
+    "nextjs/no-img-element": "error",
+    "jsx-a11y/prefer-tag-over-role": "error",
+    "jsx-a11y/no-static-element-interactions": "error",
+    "jsx-a11y/click-events-have-key-events": "error",
+    "jsx-a11y/no-autofocus": "error",
+    "jsx-a11y/role-has-required-aria-props": "error",
+    "jsx-a11y/no-noninteractive-element-interactions": "error",
+    "jsx-a11y/control-has-associated-label": "error",
+    "jsx-a11y/aria-role": "error",
+    "jsx-a11y/no-noninteractive-element-to-interactive-role": "error",
+    "jsx-a11y/no-aria-hidden-on-focusable": "error",
+    "jsx-a11y/media-has-caption": "error"
+  },
+  "overrides": [
+    {
+      "files": ["src/__tests__/**", "scripts/**"],
+      "rules": {
+        "react/globals": "off",
+        "react/no-children-prop": "off",
+        "unicorn/prefer-string-starts-ends-with": "off"
+      }
+    },
+    {
+      // Widgets with no native tag: an autocomplete whose options carry images and badges
+      // (<select>/<datalist> can hold only text), and a rich-text contentEditable region
+      // (<textarea> can't hold formatting). Both implement the ARIA pattern for their role.
+      "files": ["src/components/minigames/CharacterAutocomplete.tsx", "src/components/common/RichTextEditor.tsx"],
+      "rules": {
+        "jsx-a11y/prefer-tag-over-role": "off"
+      }
+    },
+    {
+      // Img is the one <img>: the optimizer next/image exists for can't fetch this site's pictures
+      // (see the file), so the native element is the right one here and everywhere else uses Img.
+      "files": ["src/components/common/Img.tsx"],
+      "rules": {
+        "nextjs/no-img-element": "off"
+      }
+    }
+  ]
+}

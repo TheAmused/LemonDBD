@@ -163,16 +163,19 @@ function purgeCollection(
 ): { hashes: string[]; items: number } {
   const none = { hashes: [] as string[], items: 0 };
   const parsed = readJson(storage, collection.key);
-  const doomed = entriesOf(collection, parsed).filter(([, item]) => banned.has(JSON.stringify(item)));
+  // Each item is serialised once: the key both picks it out and looks up its hashes below.
+  const doomed = entriesOf(collection, parsed)
+    .map(([ref, item]) => ({ ref, item, key: JSON.stringify(item) }))
+    .filter(({ key }) => banned.has(key));
   if (doomed.length === 0) return none;
   try {
     if (collection.shape === 'array') {
-      const doomedRefs = new Set(doomed.map(([ref]) => ref));
+      const doomedRefs = new Set(doomed.map(({ ref }) => ref));
       const remaining = (parsed as unknown[]).filter((_, index) => !doomedRefs.has(String(index)));
       storage.setItem(collection.key, JSON.stringify(remaining));
     } else {
       const custom = (parsed as { custom: Record<string, unknown> }).custom;
-      for (const [ref] of doomed) delete custom[ref];
+      for (const { ref } of doomed) delete custom[ref];
       storage.setItem(collection.key, JSON.stringify(parsed));
     }
   } catch {
@@ -180,7 +183,7 @@ function purgeCollection(
   }
   dispatchStorageEvent(collection.key);
   if (collection.contentType === 'minigame') {
-    for (const [, item] of doomed) {
+    for (const { item } of doomed) {
       const id = isObject(item) ? item.id : undefined;
       if (typeof id === 'string' || typeof id === 'number') {
         try {
@@ -191,7 +194,7 @@ function purgeCollection(
       }
     }
   }
-  return { hashes: doomed.flatMap(([, item]) => banned.get(JSON.stringify(item)) ?? []), items: doomed.length };
+  return { hashes: doomed.flatMap(({ key }) => banned.get(key) ?? []), items: doomed.length };
 }
 
 async function doCheckAndPurge(): Promise<string[]> {

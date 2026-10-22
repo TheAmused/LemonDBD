@@ -51,6 +51,8 @@ const JOB_KEYS = {
   sanction_emails: ['maintSanctionEmails', 'maintSanctionEmailsDesc'],
   ban_list: ['maintBanList', 'maintBanListDesc'],
   minigame_sessions: ['maintMinigameSessions', 'maintMinigameSessionsDesc'],
+  bug_report_files: ['maintBugReportFiles', 'maintBugReportFilesDesc'],
+  revoked_sessions: ['maintRevokedSessions', 'maintRevokedSessionsDesc'],
   catalog_cache: ['maintCache', 'maintCacheDesc'],
 } as const;
 
@@ -113,7 +115,10 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
   const locale = useLocale();
   const t = dict.admin;
   const [checks, setChecks] = useState<SystemCheck[] | null>(null);
-  const [checking, setChecking] = useState(false);
+  const [rechecking, setRechecking] = useState(false);
+  // The checks load with the section and on every refresh; the button re-runs them on demand.
+  const [checkedFor, setCheckedFor] = useState<number | null>(null);
+  const checking = rechecking || checkedFor !== refreshKey;
   const [jobs, setJobs] = useState<MaintenanceJob[]>([]);
   const [running, setRunning] = useState<string | null>(null);
   const [backupTab, setBackupTab] = useState<ScraperTab | null>(null);
@@ -122,22 +127,29 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
   const fail = useCallback((err: unknown) => notify({ type: 'error', text: getErrorMessage(err, t.networkError) }), [notify, t.networkError]);
 
   const loadChecks = useCallback(async () => {
-    setChecking(true);
+    setRechecking(true);
     try {
       setChecks((await fetchSystemChecks()).checks ?? []);
     } catch (err: unknown) {
       fail(err);
     } finally {
-      setChecking(false);
+      setRechecking(false);
     }
   }, [fail]);
 
   useEffect(() => {
-    void loadChecks();
+    let cancelled = false;
+    fetchSystemChecks()
+      .then((data) => !cancelled && setChecks(data.checks ?? []))
+      .catch((err: unknown) => !cancelled && fail(err))
+      .finally(() => !cancelled && setCheckedFor(refreshKey));
     listMaintenanceJobs()
-      .then((data) => setJobs(data.jobs ?? []))
-      .catch(fail);
-  }, [refreshKey, loadChecks, fail]);
+      .then((data) => !cancelled && setJobs(data.jobs ?? []))
+      .catch((err: unknown) => !cancelled && fail(err));
+    return () => {
+      cancelled = true;
+    };
+  }, [refreshKey, fail]);
 
   /** Runs one tool action, labelled `id` while it is in flight, and reports how it went. */
   const run = async (id: string, action: () => Promise<string>) => {
@@ -173,7 +185,7 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
         {(checks ?? []).map((check) => {
           const keys = CHECK_KEYS[check.key as keyof typeof CHECK_KEYS];
           const details = [
-            check.detail,
+            check.detail === 'switched_off' ? t.systemSwitchedOff : check.detail,
             check.latency_ms !== undefined ? formatMessage(t.systemLatency, { ms: check.latency_ms }) : null,
             check.last_run_at ? formatMessage(t.lastRunScheduled, { date: when(check.last_run_at) }) : null,
           ].filter(Boolean);

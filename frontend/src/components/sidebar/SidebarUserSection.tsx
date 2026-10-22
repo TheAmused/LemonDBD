@@ -11,6 +11,8 @@ import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
+import { useSiteConfig } from '@/context/SiteConfigContext';
+import { mustConfirmEmail } from '@/utils/emailVerification';
 import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
 
@@ -36,6 +38,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
       onNavigateMobile,
     }) => {
   const dict = useDictionary();
+  const verificationRequired = useSiteConfig().features.emailVerificationRequired;
   return (
     <div className="mt-4 pt-3 border-t border-border-color">
       {!isAuthenticated || !user ? (
@@ -90,7 +93,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
             </div>
           </div>
 
-          {user.is_verified === false && (
+          {mustConfirmEmail(user, verificationRequired) && (
             <Button
               type="button"
               onClick={onOpenVerifyModal}

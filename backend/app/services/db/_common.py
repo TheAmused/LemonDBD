@@ -18,5 +18,5 @@ def parse_datetime(val: str | datetime | None) -> datetime | None:
         return val
     try:
         return datetime.fromisoformat(val.replace("Z", "+00:00"))
-    except Exception:
+    except (ValueError, TypeError, AttributeError):
         return None

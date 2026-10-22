@@ -3,6 +3,8 @@ export default {
   pageTitle: "LemonDBD - Minijuegos y DBD Idle",
   creatorPageTitle: 'LemonDBD - Creador de desafíos de prueba',
   idlePageTitle: 'LemonDBD - DBD Idle: adivinador clásico de la niebla',
+  // Caption track of the Terror Radius guesser's audio: describes the sound, never names the Killer.
+  audioCaption: '[Radio de terror de un Asesino: latidos y música de persecución]',
   metaDescription: "Juega desafíos diarios de adivinanzas de Dead by Daylight, adivinanzas de mapas y audios, o crea y comparte tus propios desafíos.",
   hubTitle: "Minijuegos de Dead by Daylight",
   hubSubtitle: "Pon a prueba tus conocimientos de la Niebla con pruebas diarias, práctica infinita o desafíos creados por jugadores.",

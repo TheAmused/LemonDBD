@@ -3,13 +3,24 @@
 from typing import Any
 
 from sqlalchemy import func, select
+from sqlalchemy.orm import defer
 
-from app.core.account_state import is_blocked
+from app.core.account_state import block_kind, is_blocked
 from app.core.extensions import db
 from app.models.content_moderation import ContentReport, ContentReportSubscriber
 from app.models.user import User
+from app.services.moderation_actions import next_suspension_days
 
 REPORT_STATUSES = frozenset({"pending", "resolved_banned", "dismissed", "expired"})
+
+
+def _effective_expiry_field(report: ContentReport) -> dict[str, Any]:
+    """A pending report's `expires_at` as the purge will apply it (a shortened period counts too)."""
+    if report.status != "pending" or report.expires_at is None or report.created_at is None:
+        return {}
+    from app.services.content_moderation_service import effective_expiry
+
+    return {"expires_at": effective_expiry(report).isoformat()}
 
 
 def get_admin_reports(
@@ -43,8 +54,11 @@ def get_admin_reports(
     stats = {status: by_status.get(status, 0) for status in sorted(REPORT_STATUSES)}
     stats["total"] = sum(stats.values())
 
+    # The evidence (a whole reported document) is not loaded for the list: only whether it is there.
     stmt = (
-        base_stmt.order_by(
+        base_stmt.add_columns(ContentReport.evidence_payload.is_not(None).label("has_evidence"))
+        .options(defer(ContentReport.evidence_payload))
+        .order_by(
             ContentReport.report_count.desc(),
             ContentReport.created_at.desc(),
         )
@@ -52,8 +66,10 @@ def get_admin_reports(
         .limit(per_page)
     )
 
-    reports = db.session.scalars(stmt).all()
-    items = [{**r.to_dict(), "has_evidence": r.evidence_payload is not None} for r in reports]
+    items = [
+        {**report.to_dict(), "has_evidence": bool(has_evidence), **_effective_expiry_field(report)}
+        for report, has_evidence in db.session.execute(stmt).all()
+    ]
 
     return {
         "items": items,
@@ -86,6 +102,7 @@ def get_report_preview(report_id: int) -> dict[str, Any] | None:
 
     return {
         **report.to_dict(),
+        **_effective_expiry_field(report),
         "evidence_payload": report.evidence_payload,
         "reports": [
             {
@@ -98,5 +115,9 @@ def get_report_preview(report_id: int) -> dict[str, Any] | None:
         "reason_breakdown": breakdown,
         "attributed": report.author_id is not None,
         "author_active": not is_blocked(author) if author is not None else None,
+        # "active", "suspended" or "banned": a suspended author can still be warned, suspended for
+        # longer or banned from the report (author_active alone said "inactive" for both).
+        "author_standing": (block_kind(author) or "active") if author is not None else None,
         "author_is_admin": author.role == "admin" if author is not None else False,
+        "author_next_suspension_days": next_suspension_days(author.id) if author is not None else None,
     }

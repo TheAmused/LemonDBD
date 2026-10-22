@@ -24,7 +24,7 @@ const read = (rel: string) => fs.readFileSync(path.join(SRC, rel), 'utf-8');
 describe('Tier lists: skeleton', () => {
   it('renders role="status", aria-busy and the DBD skill-check spinner', () => {
     const html = renderWithDictionary(React.createElement(TierListSkeleton, {}));
-    assert.ok(html.includes('role="status"'));
+    assert.ok(html.includes('<output'));
     assert.ok(html.includes('aria-busy="true"'));
     assert.ok(html.includes('viewBox="0 0 160 160"'), 'must render the DBD Skill Check SVG');
     assert.ok(html.includes(enDict.tierLists.loading));

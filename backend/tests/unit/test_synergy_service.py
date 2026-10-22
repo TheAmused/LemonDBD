@@ -2,7 +2,7 @@
 import pytest
 from flask.testing import FlaskClient
 from app import create_app
-from app.services.synergy_service import SynergyService, calculate_synergy
+from app.services.synergy_service import calculate_synergy
 
 
 @pytest.mark.unit

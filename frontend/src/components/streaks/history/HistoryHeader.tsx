@@ -1,6 +1,6 @@
 'use client';
 // frontend/src/components/streaks/history/HistoryHeader.tsx
-import { Button } from '@/components/common/Button';
+
 
 import React from 'react';
 import { HistoryMode } from '@/types/historyStreak';

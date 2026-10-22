@@ -1,5 +1,5 @@
 // frontend/src/__tests__/unit/authModalVerificationFlow.test.ts
-import test, { describe, it } from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -18,10 +18,13 @@ describe('AuthModal Email Verification Flow', () => {
   });
 
   it('redirects auto-verified registered user to /welcome when onboarding is incomplete', () => {
+    const helper = source.slice(source.indexOf('const closeSignedIn ='), source.indexOf('const switchMode ='));
     assert.ok(
-      source.includes('!res.user.onboarding_completed_at') &&
-      source.includes('router.push(`/${locale}/welcome`)'),
-      'AuthModal must route auto-verified users to welcome page when onboarding is not completed'
+      helper.includes('!signedIn.onboarding_completed_at') &&
+      helper.includes('router.push(`/${locale}/welcome`)'),
+      'closeSignedIn must route users who have not finished onboarding to the welcome page'
     );
+    const registerBranch = source.slice(source.indexOf('await register('), source.indexOf('registrationFailed'));
+    assert.ok(registerBranch.includes('closeSignedIn(res.user)'), 'a verified sign-up goes through closeSignedIn');
   });
 });

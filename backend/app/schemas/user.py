@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import Any, Self
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, model_validator
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, StrictBool, model_validator
 
 
 class UserBase(BaseModel):
@@ -32,6 +32,9 @@ class UserCreate(BaseModel):
     password: str = Field(..., min_length=6)
     role: str | None = "user"
     avatar_url: str | None = "default_avatar"
+    #: The acting admin's own password (and 2FA code): required when the new account is an admin.
+    current_password: str | None = Field(None, max_length=200)
+    two_factor_code: str | None = Field(None, max_length=64)
 
 
 class UserUpdate(BaseModel):
@@ -41,8 +44,10 @@ class UserUpdate(BaseModel):
     role: str | None = None
     is_active: bool | None = None
     is_verified: bool | None = None
-    #: The acting admin's own password: required to take the admin role from another admin.
+    #: The acting admin's own password (and 2FA code): required to grant the admin role, or to take it
+    #: from another admin.
     current_password: str | None = Field(None, max_length=200)
+    two_factor_code: str | None = Field(None, max_length=64)
 
 
 class UserResponse(UserBase):
@@ -79,6 +84,39 @@ class UserCharacterOwnershipBase(BaseModel):
         if (self.survivor_id is None) == (self.killer_id is None):
             raise ValueError("exactly one of survivor_id or killer_id must be set")
         return self
+
+
+#: Most ownership changes one bulk request may carry (the whole roster is ~200 characters).
+MAX_BULK_OWNERSHIP_UPDATES = 1000
+
+
+class CharacterOwnershipSet(BaseModel):
+    """One character's ownership as a client sends it. `character_id` and `role` are checked by the
+    route / service (an invalid one is a 400 for a single change and skipped in a bulk one);
+    `is_owned` must be a real boolean -- "false" as a string used to count as owned."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    character_id: Any = None
+    role: Any = None
+    is_owned: StrictBool = True
+
+
+class PerkOwnershipSet(BaseModel):
+    """One perk's unlock state as a client sends it (see CharacterOwnershipSet)."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    perk_id: Any = None
+    is_unlocked: StrictBool = True
+
+
+class BulkCharacterOwnershipRequest(BaseModel):
+    updates: list[CharacterOwnershipSet] = Field(default_factory=list, max_length=MAX_BULK_OWNERSHIP_UPDATES)
+
+
+class BulkPerkOwnershipRequest(BaseModel):
+    updates: list[PerkOwnershipSet] = Field(default_factory=list, max_length=MAX_BULK_OWNERSHIP_UPDATES)
 
 
 class UserCharacterOwnershipResponse(BaseModel):

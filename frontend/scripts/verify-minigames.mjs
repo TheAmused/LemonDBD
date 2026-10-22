@@ -130,7 +130,7 @@ async function run() {
   await page.screenshot({ path: path.join(OUT_DIR, '04a_autocomplete_lar_dropdown.png') });
 
   // Verify options
-  const options = page.locator('li[role="option"]');
+  const options = page.locator('[role="option"]');
   const optionCount = await options.count();
   console.log(`- Options matching "lar": ${optionCount}`);
   const optionTexts = [];
@@ -152,7 +152,7 @@ async function run() {
   }
 
   // Step 3b: Select "Lara Croft" (Survivor guess)
-  const laraOption = page.locator('li[role="option"]').filter({ hasText: 'Lara Croft' }).first();
+  const laraOption = page.locator('[role="option"]').filter({ hasText: 'Lara Croft' }).first();
   await laraOption.waitFor({ state: 'visible', timeout: 5000 });
   await laraOption.click();
   console.log('Selected Survivor "Lara Croft"');
@@ -175,7 +175,7 @@ async function run() {
   console.log('Typing "Singularity" to make a second guess (Killer)...');
   await searchInput.fill('Singularity');
   await page.waitForTimeout(600);
-  const singOption = page.locator('li[role="option"]').filter({ hasText: 'The Singularity' }).first();
+  const singOption = page.locator('[role="option"]').filter({ hasText: 'The Singularity' }).first();
   await singOption.waitFor({ state: 'visible', timeout: 5000 });
   await singOption.click();
   console.log('Selected Killer "The Singularity"');
@@ -239,7 +239,7 @@ async function run() {
   if (await round1Input.isVisible()) {
     await round1Input.fill('MacMillan');
     await page.waitForTimeout(500);
-    const realmOption = page.locator('li[role="option"]').first();
+    const realmOption = page.locator('[role="option"]').first();
     if (await realmOption.isVisible()) {
       await realmOption.click();
       console.log('Selected target for Round 1');
@@ -253,7 +253,7 @@ async function run() {
     if (await round2Input.isVisible()) {
       await round2Input.fill('Trapper');
       await page.waitForTimeout(500);
-      const killerOption = page.locator('li[role="option"]').first();
+      const killerOption = page.locator('[role="option"]').first();
       if (await killerOption.isVisible()) {
         await killerOption.click();
         console.log('Selected target for Round 2');

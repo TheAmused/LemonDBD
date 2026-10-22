@@ -1,6 +1,7 @@
 # backend/app/services/db/run_family_export.py
 from typing import Any
 from sqlalchemy import select, delete
+from sqlalchemy.orm import selectinload
 from app.core.extensions import db
 from app.core.json_provider import safe_json_loads
 from app.models.base import column_dict
@@ -57,14 +58,23 @@ def export_run_family(
     """Export every row of `run_model`, nesting its `log_relation_attr` collection
     (already ordered by the model's own relationship `order_by`) as `match_logs`,
     with the owning user resolved to `login` instead of the source DB's `user_id`."""
-    runs = db.session.scalars(select(run_model).order_by(run_model.id)).all()
+    # The logs in one IN query and the owners' logins in one more, instead of two queries per run.
+    runs = db.session.scalars(
+        select(run_model).options(selectinload(getattr(run_model, log_relation_attr))).order_by(run_model.id)
+    ).all()
+    owner_ids = {run.user_id for run in runs}
+    login_by_id = (
+        dict(db.session.execute(select(User.id, User.login).where(User.id.in_(owner_ids))).tuples().all())
+        if owner_ids
+        else {}
+    )
     serialized = []
     for run in runs:
-        owner = db.session.get(User, run.user_id)
-        if not owner:
+        login = login_by_id.get(run.user_id)
+        if login is None:
             continue
         row: dict[str, object] = column_dict(run, {"id", "user_id"})
-        row["login"] = owner.login
+        row["login"] = login
         row["match_logs"] = [
             column_dict(log, {"id", "run_id"}) for log in getattr(run, log_relation_attr)
         ]

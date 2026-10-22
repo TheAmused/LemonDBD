@@ -7,7 +7,7 @@ import enDict from '@/locales/en';
 import { renderWithDictionary } from '../helpers/renderWithDictionary';
 
 describe('SidebarBottomControls Theme Switcher', () => {
-  it('renders a closed dropdown button with listbox semantics', () => {
+  it('renders a closed disclosure button for the theme menu', () => {
     const html = renderWithDictionary(
       React.createElement(SidebarBottomControls, {
         currentLocale: 'en',
@@ -16,7 +16,7 @@ describe('SidebarBottomControls Theme Switcher', () => {
       })
     );
 
-    assert.ok(html.includes('aria-haspopup="listbox"'), 'Must expose a listbox popup');
+    assert.ok(!html.includes('aria-haspopup="listbox"'), 'A menu of plain buttons, not a listbox');
     assert.ok(html.includes('aria-expanded="false"'), 'Must start closed');
     assert.ok(html.includes(`aria-label="${enDict.sidebar.toggleTheme}"`), 'Must label the selector from the dictionary');
   });

@@ -1,6 +1,5 @@
 # backend/app/routes/perks.py
 import logging
-from dataclasses import asdict
 
 from flask import Blueprint, jsonify, request
 
@@ -22,7 +21,7 @@ from app.services.perks import (
 )
 from app.utils.lang import extract_lang as _extract_lang
 from app.utils.pagination import paginate_args
-from sqlalchemy import select
+from sqlalchemy import select, text
 
 logger = logging.getLogger(__name__)
 perks_bp = Blueprint("perks", __name__)
@@ -58,6 +57,26 @@ def health_check():
         "service": "dbd-backend-api",
         "cache": redis_cache.stats(),
     }), 200
+
+
+@perks_bp.route("/api/v1/readyz", methods=["GET"])
+def readiness_check():
+    """Readiness, not just liveness: 200 only when the database answers and the rate-limit Redis
+    (when one is configured) does. The cache Redis is reported but optional -- without it each
+    worker falls back to its own in-process cache, so the site still works."""
+    checks: dict[str, str] = {}
+    try:
+        db.session.execute(text("SELECT 1"))
+        checks["database"] = "up"
+    except Exception as exc:
+        logger.warning("Readiness: database check failed: %s", exc)
+        db.session.rollback()
+        checks["database"] = "down"
+    checks.update(redis_cache.readiness())
+    ready = checks["database"] == "up" and checks["limits"] != "down"
+    response = jsonify({"status": "ready" if ready else "unavailable", "checks": checks})
+    response.headers["Cache-Control"] = "no-store"
+    return response, 200 if ready else 503
 
 
 @perks_bp.route("/api/v1/perks", methods=["GET"])
@@ -161,7 +180,6 @@ def list_chapters():
     """Retrieve all chapter/DLC banner images for client-side name matching."""
     from app.core.extensions import db
     from app.models import Chapter
-    from sqlalchemy import select
 
     rows = db.session.scalars(select(Chapter)).all()
     return jsonify({"chapters": [r.to_dict() for r in rows]}), 200
@@ -178,7 +196,7 @@ def stats_summary():
     navigation, to display three integers. This does the same work as a few
     grouped COUNT(*) queries and returns a payload of about 100 bytes.
     """
-    from sqlalchemy import func, select
+    from sqlalchemy import func
 
     from app.core.extensions import db
     from app.models import Killer, Perk, Survivor
@@ -192,30 +210,20 @@ def stats_summary():
         ("Survivor", db.session.scalar(select(func.count(Survivor.id))) or 0),
         ("Killer", db.session.scalar(select(func.count(Killer.id))) or 0),
     ]
+    return jsonify({"perks": _role_counts(perk_rows), "characters": _role_counts(character_rows)}), 200
 
-    def _pick(rows, wanted: str) -> int:
-        for key, count in rows:
-            if (key or "").lower() == wanted:
-                return int(count)
-        return 0
 
-    return (
-        jsonify(
-            {
-                "perks": {
-                    "total": sum(int(count) for _, count in perk_rows),
-                    "survivor": _pick(perk_rows, "survivor"),
-                    "killer": _pick(perk_rows, "killer"),
-                },
-                "characters": {
-                    "total": sum(int(count) for _, count in character_rows),
-                    "survivor": _pick(character_rows, "survivor"),
-                    "killer": _pick(character_rows, "killer"),
-                },
-            }
-        ),
-        200,
-    )
+def _role_counts(rows) -> dict:
+    """`{"total", "survivor", "killer"}` from `(role, count)` rows; a missing role counts 0."""
+    by_role: dict[str, int] = {}
+    for key, count in rows:
+        role = (key or "").lower()
+        by_role[role] = by_role.get(role, 0) + int(count)
+    return {
+        "total": sum(by_role.values()),
+        "survivor": by_role.get("survivor", 0),
+        "killer": by_role.get("killer", 0),
+    }
 
 
 @perks_bp.route("/api/v1/characters/<string:character_name>/detail", methods=["GET"])

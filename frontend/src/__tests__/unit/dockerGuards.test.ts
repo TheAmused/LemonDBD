@@ -26,6 +26,7 @@ const DOCKERFILES = ['backend/Dockerfile', 'frontend/Dockerfile', 'nginx/Dockerf
   (file) => path.join(ROOT, file)
 );
 const DEV_COMPOSE = path.join(ROOT, 'docker-compose.dev.yml');
+const DEV_SERVICES_COMPOSE = path.join(ROOT, 'docker-compose.dev-services.yml');
 
 /** Image references (compose `image:`, Dockerfile `FROM` / `COPY --from=`) that are not pinned. */
 export function floatingImageRefs(text: string): string[] {
@@ -44,7 +45,7 @@ export function floatingImageRefs(text: string): string[] {
 
 describe('docker: image tags are pinned', () => {
   it('every compose image and Dockerfile base names a version', () => {
-    const files = [BASE_COMPOSE, PROD_COMPOSE, DEV_COMPOSE, ...DOCKERFILES];
+    const files = [BASE_COMPOSE, PROD_COMPOSE, DEV_COMPOSE, DEV_SERVICES_COMPOSE, ...DOCKERFILES];
     const violations = files.flatMap((file) =>
       floatingImageRefs(fs.readFileSync(file, 'utf8')).map((ref) => `${path.relative(ROOT, file)}: ${ref}`)
     );

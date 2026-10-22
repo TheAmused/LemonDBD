@@ -1,28 +1,8 @@
 # docker-compose.dev.yml - Development overlay for LemonDBD
+# Both files are merged as one project and interpolated from .env.dev. Keep services in
+# docker-compose.dev-services.yml: anything written in THIS file does not see .env.dev.
 include:
-  - path: docker-compose.base.yml
+  - path:
+      - docker-compose.base.yml
+      - docker-compose.dev-services.yml
     env_file: .env.dev
-
-services:
-  backend:
-    restart: "no"
-    # Debug access to gunicorn from this machine only; requests still pass the app's own limits.
-    ports:
-      - "127.0.0.1:${BACKEND_PORT:-5000}:5000"
-
-  tunnel-notifier:
-    build:
-      context: ./docker/tunnel
-      dockerfile: Dockerfile
-    container_name: dbd_tunnel_notifier
-    restart: unless-stopped
-    environment:
-      - DISCORD_TUNNEL_WEBHOOK=${DISCORD_TUNNEL_WEBHOOK:-}
-      - DISCORD_TUNNEL_WEBHOOK_ENABLED=${DISCORD_TUNNEL_WEBHOOK_ENABLED:-false}
-      - TUNNEL_TARGET_URL=${TUNNEL_TARGET_URL:-http://nginx:80}
-      - TUNNEL_HOST_HEADER=${TUNNEL_HOST_HEADER:-}
-    depends_on:
-      nginx:
-        condition: service_started
-    networks:
-      - dbd_network

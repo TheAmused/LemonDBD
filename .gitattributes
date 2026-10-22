@@ -2,3 +2,4 @@
 # regardless of the OS or editor settings used to check them out.
 *.sh text eol=lf
 entrypoint.sh text eol=lf
+.githooks/* text eol=lf

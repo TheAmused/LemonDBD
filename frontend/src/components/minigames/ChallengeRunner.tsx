@@ -4,7 +4,7 @@
 import { logger } from '@/utils/logger';
 import { lookup } from '@/utils/lookup';
 import { Button } from '@/components/common/Button';
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   Trophy,
   ArrowRight,
@@ -46,6 +46,7 @@ import { VictoryModal } from './VictoryModal';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { TileButton } from "@/components/common/TileButton";
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface ChallengeRunnerProps {
   challenge: ChallengeDefinition;
@@ -64,29 +65,30 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
   const t = dict.minigames;
   const challengeId = challenge.id || 'default_trial';
 
-  const [currentRoundIndex, setCurrentRoundIndex] = useState(0);
-  const [roundGuesses, setRoundGuesses] = useState<Record<number, GuessRecord[]>>({});
-  const [roundStatus, setRoundStatus] = useState<Record<number, 'in_progress' | 'won' | 'lost'>>({});
-  const [isFinished, setIsFinished] = useState(false);
+  // Saved progress comes back with the first render (the runner only mounts in the browser, once
+  // the trial has loaded), and again whenever another trial takes its place.
+  const [saved] = useState(() => getChallengeProgress(challengeId));
+  const [currentRoundIndex, setCurrentRoundIndex] = useState(saved?.currentRoundIndex || 0);
+  const [roundGuesses, setRoundGuesses] = useState<Record<number, GuessRecord[]>>(saved?.roundGuesses || {});
+  const [roundStatus, setRoundStatus] = useState<Record<number, 'in_progress' | 'won' | 'lost'>>(saved?.roundStatus || {});
+  const [isFinished, setIsFinished] = useState(saved?.isFinished || false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [revealedAnswers, setRevealedAnswers] = useState<Record<number, RevealedAnswer>>({});
+  const [revealedAnswers, setRevealedAnswers] = useState<Record<number, RevealedAnswer>>(saved?.revealedAnswers || {});
   const [guessError, setGuessError] = useState<boolean>(false);
 
-  // Restore saved progress on mount
-  useEffect(() => {
-    const saved = getChallengeProgress(challengeId);
-    if (saved) {
-      setCurrentRoundIndex(saved.currentRoundIndex || 0);
-      setRoundGuesses(saved.roundGuesses || {});
-      setRoundStatus(saved.roundStatus || {});
-      setIsFinished(saved.isFinished || false);
-      setRevealedAnswers(saved.revealedAnswers || {});
-    }
-  }, [challengeId]);
+  useOnValueChange(challengeId, (id) => {
+    const progress = getChallengeProgress(id);
+    if (!progress) return;
+    setCurrentRoundIndex(progress.currentRoundIndex || 0);
+    setRoundGuesses(progress.roundGuesses || {});
+    setRoundStatus(progress.roundStatus || {});
+    setIsFinished(progress.isFinished || false);
+    setRevealedAnswers(progress.revealedAnswers || {});
+  });
 
   const rounds = challenge.rounds;
   const currentRound: RoundConfig = rounds[currentRoundIndex] || rounds[0];
-  const currentGuesses = roundGuesses[currentRoundIndex] || [];
+  const currentGuesses = useMemo(() => roundGuesses[currentRoundIndex] || [], [roundGuesses, currentRoundIndex]);
   const status = roundStatus[currentRoundIndex] || 'in_progress';
   const isRoundSolved = status === 'won';
   const isRoundOver = status === 'won' || status === 'lost';

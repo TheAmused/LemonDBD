@@ -2,7 +2,7 @@
 // frontend/src/components/perks/PerksClient.tsx
 
 import { logger } from '@/utils/logger';
-import React, { useEffect, useState, useCallback, useRef, Suspense } from 'react';
+import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 import { PageShell } from '@/components/layout/PageShell';
@@ -31,6 +31,7 @@ import { useCachedData } from '@/hooks/useCachedData';
 import { useCatalogPerks } from '@/hooks/useCatalogPerks';
 import { catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
 import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
 
@@ -50,10 +51,8 @@ function PerksContent() {
 
   const dict = useDictionary();
   const [perks, setPerks] = useState<Perk[]>([]);
-  const [allPerksForStats, setAllPerksForGenerator] = useState<Perk[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
 
-  const [role, setRole] = useState<RoleCategory>('Survivor');
+  const [role, setRole] = useState<RoleCategory>(paramRole === 'Killer' ? 'Killer' : 'Survivor');
   const [scope, setScope] = useState<ScopeFilter>('all');
   const [ownershipFilter, setOwnershipFilter] = useState<OwnershipFilter>('all');
   const [search, setSearch] = useState<string>('');
@@ -71,11 +70,6 @@ function PerksContent() {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [totalResults, setTotalResults] = useState<number>(0);
 
-  const [survivorCount, setSurvivorCount] = useState<number>(0);
-  const [killerCount, setKillerCount] = useState<number>(0);
-  const [survivorOwnedCount, setSurvivorOwnedCount] = useState<number>(0);
-  const [killerOwnedCount, setKillerOwnedCount] = useState<number>(0);
-  const [characterCount, setCharacterCount] = useState<number>(0);
 
   const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
 
@@ -131,11 +125,9 @@ function PerksContent() {
     };
   }, []);
 
-  useEffect(() => {
-    if (paramRole === 'Killer' || paramRole === 'Survivor') {
-      setRole(paramRole);
-    }
-  }, [paramRole]);
+  useOnValueChange(paramRole, (next) => {
+    if (next === 'Killer' || next === 'Survivor') setRole(next);
+  });
 
   const handleSelectCategoryFromSidebar = (selected: string) => {
     if (selected === 'Survivor' || selected === 'Killer') {
@@ -154,63 +146,67 @@ function PerksContent() {
 
   const [fetchError, setFetchError] = useState<string | null>(null);
 
-  const fetchPerks = useCallback(async () => {
-    const requestId = ++fetchSeqRef.current;
-    if (perks.length === 0) {
-      setLoading(true);
-    }
-    setFetchError(null);
-    try {
-      const url = catalogKey('perks', {
-        page,
-        limit,
-        sort_by: sortBy,
-        order,
-        category: role,
-        lang: locale,
-        scope: scope === 'general' ? 'general' : undefined,
-        // Debounced: the list refetches once typing pauses, not on every keystroke.
-        search: debouncedSearch,
-        owned_only: ownershipFilter === 'owned' && user ? 'true' : undefined,
-        user_id: user?.id,
-      });
-      const result = await fetchCached<PerksResponse>(url, () => fetchJson(url));
-      if (requestId !== fetchSeqRef.current) return;
-      const perkList = result.data || [];
-      setPerks(perkList);
-      prefetchPerkIcons(perkList);
-      if (result.pagination) {
-        setTotalPages(result.pagination.total_pages);
-        setTotalResults(result.pagination.total);
-      }
-    } catch (err: unknown) {
-      logger.error('Failed fetching perks:', err);
-      if (requestId === fetchSeqRef.current) {
-        setFetchError(err instanceof Error ? err.message : 'Failed fetching perks');
-      }
-    } finally {
-      if (requestId === fetchSeqRef.current) {
-        setLoading(false);
-      }
-    }
-  }, [
-    role,
-    scope,
-    debouncedSearch,
-    sortBy,
-    order,
+  const perksUrl = catalogKey('perks', {
     page,
     limit,
-    ownershipFilter,
-    user,
-    locale,
-    prefetchPerkIcons,
-    perks.length,
-  ]);
+    sort_by: sortBy,
+    order,
+    category: role,
+    lang: locale,
+    scope: scope === 'general' ? 'general' : undefined,
+    // Debounced: the list refetches once typing pauses, not on every keystroke.
+    search: debouncedSearch,
+    owned_only: ownershipFilter === 'owned' && user ? 'true' : undefined,
+    user_id: user?.id,
+  });
+  // The spinner shows only while there is nothing on screen yet for this request (or a retry runs).
+  const [settledUrl, setSettledUrl] = useState<string | null>(null);
+  const [retrying, setRetrying] = useState(false);
+  const loading = retrying || (settledUrl !== perksUrl && perks.length === 0);
+
+  /** Fetches one page of perks; only the newest request's answer is shown. */
+  const requestPerks = useCallback(
+    (url: string) => {
+      const requestId = ++fetchSeqRef.current;
+      const latest = () => requestId === fetchSeqRef.current;
+      return fetchCached<PerksResponse>(url, () => fetchJson(url))
+        .then(
+          (result) => {
+            if (!latest()) return;
+            const perkList = result.data || [];
+            setPerks(perkList);
+            prefetchPerkIcons(perkList);
+            if (result.pagination) {
+              setTotalPages(result.pagination.total_pages);
+              setTotalResults(result.pagination.total);
+            }
+            setFetchError(null);
+          },
+          (err: unknown) => {
+            logger.error('Failed fetching perks:', err);
+            if (latest()) setFetchError(err instanceof Error ? err.message : 'Failed fetching perks');
+          }
+        )
+        .finally(() => {
+          if (latest()) setSettledUrl(url);
+        });
+    },
+    [prefetchPerkIcons]
+  );
 
   useEffect(() => {
-    fetchPerks();
-  }, [fetchPerks]);
+    void requestPerks(perksUrl);
+  }, [perksUrl, requestPerks]);
+
+  const fetchPerks = async () => {
+    setRetrying(true);
+    setFetchError(null);
+    try {
+      await requestPerks(perksUrl);
+    } finally {
+      setRetrying(false);
+    }
+  };
 
   // Shares its cache entry with the tier lists and the profile showcase.
   const { perks: allPerksList } = useCatalogPerks(locale);
@@ -221,24 +217,23 @@ function PerksContent() {
     () => fetchJson<{ data?: CharacterItem[] }>(charactersKey)
   );
 
-  useEffect(() => {
-    const fullList: Perk[] = allPerksList;
-    if (fullList.length === 0) return;
-    setAllPerksForGenerator(fullList);
-    prefetchPerkIcons(fullList.slice(0, 60));
-    setSurvivorCount(fullList.filter((p) => p.category === 'Survivor').length);
-    setKillerCount(fullList.filter((p) => p.category === 'Killer').length);
-    setSurvivorOwnedCount(
-      fullList.filter((p) => p.category === 'Survivor' && p.is_owned !== false).length
-    );
-    setKillerOwnedCount(
-      fullList.filter((p) => p.category === 'Killer' && p.is_owned !== false).length
-    );
-  }, [allPerksList, prefetchPerkIcons]);
+  // The full catalog feeds the sidebar counts (derived while rendering) and warms the first icons.
+  const allPerksForStats = allPerksList;
+  const survivorCount = useMemo(() => allPerksList.filter((p) => p.category === 'Survivor').length, [allPerksList]);
+  const killerCount = useMemo(() => allPerksList.filter((p) => p.category === 'Killer').length, [allPerksList]);
+  const survivorOwnedCount = useMemo(
+    () => allPerksList.filter((p) => p.category === 'Survivor' && p.is_owned !== false).length,
+    [allPerksList]
+  );
+  const killerOwnedCount = useMemo(
+    () => allPerksList.filter((p) => p.category === 'Killer' && p.is_owned !== false).length,
+    [allPerksList]
+  );
+  const characterCount = (charactersResponse?.data || []).length;
 
   useEffect(() => {
-    setCharacterCount((charactersResponse?.data || []).length);
-  }, [charactersResponse]);
+    if (allPerksList.length > 0) prefetchPerkIcons(allPerksList.slice(0, 60));
+  }, [allPerksList, prefetchPerkIcons]);
 
   const handleResetFilters = () => {
     setSearch('');

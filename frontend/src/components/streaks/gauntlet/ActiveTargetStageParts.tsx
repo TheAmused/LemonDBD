@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { GauntletPlayerLoadout, Perk, Role, TierInfo } from '@/types/gauntletStreak';
 import type { OwnedCharacterItem } from '@/components/streaks/useOwnedRoster';
 import { DrawPhase } from '@/components/streaks/gauntlet/useTargetDraw';
@@ -28,10 +28,10 @@ export const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPh
   phase,
   characters,
 }) => {
-  const [failed, setFailed] = useState<boolean>(false);
+  // The name whose picture failed; another killer gets its own try.
+  const [failedName, setFailedName] = useState<string | undefined>(undefined);
+  const failed = failedName !== undefined && failedName === name;
   const src = name ? avatarUrlFor(name, role, characters) : null;
-
-  useEffect(() => setFailed(false), [name]);
 
   const motion = phase === 'landed' ? 'gn-land-frame' : phase === 'spinning' ? 'gn-spin-frame' : '';
 
@@ -51,7 +51,7 @@ export const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPh
       alt=""
       aria-hidden="true"
       className={`w-full h-full max-w-none object-cover rounded-card ${motion}`}
-      onError={() => setFailed(true)}
+      onError={() => setFailedName(name)}
     />
   );
 };

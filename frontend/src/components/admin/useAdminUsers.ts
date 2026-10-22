@@ -15,7 +15,6 @@ import { getErrorMessage } from '@/utils/api';
 import { formatMessage } from '@/utils/i18nFormat';
 import type { ActionMessage, NewUser, Reauth, UserPatch, UserRoleFilter, UserRow, UserStandingFilter } from '@/types/admin';
 
-
 interface AdminUsersInput {
   enabled: boolean;
   refreshKey: number;
@@ -27,7 +26,6 @@ export function useAdminUsers({ enabled, refreshKey, notify, onChanged }: AdminU
   const t = useDictionary().admin;
   const [users, setUsers] = useState<UserRow[]>([]);
   const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(true);
   const [search, setSearchState] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   // The filters and the page size are remembered; the search text and the page number are not.
@@ -36,6 +34,10 @@ export function useAdminUsers({ enabled, refreshKey, notify, onChanged }: AdminU
   const [page, setPage] = useState(1);
   const [perPage, setPerPageState] = usePersistentNumber<number>(ADMIN_STORAGE.usersPerPage, DEFAULT_PAGE_SIZE, PAGE_SIZE_OPTIONS);
   const [reloadKey, setReloadKey] = useState(0);
+  // The list is loading until the request for the current filters has settled.
+  const requestKey = `${page}|${perPage}|${debouncedSearch}|${role}|${standing}|${refreshKey}|${reloadKey}`;
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
+  const loading = loadedKey !== requestKey;
 
   useEffect(() => {
     const timer = window.setTimeout(() => setDebouncedSearch(search.trim()), SEARCH_DEBOUNCE_MS);
@@ -45,7 +47,6 @@ export function useAdminUsers({ enabled, refreshKey, notify, onChanged }: AdminU
   useEffect(() => {
     if (!enabled) return;
     let cancelled = false;
-    setLoading(true);
     listUsers({
       page,
       per_page: perPage,
@@ -69,12 +70,12 @@ export function useAdminUsers({ enabled, refreshKey, notify, onChanged }: AdminU
         if (!cancelled) notify({ type: 'error', text: getErrorMessage(err, t.networkError) });
       })
       .finally(() => {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) setLoadedKey(requestKey);
       });
     return () => {
       cancelled = true;
     };
-  }, [enabled, page, perPage, debouncedSearch, role, standing, refreshKey, reloadKey, notify, t.networkError]);
+  }, [enabled, page, perPage, debouncedSearch, role, standing, requestKey, notify, t.networkError]);
 
   /** Every filter change starts again at page 1. */
   const filterSetter = <V,>(set: (value: V) => void) => (value: V) => {

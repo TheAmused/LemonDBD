@@ -14,6 +14,7 @@ import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { paletteColor } from '@/utils/themeColor';
 import { Img } from '@/components/common/Img';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface CoverImageCropModalProps {
   isOpen: boolean;
@@ -63,15 +64,19 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
   const imgRef = useRef<HTMLImageElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  // Each opening (or a new image while open) starts from the image as given, unzoomed (while rendering).
+  useOnValueChange(isOpen ? `open:${imageUrl}` : null, (opened) => {
+    if (opened === null) return;
+    setCurrentUrl(imageUrl);
+    setZoom(1);
+    setOffset({ x: 0, y: 0 });
+    setCorsError(false);
+    setImageError(false);
+    setImageLoaded(false);
+  });
+
   useEffect(() => {
     if (isOpen) {
-      setCurrentUrl(imageUrl);
-      setZoom(1);
-      setOffset({ x: 0, y: 0 });
-      setCorsError(false);
-      setImageError(false);
-      setImageLoaded(false);
-
       // Preemptively fetch via proxy to turn into a clean local dataUrl
       if (imageUrl && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))) {
         const proxied = `/api/v1/smash-or-pass/proxy-image?url=${encodeURIComponent(imageUrl)}`;

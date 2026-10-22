@@ -151,7 +151,11 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
         ? t.disableCharacterSubtitle
         : t.disablePerkSubtitle;
 
-  const list = loadedFor !== viewKey ? [] : kind === 'characters' ? characters : perks;
+  const list = useMemo(
+    () => (loadedFor !== viewKey ? [] : kind === 'characters' ? characters : perks),
+    [loadedFor, viewKey, kind, characters, perks]
+  );
+
   const disabledCount = useMemo(() => list.filter((item) => item.is_disabled).length, [list]);
   const shown = disabledOnly ? list.filter((item) => item.is_disabled) : list;
 

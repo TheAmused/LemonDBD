@@ -47,7 +47,10 @@ export function UserProfileClient() {
   const [avatarFeedback, setAvatarFeedback] = useState<StatusFeedback | null>(null);
 
   const [myReports, setMyReports] = useState<UserBugReport[]>([]);
-  const [loadingReports, setLoadingReports] = useState(false);
+  // The first page loads with the profile; a page change shows as loading until its answer is in.
+  const [firstReportsLoaded, setFirstReportsLoaded] = useState(false);
+  const [pagingReports, setPagingReports] = useState(false);
+  const loadingReports = pagingReports || (isAuthenticated && !firstReportsLoaded);
   const [reportsTotal, setReportsTotal] = useState(0);
   const [unreadReports, setUnreadReports] = useState(0);
   const [reportsPage, setReportsPage] = useState(1);
@@ -57,42 +60,49 @@ export function UserProfileClient() {
   const reportsRequestRef = useRef<AbortController | null>(null);
   const [reportSubmitted, setReportSubmitted] = useState(false);
 
-  const fetchMyReports = useCallback(async (page: number = 1, signal?: AbortSignal) => {
-    if (!isAuthenticated) return;
-
+  /**
+   * Fetches one page of the reports; a newer request cancels the one in flight. State is set in its
+   * callbacks. Resolves to whether this was still the newest request when it settled.
+   */
+  const fetchMyReports = useCallback((page: number = 1, signal?: AbortSignal): Promise<boolean> => {
     reportsRequestRef.current?.abort();
     const controller = new AbortController();
     reportsRequestRef.current = controller;
     signal?.addEventListener('abort', () => controller.abort());
 
-    setLoadingReports(true);
-    try {
-      const result = await fetchMyBugReports(page, REPORTS_PER_PAGE, controller.signal);
-      setMyReports(result.reports);
-      setReportsTotal(result.total);
-      setUnreadReports(result.unreadCount);
-      setReportsPage(result.page);
-      setReportsTotalPages(result.totalPages);
-    } catch (err) {
-      if (err instanceof DOMException && err.name === 'AbortError') return;
-      logger.error('Failed to fetch user bug reports:', err);
-    } finally {
-      if (reportsRequestRef.current === controller) setLoadingReports(false);
-    }
-  }, [isAuthenticated]);
+    return fetchMyBugReports(page, REPORTS_PER_PAGE, controller.signal).then(
+      (result) => {
+        setMyReports(result.reports);
+        setReportsTotal(result.total);
+        setUnreadReports(result.unreadCount);
+        setReportsPage(result.page);
+        setReportsTotalPages(result.totalPages);
+      },
+      (err: unknown) => {
+        if (err instanceof DOMException && err.name === 'AbortError') return;
+        logger.error('Failed to fetch user bug reports:', err);
+      }
+    ).then(() => reportsRequestRef.current === controller);
+  }, []);
 
   useEffect(() => {
     if (!isAuthenticated) return;
     const controller = new AbortController();
-    fetchMyReports(1, controller.signal);
+    void fetchMyReports(1, controller.signal).finally(() => {
+      if (!controller.signal.aborted) setFirstReportsLoaded(true);
+    });
     return () => controller.abort();
   }, [isAuthenticated, fetchMyReports]);
 
   const handleReportsPageChange = useCallback(
     (page: number) => {
-      fetchMyReports(page);
+      if (!isAuthenticated) return;
+      setPagingReports(true);
+      void fetchMyReports(page).then((newest) => {
+        if (newest) setPagingReports(false);
+      });
     },
-    [fetchMyReports]
+    [isAuthenticated, fetchMyReports]
   );
 
   // The local preview of an avatar being uploaded is a blob: URL; it is released once replaced.

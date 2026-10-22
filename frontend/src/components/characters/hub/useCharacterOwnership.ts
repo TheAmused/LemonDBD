@@ -88,7 +88,8 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
   // Keyed by "survivor:7" / "killer:7", not by a bare id: survivors and
   // killers are numbered separately now, so an id alone collides.
   const [characterOwnershipDraft, setCharacterOwnershipDraft] = useState<Record<string, boolean>>({});
-  const loadedCharacterOwnership = useRef<Record<string, boolean>>({});
+  // What the server holds, to tell the edits apart from it.
+  const [loadedCharacterOwnership, setLoadedCharacterOwnership] = useState<Record<string, boolean>>({});
   const [perkUnlockDraft, setPerkUnlockDraft] = useState<Record<number, boolean>>({});
   const [allPerks, setAllPerks] = useState<OwnedPerk[]>([]);
   const [perksPopupCharacter, setPerksPopupCharacter] = useState<CharacterItem | null>(null);
@@ -97,9 +98,9 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
   const isDirty = useMemo(
     () =>
       ownershipMode &&
-      (changedCharacterUpdates(loadedCharacterOwnership.current, characterOwnershipDraft).length > 0 ||
+      (changedCharacterUpdates(loadedCharacterOwnership, characterOwnershipDraft).length > 0 ||
         changedPerkUpdates(allPerks, perkUnlockDraft, new Set()).length > 0),
-    [ownershipMode, characterOwnershipDraft, allPerks, perkUnlockDraft]
+    [ownershipMode, loadedCharacterOwnership, characterOwnershipDraft, allPerks, perkUnlockDraft]
   );
 
   // A reload or a closed tab would silently lose the draft.
@@ -155,7 +156,7 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
         perkDraft[p.perk_id] = p.is_unlocked;
       });
 
-      loadedCharacterOwnership.current = charDraft;
+      setLoadedCharacterOwnership(charDraft);
       setCharacterOwnershipDraft(charDraft);
       setPerkUnlockDraft(perkDraft);
       setAllPerks(perksList);
@@ -210,7 +211,7 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
     setOwnershipSaveError(null);
     try {
       const characterUpdates = changedCharacterUpdates(
-        loadedCharacterOwnership.current,
+        loadedCharacterOwnership,
         characterOwnershipDraft,
       );
       // Only what changed (and the perks of changed characters): sending all ~320 perks on every

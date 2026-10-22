@@ -137,9 +137,11 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
 
   useEffect(() => {
     isMountedRef.current = true;
+    // The list is only ever pushed to, so the one read here is the one to clear on unmount.
+    const timeouts = timeoutsRef.current;
     return () => {
       isMountedRef.current = false;
-      timeoutsRef.current.forEach((id) => clearTimeout(id));
+      timeouts.forEach((id) => clearTimeout(id));
     };
   }, []);
 

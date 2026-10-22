@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/generator/modes/wheel/useWheelStage.ts
 import { logger } from '@/utils/logger';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useEffectEvent, useRef, useState } from 'react';
 import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import type { ChaosMutator } from '@/types/chaos';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -12,6 +12,8 @@ import { drawWheel } from './wheelDrawing';
 
 import { useEmberDrift } from './useEmberDrift';
 import { pickRandomLoadout } from '../../lib/perkPicker';
+import { useReducedMotion } from 'framer-motion';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface WheelStageInput {
   totalPages: number;
@@ -47,7 +49,7 @@ export function useWheelStage({
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
   const [isMorphing, setIsMorphing] = useState<boolean>(false);
   const [statusText, setStatusText] = useState<string>('');
-  const [reduceMotion, setReduceMotion] = useState(false);
+  const reduceMotion = useReducedMotion() ?? false;
 
   const wheelCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const wheelWrapperRef = useRef<HTMLDivElement | null>(null);
@@ -128,26 +130,22 @@ export function useWheelStage({
   // keep showing after the switch until the next spin recomputed it -- back
   // to the page wheel and a clean angle, same starting point a fresh mount
   // would have given it.
-  useEffect(() => {
+  // The shown state resets while rendering; the animation refs follow in the effect below.
+  useOnValueChange(role, () => {
+    if (isSpinning) return;
+    setStatusText('');
+    setWheelPhase(effectiveTotalPages > 1 ? 'page' : 'perk');
+    setSelectedPageUI(1);
+  });
+  const resetWheelRefs = useEffectEvent(() => {
     if (isSpinning) return;
     wheelAngleRef.current = 0;
-    setStatusText('');
-    if (effectiveTotalPages > 1) {
-      wheelPhaseRef.current = 'page';
-      activePageRef.current = 1;
-      setWheelPhase('page');
-      setSelectedPageUI(1);
-    } else {
-      wheelPhaseRef.current = 'perk';
-      activePageRef.current = 1;
-      setWheelPhase('perk');
-      setSelectedPageUI(1);
-    }
-  }, [role]);
-
+    wheelPhaseRef.current = effectiveTotalPages > 1 ? 'page' : 'perk';
+    activePageRef.current = 1;
+  });
   useEffect(() => {
-    setReduceMotion(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-  }, []);
+    resetWheelRefs();
+  }, [role]);
 
   useEffect(() => {
     isMountedRef.current = true;

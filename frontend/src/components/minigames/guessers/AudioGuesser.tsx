@@ -69,19 +69,24 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
   const heightClue = attempts >= 3 && targetChar ? `${t.attributes.height}: ${targetChar.height || ''}` : null;
 
   // Cleanup on unmount or round switch
+  // Reads the element when it runs: the <audio> only mounts once the round has a source.
+  const rewindAudio = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.pause();
+    audio.currentTime = 0;
+  }, []);
+
   useEffect(() => {
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
+      rewindAudio();
       if (synthTimerRef.current) {
         clearTimeout(synthTimerRef.current);
       }
       soundEngine.stopAll();
       setIsPlaying(false);
     };
-  }, [roundConfig.round_number]);
+  }, [roundConfig.round_number, rewindAudio]);
 
   const togglePlay = useCallback(() => {
     if (isPlaying) {

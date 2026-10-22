@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/streaks/chaos/ChaosBoard.tsx
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import type { Difficulty } from '@/types/chaosStreak';
@@ -80,11 +80,7 @@ export const ChaosBoard: React.FC = () => {
   // instead. That stays true for the run's whole lifetime, only resetting
   // when abandon/completion swaps in a different run id.
   const [engagedRunId, setEngagedRunId] = useState<number | null>(null);
-  useEffect(() => {
-    if (run?.perks_revealed && run.id !== engagedRunId) {
-      setEngagedRunId(run.id);
-    }
-  }, [run?.perks_revealed, run?.id, engagedRunId]);
+  if (run?.perks_revealed && run.id !== engagedRunId) setEngagedRunId(run.id);
   const poolFrozen = Boolean(run?.pool_frozen) && run?.id === engagedRunId;
 
   const rosterKillers = useMemo(() => {

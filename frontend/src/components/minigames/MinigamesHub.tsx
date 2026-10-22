@@ -4,7 +4,7 @@ import { logger } from '@/utils/logger';
 import { getErrorMessage } from "@/utils/api";
 // frontend/src/components/minigames/MinigamesHub.tsx
 import { Button, buttonClassName } from '@/components/common/Button';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -37,6 +37,7 @@ import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
 import { FlagshipCard, GuesserCard, CustomTrialCard } from './MinigamesHubCards';
 import { flagshipModes, guesserModes } from './hubModes';
+import { useOnceInBrowser } from '@/hooks/useOnceInBrowser';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
@@ -60,11 +61,11 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
   const [shareLoadingId, setShareLoadingId] = useState<string | number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Load streaks and check onboarding on mount
-  useEffect(() => {
+  // Streaks and the onboarding check come from this browser's storage.
+  useOnceInBrowser(() => {
     setStreakData(getDailyStreak());
     if (!hasSeenNsfwOnboarding()) setOnboardingOpen(true);
-  }, []);
+  });
 
   const [todayStr] = useState(() => new Date().toISOString().slice(0, 10));
   const isCompletedToday = wonDailyOn(streakData, todayStr);

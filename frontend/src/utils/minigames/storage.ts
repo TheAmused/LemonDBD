@@ -11,8 +11,17 @@ export function getCustomChallenges(): ChallengeDefinition[] {
   const storage = getLocalStorage();
   if (!storage) return [];
   try {
-    const raw = storage.getItem(CUSTOM_CHALLENGES_KEY);
-    if (!raw) return [];
+    return parseCustomChallenges(storage.getItem(CUSTOM_CHALLENGES_KEY));
+  } catch (err) {
+    logger.error('Error reading custom minigames from storage:', err);
+    return [];
+  }
+}
+
+/** The trial list stored under CUSTOM_CHALLENGES_KEY (empty for nothing or junk). */
+export function parseCustomChallenges(raw: string | null): ChallengeDefinition[] {
+  if (!raw) return [];
+  try {
     const parsed = JSON.parse(raw);
     return Array.isArray(parsed) ? parsed : [];
   } catch (err) {

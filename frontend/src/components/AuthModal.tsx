@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/AuthModal.tsx
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAltcha } from '@/hooks/useAltcha';
@@ -24,6 +24,7 @@ import {
   AuthField, authModalTitle, DemoAccountButtons, ForgotSentNotice, GoogleSignInSection, LegalConsentField, ModeSwitchLink,
   SecurityCheck, SubmitLabel, type AuthMode, type Notice,
 } from '@/components/auth/AuthModalParts';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -55,14 +56,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [notice, setNotice] = useState<Notice | null>(null);
+  const [notice, setNotice] = useState<Notice | null>(() =>
+    isOpen && verifyEmailFor ? { type: 'verify-reminder', email: verifyEmailFor } : null
+  );
   const [acceptedLegal, setAcceptedLegal] = useState<boolean>(false);
   // Which document the read-only preview shows (null: closed).
   const [legalDoc, setLegalDoc] = useState<LegalDocId | null>(null);
   // Set by a submit with the box unticked, so the field error only shows after an attempt.
   const [legalAttempted, setLegalAttempted] = useState<boolean>(false);
 
-  useEffect(() => {
+  // Opening, closing or a new starting point clears the password; an opening starts the form afresh.
+  useOnValueChange(`${isOpen}|${initialMode}|${verifyEmailFor ?? ''}`, () => {
     setPassword('');
     if (isOpen) {
       setMode(initialMode);
@@ -72,7 +76,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       setLegalDoc(null);
       setNotice(verifyEmailFor ? { type: 'verify-reminder', email: verifyEmailFor } : null);
     }
-  }, [isOpen, initialMode, verifyEmailFor]);
+  });
 
   const locale = pathname?.split('/')[1] || 'en';
 

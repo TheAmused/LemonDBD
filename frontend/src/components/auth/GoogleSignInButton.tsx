@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/auth/GoogleSignInButton.tsx
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { buttonClassName } from '@/components/common/Button';
 import { useDictionary } from '@/context/DictionaryContext';
 
@@ -82,7 +82,9 @@ export const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({ clientId
   const dict = useDictionary();
   const holderRef = useRef<HTMLDivElement>(null);
   const callbackRef = useRef(onCredential);
-  callbackRef.current = onCredential;
+  useLayoutEffect(() => {
+    callbackRef.current = onCredential;
+  });
 
   useEffect(() => {
     let cancelled = false;

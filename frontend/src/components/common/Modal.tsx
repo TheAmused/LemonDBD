@@ -24,11 +24,12 @@ import { type ModalVariant, type ModalSize, type ModalCloseButton, type ModalBac
 import React, {
   useCallback,
   useEffect,
+  useEffectEvent,
   useId,
   useMemo,
   useRef,
-  useState,
 } from 'react';
+import { useIsClient } from '@/hooks/useIsClient';
 import { createPortal } from 'react-dom';
 import {
   AnimatePresence,
@@ -155,7 +156,7 @@ export const Modal: React.FC<ModalProps> = ({
   const titleId = `${id}-title`;
   const descriptionId = `${id}-desc`;
   const panelRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const reduceMotion = useReducedMotion();
   const dragControls = useDragControls();
   const compact = useIsCompact(MODAL_CONFIG.compactBreakpoint);
@@ -168,7 +169,9 @@ export const Modal: React.FC<ModalProps> = ({
     if (!busy) onClose();
   }, [busy, onClose]);
 
-  useEffect(() => setMounted(true), []);
+  // Effect events: the open/focus effects below run once per open, reading these props as they are then.
+  const notifyOpen = useEffectEvent(() => onOpen?.());
+  const focusOptions = useEffectEvent(() => ({ initialFocusRef, restoreFocus }));
 
   /* stack + scroll lock */
   useEffect(() => {
@@ -178,12 +181,11 @@ export const Modal: React.FC<ModalProps> = ({
       const scrollbar = window.innerWidth - document.documentElement.clientWidth;
       acquireScrollLock(document.body, scrollbar);
     }
-    onOpen?.();
+    notifyOpen();
     return () => {
       removeModal(id);
       if (lockScroll) releaseScrollLock(document.body);
     };
-    // onOpen intentionally excluded: it must fire once per open.
   }, [isOpen, lockScroll, id]);
 
   /* Escape + Tab trap (top-most modal only) */
@@ -233,11 +235,12 @@ export const Modal: React.FC<ModalProps> = ({
     // is plain :focus (not :focus-visible); re-focusing it left a focus ring and
     // its tooltip stuck on screen after the modal closed.
     const openerWasKeyboard = Boolean(opener?.matches?.(':focus-visible'));
+    const { initialFocusRef: initialFocus, restoreFocus: shouldRestore } = focusOptions();
     const raf = requestAnimationFrame(() => {
       const panel = panelRef.current;
       if (!panel) return;
       const target =
-        initialFocusRef?.current ??
+        initialFocus?.current ??
         panel.querySelector<HTMLElement>('[data-autofocus]') ??
         getFocusable(panel).find((el) => !el.hasAttribute('data-modal-close')) ??
         panel;
@@ -245,11 +248,10 @@ export const Modal: React.FC<ModalProps> = ({
     });
     return () => {
       cancelAnimationFrame(raf);
-      if (restoreFocus && openerWasKeyboard && opener && opener.isConnected) {
+      if (shouldRestore && openerWasKeyboard && opener && opener.isConnected) {
         opener.focus({ preventScroll: true });
       }
     };
-    // Focus once per open.
   }, [isOpen, mounted]);
 
   const ctx = useMemo<ModalContextValue>(

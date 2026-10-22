@@ -336,7 +336,7 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
       clearTimeout(fallbackTimer);
       cancelAnimationFrame(animId);
     };
-  }, [exitType, onComplete]);
+  }, [exitType, onComplete, durationProp]);
 
   return (
     <div

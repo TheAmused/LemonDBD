@@ -104,7 +104,9 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({ 
   const dict = useDictionary();
   const [search, setSearch] = useState('');
   const [characters, setCharacters] = useState<CharacterItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  // Loading while open until the roster for this language has arrived (it stays for later openings).
+  const [loadedFor, setLoadedFor] = useState<string | null>(null);
+  const loading = isOpen && loadedFor !== locale;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -114,7 +116,6 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({ 
     // it lists cannot change in between.
     const url = catalogKey('characters', { category: 'all', lang: locale });
 
-    setLoading(true);
     fetchCached<ListPayload<CharacterItem>>(url, () => fetchJson<ListPayload<CharacterItem>>(url), { ttlMs: CATALOG_TTL_MS })
       .then((data) => {
         const list = unwrapList(data);
@@ -124,7 +125,7 @@ export const ShowcaseCharacterModal: React.FC<ShowcaseCharacterModalProps> = ({ 
         logger.error('Failed to load characters for showcase modal:', err);
       })
       .finally(() => {
-        setLoading(false);
+        setLoadedFor(locale);
       });
   }, [isOpen, locale]);
 

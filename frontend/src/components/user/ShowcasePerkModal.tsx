@@ -1,7 +1,7 @@
 // frontend/src/components/user/ShowcasePerkModal.tsx
 'use client';
 
-import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { SearchInput } from '@/components/common/Field';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { Sparkles, Check } from 'lucide-react';
@@ -14,6 +14,7 @@ import { Spinner } from '@/components/common/Spinner';
 import { EmptyState } from '@/components/common/EmptyState';
 import { useDictionary } from "@/context/DictionaryContext";
 import { SelectableCard } from '@/components/common/SelectableCard';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 /** The slots sit clockwise from the top (top, right, bottom, left); the build fills them the other way round. */
 const FILL_ORDER = [0, 3, 2, 1] as const;
@@ -70,11 +71,9 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, ro
   const [search, setSearch] = useState('');
   const { perks, loading } = useCatalogPerks(locale, isOpen);
 
-  useEffect(() => {
-    if (isOpen) {
-      setSearch('');
-    }
-  }, [isOpen]);
+  useOnValueChange(isOpen, (open) => {
+    if (open) setSearch('');
+  });
 
   // The role's perks are listed right away; the search only narrows them down.
   const sortedPerks = useMemo(
@@ -92,7 +91,9 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, ro
 
   // Read through a ref so togglePerk keeps one identity and a pick re-renders only the tiles whose selection changed.
   const buildRef = useRef({ perkIds, onSetPerk });
-  buildRef.current = { perkIds, onSetPerk };
+  useLayoutEffect(() => {
+    buildRef.current = { perkIds, onSetPerk };
+  });
 
   // Picking fills the first free slot, picking a chosen perk again frees its slot; a full build ignores new picks.
   const togglePerk = useCallback((perk: Perk) => {

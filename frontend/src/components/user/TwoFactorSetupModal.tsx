@@ -17,6 +17,7 @@ import { ApiError } from '@/utils/api';
 import { enableTwoFactor, startTwoFactorSetup, type TwoFactorSetup } from '@/services/twoFactorApi';
 import { twoFactorErrorMessage } from '@/utils/twoFactorErrors';
 import { trackEvent } from '@/utils/analytics';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 type Step = 'password' | 'scan' | 'codes';
 
@@ -39,8 +40,7 @@ export const TwoFactorSetupModal: React.FC<TwoFactorSetupModalProps> = ({ isOpen
   const [keyCopied, setKeyCopied] = useState(false);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const reset = () => {
-    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+  const resetFields = () => {
     setStep('password');
     setPassword('');
     setSetup(null);
@@ -50,9 +50,16 @@ export const TwoFactorSetupModal: React.FC<TwoFactorSetupModalProps> = ({ isOpen
     setBusy(false);
     setKeyCopied(false);
   };
+  const reset = () => {
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    resetFields();
+  };
 
+  // Closing starts the next opening from the first step (the effect below stops the copy timer).
+  useOnValueChange(isOpen, (open) => {
+    if (!open) resetFields();
+  });
   useEffect(() => {
-    if (!isOpen) reset();
     return () => {
       if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
     };

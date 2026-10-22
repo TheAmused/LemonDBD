@@ -80,19 +80,21 @@ export function useSmashRosters(_locale: string) {
 
   // NSFW rosters are only listed once the viewer has NSFW on (each still opens behind the gate's
   // logic above); switching it on refetches so they appear.
-  const loadRosters = useCallback(async () => {
-    try {
-      const rosterList = await fetchRosters(globalNsfw);
-      if (rosterList && rosterList.length > 0) {
-        setRosters(rosterList);
-      }
-    } catch {
-      // Best-effort: failure here is non-fatal.
-    }
-  }, [globalNsfw]);
+  const loadRosters = useCallback(
+    () =>
+      fetchRosters(globalNsfw).then(
+        (rosterList) => {
+          if (rosterList && rosterList.length > 0) setRosters(rosterList);
+        },
+        () => {
+          // Best-effort: failure here is non-fatal.
+        }
+      ),
+    [globalNsfw]
+  );
 
   useEffect(() => {
-    loadRosters();
+    void loadRosters();
   }, [loadRosters]);
 
   const getRosterDisplayName = useCallback(

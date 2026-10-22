@@ -2,7 +2,7 @@
 // frontend/src/components/UserAvatar.tsx
 
 import { logger } from '@/utils/logger';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { LemonIcon } from '@/components/LemonIcon';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
@@ -99,7 +99,8 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   adminAriaLabel,
   alt,
 }) => {
-  const [imgError, setImgError] = useState(false);
+  // The source that failed to load; a new avatar URL gets its own try.
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
   const sizeConfig = SIZE_MAP[size] || SIZE_MAP.md;
   const containerClasses = shape === 'circle'
     ? sizeConfig.container.replace(/rounded-\S+/, 'rounded-full')
@@ -107,12 +108,8 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
 
   const rawAvatarUrl = previewUrl || user?.avatar_url;
 
-  useEffect(() => {
-    setImgError(false);
-  }, [rawAvatarUrl]);
-
   const finalSrc = rawAvatarUrl ? avatarImageSrc(rawAvatarUrl, Boolean(previewUrl)) : '';
-  const isCustomAvatar = finalSrc !== '' && !imgError;
+  const isCustomAvatar = finalSrc !== '' && failedSrc !== finalSrc;
 
   const defaultBorder =
     borderClassName ||
@@ -129,7 +126,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
             alt={alt || user?.username || ''}
             onError={() => {
               logger.warn('Avatar image failed to load from:', finalSrc);
-              setImgError(true);
+              setFailedSrc(finalSrc);
             }}
             className="h-full w-full object-cover"
           />

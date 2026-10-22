@@ -12,6 +12,7 @@ import { FogReportIcon, CampfireMugIcon } from '@/components/icons/DbdIcons';
 import { tip } from '@/components/common/Tooltip';
 import { FitText } from '@/components/common/FitText';
 import { useDictionary } from "@/context/DictionaryContext";
+import { useIsClient } from '@/hooks/useIsClient';
 
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
@@ -82,7 +83,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
   const setTheme = propSetTheme ?? themeContext.setTheme;
   const pathname = usePathname();
 
-  const [clientMounted, setClientMounted] = useState(false);
+  const clientMounted = useIsClient();
   const isMounted = propMounted ?? (propTheme !== undefined ? true : clientMounted);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   // Guards against a second locale switch landing while the first is still
@@ -92,8 +93,10 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
   // lands) is the one window where the applied theme class can momentarily
   // drop out from under a still-resolving navigation. Blocking overlap here
   // is cheaper and more certain than trying to make every intermediate
-  // frame themed. Cleared once `pathname` reflects the new locale.
-  const [isSwitchingLang, setIsSwitchingLang] = useState(false);
+  // frame themed. Held for the path the switch started from, so it clears
+  // itself once `pathname` reflects the new locale.
+  const [switchingFrom, setSwitchingFrom] = useState<string | null>(null);
+  const isSwitchingLang = switchingFrom !== null && switchingFrom === pathname;
   const langMenuRef = useRef<HTMLDivElement>(null);
   const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
   const themeMenuRef = useRef<HTMLDivElement>(null);
@@ -135,16 +138,6 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
     return segments.join('/') + query;
   };
 
-  useEffect(() => {
-    setClientMounted(true);
-  }, []);
-
-  // The in-flight navigation has landed once the URL reflects it; release
-  // the guard so the next switch is allowed.
-  useEffect(() => {
-    setIsSwitchingLang(false);
-  }, [pathname]);
-
   return (
     <div className="space-y-2 pt-3 mt-3 border-t border-border-color">
       {/* Language & Theme Controls */}
@@ -178,7 +171,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
                       e.preventDefault();
                       return;
                     }
-                    setIsSwitchingLang(true);
+                    setSwitchingFrom(pathname);
                     setIsLangMenuOpen(false);
                   }}
                   className={

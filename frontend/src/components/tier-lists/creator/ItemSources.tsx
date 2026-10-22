@@ -23,6 +23,7 @@ import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { ToggleChip } from '@/components/common/ToggleChip';
 import { TileButton } from '@/components/common/TileButton';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 export interface IncomingItem {
   name: string;
@@ -67,9 +68,7 @@ export function ItemSources({ onAdd, existingIds, locale }: ItemSourcesProps) {
 
   // Guards against a stale 'upload' selection if admin status changes (or
   // isn't known yet on first render) out from under an open tab.
-  useEffect(() => {
-    if (tab === 'upload' && !isAdmin) setTab('catalog');
-  }, [tab, isAdmin]);
+  if (tab === 'upload' && !isAdmin) setTab('catalog');
 
   return (
     <div className="flex flex-col gap-4">
@@ -211,30 +210,32 @@ type ProbeStatus = 'idle' | 'loading' | 'ok' | 'error' | 'invalid';
 function useImageProbe(rawUrl: string): { status: ProbeStatus; src: string | null } {
   const trimmed = rawUrl.trim();
   const src = useMemo(() => (trimmed ? sanitizeImageUrl(trimmed) : null), [trimmed]);
-  const [status, setStatus] = useState<ProbeStatus>('idle');
+  // The probe's answer for the link it checked; a link not answered yet is still loading.
+  const [probed, setProbed] = useState<{ src: string; ok: boolean } | null>(null);
+  const status: ProbeStatus = !trimmed
+    ? 'idle'
+    : !src
+      ? 'invalid'
+      : probed?.src === src
+        ? probed.ok
+          ? 'ok'
+          : 'error'
+        : 'loading';
 
   useEffect(() => {
-    if (!trimmed) {
-      setStatus('idle');
-      return;
-    }
-    if (!src) {
-      setStatus('invalid');
-      return;
-    }
-    setStatus('loading');
+    if (!src) return;
     let cancelled = false;
     const timer = window.setTimeout(() => {
       const probe = new window.Image();
-      probe.onload = () => !cancelled && setStatus('ok');
-      probe.onerror = () => !cancelled && setStatus('error');
+      probe.onload = () => !cancelled && setProbed({ src, ok: true });
+      probe.onerror = () => !cancelled && setProbed({ src, ok: false });
       probe.src = src;
     }, 350);
     return () => {
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [trimmed, src]);
+  }, [src]);
 
   return { status, src };
 }
@@ -392,8 +393,9 @@ function CatalogSource({ onAdd, existingIds, locale }: {
     return items.filter((i) => normalizeSearchText(`${i.name} ${i.subtitle ?? ''}`).includes(needle));
   }, [items, query]);
 
+  // A new kind or search starts from the first chunk, scrolled to the top.
+  useOnValueChange(`${kind}|${query}`, () => setRenderLimit(CHUNK_SIZE));
   useEffect(() => {
-    setRenderLimit(CHUNK_SIZE);
     if (containerRef.current) {
       containerRef.current.scrollTop = 0;
     }

@@ -11,13 +11,13 @@ import type { AdminOverview } from '@/types/admin';
 export function useAdminOverview(enabled: boolean) {
   const [overview, setOverview] = useState<AdminOverview | null>(null);
 
-  const refresh = useCallback(async () => {
-    try {
-      setOverview(await fetchOverview());
-    } catch (err: unknown) {
-      logger.error('Failed to load the admin overview:', err);
-    }
-  }, []);
+  const refresh = useCallback(
+    () =>
+      fetchOverview().then(setOverview, (err: unknown) => {
+        logger.error('Failed to load the admin overview:', err);
+      }),
+    []
+  );
 
   useEffect(() => {
     if (enabled) void refresh();

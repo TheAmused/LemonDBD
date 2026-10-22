@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/maps/MapsClient.tsx
 
-import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { Suspense, useCallback, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Search, Mic } from 'lucide-react';
@@ -15,6 +15,7 @@ import { MapRealm } from '@/types/map';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { usePersistentString } from '@/hooks/usePersistentString';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 const isValidSearchMode = (v: string): v is 'text' | 'voice' => v === 'text' || v === 'voice';
 
@@ -45,18 +46,20 @@ function MapsClientInner() {
     timestamp: Date.now(),
     via: 'link',
   }));
-  useEffect(() => {
+  // A new link target (client navigation to another map) is handled like a fresh selection:
+  // the bumped timestamp makes it a new target even when it names the map already open.
+  useOnValueChange(`${initialMapName}|${initialMapId ?? ''}`, () => {
     if (initialMapName || initialMapId !== undefined) {
-      setSelectedMap({ mapName: initialMapName, mapId: initialMapId, timestamp: Date.now(), via: 'link' });
+      setSelectedMap((prev) => ({ mapName: initialMapName, mapId: initialMapId, timestamp: prev.timestamp + 1, via: 'link' }));
     }
-  }, [initialMapName, initialMapId]);
+  });
 
   const backendBase = getBackendBaseUrl();
 
   const searchModeOptions: readonly [
     SegmentedControlOption<'text' | 'voice'>,
     SegmentedControlOption<'text' | 'voice'>,
-  ] = [
+  ] = useMemo(() => [
     {
       value: 'text',
       icon: <Search className="h-4 w-4" aria-hidden="true" />,
@@ -69,7 +72,7 @@ function MapsClientInner() {
       label: dict.maps.searchVoiceTab,
       activeClassName: 'bg-accent-red',
     },
-  ];
+  ], [dict.maps.searchTextTab, dict.maps.searchVoiceTab]);
 
   const router = useRouter();
 

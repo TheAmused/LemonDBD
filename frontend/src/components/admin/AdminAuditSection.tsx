@@ -120,11 +120,13 @@ export function AdminAuditSection({ refreshKey, notify }: { refreshKey: number; 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = usePersistentNumber<number>(ADMIN_STORAGE.auditPerPage, DENSE_PAGE_SIZE, PAGE_SIZE_OPTIONS);
   const [category, setCategory] = usePersistentString<Category>(ADMIN_STORAGE.auditCategory, 'all', oneOf(Object.keys(CATEGORIES) as Category[]));
-  const [loading, setLoading] = useState(true);
+  // The log is loading until the request for the current page and filter has settled.
+  const requestKey = `${page}|${perPage}|${category}|${refreshKey}`;
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
+  const loading = loadedKey !== requestKey;
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
     listAuditLogs({ page, per_page: perPage, target_type: CATEGORIES[category].join(',') })
       .then((data) => {
         if (cancelled) return;
@@ -132,11 +134,11 @@ export function AdminAuditSection({ refreshKey, notify }: { refreshKey: number; 
         setTotal(data.total ?? 0);
       })
       .catch((err: unknown) => !cancelled && notify({ type: 'error', text: getErrorMessage(err, t.networkError) }))
-      .finally(() => !cancelled && setLoading(false));
+      .finally(() => !cancelled && setLoadedKey(requestKey));
     return () => {
       cancelled = true;
     };
-  }, [page, perPage, category, refreshKey, notify, t.networkError]);
+  }, [page, perPage, category, requestKey, notify, t.networkError]);
 
   const actionLabel = (action: string) => {
     const key = ACTION_LABEL_KEYS[action as keyof typeof ACTION_LABEL_KEYS];

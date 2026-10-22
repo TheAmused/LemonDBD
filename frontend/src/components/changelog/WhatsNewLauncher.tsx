@@ -1,11 +1,14 @@
 'use client';
 // frontend/src/components/changelog/WhatsNewLauncher.tsx
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Megaphone, Plus, Skull } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { useAuth } from '@/context/AuthContext';
 import { useDragReorder } from '@/hooks/useDragReorder';
+import { useIsClient } from '@/hooks/useIsClient';
+import { useLatest } from '@/hooks/useLatest';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 import type {
   ChangelogAnnounceResponse,
   ChangelogDiscordResult,
@@ -81,8 +84,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
   const [pendingDraft, setPendingDraft] = useState<ChangelogPostDraft | null>(null);
   const [announcing, setAnnouncing] = useState(false);
   const [discordNotice, setDiscordNotice] = useState<{ title: string; postTitle: string } | null>(null);
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useIsClient();
 
   const handleOpen = () => {
     setIsOpen(true);
@@ -176,9 +178,9 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
   const listedPosts = useMemo(() => (isAdmin ? posts : posts.filter((p) => p.is_published)), [posts, isAdmin]);
 
   // Every entry starts collapsed on each open (readers: opening one is what marks it as read).
-  useEffect(() => {
-    if (!isOpen) setExpandedIds(new Set());
-  }, [isOpen]);
+  useOnValueChange(isOpen, (open) => {
+    if (!open) setExpandedIds(new Set());
+  });
 
   const canReorder = isAdmin && !!token;
 
@@ -195,8 +197,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
     [token]
   );
 
-  const postsRef = useRef(posts);
-  postsRef.current = posts;
+  const postsRef = useLatest(posts);
 
   const drag = useDragReorder<number>({
     enabled: canReorder,

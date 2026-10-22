@@ -2,7 +2,7 @@
 'use client';
 
 import { logger } from '@/utils/logger';
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 export interface UserProfile {
   id: number;
@@ -109,37 +109,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [warnings, setWarnings] = useState<UserWarning[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  const fetchCurrentUser = useCallback(async () => {
-    try {
-      const res = await fetch(`${API_BASE}/api/v1/auth/me`, { credentials: 'include' });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.authenticated && data.user) {
-          setToken(SESSION_MARKER);
-          setSessionFlag(true);
-          setUser(data.user);
-          setWarnings(warningsFromResponse(data));
-          if (data.ownership) {
-            setOwnership(data.ownership);
+  // State is set in the promise callbacks, so the mount effect below never renders synchronously.
+  const fetchCurrentUser = useCallback(
+    () =>
+      fetch(`${API_BASE}/api/v1/auth/me`, { credentials: 'include' })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data?.authenticated && data.user) {
+            setToken(SESSION_MARKER);
+            setSessionFlag(true);
+            setUser(data.user);
+            setWarnings(warningsFromResponse(data));
+            if (data.ownership) {
+              setOwnership(data.ownership);
+            }
+            return;
           }
-          return;
-        }
-      }
-      // No (or an expired) session cookie
-      setUser(null);
-      setToken(null);
-      setWarnings([]);
-      setSessionFlag(false);
-    } catch (err) {
-      logger.error('Failed to fetch auth state:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+          // No (or an expired) session cookie
+          setUser(null);
+          setToken(null);
+          setWarnings([]);
+          setSessionFlag(false);
+        })
+        .catch((err: unknown) => {
+          logger.error('Failed to fetch auth state:', err);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        }),
+    []
+  );
 
   useEffect(() => {
     // The session cookie is HttpOnly, so ask the server who we are.
-    fetchCurrentUser();
+    void fetchCurrentUser();
   }, [fetchCurrentUser]);
 
   /** A response that carries a new session (its cookie is already set): adopt the identity it names. */
@@ -372,7 +375,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-
   const bulkUpdateCharacterOwnership = async (
     updates: CharacterOwnershipUpdate[]
   ): Promise<boolean> => {
@@ -487,25 +489,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // exposed functions keep a stable identity while still calling the freshest
   // closure (no stale `token`/`user` captures), and memoise the value on the
   // auth state that consumers actually care about.
-  const handlersRef = useRef({
-    login,
-    loginWithGoogle,
-    completeTwoFactorLogin,
-    register,
-    logout,
-    resendVerification,
-    verifyEmail,
-    forgotPassword,
-    resetPassword,
-    refreshUser,
-    acknowledgeWarning,
-    bulkUpdateCharacterOwnership,
-    updatePerkOwnership,
-    bulkUpdatePerkOwnership,
-    markOnboardingComplete,
-    setPreferredLanguage,
-  });
-  handlersRef.current = {
+  const handlers = {
     login,
     loginWithGoogle,
     completeTwoFactorLogin,
@@ -523,6 +507,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     markOnboardingComplete,
     setPreferredLanguage,
   };
+  const handlersRef = useRef(handlers);
+  useLayoutEffect(() => {
+    handlersRef.current = handlers;
+  });
 
   const actions = useMemo(
     () => ({

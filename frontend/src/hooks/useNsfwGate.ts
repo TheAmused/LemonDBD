@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/hooks/useNsfwGate.ts
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
+import { useIsClient } from '@/hooks/useIsClient';
 import { hasAcknowledgedNsfwContent, useGlobalNsfwPreference, type NsfwContentScope } from '@/utils/nsfwAck';
 
 /**
@@ -13,11 +14,9 @@ import { hasAcknowledgedNsfwContent, useGlobalNsfwPreference, type NsfwContentSc
  */
 export function useNsfwGate(scope: NsfwContentScope, id: string, flagged: boolean) {
   const [globalNsfw, setGlobalNsfw] = useGlobalNsfwPreference();
-  const [authored, setAuthored] = useState<boolean>(false);
-
-  useEffect(() => {
-    setAuthored(flagged ? hasAcknowledgedNsfwContent(scope, id) : false);
-  }, [scope, id, flagged]);
+  // localStorage is only read in the browser, after hydration, so server and client markup agree.
+  const isClient = useIsClient();
+  const authored = isClient && flagged && hasAcknowledgedNsfwContent(scope, id);
 
   const confirm = useCallback(() => setGlobalNsfw(true), [setGlobalNsfw]);
 

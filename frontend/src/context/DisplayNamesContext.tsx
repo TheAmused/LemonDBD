@@ -87,15 +87,14 @@ export const DisplayNamesProvider: React.FC<{ locale: string; children: React.Re
   locale,
   children,
 }) => {
-  const [characterMap, setCharacterMap] = useState<DisplayMaps>(EMPTY_MAPS);
-  const [perkMap, setPerkMap] = useState<DisplayMaps>(EMPTY_MAPS);
+  // Each map is kept with the locale it was loaded for; English (or a locale still loading) uses the names as they are.
+  const [characters, setCharacters] = useState<{ locale: string; map: DisplayMaps } | null>(null);
+  const [perks, setPerks] = useState<{ locale: string; map: DisplayMaps } | null>(null);
+  const characterMap = characters?.locale === locale ? characters.map : EMPTY_MAPS;
+  const perkMap = perks?.locale === locale ? perks.map : EMPTY_MAPS;
 
   useEffect(() => {
-    if (!locale || locale === 'en') {
-      setCharacterMap(EMPTY_MAPS);
-      setPerkMap(EMPTY_MAPS);
-      return;
-    }
+    if (!locale || locale === 'en') return;
 
     let cancelled = false;
 
@@ -113,12 +112,12 @@ export const DisplayNamesProvider: React.FC<{ locale: string; children: React.Re
     void load(
       `${backendBase}/api/v1/characters?category=all&lang=en`,
       `${backendBase}/api/v1/characters?category=all&lang=${locale}`,
-      setCharacterMap
+      (map) => setCharacters({ locale, map })
     );
     void load(
       `${backendBase}/api/v1/perks?limit=1000&lang=en`,
       `${backendBase}/api/v1/perks?limit=1000&lang=${locale}`,
-      setPerkMap
+      (map) => setPerks({ locale, map })
     );
 
     return () => {

@@ -1,7 +1,7 @@
 // frontend/src/hooks/useUserShowcase.ts
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   DEFAULT_SHOWCASE_STATE,
   GRADE_EMBLEMS,
@@ -16,6 +16,7 @@ import {
 import { getLocalStorage } from '@/utils/safeStorage';
 import { getAuthToken } from '@/utils/api';
 import { reportCompleteShowcaseRoles } from '@/utils/userShowcaseAnalytics';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 const SAVE_RETRY_DELAY_MS = 2000;
 
@@ -163,11 +164,19 @@ export function useUserShowcase(
     loadStoredShowcase(userId)
   );
   const [isSaving, setIsSaving] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  // A signed-in account's showcase is loading until its database copy (or the local fallback) settles.
+  const [settledFor, setSettledFor] = useState<number | string | null>(null);
+  const isLoading = !!userId && userId !== 'guest' && settledFor !== userId;
 
+  // Another account shows its own stored copy in the same render.
+  useOnValueChange(userId, (nextUserId) => setShowcase(loadStoredShowcase(nextUserId)));
+
+  // The edit helpers read the latest showcase from here (they also write it as they go).
   const showcaseRef = useRef<UserShowcaseState>(showcase);
-  showcaseRef.current = showcase;
+  useLayoutEffect(() => {
+    showcaseRef.current = showcase;
+  });
   const prevUserIdRef = useRef(userId);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   /**
@@ -212,9 +221,6 @@ export function useUserShowcase(
     if (prevUserIdRef.current !== userId) {
       prevUserIdRef.current = userId;
       pendingEditsRef.current = [];
-      const loaded = loadStoredShowcase(userId);
-      showcaseRef.current = loaded;
-      setShowcase(loaded);
     }
 
     dbLoadedRef.current = false;
@@ -222,7 +228,6 @@ export function useUserShowcase(
 
     let cancelled = false;
     const controller = new AbortController();
-    setIsLoading(true);
 
     /** The base is ready (the database copy, or the local one if it could not be read): replay queued edits. */
     const settle = (base: UserShowcaseState) => {
@@ -235,7 +240,7 @@ export function useUserShowcase(
       setShowcase(next);
       reportCompleteShowcaseRoles(userId, next);
       if (edits.length > 0) syncToDatabase(userId, next);
-      setIsLoading(false);
+      setSettledFor(userId);
     };
 
     fetchUserShowcase(userId, controller.signal)

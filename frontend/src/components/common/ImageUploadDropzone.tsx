@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/common/ImageUploadDropzone.tsx
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Check, ImagePlus, Trash2, Upload } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
@@ -9,6 +9,7 @@ import { cn } from '@/utils/cn';
 import { useDictionary } from '@/context/DictionaryContext';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import { Img } from '@/components/common/Img';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 /** Reads a file's raw bytes back out as a `data:...;base64,...` URL. */
 async function fileToDataUrl(file: File): Promise<string | null> {
@@ -146,9 +147,7 @@ export function ImageUploadDropzone({
   const [processing, setProcessing] = useState<boolean>(false);
   const [urlInput, setUrlInput] = useState<string>(value || '');
 
-  useEffect(() => {
-    setUrlInput(value || '');
-  }, [value]);
+  useOnValueChange(value, (next) => setUrlInput(next || ''));
 
   const commitUrl = () => {
     const trimmed = urlInput.trim();

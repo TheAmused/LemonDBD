@@ -18,6 +18,7 @@ import { cn } from '@/utils/cn';
 import { analyzeScoreboard, type ScoreboardReport } from '@/services/scoreboardApi';
 import { Table, TableBody, TableHead, TableRow, Td, Th } from '@/components/common/Table';
 import { Img } from '@/components/common/Img';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface ScoreboardCheckModalProps {
   isOpen: boolean;
@@ -44,31 +45,27 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
   const [error, setError] = useState<string | null>(null);
   const [report, setReport] = useState<ScoreboardReport | null>(null);
 
+  // The preview URL is made when a file is picked and released when it is replaced or the modal unmounts.
   useEffect(() => {
-    if (!file) {
-      setPreviewUrl(null);
-      return;
-    }
-    const url = URL.createObjectURL(file);
-    setPreviewUrl(url);
-    return () => URL.revokeObjectURL(url);
-  }, [file]);
+    if (!previewUrl) return;
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [previewUrl]);
 
   const reset = useCallback(() => {
     setFile(null);
+    setPreviewUrl(null);
     setReport(null);
     setError(null);
   }, []);
 
-  useEffect(() => {
-    if (!isOpen) {
-      reset();
-      setPlayer('');
-      setRole('');
-      setCharacter('');
-      setKills('');
-    }
-  }, [isOpen, reset]);
+  useOnValueChange(isOpen, (open) => {
+    if (open) return;
+    reset();
+    setPlayer('');
+    setRole('');
+    setCharacter('');
+    setKills('');
+  });
 
   const pick = (f: File | undefined | null) => {
     if (!f || switchedOff) return;
@@ -77,6 +74,7 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
     if (f.size > maxBytes) return setError(tooLarge);
     setError(null);
     setFile(f);
+    setPreviewUrl(URL.createObjectURL(f));
   };
 
   const run = async () => {

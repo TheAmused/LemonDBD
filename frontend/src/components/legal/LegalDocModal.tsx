@@ -9,6 +9,7 @@ import { Modal } from '@/components/common/Modal';
 import { LegalNotice, LegalSections } from '@/components/legal/LegalSections';
 import { legalDocText, type LegalDocId } from '@/components/legal/legalDocs';
 import { useDictionary } from '@/context/DictionaryContext';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface LegalDocModalProps {
   /** Which document to show; null keeps the dialog closed. */
@@ -19,10 +20,10 @@ interface LegalDocModalProps {
 export function LegalDocModal({ doc, onClose }: LegalDocModalProps) {
   const dict = useDictionary();
   // Keep the last document while the closing animation plays.
-  const [shown, setShown] = React.useState<LegalDocId>('terms');
-  React.useEffect(() => {
-    if (doc) setShown(doc);
-  }, [doc]);
+  const [shown, setShown] = React.useState<LegalDocId>(doc ?? 'terms');
+  useOnValueChange(doc, (next) => {
+    if (next) setShown(next);
+  });
   const text = legalDocText(dict, shown);
 
   return (

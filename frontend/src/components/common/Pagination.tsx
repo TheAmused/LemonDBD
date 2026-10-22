@@ -1,13 +1,14 @@
 'use client';
 // frontend/src/components/common/Pagination.tsx
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 
 import { useDictionary } from "@/context/DictionaryContext";
 import { cn } from '@/utils/cn';
 import { Input, Select } from '@/components/common/Field';
 import { PAGE_SIZE_OPTIONS } from '@/constants/pagination';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface PaginationProps {
   page: number;
@@ -46,9 +47,7 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
   // line by itself.
   const [pageInput, setPageInput] = useState(String(page));
 
-  useEffect(() => {
-    setPageInput(String(page));
-  }, [page]);
+  useOnValueChange(page, (next) => setPageInput(String(next)));
 
   const commitPageInput = () => {
     const target = Number(pageInput);

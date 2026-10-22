@@ -2,7 +2,7 @@
 'use client';
 
 import { logger } from '@/utils/logger';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { ChallengeCompletion } from '@/types/challengeCompletion';
 import { useAuth } from '@/context/AuthContext';
 import { createRunRequestTracker } from './runRequestTracker';
@@ -27,78 +27,104 @@ export function useChallengeRun<TRun, TStats>(config: ChallengeRunConfig<TRun, T
   const { scope, label } = config;
   // The fetchers are closures over the caller's arguments; `scope` is what says they changed.
   const configRef = useRef(config);
-  configRef.current = config;
   // Decides which answers are still worth showing and blocks a second click while an action is in flight.
-  const [tracker] = useState(() => createRunRequestTracker(() => configRef.current.scope));
+  const [tracker] = useState(() => createRunRequestTracker(scope));
+  useLayoutEffect(() => {
+    configRef.current = config;
+    tracker.setScope(config.scope);
+  });
 
   const [run, setRun] = useState<TRun | null>(null);
   const [stats, setStats] = useState<TStats | null>(null);
   const [completions, setCompletions] = useState<ChallengeCompletion[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  // The run whose load has settled (a manual reload shows as loading too); signed out, it never loads.
+  const [loadedFor, setLoadedFor] = useState<string | null>(null);
+  const [reloading, setReloading] = useState(false);
+  const loading = !token || reloading || loadedFor !== scope;
   // Every run with a server action in flight; this run is busy while it is one of them.
   const [actingScopes, setActingScopes] = useState<readonly string[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  // An error belongs to the run it happened on.
+  const [failure, setFailure] = useState<{ scope: string; message: string } | null>(null);
+  const error = failure && failure.scope === scope ? failure.message : null;
 
-  const loadStats = useCallback(async () => {
-    if (!token) return;
+  // Promise chains rather than async/await: the state they set is only ever set in their callbacks.
+  const loadStats = useCallback((): Promise<void> => {
+    if (!token) return Promise.resolve();
     const isLatest = tracker.begin('stats', scope);
-    try {
-      const loaded = await configRef.current.fetchStats(token);
-      if (isLatest()) setStats(loaded);
-    } catch (err) {
-      logger.error(`Failed to load ${label} stats:`, err);
-    }
+    return configRef.current.fetchStats(token).then(
+      (loaded) => {
+        if (isLatest()) setStats(loaded);
+      },
+      (err: unknown) => logger.error(`Failed to load ${label} stats:`, err)
+    );
   }, [token, scope, label, tracker]);
 
-  const loadCompletions = useCallback(async () => {
-    if (!token) return;
+  const loadCompletions = useCallback((): Promise<void> => {
+    if (!token) return Promise.resolve();
     const isLatest = tracker.begin('completions', scope);
-    try {
-      const loaded = await configRef.current.fetchCompletions(token);
-      if (isLatest()) setCompletions(loaded);
-    } catch (err) {
-      logger.error(`Failed to load ${label} completion history:`, err);
-    }
+    return configRef.current.fetchCompletions(token).then(
+      (loaded) => {
+        if (isLatest()) setCompletions(loaded);
+      },
+      (err: unknown) => logger.error(`Failed to load ${label} completion history:`, err)
+    );
   }, [token, scope, label, tracker]);
+
+  /** Fetches the run; only the newest request for the run the player is still on is shown. */
+  const fetchRun = useCallback((): Promise<void> => {
+    if (!token) return Promise.resolve();
+    const isLatest = tracker.begin('run', scope);
+    return configRef.current
+      .fetchRun(token)
+      .then(
+        (loaded) => {
+          if (!isLatest()) return;
+          setRun(loaded);
+          setFailure(null);
+        },
+        (err: unknown) => {
+          if (isLatest()) setFailure({ scope, message: err instanceof Error ? err.message : 'Could not load this run' });
+        }
+      )
+      .finally(() => {
+        if (isLatest()) setLoadedFor(scope);
+      });
+  }, [token, scope, tracker]);
 
   const load = useCallback(async () => {
     if (!token) return;
-    const isLatest = tracker.begin('run', scope);
-    setLoading(true);
-    setError(null);
+    setReloading(true);
+    setFailure(null);
     try {
-      const loaded = await configRef.current.fetchRun(token);
-      if (isLatest()) setRun(loaded);
-    } catch (err) {
-      if (isLatest()) setError(err instanceof Error ? err.message : 'Could not load this run');
+      await fetchRun();
     } finally {
-      if (isLatest()) setLoading(false);
+      setReloading(false);
     }
-  }, [token, scope, tracker]);
+  }, [token, fetchRun]);
 
   useEffect(() => {
-    load();
-    loadStats();
-    loadCompletions();
-  }, [load, loadStats, loadCompletions]);
+    void fetchRun();
+    void loadStats();
+    void loadCompletions();
+  }, [fetchRun, loadStats, loadCompletions]);
 
   /** Runs a server action that returns the updated run; undefined when it failed, when another action on this run
    *  is still running, or when the player moved to another run before it answered. */
   const mutate = useCallback(
     async (action: () => Promise<TRun>, failureMessage = 'That did not go through. Try again.') => {
-      const requestScope = configRef.current.scope;
+      const requestScope = tracker.currentScope();
       if (!token || !tracker.startAction(requestScope)) return undefined;
       setActingScopes((current) => [...current, requestScope]);
-      setError(null);
+      setFailure(null);
       try {
         const updated = await action();
         if (!tracker.acceptRunAnswer(requestScope)) return undefined;
         setRun(updated);
-        // A load that this answer replaced never gets to clear the flag itself.
-        setLoading(false);
+        // A load that this answer replaced never gets to settle itself.
+        setLoadedFor(requestScope);
         return updated;
       } catch (err) {
-        if (configRef.current.scope === requestScope) setError(err instanceof Error ? err.message : failureMessage);
+        if (tracker.currentScope() === requestScope) setFailure({ scope: requestScope, message: err instanceof Error ? err.message : failureMessage });
         return undefined;
       } finally {
         tracker.finishAction(requestScope);

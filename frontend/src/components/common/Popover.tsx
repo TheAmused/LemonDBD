@@ -15,7 +15,9 @@
 // trigger when the panel closes while focus was inside it, and the layer sits above <Modal> (z 120) but below tooltips.
 // `Popover` never owns the open state: the caller does.
 
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useEffectEvent, useLayoutEffect, useRef, useState } from 'react';
+import { useIsClient } from '@/hooks/useIsClient';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 import { createPortal } from 'react-dom';
 import { cn } from '@/utils/cn';
 import { TOOLTIP_CONFIG } from './Tooltip';
@@ -187,45 +189,45 @@ export const Popover: React.FC<PopoverProps> = ({
   const panelRef = useRef<HTMLDivElement>(null);
   // Typed as a div: the panel only ever uses what every element has (contains, focus, bounds).
   const Panel = as as 'div';
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const [present, setPresent] = useState(open);
   const [leaving, setLeaving] = useState(false);
   const [pos, setPos] = useState<PopoverPosition | null>(null);
-  const onCloseRef = useRef(onClose);
-  onCloseRef.current = onClose;
+  const requestClose = useEffectEvent(() => onClose?.());
   const wasOpen = useRef(false);
 
-  useEffect(() => setMounted(true), []);
-
-  /* mount / unmount (with a short exit animation) */
-  useEffect(() => {
-    if (open) {
+  /* mount / unmount (with a short exit animation); a panel that unmounts forgets its position */
+  useOnValueChange(open, (isOpen) => {
+    if (isOpen) {
       setPresent(true);
       setLeaving(false);
-      return;
-    }
-    if (!present) return;
-    if (!animate) {
+    } else if (present && animate) {
+      setLeaving(true);
+    } else {
       setPresent(false);
-      return;
+      setPos(null);
     }
-    setLeaving(true);
+  });
+
+  useEffect(() => {
+    if (!leaving) return;
     const t = window.setTimeout(() => {
       setPresent(false);
       setLeaving(false);
+      setPos(null);
     }, POPOVER_CONFIG.exitMs);
     return () => window.clearTimeout(t);
-  }, [open, present, animate]);
-
-  useEffect(() => {
-    if (!present) setPos(null);
-  }, [present]);
+  }, [leaving]);
 
   const reposition = useCallback(() => {
     const panel = panelRef.current;
     const anchor = anchorRef.current;
     if (!panel || !anchor) return;
     const rect = anchor.getBoundingClientRect();
+    // Exposed so callers can size the panel relative to the trigger (e.g.
+    // `w-[var(--popover-anchor-width)]`) now that it is portaled; set before measuring.
+    panel.style.setProperty('--popover-anchor-width', `${rect.width}px`);
+    if (matchWidth) panel.style.width = `${rect.width}px`;
     const border = panel.offsetHeight - panel.clientHeight;
     const next = computePopoverPosition({
       anchor: rect,
@@ -276,13 +278,13 @@ export const Popover: React.FC<PopoverProps> = ({
       const target = e.target as Node;
       if (anchorRef.current?.contains(target)) return;
       if (panelRef.current?.contains(target)) return;
-      onCloseRef.current?.();
+      requestClose();
     };
     const onKeyDown = (e: KeyboardEvent) => {
       if (!closeOnEscape || e.key !== 'Escape' || e.defaultPrevented) return;
       // preventDefault so a surrounding <Modal> does not also close on this Escape.
       e.preventDefault();
-      onCloseRef.current?.();
+      requestClose();
     };
     document.addEventListener('pointerdown', onPointerDown);
     document.addEventListener('keydown', onKeyDown);
@@ -321,8 +323,6 @@ export const Popover: React.FC<PopoverProps> = ({
 
   if (!mounted || !present || typeof document === 'undefined') return null;
 
-  const anchorWidth = anchorRef.current?.getBoundingClientRect().width;
-
   return createPortal(
     <Panel
       ref={panelRef}
@@ -335,10 +335,8 @@ export const Popover: React.FC<PopoverProps> = ({
         zIndex,
         // Position is computed, never animated.
         transition: leaving ? `opacity ${POPOVER_CONFIG.exitMs}ms ease-out, transform ${POPOVER_CONFIG.exitMs}ms ease-out` : 'none',
-        // Exposed so callers can size the panel relative to the trigger
-        // (e.g. `w-[var(--popover-anchor-width)]`) now that it is portaled.
-        ...(anchorWidth !== undefined ? ({ '--popover-anchor-width': `${anchorWidth}px` } as React.CSSProperties) : null),
-        ...(matchWidth && anchorWidth !== undefined ? { width: pos ? pos.width : anchorWidth } : null),
+        // --popover-anchor-width (and the width of a matchWidth panel before it is placed) is set by reposition().
+        ...(matchWidth && pos ? { width: pos.width } : null),
         ...(pos
           ? { top: pos.top, left: pos.left, maxHeight: pos.maxHeight }
           : { top: -9999, left: -9999, visibility: 'hidden', ...(maxHeight ? { maxHeight } : null) }),

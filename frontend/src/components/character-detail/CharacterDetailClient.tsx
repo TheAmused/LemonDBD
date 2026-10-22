@@ -2,7 +2,7 @@
 // frontend/src/components/character-detail/CharacterDetailClient.tsx
 
 import { logger } from '@/utils/logger';
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, UserX } from 'lucide-react';
 import { PageShell } from '@/components/layout/PageShell';
@@ -24,7 +24,6 @@ import { buttonClassName } from '@/components/common/Button';
 export function CharacterDetailClient({ slug }: { slug: string }) {
   const locale = useLocale() as Locale;
   const dict = useDictionary();
-  const [notFound, setNotFound] = useState<boolean>(false);
   const backendBase = getBackendBaseUrl();
 
   const rosterKey = `${backendBase}/api/v1/characters?lang=${locale}`;
@@ -47,16 +46,11 @@ export function CharacterDetailClient({ slug }: { slug: string }) {
 
   const detailData = detailResponse?.data ?? null;
 
+  // A failed request, or an answer without a character, is a not-found page.
+  const notFound = Boolean(detailError) || (detailResponse !== undefined && !detailResponse.data?.character);
   useEffect(() => {
-    if (detailError) {
-      logger.error('Failed to fetch character detail:', detailError);
-      setNotFound(true);
-      return;
-    }
-    if (detailResponse) {
-      setNotFound(!detailResponse.data?.character);
-    }
-  }, [detailResponse, detailError]);
+    if (detailError) logger.error('Failed to fetch character detail:', detailError);
+  }, [detailError]);
 
   useDocumentTitle(
     detailData?.character?.name ? `${detailData.character.name} - LemonDBD` : undefined

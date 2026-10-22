@@ -5,7 +5,7 @@
 // the next decision (with a preview of what the user will be told) and the history of warnings,
 // suspensions and bans. Every decision is confirmed first.
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { AccordionSection } from '@/components/common/AccordionSection';
 import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
@@ -33,6 +33,7 @@ import {
   type SanctionDraft,
 } from '@/types/moderation';
 import type { ActionMessage, UserRow } from '@/types/admin';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface AdminModerationDrawerProps {
   user: UserRow | null;
@@ -58,9 +59,8 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
   // Each section folds away like the profile page's drawers, and is remembered.
   const [isHistoryOpen, toggleHistory] = usePersistentDrawer(ADMIN_STORAGE.moderationHistoryOpen, false);
 
-  useEffect(() => {
-    setDraft(EMPTY_SANCTION_DRAFT);
-  }, [user?.id]);
+  // Another user's drawer starts from an empty sanction.
+  useOnValueChange(user?.id, () => setDraft(EMPTY_SANCTION_DRAFT));
 
   const summary = data?.summary;
   const suggestion = summary?.suggestion ?? null;

@@ -4,7 +4,7 @@
 // One form for both account dialogs: "Create user" (login, name, email, password, role) and
 // "Edit user" (display name, role, e-mail verified). The login and e-mail of an existing account are
 // shown but not editable here.
-import React, { useEffect, useId, useState } from 'react';
+import React, { useId, useState } from 'react';
 import { Save, UserPlus } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
@@ -17,6 +17,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { useSiteConfig } from '@/context/SiteConfigContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import type { NewUser, Reauth, UserPatch, UserRow } from '@/types/admin';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 const FORM_ID = 'admin-user-form';
 
@@ -32,6 +33,13 @@ interface AdminUserFormModalProps {
 
 const EMPTY: NewUser = { login: '', username: '', email: '', password: '', role: 'user' };
 
+/** The form a target opens with: blank for a new account, the user's details for an edit. */
+const formFor = (target: UserRow | 'new' | null): NewUser =>
+  target === null || target === 'new'
+    ? EMPTY
+    : { ...EMPTY, login: target.login, username: target.username, email: target.email, role: target.role === 'admin' ? 'admin' : 'user' };
+const verifiedFor = (target: UserRow | 'new' | null) => target !== null && target !== 'new' && !!target.is_verified;
+
 export function AdminUserFormModal({ target, currentUserId, onClose, onCreate, onUpdate }: AdminUserFormModalProps) {
   const dict = useDictionary();
   const t = dict.admin;
@@ -39,22 +47,18 @@ export function AdminUserFormModal({ target, currentUserId, onClose, onCreate, o
   const minPasswordLength = useSiteConfig().limits.passwordMinLength;
   const ids = useId();
   const editing = target !== null && target !== 'new' ? target : null;
-  const [form, setForm] = useState<NewUser>(EMPTY);
-  const [verified, setVerified] = useState(false);
+  const [form, setForm] = useState<NewUser>(() => formFor(target));
+  const [verified, setVerified] = useState(() => verifiedFor(target));
   const [reauth, setReauth] = useState<Reauth>(EMPTY_REAUTH);
   const [busy, setBusy] = useState(false);
 
-  useEffect(() => {
-    if (target === null) return;
+  // Each opening starts from its target; closing (null) keeps the fields for the exit animation.
+  useOnValueChange(target, (next) => {
+    if (next === null) return;
     setReauth(EMPTY_REAUTH);
-    if (target === 'new') {
-      setForm(EMPTY);
-      setVerified(false);
-      return;
-    }
-    setForm({ ...EMPTY, login: target.login, username: target.username, email: target.email, role: target.role === 'admin' ? 'admin' : 'user' });
-    setVerified(!!target.is_verified);
-  }, [target]);
+    setForm(formFor(next));
+    setVerified(verifiedFor(next));
+  });
 
   const field = (key: keyof NewUser) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setForm((f) => ({ ...f, [key]: e.target.value }));

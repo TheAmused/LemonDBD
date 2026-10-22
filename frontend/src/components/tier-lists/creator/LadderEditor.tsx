@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/tier-lists/creator/LadderEditor.tsx
 
-import { useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import { GripVertical, ListOrdered, Plus, X } from 'lucide-react';
 import type { TierDefinition } from '@/types/tierList';
 import { cn } from '@/utils/cn';
@@ -46,7 +46,9 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
   const [paletteFor, setPaletteFor] = useState<string | null>(null);
   const [bgDrafts, setBgDrafts] = useState<Record<string, string>>({});
   const tiersRef = useRef(tiers);
-  tiersRef.current = tiers;
+  useLayoutEffect(() => {
+    tiersRef.current = tiers;
+  });
 
   const update = (id: string, patch: Partial<TierDefinition>) =>
     onChange(tiers.map((tier) => (tier.id === id ? { ...tier, ...patch } : tier)));

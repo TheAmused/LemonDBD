@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/smash-or-pass/SmashLeaderboardModal.tsx
 
-import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   Skull,
   Search,
@@ -26,6 +26,7 @@ import { Input } from '@/components/common/Field';
 import { CandidateRow, type TierConfig } from "./SmashLeaderboardParts";
 import { useDictionary } from "@/context/DictionaryContext";
 import { IconTile } from '@/components/common/IconTile';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 export interface SmashLeaderboardModalProps {
   isOpen: boolean;
@@ -62,9 +63,9 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   const [visibleCount, setVisibleCount] = useState<number>(35);
 
   // Reset pagination slicing on filters or modal open
-  useEffect(() => {
-    setVisibleCount(35);
-  }, [searchQuery, roleFilter, genderFilter, tierFilter, sortBy, viewMode, isOpen]);
+  useOnValueChange(JSON.stringify([searchQuery, roleFilter, genderFilter, tierFilter, sortBy, viewMode, isOpen]), () =>
+    setVisibleCount(35)
+  );
 
   // PC Grabbing & Drag-to-Scroll Physics
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);

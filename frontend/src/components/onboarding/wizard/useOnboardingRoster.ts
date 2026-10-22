@@ -1,6 +1,6 @@
 'use client';
 // frontend/src/components/onboarding/wizard/useOnboardingRoster.ts
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ownershipKey, ownsPerk } from '@/utils/characterUtils';
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -177,12 +177,14 @@ export function useOnboardingRoster(locale: string) {
     [characters]
   );
 
-  const isCharacterOwned = (c: OnboardingCharacter) =>
-    ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned;
+  const isCharacterOwned = useCallback(
+    (c: OnboardingCharacter) => ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned,
+    [ownershipDraft]
+  );
 
   const ownedChaptersCount = useMemo(() => {
     return chapterGroups.filter((g) => g.characters.every(isCharacterOwned)).length;
-  }, [chapterGroups, ownershipDraft]);
+  }, [chapterGroups, isCharacterOwned]);
 
   const filteredChapterGroups = useMemo(() => {
     if (!searchQuery.trim()) return chapterGroups;

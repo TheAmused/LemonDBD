@@ -1,8 +1,9 @@
 'use client';
 // frontend/src/components/smash-or-pass/roster-select/useRosterCarousel.ts
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } from 'react';
 import type { RosterItem } from '@/types/smashOrPass';
 import { SmashSounds } from '../SmashSoundEffects';
+import { safeGetItem } from '@/utils/safeStorage';
 
 const STORAGE_KEY = 'dbd_smash_selected_roster';
 
@@ -24,6 +25,8 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
   const [visualIndex, setVisualIndex] = useState<number>(0);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [activeSelectedSlug, setActiveSelectedSlug] = useState<string>(selectedRosterSlug);
+  // Where the carousel is heading (the roster it will settle on), for the label under it.
+  const [targetIndex, setTargetIndex] = useState<number>(0);
 
   const officialRosters = useMemo(
     () => rosters.filter((r) => !r.is_local && !r.slug.startsWith('local:')),
@@ -46,6 +49,11 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
   const visualIndexRef = useRef<number>(0);
   const targetIndexRef = useRef<number>(0);
   const animFrameRef = useRef<number | null>(null);
+  /** Moves the target: the ref for the animation loop, the state for what is shown. */
+  const aimAt = useCallback((index: number) => {
+    targetIndexRef.current = index;
+    setTargetIndex(index);
+  }, []);
 
   const N = displayedRosters.length;
 
@@ -53,7 +61,7 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
     setFilter(newFilter);
     if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     visualIndexRef.current = 0;
-    targetIndexRef.current = 0;
+    aimAt(0);
     lastTickIndexRef.current = 0;
     setVisualIndex(0);
   };
@@ -68,7 +76,7 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
 
   const animateTo = useCallback(
     (target: number, duration = 420) => {
-      targetIndexRef.current = target;
+      aimAt(target);
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
 
       const startVal = visualIndexRef.current;
@@ -103,27 +111,37 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
 
       animFrameRef.current = requestAnimationFrame(step);
     },
-    [normalizeIndex]
+    [normalizeIndex, aimAt]
   );
 
-  useEffect(() => {
-    if (!isOpen || N === 0) return;
-
-    const savedSlug =
-      (typeof window !== 'undefined' && localStorage.getItem(STORAGE_KEY)) ||
-      selectedRosterSlug ||
-      'canon';
-
+  /** The roster the carousel opens on: the last one confirmed here, else the active one. */
+  const startingPoint = () => {
+    const savedSlug = safeGetItem(STORAGE_KEY) || selectedRosterSlug || 'canon';
     const foundIdx = displayedRosters.findIndex((r) => r.slug === savedSlug);
-    const initialIdx = foundIdx !== -1 ? foundIdx : 0;
+    return { savedSlug, initialIdx: foundIdx !== -1 ? foundIdx : 0 };
+  };
 
+  // Each opening (and a new list or roster while open) recentres the carousel: the shown state
+  // while rendering, the animation refs in the effect below.
+  const [centredOn, setCentredOn] = useState<{ rosters: RosterItem[]; slug: string } | null>(null);
+  if (!isOpen && centredOn) setCentredOn(null);
+  if (isOpen && N > 0 && (centredOn?.rosters !== displayedRosters || centredOn.slug !== selectedRosterSlug)) {
+    setCentredOn({ rosters: displayedRosters, slug: selectedRosterSlug });
+    const { savedSlug, initialIdx } = startingPoint();
+    setVisualIndex(initialIdx);
+    setTargetIndex(initialIdx);
+    setIsDragging(false);
+    setActiveSelectedSlug(savedSlug);
+  }
+  const centreRefs = useEffectEvent(() => {
+    const { initialIdx } = startingPoint();
     if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
     visualIndexRef.current = initialIdx;
     targetIndexRef.current = initialIdx;
-    setVisualIndex(initialIdx);
-    setIsDragging(false);
-    setActiveSelectedSlug(savedSlug);
     lastTickIndexRef.current = initialIdx;
+  });
+  useEffect(() => {
+    if (isOpen && N > 0) centreRefs();
   }, [isOpen, N, displayedRosters, selectedRosterSlug]);
 
   useEffect(() => {
@@ -264,7 +282,7 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
     const newVisual = dragStartCenterRef.current + offset;
 
     visualIndexRef.current = newVisual;
-    targetIndexRef.current = newVisual;
+    aimAt(newVisual);
     setVisualIndex(newVisual);
 
     const roundedIdx = normalizeIndex(newVisual);
@@ -320,7 +338,7 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
       .sort((a, b) => Math.abs(b.visualOffset) - Math.abs(a.visualOffset));
   }, [N, visualIndex, displayedRosters]);
 
-  const activeRosterInCenter = N > 0 ? displayedRosters[normalizeIndex(targetIndexRef.current)] : null;
+  const activeRosterInCenter = N > 0 ? displayedRosters[normalizeIndex(targetIndex)] : null;
 
   return {
     filter,

@@ -3,7 +3,7 @@
 
 import { SearchInput } from '@/components/common/Field';
 import { Button } from '@/components/common/Button';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useEffectEvent, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { ImageOff, Compass, Maximize2, ArrowDownAZ, X } from 'lucide-react';
 import type { MapRealm } from '@/types/map';
@@ -195,18 +195,26 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   const activeRealms = useMemo(() => {
     const set = new Set<string>();
     displayedGroups.forEach(({ realm }) => {
-      if (isRealmExpanded(realm)) set.add(realm);
+      if (isSearching || expandedRealm === realm) set.add(realm);
     });
     return set;
   }, [displayedGroups, isSearching, expandedRealm]);
-  const activeRealmsSignature = [...activeRealms].sort().join('|');
   const activeRealmsRef = useRef(activeRealms);
-  activeRealmsRef.current = activeRealms;
+  useLayoutEffect(() => {
+    activeRealmsRef.current = activeRealms;
+  });
 
-  const [renderedRealms, setRenderedRealms] = useState<Set<string>>(new Set());
-  const [openRealms, setOpenRealms] = useState<Set<string>>(new Set());
+  // Realms whose panel has finished entering. A realm becomes active closed, opens two frames later
+  // (so the closed state paints and the transition runs), and on leaving stays mounted, closing,
+  // until PANEL_EXIT_MS has passed. What is mounted and what is open are derived from this set.
+  const [opened, setOpened] = useState<Set<string>>(() => new Set());
+  const renderedRealms = useMemo(() => {
+    const present = new Set(displayedGroups.map((g) => g.realm));
+    return new Set([...activeRealms, ...opened].filter((r) => present.has(r)));
+  }, [displayedGroups, activeRealms, opened]);
+  const openRealms = useMemo(() => new Set([...opened].filter((r) => activeRealms.has(r))), [opened, activeRealms]);
   const exitTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
-  const enterFrames = useRef<Set<number>>(new Set());
+  const enterFrames = useRef<Map<string, number>>(new Map());
 
   // Unmounting mid-transition must not leave a timer or frame that sets state afterwards.
   useEffect(() => {
@@ -220,81 +228,63 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     };
   }, []);
 
-  useEffect(() => {
-    const toEnter = [...activeRealms].filter((r) => !renderedRealms.has(r));
-    const toExit = [...renderedRealms].filter((r) => !activeRealms.has(r));
-    if (toEnter.length === 0 && toExit.length === 0) return;
+  // A realm toggled while another was closing opens once that one has gone.
+  const openPendingRealm = useEffectEvent(() => {
+    if (!pendingOpenRef.current) return;
+    const next = pendingOpenRef.current;
+    pendingOpenRef.current = null;
+    setExpandedRealmRaw(next);
+  });
 
-    toEnter.forEach((r) => {
+  useEffect(() => {
+    activeRealms.forEach((r) => {
       const timer = exitTimers.current.get(r);
       if (timer) {
         clearTimeout(timer);
         exitTimers.current.delete(r);
       }
-    });
-
-    if (toEnter.length > 0) {
-      setRenderedRealms((prev) => {
-        const next = new Set(prev);
-        toEnter.forEach((r) => next.add(r));
-        return next;
-      });
+      if (opened.has(r) || enterFrames.current.has(r)) return;
       // Double rAF: guarantees the closed state actually paints before flipping open, or the transition can silently skip.
       const outer = requestAnimationFrame(() => {
-        enterFrames.current.delete(outer);
         const inner = requestAnimationFrame(() => {
-          enterFrames.current.delete(inner);
-          setOpenRealms((prev) => {
-            const next = new Set(prev);
-            // Re-check against the latest activeRealms: if the user toggled this
-            // realm shut again before these frames fired, don't reopen it.
-            toEnter.forEach((r) => {
-              if (activeRealmsRef.current.has(r)) next.add(r);
-            });
-            return next;
-          });
+          enterFrames.current.delete(r);
+          // Re-check against the latest activeRealms: if the user toggled this
+          // realm shut again before these frames fired, don't reopen it.
+          setOpened((prev) => (activeRealmsRef.current.has(r) && !prev.has(r) ? new Set(prev).add(r) : prev));
         });
-        enterFrames.current.add(inner);
+        enterFrames.current.set(r, inner);
       });
-      enterFrames.current.add(outer);
-    }
-
-    if (toExit.length > 0) {
-      setOpenRealms((prev) => {
-        const next = new Set(prev);
-        toExit.forEach((r) => next.delete(r));
-        return next;
-      });
-      toExit.forEach((r) => {
+      enterFrames.current.set(r, outer);
+    });
+    // A realm closed again before it had opened drops its pending frames (and still hands over
+    // to a realm waiting to open, as a closing one would).
+    enterFrames.current.forEach((frame, r) => {
+      if (activeRealms.has(r)) return;
+      cancelAnimationFrame(frame);
+      enterFrames.current.delete(r);
+      if (!opened.has(r)) {
         const timer = setTimeout(() => {
-          setRenderedRealms((prev) => {
-            const next = new Set(prev);
-            next.delete(r);
-            return next;
-          });
           exitTimers.current.delete(r);
-          if (pendingOpenRef.current) {
-            const next = pendingOpenRef.current;
-            pendingOpenRef.current = null;
-            setExpandedRealmRaw(next);
-          }
+          openPendingRealm();
         }, PANEL_EXIT_MS);
         exitTimers.current.set(r, timer);
-      });
-    }
-  }, [activeRealmsSignature]);
-
-  useEffect(() => {
-    const present = new Set(displayedGroups.map((g) => g.realm));
-    setRenderedRealms((prev) => {
-      const next = new Set([...prev].filter((r) => present.has(r)));
-      return next.size === prev.size ? prev : next;
+      }
     });
-    setOpenRealms((prev) => {
-      const next = new Set([...prev].filter((r) => present.has(r)));
-      return next.size === prev.size ? prev : next;
+    opened.forEach((r) => {
+      if (activeRealms.has(r) || exitTimers.current.has(r)) return;
+      const timer = setTimeout(() => {
+        exitTimers.current.delete(r);
+        setOpened((prev) => {
+          if (!prev.has(r) || activeRealmsRef.current.has(r)) return prev;
+          const next = new Set(prev);
+          next.delete(r);
+          return next;
+        });
+        openPendingRealm();
+      }, PANEL_EXIT_MS);
+      exitTimers.current.set(r, timer);
     });
-  }, [displayedGroups]);
+  }, [activeRealms, opened]);
 
   const rowPanels = useMemo(() => {
     const panels = new Map<number, { realm: string; maps: MapRealm[]; open: boolean }[]>();

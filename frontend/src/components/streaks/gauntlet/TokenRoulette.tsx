@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/streaks/gauntlet/TokenRoulette.tsx
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useEffectEvent, useMemo, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import { playReelThud, playReelTick } from '@/utils/perkAudio';
 import { useChallengeAnimations } from '../useChallengeAnimations';
@@ -44,8 +44,7 @@ export const TokenRoulette: React.FC<TokenRouletteProps> = ({ roll, onDone }) =>
   const [spinning, setSpinning] = useState(false);
   const [landed, setLanded] = useState(false);
   // The parent hands a fresh callback each render; the reel must run once per roll, not once per render.
-  const onDoneRef = useRef(onDone);
-  onDoneRef.current = onDone;
+  const finish = useEffectEvent(() => onDone());
   const spinMs = animate ? SPIN_MS : REDUCED_SPIN_MS;
   const holdMs = animate ? HOLD_MS : SKIPPED_HOLD_MS;
 
@@ -62,7 +61,7 @@ export const TokenRoulette: React.FC<TokenRouletteProps> = ({ roll, onDone }) =>
       if (animate) playReelThud();
       setLanded(true);
     }, START_DELAY_MS + spinMs);
-    const done = setTimeout(() => onDoneRef.current(), START_DELAY_MS + spinMs + holdMs);
+    const done = setTimeout(() => finish(), START_DELAY_MS + spinMs + holdMs);
     return () => {
       clearInterval(ticker);
       clearTimeout(start);

@@ -17,6 +17,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 
 import { Button } from '@/components/common/Button';
 import { paletteColor } from '@/utils/themeColor';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 export { CHAOS_MUTATORS };
 export type { ChaosMutator };
 
@@ -84,9 +85,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
   const [wonMutator, setWonMutator] = useState<ChaosMutator | null>(activeMutator);
 
-  useEffect(() => {
-    setWonMutator(activeMutator);
-  }, [activeMutator]);
+  useOnValueChange(activeMutator, setWonMutator);
 
   const drawWheel = useCallback(() => {
     const canvas = canvasRef.current;

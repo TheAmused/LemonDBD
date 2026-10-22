@@ -8,6 +8,7 @@ import { Button } from '@/components/common/Button';
 import { Textarea } from '@/components/common/Field';
 import { checkDocument } from '@/utils/contentRevocation';
 import { logger } from '@/utils/logger';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 type ParseResultLike = { ok: boolean };
 
@@ -45,12 +46,16 @@ export function useImportDraft<R extends ParseResultLike>({
   const [linkResult, setLinkResult] = useState<R | null>(null);
   const [fileError, setFileError] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (!isOpen) return;
+  // Each opening (or a new shared link while open) starts from an empty box.
+  useOnValueChange(isOpen ? `open:${sharePayload ?? ''}` : null, (opened) => {
+    if (opened === null) return;
     setText('');
     setFileError(false);
     setLinkResult(null);
-    if (!sharePayload) return;
+  });
+
+  useEffect(() => {
+    if (!isOpen || !sharePayload) return;
     let cancelled = false;
     void (async () => {
       try {

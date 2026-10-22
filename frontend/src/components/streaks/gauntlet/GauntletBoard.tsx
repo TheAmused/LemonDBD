@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/gauntlet/GauntletBoard.tsx
 
 import type { Dictionary } from '@/locales/types';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { DEFAULT_GAUNTLET_GAME_MODE, GauntletGameMode, PICK_CHARACTER_MODES, Role } from '@/types/gauntletStreak';
@@ -29,6 +29,7 @@ import { CharacterRosterGrid } from './CharacterRosterGrid';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
 import { saveGauntletMode } from '@/utils/streakDifficultyPrefs';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 const GauntletStatsDrawer = dynamic(
   () => import('./GauntletStatsDrawer').then((m) => m.GauntletStatsDrawer),
@@ -142,18 +143,13 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
   const canAffordShield = boosts != null && (run?.tokens ?? 0) >= boosts.prices.shield && shieldWouldHelp;
 
   // Once the bought killer is on screen the draw rules apply again, so a later match can draw it normally.
-  useEffect(() => {
-    if (instantTarget && shownTarget === instantTarget) setInstantTarget(null);
-  }, [instantTarget, shownTarget]);
+  // (These three adjust state while rendering, so no frame shows the stale value.)
+  if (instantTarget && shownTarget === instantTarget) setInstantTarget(null);
 
   // A result, a purchase or a mode switch ends any killer purchase still being chosen.
-  useEffect(() => {
-    setBuyingPick(false);
-  }, [run?.updated_at, gameMode]);
+  useOnValueChange(`${run?.updated_at ?? ''}|${gameMode}`, () => setBuyingPick(false));
 
-  useEffect(() => {
-    if (!awaitingPick && !buyingPick) setPendingPick(null);
-  }, [awaitingPick, buyingPick]);
+  if (!awaitingPick && !buyingPick && pendingPick !== null) setPendingPick(null);
 
   const cancelPick = () => {
     setBuyingPick(false);

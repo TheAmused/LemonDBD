@@ -1,11 +1,12 @@
 'use client';
 // frontend/src/components/admin/AdminReasonModal.tsx
 
-import React, { useEffect, useId, useState } from 'react';
+import React, { useId, useState } from 'react';
 import { FieldLabel, Textarea } from '@/components/common/Field';
 import { Button } from '@/components/common/Button';
 import { Modal } from '@/components/common/Modal';
 import { useDictionary } from "@/context/DictionaryContext";
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 export interface AdminReasonModalProps {
   isOpen: boolean;
@@ -21,9 +22,9 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({ isOpen, titl
   const fieldId = useId();
   const [reason, setReason] = useState('');
 
-  useEffect(() => {
-    if (isOpen) setReason('');
-  }, [isOpen]);
+  useOnValueChange(isOpen, (open) => {
+    if (open) setReason('');
+  });
 
   return (
     <Modal

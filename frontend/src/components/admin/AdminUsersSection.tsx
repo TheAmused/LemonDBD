@@ -4,7 +4,7 @@
 // The user directory: search and filters (their options carry the counts), the accounts, and the
 // actions on one account. Moderation is the row's main action; the rest sit in its "⋯" menu.
 import React, { useState } from 'react';
-import { Download, Gavel, Pencil, ShieldCheck, ShieldOff, Trash2, UserPlus } from 'lucide-react';
+import { Download, Gavel, Pencil, ShieldCheck, ShieldOff, Trash2, Trophy, UserPlus } from 'lucide-react';
 import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
 import { ActionMenu, type ActionMenuItem } from '@/components/common/ActionMenu';
@@ -18,6 +18,7 @@ import { Table, TableBody, TableHead, TableRow, Td, Th } from '@/components/comm
 import { tip } from '@/components/common/Tooltip';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 import { UserAvatar } from '@/components/UserAvatar';
+import { AdminUserChallengesModal } from '@/components/admin/AdminUserChallengesModal';
 import { UserStandingBadge } from '@/components/admin/UserStandingBadge';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { downloadAccountData } from '@/services/userProfileApi';
@@ -45,6 +46,7 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
   const locale = useLocale();
   const t = dict.admin;
   const [pending, setPending] = useState<PendingAction>(null);
+  const [challengesFor, setChallengesFor] = useState<UserRow | null>(null);
   const [busy, setBusy] = useState(false);
   const [ownPassword, setOwnPassword] = useState('');
   const { users, total, loading, page, perPage } = directory;
@@ -64,6 +66,7 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
 
   const menuItems = (u: UserRow): ActionMenuItem[] => [
     { key: 'edit', label: t.editUser, icon: <Pencil className="icon-md" aria-hidden="true" />, onSelect: () => onEdit(u) },
+    { key: 'challenges', label: t.resetChallenges, icon: <Trophy className="icon-md" aria-hidden="true" />, onSelect: () => setChallengesFor(u) },
     ...(u.two_factor_enabled
       ? [{ key: '2fa', label: t.resetTwoFactor, icon: <ShieldOff className="icon-md" aria-hidden="true" />, onSelect: () => setPending({ kind: 'resetTwoFactor', user: u }) }]
       : []),
@@ -246,6 +249,8 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
           onLimitChange={directory.setPerPage}
         />
       )}
+
+      <AdminUserChallengesModal user={challengesFor} notify={notify} onClose={() => setChallengesFor(null)} />
 
       <ConfirmModal
         open={pending !== null}

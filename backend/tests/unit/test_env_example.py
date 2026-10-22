@@ -60,7 +60,7 @@ def _frontend_reads() -> set[str]:
 
 def _compose_reads() -> set[str]:
     names: set[str] = set()
-    for name in ("docker-compose.base.yml", "docker-compose.dev.yml", "docker-compose.prod.yml", "docker-compose.yml"):
+    for name in ("docker-compose.base.yml", "docker-compose.dev.yml", "docker-compose.dev-services.yml", "docker-compose.prod.yml", "docker-compose.yml"):
         names |= set(re.findall(r"\$\{([A-Z0-9_]+)", (ROOT / name).read_text(encoding="utf-8")))
     return names
 

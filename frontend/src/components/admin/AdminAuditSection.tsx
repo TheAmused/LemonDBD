@@ -68,6 +68,7 @@ const ACTION_LABEL_KEYS = {
   database_imported: 'auditActionDatabaseImported',
   database_purged: 'auditActionDatabasePurged',
   user_two_factor_reset: 'auditActionUserTwoFactorReset',
+  user_challenge_reset: 'auditActionUserChallengeReset',
   user_updated: 'auditActionUserUpdated',
   'tier_list.create': 'auditActionTierListCreated',
   'tier_list.update': 'auditActionTierListUpdated',

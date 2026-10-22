@@ -22,6 +22,7 @@ import type {
   MaintenanceRun,
   NewUser,
   SystemCheck,
+  UserChallengeProgress,
   UserPatch,
   UserRow,
 } from '@/types/admin';
@@ -38,6 +39,12 @@ export const deleteUser = (id: number) => apiRequest<object>(`/users/${id}`, 'DE
 /** `currentPassword` (the acting admin's) is required when the target is another admin. */
 export const resetTwoFactor = (id: number, currentPassword?: string) =>
   apiRequest<object>(`/users/${id}/two-factor/reset`, 'POST', currentPassword ? { current_password: currentPassword } : undefined);
+
+export const listUserChallenges = (id: number) => apiRequest<{ challenges: UserChallengeProgress[] }>(`/users/${id}/challenges`);
+/** Deletes the player's run and completions in one challenge (cheating) and emails them, with the admin's optional
+ *  `note`; audited server-side. `emailed` is false when the reset went through but the email could not be sent. */
+export const resetUserChallenge = (id: number, challenge: Pick<UserChallengeProgress, 'mode' | 'variant'>, note?: string) =>
+  apiRequest<{ emailed: boolean }>(`/users/${id}/challenges/reset`, 'POST', { ...challenge, ...(note ? { note } : {}) });
 
 /* Bug reports */
 export const listBugReports = (query: { page: number; per_page: number; status?: string; search?: string }) =>

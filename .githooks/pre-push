@@ -1,0 +1,32 @@
+#!/bin/sh
+# .githooks/pre-push -- runs the same fast checks as CI (.github/workflows/ci.yml) before anything
+# leaves your machine. Enable once per clone:  git config core.hooksPath .githooks
+# Skip in an emergency:  git push --no-verify   (CI still runs on the server.)
+# The live suites (npm run test:live) need the running stack, so they are not part of this hook.
+set -e
+root=$(git rev-parse --show-toplevel)
+
+# Nothing to test when the push only deletes branches.
+only_deletes=1
+while read -r _ local_sha _ _; do
+  [ "$local_sha" != "0000000000000000000000000000000000000000" ] && only_deletes=0
+done
+[ "$only_deletes" = 1 ] && exit 0
+
+echo "[pre-push] frontend: type-check, guards, unit tests"
+cd "$root/frontend"
+npx tsc --noEmit -p .
+npm run --silent check
+npm run --silent test:unit
+
+echo "[pre-push] backend: ruff, unit tests"
+cd "$root/backend"
+if [ -x "$root/.venv/Scripts/python.exe" ]; then py="$root/.venv/Scripts/python.exe"
+elif [ -x "$root/.venv/bin/python" ]; then py="$root/.venv/bin/python"
+elif [ -x .venv/Scripts/python.exe ]; then py=.venv/Scripts/python.exe
+elif [ -x .venv/bin/python ]; then py=.venv/bin/python
+else py=python; fi
+"$py" -m ruff check .
+"$py" -m pytest tests/unit -q
+
+echo "[pre-push] all checks passed"

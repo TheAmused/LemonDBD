@@ -98,7 +98,7 @@ export function useStartListening(ctx: StartListeningContext) {
                 if (!silenceTimerRef.current) {
                   silenceTimerRef.current = setTimeout(() => {
                     if (isListeningRef.current) {
-                      stopListeningAndProcess();
+                      void stopListeningAndProcess();
                     }
                   }, 1200);
                 }
@@ -126,7 +126,7 @@ export function useStartListening(ctx: StartListeningContext) {
 
       if (!SpeechRec) {
         setActiveEngine('client-model');
-        initClientSpeechModel(locale);
+        void initClientSpeechModel(locale);
         return;
       }
 
@@ -157,7 +157,7 @@ export function useStartListening(ctx: StartListeningContext) {
           if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
           silenceTimerRef.current = setTimeout(() => {
             if (isListeningRef.current) {
-              stopListeningAndProcess();
+              void stopListeningAndProcess();
             }
           }, 10000);
         };
@@ -214,7 +214,7 @@ export function useStartListening(ctx: StartListeningContext) {
 
           if (event.error === 'network' || event.error === 'service-not-allowed') {
             setActiveEngine('client-model');
-            initClientSpeechModel(locale);
+            void initClientSpeechModel(locale);
             setVoiceStatus('nomatch');
             setErrorMessage(dict.voice.switchedToLocalEngine);
             if (resetTimerRef.current) clearTimeout(resetTimerRef.current);

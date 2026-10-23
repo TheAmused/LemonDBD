@@ -113,7 +113,7 @@ function PlayTrialContent() {
       }
     }
 
-    loadData();
+    void loadData();
 
     return () => {
       isMounted = false;

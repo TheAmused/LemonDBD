@@ -42,7 +42,7 @@ export function VoiceMicButton({
           isHoldingRef.current = true;
           holdStartTimeRef.current = Date.now();
           if (!isListeningRef.current) {
-            startListening(true);
+            void startListening(true);
           }
         }}
         onTouchEnd={(e) => {
@@ -51,12 +51,12 @@ export function VoiceMicButton({
             holdStartTimeRef.current > 0 ? Date.now() - holdStartTimeRef.current : 0;
           isHoldingRef.current = false;
           if (duration > 250 && isListeningRef.current) {
-            stopListeningAndProcess();
+            void stopListeningAndProcess();
           } else if (duration <= 250) {
             if (isListeningRef.current || voiceStatus === 'listening') {
-              stopListeningAndProcess();
+              void stopListeningAndProcess();
             } else {
-              startListening(false);
+              void startListening(false);
             }
           }
         }}
@@ -66,7 +66,7 @@ export function VoiceMicButton({
           isHoldingRef.current = true;
           holdStartTimeRef.current = Date.now();
           if (!isListeningRef.current) {
-            startListening(true);
+            void startListening(true);
           }
         }}
         onMouseUp={() => {
@@ -74,7 +74,7 @@ export function VoiceMicButton({
             holdStartTimeRef.current > 0 ? Date.now() - holdStartTimeRef.current : 0;
           isHoldingRef.current = false;
           if (duration > 250 && isListeningRef.current) {
-            stopListeningAndProcess();
+            void stopListeningAndProcess();
           }
         }}
         onMouseLeave={() => {
@@ -83,7 +83,7 @@ export function VoiceMicButton({
               holdStartTimeRef.current > 0 ? Date.now() - holdStartTimeRef.current : 0;
             isHoldingRef.current = false;
             if (duration > 250 && isListeningRef.current) {
-              stopListeningAndProcess();
+              void stopListeningAndProcess();
             }
           }
         }}
@@ -96,10 +96,10 @@ export function VoiceMicButton({
 
           if (isListeningRef.current || voiceStatus === 'listening') {
             if (!isClickFromMouse || mouseDownListeningStateRef.current) {
-              stopListeningAndProcess();
+              void stopListeningAndProcess();
             }
           } else {
-            startListening(false);
+            void startListening(false);
           }
         }}
         aria-label={currentCfg.badge || ''}

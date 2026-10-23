@@ -40,7 +40,7 @@ export function MinigameCreatorClient() {
       }
     }
 
-    loadCatalog();
+    void loadCatalog();
 
     return () => {
       isMounted = false;

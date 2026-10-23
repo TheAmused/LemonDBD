@@ -289,8 +289,8 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
                   onRevealNsfw={() => setShowNsfw(true)}
                   isShareLoading={shareLoadingId === trial.id}
                   isCopied={copiedId === trial.id}
-                  onShare={() => handleShare(trial)}
-                  onExport={() => handleExport(trial)}
+                  onShare={() => { void handleShare(trial); }}
+                  onExport={() => { void handleExport(trial); }}
                   onDelete={() => requestDelete(trial.id!)}
                 />
               ))}

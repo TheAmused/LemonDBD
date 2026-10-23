@@ -9,7 +9,44 @@ import path from 'node:path';
 const PORT = 3007;
 const BASE_URL = `http://127.0.0.1:${PORT}`;
 
-const canonData = require(path.join(__dirname, '../../backend/app/seeds/data/smash_or_pass/rosters/canon.json'));
+/** The canon.json fields this script reads. */
+interface CanonEntity {
+  slug: string;
+  name: string;
+  role: string;
+  gender: string;
+  media_url?: string;
+  media_type?: string;
+  real_name?: string;
+  watermark_left?: string;
+  watermark_right?: string;
+  archetype?: string;
+  bio?: string;
+  tagline?: string;
+  quote?: string;
+  meme?: string;
+  turn_on?: string;
+  dealbreaker?: string;
+  dating_vibe?: string;
+  red_flags?: string[];
+  green_flags?: string[];
+  translations?: Record<string, unknown>;
+}
+
+interface CanonRoster {
+  slug: string;
+  name: string;
+  description: string;
+  translations?: { pl?: { name?: string; description?: string } };
+  cover_image_url: string;
+  theme_color: string;
+  category: string;
+  is_nsfw: boolean;
+  is_active: boolean;
+  entities: CanonEntity[];
+}
+
+const canonData = require(path.join(__dirname, '../../backend/app/seeds/data/smash_or_pass/rosters/canon.json')) as { rosters: CanonRoster[] };
 const canonRoster = canonData.rosters[0];
 const canonEntities = canonRoster.entities;
 
@@ -82,13 +119,13 @@ async function verifySmashPage(page: Page, isMobile: boolean) {
     (url) => url.pathname.includes('/smash-or-pass/rosters/') && url.pathname.endsWith('/feed'),
     async (route) => {
       // Prioritize iconic test characters: The Onryō, Leon S. Kennedy, Eleven
-      const onryo = canonEntities.find((e: any) => e.slug === 'the_onryō');
-      const leon = canonEntities.find((e: any) => e.slug === 'leon_scott_kennedy');
-      const eleven = canonEntities.find((e: any) => e.slug === 'eleven');
-      const others = canonEntities.filter((e: any) => !['the_onryō', 'leon_scott_kennedy', 'eleven'].includes(e.slug));
-      const ordered = [onryo, leon, eleven, ...others].filter(Boolean);
+      const onryo = canonEntities.find((e) => e.slug === 'the_onryō');
+      const leon = canonEntities.find((e) => e.slug === 'leon_scott_kennedy');
+      const eleven = canonEntities.find((e) => e.slug === 'eleven');
+      const others = canonEntities.filter((e) => !['the_onryō', 'leon_scott_kennedy', 'eleven'].includes(e.slug));
+      const ordered = [onryo, leon, eleven, ...others].filter((e): e is CanonEntity => e !== undefined);
 
-      const toApiEntity = (e: any, index: number) => ({
+      const toApiEntity = (e: CanonEntity, index: number) => ({
         id: e.slug,
         roster_id: 'canon',
         slug: e.slug,
@@ -335,17 +372,17 @@ async function main() {
   }
 
   // Spot-check iconic characters
-  const onryo = canonEntities.find((e: any) => e.slug === 'the_onryō');
+  const onryo = canonEntities.find((e) => e.slug === 'the_onryō');
   if (!onryo || onryo.watermark_left !== 'THE ONRYŌ' || onryo.watermark_right !== 'SADAKO') {
     throw new Error(`The Onryō watermark check failed: ${JSON.stringify(onryo)}`);
   }
 
-  const leon = canonEntities.find((e: any) => e.slug === 'leon_scott_kennedy');
+  const leon = canonEntities.find((e) => e.slug === 'leon_scott_kennedy');
   if (!leon || leon.watermark_left !== 'LEON S.' || leon.watermark_right !== 'KENNEDY') {
     throw new Error(`Leon watermark check failed: ${JSON.stringify(leon)}`);
   }
 
-  const bill = canonEntities.find((e: any) => e.slug === 'bill_overbeck');
+  const bill = canonEntities.find((e) => e.slug === 'bill_overbeck');
   if (!bill || bill.watermark_left !== 'BILL' || bill.watermark_right !== 'OVERBECK') {
     throw new Error(`Bill watermark check failed: ${JSON.stringify(bill)}`);
   }

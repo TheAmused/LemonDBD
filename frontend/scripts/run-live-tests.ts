@@ -24,20 +24,39 @@ const KEY = "altcha_enforced";
 const REASON = "Automated live test run (restored afterwards)";
 if (!process.env.NODE_TLS_REJECT_UNAUTHORIZED) process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-type Json = Record<string, any>;
+/** The response fields these scripts read; the API sends more. */
+interface ApiBody {
+  token?: string;
+  error?: string;
+  error_code?: string;
+  message?: string;
+  status?: string | number;
+  settings?: SettingRow[];
+}
+interface AltchaChallenge {
+  algorithm: string;
+  challenge: string;
+  salt: string;
+  signature: string;
+  expires?: number;
+  maxnumber?: number;
+}
+interface AltchaSolution extends AltchaChallenge {
+  number: number;
+}
 type SettingRow = { key: string; value: unknown; overridden: boolean };
 
-async function call(path: string, init: RequestInit = {}, token?: string): Promise<{ status: number; body: Json }> {
+async function call<T = ApiBody>(path: string, init: RequestInit = {}, token?: string): Promise<{ status: number; body: T }> {
   const headers: Record<string, string> = { "Content-Type": "application/json", "X-Return-Token": "1" };
   if (token) headers.Authorization = `Bearer ${token}`;
   const res = await fetch(`${API}/api/v1${path}`, { ...init, headers: { ...headers, ...(init.headers as Record<string, string>) } });
-  const body = await res.json().catch(() => ({}));
+  const body = (await res.json().catch(() => ({}))) as T;
   return { status: res.status, body };
 }
 
 /** Brute-forces one ALTCHA challenge synchronously (50k hashes at most: milliseconds). */
-async function solveChallenge(): Promise<Json> {
-  const { status, body: ch } = await call("/auth/altcha-challenge");
+async function solveChallenge(): Promise<AltchaSolution> {
+  const { status, body: ch } = await call<AltchaChallenge>("/auth/altcha-challenge");
   if (status !== 200) throw new Error(`ALTCHA challenge endpoint returned ${status}`);
   const max = ch.maxnumber || 50000;
   for (let n = 0; n <= max; n++) {
@@ -51,7 +70,7 @@ async function solveChallenge(): Promise<Json> {
 async function adminToken(withAltcha: boolean): Promise<string> {
   const login = process.env.LIVE_ADMIN_LOGIN || "lemon";
   const password = process.env.LIVE_ADMIN_PASSWORD || "lemon";
-  const payload: Json = { login, password };
+  const payload: { login: string; password: string; altcha?: AltchaSolution } = { login, password };
   if (withAltcha) payload.altcha = await solveChallenge();
   const { status, body } = await call("/auth/login", { method: "POST", body: JSON.stringify(payload) });
   if (status !== 200 || !body.token) {
@@ -62,7 +81,7 @@ async function adminToken(withAltcha: boolean): Promise<string> {
 
 async function currentSetting(token: string): Promise<SettingRow> {
   const { status, body } = await call("/admin/settings", {}, token);
-  const row = (body.settings as SettingRow[] | undefined)?.find((s) => s.key === KEY);
+  const row = body.settings?.find((s) => s.key === KEY);
   if (status !== 200 || !row) throw new Error(`could not read the ${KEY} setting (${status})`);
   return row;
 }

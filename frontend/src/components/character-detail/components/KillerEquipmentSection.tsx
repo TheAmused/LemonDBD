@@ -1,13 +1,14 @@
 'use client';
 // frontend/src/components/character-detail/components/KillerEquipmentSection.tsx
 import React, { useMemo } from 'react';
-import {
+import type {
   AddonItem,
   EquipmentItem,
+  CharacterDetailDictionary} from '../types';
+import {
   getAssetUrl,
   getRarityTileStyle,
-  getRarityRank,
-  CharacterDetailDictionary,
+  getRarityRank
 } from '../types';
 import { tip } from '@/components/common/Tooltip';
 import { toTitleCase } from '@/utils/textCase';

@@ -4,11 +4,12 @@
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { BookOpen, Flame, Bookmark, Calendar, ShieldCheck } from 'lucide-react';
-import {
+import type {
   CharacterViewBaseProps,
   AddonItem,
   EquipmentItem,
-  OfferingItem,
+  OfferingItem} from './types';
+import {
   getAssetUrl,
   formatLocalizedReleaseDate,
   formatKillerHeight,
@@ -20,7 +21,7 @@ import { KillerCombatStats } from './components/KillerCombatStats';
 import { CharacterPerksSection } from './components/CharacterPerksSection';
 import { KillerEquipmentSection } from './components/KillerEquipmentSection';
 import { OfferingsSection } from './components/OfferingsSection';
-import { Perk } from '@/types/perks';
+import type { Perk } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 import { tip } from '@/components/common/Tooltip';

@@ -4,7 +4,7 @@
 import { logger } from '@/utils/logger';
 import { useEffect, useState } from 'react';
 import { fetchCompletionStatus } from '@/services/challengeCompletionsApi';
-import { ChallengeCompletionStatus } from '@/types/challengeCompletionStatus';
+import type { ChallengeCompletionStatus } from '@/types/challengeCompletionStatus';
 import { useAuth } from '@/context/AuthContext';
 
 /** Every mode+variant the current user has ever fully completed. Feeds the

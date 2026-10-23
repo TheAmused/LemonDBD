@@ -7,7 +7,7 @@ import { PageShell } from '@/components/layout/PageShell';
 import { PageShellFallback } from '@/components/layout/PageShellFallback';
 import { GeneratorPage } from '@/components/generator/GeneratorPage';
 import { RandomizerPageSkeleton } from '@/components/generator/RandomizerSkeleton';
-import { Perk, CharacterItem } from '@/types/perks';
+import type { Perk, CharacterItem } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useCachedData } from '@/hooks/useCachedData';
@@ -60,7 +60,7 @@ function RandomizerContent() {
             <Button
               variant="primary"
               size="md"
-              onClick={() => retryPerks()}
+              onClick={() => { void retryPerks(); }}
             >
               {dict.modal.retry}
             </Button>

@@ -7,8 +7,8 @@
 // aura | generator | healing | chase | stealth | entity | hooks
 // (`entity` is the catch-all and only ever appears alone).
 //
-import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
-import { ChaosMutator } from '@/types/chaos';
+import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
+import type { ChaosMutator } from '@/types/chaos';
 
 const FALLBACK_PERK_TYPES: readonly string[] = ['entity'];
 

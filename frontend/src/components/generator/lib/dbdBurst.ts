@@ -1,5 +1,5 @@
 // frontend/src/components/generator/lib/dbdBurst.ts
-import { RoleCategory } from '@/types/perks';
+import type { RoleCategory } from '@/types/perks';
 import { paletteColor } from '@/utils/themeColor';
 
 interface BurstParticle {

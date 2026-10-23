@@ -18,9 +18,9 @@ import { Modal } from '@/components/common/Modal';
 import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
 import { Tooltip } from '@/components/common/Tooltip';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
-import { FriendzoneIcon, EldritchVoidIcon } from '@/components/icons/DbdIcons';
-import { RankFirstIcon, ThornHeartIcon } from '@/components/icons/DbdIcons';
+import { KillerIcon, SurvivorIcon,FriendzoneIcon,EldritchVoidIcon,RankFirstIcon,ThornHeartIcon } from '@/components/icons/DbdIcons';
+
+
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { CandidateRow, type TierConfig } from "./SmashLeaderboardParts";

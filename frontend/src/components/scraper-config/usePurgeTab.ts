@@ -26,7 +26,7 @@ function dropDependents(selection: string[], removed: string[]): string[] {
 }
 
 /** Which tables to wipe, behind a confirmation, and the purge request itself. */
-export function usePurgeTab(onPurgeSuccess?: () => void) {
+export function usePurgeTab(onPurgeSuccess?: () => void | Promise<void>) {
   const dict = useDictionary();
   const apiBase = getBackendBaseUrl();
   const [purgeTargets, setPurgeTargets] = useState<string[]>([]);

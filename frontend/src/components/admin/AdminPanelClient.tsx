@@ -67,7 +67,10 @@ export function AdminPanelClient() {
   const notify = useCallback((next: ActionMessage) => setMessage(next), []);
   const dismiss = useCallback(() => setMessage(null), []);
   const { overview, refresh: refreshOverview } = useAdminOverview(ready);
-  const directory = useAdminUsers({ enabled: ready && tab === 'users', refreshKey, notify, onChanged: refreshOverview });
+  const overviewChanged = useCallback(() => {
+    void refreshOverview();
+  }, [refreshOverview]);
+  const directory = useAdminUsers({ enabled: ready && tab === 'users', refreshKey, notify, onChanged: overviewChanged });
 
   const refreshAll = () => {
     setRefreshKey((k) => k + 1);
@@ -116,7 +119,7 @@ export function AdminPanelClient() {
             />
           )}
           {tab === 'reports' && (
-            <AdminReportsSection queue={queue} refreshKey={refreshKey} notify={notify} onChanged={refreshOverview} onShowUser={showUser} />
+            <AdminReportsSection queue={queue} refreshKey={refreshKey} notify={notify} onChanged={overviewChanged} onShowUser={showUser} />
           )}
           {tab === 'availability' && <AdminAvailabilitySection refreshKey={refreshKey} notify={notify} />}
           {tab === 'audit' && <AdminAuditSection refreshKey={refreshKey} notify={notify} />}

@@ -5,8 +5,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Lock } from 'lucide-react';
 import { DbdButton } from '@/components/common/Button';
-import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
-import { ChaosMutator } from '@/types/chaos';
+import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
+import type { ChaosMutator } from '@/types/chaos';
 
 import { pickRandomLoadout, buildDrawnSlots } from '../lib/perkPicker';
 import { getSlotInteraction } from '../lib/blindnessCurse';

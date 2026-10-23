@@ -68,7 +68,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({ em
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex w-full flex-col items-center gap-5">
+    <form onSubmit={(e) => { void handleSubmit(e); }} className="flex w-full flex-col items-center gap-5">
       <p className="w-full text-center type-body-lg text-text-secondary">
         {formatMessage(t.authVerifySubtitle, { email })}
       </p>
@@ -89,7 +89,7 @@ export const EmailVerificationForm: React.FC<EmailVerificationFormProps> = ({ em
       {(t.resendCodeIn) && (
         <Button
           type="button"
-          onClick={handleResend}
+          onClick={() => { void handleResend(); }}
           disabled={cooldown > 0}
           variant="link" size="sm"
         >

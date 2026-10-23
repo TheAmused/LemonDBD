@@ -1,5 +1,5 @@
 // frontend/src/constants/addonRarityIcons.ts
-import { AddonRarity } from '@/types/chaosStreak';
+import type { AddonRarity } from '@/types/chaosStreak';
 
 export const ADDON_RARITY_ICONS: Record<AddonRarity, string> = {
   Common: '/images/addon-rarity/common.webp',

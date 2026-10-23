@@ -2,8 +2,8 @@
 'use client';
 
 import React from 'react';
-import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
-import { ChaosMutator } from '@/types/chaos';
+import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
+import type { ChaosMutator } from '@/types/chaos';
 import { cn } from '@/utils/cn';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from '@/context/DictionaryContext';

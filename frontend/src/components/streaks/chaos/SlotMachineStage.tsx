@@ -3,11 +3,12 @@
 
 import React, { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } from 'react';
 
-import { Perk } from '@/types/gauntletStreak';
-import { AddonRarity } from '@/types/chaosStreak';
+import type { Perk } from '@/types/gauntletStreak';
+import type { AddonRarity } from '@/types/chaosStreak';
 import { ADDON_RARITY_ICONS } from '@/constants/addonRarityIcons';
 import { PerkIcon } from '@/components/ui/PerkIcon';
-import { useSlotReels, ReelDirection, REEL_SPIN_MS } from './useSlotReels';
+import type { ReelDirection} from './useSlotReels';
+import { useSlotReels, REEL_SPIN_MS } from './useSlotReels';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { Button } from '@/components/common/Button';

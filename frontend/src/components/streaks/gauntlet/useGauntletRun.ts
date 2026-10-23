@@ -2,13 +2,14 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import {
+import type {
   BuyableBoost,
-  DEFAULT_GAUNTLET_GAME_MODE,
   GauntletGameMode,
   GauntletRun,
   GauntletStats,
-  Role,
+  Role} from '@/types/gauntletStreak';
+import {
+  DEFAULT_GAUNTLET_GAME_MODE
 } from '@/types/gauntletStreak';
 import * as api from '@/services/gauntletStreakApi';
 import { useBankedCheckpoint, useChallengeRun } from '../useChallengeRun';
@@ -44,7 +45,7 @@ export function useGauntletRun(role: Role, gameMode: GauntletGameMode = DEFAULT_
         return outcome.run;
       }, 'Failed to record the result');
       if (!updated || !outcome) return;
-      loadStats();
+      void loadStats();
       const tokensFull = run.boosts != null && tokensBefore >= run.boosts.cap;
       if (result === 'win' && (outcome.previous_run.last_token_roll > 0 || tokensFull)) {
         setTokenRoll({ roll: outcome.previous_run.last_token_roll, from: tokensBefore });
@@ -52,7 +53,7 @@ export function useGauntletRun(role: Role, gameMode: GauntletGameMode = DEFAULT_
       // A win that banks a fresh checkpoint gets its own celebration. If that
       // same win also finished the gauntlet, the win screen covers that instead.
       const justFinished = outcome.previous_run.status === 'completed';
-      if (justFinished) loadCompletions();
+      if (justFinished) void loadCompletions();
       if (result === 'win' && !justFinished && outcome.previous_run.last_checkpoint_streak > checkpointBefore) {
         setJustBankedCheckpoint(outcome.previous_run.last_checkpoint_streak);
       }

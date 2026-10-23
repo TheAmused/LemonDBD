@@ -1,6 +1,6 @@
 // frontend/src/services/pageStreakApi.ts
-import { PageStreakRun, PageStreakStats, PoolSummary, RosterMilestone, RosterResponse } from '../types/pageStreak';
-import { CompletionsResponse } from '../types/challengeCompletion';
+import type { PageStreakRun, PageStreakStats, PoolSummary, RosterMilestone, RosterResponse } from '../types/pageStreak';
+import type { CompletionsResponse } from '../types/challengeCompletion';
 import { createStreakApiClient } from './streakApiClient';
 
 const { getJson, postJson } = createStreakApiClient('page-streak');

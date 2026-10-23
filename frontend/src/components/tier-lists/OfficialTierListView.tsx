@@ -63,7 +63,7 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
     [slug]
   );
 
-  const handleDeleteOfficial = useCallback(async () => {
+  const deleteOfficial = useCallback(async () => {
     setDeleteFailed(false);
     try {
       await deleteOfficialTierList(slug, token);
@@ -73,6 +73,10 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
       setDeleteFailed(true);
     }
   }, [slug, token, locale, router]);
+
+  const handleDeleteOfficial = useCallback(() => {
+    void deleteOfficial();
+  }, [deleteOfficial]);
 
   const onReset = useCallback(() => clearRanking(slug), [slug]);
 

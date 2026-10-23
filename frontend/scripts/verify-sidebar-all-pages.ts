@@ -1,7 +1,9 @@
 // frontend/scripts/verify-sidebar-all-pages.ts
-import { chromium, Browser } from 'playwright';
-import { spawn, ChildProcess } from 'child_process';
-import http from 'http';
+import type { Browser } from 'playwright';
+import { chromium } from 'playwright';
+import type { ChildProcess } from 'node:child_process';
+import { spawn } from 'node:child_process';
+import http from 'node:http';
 
 const PORT = 3005;
 const BASE_URL = `http://127.0.0.1:${PORT}`;
@@ -481,4 +483,4 @@ async function main() {
   }
 }
 
-main();
+void main();

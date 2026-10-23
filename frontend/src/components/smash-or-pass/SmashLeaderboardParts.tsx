@@ -8,8 +8,8 @@ import { localizedProfile } from '@/utils/entityProfile';
 import { tip } from '@/components/common/Tooltip';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import { SmashSounds } from '@/components/smash-or-pass/SmashSoundEffects';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
-import { RankFirstIcon, RankPlacedIcon } from '@/components/icons/DbdIcons';
+import { KillerIcon, SurvivorIcon,RankFirstIcon,RankPlacedIcon } from '@/components/icons/DbdIcons';
+
 import { formatNumber } from '@/utils/format';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 import { formatMessage } from '@/utils/i18nFormat';

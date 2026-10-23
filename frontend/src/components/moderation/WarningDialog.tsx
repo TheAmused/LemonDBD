@@ -58,7 +58,7 @@ export function WarningDialog() {
   return (
     <Modal
       isOpen
-      onClose={() => acknowledgeWarning(warning.id)}
+      onClose={() => { void acknowledgeWarning(warning.id); }}
       variant="dialog"
       size="md"
       layer="top"
@@ -70,7 +70,7 @@ export function WarningDialog() {
       bodyClassName="space-y-4"
       footerClassName="justify-end"
       footer={
-        <Button variant="primary" size="sm" data-autofocus onClick={() => acknowledgeWarning(warning.id)}>
+        <Button variant="primary" size="sm" data-autofocus onClick={() => { void acknowledgeWarning(warning.id); }}>
           {t.acknowledge}
         </Button>
       }
@@ -84,7 +84,7 @@ export function WarningDialog() {
         {warnings.length > 1 && (
           <span>{formatMessage(t.counter, { current: 1, total: warnings.length })}</span>
         )}
-        <Link href={`/${locale}/rules`} className="text-accent-amber hover:opacity-80" onClick={() => acknowledgeWarning(warning.id)}>
+        <Link href={`/${locale}/rules`} className="text-accent-amber hover:opacity-80" onClick={() => { void acknowledgeWarning(warning.id); }}>
           {t.rulesLink}
         </Link>
       </div>

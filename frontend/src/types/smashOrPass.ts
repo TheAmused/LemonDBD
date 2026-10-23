@@ -52,7 +52,8 @@ export interface EntityProfile {
  */
 export interface EntityMetadata extends EntityProfile {
   chapter?: string;
-  danger_level?: 'Low' | 'Medium' | 'High' | 'Lethal' | 'Eldritch' | string;
+  /** Usually one of Low, Medium, High, Lethal or Eldritch; the API may send other labels. */
+  danger_level?: string;
   chaos_score?: number;
   /** Derived server-side as [archetype, role, gender]; read-only, never stored here. */
   compatibility_tags?: string[];
@@ -92,8 +93,10 @@ export interface EntityItem {
   real_name?: string;
   watermark_left?: string;
   watermark_right?: string;
-  role: CharacterRole | string;
-  gender: CharacterGender | string;
+  /** Usually a {@link CharacterRole}; the API may send other values. */
+  role: string;
+  /** Usually a {@link CharacterGender}; the API may send other values. */
+  gender: string;
   media_url?: string | null;
   media_display?: MediaDisplay | null;
   // `metadata_json` is gone: the API used to emit the same dict twice per entity.
@@ -145,7 +148,8 @@ export interface LeaderboardItem {
   media_url?: string | null;
   metadata?: EntityMetadata;
   stat?: EntityStatItem | null;
-  tier: TierClassification | string;
+  /** Usually a {@link TierClassification}; the API may send other values. */
+  tier: string;
   rank: number;
   smash_count?: number;
   pass_count?: number;
@@ -183,7 +187,8 @@ export interface SmashFilterOptions {
 export interface SmashLeaderboardOptions {
   role?: string;
   gender?: string;
-  sortBy?: 'smash_rate' | 'total_votes' | 'smash_count' | 'chaos_rating' | string;
+  /** Usually smash_rate, total_votes, smash_count or chaos_rating. */
+  sortBy?: string;
   limit?: number;
 }
 
@@ -253,7 +258,8 @@ export interface CustomRomanceArchetype {
   subtitle: string;
   description: string;
   badge_color: string;
-  icon_name?: 'flame' | 'skull' | 'heart' | 'zap' | 'sparkles' | 'shield' | 'compass' | string;
+  /** Usually flame, skull, heart, zap, sparkles, shield or compass; other names fall back to a default icon. */
+  icon_name?: string;
   icon_url?: string;
   badge_image_url?: string;
   is_fallback?: boolean;

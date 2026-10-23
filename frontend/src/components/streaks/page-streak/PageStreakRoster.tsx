@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/page-streak/PageStreakRoster.tsx
 
 import React from 'react';
-import { RosterEntry } from '@/types/pageStreak';
+import type { RosterEntry } from '@/types/pageStreak';
 import { KillerRosterGrid } from './KillerRosterGrid';
 import { useDictionary } from "@/context/DictionaryContext";
 import { InlineLink } from '@/components/common/InlineLink';

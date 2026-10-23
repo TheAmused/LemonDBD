@@ -3,7 +3,7 @@ import React from 'react';
 import { pageMetadata } from '@/i18n/metadata';
 import { PageShell } from '@/components/layout/PageShell';
 import { AboutClient } from '@/components/about/AboutClient';
-import { Locale } from '@/i18n/config';
+import type { Locale } from '@/i18n/config';
 
 export const generateMetadata = pageMetadata('/about', (d) => ({ title: d.about.pageTitle }));
 

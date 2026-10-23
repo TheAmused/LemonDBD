@@ -15,9 +15,9 @@ export class SidewaysPointerSensor extends PointerSensor {
   static activators: typeof PointerSensor.activators = [
     {
       eventName: 'onPointerDown',
-      handler: ({ nativeEvent: event }, { onActivation }) => {
+      handler: ({ nativeEvent: event }, options) => {
         if (event.pointerType === 'mouse' || !event.isPrimary || event.button !== 0) return false;
-        onActivation?.({ event });
+        options.onActivation?.({ event });
         return true;
       },
     },

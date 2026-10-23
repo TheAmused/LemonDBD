@@ -4,11 +4,12 @@
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { BookOpen, Bookmark, Calendar, ShieldCheck } from 'lucide-react';
-import {
+import type {
   CharacterViewBaseProps,
   AddonItem,
   EquipmentItem,
-  OfferingItem,
+  OfferingItem} from './types';
+import {
   formatLocalizedReleaseDate,
 } from './types';
 import { CharacterTopBar } from './components/CharacterTopBar';
@@ -16,7 +17,7 @@ import { CharacterHeroAvatar } from './components/CharacterHeroAvatar';
 import { CharacterPerksSection } from './components/CharacterPerksSection';
 import { SurvivorEquipmentSection } from './components/SurvivorEquipmentSection';
 import { OfferingsSection } from './components/OfferingsSection';
-import { Perk } from '@/types/perks';
+import type { Perk } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { Button } from '@/components/common/Button';
 import { InfoChip } from '@/components/common/InfoChip';

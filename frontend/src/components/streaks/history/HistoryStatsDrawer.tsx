@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/history/HistoryStatsDrawer.tsx
 
 import React from 'react';
-import { HistoryStats, HistoryMatchLog } from '@/types/historyStreak';
+import type { HistoryStats, HistoryMatchLog } from '@/types/historyStreak';
 import { StreakStatsDrawer } from '../StreakStatsDrawer';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { useDictionary } from "@/context/DictionaryContext";

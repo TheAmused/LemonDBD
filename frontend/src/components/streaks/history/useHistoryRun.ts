@@ -2,7 +2,7 @@
 'use client';
 
 import { useCallback } from 'react';
-import { HistoryMode, HistoryRun, HistoryStats } from '@/types/historyStreak';
+import type { HistoryMode, HistoryRun, HistoryStats } from '@/types/historyStreak';
 import * as api from '@/services/historyStreakApi';
 import { useChallengeRun } from '../useChallengeRun';
 
@@ -24,8 +24,8 @@ export function useHistoryRun(mode: HistoryMode) {
         'Failed to record the result'
       );
       if (!updated) return undefined;
-      loadStats();
-      if (updated.status === 'completed') loadCompletions();
+      void loadStats();
+      if (updated.status === 'completed') void loadCompletions();
       return updated;
     },
     [token, run, mutate, loadStats, loadCompletions]

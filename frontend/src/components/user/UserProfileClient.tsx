@@ -14,7 +14,7 @@ import { DualMainsShowcase } from '@/components/user/DualMainsShowcase';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
 import { UserBugReportsDrawer } from '@/components/user/UserBugReportsDrawer';
 import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
-import { UserBugReport, StatusFeedback } from '@/types/userProfile';
+import type { UserBugReport, StatusFeedback } from '@/types/userProfile';
 import { fetchMyBugReports, markBugReportSeen, uploadAvatar, ApiError } from '@/services/userProfileApi';
 import { useUserShowcase } from '@/hooks/useUserShowcase';
 import { User } from 'lucide-react';
@@ -198,7 +198,7 @@ export function UserProfileClient() {
         <input
           type="file"
           ref={fileInputRef}
-          onChange={handleAvatarFileChange}
+          onChange={(e) => { void handleAvatarFileChange(e); }}
           accept="image/png,image/jpeg,image/webp,image/gif"
           className="hidden"
         />
@@ -261,7 +261,7 @@ export function UserProfileClient() {
           // Only a new report changes the list; closing the dialog unused no longer resets it to page 1.
           if (reportSubmitted) {
             setReportSubmitted(false);
-            fetchMyReports(1);
+            void fetchMyReports(1);
           }
         }}
       />

@@ -45,7 +45,7 @@ export function DbdIdleClient() {
       }
     }
 
-    loadData();
+    void loadData();
 
     return () => {
       isMounted = false;

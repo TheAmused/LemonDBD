@@ -59,7 +59,7 @@ export const RecoveryCodesPanel: React.FC<RecoveryCodesPanelProps> = ({ codes, o
         <Button
           variant="secondary"
           size="sm"
-          onClick={copy}
+          onClick={() => { void copy(); }}
           leftIcon={copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
         >
           <span>{copied ? t.copied : t.copyCodes}</span>

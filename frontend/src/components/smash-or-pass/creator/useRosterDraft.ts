@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { defaultRosterThemeColor, SMASH_ROSTER_LIMITS, TRANSLATABLE_LOCALES } from '@/utils/smashOrPass/constants';
 import type { StoredCustomRoster } from '@/types/smashOrPass';
-import { DraftEntity, emptyDraftEntity } from './EntityEditor';
+import type { DraftEntity} from './EntityEditor';
+import { emptyDraftEntity } from './EntityEditor';
 import {
   type Draft,
   type EntityTranslations,

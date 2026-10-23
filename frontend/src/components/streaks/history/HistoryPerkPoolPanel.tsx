@@ -4,7 +4,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { CheckCircle2, Lock, Sparkles, X } from 'lucide-react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
-import { Perk } from '@/types/gauntletStreak';
+import type { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { usePerkDisplayName, usePerkLabel } from '@/context/DisplayNamesContext';
 import { normalizeSearchText } from '@/utils/perkUtils';

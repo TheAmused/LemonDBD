@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/history/HistoryModeModal.tsx
 
 import React from 'react';
-import { HistoryMode } from '@/types/historyStreak';
+import type { HistoryMode } from '@/types/historyStreak';
 import { ChallengeModeModal, buildCompletionTiles } from '../ChallengeModeModal';
 import { HistoryRulesModal } from './HistoryRulesModal';
 import { HISTORY_MODE_ORDER } from '@/utils/challengeTierCompletion';

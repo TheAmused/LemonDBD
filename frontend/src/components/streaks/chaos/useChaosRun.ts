@@ -2,7 +2,7 @@
 'use client';
 
 import { useCallback } from 'react';
-import { ChaosRun, ChaosStats, Difficulty } from '@/types/chaosStreak';
+import type { ChaosRun, ChaosStats, Difficulty } from '@/types/chaosStreak';
 import * as api from '@/services/chaosStreakApi';
 import { useBankedCheckpoint, useChallengeRun } from '../useChallengeRun';
 
@@ -27,8 +27,8 @@ export function useChaosRun(difficulty: Difficulty) {
       );
       if (!updated) return undefined;
       const justFinished = updated.status === 'completed';
-      loadStats();
-      if (justFinished) loadCompletions();
+      void loadStats();
+      if (justFinished) void loadCompletions();
       if (!options?.silent && result === 'win' && !justFinished && updated.last_checkpoint_streak > checkpointBefore) {
         setJustBankedCheckpoint(updated.last_checkpoint_streak);
       }

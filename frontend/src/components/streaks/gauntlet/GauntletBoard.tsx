@@ -5,7 +5,8 @@ import type { Dictionary } from '@/locales/types';
 import React, { useRef, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { DEFAULT_GAUNTLET_GAME_MODE, GauntletGameMode, PICK_CHARACTER_MODES, Role } from '@/types/gauntletStreak';
+import type { GauntletGameMode, Role } from '@/types/gauntletStreak';
+import { DEFAULT_GAUNTLET_GAME_MODE, PICK_CHARACTER_MODES } from '@/types/gauntletStreak';
 import { useGauntletRun } from './useGauntletRun';
 import { useOwnedCharacters, type OwnedCharacterItem } from '../useOwnedRoster';
 import { sortByReleaseNumber } from '@/utils/characterUtils';
@@ -196,7 +197,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
         {isCompleted ? (
           <ChallengeVictoryCard
             title={dict.streaks.gauntletComplete}
-            onRestart={abandon}
+            onRestart={() => { void abandon(); }}
             busy={busy}
           />
         ) : (
@@ -206,22 +207,22 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
             role={role}
             characters={rosterCharacters}
             loading={loading || busy}
-            onWin={() => submitResult('win')}
+            onWin={() => { void submitResult('win'); }}
             onLoss={() => {
               // A reported loss is always sent; with the tokens for it the player is first asked about a shield.
               if (canAffordShield) {
                 shieldAnswered.current = false;
                 setShieldPromptOpen(true);
               } else {
-                submitResult('loss');
+                void submitResult('loss');
               }
             }}
             bonusSlots={run?.bonus_perk_slots ?? 0}
-            onReveal={reveal}
+            onReveal={() => { void reveal(); }}
             pickCharacter={pickCharacter}
             pendingPick={pendingPick}
             onAcceptPick={() => {
-              if (pendingPick) chooseTarget(pendingPick);
+              if (pendingPick) void chooseTarget(pendingPick);
             }}
             holdReel={justBankedCheckpoint != null || tokenRoll != null}
             instantTarget={instantTarget}
@@ -233,7 +234,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
                     confirmLabel: `${dict.streaks.boostConfirmPick} (${formatMessage(dict.streaks.boostPrice, { price: boosts.prices.pick })})`,
                     cancelLabel: dict.streaks.cancel,
                     canConfirm: Boolean(pendingPick) && !busy && run.tokens >= boosts.prices.pick,
-                    onConfirm: confirmPick,
+                    onConfirm: () => { void confirmPick(); },
                     onCancel: cancelPick,
                   }
                 : undefined
@@ -251,7 +252,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
               picking={buyingPick}
               onStartPick={() => setBuyingPick(true)}
               onBuy={(boost) => {
-                buyBoost(boost);
+                void buyBoost(boost);
               }}
             />
           )}
@@ -279,7 +280,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
             setConfirmingAbandon(false);
             setShieldPromptOpen(false);
             setBuyingPick(false);
-            abandon();
+            void abandon();
           }}
         />
 
@@ -295,13 +296,13 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
               if (shieldAnswered.current) return;
               shieldAnswered.current = true;
               setShieldPromptOpen(false);
-              submitResult('loss', true);
+              void submitResult('loss', true);
             }}
             onCancel={() => {
               if (shieldAnswered.current) return;
               shieldAnswered.current = true;
               setShieldPromptOpen(false);
-              submitResult('loss', false);
+              void submitResult('loss', false);
             }}
           />
         )}

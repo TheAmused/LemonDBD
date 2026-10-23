@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/page-streak/PageStreakStatsDrawer.tsx
 
 import React from 'react';
-import { PageStreakStats, PageStreakMatchLog } from '@/types/pageStreak';
+import type { PageStreakStats, PageStreakMatchLog } from '@/types/pageStreak';
 import { StreakStatsDrawer } from '../StreakStatsDrawer';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { useDictionary } from "@/context/DictionaryContext";

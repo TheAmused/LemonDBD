@@ -5,7 +5,7 @@
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { HistoryMode } from '@/types/historyStreak';
+import type { HistoryMode } from '@/types/historyStreak';
 import { useHistoryRun } from './useHistoryRun';
 import { useKillerPerkPool } from '../chaos/useKillerPerkPool';
 import { KillerPickerGrid } from '../chaos/KillerPickerGrid';
@@ -18,7 +18,7 @@ import { HistoryHeader } from './HistoryHeader';
 import { HistoryPerkPoolPanel } from './HistoryPerkPoolPanel';
 import { HistoryNextRowPreview } from './HistoryNextRowPreview';
 import { HistoryRowClearedBanner } from './HistoryRowClearedBanner';
-import { Perk } from '@/types/gauntletStreak';
+import type { Perk } from '@/types/gauntletStreak';
 import { saveHistoryMode } from '@/utils/streakDifficultyPrefs';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
@@ -104,7 +104,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
   const handleAbandon = () => {
     setConfirmingAbandon(false);
     clearPick();
-    abandon();
+    void abandon();
   };
 
   return (
@@ -140,7 +140,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
         {isCompleted ? (
           <ChallengeVictoryCard
             title={dict.streaks.historyStreakComplete}
-            onRestart={abandon}
+            onRestart={() => { void abandon(); }}
             busy={busy}
           />
         ) : (
@@ -178,10 +178,10 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
                 </StreakActionButton>
               ) : (
                 <>
-                  <StreakActionButton variant="red" onClick={() => handleResult('loss')} disabled={busy}>
+                  <StreakActionButton variant="red" onClick={() => { void handleResult('loss'); }} disabled={busy}>
                     {dict.streaks.loseMatch}
                   </StreakActionButton>
-                  <StreakActionButton variant="green" onClick={() => handleResult('win')} disabled={busy}>
+                  <StreakActionButton variant="green" onClick={() => { void handleResult('win'); }} disabled={busy}>
                     {dict.streaks.winMatch}
                   </StreakActionButton>
                 </>

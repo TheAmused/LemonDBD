@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/chaos/ChaosStatsDrawer.tsx
 
 import React from 'react';
-import { ChaosStats, ChaosMatchLog } from '@/types/chaosStreak';
+import type { ChaosStats, ChaosMatchLog } from '@/types/chaosStreak';
 import { StreakStatsDrawer } from '../StreakStatsDrawer';
 import { ADDON_RARITY_ICONS } from '@/constants/addonRarityIcons';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';

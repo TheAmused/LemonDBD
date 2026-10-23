@@ -4,7 +4,7 @@
 import { logger } from '@/utils/logger';
 import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { MapRealm, Realm } from '@/types/map';
+import type { MapRealm, Realm } from '@/types/map';
 import { fetchMaps, fetchRealms, mapsCacheKey, realmsCacheKey } from '@/services/mapApi';
 import { readCache } from '@/services/dataCache';
 
@@ -145,7 +145,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
         }
       }
     }
-    loadMaps();
+    void loadMaps();
     return () => {
       isCancelled = true;
     };
@@ -167,7 +167,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
         logger.error('Failed loading realm images:', err);
       }
     }
-    loadRealms();
+    void loadRealms();
     return () => {
       isCancelled = true;
     };

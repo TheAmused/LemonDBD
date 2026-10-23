@@ -1,8 +1,10 @@
 // frontend/scripts/verify-smash-canon-overhaul.ts
-import { chromium, Page } from 'playwright';
-import { spawn, ChildProcess } from 'child_process';
-import http from 'http';
-import path from 'path';
+import type { Page } from 'playwright';
+import { chromium } from 'playwright';
+import type { ChildProcess } from 'node:child_process';
+import { spawn } from 'node:child_process';
+import http from 'node:http';
+import path from 'node:path';
 
 const PORT = 3007;
 const BASE_URL = `http://127.0.0.1:${PORT}`;

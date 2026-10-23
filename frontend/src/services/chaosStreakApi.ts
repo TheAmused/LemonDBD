@@ -1,12 +1,12 @@
 // frontend/src/services/chaosStreakApi.ts
-import {
+import type {
   ChaosRun,
   ChaosRunResponse,
   ChaosStats,
   ChaosStatsResponse,
   Difficulty,
 } from '../types/chaosStreak';
-import { CompletionsResponse } from '../types/challengeCompletion';
+import type { CompletionsResponse } from '../types/challengeCompletion';
 import { createStreakApiClient } from './streakApiClient';
 
 const { getJson, postJson } = createStreakApiClient('chaos-streak');

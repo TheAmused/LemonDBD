@@ -339,7 +339,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Clears the HttpOnly cookie server-side (JavaScript cannot delete it).
     const cleared = fetch(`${API_BASE}/api/v1/auth/logout`, { method: 'POST', credentials: 'include' }).catch(() => {});
     // After the cookie is gone, so the refetch is anonymous.
-    cleared.finally(onIdentityChanged);
+    void cleared.finally(onIdentityChanged);
     setUser(null);
     setToken(null);
     setOwnership(null);
@@ -353,7 +353,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const localeMatch = path.match(/^\/([a-z]{2})/);
       const locale = localeMatch ? localeMatch[1] : 'en';
       if (path.includes('/admin') || path.includes('/user')) {
-        cleared.finally(() => {
+        void cleared.finally(() => {
           window.location.href = `/${locale}`;
         });
         return;

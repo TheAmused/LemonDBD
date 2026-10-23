@@ -1,5 +1,5 @@
 // frontend/src/utils/perkUtils.ts
-import { Perk, RoleCategory } from '@/types/perks';
+import type { Perk, RoleCategory } from '@/types/perks';
 
 import { getBackendBaseUrl } from './api';
 import { isSurvivor } from '@/utils/characterUtils';
@@ -102,7 +102,7 @@ export function normalizeSearchText(text: string): string {
 export function matchesPerkSearch(
   perk: Perk,
   query: string,
-  role?: RoleCategory | string
+  role?: string
 ): boolean {
   if (role) {
     const pRole = (perk.category || '').toLowerCase();

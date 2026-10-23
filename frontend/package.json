@@ -1,16 +1,19 @@
 {
-  "name": "dbd-perk-viewer-frontend",
+  "name": "LemonDBD",
   "version": "2.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "typecheck": "tsc --noEmit -p .",
     "lint": "oxlint --format=stylish",
+    "check:lint-suppressions": "tsx scripts/check-lint-suppressions.ts",
+    "prebuild": "npm run lint",
     "test": "npm run test:unit && npm run test:live",
     "test:unit": "tsx --test src/__tests__/unit/*.test.ts src/__tests__/unit/*.test.tsx",
     "test:live": "tsx scripts/run-live-tests.ts --test-concurrency=1 src/__tests__/live/*.test.ts",
-    "test:workflows": "tsx scripts/run-live-tests.ts src/__tests__/live/*.test.ts",
+
     "test:minigames:live": "tsx scripts/run-live-tests.ts src/__tests__/live/minigamesWorkflowLive.test.ts",
     "test:minigames:e2e": "node scripts/verify-minigames.mjs",
     "check:i18n": "tsx scripts/check-hardcoded-strings.ts",
@@ -20,7 +23,7 @@
     "check:built": "tsx scripts/check-built-output.ts",
     "check:rendered": "tsx scripts/check-rendered.ts",
     "postbuild": "npm run check:built",
-    "test:guards": "tsx --test src/__tests__/unit/backgroundEffects.test.ts src/__tests__/unit/i18nArchitecture.test.ts src/__tests__/unit/i18nHygiene.test.ts src/__tests__/unit/codeQualityGuards.test.ts src/__tests__/unit/structureGuards.test.ts src/__tests__/unit/uiGuards.test.ts src/__tests__/unit/duplicationGuards.test.ts src/__tests__/unit/fileLengthGuard.test.ts src/__tests__/unit/smashIconGuards.test.ts src/__tests__/unit/dockerGuards.test.ts",
+    "test:guards": "tsx --test src/__tests__/unit/backgroundEffects.test.ts src/__tests__/unit/i18nArchitecture.test.ts src/__tests__/unit/i18nHygiene.test.ts src/__tests__/unit/codeQualityGuards.test.ts src/__tests__/unit/structureGuards.test.ts src/__tests__/unit/uiGuards.test.ts src/__tests__/unit/duplicationGuards.test.ts src/__tests__/unit/fileLengthGuard.test.ts src/__tests__/unit/smashIconGuards.test.ts src/__tests__/unit/dockerGuards.test.ts src/__tests__/unit/lintGuards.test.ts",
     "check": "npm run check:i18n && npm run check:styles && npm run test:guards",
     "check:typography": "tsx scripts/check-typography.ts"
   },

@@ -24,9 +24,6 @@ describe('code quality: type and lint escape hatches', () => {
     assert.deepEqual(bad, [], `Type-check suppressions:\n${bad.join('\n')}`);
   });
 
-  it('no eslint-disable directives', () => {
-    expectNone(perFile(scanLines(/eslint-disable/)), 'eslint-disable directives');
-  });
 
   it('no `any` (annotations, assertions, generics)', () => {
     const bad = scanAst((n) => n.kind === ts.SyntaxKind.AnyKeyword);

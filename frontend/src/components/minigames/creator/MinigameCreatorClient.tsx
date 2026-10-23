@@ -2,7 +2,6 @@
 // frontend/src/components/minigames/creator/MinigameCreatorClient.tsx
 
 import React, { useState, useEffect } from 'react';
-import { PageShell } from '@/components/layout/PageShell';
 import { MinigameCreator } from '@/components/minigames/creator/MinigameCreator';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import type { MinigameCatalog } from '@/types/minigame';
@@ -48,11 +47,7 @@ export function MinigameCreatorClient() {
   }, [locale]);
 
   return (
-    <PageShell
-      locale={locale}
-      activeCategory="minigames"
-      mainClassName="relative flex flex-col items-center justify-center min-h-vh-70"
-    >
+    <>
       {loading ? (
         <LoadingState label={dict.app.loading} />
       ) : error ? (
@@ -60,6 +55,6 @@ export function MinigameCreatorClient() {
       ) : catalog ? (
         <MinigameCreator catalog={catalog} locale={locale} />
       ) : null}
-    </PageShell>
+    </>
   );
 }

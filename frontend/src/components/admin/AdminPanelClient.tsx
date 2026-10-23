@@ -8,7 +8,6 @@ import React, { useCallback, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { ErrorPage } from '@/components/layout/ErrorPage';
-import { PageShell } from '@/components/layout/PageShell';
 import { TabPanel } from '@/components/common/Tabs';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 import { AdminPanelSkeleton } from '@/components/admin/AdminPanelSkeleton';
@@ -26,7 +25,7 @@ import {
 import { useAdminOverview } from '@/components/admin/useAdminOverview';
 import { useAdminUsers } from '@/components/admin/useAdminUsers';
 import { useAuth } from '@/context/AuthContext';
-import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { useDictionary } from '@/context/DictionaryContext';
 import { usePersistentString } from '@/hooks/usePersistentString';
 import type { ActionMessage, UserRow } from '@/types/admin';
 
@@ -42,7 +41,6 @@ const AdminModerationDrawer = dynamic(() => import('@/components/admin/AdminMode
 const AdminUserFormModal = dynamic(() => import('@/components/admin/AdminUserFormModal').then((m) => m.AdminUserFormModal), { ssr: false });
 
 export function AdminPanelClient() {
-  const locale = useLocale();
   const dict = useDictionary();
   const { user, isAdmin, isAuthenticated, isLoading } = useAuth();
   const ready = isAuthenticated && isAdmin;
@@ -89,7 +87,7 @@ export function AdminPanelClient() {
   const pending = overview?.pending ?? null;
 
   return (
-    <PageShell locale={locale} activeCategory="admin" mainId="main-admin-content" mainClassName="overflow-y-auto">
+    <>
       <div className="mx-auto w-full max-w-7xl space-y-5">
         <div className="flex items-end gap-3">
           <AdminSectionTabs
@@ -157,6 +155,6 @@ export function AdminPanelClient() {
         onCancel={() => setLeavingTo(null)}
       />
       <AdminToast message={message} onDismiss={dismiss} />
-    </PageShell>
+    </>
   );
 }

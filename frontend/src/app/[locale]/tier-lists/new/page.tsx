@@ -1,6 +1,5 @@
 import { Suspense } from 'react';
 import { pageMetadata } from '@/i18n/metadata';
-import { PageShell } from '@/components/layout/PageShell';
 import { TierListCreator, TierListSkeleton } from '@/features/tier-lists';
 import type { Locale } from '@/i18n/config';
 
@@ -24,15 +23,8 @@ export default async function NewTierListPage({
   const officialSlug = sp?.official;
 
   return (
-    <PageShell
-      locale={locale}
-      activeCategory="tier-lists"
-      padding="tight"
-      mainClassName="relative flex flex-col"
-    >
-      <Suspense fallback={<TierListSkeleton />}>
-        <TierListCreator locale={locale} editId={editId} officialSlug={officialSlug} />
-      </Suspense>
-    </PageShell>
+    <Suspense fallback={<TierListSkeleton />}>
+      <TierListCreator locale={locale} editId={editId} officialSlug={officialSlug} />
+    </Suspense>
   );
 }

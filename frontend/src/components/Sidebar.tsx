@@ -46,18 +46,9 @@ const BuyCoffeeModal = dynamic(
 
 interface SidebarProps {
   currentLocale?: string;
-  activeCategory?: string;
-  onSelectCategory?: (category: string) => void;
-  totalPerksCount?: number;
-  survivorCount?: number;
-  killerCount?: number;
-  characterCount?: number;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({
-      currentLocale: propLocale,
-      activeCategory,
-    }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ currentLocale: propLocale }) => {
   const dict = useDictionary();
   const pathname = usePathname() || '';
   const activeLocale = useLocale();
@@ -84,57 +75,11 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const checkIsActive = useCallback((itemId: string, itemHref?: string): boolean => {
-    if (!pathname) return false;
-
-    if (itemId === 'generator') {
-      return (
-        activeCategory === 'generator' ||
-        pathname.startsWith(`/${currentLocale}/randomizer`)
-      );
-    }
-
-    if (itemId === 'perks') {
-      return (
-        activeCategory === 'perks' ||
-        activeCategory === 'Survivor' ||
-        activeCategory === 'Killer' ||
-        pathname === `/${currentLocale}/perks` ||
-        pathname.startsWith(`/${currentLocale}/perks`)
-      );
-    }
-
-    if (itemId === 'characters') {
-      return (
-        activeCategory === 'characters' ||
-        pathname === `/${currentLocale}/characters` ||
-        pathname === `/${currentLocale}/characters/` ||
-        pathname.startsWith(`/${currentLocale}/characters/`)
-      );
-    }
-
-    if (itemId === 'smash-or-pass') {
-      return (
-        activeCategory === 'smash-or-pass' ||
-        pathname.startsWith(`/${currentLocale}/smash-or-pass`)
-      );
-    }
-
-    if (itemId === 'minigames') {
-      return (
-        activeCategory === 'minigames' ||
-        pathname.startsWith(`/${currentLocale}/minigames`)
-      );
-    }
-
-    if (activeCategory === itemId) return true;
-
-    if (itemHref) {
-      return pathname.startsWith(itemHref);
-    }
-
-    return false;
-  }, [pathname, currentLocale, activeCategory]);
+  // Active state comes from the URL alone: AppShell keeps this sidebar mounted across pages, so there is
+  // no page left to tell it which section it is in.
+  const checkIsActive = useCallback((itemHref: string): boolean => (
+    !!pathname && pathname.startsWith(itemHref)
+  ), [pathname]);
 
   const mainNavItems = useMemo(() => [
     {
@@ -262,7 +207,7 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
               color={item.color}
               activeBg={item.activeBg}
               href={item.href}
-              isActive={checkIsActive(item.id, item.href)}
+              isActive={checkIsActive(item.href)}
               onClick={closeMobile}
             />
           ))}

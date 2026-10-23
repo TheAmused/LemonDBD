@@ -5,7 +5,6 @@ import { logger } from '@/utils/logger';
 import React, { Suspense, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, UserX } from 'lucide-react';
-import { PageShell } from '@/components/layout/PageShell';
 import { EmptyState } from '@/components/common/EmptyState';
 import { CharacterDetailSkeleton } from '@/components/character-detail/CharactersSkeleton';
 import type {
@@ -60,40 +59,34 @@ export function CharacterDetailClient({ slug }: { slug: string }) {
   const t = dict.characterDetail;
 
   return (
-    <PageShell
-      locale={locale}
-      activeCategory="characters"
-      mainClassName="relative overflow-y-auto"
-    >
-      <div className="relative z-10">
-        {loading ? (
-          <CharacterDetailSkeleton />
-        ) : notFound || !detailData ? (
-          <EmptyState
-            variant="solid"
-            icon={UserX}
-            title={t.notFoundTitle}
-            subtitle={t.notFoundDesc}
-            className="min-h-vh-60 flex flex-col items-center justify-center space-y-5 text-center p-6"
+    <div className="relative z-10">
+      {loading ? (
+        <CharacterDetailSkeleton />
+      ) : notFound || !detailData ? (
+        <EmptyState
+          variant="solid"
+          icon={UserX}
+          title={t.notFoundTitle}
+          subtitle={t.notFoundDesc}
+          className="min-h-vh-60 flex flex-col items-center justify-center space-y-5 text-center p-6"
+        >
+          <Link
+            href={`/${locale}/characters`}
+            className={buttonClassName('primary', 'md')}
           >
-            <Link
-              href={`/${locale}/characters`}
-              className={buttonClassName('primary', 'md')}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              <span>{t.backToCharacters}</span>
-            </Link>
-          </EmptyState>
-        ) : (
-          <Suspense fallback={<CharacterDetailSkeleton />}>
-            <CharacterSubpageView
-              currentLocale={locale}
-              detailData={detailData}
-              allCharacters={allCharacters}
-            />
-          </Suspense>
-        )}
-      </div>
-    </PageShell>
+            <ChevronLeft className="h-4 w-4" />
+            <span>{t.backToCharacters}</span>
+          </Link>
+        </EmptyState>
+      ) : (
+        <Suspense fallback={<CharacterDetailSkeleton />}>
+          <CharacterSubpageView
+            currentLocale={locale}
+            detailData={detailData}
+            allCharacters={allCharacters}
+          />
+        </Suspense>
+      )}
+    </div>
   );
 }

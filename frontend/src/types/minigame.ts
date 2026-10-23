@@ -95,7 +95,8 @@ export interface GuessEvaluationResult {
    * or given up). Official classic rounds never ship it up front.
    */
   answer?: {
-    target_type?: TargetType | string | null;
+    /** Usually a {@link TargetType}; the server may send other values. */
+    target_type?: string | null;
     target_id?: number | null;
   };
 }

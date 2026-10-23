@@ -1,6 +1,6 @@
 // frontend/src/services/historyStreakApi.ts
-import { HistoryMode, HistoryRun, HistoryRunResponse, HistoryStats, HistoryStatsResponse } from '../types/historyStreak';
-import { CompletionsResponse } from '../types/challengeCompletion';
+import type { HistoryMode, HistoryRun, HistoryRunResponse, HistoryStats, HistoryStatsResponse } from '../types/historyStreak';
+import type { CompletionsResponse } from '../types/challengeCompletion';
 import { createStreakApiClient } from './streakApiClient';
 
 const { getJson, postJson } = createStreakApiClient('history-streak');

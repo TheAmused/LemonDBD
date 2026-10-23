@@ -17,7 +17,7 @@ export function SiteConfigProvider({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     const controller = new AbortController();
     const load = () => {
-      fetchSiteConfig(controller.signal).then((next) => {
+      void fetchSiteConfig(controller.signal).then((next) => {
         if (next && !controller.signal.aborted) setConfig(next);
       });
     };

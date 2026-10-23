@@ -41,7 +41,8 @@ export interface RomancePersonaResult {
   description: string;
   badgeColor: string;
   borderColor: string;
-  iconName: ArchetypeVisualConfig['iconName'] | string;
+  /** Usually an `ArchetypeVisualConfig` icon name; other names fall back to a default icon. */
+  iconName: string;
   iconUrl?: string;
   badgeImageUrl?: string;
   killerAffinity: number;

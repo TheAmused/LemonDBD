@@ -1,7 +1,8 @@
 // frontend/src/components/character-detail/modals/Model3DModal.tsx
 import React from 'react';
 import { X } from 'lucide-react';
-import { CharacterItem, getAvatarUrl, CharacterDetailDictionary } from '../types';
+import type { CharacterItem, CharacterDetailDictionary } from '../types';
+import { getAvatarUrl } from '../types';
 import { Modal, useModal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { Img } from '@/components/common/Img';

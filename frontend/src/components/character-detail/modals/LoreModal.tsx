@@ -1,6 +1,6 @@
 // frontend/src/components/character-detail/modals/LoreModal.tsx
 import React from 'react';
-import { CharacterItem, CharacterDetailDictionary } from '../types';
+import type { CharacterItem, CharacterDetailDictionary } from '../types';
 import { Modal } from '@/components/common/Modal';
 
 interface LoreModalProps {

@@ -2,7 +2,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { CharacterItem, characterSlug, CharacterDetailDictionary } from '../types';
+import type { CharacterItem, CharacterDetailDictionary } from '../types';
+import { characterSlug } from '../types';
 import { buttonClassName } from '@/components/common/Button';
 import { tip } from '@/components/common/Tooltip';
 

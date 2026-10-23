@@ -134,17 +134,9 @@
   },
   "overrides": [
     {
-      "files": [
-        "scripts/**"
-      ],
-      "rules": {
-        "react/globals": "off",
-        "react/no-children-prop": "off",
-        "unicorn/prefer-string-starts-ends-with": "off",
-        "typescript/no-explicit-any": "off"
-      }
-    },
-    {
+      // Custom widgets with no native tag: a contentEditable textbox and a combobox with a rich,
+      // thumbnail-and-badge listbox. Their ARIA roles are the accessible markup, so the rule
+      // cannot apply. Every other exception is rejected by scripts/check-lint-suppressions.ts.
       "files": [
         "src/components/minigames/CharacterAutocomplete.tsx",
         "src/components/common/RichTextEditor.tsx"
@@ -159,15 +151,6 @@
       ],
       "rules": {
         "nextjs/no-img-element": "off"
-      }
-    },
-    {
-      "files": [
-        "app/**/{page,layout,template,loading,error,not-found,route}.tsx",
-        "app/**/{page,layout,template,loading,error,not-found,route}.ts"
-      ],
-      "rules": {
-        "import/no-default-export": "off"
       }
     }
   ]

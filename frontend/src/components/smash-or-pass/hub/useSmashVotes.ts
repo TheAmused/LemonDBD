@@ -124,7 +124,7 @@ export function useSmashVotes(selectedRosterSlug: string) {
   );
 
   useEffect(() => {
-    syncVotes(selectedRosterSlug);
+    void syncVotes(selectedRosterSlug);
   }, [syncVotes, selectedRosterSlug]);
 
   /** Records a vote locally; a re-vote on the same character replaces the earlier one. */

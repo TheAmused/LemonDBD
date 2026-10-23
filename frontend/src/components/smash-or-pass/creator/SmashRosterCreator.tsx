@@ -23,7 +23,7 @@ import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useSmashRosterStore } from '@/hooks/useSmashRosterStore';
 import { useSmashTaxonomies } from '@/hooks/useSmashTaxonomies';
 import { sanitizeImageUrl } from '@/utils/smashOrPass/codec';
-import { SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
+import { SMASH_ROSTER_LIMITS,GENDER_QUICK_PICKS,ROLE_QUICK_PICKS } from '@/utils/smashOrPass/constants';
 import { CandidateFormInputs, CandidateTiles } from './EntityEditor';
 import { CoverImageCropModal } from './CoverImageCropModal';
 import { RosterBasicsSection } from './RosterBasicsSection';
@@ -33,7 +33,7 @@ import { RomanceArchetypeBuilder } from './RomanceArchetypeBuilder';
 import { Button } from '@/components/common/Button';
 import { Section, Feedback } from "./SmashRosterCreatorParts";
 import { useDictionary } from "@/context/DictionaryContext";
-import { GENDER_QUICK_PICKS, ROLE_QUICK_PICKS } from '@/utils/smashOrPass/constants';
+
 import { useRosterDraft } from './useRosterDraft';
 import { useRosterSubmit } from './useRosterSubmit';
 import { Toast } from '@/components/common/Toast';
@@ -174,7 +174,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
     <Button
       variant="primary"
       size="lg"
-      onClick={submit}
+      onClick={() => { void submit(); }}
       loading={publishingNow}
       data-roster-create=""
       className="min-h-12 2xl:min-h-hit-2xl px-8 2xl:px-10 2xl:text-lg"
@@ -244,7 +244,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
             genders={draft.custom_genders || []}
             onChangeRoles={(roles) => patch({ custom_roles: roles })}
             onChangeGenders={(genders) => patch({ custom_genders: genders })}
-            onRegisterTerm={registerTerm}
+            onRegisterTerm={(type, name) => { void registerTerm(type, name); }}
           />
         </Section>
       </div>
@@ -301,7 +301,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
                     customLabels={draft.custom_labels}
                     availableRoles={effectiveRoles}
                     availableGenders={effectiveGenders}
-                    onRegisterTaxonomy={registerTerm}
+                    onRegisterTaxonomy={(type, name) => { void registerTerm(type, name); }}
                   />
                 )}
 

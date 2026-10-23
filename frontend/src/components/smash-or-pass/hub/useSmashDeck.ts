@@ -19,8 +19,8 @@ interface UseSmashDeckOptions {
 
 /** The shuffled stack of candidates for the active roster, the filters on it, and its leaderboard. */
 export function useSmashDeck({ selectedRosterSlug, customRosterStore, onFeedSettled }: UseSmashDeckOptions) {
-  const [roleFilter, setRoleFilter] = useState<'all' | string>('all');
-  const [genderFilter, setGenderFilter] = useState<'all' | string>('all');
+  const [roleFilter, setRoleFilter] = useState<string>('all');
+  const [genderFilter, setGenderFilter] = useState<string>('all');
   const [deck, setDeck] = useState<EntityItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [totalRemaining, setTotalRemaining] = useState<number>(0);

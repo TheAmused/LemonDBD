@@ -213,14 +213,14 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
             shareUrl={shareUrl}
             feedbackNotice={feedbackNotice}
             copiedLink={copiedLink}
-            onCopyLink={handleCopyLinkOnly}
+            onCopyLink={() => { void handleCopyLinkOnly(); }}
             onBack={() => setIsSharingView(false)}
           />
         ) : (
           <PersonaBreakdown
             persona={persona}
             isSharedView={isSharedView}
-            onShare={handleShare}
+            onShare={() => { void handleShare(); }}
             onClose={onClose}
             onResetAll={onResetAll}
           />

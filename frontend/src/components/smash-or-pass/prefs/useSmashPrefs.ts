@@ -34,7 +34,7 @@ export function useSmashPrefs() {
   useEffect(() => {
     if (!hasReadLocal || isAuthLoading || userId === null || accountCheckedFor === userId) return;
     let cancelled = false;
-    (async () => {
+    void (async () => {
       const remote = await fetchSmashPreferences();
       if (cancelled) return;
       const account = remote

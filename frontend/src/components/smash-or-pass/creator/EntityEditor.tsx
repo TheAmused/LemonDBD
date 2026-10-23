@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { ChevronDown, Trash2, Image as ImageIcon } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { sanitizeImageUrl } from '@/utils/smashOrPass/codec';
-import { SMASH_ROSTER_LIMITS, TRANSLATABLE_FIELDS, TRANSLATABLE_LOCALES } from '@/utils/smashOrPass/constants';
+import { SMASH_ROSTER_LIMITS, TRANSLATABLE_FIELDS, TRANSLATABLE_LOCALES,GENDER_QUICK_PICKS,ROLE_QUICK_PICKS } from '@/utils/smashOrPass/constants';
 import type { RosterCustomLabels } from '@/types/smashOrPass';
 import { LABEL } from './styles';
 import { Button } from '@/components/common/Button';
@@ -19,7 +19,7 @@ import { type DraftEntity, type EntityTranslationDraft, TextField, TextAreaField
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { tip } from '@/components/common/Tooltip';
-import { GENDER_QUICK_PICKS, ROLE_QUICK_PICKS } from '@/utils/smashOrPass/constants';
+
 import { Badge } from '@/components/common/Badge';
 import { ToggleChip } from '@/components/common/ToggleChip';
 import { Img } from '@/components/common/Img';

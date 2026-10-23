@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { SmashSounds } from './SmashSoundEffects';
-import { EntityItem, RosterCustomLabels } from '@/types/smashOrPass';
+import type { EntityItem, RosterCustomLabels } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { resolveWatermarks } from '@/utils/smashWatermarks';
 import { FitText } from '@/components/common/FitText';

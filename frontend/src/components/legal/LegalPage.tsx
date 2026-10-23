@@ -7,11 +7,8 @@
 import React from 'react';
 import { LinkPill } from '@/components/common/LinkPill';
 import { trackEvent } from '@/utils/analytics';
-import { PageShell } from '@/components/layout/PageShell';
-import type { Locale } from '@/i18n/config';
 
 interface LegalPageLayoutProps {
-  locale: Locale;
   heading: string;
   /** Ready-made stamp, e.g. "Last updated: October 9, 2026". */
   lastUpdated: string;
@@ -19,26 +16,20 @@ interface LegalPageLayoutProps {
 }
 
 /** Page shell, title and last-updated stamp. No back link: the sidebar already leads back to About us. */
-export function LegalPageLayout({ locale, heading, lastUpdated, children }: LegalPageLayoutProps) {
+export function LegalPageLayout({ heading, lastUpdated, children }: LegalPageLayoutProps) {
   return (
-    <PageShell
-      locale={locale}
-      padding="spacious"
-      mainClassName="flex flex-col items-center min-h-screen-nav lg:min-h-screen overflow-y-auto relative"
-    >
-      <div className="relative z-10 mx-auto flex w-full max-w-page-lg flex-col gap-6 py-6 sm:gap-8 sm:py-10">
-        <header className="grid grid-cols-2 items-center gap-x-4 gap-y-3 sm:grid-cols-[1fr_auto_1fr]">
-          <span aria-hidden="true" className="hidden sm:block" />
-          <h1 className="col-span-2 row-start-2 text-center text-2xl font-black tracking-tight text-text-primary sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:text-3xl md:text-4xl">
-            {heading}
-          </h1>
-          <p className="col-span-2 row-start-1 text-center text-mini uppercase tracking-widest text-text-muted sm:col-span-1 sm:col-start-3 sm:justify-self-end sm:text-right sm:text-xs">
-            {lastUpdated}
-          </p>
-        </header>
-        {children}
-      </div>
-    </PageShell>
+    <div className="relative z-10 mx-auto flex w-full max-w-page-lg flex-col gap-6 py-6 sm:gap-8 sm:py-10">
+      <header className="grid grid-cols-2 items-center gap-x-4 gap-y-3 sm:grid-cols-[1fr_auto_1fr]">
+        <span aria-hidden="true" className="hidden sm:block" />
+        <h1 className="col-span-2 row-start-2 text-center text-2xl font-black tracking-tight text-text-primary sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:text-3xl md:text-4xl">
+          {heading}
+        </h1>
+        <p className="col-span-2 row-start-1 text-center text-mini uppercase tracking-widest text-text-muted sm:col-span-1 sm:col-start-3 sm:justify-self-end sm:text-right sm:text-xs">
+          {lastUpdated}
+        </p>
+      </header>
+      {children}
+    </div>
   );
 }
 

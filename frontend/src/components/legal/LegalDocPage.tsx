@@ -7,16 +7,14 @@ import React from 'react';
 import { LegalPageLayout } from '@/components/legal/LegalPage';
 import { LegalNotice, LegalSections } from '@/components/legal/LegalSections';
 import { legalDocText, type LegalDocId } from '@/components/legal/legalDocs';
-import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { useDictionary } from '@/context/DictionaryContext';
 
 export function LegalDocPage({ doc }: { doc: LegalDocId }) {
   const dict = useDictionary();
-  const locale = useLocale();
   const text = legalDocText(dict, doc);
 
   return (
     <LegalPageLayout
-      locale={locale}
       heading={text.heading}
       lastUpdated={`${text.lastUpdatedLabel}: ${text.lastUpdated}`}
     >

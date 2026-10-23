@@ -12,24 +12,21 @@ export const UserProfileSkeleton: React.FC<UserProfileSkeletonProps> = ({ classN
   const dict = useDictionary();
   const loadingLabel = dict.characterDetail.loading;
 
+  // Content only: the sidebar and <main> come from AppShell, so there is no placeholder sidebar here.
   return (
     <output
       aria-busy="true"
       aria-label={loadingLabel}
-      className={`min-h-screen text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300 ${className}`}
+      className={`flex min-h-skeleton-page w-full flex-1 items-center justify-center p-6 lg:p-8 ${className}`}
     >
-      <div aria-hidden="true" className="lemon-shell-aside hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:block lg:w-64 border-r border-border-color bg-bg-surface" />
-
-      <main className="flex-1 w-full min-h-skeleton-page flex items-center justify-center p-6 lg:p-8">
-        <DbdSpinner
-          size="responsive"
-          layout="inline"
-          accent="blood"
-          needleSpeed={1.3}
-          label={loadingLabel}
-          sublabel={dict.user.loadingProfileSub}
-        />
-      </main>
+      <DbdSpinner
+        size="responsive"
+        layout="inline"
+        accent="blood"
+        needleSpeed={1.3}
+        label={loadingLabel}
+        sublabel={dict.user.loadingProfileSub}
+      />
     </output>
   );
 };

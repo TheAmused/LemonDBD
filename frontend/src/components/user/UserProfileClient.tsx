@@ -8,7 +8,6 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
-import { PageShell } from '@/components/layout/PageShell';
 import { CampfireHeader } from '@/components/user/CampfireHeader';
 import { DualMainsShowcase } from '@/components/user/DualMainsShowcase';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
@@ -154,7 +153,7 @@ export function UserProfileClient() {
 
   if (!isAuthenticated || !user) {
     return (
-      <div className="min-h-screen text-text-primary flex flex-col items-center justify-center p-6 text-center dbd-fog-overlay transition-colors duration-300">
+      <div className="flex min-h-skeleton-page flex-1 flex-col items-center justify-center p-6 text-center text-text-primary">
         <Surface padding="none" className="max-w-md w-full text-text-primary p-8 backdrop-blur-xl shadow-xl space-y-4">
           <IconTile tone="amber" size="lg" className="mx-auto">
             <LemonIcon className="h-10 w-10 text-accent-amber" />
@@ -189,11 +188,7 @@ export function UserProfileClient() {
   }
 
   return (
-    <PageShell
-      locale={currentLocale}
-      activeCategory="user"
-      mainClassName="overflow-y-auto relative"
-    >
+    <>
       <div className="relative z-10 max-w-5xl xl:max-w-6xl 2xl:max-w-profile 3xl:max-w-profile-xl w-full mx-auto space-y-6 sm:space-y-8 2xl:space-y-10 py-4 sm:py-6 lg:py-8 2xl:py-10">
         <input
           type="file"
@@ -265,6 +260,6 @@ export function UserProfileClient() {
           }
         }}
       />
-    </PageShell>
+    </>
   );
 }

@@ -1,6 +1,7 @@
 // frontend/src/components/character-detail/modals/EquipmentDetailModal.tsx
 import React from 'react';
-import { AddonItem, EquipmentItem, getAssetUrl, getRarityTileStyle, CharacterDetailDictionary } from '../types';
+import type { AddonItem, EquipmentItem, CharacterDetailDictionary } from '../types';
+import { getAssetUrl, getRarityTileStyle } from '../types';
 import { RichText } from '@/components/common/RichText';
 import { Modal } from '@/components/common/Modal';
 import { Img } from '@/components/common/Img';

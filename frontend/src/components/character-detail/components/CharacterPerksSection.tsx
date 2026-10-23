@@ -2,8 +2,9 @@
 // frontend/src/components/character-detail/components/CharacterPerksSection.tsx
 
 import React, { useState } from 'react';
-import { CharacterItem, PerkItem, getAssetUrl, CharacterDetailDictionary } from '../types';
-import { Perk } from '@/types/perks';
+import type { CharacterItem, PerkItem, CharacterDetailDictionary } from '../types';
+import { getAssetUrl } from '../types';
+import type { Perk } from '@/types/perks';
 import { DisabledBadge } from '@/components/DisabledBadge';
 import { DisabledReasonModal } from '@/components/DisabledReasonModal';
 import { tip } from '@/components/common/Tooltip';

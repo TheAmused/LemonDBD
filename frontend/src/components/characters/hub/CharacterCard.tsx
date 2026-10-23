@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { useDictionary } from '@/context/DictionaryContext';
 import { DisabledBadge } from '@/components/DisabledBadge';
 import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
+import type {
+  CharacterItem} from '@/components/character-detail/types';
 import {
-  CharacterItem,
   characterSlug,
   getAvatarUrl as resolveAvatarUrl,
   getAvatarThumbUrl,

@@ -13,13 +13,14 @@ import {
   Cloud,
   type LucideIcon,
 } from 'lucide-react';
-import {
+import type {
   AddonItem,
   EquipmentItem,
+  CharacterDetailDictionary} from '../types';
+import {
   getAssetUrl,
   getRarityTileStyle,
-  getRarityRank,
-  CharacterDetailDictionary,
+  getRarityRank
 } from '../types';
 import { CategoryPicker } from './CategoryPicker';
 import { toTitleCase } from '@/utils/textCase';

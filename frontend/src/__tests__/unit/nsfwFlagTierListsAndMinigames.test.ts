@@ -208,7 +208,7 @@ describe('NSFW wiring (source checks)', () => {
 
   it('the minigame creator, hub card and play page handle the flag', () => {
     assert.match(read('components', 'minigames', 'creator', 'MinigameCreator.tsx'), /<NsfwSwitch/);
-    assert.match(read('components', 'minigames', 'MinigamesHub.tsx'), /trial\.is_nsfw && <NsfwBadge/);
+    assert.match(read('components', 'minigames', 'MinigamesHubCards.tsx'), /trial\.is_nsfw && <NsfwBadge/);
     const play = read('components', 'minigames', 'PlayTrialClient.tsx');
     assert.match(play, /useNsfwGate\(/);
     assert.match(play, /<NsfwContentGate/);

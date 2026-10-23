@@ -8,7 +8,7 @@ from app.models.base import ColumnDictMixin, JSON_DICT, JSON_LIST
 from app.schemas.gauntlet import GauntletLoadout
 
 if TYPE_CHECKING:
-    from app.schemas.gauntlet import GauntletMatchLogDict, GauntletRunDict
+    from app.schemas.gauntlet import GauntletMatchLogDict, GauntletRunDict  # noqa: F401 -- named in the ColumnDictMixin["..."] string generic
 
 
 class GauntletRun(StreakRunMixin, ColumnDictMixin["GauntletRunDict"], Base):

@@ -6,13 +6,11 @@ import {
   Heart,
   Flame,
   Quote,
-  CheckCircle2,
-  AlertTriangle,
   ThumbsDown,
 } from 'lucide-react';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
-import { EntityItem, EntityStatItem } from '@/types/smashOrPass';
+import type { EntityItem, EntityStatItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { Modal } from '@/components/common/Modal';
 import { EldritchVoidIcon, FriendzoneIcon, RankFirstIcon } from '@/components/icons/DbdIcons';
@@ -21,6 +19,7 @@ import { formatNumber } from '@/utils/format';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
+import { Img } from '@/components/common/Img';
 
 /** An entity, optionally carrying legacy vote-response fields. */
 type StatsCharacter = EntityItem & {
@@ -135,8 +134,6 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
   const globalRankLabel = rawSmashDict.statsDetail.rank;
   const loreQuoteLabel = rawSmashDict.loreLabels.signatureQuote;
   const loreProfileLabel = rawSmashDict.loreLabels.bio;
-  const greenFlagsLabel = rawSmashDict.loreLabels.greenFlag;
-  const redFlagsLabel = rawSmashDict.loreLabels.redFlag;
   const turnOnLabel = rawSmashDict.loreLabels.turn_on;
   const dealbreakerLabel = rawSmashDict.loreLabels.dealbreaker;
   const percentSign = rawSmashDict.percentSign;
@@ -151,7 +148,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
 
   const portrait = (
     <div className="relative h-20 w-20 rounded-card overflow-hidden border border-accent-red/40 shrink-0 bg-bg-primary shadow-md">
-      <img
+      <Img
         src={avatarSrc}
         alt={name}
         loading="lazy"

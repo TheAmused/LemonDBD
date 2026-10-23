@@ -8,7 +8,6 @@ seen the very rows being tested.
 """
 import json
 import sys
-import time
 from pathlib import Path
 
 import cv2
@@ -16,7 +15,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from app.services.scoreboard_ocr import analyze_scoreboard, load_image, read_lines, row_probes  # noqa: E402
+from app.services.scoreboard_ocr import load_image, read_lines, row_probes  # noqa: E402
 from app.services.scoreboard_ocr.icons import CLASSES, classify_icon, icon_patch, icon_window  # noqa: E402
 from app.services.scoreboard_ocr.parse import build_report, name_similarity  # noqa: E402
 from scripts.build_scoreboard_prototypes import row_centres  # noqa: E402
@@ -49,10 +48,8 @@ def main(folder: Path, holdout: bool) -> int:
                 c: np.mean([p for other, per in patches.items() if other != name for p in per[c]], axis=0)
                 for c in CLASSES
             }
-        t0 = time.time()
         _, glow = row_probes(gray)
         report = build_report(lines, lambda cy: classify_icon(icon_window(gray, cy), protos), glow)
-        ms = (time.time() - t0) * 1000
         totals["files"] += 1
         if not report.get("ok"):
             print(f"{name}: FAILED {report}")

@@ -1,24 +1,19 @@
 // frontend/src/app/[locale]/perks/loading.tsx
 import React from 'react';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
-import { PageShellFallback } from '@/components/layout/PageShellFallback';
+import { RouteLoading } from '@/components/layout/RouteLoading';
 
 export default function PerksLoading() {
   return (
-    <PageShellFallback
-      outerClassName="h-dvh overflow-hidden text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
-      padding="tight"
-      mainClassName="flex h-full min-h-0 flex-col items-center justify-center"
-      skeleton={
-        <DbdSpinner
-          size="responsive"
-          layout="inline"
-          accent="blood"
-          needleSpeed={1.2}
-          labelKey="app.loadingPerks"
-          sublabelKey="app.loadingPerksSub"
-        />
-      }
-    />
+    <RouteLoading className="h-full">
+      <DbdSpinner
+        size="responsive"
+        layout="inline"
+        accent="blood"
+        needleSpeed={1.2}
+        labelKey="app.loadingPerks"
+        sublabelKey="app.loadingPerksSub"
+      />
+    </RouteLoading>
   );
 }

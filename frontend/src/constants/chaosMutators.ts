@@ -1,5 +1,5 @@
 // frontend/src/constants/chaosMutators.ts
-import { ChaosMutator } from '@/types/chaos';
+import type { ChaosMutator } from '@/types/chaos';
 
 const SURVIVOR_CHAOS_MUTATORS: readonly ChaosMutator[] = [
   {

@@ -17,7 +17,7 @@ from sqlalchemy import delete
 
 from app.core.extensions import db
 from app.core.redis_cache import bump_catalog_version
-from app.models.map import MapRealm, Realm
+from app.models.map import MapRealm, MapSource, Realm
 from app.models.smash_or_pass import Entity, EntityStat, Roster, Vote
 from app.models.user import UserCharacterOwnership, UserPerkOwnership
 from app.services.db.asset_bundling import get_static_dir
@@ -31,11 +31,13 @@ from app.services.db.import_content import import_content
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["DatabaseExportImportService", "SUPPORTED_EXPORT_TARGETS", "TARGET_GROUPS", "get_static_dir"]
+__all__ = ["DatabaseExportImportService", "SUPPORTED_EXPORT_TARGETS", "TARGET_GROUPS", "clear_targets", "get_static_dir"]
+
+IMPORT_MODES = ("merge", "replace")
 
 
-def _clear_for_replace(target_keys: set[str]) -> None:
-    """Delete the rows `replace` mode is about to rewrite (children before parents)."""
+def clear_targets(target_keys: set[str]) -> None:
+    """Delete every row of the named entities (children before parents): replace mode and purge."""
     if "ownerships" in target_keys:
         db.session.execute(delete(UserCharacterOwnership))
         db.session.execute(delete(UserPerkOwnership))
@@ -43,6 +45,8 @@ def _clear_for_replace(target_keys: set[str]) -> None:
         db.session.execute(delete(MapRealm))
     if "maps" in target_keys or "realms" in target_keys:
         db.session.execute(delete(Realm))
+    if "map_sources" in target_keys:
+        db.session.execute(delete(MapSource))
     if "rosters" in target_keys:
         db.session.execute(delete(Vote))
         db.session.execute(delete(EntityStat))
@@ -88,6 +92,8 @@ class DatabaseExportImportService:
     ) -> dict[str, Any]:
         if not isinstance(payload, dict):
             raise ValueError("Invalid JSON payload: root must be an object.")
+        if mode not in IMPORT_MODES:
+            raise ValueError("mode must be 'merge' or 'replace'.")
 
         data = _flatten_payload(payload)
         target_keys = set(targets) if targets else set(data.keys())
@@ -96,7 +102,7 @@ class DatabaseExportImportService:
 
         try:
             if mode == "replace":
-                _clear_for_replace(target_keys)
+                clear_targets(target_keys)
 
             import_content(data, target_keys, summary, static_dir)
             import_users(data, target_keys, summary, static_dir)

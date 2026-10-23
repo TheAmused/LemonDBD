@@ -1,7 +1,5 @@
 # backend/tests/unit/test_static_db_seeder.py
 import json
-import pytest
-from pathlib import Path
 from sqlalchemy import select, func
 from app.core.extensions import db
 from app.models.character import Killer, Survivor

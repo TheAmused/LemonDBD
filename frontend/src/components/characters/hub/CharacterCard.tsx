@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { useDictionary } from '@/context/DictionaryContext';
 import { DisabledBadge } from '@/components/DisabledBadge';
 import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
+import type {
+  CharacterItem} from '@/components/character-detail/types';
 import {
-  CharacterItem,
   characterSlug,
   getAvatarUrl as resolveAvatarUrl,
   getAvatarThumbUrl,
@@ -16,6 +17,7 @@ import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
+import { Img } from '@/components/common/Img';
 interface CharacterCardProps {
   char: CharacterItem;
   locale: string;
@@ -98,7 +100,7 @@ export function CharacterCard({
       )}
 
       <div className="relative h-full w-full overflow-hidden bg-bg-elevated">
-        <img
+        <Img
           src={avatarThumbSrc}
           alt={char.name}
           loading="lazy"

@@ -28,7 +28,7 @@ const CATEGORIES = {
   users: ['user'],
   reports: ['bug_report', 'content'],
   availability: ['challenge_mode', 'character', 'perk'],
-  publishing: ['tier_list', 'roster', 'changelog_post'],
+  publishing: ['tier_list', 'roster', 'changelog_post', 'minigame_challenge'],
   system: ['site_settings', 'maintenance', 'database'],
 } as const satisfies Record<string, readonly string[]>;
 type Category = keyof typeof CATEGORIES;
@@ -77,6 +77,12 @@ const ACTION_LABEL_KEYS = {
   'changelog.update': 'auditActionChangelogUpdated',
   'changelog.reorder': 'auditActionChangelogReordered',
   'changelog.delete': 'auditActionChangelogDeleted',
+  'tier_list.delete': 'auditActionTierListDeleted',
+  'smash_roster.delete': 'auditActionRosterDeleted',
+  'minigame_challenge.delete': 'auditActionMinigameChallengeDeleted',
+  'changelog.announce': 'auditActionChangelogAnnounced',
+  'changelog.announce_update': 'auditActionChangelogAnnouncementUpdated',
+  'changelog.announce_remove': 'auditActionChangelogAnnouncementRemoved',
 } as const;
 
 const TARGET_LABEL_KEYS = {
@@ -89,6 +95,7 @@ const TARGET_LABEL_KEYS = {
   tier_list: 'auditTargetTierList',
   roster: 'auditTargetRoster',
   changelog_post: 'auditTargetChangelog',
+  minigame_challenge: 'auditTargetMinigameChallenge',
   site_settings: 'auditTargetSettings',
   maintenance: 'auditTargetMaintenance',
   database: 'auditTargetDatabase',
@@ -96,7 +103,7 @@ const TARGET_LABEL_KEYS = {
 
 /** Removing access or content reads red, giving it back green, everything else neutral. */
 const actionTone = (action: string): string =>
-  /(disabled|deleted|ban|banned|suspended|purged)$/.test(action)
+  /(disabled|deleted|delete|ban|banned|suspended|purged|announce_remove)$/.test(action)
     ? 'text-accent-red'
     : /(enabled|restored|revoked|dismiss)$/.test(action)
       ? 'text-accent-green'
@@ -114,11 +121,13 @@ export function AdminAuditSection({ refreshKey, notify }: { refreshKey: number; 
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = usePersistentNumber<number>(ADMIN_STORAGE.auditPerPage, DENSE_PAGE_SIZE, PAGE_SIZE_OPTIONS);
   const [category, setCategory] = usePersistentString<Category>(ADMIN_STORAGE.auditCategory, 'all', oneOf(Object.keys(CATEGORIES) as Category[]));
-  const [loading, setLoading] = useState(true);
+  // The log is loading until the request for the current page and filter has settled.
+  const requestKey = `${page}|${perPage}|${category}|${refreshKey}`;
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
+  const loading = loadedKey !== requestKey;
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
     listAuditLogs({ page, per_page: perPage, target_type: CATEGORIES[category].join(',') })
       .then((data) => {
         if (cancelled) return;
@@ -126,11 +135,11 @@ export function AdminAuditSection({ refreshKey, notify }: { refreshKey: number; 
         setTotal(data.total ?? 0);
       })
       .catch((err: unknown) => !cancelled && notify({ type: 'error', text: getErrorMessage(err, t.networkError) }))
-      .finally(() => !cancelled && setLoading(false));
+      .finally(() => !cancelled && setLoadedKey(requestKey));
     return () => {
       cancelled = true;
     };
-  }, [page, perPage, category, refreshKey, notify, t.networkError]);
+  }, [page, perPage, category, requestKey, notify, t.networkError]);
 
   const actionLabel = (action: string) => {
     const key = ACTION_LABEL_KEYS[action as keyof typeof ACTION_LABEL_KEYS];

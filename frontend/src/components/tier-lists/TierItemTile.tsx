@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/tier-lists/TierItemTile.tsx
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { FitText } from '@/components/common/FitText';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import type { TierItem } from '@/types/tierList';
@@ -34,6 +34,18 @@ const LG_IMAGE_CLASSES: Record<TierTileShape, string> = {
   wide: 'h-20 phone-lg:h-24 sm:h-28',
 };
 
+/** The first `count` characters of `word`, counted by code point so astral letters stay whole. */
+function leadingChars(word: string, count: number): string {
+  let out = '';
+  let taken = 0;
+  for (const ch of word) {
+    if (taken === count) break;
+    out += ch;
+    taken += 1;
+  }
+  return out;
+}
+
 /** `William "Bill" Overbeck` -> `WB`: first letter of the first two words that have one. */
 function initials(name: string): string {
   const words = name
@@ -41,7 +53,7 @@ function initials(name: string): string {
     .map((w) => w.replace(/[^\p{L}\p{N}]/gu, ''))
     .filter(Boolean);
   if (words.length === 0) return name.slice(0, 2).toUpperCase();
-  const letters = words.length > 1 ? [...words[0]][0] + [...words[1]][0] : [...words[0]].slice(0, 2).join('');
+  const letters = words.length > 1 ? leadingChars(words[0], 1) + leadingChars(words[1], 1) : leadingChars(words[0], 2);
   return letters.toUpperCase();
 }
 

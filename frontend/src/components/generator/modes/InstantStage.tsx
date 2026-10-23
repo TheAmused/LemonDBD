@@ -4,9 +4,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { DbdButton } from '@/components/common/Button';
-import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
-import { ChaosMutator } from '@/types/chaos';
-import { Dictionary } from '@/locales/types';
+import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
+import type { ChaosMutator } from '@/types/chaos';
+
 import { pickRandomLoadout, buildDrawnSlots } from '../lib/perkPicker';
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
@@ -47,7 +47,6 @@ export const InstantStage: React.FC<InstantStageProps> = ({
       onRevealSlot,
       onSelectPerk,
       isBlind = false,
-      backendBase,
     }) => {
   const dict = useDictionary();
   const [revealSlots, setRevealSlots] = useState<(DrawnSlot | null)[]>([null, null, null, null]);

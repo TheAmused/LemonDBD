@@ -94,7 +94,7 @@ class TestPasswordChangeSignsOutOtherSessions:
         res = client.put(
             "/api/v1/auth/profile",
             json={"new_password": "brand-new-pass", "current_password": PASSWORD},
-            headers=_bearer(old_token),
+            headers={**_bearer(old_token), "X-Return-Token": "1"},
         )
         assert res.status_code == 200
         body = res.get_json()
@@ -112,7 +112,9 @@ class TestPasswordChangeSignsOutOtherSessions:
 
         user = _make_user()
         old_token = generate_token(user.id, user.role)
-        user.reset_token = "reset-me"
+        from app.services.user.auth import hash_reset_token
+
+        user.reset_token = hash_reset_token("reset-me")
         user.reset_token_expires_at = datetime.now(timezone.utc) + timedelta(minutes=5)
         db.session.commit()
 
@@ -121,7 +123,11 @@ class TestPasswordChangeSignsOutOtherSessions:
         )
         assert res.status_code == 200
         assert client.get("/api/v1/auth/me", headers=_bearer(old_token)).get_json()["authenticated"] is False
-        login = client.post("/api/v1/auth/login", json={"login": user.username, "password": "another-pass"})
+        login = client.post(
+            "/api/v1/auth/login",
+            json={"login": user.username, "password": "another-pass"},
+            headers={"X-Return-Token": "1"},
+        )
         assert login.status_code == 200
         assert decode_token(login.get_json()["token"])["ver"] == 1
 
@@ -232,6 +238,8 @@ class TestWeakSecretWarnings:
             TESTING = False
             SECRET_KEY = "short-but-unique"
             JWT_SECRET_KEY = "short-but-unique"
+            # The test suite's Fernet key is the public dev key, which production refuses outright.
+            TWO_FACTOR_ENCRYPTION_KEY = ""
 
         monkeypatch.setenv("FLASK_ENV", "production")
         with caplog.at_level("WARNING"):

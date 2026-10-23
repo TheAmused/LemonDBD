@@ -1,23 +1,19 @@
 // frontend/src/app/[locale]/maps/loading.tsx
 import React from 'react';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
-import { PageShellFallback } from '@/components/layout/PageShellFallback';
+import { RouteLoading } from '@/components/layout/RouteLoading';
 
 export default function MapsLoading() {
   return (
-    <PageShellFallback
-      customPadding="p-6 lg:p-7"
-      mainClassName="min-h-skeleton-page flex items-center justify-center"
-      skeleton={
-        <DbdSpinner
-          size="responsive"
-          layout="inline"
-          accent="blood"
-          needleSpeed={1.6}
-          labelKey="maps.loadingTacticalMaps"
-          sublabelKey="maps.loadingTacticalMapsSub"
-        />
-      }
-    />
+    <RouteLoading>
+      <DbdSpinner
+        size="responsive"
+        layout="inline"
+        accent="blood"
+        needleSpeed={1.6}
+        labelKey="maps.loadingTacticalMaps"
+        sublabelKey="maps.loadingTacticalMapsSub"
+      />
+    </RouteLoading>
   );
 }

@@ -1,0 +1,71 @@
+# .github/workflows/ci.yml -- runs on every push and pull request.
+# The same checks run_tests.py runs locally, minus the live (Postgres) and k6 suites.
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+          cache: pip
+          cache-dependency-path: |
+            backend/requirements.lock
+            backend/requirements-dev.txt
+      - name: Install dependencies (hash-checked, as in the image)
+        run: |
+          python -m pip install --require-hashes -r requirements.lock
+          python -m pip install --no-deps --ignore-requires-python --require-hashes -r requirements-ocr.txt
+          python -m pip install -r requirements-dev.txt
+      - name: ruff (unused imports and variables, undefined names; config in ruff.toml)
+        run: ruff check .
+      - name: pytest (unit)
+        run: python -m pytest tests/unit -q
+
+  frontend:
+    name: Frontend checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      # No separate type-check, lint or i18n/style steps: `npm run build` below runs the lint
+      # (prebuild) and Next's type-check, and `npm run test:unit` already runs the i18n, style and
+      # typography scans and every guard suite (including the lint-suppression guard).
+      - name: Compose env for the docker guard test
+        # dockerGuards.test.ts validates the prod compose file, which needs .env.prod and the
+        # required passwords. Throwaway values, never used to run anything.
+        working-directory: .
+        run: |
+          cp .env.example .env.prod
+          sed -i -E 's/^(POSTGRES_PASSWORD|UMAMI_APP_SECRET|PGADMIN_DEFAULT_PASSWORD|UMAMI_ADMIN_PASSWORD)=\r?$/\1=ci-only/' .env.prod
+      - name: Unit tests
+        run: npm run test:unit
+      - name: Production build (lint, type-check, build, built-output check)
+        run: npm run build

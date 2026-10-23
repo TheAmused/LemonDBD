@@ -1,5 +1,6 @@
 'use client';
 // frontend/src/components/smash-or-pass/hub/useSmashVotes.ts
+import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import {
@@ -123,7 +124,7 @@ export function useSmashVotes(selectedRosterSlug: string) {
   );
 
   useEffect(() => {
-    syncVotes(selectedRosterSlug);
+    void syncVotes(selectedRosterSlug);
   }, [syncVotes, selectedRosterSlug]);
 
   /** Records a vote locally; a re-vote on the same character replaces the earlier one. */
@@ -150,7 +151,7 @@ export function useSmashVotes(selectedRosterSlug: string) {
       const results = await Promise.allSettled(resets);
       const failed = results.filter((r) => r.status === 'rejected');
       if (failed.length > 0) {
-        console.error('Failed to reset votes on backend database:', (failed[0] as PromiseRejectedResult).reason);
+        logger.error('Failed to reset votes on backend database:', (failed[0] as PromiseRejectedResult).reason);
         return false;
       }
     }

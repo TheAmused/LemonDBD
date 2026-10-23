@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/streaks/gauntlet/TokenRollModal.tsx
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Coins } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Modal } from '@/components/common/Modal';
@@ -10,6 +10,7 @@ import { formatMessage } from '@/utils/i18nFormat';
 import { TokenRoulette } from './TokenRoulette';
 import type { TokenRollPlay } from './useGauntletRun';
 import { Surface } from '@/components/common/Surface';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface TokenRollModalProps {
   /** The win's token roll to play; null keeps the modal closed. */
@@ -31,9 +32,9 @@ export const TokenRollModal: React.FC<TokenRollModalProps> = ({ tokenRoll, cap, 
   // A full balance rolls nothing, so there is no reel to wait for.
   const full = tokenRoll?.roll === 0;
 
-  useEffect(() => {
-    if (!tokenRoll) setLanded(false);
-  }, [tokenRoll]);
+  useOnValueChange(tokenRoll, (roll) => {
+    if (!roll) setLanded(false);
+  });
 
   return (
     <Modal

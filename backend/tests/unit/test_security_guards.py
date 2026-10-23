@@ -76,6 +76,26 @@ class TestSecurityGuards:
             ip = get_client_ip()
             assert ip in ("127.0.0.1", "localhost", None) or isinstance(ip, str)
 
+    def test_forwarding_headers_from_a_public_peer_are_ignored(self, app: Flask) -> None:
+        """Someone reaching gunicorn directly cannot pick an IP, least of all a local one."""
+        from app.core.limiter import is_local_traffic
+
+        public_peer = {"REMOTE_ADDR": "203.0.113.7"}
+        with app.test_request_context(
+            "/",
+            environ_base=public_peer,
+            headers={"X-Real-IP": "127.0.0.1", "X-Forwarded-For": "10.0.0.1"},
+        ):
+            assert get_client_ip() == "203.0.113.7"
+            assert is_local_traffic() is False
+
+        # nginx on the docker network is trusted to say who the client is.
+        with app.test_request_context(
+            "/", environ_base={"REMOTE_ADDR": "172.18.0.5"}, headers={"X-Real-IP": "198.51.100.8"}
+        ):
+            assert get_client_ip() == "198.51.100.8"
+            assert is_local_traffic() is False
+
     def test_register_honeypot_rejection_string(self, client: FlaskClient) -> None:
         payload = {
             "login": "spambot1",

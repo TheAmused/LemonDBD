@@ -6,6 +6,7 @@ import { AlertCircle, CheckCircle2, ShieldAlert } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { useDictionary } from '@/context/DictionaryContext';
+import { useSiteConfig } from '@/context/SiteConfigContext';
 import { apiUrl, authFetch } from '@/utils/api';
 import { stripManifest, type ContentManifest } from '@/utils/contentSigning';
 import { isRecord } from '@/utils/shareCodec';
@@ -102,6 +103,8 @@ export function ReportContentModalBody({
 }: ReportContentModalBodyProps) {
   const dict = useDictionary();
   const t = dict.tierLists;
+  // Settings > Access: while reports are paused the form is not offered (the server refuses it anyway).
+  const reportsOpen = useSiteConfig().features.contentReportsOpen;
 
   const [reason, setReason] = useState<ReportReason>('hate_speech');
   const [notes, setNotes] = useState('');
@@ -157,6 +160,22 @@ export function ReportContentModalBody({
     );
   }
 
+  if (!reportsOpen) {
+    return (
+      <div className="flex flex-col items-center gap-4 py-4 text-center">
+        <IconTile tone="amber" size="md">
+          <AlertCircle className="h-6 w-6" aria-hidden="true" />
+        </IconTile>
+        <div className="flex flex-col gap-1 max-w-sm">
+          <p className="type-body-lg text-text-secondary">{t.reportPaused}</p>
+        </div>
+        <Button variant="primary" onClick={onClose} className="mt-2 min-w-24">
+          {t.dismiss}
+        </Button>
+      </div>
+    );
+  }
+
   if (status === 'already_banned') {
     return (
       <div className="flex flex-col items-center gap-4 py-4 text-center">
@@ -174,7 +193,7 @@ export function ReportContentModalBody({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 py-1">
+    <form onSubmit={(e) => { void handleSubmit(e); }} className="flex flex-col gap-4 py-1">
       {!manifest && (
         <div className="flex items-start gap-3 rounded-card border border-border-color bg-bg-elevated/40 p-3 text-xs text-text-secondary">
           <ShieldAlert className="h-4 w-4 shrink-0 text-accent-amber mt-0.5" aria-hidden="true" />

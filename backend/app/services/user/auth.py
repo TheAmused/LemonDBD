@@ -1,7 +1,8 @@
 # backend/app/services/user/auth.py
+import hashlib
 import logging
 import secrets
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from sqlalchemy import func, or_, select, update
 
 from app.core.account_state import AccountBlockedError, is_blocked
@@ -13,6 +14,7 @@ from app.core.security import (
     generate_token,
     token_matches_user,
     hash_password,
+    spend_password_check,
     verify_password,
 )
 from app.models import BugReport, User
@@ -95,10 +97,11 @@ def create_user_account(
 
     require_verification = email_verification_required()
 
+    sent_at = datetime.now(timezone.utc)
     if require_verification:
         is_verified = False
         verif_code = _generate_verification_code()
-        verif_expires = datetime.now(timezone.utc) + verification_lifetime()
+        verif_expires = sent_at + verification_lifetime()
     else:
         is_verified = True
         verif_code = None
@@ -115,6 +118,7 @@ def create_user_account(
         is_verified=is_verified,
         verification_code=verif_code,
         verification_code_expires_at=verif_expires,
+        verification_sent_at=sent_at if require_verification else None,
         verification_attempts=0,
     )
     with transaction():
@@ -145,6 +149,38 @@ def claim_guest_bug_reports(user: User) -> int:
         .execution_options(synchronize_session=False)
     )
     return int(result.rowcount or 0)
+
+
+#: What a sign-in or sign-up that still needs the e-mail code returns instead of a session.
+VERIFICATION_PENDING_TYPE = "verify"
+VERIFICATION_PENDING_LIFETIME = timedelta(hours=1)
+
+
+def needs_email_verification(user: User) -> bool:
+    """True while the site requires a confirmed address and this account has not confirmed one."""
+    return email_verification_required() and not user.is_verified
+
+
+def create_verification_pending_token(user: User) -> str:
+    """Proof that the password step passed for `user`, good only for finishing sign-in with the e-mail code."""
+    return generate_token(user.id, user.role, token_type=VERIFICATION_PENDING_TYPE, lifetime=VERIFICATION_PENDING_LIFETIME)
+
+
+def user_from_verification_pending_token(token: str | None) -> User | None:
+    """The account a still-valid pending-verification token belongs to (same credentials version), else None."""
+    from app.core.security import decode_token
+
+    payload = decode_token(token or "") if token else None
+    if not payload or payload.get("typ") != VERIFICATION_PENDING_TYPE:
+        return None
+    try:
+        user = db.session.get(User, int(payload["sub"]))
+        version = int(payload.get("ver", 0))
+    except (KeyError, TypeError, ValueError):
+        return None
+    if user is None or version != int(user.token_version or 0):
+        return None
+    return user
 
 
 def verify_email_code(email: str, code: str) -> tuple[User | None, str | None]:
@@ -188,6 +224,25 @@ def verify_email_code(email: str, code: str) -> tuple[User | None, str | None]:
     return user, None
 
 
+def _cooldown_left(sent_at: datetime | None, expires_at: datetime | None, lifetime: timedelta) -> int:
+    """Seconds until another code or link may be sent (0 when it may be sent now).
+
+    Counted from the stored send time. A code sent before that was stored falls back to
+    `expires_at - lifetime`, clamped so a lifetime the admin shortened since cannot push the send
+    time into the future (that used to block new reset mails for most of an hour).
+    """
+    now = datetime.now(timezone.utc)
+    last = sent_at
+    if last is None and expires_at is not None:
+        last = min(expires_at - lifetime, now - resend_cooldown())
+    if last is None:
+        return 0
+    if last.tzinfo is None:
+        last = last.replace(tzinfo=timezone.utc)
+    remaining = resend_cooldown() - (now - last)
+    return max(0, int(remaining.total_seconds()) + 1) if remaining.total_seconds() > 0 else 0
+
+
 def resend_verification_email(email: str) -> tuple[bool, str | None]:
     """Regenerate and resend a verification code if the account isn't verified yet."""
     clean_email = (email or "").strip().lower()
@@ -200,24 +255,30 @@ def resend_verification_email(email: str) -> tuple[bool, str | None]:
     if not user or user.is_verified:
         return True, None
 
-    if user.verification_code_expires_at:
-        expires_at = user.verification_code_expires_at
-        if expires_at.tzinfo is None:
-            expires_at = expires_at.replace(tzinfo=timezone.utc)
-        last_sent_at = expires_at - verification_lifetime()
-        elapsed = datetime.now(timezone.utc) - last_sent_at
-        cooldown = resend_cooldown()
-        if elapsed < cooldown:
-            wait_seconds = int((cooldown - elapsed).total_seconds()) + 1
-            return False, f"Please wait {wait_seconds}s before requesting another code."
+    expires_at = user.verification_code_expires_at
+    if expires_at is not None and expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    if _cooldown_left(user.verification_sent_at, expires_at, verification_lifetime()):
+        # The same answer as for an unknown or verified address: a 429 here told anyone that the
+        # address has an account waiting for its code. The form's own countdown covers the wait.
+        return True, None
 
+    now = datetime.now(timezone.utc)
     with transaction():
         user.verification_code = _generate_verification_code()
-        user.verification_code_expires_at = datetime.now(timezone.utc) + verification_lifetime()
+        user.verification_code_expires_at = now + verification_lifetime()
+        user.verification_sent_at = now
         user.verification_attempts = 0
 
     send_verification_email(user)
     return True, None
+
+
+def hash_reset_token(token: str) -> str:
+    """What is stored for a reset token: its SHA-256. The link carries the token itself, so a copy of
+    the database alone cannot be used to reset anyone's password. A plain hash is enough here: the
+    token is 256 random bits, single use and short-lived, so there is nothing to brute-force."""
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
 
 
 def request_password_reset(email: str) -> tuple[bool, str | None]:
@@ -232,22 +293,21 @@ def request_password_reset(email: str) -> tuple[bool, str | None]:
     if not user:
         return True, None
 
-    if user.reset_token_expires_at:
-        expires_at = user.reset_token_expires_at
-        if expires_at.tzinfo is None:
-            expires_at = expires_at.replace(tzinfo=timezone.utc)
-        last_sent_at = expires_at - reset_lifetime()
-        elapsed = datetime.now(timezone.utc) - last_sent_at
-        cooldown = resend_cooldown()
-        if elapsed < cooldown:
-            wait_seconds = int((cooldown - elapsed).total_seconds()) + 1
-            return False, f"Please wait {wait_seconds}s before requesting another reset email."
+    expires_at = user.reset_token_expires_at
+    if expires_at is not None and expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+    if _cooldown_left(user.reset_sent_at, expires_at, reset_lifetime()):
+        # Silent, like an unknown address: a 429 only for registered addresses revealed the account.
+        return True, None
 
+    now = datetime.now(timezone.utc)
+    token = secrets.token_urlsafe(32)
     with transaction():
-        user.reset_token = secrets.token_urlsafe(32)
-        user.reset_token_expires_at = datetime.now(timezone.utc) + reset_lifetime()
+        user.reset_token = hash_reset_token(token)
+        user.reset_token_expires_at = now + reset_lifetime()
+        user.reset_sent_at = now
 
-    send_password_reset_email(user)
+    send_password_reset_email(user, token)
     return True, None
 
 
@@ -261,7 +321,7 @@ def reset_password_with_token(token: str, new_password: str) -> tuple[User | Non
         return None, f"Password must be at least {min_length} characters long."
 
     user = db.session.scalars(
-        select(User).where(User.reset_token == clean_token)
+        select(User).where(User.reset_token == hash_reset_token(clean_token))
     ).first()
     if not user:
         return None, "Invalid or already used reset link."
@@ -316,7 +376,8 @@ def authenticate_user_credentials(
         )
     ).first()
 
-    if not user:
+    if not user or not user.password_hash:
+        spend_password_check(password)  # same cost as a real check: timing must not reveal the account
         return None, None
 
     if verify_password(password, user.password_hash):
@@ -339,8 +400,10 @@ def authenticate_user_credentials(
 
 def retrieve_user_from_jwt(token: str) -> User | None:
     """Decode incoming JWT and fetch corresponding active User entity."""
+    from app.core.security import is_revoked
+
     payload = decode_token(token)
-    if not payload or "sub" not in payload:
+    if not payload or "sub" not in payload or is_revoked(payload):
         return None
     try:
         user_id = int(payload["sub"])

@@ -76,9 +76,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
   const [shareSuccess, setShareSuccess] = useState(false);
 
   // Admin publish state
-  const [officialDate, setOfficialDate] = useState(
-    new Date().toISOString().slice(0, 10)
-  );
+  const [officialDate, setOfficialDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [isPublishingOfficial, setIsPublishingOfficial] = useState(false);
 
   const handleAddRound = () => {
@@ -371,7 +369,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
         <Button
           variant="secondary"
           size="md"
-          onClick={handleExportJson}
+          onClick={() => { void handleExportJson(); }}
         >
           <Download className="w-4 h-4" />
           <span>{t.exportJson}</span>
@@ -380,7 +378,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
         <Button
           variant="secondary"
           size="md"
-          onClick={handleShareLink}
+          onClick={() => { void handleShareLink(); }}
           disabled={isSharing}
         >
           {shareSuccess ? (
@@ -424,7 +422,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
 
             <Button
               type="button"
-              onClick={handlePublishOfficial}
+              onClick={() => { void handlePublishOfficial(); }}
               disabled={isPublishingOfficial}
               variant="amber" size="md" className="w-full sm:w-auto"
             >

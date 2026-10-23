@@ -6,7 +6,6 @@ from app.models.smash_or_pass import (
     Entity,
     EntityStat,
     Roster,
-    Vote,
 )
 from app.seeds.smash_roster_seeder import seed_smash_rosters
 from app.services.smash_or_pass_service import SmashOrPassService

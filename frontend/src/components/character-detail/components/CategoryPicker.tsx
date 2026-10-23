@@ -71,7 +71,7 @@ export const CategoryPicker: React.FC<CategoryPickerProps> = ({
       <Button
         variant="secondary"
         size="sm"
-        {...popoverTriggerProps(open, 'listbox')}
+        {...popoverTriggerProps(open, false)}
         aria-label={ariaLabel}
         onClick={() => setOpen((o) => !o)}
         className={cn('w-full justify-between', open && `${accentClasses.border} ${accentClasses.text}`)}
@@ -91,8 +91,6 @@ export const CategoryPicker: React.FC<CategoryPickerProps> = ({
         gap={GAP_PX}
         viewportMargin={VIEWPORT_MARGIN_PX}
         maxHeight={MAX_MENU_HEIGHT_PX}
-        role="listbox"
-        ariaLabel={ariaLabel}
         animate={false}
         className="rounded-card border border-border-color bg-bg-surface shadow-xl"
       >
@@ -102,7 +100,6 @@ export const CategoryPicker: React.FC<CategoryPickerProps> = ({
             return (
               <MenuItem selected={isSelected} tone={accent} flush
                 key={cat.key}
-                role="option"
                 onClick={() => {
                   onSelect(cat.key);
                   setOpen(false);

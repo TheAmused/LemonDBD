@@ -97,7 +97,7 @@ export function AdminReportsSection({ queue, refreshKey, notify, onChanged, onSh
               <BugReportDetail
                 key={selectedBug.id}
                 report={selectedBug}
-                onStatusChange={(s) => bugs.changeStatus(selectedBug.id, s)}
+                onStatusChange={(s, notes) => bugs.changeStatus(selectedBug.id, s, notes)}
                 onReply={(notes) => bugs.reply(selectedBug.id, notes)}
                 onDelete={() => bugs.remove(selectedBug.id)}
                 onShowUser={onShowUser}

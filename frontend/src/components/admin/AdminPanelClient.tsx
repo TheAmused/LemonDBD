@@ -6,8 +6,8 @@
 
 import React, { useCallback, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { ErrorPage } from '@/components/layout/ErrorPage';
-import { PageShell } from '@/components/layout/PageShell';
 import { TabPanel } from '@/components/common/Tabs';
 import { AdminHeader } from '@/components/admin/AdminHeader';
 import { AdminPanelSkeleton } from '@/components/admin/AdminPanelSkeleton';
@@ -25,7 +25,7 @@ import {
 import { useAdminOverview } from '@/components/admin/useAdminOverview';
 import { useAdminUsers } from '@/components/admin/useAdminUsers';
 import { useAuth } from '@/context/AuthContext';
-import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { useDictionary } from '@/context/DictionaryContext';
 import { usePersistentString } from '@/hooks/usePersistentString';
 import type { ActionMessage, UserRow } from '@/types/admin';
 
@@ -41,12 +41,21 @@ const AdminModerationDrawer = dynamic(() => import('@/components/admin/AdminMode
 const AdminUserFormModal = dynamic(() => import('@/components/admin/AdminUserFormModal').then((m) => m.AdminUserFormModal), { ssr: false });
 
 export function AdminPanelClient() {
-  const locale = useLocale();
   const dict = useDictionary();
   const { user, isAdmin, isAuthenticated, isLoading } = useAuth();
   const ready = isAuthenticated && isAdmin;
 
-  const [tab, setTab] = usePersistentString<AdminTab>(ADMIN_STORAGE.tab, 'users', isAdminTab);
+  const [tab, setTabNow] = usePersistentString<AdminTab>(ADMIN_STORAGE.tab, 'users', isAdminTab);
+  // Unsaved Settings changes are lost when that tab unmounts: leaving it asks first.
+  const [settingsDirty, setSettingsDirty] = useState(0);
+  const [leavingTo, setLeavingTo] = useState<AdminTab | null>(null);
+  const setTab = useCallback(
+    (next: AdminTab) => {
+      if (tab === 'settings' && next !== 'settings' && settingsDirty > 0) setLeavingTo(next);
+      else setTabNow(next);
+    },
+    [tab, settingsDirty, setTabNow]
+  );
   const [queue, setQueue] = usePersistentString<ReportQueue>(ADMIN_STORAGE.reportQueue, 'bugs', isReportQueue);
   const [message, setMessage] = useState<ActionMessage | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
@@ -56,7 +65,10 @@ export function AdminPanelClient() {
   const notify = useCallback((next: ActionMessage) => setMessage(next), []);
   const dismiss = useCallback(() => setMessage(null), []);
   const { overview, refresh: refreshOverview } = useAdminOverview(ready);
-  const directory = useAdminUsers({ enabled: ready && tab === 'users', refreshKey, notify, onChanged: refreshOverview });
+  const overviewChanged = useCallback(() => {
+    void refreshOverview();
+  }, [refreshOverview]);
+  const directory = useAdminUsers({ enabled: ready && tab === 'users', refreshKey, notify, onChanged: overviewChanged });
 
   const refreshAll = () => {
     setRefreshKey((k) => k + 1);
@@ -75,7 +87,7 @@ export function AdminPanelClient() {
   const pending = overview?.pending ?? null;
 
   return (
-    <PageShell locale={locale} activeCategory="admin" mainId="main-admin-content" mainClassName="overflow-y-auto">
+    <>
       <div className="mx-auto w-full max-w-7xl space-y-5">
         <div className="flex items-end gap-3">
           <AdminSectionTabs
@@ -105,11 +117,11 @@ export function AdminPanelClient() {
             />
           )}
           {tab === 'reports' && (
-            <AdminReportsSection queue={queue} refreshKey={refreshKey} notify={notify} onChanged={refreshOverview} onShowUser={showUser} />
+            <AdminReportsSection queue={queue} refreshKey={refreshKey} notify={notify} onChanged={overviewChanged} onShowUser={showUser} />
           )}
           {tab === 'availability' && <AdminAvailabilitySection refreshKey={refreshKey} notify={notify} />}
           {tab === 'audit' && <AdminAuditSection refreshKey={refreshKey} notify={notify} />}
-          {tab === 'settings' && <AdminSettingsSection refreshKey={refreshKey} notify={notify} />}
+          {tab === 'settings' && <AdminSettingsSection refreshKey={refreshKey} notify={notify} onDirtyChange={setSettingsDirty} />}
           {tab === 'tools' && <AdminToolsSection refreshKey={refreshKey} notify={notify} onDataChanged={refreshAll} />}
         </TabPanel>
       </div>
@@ -130,7 +142,19 @@ export function AdminPanelClient() {
         }}
         onActionMessage={(next) => next && notify(next)}
       />
+      <ConfirmModal
+        open={leavingTo !== null}
+        title={dict.admin.unsavedSettingsTitle}
+        message={dict.admin.unsavedSettingsMessage}
+        confirmLabel={dict.admin.unsavedSettingsLeave}
+        cancelLabel={dict.admin.unsavedSettingsStay}
+        onConfirm={() => {
+          if (leavingTo) setTabNow(leavingTo);
+          setLeavingTo(null);
+        }}
+        onCancel={() => setLeavingTo(null)}
+      />
       <AdminToast message={message} onDismiss={dismiss} />
-    </PageShell>
+    </>
   );
 }

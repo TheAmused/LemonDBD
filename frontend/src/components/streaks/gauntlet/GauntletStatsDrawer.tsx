@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/gauntlet/GauntletStatsDrawer.tsx
 
 import React from 'react';
-import { GauntletStats, MatchLog } from '@/types/gauntletStreak';
+import type { GauntletStats, MatchLog } from '@/types/gauntletStreak';
 import { StreakStatsDrawer } from '../StreakStatsDrawer';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { useDictionary } from "@/context/DictionaryContext";

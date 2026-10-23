@@ -17,4 +17,11 @@ export default {
     title: 'Page blocked',
     text: 'This page isn\'t open to visitors right now.',
   },
+  error: {
+    code: 'Error',
+    title: 'Something went wrong',
+    text: 'This page hit an unexpected error. Try again; if it keeps happening, go back to the home page.',
+    retry: 'Try again',
+    reference: 'Reference',
+  },
 } as const;

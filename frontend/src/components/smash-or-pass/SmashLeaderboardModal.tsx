@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/smash-or-pass/SmashLeaderboardModal.tsx
 
-import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   Skull,
   Search,
@@ -13,19 +13,20 @@ import {
   Users,
 } from 'lucide-react';
 import type { LeaderboardItem } from '@/types/smashOrPass';
-import { localizedProfile } from '@/utils/entityProfile';
+
 import { Modal } from '@/components/common/Modal';
 import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
 import { Tooltip } from '@/components/common/Tooltip';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
-import { FriendzoneIcon, EldritchVoidIcon } from '@/components/icons/DbdIcons';
-import { RankFirstIcon, ThornHeartIcon } from '@/components/icons/DbdIcons';
+import { KillerIcon, SurvivorIcon,FriendzoneIcon,EldritchVoidIcon,RankFirstIcon,ThornHeartIcon } from '@/components/icons/DbdIcons';
+
+
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { CandidateRow, type TierConfig } from "./SmashLeaderboardParts";
 import { useDictionary } from "@/context/DictionaryContext";
 import { IconTile } from '@/components/common/IconTile';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 export interface SmashLeaderboardModalProps {
   isOpen: boolean;
@@ -50,7 +51,6 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       userSmashes = [],
       onSelectCharacter,
       editionName = '',
-      isAuthenticated = false,
       locale = 'en',
     }) => {
   const dict = useDictionary();
@@ -63,9 +63,9 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   const [visibleCount, setVisibleCount] = useState<number>(35);
 
   // Reset pagination slicing on filters or modal open
-  useEffect(() => {
-    setVisibleCount(35);
-  }, [searchQuery, roleFilter, genderFilter, tierFilter, sortBy, viewMode, isOpen]);
+  useOnValueChange(JSON.stringify([searchQuery, roleFilter, genderFilter, tierFilter, sortBy, viewMode, isOpen]), () =>
+    setVisibleCount(35)
+  );
 
   // PC Grabbing & Drag-to-Scroll Physics
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
@@ -421,6 +421,8 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       {/* Leaderboard Content with Smooth PC Drag-to-Scroll & Grab Physics */}
       <div
         ref={scrollContainerRef}
+        // Grab-to-scroll for mice; keyboard and touch scroll the list natively.
+        role="presentation"
         onScroll={handleScroll}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -465,7 +467,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
                   </span>
                 </div>
 
-                <div className="space-y-2.5 pl-1" role="list">
+                <ul className="space-y-2.5 pl-1">
                   {tierList.map((item, idx) => {
                     const itemSlug = item.slug || item.character_slug || '';
                     const totalVotes = item.total_votes ?? item.stat?.total_votes ?? 0;
@@ -474,34 +476,35 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
                     const tier = tierKey ? tierMetadata[tierKey] : null;
 
                     return (
-                      <CandidateRow
-                        key={itemSlug}
-                        item={item}
-                        index={idx}
-                        isTop3={false}
-                        hasUserSmashed={userVotedSet.has(itemSlug)}
-                        tier={tier}
-                        locale={locale}
-                        backendBase={backendBase}
-                        rawSmashDict={rawSmashDict}
-                        survivorsLabel={survivorsLabel}
-                        killersLabel={killersLabel}
-                        unratedLabel={unratedLabel}
-                        noVotesDesc={noVotesDesc}
-                        percentSign={percentSign}
-                        votesWord={votesWord}
-                        onSelectCharacter={onSelectCharacter}
-                        onDragStateCheck={checkDragState}
-                        onMouseDownCheck={checkMouseDown}
-                      />
+                      <li key={itemSlug}>
+                        <CandidateRow
+                          item={item}
+                          index={idx}
+                          isTop3={false}
+                          hasUserSmashed={userVotedSet.has(itemSlug)}
+                          tier={tier}
+                          locale={locale}
+                          backendBase={backendBase}
+                          rawSmashDict={rawSmashDict}
+                          survivorsLabel={survivorsLabel}
+                          killersLabel={killersLabel}
+                          unratedLabel={unratedLabel}
+                          noVotesDesc={noVotesDesc}
+                          percentSign={percentSign}
+                          votesWord={votesWord}
+                          onSelectCharacter={onSelectCharacter}
+                          onDragStateCheck={checkDragState}
+                          onMouseDownCheck={checkMouseDown}
+                        />
+                      </li>
                     );
                   })}
-                </div>
+                </ul>
               </div>
             );
           })
         ) : (
-          <div className="space-y-2.5" role="list">
+          <ul className="space-y-2.5">
             {filteredItems.slice(0, visibleCount).map((item, index) => {
               const itemSlug = item.slug || item.character_slug || '';
               const totalVotes = item.total_votes ?? item.stat?.total_votes ?? 0;
@@ -511,29 +514,30 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
               const tier = tierKey ? tierMetadata[tierKey] : null;
 
               return (
-                <CandidateRow
-                  key={itemSlug}
-                  item={item}
-                  index={index}
-                  isTop3={isTop3}
-                  hasUserSmashed={userVotedSet.has(itemSlug)}
-                  tier={tier}
-                  locale={locale}
-                  backendBase={backendBase}
-                  rawSmashDict={rawSmashDict}
-                  survivorsLabel={survivorsLabel}
-                  killersLabel={killersLabel}
-                  unratedLabel={unratedLabel}
-                  noVotesDesc={noVotesDesc}
-                  percentSign={percentSign}
-                  votesWord={votesWord}
-                  onSelectCharacter={onSelectCharacter}
-                  onDragStateCheck={checkDragState}
-                  onMouseDownCheck={checkMouseDown}
-                />
+                <li key={itemSlug}>
+                  <CandidateRow
+                    item={item}
+                    index={index}
+                    isTop3={isTop3}
+                    hasUserSmashed={userVotedSet.has(itemSlug)}
+                    tier={tier}
+                    locale={locale}
+                    backendBase={backendBase}
+                    rawSmashDict={rawSmashDict}
+                    survivorsLabel={survivorsLabel}
+                    killersLabel={killersLabel}
+                    unratedLabel={unratedLabel}
+                    noVotesDesc={noVotesDesc}
+                    percentSign={percentSign}
+                    votesWord={votesWord}
+                    onSelectCharacter={onSelectCharacter}
+                    onDragStateCheck={checkDragState}
+                    onMouseDownCheck={checkMouseDown}
+                  />
+                </li>
               );
             })}
-          </div>
+          </ul>
         )}
       </div>
     </Modal>

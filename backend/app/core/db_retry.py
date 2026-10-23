@@ -96,11 +96,11 @@ def retry_on_transient_db_error(retries: int = 2, delay_seconds: float = 0.25) -
                     try:
                         db.session.rollback()
                     except Exception:
-                        pass
+                        logger.debug("Rollback before a retry failed", exc_info=True)
                     try:
                         db.session.remove()
                     except Exception:
-                        pass
+                        logger.debug("Removing the session before a retry failed", exc_info=True)
                     time.sleep(delay_seconds)
             raise AssertionError("unreachable")  # pragma: no cover
 

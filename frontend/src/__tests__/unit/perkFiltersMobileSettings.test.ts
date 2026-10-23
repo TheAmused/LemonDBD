@@ -93,7 +93,10 @@ describe('CustomDropdown backward compatibility + new children mode', () => {
         ariaLabel: 'Pick one',
       })
     );
-    assert.match(html, /aria-haspopup="listbox"/, 'classic mode must keep aria-haspopup="listbox"');
+    // A disclosure of plain buttons (the current one aria-current), not a listbox it could not drive
+    // from the keyboard.
+    assert.match(html, /aria-expanded="false"/, 'classic mode is a disclosure');
+    assert.doesNotMatch(html, /aria-haspopup/, 'classic mode claims no popup role');
     assert.match(html, />Option B</, 'the trigger must show the selected option label, same as before');
   });
 
@@ -106,7 +109,7 @@ describe('CustomDropdown backward compatibility + new children mode', () => {
       )
     );
     assert.match(html, />Settings</, 'the trigger must show the static label when no options/value are given');
-    assert.match(html, /aria-haspopup="true"/, 'children mode should not claim aria-haspopup="listbox" since it is not a listbox');
+    assert.match(html, /aria-haspopup="true"/, 'children mode opens a panel of arbitrary content');
   });
 });
 

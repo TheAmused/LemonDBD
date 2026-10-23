@@ -1,36 +1,30 @@
 'use client';
 // frontend/src/hooks/useCustomChallenges.ts
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { ChallengeDefinition } from '@/types/minigame';
-import { CUSTOM_CHALLENGES_KEY, deleteCustomChallenge, getCustomChallenges } from '@/utils/minigames/storage';
+import { CUSTOM_CHALLENGES_KEY, deleteCustomChallenge, parseCustomChallenges } from '@/utils/minigames/storage';
+import { refreshStoredItems, useStoredItem } from '@/hooks/useStoredItem';
 
 type TrialId = string | number;
 
 /**
- * The trials saved in this browser, kept in step with storage: a write from another tab, or the
- * moderation sweep deleting a banned trial, announces itself with a `storage` event and the list
- * re-reads. Deleting goes through a confirmation (`requestDelete`, then `confirmDelete`).
+ * The trials saved in this browser, kept in step with storage (useStoredItem): a write from another
+ * tab, or the moderation sweep deleting a banned trial, announces itself with a `storage` event and
+ * the list re-reads; `reload` re-reads after a save in this tab. Deleting goes through a
+ * confirmation (`requestDelete`, then `confirmDelete`).
  */
 export function useCustomChallenges() {
-  const [trials, setTrials] = useState<ChallengeDefinition[]>([]);
+  const [stored] = useStoredItem(CUSTOM_CHALLENGES_KEY);
+  const trials = useMemo<ChallengeDefinition[]>(() => parseCustomChallenges(stored), [stored]);
   const [pendingDeleteId, setPendingDeleteId] = useState<TrialId | null>(null);
-  const reload = useCallback(() => setTrials(getCustomChallenges()), []);
-
-  useEffect(() => {
-    reload();
-    const onStorage = (event: StorageEvent) => {
-      if (event.key === null || event.key === CUSTOM_CHALLENGES_KEY) reload();
-    };
-    window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
-  }, [reload]);
+  const reload = refreshStoredItems;
 
   const confirmDelete = useCallback(() => {
     if (pendingDeleteId === null) return;
     deleteCustomChallenge(pendingDeleteId);
-    reload();
+    refreshStoredItems();
     setPendingDeleteId(null);
-  }, [pendingDeleteId, reload]);
+  }, [pendingDeleteId]);
 
   return {
     trials,

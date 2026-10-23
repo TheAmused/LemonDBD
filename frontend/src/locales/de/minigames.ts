@@ -3,6 +3,8 @@ export default {
   pageTitle: "LemonDBD - Minispiele & DBD Idle",
   creatorPageTitle: 'LemonDBD - Prüfungs-Challenge-Ersteller',
   idlePageTitle: 'LemonDBD - DBD Idle: Klassischer Nebel-Rater',
+  // Caption track of the Terror Radius guesser's audio: describes the sound, never names the Killer.
+  audioCaption: '[Terrorradius eines Killers: Herzschlag und Verfolgungsmusik]',
   metaDescription: "Spiele tägliche Dead by Daylight Rate-Herausforderungen, Karten- und Audio-Rätsel oder erstelle eigene Herausforderungen.",
   hubTitle: "Dead by Daylight Minispiele",
   hubSubtitle: "Teste dein Nebel-Wissen in täglichen Prüfungen, endlosem Training oder benutzerdefinierten Herausforderungen.",

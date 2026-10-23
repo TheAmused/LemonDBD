@@ -55,7 +55,12 @@ export function CardBackFace({
         pointerEvents: isFlipped ? 'auto' : 'none',
         visibility: isFlipped ? 'visible' : 'hidden',
       }}
-      onClick={() => {
+      // Clicking the card turns it back for pointer users; the Flip Back button is the
+      // keyboard control (role="presentation": no second control). The lore text is
+      // selectable, so clicks inside it never flip.
+      role="presentation"
+      onClick={(e) => {
+        if ((e.target as HTMLElement).closest('[data-card-lore]')) return;
         SmashSounds.playFlipSound();
         onFlip();
       }}
@@ -97,8 +102,8 @@ export function CardBackFace({
       {/* Scrollable Back Content */}
       <div className="relative my-2 flex-1 min-h-0">
       <div
+        data-card-lore=""
         className="space-y-2 h-full pr-1 overflow-y-auto select-text pointer-events-auto scrollbar-thin scrollbar-thumb-border-color"
-        onClick={(e) => e.stopPropagation()}
       >
         {/* Mobile-only fallback (<880px): show Turn On & Dealbreaker only when floating lore fragments are hidden */}
         <div className="@hub-lg/hub:hidden space-y-2">

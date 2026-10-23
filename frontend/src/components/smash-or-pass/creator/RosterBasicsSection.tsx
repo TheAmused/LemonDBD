@@ -10,7 +10,7 @@ const ImageUploadDropzone = dynamic(
   () => import('@/components/common/ImageUploadDropzone').then((m) => m.ImageUploadDropzone),
   { ssr: false }
 );
-import { Switch } from '@/components/common/Switch';
+import { LabeledSwitch } from '@/components/common/Switch';
 import { Tooltip, tip } from '@/components/common/Tooltip';
 import { useDictionary } from '@/context/DictionaryContext';
 import { defaultRosterThemeColor, SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
@@ -18,7 +18,6 @@ import { type Draft, Section } from './SmashRosterCreatorParts';
 import { LABEL } from './styles';
 
 /** A checkbox row whose whole line is the click target. */
-const CHECK_ROW = 'flex items-center gap-2.5 cursor-pointer group select-none';
 
 interface RosterBasicsSectionProps {
   draft: Draft;
@@ -163,19 +162,11 @@ export function RosterBasicsSection({
             title={c.simpleVersion}
             description={c.simpleVersionDesc}
           >
-            <div
-              onClick={() => patch({ roster_mode: draft.roster_mode === 'simple' ? 'full' : 'simple' })}
-              className={CHECK_ROW}
-            >
-              <Switch
-                checked={draft.roster_mode === 'simple'}
-                onChange={(checked) => patch({ roster_mode: checked ? 'simple' : 'full' })}
-                ariaLabel={c.simpleVersion}
-              />
-              <span className="type-strong-fluid text-text-primary group-hover:text-accent-red transition-colors">
-                {c.simpleVersion}
-              </span>
-            </div>
+            <LabeledSwitch
+              checked={draft.roster_mode === 'simple'}
+              onChange={(checked) => patch({ roster_mode: checked ? 'simple' : 'full' })}
+              label={c.simpleVersion}
+            />
           </Tooltip>
 
           {/* NSFW Content Switch */}
@@ -183,19 +174,11 @@ export function RosterBasicsSection({
             title={c.nsfwLabel}
             description="Mark this roster as containing mature or sensitive material."
           >
-            <div
-              onClick={() => patch({ is_nsfw: !draft.is_nsfw })}
-              className={CHECK_ROW}
-            >
-              <Switch
-                checked={draft.is_nsfw}
-                onChange={(checked) => patch({ is_nsfw: checked })}
-                ariaLabel={c.nsfwLabel}
-              />
-              <span className="type-strong-fluid text-text-primary group-hover:text-accent-red transition-colors">
-                {c.nsfwLabel}
-              </span>
-            </div>
+            <LabeledSwitch
+              checked={draft.is_nsfw}
+              onChange={(checked) => patch({ is_nsfw: checked })}
+              label={c.nsfwLabel}
+            />
           </Tooltip>
 
           {/* Official Roster Switch (Admin only) */}
@@ -204,19 +187,12 @@ export function RosterBasicsSection({
               title={c.officialPublicHub}
               description="Publish directly to the public Hub directory for all visitors."
             >
-              <div
-                onClick={() => onOfficialChange(!official)}
-                className={CHECK_ROW}
-              >
-                <Switch
-                  checked={official}
-                  onChange={(checked) => onOfficialChange(checked)}
-                  ariaLabel={c.officialPublicHub}
-                />
-                <span className="type-strong-fluid text-accent-red group-hover:underline transition-colors">
-                  {c.officialPublicHub}
-                </span>
-              </div>
+              <LabeledSwitch
+                checked={official}
+                onChange={onOfficialChange}
+                label={c.officialPublicHub}
+                labelClassName="type-strong-fluid text-accent-red group-hover:underline transition-colors"
+              />
             </Tooltip>
           )}
         </div>

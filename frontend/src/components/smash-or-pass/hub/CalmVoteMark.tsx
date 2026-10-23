@@ -2,6 +2,7 @@
 // frontend/src/components/smash-or-pass/hub/CalmVoteMark.tsx
 import { useEffect, useState } from 'react';
 import { Heart, Skull } from 'lucide-react';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface CalmVoteMarkProps {
   triggerType: 'smash' | 'pass' | 'super_smash' | null;
@@ -19,10 +20,15 @@ export function CalmVoteMark({ triggerType, triggerKey }: CalmVoteMarkProps) {
   const [shown, setShown] = useState<'smash' | 'pass' | null>(null);
   const [visible, setVisible] = useState(false);
 
-  useEffect(() => {
+  // Each vote puts the mark up at once (while rendering); the effect below takes it down.
+  useOnValueChange(`${triggerKey}|${triggerType ?? ''}`, () => {
     if (!triggerType) return;
     setShown(triggerType === 'pass' ? 'pass' : 'smash');
     setVisible(true);
+  });
+
+  useEffect(() => {
+    if (!triggerType) return;
     const timer = setTimeout(() => setVisible(false), HOLD_MS);
     return () => clearTimeout(timer);
   }, [triggerKey, triggerType]);

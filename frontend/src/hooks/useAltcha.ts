@@ -4,6 +4,7 @@
 import { getErrorMessage, isAbortError } from '@/utils/api';
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 export interface AltchaChallenge {
   algorithm: string;
@@ -77,7 +78,6 @@ export async function solveAltchaPoW(
 }
 
 export function useAltcha(autoSolve: boolean = true) {
-  const [challenge, setChallenge] = useState<AltchaChallenge | null>(null);
   const [altchaPayload, setAltchaPayload] = useState<AltchaPayload | null>(null);
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [isVerified, setIsVerified] = useState<boolean>(false);
@@ -86,27 +86,22 @@ export function useAltcha(autoSolve: boolean = true) {
 
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const fetchChallenge = useCallback(async (signal?: AbortSignal): Promise<AltchaChallenge | null> => {
-    try {
-      setError(null);
-      const apiBase = getBackendBaseUrl();
-      const url = `${apiBase}/api/v1/auth/altcha-challenge`;
-      const res = await fetch(url, { signal });
-      if (!res.ok) throw new Error('Failed to fetch security challenge');
-      if (signal?.aborted) return null;
-      const data: AltchaChallenge = await res.json();
-      if (signal?.aborted) return null;
-      setChallenge(data);
-      return data;
-    } catch (err) {
-      if (signal?.aborted || isAbortError(err)) {
-        return null;
-      }
-      const msg = getErrorMessage(err, 'Challenge fetch failed');
-      setError(msg);
-      return null;
-    }
-  }, []);
+  // A promise chain rather than async/await: its state updates then run in callbacks only.
+  const fetchChallenge = useCallback(
+    (signal?: AbortSignal): Promise<AltchaChallenge | null> =>
+      fetch(`${getBackendBaseUrl()}/api/v1/auth/altcha-challenge`, { signal })
+        .then((res) => {
+          if (!res.ok) throw new Error('Failed to fetch security challenge');
+          return res.json() as Promise<AltchaChallenge>;
+        })
+        .then((data) => (signal?.aborted ? null : data))
+        .catch((err: unknown) => {
+          if (signal?.aborted || isAbortError(err)) return null;
+          setError(getErrorMessage(err, 'Challenge fetch failed'));
+          return null;
+        }),
+    []
+  );
 
   const solveChallenge = useCallback(async (ch: AltchaChallenge, signal?: AbortSignal) => {
     if (signal?.aborted) return;
@@ -132,36 +127,37 @@ export function useAltcha(autoSolve: boolean = true) {
     }
   }, []);
 
-  const refreshChallenge = useCallback(async () => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
+  /** Fetches and solves a fresh challenge under `controller`, replacing any run still in flight. */
+  const startChallenge = useCallback(() => {
+    abortControllerRef.current?.abort();
     const controller = new AbortController();
     abortControllerRef.current = controller;
+    return fetchChallenge(controller.signal).then((ch) =>
+      ch && !controller.signal.aborted ? solveChallenge(ch, controller.signal) : undefined
+    );
+  }, [fetchChallenge, solveChallenge]);
 
+  const refreshChallenge = useCallback(async () => {
     setIsVerified(false);
     setAltchaPayload(null);
-    setChallenge(null);
     setError(null);
+    await startChallenge();
+  }, [startChallenge]);
 
-    const ch = await fetchChallenge(controller.signal);
-    if (ch && !controller.signal.aborted) {
-      await solveChallenge(ch, controller.signal);
-    }
-  }, [fetchChallenge, solveChallenge]);
+  // Switching auto-solve off drops the solution; switching it on starts from a clean slate.
+  useOnValueChange(autoSolve, () => {
+    setIsVerifying(false);
+    setIsVerified(false);
+    setAltchaPayload(null);
+    setError(null);
+  });
 
   useEffect(() => {
     if (autoSolve) {
-      void refreshChallenge();
-    } else {
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-        abortControllerRef.current = null;
-      }
-      setIsVerifying(false);
-      setIsVerified(false);
-      setAltchaPayload(null);
-      setChallenge(null);
+      void startChallenge();
+    } else if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
     }
 
     return () => {
@@ -170,7 +166,7 @@ export function useAltcha(autoSolve: boolean = true) {
         abortControllerRef.current = null;
       }
     };
-  }, [autoSolve, refreshChallenge]);
+  }, [autoSolve, startChallenge]);
 
   return {
     altchaPayload,

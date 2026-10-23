@@ -5,9 +5,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Lock } from 'lucide-react';
 import { DbdButton } from '@/components/common/Button';
-import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
-import { ChaosMutator } from '@/types/chaos';
-import { Dictionary } from '@/locales/types';
+import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
+import type { ChaosMutator } from '@/types/chaos';
+
 import { pickRandomLoadout, buildDrawnSlots } from '../lib/perkPicker';
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
@@ -99,6 +99,20 @@ function scatterPointStyle(point: { xPct: number; yPct: number }): { left: strin
   };
 }
 
+/** After a pick the Entity claims 1-2 of the remaining perks at random -- but never more than
+ * would leave fewer than `stillNeeded` to finish the loadout. */
+function entityClaims<T>(pool: T[], stillNeeded: number): { remaining: T[]; claimed: number } {
+  if (stillNeeded <= 0 || pool.length === 0) return { remaining: pool, claimed: 0 };
+  const maxSafeDeletes = Math.max(0, pool.length - stillNeeded);
+  const claimed = Math.min(1 + (Math.random() < 0.5 ? 1 : 0), maxSafeDeletes);
+  let remaining = pool;
+  for (let i = 0; i < claimed; i++) {
+    const idx = Math.floor(Math.random() * remaining.length);
+    remaining = remaining.filter((_, pi) => pi !== idx);
+  }
+  return { remaining, claimed };
+}
+
 export const LootCrateStage: React.FC<LootCrateStageProps> = ({
       role,
       activePlayablePerks,
@@ -109,7 +123,6 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
       onRevealSlot,
       onSelectPerk,
       isBlind = false,
-      backendBase,
     }) => {
   const dict = useDictionary();
   const [phase, setPhase] = useState<CratePhase>('closed');
@@ -124,9 +137,11 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
 
   useEffect(() => {
     isMountedRef.current = true;
+    // The list is only ever pushed to, so the one read here is the one to clear on unmount.
+    const timeouts = timeoutsRef.current;
     return () => {
       isMountedRef.current = false;
-      timeoutsRef.current.forEach((id) => clearTimeout(id));
+      timeouts.forEach((id) => clearTimeout(id));
     };
   }, []);
 
@@ -188,20 +203,13 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
     // Remove the picked perk, then let the Entity claim 1-2 more at random
     // -- but never delete past what's still needed to finish the loadout,
     // and never past what's actually available.
-    let remainingPool = scatterPool.filter((p) => p.id !== item.id);
-    const stillNeeded = LOADOUT_SIZE - nextSelected.length;
-
-    if (stillNeeded > 0 && remainingPool.length > 0) {
-      const maxSafeDeletes = Math.max(0, remainingPool.length - stillNeeded);
-      const deleteCount = Math.min(1 + (Math.random() < 0.5 ? 1 : 0), maxSafeDeletes);
-      for (let i = 0; i < deleteCount; i++) {
-        const idx = Math.floor(Math.random() * remainingPool.length);
-        remainingPool = remainingPool.filter((_, pi) => pi !== idx);
-      }
-      if (deleteCount > 0) {
-        const thudTimeoutId = window.setTimeout(() => playReelThud(), 150);
-        timeoutsRef.current.push(thudTimeoutId);
-      }
+    const { remaining: remainingPool, claimed } = entityClaims(
+      scatterPool.filter((p) => p.id !== item.id),
+      LOADOUT_SIZE - nextSelected.length
+    );
+    if (claimed > 0) {
+      const thudTimeoutId = window.setTimeout(() => playReelThud(), 150);
+      timeoutsRef.current.push(thudTimeoutId);
     }
 
     setSelected(nextSelected);

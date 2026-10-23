@@ -30,7 +30,8 @@ def test_admin_can_still_create_an_admin(client: FlaskClient, db_session) -> Non
     headers = {"Authorization": f"Bearer {generate_token(boss.id, role='admin')}"}
     res = client.post(
         "/api/v1/users",
-        json={"login": "deputy", "username": "deputy", "email": "deputy@example.com", "password": "password123", "role": "admin"},
+        # Granting admin asks for the acting admin's own password (see test_admin_reauth).
+        json={"login": "deputy", "username": "deputy", "email": "deputy@example.com", "password": "password123", "role": "admin", "current_password": "password123"},
         headers=headers,
     )
     assert res.status_code == 201

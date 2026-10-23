@@ -22,7 +22,7 @@ export function isRecord(value: unknown): value is Record<string, unknown> {
 /** Collapses whitespace and control characters, then caps the length. */
 export function cleanText(value: unknown, max: number, counter?: { truncated: number }): string {
   if (typeof value !== 'string' && typeof value !== 'number') return '';
-  const text = String(value).replace(/[\u0000-\u001f\u007f]+/g, ' ').replace(/\s+/g, ' ').trim();
+  const text = String(value).replace(/\p{Cc}+/gu, ' ').replace(/\s+/g, ' ').trim();
   if (text.length > max) {
     if (counter) counter.truncated += 1;
     return text.slice(0, max).trimEnd();

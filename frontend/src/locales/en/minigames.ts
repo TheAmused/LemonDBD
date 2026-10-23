@@ -3,6 +3,8 @@ export default {
   pageTitle: "LemonDBD - Minigames & DBD Idle",
   creatorPageTitle: 'LemonDBD - Trial Challenge Creator',
   idlePageTitle: 'LemonDBD - DBD Idle: Classic Fog Guesser',
+  // Caption track of the Terror Radius guesser's audio: describes the sound, never names the Killer.
+  audioCaption: "[A Killer's terror radius: heartbeat and chase music]",
   metaDescription: "Play daily Dead by Daylight idle guessing challenges, map and audio guessers, or create and share your own custom gauntlets.",
   hubTitle: "Dead by Daylight Minigames",
   hubSubtitle: "Test your Fog knowledge with daily trials, endless practice, or custom player-made gauntlets.",

@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/CharactersHub.tsx
 
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import { User } from 'lucide-react';
@@ -19,10 +19,11 @@ import { OwnershipSaveBar } from '@/components/characters/hub/OwnershipSaveBar';
 import { SavedChangesModal } from '@/components/characters/hub/SavedChangesModal';
 import { VerificationNotice } from '@/components/characters/hub/VerificationNotice';
 import { useCharacterOwnership } from '@/components/characters/hub/useCharacterOwnership';
-import { CharacterItem, PerkItem, AddonItem, EquipmentItem } from '@/components/character-detail/types';
-import { RoleCategory } from '@/types/perks';
+import type { CharacterItem, PerkItem, AddonItem, EquipmentItem } from '@/components/character-detail/types';
+import type { RoleCategory } from '@/types/perks';
 import { getBackendBaseUrl, normalizeSearchText } from '@/utils/perkUtils';
-import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { useDictionary } from '@/context/DictionaryContext';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 const DisabledReasonModal = dynamic(
@@ -37,6 +38,14 @@ export interface CharacterDetailData {
   items?: EquipmentItem[];
 }
 
+/** The tab a `role` (or `tab`) URL parameter names, if any. */
+function tabForParam(param: string): RoleCategory | null {
+  const lower = param.toLowerCase();
+  if (lower === 'killer' || lower === 'killers') return 'Killer';
+  if (lower === 'survivor' || lower === 'survivors') return 'Survivor';
+  return null;
+}
+
 export const CharactersHub: React.FC = () => {
   const dict = useDictionary();
   const router = useRouter();
@@ -45,21 +54,15 @@ export const CharactersHub: React.FC = () => {
   const locale = (params?.locale as string) || 'en';
   const { user } = useAuth();
 
-  const [activeTab, setActiveTab] = useState<RoleCategory>('Survivor');
+  const roleParam = searchParams?.get('role') || searchParams?.get('tab') || '';
+  const [activeTab, setActiveTab] = useState<RoleCategory>(() => tabForParam(roleParam) ?? 'Survivor');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
-  const roleParam = searchParams?.get('role') || searchParams?.get('tab') || '';
-
-  useEffect(() => {
-    if (roleParam) {
-      const lower = roleParam.toLowerCase();
-      if (lower === 'killer' || lower === 'killers') {
-        setActiveTab('Killer');
-      } else if (lower === 'survivor' || lower === 'survivors') {
-        setActiveTab('Survivor');
-      }
-    }
-  }, [roleParam]);
+  // A role in the URL (a link, the back button) picks the tab.
+  useOnValueChange(roleParam, (param) => {
+    const tab = tabForParam(param);
+    if (tab) setActiveTab(tab);
+  });
 
   const handleTabChange = (tab: RoleCategory) => {
     setActiveTab(tab);
@@ -94,7 +97,7 @@ export const CharactersHub: React.FC = () => {
     data?: CharacterItem[];
   }>(charactersKey, () => fetchJson<{ data?: CharacterItem[] }>(charactersKey));
 
-  const characters = charactersResponse?.data ?? [];
+  const characters = useMemo(() => charactersResponse?.data ?? [], [charactersResponse]);
   const loading = charactersLoading;
 
   const filteredCharacters = useMemo(() => {
@@ -124,7 +127,7 @@ export const CharactersHub: React.FC = () => {
         ownershipMode={ownershipMode}
         ownershipLoading={ownershipLoading}
         ownershipSaving={ownershipSaving}
-        onToggleOwnershipMode={handleToggleOwnershipMode}
+        onToggleOwnershipMode={() => { void handleToggleOwnershipMode(); }}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
@@ -205,7 +208,7 @@ export const CharactersHub: React.FC = () => {
         <OwnershipSaveBar
           ownershipSaveError={ownershipSaveError}
           ownershipSaving={ownershipSaving}
-          onSave={handleSaveOwnership}
+          onSave={() => { void handleSaveOwnership(); }}
         />
       )}
 

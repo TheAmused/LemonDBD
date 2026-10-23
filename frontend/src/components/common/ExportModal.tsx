@@ -62,6 +62,7 @@ export interface ExportModalProps<D> {
 }
 
 import { downloadFile } from '@/utils/download';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 /** Triggers a browser download of `text` as `fileName`. */
 export function downloadTextFile(text: string, fileName: string, mime = 'application/json'): void {
@@ -99,78 +100,60 @@ export function ExportModal<D>({
 
   // Custom content only leaves the app signed with the author's account: nothing is shown until the
   // server has signed it, and if signing fails there is no unsigned fallback.
-  const [exportedDoc, setExportedDoc] = useState<D | null>(null);
-  const [exportedJson, setExportedJson] = useState<string>('');
-  const [signFailed, setSignFailed] = useState<boolean>(false);
-  const [shareUrl, setShareUrl] = useState<string>('');
   const [jsonCopy, setJsonCopy] = useState<CopyState>('idle');
   const [linkCopy, setLinkCopy] = useState<CopyState>('idle');
-  const [isSigning, setIsSigning] = useState<boolean>(true);
+  // What was prepared, and for which document and account: anything else is still being signed.
+  const [prepared, setPrepared] = useState<{
+    doc: D;
+    userId: number | null;
+    exportedDoc: D | null;
+    exportedJson: string;
+    shareUrl: string;
+  } | null>(null);
+  const userId = user?.id ?? null;
+  const current = prepared && doc && prepared.doc === doc && prepared.userId === userId ? prepared : null;
+  const isSigning = current === null;
+  const exportedDoc = current?.exportedDoc ?? null;
+  const exportedJson = current?.exportedJson ?? '';
+  const shareUrl = current?.shareUrl ?? '';
+  const signFailed = current !== null && current.exportedDoc === null;
 
-  useEffect(() => {
+  // A new document starts with fresh copy buttons.
+  useOnValueChange(doc, () => {
     setJsonCopy('idle');
     setLinkCopy('idle');
-    setShareUrl('');
+  });
 
-    const currentUnsignedDoc = isRecord(doc) ? (stripManifest(doc) as unknown as D) : doc;
-    setExportedDoc(null);
-    setExportedJson('');
-    setSignFailed(false);
-
-    if (!doc) {
-      return;
-    }
-
-    if (authLoading) {
-      setIsSigning(true);
-      return;
-    }
-
+  useEffect(() => {
+    if (!doc || authLoading) return;
     let cancelled = false;
+    const currentUnsignedDoc = isRecord(doc) ? (stripManifest(doc) as unknown as D) : doc;
+    const signed: Promise<D | null> =
+      user && isRecord(doc)
+        ? signExportPayload(resolvedContentType, signingPayload(resolvedContentType, currentUnsignedDoc)).then(
+            (manifest) =>
+              manifest ? (embedManifest(currentUnsignedDoc as Record<string, unknown>, manifest) as unknown as D) : null,
+            () => null
+          )
+        : Promise.resolve(null);
 
-    async function prepareExport() {
-      let finalDoc: D | null = null;
-      if (user && isRecord(doc)) {
-        setIsSigning(true);
-        try {
-          const manifest = await signExportPayload(
-            resolvedContentType,
-            signingPayload(resolvedContentType, currentUnsignedDoc)
-          );
-          if (manifest) {
-            finalDoc = embedManifest(currentUnsignedDoc as Record<string, unknown>, manifest) as unknown as D;
-          }
-        } catch {
-          finalDoc = null;
-        }
-      }
+    void signed.then(async (finalDoc) => {
       if (cancelled) return;
-      setIsSigning(false);
-      if (!finalDoc) {
-        setSignFailed(true);
-        return;
-      }
-      setExportedDoc(finalDoc);
-      setExportedJson(serialize(finalDoc));
-
+      const base = { doc, userId, exportedDoc: finalDoc, exportedJson: finalDoc ? serialize(finalDoc) : '', shareUrl: '' };
+      setPrepared(base);
+      if (!finalDoc) return;
       try {
         const payload = await encodePayload(finalDoc);
-        if (!cancelled) {
-          setShareUrl(buildShareUrl(window.location.origin, locale, payload));
-        }
+        if (!cancelled) setPrepared({ ...base, shareUrl: buildShareUrl(window.location.origin, locale, payload) });
       } catch {
-        if (!cancelled) {
-          setShareUrl('');
-        }
+        // No link: the JSON copy and download still work.
       }
-    }
-
-    void prepareExport();
+    });
 
     return () => {
       cancelled = true;
     };
-  }, [doc, locale, user, authLoading, resolvedContentType, serialize, encodePayload, buildShareUrl]);
+  }, [doc, locale, user, userId, authLoading, resolvedContentType, serialize, encodePayload, buildShareUrl]);
 
 
   if (!doc) return null;
@@ -205,10 +188,11 @@ export function ExportModal<D>({
             <Button
               variant="primary"
               disabled={!shareUrl}
-              onClick={async () => {
-                const ok = await copyTextWithFallback(shareUrl);
-                setLinkCopy(ok ? 'copied' : 'failed');
-                if (ok) onExport?.('link');
+              onClick={() => {
+                void copyTextWithFallback(shareUrl).then((ok) => {
+                  setLinkCopy(ok ? 'copied' : 'failed');
+                  if (ok) onExport?.('link');
+                });
               }}
               className={buttonClassName}
               aria-live="polite"
@@ -253,10 +237,11 @@ export function ExportModal<D>({
             <Button
               variant="secondary"
               disabled={isSigning || authLoading || !exportedJson}
-              onClick={async () => {
-                const ok = await copyTextWithFallback(exportedJson);
-                setJsonCopy(ok ? 'copied' : 'failed');
-                if (ok) onExport?.('json_copy');
+              onClick={() => {
+                void copyTextWithFallback(exportedJson).then((ok) => {
+                  setJsonCopy(ok ? 'copied' : 'failed');
+                  if (ok) onExport?.('json_copy');
+                });
               }}
               className={buttonClassName}
               aria-live="polite"

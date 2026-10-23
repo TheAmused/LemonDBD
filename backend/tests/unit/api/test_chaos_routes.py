@@ -1,6 +1,5 @@
 # backend/tests/unit/api/test_chaos_routes.py
 import pytest
-from flask import Flask
 from flask.testing import FlaskClient
 from sqlalchemy.orm import Session
 from app.models import Killer, Perk

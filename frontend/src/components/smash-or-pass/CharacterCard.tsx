@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/smash-or-pass/CharacterCard.tsx
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { X } from 'lucide-react';
 import { PortraitLoupeIcon, SnuffedCandleIcon, TarotTurnIcon, ThornHeartIcon } from '@/components/icons/DbdIcons';
 import { CardDisintegrationOverlay } from './CardDisintegrationOverlay';
@@ -22,6 +22,7 @@ import { Button } from '@/components/common/Button';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 import { useDictionary } from "@/context/DictionaryContext";
 import { withAlpha } from '@/utils/themeColor';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 const ZoomCloseButton: React.FC<{ label: string }> = ({ label }) => {
   const { close } = useModal();
@@ -87,18 +88,12 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   const currentLoc = locale || 'en';
   const profile = localizedProfile(character.metadata, currentLoc);
 
-  // Sample flags stably per character view (stable across card flips)
-  const sampledGreenFlags = useMemo(() => {
-    return sampleFlags(profile.green_flags);
-  }, [character.slug || character.id, profile.green_flags]);
+  // Sample flags stably per character view (stable across card flips): each character's flag lists
+  // are their own arrays, so the sample changes only with the character.
+  const sampledGreenFlags = useMemo(() => sampleFlags(profile.green_flags), [profile.green_flags]);
+  const sampledRedFlags = useMemo(() => sampleFlags(profile.red_flags), [profile.red_flags]);
 
-  const sampledRedFlags = useMemo(() => {
-    return sampleFlags(profile.red_flags);
-  }, [character.slug || character.id, profile.red_flags]);
-
-  useEffect(() => {
-    setIsZoomed(false);
-  }, [character.slug, character.id]);
+  useOnValueChange(`${character.slug}|${character.id}`, () => setIsZoomed(false));
 
   const charTagline = profile.tagline;
 
@@ -138,6 +133,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
     <>
       <div
         ref={cardRef}
+        // Swipe/drag for pointers; the Smash/Pass buttons and their key bindings are the keyboard controls.
+        role="presentation"
         data-smash-card={isTopCard ? 'top' : undefined}
         data-flipped={isTopCard && isTurned ? 'true' : undefined}
         onMouseMove={handleMouseMove}

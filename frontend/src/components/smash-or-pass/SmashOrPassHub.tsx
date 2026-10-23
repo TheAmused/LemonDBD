@@ -88,11 +88,17 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
 
   const toggleHowToPlay = useCallback(() => setIsHowToPlayOpen((prev) => !prev), [setIsHowToPlayOpen]);
   const openResetConfirm = useCallback(() => setIsResetConfirmOpen(true), [setIsResetConfirmOpen]);
+  const castVote = useCallback(
+    (vote: 'smash' | 'pass', origin?: { x: number; y: number }) => {
+      void handleVote(vote, origin);
+    },
+    [handleVote]
+  );
   useHubHotkeys({
     areModalsOpen: overlays.areModalsOpen,
     currentCharacter: deck.currentCharacter,
     isExiting: exit.isExiting,
-    handleVote,
+    handleVote: castVote,
     toggleHowToPlay,
     openStats: setSelectedStatCharacter,
     openResetConfirm,
@@ -102,7 +108,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
   const { isLeaderboardOpen } = overlays;
   useEffect(() => {
     if (isLeaderboardOpen) {
-      loadLeaderboard();
+      void loadLeaderboard();
     }
   }, [isLeaderboardOpen, loadLeaderboard]);
 
@@ -234,7 +240,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
               sessionSmashes={sessionSmashes}
               sessionPasses={sessionPasses}
               onAcknowledgeNsfw={rosters.handleAcknowledgeNsfw}
-              onVote={handleVote}
+              onVote={castVote}
               onDragUpdate={(x, y, isDragging) => exit.setDragPhysics({ x, y, isDragging })}
               onOpenPersona={() => overlays.setIsPersonaOpen(true)}
               onReset={() => setIsResetConfirmOpen(true)}
@@ -247,11 +253,11 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
         isOpen={overlays.isHowToPlayOpen}
         onClose={() => setIsHowToPlayOpen(false)}
         onPass={() => {
-          handleVote('pass');
+          void handleVote('pass');
           setIsHowToPlayOpen(false);
         }}
         onSmash={() => {
-          handleVote('smash');
+          void handleVote('smash');
           setIsHowToPlayOpen(false);
         }}
         onStats={() => {
@@ -283,7 +289,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
         leaderboardItems={deck.leaderboardItems}
         userSmashes={votes.userSmashesList}
         voteHistory={votes.voteHistory}
-        onResetAllVotes={handleResetAllVotes}
+        onResetAllVotes={() => { void handleResetAllVotes(); }}
       />
     </div>
   );

@@ -1,5 +1,6 @@
 'use client';
 // frontend/src/components/characters/hub/useCharacterOwnership.ts
+import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   buildCharacterOwnershipDraft,
@@ -10,6 +11,8 @@ import {
   ownsPerk,
 } from '@/utils/characterUtils';
 import { useAuth } from '@/context/AuthContext';
+import { useSiteConfig } from '@/context/SiteConfigContext';
+import { mustConfirmEmail } from '@/utils/emailVerification';
 import { useDictionary } from '@/context/DictionaryContext';
 import { catalogKey, invalidate } from '@/services/dataCache';
 import { authHeaders } from '@/utils/api';
@@ -51,6 +54,7 @@ interface CharacterOwnershipInput {
 export function useCharacterOwnership({ locale, onLoginRequired, onVerificationRequired }: CharacterOwnershipInput) {
   const dict = useDictionary();
   const { isAuthenticated, token, user, bulkUpdateCharacterOwnership, bulkUpdatePerkOwnership } = useAuth();
+  const verificationRequired = useSiteConfig().features.emailVerificationRequired;
   const backendBase = getBackendBaseUrl();
 
   const [ownershipMode, setOwnershipMode] = useState<boolean>(false);
@@ -84,7 +88,8 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
   // Keyed by "survivor:7" / "killer:7", not by a bare id: survivors and
   // killers are numbered separately now, so an id alone collides.
   const [characterOwnershipDraft, setCharacterOwnershipDraft] = useState<Record<string, boolean>>({});
-  const loadedCharacterOwnership = useRef<Record<string, boolean>>({});
+  // What the server holds, to tell the edits apart from it.
+  const [loadedCharacterOwnership, setLoadedCharacterOwnership] = useState<Record<string, boolean>>({});
   const [perkUnlockDraft, setPerkUnlockDraft] = useState<Record<number, boolean>>({});
   const [allPerks, setAllPerks] = useState<OwnedPerk[]>([]);
   const [perksPopupCharacter, setPerksPopupCharacter] = useState<CharacterItem | null>(null);
@@ -93,9 +98,9 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
   const isDirty = useMemo(
     () =>
       ownershipMode &&
-      (changedCharacterUpdates(loadedCharacterOwnership.current, characterOwnershipDraft).length > 0 ||
+      (changedCharacterUpdates(loadedCharacterOwnership, characterOwnershipDraft).length > 0 ||
         changedPerkUpdates(allPerks, perkUnlockDraft, new Set()).length > 0),
-    [ownershipMode, characterOwnershipDraft, allPerks, perkUnlockDraft]
+    [ownershipMode, loadedCharacterOwnership, characterOwnershipDraft, allPerks, perkUnlockDraft]
   );
 
   // A reload or a closed tab would silently lose the draft.
@@ -122,7 +127,7 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
       onLoginRequired();
       return;
     }
-    if (!user.is_verified) {
+    if (mustConfirmEmail(user, verificationRequired)) {
       trackEvent('ownership_blocked', { reason: 'verify' });
       onVerificationRequired();
       return;
@@ -151,14 +156,14 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
         perkDraft[p.perk_id] = p.is_unlocked;
       });
 
-      loadedCharacterOwnership.current = charDraft;
+      setLoadedCharacterOwnership(charDraft);
       setCharacterOwnershipDraft(charDraft);
       setPerkUnlockDraft(perkDraft);
       setAllPerks(perksList);
       setOwnershipMode(true);
       trackEvent('ownership_mode_enter');
     } catch (err: unknown) {
-      console.error('Failed to load ownership state:', err);
+      logger.error('Failed to load ownership state:', err);
       setOwnershipLoadError(dict.characterDetail.loadOwnershipError);
     } finally {
       setOwnershipLoading(false);
@@ -206,7 +211,7 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
     setOwnershipSaveError(null);
     try {
       const characterUpdates = changedCharacterUpdates(
-        loadedCharacterOwnership.current,
+        loadedCharacterOwnership,
         characterOwnershipDraft,
       );
       // Only what changed (and the perks of changed characters): sending all ~320 perks on every
@@ -241,7 +246,7 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
         }, 150);
       });
     } catch (err: unknown) {
-      console.error('Failed to save ownership changes:', err);
+      logger.error('Failed to save ownership changes:', err);
       setOwnershipSaveError(dict.characterDetail.saveOwnershipError);
     } finally {
       setOwnershipSaving(false);

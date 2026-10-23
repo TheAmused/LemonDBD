@@ -1,5 +1,5 @@
 // frontend/src/services/challengeCompletionsApi.ts
-import { ChallengeCompletionStatus } from '../types/challengeCompletionStatus';
+import type { ChallengeCompletionStatus } from '../types/challengeCompletionStatus';
 import { createStreakApiClient } from './streakApiClient';
 
 const { getJson } = createStreakApiClient('challenge-completions');

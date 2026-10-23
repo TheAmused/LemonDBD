@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { Lock, HelpCircle } from 'lucide-react';
-import { Perk, PerkDictionary } from '@/types/perks';
+import type { Perk } from '@/types/perks';
 import { getPerkIconUrl, getCharacterAvatarUrl } from '@/utils/perkUtils';
 import { DisabledBadge } from '@/components/DisabledBadge';
 
@@ -13,6 +13,7 @@ import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { TileButton } from '@/components/common/TileButton';
+import { Img } from '@/components/common/Img';
 
 const DisabledReasonModal = dynamic(
   () => import('@/components/DisabledReasonModal').then((m) => m.DisabledReasonModal),
@@ -53,11 +54,6 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
   const isOwned = perk.is_owned !== false;
 
   const generalLabel = dict.modal.generalPerk;
-  const roleLabel =
-    perk.category === 'Killer'
-      ? dict.modal.killerPerk
-      : dict.modal.survivorPerk;
-
   const ariaLabel = `${perk.name}${isGeneral ? (generalLabel ? ` - ${generalLabel}` : '') : (perk.character ? ` - ${perk.character}` : '')}`;
 
   const coordinateLabel = coordinate
@@ -147,7 +143,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
                       : 'h-9 w-9 sm:h-11 sm:w-11 md:h-12 md:w-12 lg:h-13 lg:w-13'
               }`}
             >
-              <img
+              <Img
                 src={avatarSrc}
                 alt={perk.character}
                 onError={() => setAvatarError(true)}

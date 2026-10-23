@@ -6,11 +6,10 @@ import {
   isPerkBlockedByMutator,
   computePlayablePool,
   pickRandomLoadout,
-  buildDrawnSlots,
 } from '@/components/generator/lib/perkPicker';
 import { getSlotInteraction } from '@/components/generator/lib/blindnessCurse';
 import { CHAOS_MUTATORS } from '@/constants/chaosMutators';
-import type { Perk, DrawnSlot } from '@/types/perks';
+import type { Perk } from '@/types/perks';
 import type { ChaosMutator } from '@/types/chaos';
 
 function makePerk(overrides: Partial<Perk>): Perk {

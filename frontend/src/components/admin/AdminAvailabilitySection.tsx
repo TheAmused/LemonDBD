@@ -34,6 +34,7 @@ import { getErrorMessage, staticUrl } from '@/utils/api';
 import { cn } from '@/utils/cn';
 import { formatMessage } from '@/utils/i18nFormat';
 import type { ActionMessage, AdminCharacterRow, AdminPerkRow, ChallengeMode, ChallengeModeSetting } from '@/types/admin';
+import { Img } from '@/components/common/Img';
 
 const KINDS = ['characters', 'perks'] as const;
 const ROLES = ['Survivor', 'Killer'] as const;
@@ -59,6 +60,9 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
   const [disabledOnly, setDisabledOnly] = usePersistentBoolean(ADMIN_STORAGE.availabilityDisabledOnly, false);
   const [characters, setCharacters] = useState<AdminCharacterRow[]>([]);
   const [perks, setPerks] = useState<AdminPerkRow[]>([]);
+  /** Which kind and role the lists on hand belong to: after a switch the old list is not shown under the new label. */
+  const [loadedFor, setLoadedFor] = useState<string | null>(null);
+  const viewKey = `${kind}:${role}`;
   const [loading, setLoading] = useState(true);
   const [pending, setPending] = useState<Pending | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
@@ -85,10 +89,19 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
     const timer = window.setTimeout(() => {
       setLoading(true);
       // Only the list on screen: both were fetched on every search keystroke and role switch.
+      const loaded = () => !cancelled && setLoadedFor(`${kind}:${role}`);
       const request =
         kind === 'characters'
-          ? listCharacters(role, search.trim()).then((res) => !cancelled && setCharacters(res.data ?? []))
-          : listPerks(role, search.trim()).then((res) => !cancelled && setPerks(res.data ?? []));
+          ? listCharacters(role, search.trim()).then((res) => {
+              if (cancelled) return;
+              setCharacters(res.data ?? []);
+              loaded();
+            })
+          : listPerks(role, search.trim()).then((res) => {
+              if (cancelled) return;
+              setPerks(res.data ?? []);
+              loaded();
+            });
       request
         .catch((err: unknown) => !cancelled && fail(err))
         .finally(() => !cancelled && setLoading(false));
@@ -138,7 +151,11 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
         ? t.disableCharacterSubtitle
         : t.disablePerkSubtitle;
 
-  const list = kind === 'characters' ? characters : perks;
+  const list = useMemo(
+    () => (loadedFor !== viewKey ? [] : kind === 'characters' ? characters : perks),
+    [loadedFor, viewKey, kind, characters, perks]
+  );
+
   const disabledCount = useMemo(() => list.filter((item) => item.is_disabled).length, [list]);
   const shown = disabledOnly ? list.filter((item) => item.is_disabled) : list;
 
@@ -155,7 +172,7 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
                   {setting.is_enabled ? t.enabledLabel : setting.disabled_reason || t.disabledLabel}
                 </p>
               </div>
-              <Switch checked={setting.is_enabled} onChange={() => toggleMode(setting)} ariaLabel={modeLabel[setting.mode]} />
+              <Switch checked={setting.is_enabled} onChange={() => { void toggleMode(setting); }} ariaLabel={modeLabel[setting.mode]} />
             </li>
           ))}
         </ul>
@@ -213,7 +230,7 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
                   <li key={`${kind}-${item.id}`}>
                     <TileButton
                       press={false}
-                      onClick={() => (isCharacter ? toggleCharacter(item as AdminCharacterRow) : togglePerk(item as AdminPerkRow))}
+                      onClick={() => { void (isCharacter ? toggleCharacter(item as AdminCharacterRow) : togglePerk(item as AdminPerkRow)); }}
                       aria-pressed={!item.is_disabled}
                       aria-label={label}
                       {...tip(item.name, item.disabled_reason || undefined, 'status')}
@@ -227,7 +244,7 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
                         )}
                       >
                         {image ? (
-                          <img
+                          <Img
                             src={staticUrl(image)}
                             alt=""
                             loading="lazy"

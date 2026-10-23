@@ -1,7 +1,7 @@
 # backend/app/services/admin_control_service.py
 import logging
 from typing import Any
-from sqlalchemy import delete, desc, func, select
+from sqlalchemy import desc, func, select
 from sqlalchemy.exc import IntegrityError
 
 from app.core.extensions import db
@@ -11,19 +11,10 @@ from app.core.transaction import transaction
 from app.models import (
     AdminAuditLog,
     ChallengeModeSetting,
-    GauntletRun,
-    Item,
-    ItemAddon,
     Killer,
-    KillerAddon,
-    MapRealm,
-    PageStreakRun,
     Perk,
-    Realm,
     Survivor,
     User,
-    UserCharacterOwnership,
-    UserPerkOwnership,
 )
 from app.models.admin import CHALLENGE_MODES
 
@@ -179,41 +170,21 @@ def set_perk_disabled(
 
 
 def purge_database_tables(targets: list[str]) -> list[str]:
-    """Purges selected entity tables atomically within a single transaction block."""
-    purged: list[str] = []
+    """Delete every row of the named entities in one transaction; returns them in a fixed order.
+
+    The names are the export/import names (`export_registry.PURGEABLE_TARGETS`), so the admin
+    panel offers exactly what can be purged. Raises ValueError for a name that can't be purged, or
+    when a table is chosen without the tables that point at it (`PURGE_REQUIRES`).
+    """
+    from app.services.db.export_import import clear_targets
+    from app.services.db.export_registry import PURGEABLE_TARGETS, missing_purge_dependencies, unknown_targets
+
+    unknown = unknown_targets(targets, PURGEABLE_TARGETS)
+    if unknown:
+        raise ValueError(f"These cannot be purged: {', '.join(unknown)}.")
+    missing = missing_purge_dependencies(targets)
+    if missing:
+        raise ValueError(f"Also select: {', '.join(missing)} (their rows point at what you chose).")
     with transaction():
-        if "perks" in targets:
-            db.session.execute(delete(Perk))
-            purged.append("perks")
-
-        if "addons" in targets:
-            db.session.execute(delete(KillerAddon))
-            db.session.execute(delete(ItemAddon))
-            purged.append("addons")
-
-        if "characters" in targets:
-            db.session.execute(delete(KillerAddon))
-            db.session.execute(delete(Survivor))
-            db.session.execute(delete(Killer))
-            purged.append("characters")
-
-        if "items" in targets:
-            db.session.execute(delete(Item))
-            purged.append("items")
-
-        if "maps" in targets:
-            db.session.execute(delete(MapRealm))
-            db.session.execute(delete(Realm))
-            purged.append("maps")
-
-        if "ownerships" in targets:
-            db.session.execute(delete(UserCharacterOwnership))
-            db.session.execute(delete(UserPerkOwnership))
-            purged.append("ownerships")
-
-        if "game_runs" in targets:
-            db.session.execute(delete(GauntletRun))
-            db.session.execute(delete(PageStreakRun))
-            purged.append("game_runs")
-
-    return purged
+        clear_targets(set(targets))
+    return [target for target in PURGEABLE_TARGETS if target in targets]

@@ -2,8 +2,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Tag, Plus, X, Shield, User } from 'lucide-react';
-import { LABEL } from './styles';
+import { Plus, X, Shield, User } from 'lucide-react';
+
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";

@@ -6,6 +6,7 @@ import { ImageOff } from 'lucide-react';
 import type { MapRealm } from '@/types/map';
 import { getMapThumbSrc } from '@/utils/mapUtils';
 import { TileButton } from '@/components/common/TileButton';
+import { Img } from '@/components/common/Img';
 
 export interface MapCardProps {
   map: MapRealm;
@@ -25,7 +26,7 @@ export const MapCard: React.FC<MapCardProps> = ({ map, backendBase, onSelect }) 
     >
       <div className="h-24 w-24 sm:h-36 sm:w-36 md:h-40 md:w-40 overflow-hidden rounded-card bg-bg-elevated flex items-center justify-center">
         {imageSrc && !imageFailed ? (
-          <img
+          <Img
             src={imageSrc}
             alt={map.name}
             loading="lazy"

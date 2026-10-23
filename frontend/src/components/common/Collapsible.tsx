@@ -3,7 +3,8 @@
 // The body that folds away under a header: one animation (height via grid-template-rows 0fr to 1fr,
 // which `height: auto` cannot do), one fade, and `inert` while closed so hidden controls are neither
 // focusable nor read out. Every collapsible section in the app moves through this component.
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 import { cn } from '@/utils/cn';
 
 export interface CollapsibleProps {
@@ -29,9 +30,9 @@ export interface CollapsibleProps {
 export function Collapsible({ open, children, className, contentClassName, overflowWhenOpen = false, onlyBelow }: CollapsibleProps) {
   // True once fully open AND the opening transition has finished.
   const [settled, setSettled] = useState(open);
-  useEffect(() => {
-    if (!open) setSettled(false);
-  }, [open]);
+  useOnValueChange(open, (isOpen) => {
+    if (!isOpen) setSettled(false);
+  });
 
   return (
     <div

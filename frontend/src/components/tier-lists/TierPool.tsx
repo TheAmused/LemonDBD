@@ -88,9 +88,15 @@ export function TierPool({
       )}
     >
       {/* Header: search on the left (always reachable, even collapsed), title centred on the panel, collapse toggle on the right. */}
+      {/* The whole bar toggles for pointer users; the chevron button is the keyboard control
+          (role="presentation": the bar only catches its click as it bubbles). */}
       <div
         data-pool-head=""
-        onClick={() => onCollapsedChange(!collapsed)}
+        role="presentation"
+        onClick={(e) => {
+          if ((e.target as HTMLElement).closest('[data-pool-search]')) return;
+          onCollapsedChange(!collapsed);
+        }}
         className="relative grid w-full cursor-pointer select-none grid-cols-pool-bar items-center gap-x-3 gap-y-1.5 overflow-hidden px-3 py-1.5 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] sm:px-4 sm:min-h-12 short:py-1 short:sm:min-h-0">
         {/* Atmospheric DBD Banner Backdrop */}
         <div
@@ -101,7 +107,7 @@ export function TierPool({
         <div className="absolute inset-x-0 bottom-0 h-px bg-border-color/60 pointer-events-none" />
 
         <div
-          onClick={(e) => e.stopPropagation()}
+          data-pool-search=""
           className={cn(
             'relative z-10 col-span-3 row-start-2 cursor-auto sm:col-span-1 sm:col-start-1 sm:row-start-1 sm:max-w-xs',
             // Nothing to search in an empty pool: drop the field and give its row back to the tiers.
@@ -177,6 +183,8 @@ export function TierPool({
 
           <div
             ref={setNodeRef}
+            // A pointer shortcut for the "Move here" button above.
+            role="presentation"
             onClick={canReceiveSelection ? () => onMoveSelectedHere(POOL_CONTAINER_ID) : undefined}
             className={cn(
               'min-h-21 p-3 sm:p-4 transition-colors',

@@ -12,7 +12,7 @@ import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { SandboxedContentPreview } from '@/components/admin/SandboxedContentPreview';
 import { SanctionForm } from '@/components/admin/SanctionForm';
 import { contentReasonLabel, contentStatusLabel, contentStatusTone, contentTypeLabel } from '@/components/admin/reportLabels';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { cn } from '@/utils/cn';
 import { formatDateTime } from '@/utils/format';
 import { formatMessage } from '@/utils/i18nFormat';
@@ -20,6 +20,7 @@ import {
   EMPTY_SANCTION_DRAFT,
   authorDecisionFromDraft,
   isSanctionDraftValid,
+  patchDraft,
   type AuthorDecision,
   type SanctionDraft,
   type SanctionKind,
@@ -37,6 +38,7 @@ interface ContentReportDetailProps {
 /** One report in full: who flagged what and why, the reported content, and the ban/dismiss decision. */
 export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }: ContentReportDetailProps) {
   const dict = useDictionary();
+  const locale = useLocale();
   const [notes, setNotes] = useState<string>(detail.admin_notes ?? '');
   // What happens to the author's account: nothing, or one of the three decisions (with its form).
   const [authorKind, setAuthorKind] = useState<SanctionKind | 'none'>('none');
@@ -54,7 +56,9 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
           : '';
 
   const isPending = detail.status === 'pending';
-  const canActOnAuthor = detail.attributed && detail.author_active !== false && !detail.author_is_admin;
+  // A suspended author can still be warned, suspended for longer or banned; a banned one cannot be acted on.
+  const standing = detail.author_standing ?? (detail.author_active === false ? 'banned' : 'active');
+  const canActOnAuthor = detail.attributed && standing !== 'banned' && !detail.author_is_admin;
   const authorDecision: AuthorDecision | null =
     canActOnAuthor && authorKind !== 'none' ? authorDecisionFromDraft({ ...authorDraft, kind: authorKind }) : null;
   const authorValid = authorKind === 'none' || !canActOnAuthor || isSanctionDraftValid({ ...authorDraft, kind: authorKind });
@@ -87,7 +91,7 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
                 variant="ghost"
                 size="xs"
                 icon
-                onClick={() => onShowUser(detail.author_login)}
+                onClick={() => onShowUser(detail.author_id ? `id:${detail.author_id}` : detail.author_login)}
                 aria-label={dict.admin.showInUsers}
                 {...tip(dict.admin.showInUsers, undefined, 'action')}
               >
@@ -104,14 +108,14 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
         </div>
         <div>
           <dt className="type-label-sm text-text-secondary">{dict.admin.contentReportCreated}</dt>
-          <dd className="text-text-primary">{formatDateTime(detail.created_at)}</dd>
+          <dd className="text-text-primary">{formatDateTime(detail.created_at, locale)}</dd>
         </div>
         <div>
           <dt className="type-label-sm text-text-secondary">
             {isPending ? dict.admin.contentReportExpires : dict.admin.contentReportResolvedAt}
           </dt>
           <dd className="text-text-primary">
-            {formatDateTime(isPending ? detail.expires_at : (detail.resolved_at ?? detail.expires_at))}
+            {formatDateTime(isPending ? detail.expires_at : (detail.resolved_at ?? detail.expires_at), locale)}
           </dd>
         </div>
       </dl>
@@ -122,8 +126,11 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
           <span>{dict.admin.contentReportUnattributed}</span>
         </p>
       )}
-      {detail.attributed && detail.author_active === false && (
+      {detail.attributed && standing === 'banned' && (
         <p className="type-body text-text-secondary">{dict.admin.contentReportAuthorInactive}</p>
+      )}
+      {detail.attributed && standing === 'suspended' && (
+        <p className="type-body text-text-secondary">{dict.admin.contentReportAuthorSuspended}</p>
       )}
       {detail.attributed && detail.author_is_admin && (
         <p className="type-body text-text-secondary">{dict.admin.contentReportAuthorIsAdmin}</p>
@@ -185,7 +192,10 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
                   buttonClassName="w-full justify-between py-2.5"
                   menuClassName="w-full"
                   value={authorKind}
-                  onChange={setAuthorKind}
+                  onChange={(kind) => {
+                    if (kind !== 'none') setAuthorDraft((d) => patchDraft({ ...d, kind: authorKind === 'none' ? 'warning' : authorKind }, { kind }, detail.author_next_suspension_days));
+                    setAuthorKind(kind);
+                  }}
                   options={[
                     { value: 'none', label: moderation.authorActionNone },
                     { value: 'warning', label: moderation.authorActionWarning },
@@ -212,7 +222,7 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
               {authorDecision ? <UserX className="icon-md" /> : <Ban className="icon-md" />}
               {dict.admin.contentReportBanAction}
             </Button>
-            <Button size="sm" disabled={resolving} onClick={() => onResolve('dismiss', null, notes)}>
+            <Button size="sm" disabled={resolving} onClick={() => { void onResolve('dismiss', null, notes); }}>
               <CheckCircle className="icon-md" />
               {dict.admin.contentReportDismissAction}
             </Button>
@@ -234,7 +244,7 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
         confirmLabel={dict.admin.contentReportBanAction}
         cancelLabel={dict.admin.cancel}
         busy={resolving}
-        onConfirm={runBan}
+        onConfirm={() => { void runBan(); }}
         onCancel={() => setConfirmBan(false)}
       />
     </article>

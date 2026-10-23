@@ -84,7 +84,7 @@ function ResetPasswordContent() {
           </Link>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-3.5">
+        <form onSubmit={(e) => { void handleSubmit(e); }} className="space-y-3.5">
           {error && (
             <div
               role="alert"

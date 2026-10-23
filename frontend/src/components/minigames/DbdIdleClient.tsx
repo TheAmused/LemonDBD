@@ -2,7 +2,6 @@
 // frontend/src/components/minigames/DbdIdleClient.tsx
 
 import React, { useState, useEffect } from 'react';
-import { PageShell } from '@/components/layout/PageShell';
 import { ChallengeRunner } from '@/components/minigames/ChallengeRunner';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import type { ChallengeDefinition, MinigameCatalog } from '@/types/minigame';
@@ -45,7 +44,7 @@ export function DbdIdleClient() {
       }
     }
 
-    loadData();
+    void loadData();
 
     return () => {
       isMounted = false;
@@ -53,11 +52,7 @@ export function DbdIdleClient() {
   }, [locale]);
 
   return (
-    <PageShell
-      locale={locale}
-      activeCategory="minigames"
-      mainClassName="relative flex flex-col items-center justify-center min-h-vh-70"
-    >
+    <>
       {loading ? (
         <LoadingState label={dict.app.loading} />
       ) : error ? (
@@ -70,6 +65,6 @@ export function DbdIdleClient() {
           source="daily"
         />
       ) : null}
-    </PageShell>
+    </>
   );
 }

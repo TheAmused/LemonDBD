@@ -1,9 +1,10 @@
 // frontend/src/hooks/useMapExplorerData.ts
 'use client';
 
+import { logger } from '@/utils/logger';
 import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { MapRealm, Realm } from '@/types/map';
+import type { MapRealm, Realm } from '@/types/map';
 import { fetchMaps, fetchRealms, mapsCacheKey, realmsCacheKey } from '@/services/mapApi';
 import { readCache } from '@/services/dataCache';
 
@@ -99,7 +100,6 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [loading, setLoading] = useState(cachedMaps === undefined);
   const [openMapId, setOpenMapId] = useState<number | null>(null);
-  const lastHandledTargetRef = useRef<string | null>(null);
 
   const onAvailableMapsLoadedRef = useRef(onAvailableMapsLoaded);
   useEffect(() => {
@@ -110,18 +110,15 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
   useEffect(() => {
     onAutoOpenRef.current = onAutoOpen;
   }, [onAutoOpen]);
-  const openMapIdRef = useRef<number | null>(null);
-  openMapIdRef.current = openMapId;
 
+  // Below the minimum length there is no search at once; otherwise it settles after the debounce.
+  const trimmedSearch = search.trim();
+  const searchTooShort = trimmedSearch.length > 0 && trimmedSearch.length < SEARCH_MIN_CHARS;
   useEffect(() => {
-    const trimmed = search.trim();
-    if (trimmed.length > 0 && trimmed.length < SEARCH_MIN_CHARS) {
-      setDebouncedSearch('');
-      return;
-    }
-    const timeoutId = setTimeout(() => setDebouncedSearch(search), SEARCH_DEBOUNCE_MS);
+    const timeoutId = setTimeout(() => setDebouncedSearch(searchTooShort ? '' : search), searchTooShort ? 0 : SEARCH_DEBOUNCE_MS);
     return () => clearTimeout(timeoutId);
-  }, [search]);
+  }, [search, searchTooShort]);
+  const settledSearch = searchTooShort ? '' : debouncedSearch;
 
   useEffect(() => {
     let isCancelled = false;
@@ -141,14 +138,14 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
           onAvailableMapsLoadedRef.current?.(loaded);
         }
       } catch (err) {
-        console.error('Failed loading maps:', err);
+        logger.error('Failed loading maps:', err);
       } finally {
         if (!isCancelled) {
           setLoading(false);
         }
       }
     }
-    loadMaps();
+    void loadMaps();
     return () => {
       isCancelled = true;
     };
@@ -167,56 +164,57 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
           setRealmImages(byName);
         }
       } catch (err) {
-        console.error('Failed loading realm images:', err);
+        logger.error('Failed loading realm images:', err);
       }
     }
-    loadRealms();
+    void loadRealms();
     return () => {
       isCancelled = true;
     };
   }, [locale]);
 
-  useEffect(() => {
-    const rawTarget = selectedMap !== undefined ? selectedMap : initialMapName;
-    const rawObj = typeof rawTarget === 'object' && rawTarget !== null ? rawTarget : null;
-    const targetMapName =
-      typeof rawTarget === 'object' && rawTarget !== null ? rawTarget.mapName : rawTarget;
-    if ((!targetMapName || !targetMapName.trim()) && !rawObj?.mapId) return;
-    if (maps.length === 0) return;
-
-    const targetKey =
-      typeof rawTarget === 'object' && rawTarget !== null
+  // A link or voice command names a map to open. It is handled once per target (a voice command can
+  // repeat itself), while rendering, so the map opens in the same paint; reopening the map that is
+  // already open is not an open, so only a real one is reported through onAutoOpen.
+  const rawTarget = selectedMap !== undefined ? selectedMap : initialMapName;
+  const rawObj = typeof rawTarget === 'object' && rawTarget !== null ? rawTarget : null;
+  const targetMapName = typeof rawTarget === 'object' && rawTarget !== null ? rawTarget.mapName : rawTarget;
+  const hasTarget = (!!targetMapName && !!targetMapName.trim()) || !!rawObj?.mapId;
+  const targetKey =
+    !hasTarget || maps.length === 0
+      ? null
+      : typeof rawTarget === 'object' && rawTarget !== null
         ? `${rawTarget.mapName}::${rawTarget.timestamp}`
         : rawTarget;
-    if (lastHandledTargetRef.current === targetKey) return;
-
+  const [handledTargetKey, setHandledTargetKey] = useState<string | null>(null);
+  const [autoOpened, setAutoOpened] = useState<{ map: MapRealm; via: 'voice' | 'link' } | null>(null);
+  if (targetKey !== null && targetKey !== handledTargetKey) {
     // Prefer a direct id lookup (set by voice commands on non-English locales) over name matching.
     const directId = rawObj?.mapId as number | undefined;
-    const match = directId
-      ? maps.find((m) => m.id === directId)
-      : findMapByName(maps, targetMapName);
+    const match = directId ? maps.find((m) => m.id === directId) : findMapByName(maps, targetMapName ?? '');
     if (match) {
-      // Opening the map that is already open is not an open (a voice command can repeat itself).
-      const alreadyOpen = openMapIdRef.current === match.id;
-      setOpenMapId(match.id);
-      lastHandledTargetRef.current = targetKey;
-      if (!alreadyOpen) {
-        const via = typeof rawTarget === 'object' && rawTarget !== null ? rawTarget.via ?? 'link' : 'link';
-        onAutoOpenRef.current?.(match, via);
+      setHandledTargetKey(targetKey);
+      if (openMapId !== match.id) {
+        setOpenMapId(match.id);
+        setAutoOpened({ map: match, via: rawObj ? rawObj.via ?? 'link' : 'link' });
       }
     }
-  }, [initialMapName, selectedMap, maps]);
+  }
+
+  useEffect(() => {
+    if (autoOpened) onAutoOpenRef.current?.(autoOpened.map, autoOpened.via);
+  }, [autoOpened]);
 
   const filteredMaps = useMemo(() => {
-    if (!debouncedSearch || debouncedSearch.length < SEARCH_MIN_CHARS) return maps;
-    const needle = normalizeMapSearch(debouncedSearch);
+    if (!settledSearch || settledSearch.length < SEARCH_MIN_CHARS) return maps;
+    const needle = normalizeMapSearch(settledSearch);
     if (!needle) return maps;
     return maps.filter(
       (m) =>
         normalizeMapSearch(m.name).includes(needle) ||
         (m.raw_name ? normalizeMapSearch(m.raw_name).includes(needle) : false)
     );
-  }, [maps, debouncedSearch]);
+  }, [maps, settledSearch]);
 
   const groupedMapsByRealm = useMemo(() => groupMapsByRealmSorted(filteredMaps), [filteredMaps]);
 
@@ -226,7 +224,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
     loading,
     search,
     setSearch,
-    activeSearch: debouncedSearch,
+    activeSearch: settledSearch,
     groupedMapsByRealm,
     realmImages,
     openMapId,

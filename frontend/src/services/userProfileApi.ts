@@ -180,6 +180,19 @@ export async function downloadAccountData(userId?: number): Promise<void> {
 }
 
 /** Permanently deletes the signed-in account; the server re-checks the password. */
+/** End every session of the signed-in account on every device (this one included). */
+export async function signOutEverywhere(): Promise<void> {
+  const res = await fetch(`${apiBase()}/api/v1/auth/logout-all`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: authHeaders(),
+  });
+  if (!res.ok) {
+    const data = await parseJsonSafely(res);
+    throw new ApiError(data.error || 'Failed to sign out everywhere.', res.status, data.error_code);
+  }
+}
+
 export async function deleteAccount(
   password: string,
   twoFactorCode?: string,

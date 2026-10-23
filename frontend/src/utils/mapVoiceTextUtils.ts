@@ -66,8 +66,8 @@ export function levenshteinDistance(a: string, b: string): number {
   const len1 = s1.length;
   const len2 = s2.length;
 
-  let prevRow = new Array<number>(len2 + 1);
-  let currRow = new Array<number>(len2 + 1);
+  let prevRow = Array.from<number>({ length: len2 + 1 });
+  let currRow = Array.from<number>({ length: len2 + 1 });
 
   for (let j = 0; j <= len2; j++) {
     prevRow[j] = j;
@@ -217,7 +217,7 @@ export function getVariantsForMap(mapName: string): string[] {
  */
 export function cleanSpokenQuery(spoken: string): string {
   let cleaned = normalizeString(spoken)
-    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"']/g, ' ')
+    .replace(/[.,/#!$%^&*;:{}=\-_`~()?"']/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 

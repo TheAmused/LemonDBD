@@ -1,6 +1,6 @@
 'use client';
 // frontend/src/components/onboarding/wizard/useChapterExpansion.ts
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useResponsiveGridColumns } from '@/hooks/useResponsiveGridColumns';
 import { CHAPTER_GRID_BREAKPOINTS, type ChapterGroup } from '../CharacterOnboardingWizardParts';
 
@@ -40,19 +40,21 @@ export function useChapterExpansion(filteredChapterGroups: ChapterGroup[]) {
     });
   };
 
-  useEffect(() => {
-    if (expandedChapter !== null) setRenderedChapter(expandedChapter);
-    // When expandedChapter goes null, renderedChapter is left as-is --
-    // handleChapterPanelExitComplete clears it once the close transition
-    // genuinely finishes, and opens any pending chapter at that point.
-  }, [expandedChapter]);
+  const stillExists = (name: string | null) =>
+    name === null || filteredChapterGroups.some((g) => g.chapterName === name);
+
+  // (Adjusted while rendering.) An opened chapter's panel mounts at once. When expandedChapter
+  // goes null, renderedChapter is left as-is -- handleChapterPanelExitComplete clears it once the
+  // close transition genuinely finishes, and opens any pending chapter at that point.
+  if (expandedChapter !== null && renderedChapter !== expandedChapter) setRenderedChapter(expandedChapter);
 
   const handleChapterPanelExitComplete = () => {
     setRenderedChapter(null);
     if (pendingChapterOpenRef.current) {
       const next = pendingChapterOpenRef.current;
       pendingChapterOpenRef.current = null;
-      setExpandedChapter(next);
+      // A queued chapter that has disappeared in the meantime stays closed.
+      if (stillExists(next)) setExpandedChapter(next);
     }
   };
 
@@ -63,15 +65,11 @@ export function useChapterExpansion(filteredChapterGroups: ChapterGroup[]) {
   // AnimatePresence host stops rendering, its onExitComplete never fires,
   // renderedChapter never clears, and every future chapter click gets stuck
   // queued in pendingChapterOpenRef instead of opening.
-  useEffect(() => {
-    const stillExists = (name: string | null) =>
-      name === null || filteredChapterGroups.some((g) => g.chapterName === name);
-    if (!stillExists(expandedChapter) || !stillExists(renderedChapter)) {
-      setExpandedChapter(null);
-      setRenderedChapter(null);
-      pendingChapterOpenRef.current = null;
-    }
-  }, [filteredChapterGroups, expandedChapter, renderedChapter]);
+  // (Adjusted while rendering; a chapter queued to open is checked when its turn comes, above.)
+  if (!stillExists(expandedChapter) || !stillExists(renderedChapter)) {
+    setExpandedChapter(null);
+    setRenderedChapter(null);
+  }
 
   // Needed so the expand panel below can be placed after the last card of
   // its row instead of right after whichever card was clicked -- otherwise

@@ -8,8 +8,6 @@ from app.models.map import (
     DEFAULT_LAYOUT_TYPE,
     DEFAULT_PALLET_DENSITY,
     DEFAULT_IS_SHACK,
-    DEFAULT_SOURCE_CODE,
-    DEFAULT_SOURCE_LABEL,
     MapRealm,
     MapSource,
     Realm,

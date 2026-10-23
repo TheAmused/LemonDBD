@@ -96,7 +96,7 @@ async function run() {
         await editBtn.click();
 
         // Verify TierItemEditModal opens
-        const editModal = page.locator('div[role="dialog"]');
+        const editModal = page.getByRole('dialog');
         await editModal.waitFor({ state: 'visible' });
         await editModal.screenshot({ path: path.join(OUT_DIR, 'edit-modal.png') });
         console.log('  ✓ TierItemEditModal opened successfully');

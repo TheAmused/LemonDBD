@@ -4,7 +4,6 @@
 # scheduler decoupling, and database connection pool allocation.
 import pytest
 from flask import Flask
-from app import create_app
 from app.core.config import Config
 
 

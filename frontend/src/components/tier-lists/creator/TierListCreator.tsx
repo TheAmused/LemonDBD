@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/tier-lists/creator/TierListCreator.tsx
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { History, SearchX } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
@@ -11,7 +11,7 @@ import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useTierListStore } from '@/hooks/useTierListStore';
 import { useTierListTemplate } from '@/hooks/useTierListTemplates';
 import { createOfficialTierList, updateOfficialTierList } from '@/services/tierListApi';
-import { apiUrl, authFetch, staticUrl } from '@/utils/api';
+import { staticUrl } from '@/utils/api';
 import { cn } from '@/utils/cn';
 import { resolveTiers } from '@/utils/tierLists/board';
 import { normalizePlacements, sanitizeImageUrl } from '@/utils/tierLists/codec';
@@ -29,7 +29,7 @@ import { CreatorItems } from './CreatorItems';
 import { CreatorPreviewModal } from './CreatorPreview';
 import { type IncomingItem, ItemSources } from './ItemSources';
 import { LadderEditor } from './LadderEditor';
-import { Switch } from '@/components/common/Switch';
+import { LabeledSwitch } from '@/components/common/Switch';
 import { NsfwSwitch } from '@/components/common/NsfwSwitch';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
@@ -38,6 +38,7 @@ import { formatMessage } from '@/utils/i18nFormat';
 import dynamic from 'next/dynamic';
 import { useDictionary } from '@/context/DictionaryContext';
 import { Toast } from '@/components/common/Toast';
+import { useIsClient } from '@/hooks/useIsClient';
 
 const ImageUploadDropzone = dynamic(
   () => import('@/components/common/ImageUploadDropzone').then((m) => m.ImageUploadDropzone),
@@ -90,7 +91,6 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
   const [official, setOfficial] = useState<boolean>(false);
   const [publishing, setPublishing] = useState<boolean>(false);
   const [publishError, setPublishError] = useState<string | null>(null);
-  const loaded = useRef<boolean>(false);
 
   const isEditing = Boolean(editId || officialSlug);
 
@@ -102,21 +102,21 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
         : c.pageTitle
   );
 
-  // Restore after mount (localStorage is client-only), then autosave -- new
-  // lists only. Editing an existing one is seeded from the store instead
-  // (below), never through this scratch-draft key.
-  useEffect(() => {
-    if (isEditing) {
-      loaded.current = true;
-      return;
-    }
-    const saved = readDraft();
+  // Restore once running in the browser (localStorage is client-only, so the server and the
+  // hydrating render show the empty draft), while rendering; then autosave -- new lists only.
+  // Editing an existing one is seeded from the store instead (below), never through this
+  // scratch-draft key.
+  const isClient = useIsClient();
+  const [draftReadFor, setDraftReadFor] = useState<boolean | null>(null);
+  if (isClient && draftReadFor !== isEditing) {
+    setDraftReadFor(isEditing);
+    const saved = isEditing ? null : readDraft();
     if (saved && (saved.title || saved.items.length)) {
       setDraft(saved);
       setRestored(true);
     }
-    loaded.current = true;
-  }, [isEditing]);
+  }
+  const draftLoaded = draftReadFor !== null;
 
   useEffect(() => {
     if (!restored) return;
@@ -127,7 +127,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
   }, [restored]);
 
   useEffect(() => {
-    if (!loaded.current || isEditing) return;
+    if (!draftLoaded || isEditing) return;
     const timer = window.setTimeout(() => {
       try {
         if (draft.title || draft.description || draft.items.length) localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
@@ -137,18 +137,18 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       }
     }, 400);
     return () => window.clearTimeout(timer);
-  }, [draft, isEditing]);
+  }, [draft, isEditing, draftLoaded]);
 
   // Edit mode: once the store has hydrated, seed the draft from the saved
   // list -- once per `editId`, so it doesn't clobber in-progress edits on
   // every unrelated re-render (e.g. the autosave-like effects above don't
   // apply here, but the store itself can re-emit for other reasons).
-  const editSeeded = useRef<string | null>(null);
-  useEffect(() => {
-    if (!editId || !storeHydrated || editSeeded.current === editId) return;
-    editSeeded.current = editId;
-    if (!editingList) return; // not found -- the fallback view below takes over
-    setDraft({
+  // (Adjusted while rendering, so the empty form never paints first.)
+  const [seededFor, setSeededFor] = useState<string | null>(null);
+  if (editId && storeHydrated && seededFor !== editId) {
+    setSeededFor(editId);
+    // Not found: the fallback view below takes over.
+    if (editingList) setDraft({
       title: editingList.title,
       description: editingList.description,
       tiers: editingList.tiers,
@@ -157,11 +157,10 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       backgroundImage: editingList.backgroundImage ?? '',
       is_nsfw: editingList.is_nsfw === true,
     });
-  }, [editId, storeHydrated, editingList]);
+  }
 
-  useEffect(() => {
-    if (!officialSlug || !officialTemplate || editSeeded.current === `official:${officialSlug}`) return;
-    editSeeded.current = `official:${officialSlug}`;
+  if (officialSlug && officialTemplate && seededFor !== `official:${officialSlug}`) {
+    setSeededFor(`official:${officialSlug}`);
     setDraft({
       title: officialTemplate.title,
       description: officialTemplate.description ?? '',
@@ -180,7 +179,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       is_nsfw: officialTemplate.is_nsfw === true,
       is_active: officialTemplate.is_active !== false,
     });
-  }, [officialSlug, officialTemplate]);
+  }
 
   const patch = (next: Partial<Draft>) => setDraft((d) => ({ ...d, ...next }));
 
@@ -360,7 +359,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
     <Button
       variant="primary"
       data-tier-create=""
-      onClick={submit}
+      onClick={() => { void submit(); }}
       disabled={publishingNow}
       className={cn(extra ?? 'min-h-12 2xl:min-h-hit-2xl px-8 2xl:px-10 text-base 2xl:text-lg')}
     >
@@ -409,30 +408,14 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
                 hint={t.nsfw.hint}
               />
               {isAdmin && !officialSlug && (
-                <div
-                  onClick={() => setOfficial(!official)}
-                  className="flex cursor-pointer select-none items-center gap-2.5 group"
-                >
-                  <Switch checked={official} onChange={setOfficial} ariaLabel={c.official} />
-                  <span className="type-strong-fluid text-text-primary transition-colors group-hover:text-accent-red">
-                    {c.official}
-                  </span>
-                </div>
+                <LabeledSwitch checked={official} onChange={setOfficial} label={c.official} />
               )}
               {isAdmin && (official || Boolean(officialSlug)) && (
-                <div
-                  onClick={() => patch({ is_active: !(draft.is_active ?? true) })}
-                  className="flex cursor-pointer select-none items-center gap-2.5 group"
-                >
-                  <Switch
-                    checked={draft.is_active ?? true}
-                    onChange={(checked) => patch({ is_active: checked })}
-                    ariaLabel={c.publishedLabel}
-                  />
-                  <span className="type-strong-fluid text-text-primary transition-colors group-hover:text-accent-red">
-                    {c.publishedLabel}
-                  </span>
-                </div>
+                <LabeledSwitch
+                  checked={draft.is_active ?? true}
+                  onChange={(checked) => patch({ is_active: checked })}
+                  label={c.publishedLabel}
+                />
               )}
             </div>
             <label className="md:col-span-1">
@@ -491,9 +474,9 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
           <div className="flex flex-col gap-6 2xl:gap-8">
             <ItemSources onAdd={addItems} existingIds={existingIds} locale={locale} />
             {skipped > 0 && (
-              <p role="status" className="text-xs 2xl:text-sm font-semibold text-accent-amber">
+              <output className="block text-xs 2xl:text-sm font-semibold text-accent-amber">
                 {formatMessage(c.itemsSkipped, { count: skipped }, locale)}
-              </p>
+              </output>
             )}
             <CreatorItems
               items={draft.items}

@@ -8,7 +8,6 @@ import {
   getPerkIconUrl,
   getCharacterAvatarUrl,
   formatPerkSlug,
-  getBackendBaseUrl,
   normalizeSearchText,
   matchesPerkSearch,
 } from '@/utils/perkUtils';

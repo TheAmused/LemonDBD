@@ -3,7 +3,7 @@
 //
 // Profile-page card with the switch for the authenticator-app sign-in. Off by default for everyone.
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ShieldCheck } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { TwoFactorConfirmModal, type TwoFactorAction } from '@/components/user/TwoFactorConfirmModal';
@@ -34,18 +34,26 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
   const [setupOpen, setSetupOpen] = useState(false);
   const [action, setAction] = useState<TwoFactorAction | null>(null);
 
-  const load = useCallback(async () => {
-    try {
-      setStatus(await fetchTwoFactorStatus());
-      setLoadFailed(false);
-    } catch {
-      setLoadFailed(true);
-    }
-  }, []);
+  // Bumped after enabling or changing two-factor sign-in, to read the status again.
+  const [reloadKey, setReloadKey] = useState(0);
+  const load = () => setReloadKey((key) => key + 1);
 
   useEffect(() => {
-    load();
-  }, [load, refreshTrigger]);
+    let cancelled = false;
+    void (async () => {
+      try {
+        const next = await fetchTwoFactorStatus();
+        if (cancelled) return;
+        setStatus(next);
+        setLoadFailed(false);
+      } catch {
+        if (!cancelled) setLoadFailed(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [refreshTrigger, reloadKey]);
 
   const enabledOn = status?.enabled_at
     ? new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(status.enabled_at))

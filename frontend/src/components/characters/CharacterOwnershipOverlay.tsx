@@ -3,6 +3,7 @@ import React from 'react';
 import { Lock, Check } from 'lucide-react';
 
 import { tip } from '@/components/common/Tooltip';
+import { Img } from '@/components/common/Img';
 export interface OwnershipClipOverlayProps {
   isOwned: boolean;
   isPartial: boolean;
@@ -25,7 +26,7 @@ export const OwnershipClipOverlay: React.FC<OwnershipClipOverlayProps> = ({
   return (
     <>
       {imageSrc && (
-        <img
+        <Img
           src={imageSrc}
           alt=""
           aria-hidden="true"

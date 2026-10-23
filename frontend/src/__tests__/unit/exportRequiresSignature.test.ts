@@ -12,7 +12,7 @@ const read = (rel: string) => fs.readFileSync(path.resolve(__dirname, '../..', r
 
 test('ExportModal shows nothing exportable until the server has signed the document', () => {
   const src = read('components/common/ExportModal.tsx');
-  assert.ok(src.includes('setSignFailed(true)'), 'a failed signature is reported');
+  assert.ok(src.includes('const signFailed = current !== null && current.exportedDoc === null'), 'a failed signature is reported');
   assert.ok(src.includes('dict.tierLists.signFailed'), 'with a translated message');
   assert.ok(!/useState<string>\(\(\) => \(unsignedDoc/.test(src), 'the JSON starts empty, not as the unsigned document');
   assert.ok(!/finalDoc = currentUnsignedDoc/.test(src), 'no unsigned fallback');

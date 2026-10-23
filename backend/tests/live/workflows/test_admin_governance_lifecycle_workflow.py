@@ -33,14 +33,15 @@ class TestAdminGovernanceLifecycleWorkflow:
 
         promote_res = admin_client.put(
             f"/api/v1/users/{target_id}",
-            json={"role": "admin", "is_active": True},
+            # Granting (and later taking back) admin rights needs the acting admin's own password.
+            json={"role": "admin", "is_active": True, "current_password": "adminpassword123"},
         )
         assert promote_res.status_code == 200
         assert promote_res.get_json()["user"]["role"] == "admin"
 
         deact_res = admin_client.put(
             f"/api/v1/users/{target_id}",
-            json={"role": "user", "is_active": False},
+            json={"role": "user", "is_active": False, "current_password": "adminpassword123"},
         )
         assert deact_res.status_code == 200
         assert deact_res.get_json()["user"]["is_active"] is False
@@ -59,7 +60,7 @@ class TestAdminGovernanceLifecycleWorkflow:
         stats = stats_res.get_json()
         assert "active_users" in stats or "perks_count" in stats or isinstance(stats, dict)
 
-        export_res = admin_client.get("/api/v1/admin/database/export?targets=perks,characters")
+        export_res = admin_client.post("/api/v1/admin/database/export", json={"targets": ["perks", "survivors", "killers"]})
         assert export_res.status_code == 200
         export_data = export_res.get_json()
         assert isinstance(export_data, dict)

@@ -1,15 +1,16 @@
 // frontend/src/services/gauntletStreakApi.ts
-import {
-  DEFAULT_GAUNTLET_GAME_MODE,
+import type {
   BuyableBoost,
   GauntletGameMode,
   Role,
   RunResponse,
   SubmitResultResponse,
   StatsResponse,
-  GauntletRun,
+  GauntletRun} from '../types/gauntletStreak';
+import {
+  DEFAULT_GAUNTLET_GAME_MODE
 } from '../types/gauntletStreak';
-import { CompletionsResponse } from '../types/challengeCompletion';
+import type { CompletionsResponse } from '../types/challengeCompletion';
 import { createStreakApiClient } from './streakApiClient';
 
 const { getJson, postJson } = createStreakApiClient('gauntlet-streak');

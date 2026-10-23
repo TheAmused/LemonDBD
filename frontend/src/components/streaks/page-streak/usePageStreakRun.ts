@@ -2,7 +2,7 @@
 'use client';
 
 import { useCallback } from 'react';
-import { PageStreakRun, PageStreakStats } from '@/types/pageStreak';
+import type { PageStreakRun, PageStreakStats } from '@/types/pageStreak';
 import * as api from '@/services/pageStreakApi';
 import { useChallengeRun } from '../useChallengeRun';
 
@@ -25,8 +25,8 @@ export function usePageStreakRun(killer: string) {
       if (!token) return;
       const updated = await mutate(() => api.submitResult(token, killer, page, perks, result));
       if (!updated) return;
-      loadStats();
-      if (updated.status === 'completed') loadCompletions();
+      void loadStats();
+      if (updated.status === 'completed') void loadCompletions();
     },
     [token, killer, mutate, loadStats, loadCompletions]
   );

@@ -9,11 +9,12 @@ import {
   VeiledCompassIcon,
 } from '@/components/icons/DbdIcons';
 import type { RomancePersonaResult } from '@/utils/smashPersona';
+import { Img } from '@/components/common/Img';
 
 /** The mark on a persona's badge: its own picture if it has one, else the icon its archetype names. */
 export function PersonaIcon({ persona }: { persona: RomancePersonaResult }) {
   if (persona.iconUrl) {
-    return <img src={persona.iconUrl} alt={persona.title} className="h-6 w-6 object-contain rounded-chip" />;
+    return <Img src={persona.iconUrl} alt={persona.title} className="h-6 w-6 object-contain rounded-chip" />;
   }
   switch (persona.iconName) {
     case 'compass':

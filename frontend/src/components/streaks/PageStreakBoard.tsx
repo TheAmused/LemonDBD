@@ -5,7 +5,7 @@ import { RotateCcw } from 'lucide-react';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { PageStreakRoster } from './page-streak/PageStreakRoster';
 import { fetchRoster, resetAllRuns } from '@/services/pageStreakApi';
-import { RosterEntry } from '@/types/pageStreak';
+import type { RosterEntry } from '@/types/pageStreak';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from '@/context/DictionaryContext';
 
@@ -18,28 +18,46 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
   const dict = useDictionary();
   const { token } = useAuth();
   const [roster, setRoster] = useState<RosterEntry[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Loading until the first roster for this session has arrived (a retry shows as loading too).
+  const [loadedFor, setLoadedFor] = useState<string | null>(null);
+  const [reloading, setReloading] = useState(false);
+  const loading = reloading || !token || loadedFor !== token;
   const [error, setError] = useState<string | null>(null);
   const [confirmingResetAll, setConfirmingResetAll] = useState(false);
   const [resettingAll, setResettingAll] = useState(false);
 
+  /** Fetches the roster; its state is set in the promise callbacks only. */
+  const fetchInto = useCallback(
+    (sessionToken: string) =>
+      fetchRoster(sessionToken).then(
+        ({ roster: fetchedRoster }) => {
+          setRoster(fetchedRoster);
+          setError(null);
+        },
+        (err: unknown) => setError(err instanceof Error ? err.message : 'Could not load the roster')
+      ),
+    []
+  );
+
   const load = useCallback(async () => {
     if (!token) return;
-    setLoading(true);
+    setReloading(true);
     setError(null);
     try {
-      const { roster: fetchedRoster } = await fetchRoster(token);
-      setRoster(fetchedRoster);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not load the roster');
+      await fetchInto(token);
     } finally {
-      setLoading(false);
+      setReloading(false);
     }
-  }, [token]);
+  }, [token, fetchInto]);
 
   useEffect(() => {
-    load();
-  }, [load]);
+    if (!token) return;
+    let cancelled = false;
+    void fetchInto(token).finally(() => !cancelled && setLoadedFor(token));
+    return () => {
+      cancelled = true;
+    };
+  }, [token, fetchInto]);
 
   const handleResetAll = async () => {
     if (!token) return;
@@ -77,11 +95,11 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
         confirmLabel={dict.streaks.resetConfirm}
         cancelLabel={dict.streaks.cancel}
         busy={resettingAll}
-        onConfirm={handleResetAll}
+        onConfirm={() => { void handleResetAll(); }}
         onCancel={() => setConfirmingResetAll(false)}
       />
 
-      <PageStreakRoster locale={locale} roster={roster} loading={loading} error={error} onRetry={load} />
+      <PageStreakRoster locale={locale} roster={roster} loading={loading} error={error} onRetry={() => { void load(); }} />
     </div>
   );
 };

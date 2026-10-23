@@ -9,6 +9,7 @@ import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { Badge } from '@/components/common/Badge';
+import { Img } from '@/components/common/Img';
 export type CharacterHeroAvatarTranslations = Pick<CharacterDetailDictionary, 'view3DModel' | 'dlcLicensed' | 'dlcOriginal'>;
 
 interface CharacterHeroAvatarProps {
@@ -36,22 +37,14 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
 
   return (
     <div className="lg:col-span-4 flex flex-col items-center w-full">
-      <div
-        role="button"
-        tabIndex={0}
+      <button type="button"
         onClick={onOpenModelModal}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            onOpenModelModal();
-          }
-        }}
         className="group relative w-full max-w-70 sm:max-w-80 aspect-[3/4] rounded-card overflow-hidden border-2 border-border-color bg-bg-elevated shadow-lg dark:shadow-2xl cursor-pointer hover:border-accent-red/60 focus:outline-none focus:ring-2 focus:ring-accent-red transition-all duration-300 flex items-center justify-center"
         {...tip(t.view3DModel, undefined, 'action')}
         aria-label={heroAriaLabel}
       >
         {!imgFailed ? (
-          <img
+          <Img
             src={getAvatarUrl(backendBase, character, isSurvivor)}
             alt={character.name}
             loading="eager"
@@ -90,7 +83,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
             {character.is_licensed ? t.dlcLicensed : t.dlcOriginal}
           </Badge>
         </div>
-      </div>
+      </button>
     </div>
   );
 };

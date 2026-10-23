@@ -246,6 +246,7 @@ def test_admin_preview_lists_every_reporters_reason_without_identities(
     assert all(set(r) == {"reason", "notes", "created_at"} for r in data["reports"])
     assert data["attributed"] is True
     assert data["author_active"] is True
+    assert data["author_standing"] == "active"
     assert data["author_is_admin"] is False
     assert data["evidence_payload"] == canonicalize_payload(payload)
 
@@ -364,6 +365,9 @@ def test_expired_evidence_purge_is_scheduled_and_wipes_payloads() -> None:
 
     class SchedulerConfig(TestingConfig):
         TESTING = False
+        # TESTING is off, so create_app() runs the production key checks: give it real keys.
+        SECRET_KEY = JWT_SECRET_KEY = "scheduler-test-" + "k" * 40
+        TWO_FACTOR_ENCRYPTION_KEY = ""
         SCHEDULER_ENABLED = True
         SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
 

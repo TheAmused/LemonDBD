@@ -4,7 +4,6 @@ import assert from 'node:assert';
 import {
   safeGetJSON,
   safeSetJSON,
-  safeRemoveItem,
   getDrawnPerksForRole,
   saveDrawnPerksForRole,
   clearDrawnPerksForRole,
@@ -20,8 +19,6 @@ import {
   filterPerksByMutator,
   pickRandomLoadout,
   buildDrawnSlots,
-  isExhaustionPerk,
-  isHexOrBoonPerk,
 } from '@/components/generator/lib/perkPicker';
 import { Perk } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';

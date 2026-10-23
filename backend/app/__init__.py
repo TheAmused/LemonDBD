@@ -12,8 +12,11 @@ from app.core.config import Config, fatal_secret_problems, weak_secret_warnings
 from app.core.extensions import db, mail, migrate
 from app.core.json_provider import ORJSONProvider
 from app.core.limiter import limiter
+from app.core.logging_setup import configure_logging, init_request_ids
 from app.core.static_files import static_max_age
 import app.models  # noqa: F401
+
+logger = logging.getLogger(__name__)
 
 
 def create_app(config_class: Type[Config] | None = None) -> Flask:
@@ -30,16 +33,16 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     else:
         flask_app.config.from_object(config_class)
 
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-    )
+    configure_logging()
+    init_request_ids(flask_app)
 
     fatal = fatal_secret_problems(flask_app.config)
     if fatal:
         raise RuntimeError(
             "Refusing to start: " + "; ".join(fatal) + ". Set SECRET_KEY and JWT_SECRET_KEY to long random "
-            "values (python -c \"import secrets; print(secrets.token_urlsafe(48))\")."
+            "values (python -c \"import secrets; print(secrets.token_urlsafe(48))\"), give "
+            "TWO_FACTOR_ENCRYPTION_KEY a fresh Fernet key or leave it empty, and list the exact "
+            "CORS_ORIGINS (or leave it empty to allow only FRONTEND_URL)."
         )
 
     for problem in weak_secret_warnings(flask_app.config):
@@ -119,11 +122,11 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
             try:
                 db.session.rollback()
             except Exception:
-                pass
+                logger.debug("Rollback at app-context teardown failed", exc_info=True)
         try:
             db.session.remove()
         except Exception:
-            pass
+            logger.debug("Removing the session at app-context teardown failed", exc_info=True)
 
     def _init_db_safely():
         is_testing = flask_app.config.get("TESTING", False) or ("PYTEST_CURRENT_TEST" in os.environ)
@@ -131,14 +134,14 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
             try:
                 db.create_all()
             except Exception:
-                pass
+                logger.warning("create_all() failed while setting up the test database", exc_info=True)
             return
 
         is_pg = False
         try:
             is_pg = db.engine.dialect.name in ("postgresql", "postgres")
         except Exception:
-            pass
+            logger.debug("Could not read the database dialect", exc_info=True)
 
         if is_pg:
             try:
@@ -147,7 +150,7 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
                     if not exists:
                         raw_conn.execute(text("CREATE DATABASE umami;"))
             except Exception:
-                pass
+                logger.warning("Could not create the umami database; Umami will fail to start until it exists", exc_info=True)
 
             with db.engine.connect() as conn:
                 acquired = conn.execute(text("SELECT pg_try_advisory_lock(8882026);")).scalar()

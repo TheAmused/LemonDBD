@@ -1,18 +1,21 @@
 'use client';
 // frontend/src/components/character-detail/components/KillerEquipmentSection.tsx
 import React, { useMemo } from 'react';
-import {
+import type {
   AddonItem,
   EquipmentItem,
+  CharacterDetailDictionary} from '../types';
+import {
   getAssetUrl,
   getRarityTileStyle,
-  getRarityRank,
-  CharacterDetailDictionary,
+  getRarityRank
 } from '../types';
 import { tip } from '@/components/common/Tooltip';
 import { toTitleCase } from '@/utils/textCase';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { AccordionSection } from '@/components/common/AccordionSection';
+import { TileButton } from '@/components/common/TileButton';
+import { Img } from '@/components/common/Img';
 
 interface KillerEquipmentSectionProps {
   addons?: (AddonItem | EquipmentItem)[];
@@ -59,14 +62,14 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
             const displayItem = { ...item, name: toTitleCase(item.name) };
 
             return (
-              <div
+              <TileButton
                 key={`${item.name}-${idx}`}
                 {...tip(displayItem.name, undefined, 'item')}
                 onClick={() => onSelectEquipment(displayItem)}
-                className={`relative group rounded-card border-2 p-2.5 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-accent-red h-24 w-24 sm:h-28 sm:w-28 lg:h-32 lg:w-32 shadow-lg ${rarityStyle.bg}`}
+                className={`relative group rounded-card border-2 p-2.5 flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 focus-visible:ring-accent-red h-24 w-24 sm:h-28 sm:w-28 lg:h-32 lg:w-32 shadow-lg ${rarityStyle.bg}`}
                 style={rarityStyle.style}
               >
-                <img
+                <Img
                   src={iconSrc}
                   alt={displayItem.name}
                   className="h-full w-full object-contain filter drop-shadow-lg"
@@ -74,7 +77,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
                     (e.target as HTMLImageElement).style.display = 'none';
                   }}
                 />
-              </div>
+              </TileButton>
             );
           })}
         </div>

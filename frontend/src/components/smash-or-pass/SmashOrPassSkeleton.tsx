@@ -19,8 +19,7 @@ export const SmashHubSkeleton: React.FC<SmashOrPassSkeletonProps> = ({ className
   const loadingLabel = ariaLabel || dict.smashOrPass.loadingArena;
 
   return (
-    <div
-      role="status"
+    <output
       aria-label={loadingLabel}
       aria-busy="true"
       className={`relative min-h-screen-smash flex flex-col items-center justify-center p-6 select-none ${className}`}
@@ -32,7 +31,7 @@ export const SmashHubSkeleton: React.FC<SmashOrPassSkeletonProps> = ({ className
         needleSpeed={1.0}
         label={loadingLabel}
       />
-    </div>
+    </output>
   );
 };
 
@@ -45,9 +44,8 @@ export const SmashLeaderboardSkeleton: React.FC<{ count?: number;
   const loadingLabel = ariaLabel || dict.smashOrPass.loadingRankings;
 
   return (
-    <div
+    <output
       className="py-8 flex flex-col items-center justify-center select-none"
-      role="status"
       aria-busy="true"
       aria-label={loadingLabel}
     >
@@ -58,6 +56,6 @@ export const SmashLeaderboardSkeleton: React.FC<{ count?: number;
         needleSpeed={1.0}
         label={loadingLabel}
       />
-    </div>
+    </output>
   );
 };

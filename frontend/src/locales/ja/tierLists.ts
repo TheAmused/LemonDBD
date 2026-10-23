@@ -237,6 +237,7 @@ export default {
   reportNotesPlaceholder: "このコンテンツが不適切である理由を入力してください...",
   reportSubmit: "報告を送信",
   reportSubmitting: "送信中...",
+  reportPaused: "通報は現在停止中です。しばらくしてからもう一度お試しください。",
   reportSuccess: "報告を送信しました。LemonDBDの安全維持にご協力いただきありがとうございます。",
   reportAlreadyBanned: "このコンテンツはすでに利用停止となり、削除されました。",
   reportError: "報告の送信に失敗しました。もう一度お試しください。",

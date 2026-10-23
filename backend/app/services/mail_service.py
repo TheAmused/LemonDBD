@@ -149,10 +149,13 @@ def send_verification_email(user: User) -> None:
         logger.warning(f"Failed to send verification email to '{user.email}': {err}")
 
 
-def send_password_reset_email(user: User) -> None:
-    """Best-effort send of the password reset link. Never raises."""
+def send_password_reset_email(user: User, token: str) -> None:
+    """Best-effort send of the password reset link. Never raises.
+
+    `token` is the raw token: the database only holds its hash, so it cannot be read back from `user`.
+    """
     frontend_url = current_app.config.get("FRONTEND_URL", "http://localhost:3000")
-    link = f"{frontend_url}/en/reset-password?token={user.reset_token}"
+    link = f"{frontend_url}/en/reset-password?token={token}"
     expires_in = describe_duration(reset_lifetime())
 
     body_html = f"""\

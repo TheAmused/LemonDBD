@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { GauntletPlayerLoadout, Perk, Role, TierInfo } from '@/types/gauntletStreak';
 import type { OwnedCharacterItem } from '@/components/streaks/useOwnedRoster';
-import { DrawPhase } from '@/components/streaks/gauntlet/useTargetDraw';
+import type { DrawPhase } from '@/components/streaks/gauntlet/useTargetDraw';
 import { User, Sparkles, Star, Lock, HelpCircle } from 'lucide-react';
 import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
@@ -12,6 +12,7 @@ import { PerkIcon } from '@/components/ui/PerkIcon';
 import { DiamondSlot } from '@/components/ui/DiamondSlot';
 import { useDictionary } from '@/context/DictionaryContext';
 import { baseSlots } from '@/utils/perkSlots';
+import { Img } from '@/components/common/Img';
 
 const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[] = []) => {
   if (!name) return null;
@@ -27,10 +28,10 @@ export const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPh
   phase,
   characters,
 }) => {
-  const [failed, setFailed] = useState<boolean>(false);
+  // The name whose picture failed; another killer gets its own try.
+  const [failedName, setFailedName] = useState<string | undefined>(undefined);
+  const failed = failedName !== undefined && failedName === name;
   const src = name ? avatarUrlFor(name, role, characters) : null;
-
-  useEffect(() => setFailed(false), [name]);
 
   const motion = phase === 'landed' ? 'gn-land-frame' : phase === 'spinning' ? 'gn-spin-frame' : '';
 
@@ -45,12 +46,12 @@ export const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPh
   }
 
   return (
-    <img
+    <Img
       src={src}
       alt=""
       aria-hidden="true"
       className={`w-full h-full max-w-none object-cover rounded-card ${motion}`}
-      onError={() => setFailed(true)}
+      onError={() => setFailedName(name)}
     />
   );
 };
@@ -76,20 +77,11 @@ const PerkArt: React.FC<{ perk: Perk; size: string }> = ({ perk, size }) => {
 
 type SlotSize = 'large' | 'small' | 'compact';
 
-const SLOT_ICON_BASE: Record<SlotSize, string> = {
-  large: 'w-11 h-11 sm:w-14 sm:h-14 xl:w-18 xl:h-18',
-  small: 'w-11 h-11 xl:w-16 xl:h-16',
-  compact: 'w-10 h-10 xl:w-12 xl:h-12',
-};
-
 const CAPTION_CLASS: Record<SlotSize, string> = {
   large: 'mt-4 w-20 sm:w-24 xl:mt-5 xl:w-28',
   small: 'mt-3 w-20 xl:mt-4 xl:w-24',
   compact: 'mt-3 w-20',
 };
-
-const slotIconBase = (size: SlotSize) =>
-  `${SLOT_ICON_BASE[size]} shrink-0 rounded-chip rotate-45 flex items-center justify-center border relative`;
 
 const BADGE_TEXT_SIZE: Record<SlotSize, string> = {
   large: 'text-micro',
@@ -182,70 +174,78 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, disp
           {dict.streaks.goesInBare}
         </p>
       )}
-      <div className={large ? 'flex items-start gap-5 sm:gap-7 xl:gap-12' : size === 'compact' ? 'flex items-start gap-4 xl:gap-6' : 'flex items-start gap-5 xl:gap-10'} role="list">
+      <ul className={large ? 'flex items-start gap-5 sm:gap-7 xl:gap-12' : size === 'compact' ? 'flex items-start gap-4 xl:gap-6' : 'flex items-start gap-5 xl:gap-10'}>
         {slots.map((idx) => {
           if (idx === 0 && perkLimit === 0 && randomPerks.length > 0) {
             const perk = randomPerks[0];
             return (
-              <SlotChip
-                key="random-perk"
-                size={size}
-                iconClassName="border-transparent"
-                caption={perkDisplayName(perk.name)}
-              >
-                <PerkArt perk={perk} size={perkArtSize} />
-              </SlotChip>
+              <li key="random-perk">
+                <SlotChip
+                  size={size}
+                  iconClassName="border-transparent"
+                  caption={perkDisplayName(perk.name)}
+                >
+                  <PerkArt perk={perk} size={perkArtSize} />
+                </SlotChip>
+              </li>
             );
           }
 
           if (idx >= ownSlots && idx < ownSlots + bonusSlots) {
             // A slot bought with tokens: any perk the player likes, so it looks like a survivor's free slot.
             return (
-              <SlotChip
-                key={`bonus-${idx}`}
-                size={size}
-                iconClassName="bg-bg-elevated border-border-color text-text-muted"
-              >
-                <HelpCircle className={iconSize} />
-              </SlotChip>
+              <li key={`bonus-${idx}`}>
+                <SlotChip
+                  size={size}
+                  iconClassName="bg-bg-elevated border-border-color text-text-muted"
+                >
+                  <HelpCircle className={iconSize} />
+                </SlotChip>
+              </li>
             );
           }
 
           if (idx >= perkLimit) {
             return (
-              <SlotChip
-                key={`locked-${idx}`}
-                size={size}
-                iconClassName="bg-bg-elevated/60 border-dashed border-border-color opacity-60 text-text-muted"
-              >
-                <Lock className={iconSize} />
-              </SlotChip>
+              <li key={`locked-${idx}`}>
+                <SlotChip
+                  size={size}
+                  iconClassName="bg-bg-elevated/60 border-dashed border-border-color opacity-60 text-text-muted"
+                >
+                  <Lock className={iconSize} />
+                </SlotChip>
+              </li>
             );
           }
 
           if (charactersPerksOnly) {
             // Every filled slot is one of the killer's own teachables, and which ones is the player's pick,
             // so it is drawn as the generic teachable slot rather than a specific perk that would look assigned.
-            return <TeachableSlot key={`char-slot-${idx}`} size={size} accent={teachableAccent} />;
+            return <li key={`char-slot-${idx}`}>
+              <TeachableSlot size={size} accent={teachableAccent} />
+            </li>;
           }
 
           if (idx === 0) {
             // One of several choices, not a specific assigned perk -- a symbol
             // for "your character's own unique perk goes here", not a preview.
-            return <TeachableSlot key="character-slot" size={size} accent={teachableAccent} />;
+            return <li key="character-slot">
+              <TeachableSlot size={size} accent={teachableAccent} />
+            </li>;
           }
 
           return (
-            <SlotChip
-              key={`free-${idx}`}
-              size={size}
-              iconClassName="bg-bg-elevated border-border-color text-text-muted"
-            >
-              <HelpCircle className={iconSize} />
-            </SlotChip>
+            <li key={`free-${idx}`}>
+              <SlotChip
+                size={size}
+                iconClassName="bg-bg-elevated border-border-color text-text-muted"
+              >
+                <HelpCircle className={iconSize} />
+              </SlotChip>
+            </li>
           );
         })}
-      </div>
+      </ul>
     </div>
   );
 };
@@ -274,7 +274,7 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
       className={`${sizeClass} shrink-0 rounded-card bg-bg-elevated border-2 border-border-color flex items-center justify-center overflow-hidden`}
     >
       {avatarSrc && !avatarError ? (
-        <img
+        <Img
           src={avatarSrc}
           alt={displayName}
           className="w-full h-full max-w-none object-cover"

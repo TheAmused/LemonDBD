@@ -2,14 +2,14 @@
 //
 // Route-level loading UI while this segment's bundle and data resolve. The spinner label comes
 // from the dictionary (DbdSpinner reads it itself), so nothing here is hardcoded English.
+// /welcome has no shell (shellRoutes.ts), so this centres in the whole viewport.
 import { DbdSpinner } from '@/components/common/DbdSpinner';
-import { PageShellFallback } from '@/components/layout/PageShellFallback';
+import { RouteLoading } from '@/components/layout/RouteLoading';
 
 export default function WelcomeLoading() {
   return (
-    <PageShellFallback
-      mainClassName="flex items-center justify-center"
-      skeleton={<DbdSpinner size="responsive" layout="inline" accent="blood" />}
-    />
+    <RouteLoading fullScreen>
+      <DbdSpinner size="responsive" layout="inline" accent="blood" />
+    </RouteLoading>
   );
 }

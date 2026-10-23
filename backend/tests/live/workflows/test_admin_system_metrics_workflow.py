@@ -17,6 +17,6 @@ class TestAdminSystemMetricsWorkflow:
         stats = stats_res.get_json()
         assert "perks_count" in stats or "active_users" in stats or isinstance(stats, dict)
 
-        export_res = admin_client.get("/api/v1/admin/database/export?targets=perks,characters")
+        export_res = admin_client.post("/api/v1/admin/database/export", json={"targets": ["perks", "survivors", "killers"]})
         assert export_res.status_code == 200
         assert isinstance(export_res.get_json(), dict)

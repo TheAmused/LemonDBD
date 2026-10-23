@@ -237,6 +237,7 @@ export default {
   reportNotesPlaceholder: "Explain what makes this content inappropriate...",
   reportSubmit: "Submit report",
   reportSubmitting: "Submitting...",
+  reportPaused: "Reporting is paused at the moment. Please try again later.",
   reportSuccess: "Report submitted. Thank you for helping keep LemonDBD safe.",
   reportAlreadyBanned: "This content was already banned and has been removed.",
   reportError: "Failed to submit report. Please try again.",

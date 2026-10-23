@@ -1,19 +1,19 @@
 'use client';
 // frontend/src/components/user/UserProfileClient.tsx
 
+import { logger } from '@/utils/logger';
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Button } from '@/components/common/Button';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import { LemonIcon } from '@/components/LemonIcon';
-import { PageShell } from '@/components/layout/PageShell';
 import { CampfireHeader } from '@/components/user/CampfireHeader';
 import { DualMainsShowcase } from '@/components/user/DualMainsShowcase';
 import { UserProfileForm } from '@/components/user/UserProfileForm';
 import { UserBugReportsDrawer } from '@/components/user/UserBugReportsDrawer';
 import { UserProfileSkeleton } from '@/components/user/UserProfileSkeleton';
-import { UserBugReport, StatusFeedback } from '@/types/userProfile';
+import type { UserBugReport, StatusFeedback } from '@/types/userProfile';
 import { fetchMyBugReports, markBugReportSeen, uploadAvatar, ApiError } from '@/services/userProfileApi';
 import { useUserShowcase } from '@/hooks/useUserShowcase';
 import { User } from 'lucide-react';
@@ -46,7 +46,10 @@ export function UserProfileClient() {
   const [avatarFeedback, setAvatarFeedback] = useState<StatusFeedback | null>(null);
 
   const [myReports, setMyReports] = useState<UserBugReport[]>([]);
-  const [loadingReports, setLoadingReports] = useState(false);
+  // The first page loads with the profile; a page change shows as loading until its answer is in.
+  const [firstReportsLoaded, setFirstReportsLoaded] = useState(false);
+  const [pagingReports, setPagingReports] = useState(false);
+  const loadingReports = pagingReports || (isAuthenticated && !firstReportsLoaded);
   const [reportsTotal, setReportsTotal] = useState(0);
   const [unreadReports, setUnreadReports] = useState(0);
   const [reportsPage, setReportsPage] = useState(1);
@@ -56,42 +59,49 @@ export function UserProfileClient() {
   const reportsRequestRef = useRef<AbortController | null>(null);
   const [reportSubmitted, setReportSubmitted] = useState(false);
 
-  const fetchMyReports = useCallback(async (page: number = 1, signal?: AbortSignal) => {
-    if (!isAuthenticated) return;
-
+  /**
+   * Fetches one page of the reports; a newer request cancels the one in flight. State is set in its
+   * callbacks. Resolves to whether this was still the newest request when it settled.
+   */
+  const fetchMyReports = useCallback((page: number = 1, signal?: AbortSignal): Promise<boolean> => {
     reportsRequestRef.current?.abort();
     const controller = new AbortController();
     reportsRequestRef.current = controller;
     signal?.addEventListener('abort', () => controller.abort());
 
-    setLoadingReports(true);
-    try {
-      const result = await fetchMyBugReports(page, REPORTS_PER_PAGE, controller.signal);
-      setMyReports(result.reports);
-      setReportsTotal(result.total);
-      setUnreadReports(result.unreadCount);
-      setReportsPage(result.page);
-      setReportsTotalPages(result.totalPages);
-    } catch (err) {
-      if (err instanceof DOMException && err.name === 'AbortError') return;
-      console.error('Failed to fetch user bug reports:', err);
-    } finally {
-      if (reportsRequestRef.current === controller) setLoadingReports(false);
-    }
-  }, [isAuthenticated]);
+    return fetchMyBugReports(page, REPORTS_PER_PAGE, controller.signal).then(
+      (result) => {
+        setMyReports(result.reports);
+        setReportsTotal(result.total);
+        setUnreadReports(result.unreadCount);
+        setReportsPage(result.page);
+        setReportsTotalPages(result.totalPages);
+      },
+      (err: unknown) => {
+        if (err instanceof DOMException && err.name === 'AbortError') return;
+        logger.error('Failed to fetch user bug reports:', err);
+      }
+    ).then(() => reportsRequestRef.current === controller);
+  }, []);
 
   useEffect(() => {
     if (!isAuthenticated) return;
     const controller = new AbortController();
-    fetchMyReports(1, controller.signal);
+    void fetchMyReports(1, controller.signal).finally(() => {
+      if (!controller.signal.aborted) setFirstReportsLoaded(true);
+    });
     return () => controller.abort();
   }, [isAuthenticated, fetchMyReports]);
 
   const handleReportsPageChange = useCallback(
     (page: number) => {
-      fetchMyReports(page);
+      if (!isAuthenticated) return;
+      setPagingReports(true);
+      void fetchMyReports(page).then((newest) => {
+        if (newest) setPagingReports(false);
+      });
     },
-    [fetchMyReports]
+    [isAuthenticated, fetchMyReports]
   );
 
   // The local preview of an avatar being uploaded is a blob: URL; it is released once replaced.
@@ -103,7 +113,7 @@ export function UserProfileClient() {
   const handleReportSeen = useCallback((id: number) => {
     setMyReports((prev) => prev.map((r) => (r.id === id ? { ...r, feedback_unread: false } : r)));
     setUnreadReports((count) => Math.max(0, count - 1));
-    markBugReportSeen(id).catch((err) => console.error('Failed to mark bug report as seen:', err));
+    markBugReportSeen(id).catch((err) => logger.error('Failed to mark bug report as seen:', err));
   }, []);
 
   const handleAvatarFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -143,7 +153,7 @@ export function UserProfileClient() {
 
   if (!isAuthenticated || !user) {
     return (
-      <div className="min-h-screen text-text-primary flex flex-col items-center justify-center p-6 text-center dbd-fog-overlay transition-colors duration-300">
+      <div className="flex min-h-skeleton-page flex-1 flex-col items-center justify-center p-6 text-center text-text-primary">
         <Surface padding="none" className="max-w-md w-full text-text-primary p-8 backdrop-blur-xl shadow-xl space-y-4">
           <IconTile tone="amber" size="lg" className="mx-auto">
             <LemonIcon className="h-10 w-10 text-accent-amber" />
@@ -178,16 +188,12 @@ export function UserProfileClient() {
   }
 
   return (
-    <PageShell
-      locale={currentLocale}
-      activeCategory="user"
-      mainClassName="overflow-y-auto relative"
-    >
+    <>
       <div className="relative z-10 max-w-5xl xl:max-w-6xl 2xl:max-w-profile 3xl:max-w-profile-xl w-full mx-auto space-y-6 sm:space-y-8 2xl:space-y-10 py-4 sm:py-6 lg:py-8 2xl:py-10">
         <input
           type="file"
           ref={fileInputRef}
-          onChange={handleAvatarFileChange}
+          onChange={(e) => { void handleAvatarFileChange(e); }}
           accept="image/png,image/jpeg,image/webp,image/gif"
           className="hidden"
         />
@@ -250,10 +256,10 @@ export function UserProfileClient() {
           // Only a new report changes the list; closing the dialog unused no longer resets it to page 1.
           if (reportSubmitted) {
             setReportSubmitted(false);
-            fetchMyReports(1);
+            void fetchMyReports(1);
           }
         }}
       />
-    </PageShell>
+    </>
   );
 }

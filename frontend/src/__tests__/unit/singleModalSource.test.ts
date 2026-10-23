@@ -20,7 +20,7 @@ function walk(dir: string, out: string[] = []): string[] {
 test('no hand-written dialogs: aria-modal / role="dialog" only inside common/Modal.tsx', () => {
   const offenders = walk(ROOT)
     .filter((f) => !ALLOWED.has(f))
-    .filter((f) => /aria-modal|role="dialog"/.test(fs.readFileSync(f, 'utf-8')))
+    .filter((f) => /aria-modal|role="dialog"|<dialog\b/.test(fs.readFileSync(f, 'utf-8')))
     .map((f) => path.relative(ROOT, f));
   assert.deepStrictEqual(offenders, []);
 });

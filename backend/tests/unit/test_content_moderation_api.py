@@ -1,12 +1,10 @@
 # backend/tests/unit/test_content_moderation_api.py
 import pytest
-from datetime import datetime, timezone, timedelta
 from flask.testing import FlaskClient
 from sqlalchemy.orm import Session
 
-from app.core.extensions import db
 from app.core.security import generate_token
-from app.models.content_moderation import ContentReport, ContentReportSubscriber, ContentRevocation
+from app.models.content_moderation import ContentReport, ContentRevocation
 from app.models.user import User
 from app.services.content_crypto import canonicalize_payload, compute_content_hash, sign_content
 

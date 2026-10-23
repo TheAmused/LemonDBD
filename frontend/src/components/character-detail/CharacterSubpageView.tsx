@@ -2,7 +2,7 @@
 // frontend/src/components/character-detail/CharacterSubpageView.tsx
 
 import React from 'react';
-import { CharacterDetailPayload, CharacterItem } from './types';
+import type { CharacterDetailPayload, CharacterItem } from './types';
 import { SurvivorDetailView } from './SurvivorDetailView';
 import { KillerDetailView } from './KillerDetailView';
 

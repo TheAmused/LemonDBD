@@ -4,6 +4,7 @@ import assert from 'node:assert';
 import fs from 'node:fs';
 import path from 'node:path';
 import { PerkFilters, computeHasActiveFilters } from '@/components/PerkFilters';
+import { matchShell } from '@/components/layout/shellRoutes';
 
 test('PerkFilters is properly exported', () => {
   assert.strictEqual(typeof PerkFilters, 'function');
@@ -70,7 +71,9 @@ test('the Perks Vault stat banner ("Vault Total" / stat pill row) is gone from t
 });
 
 test('the perks page uses a fixed-viewport layout (h-dvh) instead of relying on page-level scroll', () => {
-  assert.ok(PERKS_PAGE_SRC.includes('h-dvh'));
+  // The shell registry (shellRoutes.ts) owns the outer wrapper; the page keeps its inner scroll area.
+  const shell = matchShell(['perks']).shell;
+  assert.ok(shell && shell.outerClassName?.includes('h-dvh'));
   assert.ok(PERKS_PAGE_SRC.includes('overflow-y-auto'));
 });
 

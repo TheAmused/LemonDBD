@@ -23,7 +23,7 @@ def _actions() -> list[str]:
 @pytest.mark.unit
 def test_creating_a_user_is_audited(client: FlaskClient, admin) -> None:
     _, headers = admin
-    res = client.post("/api/v1/users", json={"login": "deputy", "username": "deputy", "email": "deputy@example.com", "password": "password123", "role": "admin"}, headers=headers)
+    res = client.post("/api/v1/users", json={"login": "deputy", "username": "deputy", "email": "deputy@example.com", "password": "password123", "role": "admin", "current_password": "password123"}, headers=headers)
     assert res.status_code == 201
     assert "user_created" in _actions()
 
@@ -31,24 +31,31 @@ def test_creating_a_user_is_audited(client: FlaskClient, admin) -> None:
 @pytest.mark.unit
 def test_export_and_purge_are_audited(client: FlaskClient, admin) -> None:
     _, headers = admin
-    assert client.get("/api/v1/admin/database/export?targets=perks&include_assets=false", headers=headers).status_code == 200
-    assert client.post("/api/v1/admin/database/purge", json={"targets": ["perks"]}, headers=headers).status_code == 200
+    assert client.post("/api/v1/admin/database/export", json={"targets": ["perks"], "include_assets": False}, headers=headers).status_code == 200
+    assert client.post("/api/v1/admin/database/purge", json={"targets": ["perks"], "current_password": "password123"}, headers=headers).status_code == 200
     assert {"database_exported", "database_purged"} <= set(_actions())
 
 
 @pytest.mark.unit
-def test_importing_a_new_password_hash_bumps_the_token_version(client: FlaskClient, admin) -> None:
+def test_importing_never_rewrites_an_existing_accounts_credentials_role_or_standing(client: FlaskClient, admin) -> None:
+    """An import used to set a known password hash, the admin role, `is_active` and the e-mail address."""
     _, headers = admin
     victim = User(login="player", username="player", email="player@example.com", password_hash=hash_password("old-password"), token_version=0)
     db.session.add(victim)
     db.session.commit()
+    old_hash = victim.password_hash
     old_token = generate_token(victim.id, role="user")
 
+    row = {"login": "player", "username": "Player Two", "email": "attacker@example.com", "password_hash": hash_password("new-password"), "role": "admin", "is_active": False, "is_verified": True}
     res = client.post(
         "/api/v1/admin/database/import",
-        json={"mode": "merge", "targets": ["users"], "data": {"users": [{"login": "player", "email": "player@example.com", "password_hash": hash_password("new-password")}]}},
+        json={"current_password": "password123", "mode": "merge", "targets": ["users"], "data": {"users": [row]}},
         headers=headers,
     )
     assert res.status_code == 200, res.get_json()
     assert "database_imported" in _actions()
-    assert client.get("/api/v1/auth/me", headers={"Authorization": f"Bearer {old_token}"}).get_json()["authenticated"] is False
+    db.session.expire_all()
+    player = db.session.get(User, victim.id)
+    assert (player.password_hash, player.role, player.is_active, player.email, player.is_verified) == (old_hash, "user", True, "player@example.com", False)
+    assert player.username == "Player Two"
+    assert client.get("/api/v1/auth/me", headers={"Authorization": f"Bearer {old_token}"}).get_json()["authenticated"] is True

@@ -23,10 +23,12 @@ anywhere in the query to make that deterministic. So which existing vote gets
 overwritten by a fresh `cast_vote` call was implementation-defined (could
 differ between two functionally-identical requests, or across DB engines/query
 planners) whenever a user had more than one Vote row for the same entity.
-`sync_session_votes` had the identical pattern on a narrower query. Both were
-changed to
+`cast_vote` was changed to
 `db.session.scalars(...).order_by(Vote.created_at.desc()).first()`, which
 deterministically picks the most recently created matching vote every time.
+`sync_session_votes` had the identical pattern on a narrower query; it now
+looks up every entity the account already voted on in one query (see
+test_query_counts.py), so there is no "which row" to pick at all.
 """
 from datetime import timedelta
 
@@ -34,7 +36,6 @@ import pytest
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.core.extensions import db
 from app.models.base import utcnow
 from app.models.smash_or_pass import Entity, Roster, Vote
 from app.seeds.smash_roster_seeder import seed_smash_rosters

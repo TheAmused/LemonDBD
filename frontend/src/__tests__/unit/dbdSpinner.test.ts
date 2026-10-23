@@ -25,7 +25,7 @@ describe('DbdSpinner: Core Visual & Dead by Daylight Skill Check Rendering', () 
     assert.ok(html.includes('r="58"'), 'Skill check circular track must be rendered');
     assert.ok(html.includes('stroke-dasharray="16 348"'), 'Great Skill Check Zone arc must be rendered');
     assert.ok(html.includes('stroke-dasharray="66 298"'), 'Good Success Zone arc must be rendered');
-    assert.ok(html.includes('role="status"'), 'Container must have role="status"');
+    assert.ok(html.includes('<output'), 'Container must have a status region (<output>)');
     assert.ok(html.includes('aria-busy="true"'), 'Container must have aria-busy="true"');
     assert.ok(html.includes('Calibrating Trial Coordinates...'), 'Custom label must be present in DOM');
   });
@@ -49,7 +49,7 @@ describe('DbdSpinner: Layout Modes, Sizes & Accents', () => {
       const html = renderWithDictionary(
         React.createElement(DbdSpinner, { layout })
       );
-      assert.ok(html.includes('role="status"'), 'Layout must have role=status');
+      assert.ok(html.includes('<output'), 'Layout must be a status region (<output>)');
     });
   }
 
@@ -59,7 +59,7 @@ describe('DbdSpinner: Layout Modes, Sizes & Accents', () => {
       const html = renderWithDictionary(
         React.createElement(DbdSpinner, { size })
       );
-      assert.ok(html.includes('role="status"'), 'Size must render valid status container');
+      assert.ok(html.includes('<output'), 'Size must render valid status container');
     });
   }
 
@@ -69,7 +69,7 @@ describe('DbdSpinner: Layout Modes, Sizes & Accents', () => {
       const html = renderWithDictionary(
         React.createElement(DbdSpinner, { accent })
       );
-      assert.ok(html.includes('role="status"'), 'Accent must have role=status');
+      assert.ok(html.includes('<output'), 'Accent must be a status region (<output>)');
     });
   }
 

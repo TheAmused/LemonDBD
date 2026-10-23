@@ -8,7 +8,7 @@ from app.models.challenge_mixins import MatchLogMixin, RetryableRunMixin
 from app.models.base import ColumnDictMixin, JSON_LIST, utcnow
 
 if TYPE_CHECKING:
-    from app.schemas.page_streak import PageStreakPageLogDict
+    from app.schemas.page_streak import PageStreakPageLogDict  # noqa: F401 -- named in the ColumnDictMixin["..."] string generic
 
 
 class PageStreakRun(RetryableRunMixin, Base):

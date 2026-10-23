@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/changelog/ChangelogEditorModal.tsx
 
-import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
+import React, { useId, useMemo, useRef, useState } from 'react';
 import { Plus } from 'lucide-react';
 import type { ChangelogPost, ChangelogPostDraft } from '@/types/changelog';
 import {
@@ -18,6 +18,7 @@ import { Switch } from '@/components/common/Switch';
 import { Button } from '@/components/common/Button';
 import { FormField, Input } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 export interface ChangelogEditorModalProps {
   open: boolean;
@@ -43,21 +44,22 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
   const textColors = useMemo(() => changelogTextColors(), []);
   const highlightColors = useMemo(() => changelogHighlightColors(), []);
   const editorRef = useRef<RichTextEditorHandle>(null);
-  const [title, setTitle] = useState('');
-  const [html, setHtml] = useState('');
-  const [initialHtml, setInitialHtml] = useState('');
-  const [isPublished, setIsPublished] = useState(true);
+  const draftOf = (p: ChangelogPost | null | undefined) =>
+    p ? { title: p.title, content_html: p.content_html, is_published: p.is_published } : EMPTY_DRAFT;
+  const [title, setTitle] = useState(() => (open ? draftOf(post).title : ''));
+  const [html, setHtml] = useState(() => (open ? draftOf(post).content_html : ''));
+  const [initialHtml, setInitialHtml] = useState(() => (open ? draftOf(post).content_html : ''));
+  const [isPublished, setIsPublished] = useState(() => (open ? draftOf(post).is_published : true));
 
-  useEffect(() => {
+  // Each opening (or another post while open) loads that post, or a blank draft.
+  useOnValueChange(open ? (post ?? 'new') : null, () => {
     if (!open) return;
-    const draft = post
-      ? { title: post.title, content_html: post.content_html, is_published: post.is_published }
-      : EMPTY_DRAFT;
+    const draft = draftOf(post);
     setTitle(draft.title);
     setHtml(draft.content_html);
     setInitialHtml(draft.content_html);
     setIsPublished(draft.is_published);
-  }, [open, post]);
+  });
 
   if (!open) return null;
 

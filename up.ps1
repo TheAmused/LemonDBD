@@ -109,7 +109,7 @@ if (-not $skipUpFlow) {
 
     # 1.1 Backend Unit Tests
     Write-Host ""
-    Write-Host "> [1/3] Running Backend Unit Tests (pytest)..." -ForegroundColor Yellow
+    Write-Host "> [1/2] Running Backend Unit Tests (pytest)..." -ForegroundColor Yellow
     $env:PYTHONPATH = "$PSScriptRoot\backend"
     & $pythonCmd -m pytest backend/tests/unit -v --tb=short
 
@@ -122,13 +122,12 @@ if (-not $skipUpFlow) {
     Write-Host "[PASS] Backend Unit Tests Passed." -ForegroundColor Green
 
 
-    # 1.2 Frontend Unit Tests & Checks
-    # (this includes global-styles-hardcoded.test.ts, which runs
-    # scripts/check-global-styles.ts -- see src/__tests__/unit/ -- so any
-    # runner that calls `npm run test:unit` gets the style check for free,
-    # instead of every platform script needing its own separate step.)
+    # 1.2 Frontend unit tests (npm run test:unit). This one run is also the static check: the
+    # hardcoded-string, global-style and typography scans are unit tests, and so are the
+    # architecture / i18n / quality / lint-suppression guard suites. `npm run check` is a subset
+    # of it, so it is not run again.
     Write-Host ""
-    Write-Host "> [2/3] Running Frontend Unit Tests (npm run test:unit)..." -ForegroundColor Yellow
+    Write-Host "> [2/2] Running Frontend Unit Tests + static guards (npm run test:unit)..." -ForegroundColor Yellow
     Push-Location "$PSScriptRoot\frontend"
     try {
         npm run test:unit
@@ -143,46 +142,10 @@ if (-not $skipUpFlow) {
     }
     Write-Host "[PASS] Frontend Unit Tests Passed." -ForegroundColor Green
 
-    # 1.3 Frontend static checks (npm run check): hardcoded strings, global styles/typography
-    # and the architecture/i18n/quality guard suites. Fast, so it runs every time.
-    Write-Host ""
-    Write-Host "> [3/3] Running Frontend Checks (npm run check)..." -ForegroundColor Yellow
-    Push-Location "$PSScriptRoot\frontend"
-    try {
-        npm run check
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host ""
-            Write-Host "[FAIL] Frontend checks did not pass!" -ForegroundColor Red
-            Write-Host "[STOP] Docker build and startup has been ABORTED." -ForegroundColor Red
-            exit 1
-        }
-    } finally {
-        Pop-Location
-    }
-    Write-Host "[PASS] Frontend Checks Passed." -ForegroundColor Green
-
-    # 1.4 Built-output check (npm run check:built): the dictionary must stay out of the HTML and
-    # every route must stay within its JS budget. It runs as `postbuild`, so it already runs inside
-    # the Docker image build in Gate 2 (a failure there stops the stack from starting). Strict mode
-    # additionally builds locally first so the failure shows up here, before any image work.
-    if ($Strict) {
-        Write-Host ""
-        Write-Host "> [Strict] Production build + built-output check (npm run build -> check:built)..." -ForegroundColor Yellow
-        Push-Location "$PSScriptRoot\frontend"
-        try {
-            npm run build
-            if ($LASTEXITCODE -ne 0) {
-                Write-Host ""
-                Write-Host "[FAIL] Frontend build or built-output check did not pass!" -ForegroundColor Red
-                Write-Host "[STOP] Docker build and startup has been ABORTED." -ForegroundColor Red
-                exit 1
-            }
-        } finally {
-            Pop-Location
-        }
-        Write-Host "[PASS] Built-output check passed." -ForegroundColor Green
-    }
-
+    # Lint, the type-check and the built-output check are not run here: the Docker image build in
+    # Gate 2 runs `npm run build`, which stops on any lint error or warning (prebuild), on a type
+    # error (next build) and on a broken bundle (postbuild: check:built). Building locally first
+    # would run the same build twice.
 
     # ====================================================================
     # [GATE 2] Build & Start Docker Stack
@@ -197,7 +160,7 @@ if (-not $skipUpFlow) {
         docker compose build --no-cache
         if ($LASTEXITCODE -ne 0) {
             Write-Host "[FAIL] Docker image build failed!" -ForegroundColor Red
-            Write-Host "       (the frontend image runs the built-output check as part of its build: see the log above)" -ForegroundColor Red
+            Write-Host "       (the frontend image build runs the lint, the type-check and the built-output check: see the log above)" -ForegroundColor Red
             exit 1
         }
         docker compose up -d --wait

@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/PerkFilters.tsx
 
+import { logger } from '@/utils/logger';
 import React, { useState, useEffect, useRef } from 'react';
 import {
   SlidersHorizontal,
@@ -8,16 +9,16 @@ import {
   ArrowUpAZ,
   ArrowDownZA,
 } from 'lucide-react';
-import { SegmentedControl, SegmentedControlOption } from '@/components/common/SegmentedControl';
+import type { SegmentedControlOption } from '@/components/common/SegmentedControl';
+import { SegmentedControl } from '@/components/common/SegmentedControl';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
-import {
+import type {
   RoleCategory,
   ScopeFilter,
   OwnershipFilter,
   SortField,
   SortOrder,
   PerkSuggestion,
-  PerkDictionary,
 } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
@@ -28,6 +29,8 @@ import { Surface } from '@/components/common/Surface';
 import { SearchInput } from '@/components/common/Field';
 import { Badge } from '@/components/common/Badge';
 import { MenuItem } from '@/components/common/MenuItem';
+
+const NO_SUGGESTIONS: PerkSuggestion[] = [];
 
 /** The icon beside a filter label: grows with the screen. */
 const FILTER_ICON = 'h-3 w-3 sm:h-3.5 sm:w-3.5 wide:h-4 wide:w-4 wide-2k:h-5 wide-2k:w-5';
@@ -85,7 +88,6 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       setSortBy,
       order,
       setOrder,
-      onReset,
       locale,
       survivorCount,
       killerCount,
@@ -96,7 +98,9 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   const dict = useDictionary();
   const backendBase = getBackendBaseUrl();
 
-  const [perkSuggestions, setPerkSuggestions] = useState<PerkSuggestion[]>([]);
+  const [fetchedSuggestions, setPerkSuggestions] = useState<PerkSuggestion[]>([]);
+  // An empty search box suggests nothing; otherwise the last answer stays until the next arrives.
+  const perkSuggestions = search && search.trim().length > 0 ? fetchedSuggestions : NO_SUGGESTIONS;
   const [isPerkSuggestionsOpen, setIsPerkSuggestionsOpen] = useState<boolean>(false);
   const searchDropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -114,15 +118,12 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
   const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    if (!search || search.trim().length < 1) {
-      setPerkSuggestions([]);
-      return;
-    }
+    if (!search || search.trim().length < 1) return;
     abortControllerRef.current?.abort();
     abortControllerRef.current = new AbortController();
     const { signal } = abortControllerRef.current;
 
-    const timer = setTimeout(async () => {
+    const fetchSuggestions = async () => {
       try {
         const res = await fetch(
           `${backendBase}/api/v1/perks/suggestions?q=${encodeURIComponent(
@@ -136,9 +137,12 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         }
       } catch (err: unknown) {
         if (!(err instanceof Error && err.name === 'AbortError')) {
-          console.error('Failed fetching perk suggestions:', err);
+          logger.error('Failed fetching perk suggestions:', err);
         }
       }
+    };
+    const timer = setTimeout(() => {
+      void fetchSuggestions();
     }, 180);
     return () => {
       clearTimeout(timer);
@@ -353,10 +357,6 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           pill
           fieldSize="sm"
           value={search}
-          role="combobox"
-          aria-expanded={isPerkSuggestionsOpen && perkSuggestions.length > 0}
-          aria-controls="perk-suggestions-listbox"
-          aria-autocomplete="list"
           onFocus={() => setIsPerkSuggestionsOpen(true)}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -389,15 +389,13 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         )}
 
         {isPerkSuggestionsOpen && perkSuggestions.length > 0 && (
+          // Suggestions are ordinary buttons under the search box (Tab reaches them), not a listbox.
           <Surface
-            id="perk-suggestions-listbox"
-            role="listbox"
             padding="none" className="absolute top-full left-0 right-0 mt-2 max-h-60 overflow-y-auto shadow-2xl z-50 p-1.5 flex flex-col gap-1"
           >
             {perkSuggestions.map((item, idx) => (
               <MenuItem className="justify-between"
                 key={`${item.name}-${idx}`}
-                role="option"
                 onClick={() => {
                   setSearch(item.name);
                   setIsPerkSuggestionsOpen(false);

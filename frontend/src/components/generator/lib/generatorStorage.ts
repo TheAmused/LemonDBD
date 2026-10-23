@@ -1,6 +1,7 @@
 // frontend/src/components/generator/lib/generatorStorage.ts
-import { RoleCategory, DrawnSlot, GeneratorMode } from '@/types/perks';
-import { ChaosMutator } from '@/types/chaos';
+import { logger } from '@/utils/logger';
+import type { RoleCategory, DrawnSlot, GeneratorMode } from '@/types/perks';
+import type { ChaosMutator } from '@/types/chaos';
 import { getLocalStorage } from '@/utils/safeStorage';
 
 export const GENERATOR_STORAGE_KEY = 'lemon_dbd_generator_v9';
@@ -47,7 +48,7 @@ export function safeSetJSON(key: string, value: unknown): boolean {
     storage.setItem(key, serialized);
     return true;
   } catch (err: unknown) {
-    console.warn(`[generatorStorage] Failed saving to localStorage (${key}):`, err);
+    logger.warn(`[generatorStorage] Failed saving to localStorage (${key}):`, err);
     return false;
   }
 }

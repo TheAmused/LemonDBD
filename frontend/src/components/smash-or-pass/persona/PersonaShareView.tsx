@@ -86,7 +86,7 @@ export function PersonaShareView({
             <a
               key={item.name}
               href={item.url}
-              onClick={item.onClick}
+              onClick={item.onClick ? (e) => { void item.onClick?.(e); } : undefined}
               target={item.url.startsWith('http') ? '_blank' : undefined}
               rel={item.url.startsWith('http') ? 'noopener noreferrer' : undefined}
               className={`flex items-center justify-center gap-2 py-2.5 px-3 rounded-control bg-bg-elevated border border-border-color transition-all duration-150 cursor-pointer font-bold ${item.color}`}

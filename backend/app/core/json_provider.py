@@ -22,7 +22,7 @@ def safe_json_loads(val: str | bytes | None, default: Any = None) -> Any:
         if HAS_ORJSON:
             return orjson.loads(val)
         return json.loads(val)
-    except Exception:
+    except (ValueError, TypeError):
         return default
 
 
@@ -32,7 +32,7 @@ def safe_json_dumps(val: Any, default_val: str = "{}") -> str:
         if HAS_ORJSON:
             return orjson.dumps(val).decode("utf-8")
         return json.dumps(val)
-    except Exception:
+    except (TypeError, ValueError, OverflowError):
         return default_val
 
 

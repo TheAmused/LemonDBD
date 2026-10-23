@@ -23,6 +23,9 @@ from app.models.character import Killer
 from app.models.user import User
 from app.services.db import export_import as export_import_module
 from app.services.db.export_import import DatabaseExportImportService, SUPPORTED_EXPORT_TARGETS
+from tests.unit.conftest import tiny_image
+
+TRAPPER_ICON = tiny_image(7)
 
 
 @pytest.fixture
@@ -30,7 +33,7 @@ def seeded_app(tmp_path: Path, monkeypatch) -> Flask:
     static_dir = tmp_path / "static"
     icon_dir = static_dir / "icons" / "characters"
     icon_dir.mkdir(parents=True)
-    (icon_dir / "trapper.webp").write_bytes(b"real-trapper-bytes")
+    (icon_dir / "trapper.webp").write_bytes(TRAPPER_ICON)
     monkeypatch.setattr(export_import_module, "get_static_dir", lambda: static_dir)
 
     test_app = create_app()
@@ -74,5 +77,5 @@ def test_full_export_then_wipe_then_import_restores_everything(seeded_app: Flask
 
         restored_char = db.session.scalars(select(Killer).where(Killer.name == "The Trapper")).one()
         assert restored_char.avatar_local_path == "icons/characters/trapper.webp"
-        assert icon_path.read_bytes() == b"real-trapper-bytes"
+        assert icon_path.read_bytes() == TRAPPER_ICON
         assert summary["summary"]["killers"]["created"] == 1

@@ -18,8 +18,8 @@
 //             (size + weight + tracking + case + leading). Use the role, so one edit in globals.css
 //             restyles every page.
 //   DIRECTIVE any `*-ignore` comment (styles-ignore, i18n-ignore, fonts-ignore, ...).
-import { readdirSync, readFileSync, statSync } from "fs";
-import { join, relative, sep } from "path";
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import { join, relative, sep } from "node:path";
 import { readGlobalCss } from "./lib/globalCss";
 
 const SRC = "src";

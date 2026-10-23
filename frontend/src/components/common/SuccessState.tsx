@@ -12,10 +12,10 @@ interface SuccessStateProps {
 
 export function SuccessState({ title, description }: SuccessStateProps) {
   return (
-    <div role="status" className="flex flex-col items-center py-4 text-center">
+    <output className="flex flex-col items-center py-4 text-center">
       <CheckCircle2 className="mb-3 h-10 w-10 text-accent-green" aria-hidden="true" />
       <h2 className="text-lg font-extrabold tracking-tight text-text-primary">{title}</h2>
       {description && <p className="mt-1 text-sm text-text-secondary">{description}</p>}
-    </div>
+    </output>
   );
 }

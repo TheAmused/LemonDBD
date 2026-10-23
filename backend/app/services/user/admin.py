@@ -1,5 +1,6 @@
 # backend/app/services/user/admin.py
 import logging
+import re
 from datetime import datetime, timezone
 from typing import Any
 
@@ -17,6 +18,7 @@ from app.models import (
     UserCharacterOwnership,
     UserPerkOwnership,
 )
+from app.services import bug_report_files
 from app.services.moderation_actions import ModerationError, ban, restore_account
 from app.services.user import google_auth
 from app.services.user.two_factor import enabled_user_ids
@@ -53,10 +55,16 @@ def list_all_users_paginated(
         stmt = stmt.where(standing_condition)
 
     if search and search.strip():
-        pat = f"%{search.strip().lower()}%"
-        stmt = stmt.where(
-            or_(User.login.ilike(pat), User.username.ilike(pat), User.email.ilike(pat))
-        )
+        # `id:42` names one account exactly (how a report's "show in users" finds its reporter even
+        # after the address on the report went stale); anything else is a substring search.
+        by_id = re.fullmatch(r"id:\s*(\d{1,12})", search.strip(), re.IGNORECASE)
+        if by_id:
+            stmt = stmt.where(User.id == int(by_id.group(1)))
+        else:
+            pat = f"%{search.strip().lower()}%"
+            stmt = stmt.where(
+                or_(User.login.ilike(pat), User.username.ilike(pat), User.email.ilike(pat))
+            )
 
     total = db.session.scalar(select(func.count()).select_from(stmt.subquery())) or 0
     stmt = stmt.order_by(User.id.asc()).offset((page - 1) * per_page).limit(per_page)
@@ -129,6 +137,13 @@ def admin_modify_user(
     clean_username = username.strip() if username is not None else None
     if clean_username is not None and len(clean_username) < 3:
         return None, "Username must be at least 3 characters long."
+    # Everything the ban below would refuse is refused here, before anything is written: the role,
+    # name and verification used to be committed first and stay changed when the ban then failed.
+    if is_active is False and block_kind(user) != "banned":
+        if acting_admin is not None and acting_admin.id == user_id:
+            return None, "You cannot sanction your own account"
+        if (clean_role or user.role) == "admin":
+            return None, "Administrators cannot be sanctioned; change the role first"
 
     if clean_role or clean_username or is_verified is not None:
         with transaction():
@@ -174,14 +189,24 @@ def _anonymise_moderation_records(user_id: int) -> None:
     )
 
 
-def _anonymise_bug_reports(user_id: int) -> None:
-    """Bug reports are kept for the team's records, but without the reporter's name and address."""
+def _anonymise_bug_reports(user_id: int) -> list[str]:
+    """Bug reports are kept for the team's records, but without the reporter's name, address and screenshots.
+
+    Returns the screenshots' paths: the caller deletes the files once the transaction has committed
+    (they are public, and a screenshot can show as much about a person as their name does).
+    """
+    images = [
+        path
+        for images_json in db.session.scalars(select(BugReport.images_json).where(BugReport.user_id == user_id))
+        for path in BugReport.parse_images(images_json)
+    ]
     db.session.execute(
         update(BugReport)
         .where(BugReport.user_id == user_id)
-        .values(reporter_name="Deleted user", reporter_email=None)
+        .values(reporter_name="Deleted user", reporter_email=None, images_json="[]")
         .execution_options(synchronize_session=False)
     )
+    return images
 
 
 def admin_remove_user(user_id: int) -> bool:
@@ -196,9 +221,10 @@ def admin_remove_user(user_id: int) -> bool:
     avatar_dir = get_avatar_storage_directory()
     remove_stale_avatar_file(user.avatar_url, avatar_dir, user.id)
     with transaction():
-        _anonymise_bug_reports(user.id)
+        screenshots = _anonymise_bug_reports(user.id)
         _anonymise_moderation_records(user.id)
         db.session.delete(user)
+    bug_report_files.delete_files(screenshots)
     return True
 
 
@@ -240,9 +266,10 @@ def delete_own_account(
     remove_stale_avatar_file(user.avatar_url, avatar_dir, user.id)
 
     with transaction():
-        _anonymise_bug_reports(user.id)
+        screenshots = _anonymise_bug_reports(user.id)
         _anonymise_moderation_records(user.id)
         db.session.delete(user)
+    bug_report_files.delete_files(screenshots)
 
     return True, None
 

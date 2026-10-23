@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/smash-or-pass/TactileKeycaps.tsx
 
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   ArrowLeft,
   ArrowRight,

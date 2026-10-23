@@ -1,7 +1,9 @@
 // frontend/scripts/verify-sidebar-all-pages.ts
-import { chromium, Browser, Page } from 'playwright';
-import { spawn, ChildProcess } from 'child_process';
-import http from 'http';
+import type { Browser } from 'playwright';
+import { chromium } from 'playwright';
+import type { ChildProcess } from 'node:child_process';
+import { spawn } from 'node:child_process';
+import http from 'node:http';
 
 const PORT = 3005;
 const BASE_URL = `http://127.0.0.1:${PORT}`;
@@ -293,7 +295,7 @@ async function runMobileTests(browser: Browser) {
     await page.waitForTimeout(300);
 
     // Drawer dialog
-    const drawerDialog = page.locator('div[role="dialog"].lg\\:hidden');
+    const drawerDialog = page.locator('dialog.lg\\:hidden');
     const isDrawerOpen = await drawerDialog.isVisible();
     if (!isDrawerOpen) {
       throw new Error(`[${route}] Mobile drawer failed to open on hamburger click`);
@@ -445,9 +447,8 @@ async function main() {
     }
   );
 
-  serverProcess.stdout?.on('data', (data) => {
-    // console.log(`[Next.js] ${data}`);
-  });
+  // Drain the dev server's output so its pipe never fills up.
+  serverProcess.stdout?.on('data', () => {});
 
   serverProcess.stderr?.on('data', (data) => {
     console.error(`[Next.js err] ${data}`);
@@ -482,4 +483,4 @@ async function main() {
   }
 }
 
-main();
+void main();

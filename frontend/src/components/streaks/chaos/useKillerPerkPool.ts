@@ -3,7 +3,7 @@
 
 import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useState } from 'react';
-import { Perk } from '@/types/gauntletStreak';
+import type { Perk } from '@/types/gauntletStreak';
 import { useAuth } from '@/context/AuthContext';
 import { backendBase } from '@/utils/staticUrl';
 

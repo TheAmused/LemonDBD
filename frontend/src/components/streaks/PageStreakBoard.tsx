@@ -5,7 +5,7 @@ import { RotateCcw } from 'lucide-react';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { PageStreakRoster } from './page-streak/PageStreakRoster';
 import { fetchRoster, resetAllRuns } from '@/services/pageStreakApi';
-import { RosterEntry } from '@/types/pageStreak';
+import type { RosterEntry } from '@/types/pageStreak';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from '@/context/DictionaryContext';
 
@@ -95,11 +95,11 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
         confirmLabel={dict.streaks.resetConfirm}
         cancelLabel={dict.streaks.cancel}
         busy={resettingAll}
-        onConfirm={handleResetAll}
+        onConfirm={() => { void handleResetAll(); }}
         onCancel={() => setConfirmingResetAll(false)}
       />
 
-      <PageStreakRoster locale={locale} roster={roster} loading={loading} error={error} onRetry={load} />
+      <PageStreakRoster locale={locale} roster={roster} loading={loading} error={error} onRetry={() => { void load(); }} />
     </div>
   );
 };

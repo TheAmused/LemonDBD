@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Role } from '@/types/gauntletStreak';
+import type { Role } from '@/types/gauntletStreak';
 import type { OwnedCharacterItem } from '../useOwnedRoster';
 import { Check, User, ShieldCheck } from 'lucide-react';
 import { avatarUrlForCharacter, staticUrl } from '@/utils/staticUrl';
@@ -30,8 +30,8 @@ export interface CharacterRosterGridProps {
 
 export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
       role,
-      characters = [],
-      completedCharacters = [],
+      characters,
+      completedCharacters,
       checkpointCharacters = [],
       activeCharacterIds = [],
       onSelectCharacter,

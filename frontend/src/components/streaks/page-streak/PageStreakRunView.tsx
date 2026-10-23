@@ -57,7 +57,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
   useEffect(() => {
     if (loading || run || busy || error || autoStartedRef.current) return;
     autoStartedRef.current = true;
-    startRun();
+    void startRun();
   }, [loading, run, busy, error, startRun]);
   // Abandoning (or another killer) leaves no run again, so allow the next auto-start.
   useEffect(() => {
@@ -139,7 +139,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
                       disabled={busy}
                       onClick={() => {
                         setLastResult('loss');
-                        submitResult(run.current_page, selected, 'loss');
+                        void submitResult(run.current_page, selected, 'loss');
                       }}
                     >
                       {dict.streaks.loseMatch}
@@ -149,7 +149,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
                       disabled={busy}
                       onClick={() => {
                         setLastResult('win');
-                        submitResult(run.current_page, selected, 'win');
+                        void submitResult(run.current_page, selected, 'win');
                       }}
                     >
                       {dict.streaks.winMatch}
@@ -217,7 +217,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
             onCancel={() => setConfirmingAbandon(false)}
             onConfirm={() => {
               setConfirmingAbandon(false);
-              abandonRun();
+              void abandonRun();
             }}
           />
 

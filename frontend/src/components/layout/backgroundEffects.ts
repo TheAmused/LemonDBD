@@ -11,7 +11,7 @@
 //   2. add its name to BackgroundEffect and to BACKGROUND_EFFECT_COMPONENTS in
 //      AppBackground.tsx;
 //   3. add a rule to ROUTE_BACKGROUND_EFFECTS below.
-// Nothing else (pages, PageShell, layouts) needs to change.
+// Nothing else (pages, AppShell, layouts) needs to change.
 
 export type BackgroundEffect = 'campfire';
 

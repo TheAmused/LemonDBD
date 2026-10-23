@@ -5,8 +5,6 @@ import { logger } from '@/utils/logger';
 import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
-import { PageShell } from '@/components/layout/PageShell';
-import { PageShellFallback } from '@/components/layout/PageShellFallback';
 import { PerkFilters } from '@/components/PerkFilters';
 import { PerkCard } from '@/components/PerkCard';
 import { PerksGridSkeleton } from '@/components/PerksSkeleton';
@@ -18,7 +16,6 @@ import { SearchX } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import type {
   Perk,
-  CharacterItem,
   RoleCategory,
   ScopeFilter,
   OwnershipFilter,
@@ -27,7 +24,6 @@ import type {
 } from '@/types/perks';
 import { useImagePrefetch } from '@/components/common/ImagePreloadProvider';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
-import { useCachedData } from '@/hooks/useCachedData';
 import { useCatalogPerks } from '@/hooks/useCatalogPerks';
 import { catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
 import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
@@ -129,18 +125,6 @@ function PerksContent() {
     if (next === 'Killer' || next === 'Survivor') setRole(next);
   });
 
-  const handleSelectCategoryFromSidebar = (selected: string) => {
-    if (selected === 'Survivor' || selected === 'Killer') {
-      setRole(selected);
-      setScope('all');
-    } else if (selected === 'General') {
-      setScope('general');
-    } else {
-      setScope('all');
-    }
-    setPage(1);
-  };
-
   const { prefetchPerkIcons } = useImagePrefetch();
   const fetchSeqRef = useRef(0);
 
@@ -211,14 +195,7 @@ function PerksContent() {
   // Shares its cache entry with the tier lists and the profile showcase.
   const { perks: allPerksList } = useCatalogPerks(locale);
 
-  const charactersKey = catalogKey('characters', { lang: locale });
-  const { data: charactersResponse } = useCachedData<{ data?: CharacterItem[] }>(
-    charactersKey,
-    () => fetchJson<{ data?: CharacterItem[] }>(charactersKey)
-  );
-
-  // The full catalog feeds the sidebar counts (derived while rendering) and warms the first icons.
-  const allPerksForStats = allPerksList;
+  // The full catalog feeds the role counts (derived while rendering) and warms the first icons.
   const survivorCount = useMemo(() => allPerksList.filter((p) => p.category === 'Survivor').length, [allPerksList]);
   const killerCount = useMemo(() => allPerksList.filter((p) => p.category === 'Killer').length, [allPerksList]);
   const survivorOwnedCount = useMemo(
@@ -229,7 +206,6 @@ function PerksContent() {
     () => allPerksList.filter((p) => p.category === 'Killer' && p.is_owned !== false).length,
     [allPerksList]
   );
-  const characterCount = (charactersResponse?.data || []).length;
 
   useEffect(() => {
     if (allPerksList.length > 0) prefetchPerkIcons(allPerksList.slice(0, 60));
@@ -249,140 +225,116 @@ function PerksContent() {
     setPage(1);
   };
 
-  const totalVaultPerks = allPerksForStats.length || totalResults;
-
   return (
-    <PageShell
-      locale={locale}
-      activeCategory="perks"
-      onSelectCategory={handleSelectCategoryFromSidebar}
-      totalPerksCount={totalVaultPerks}
-      survivorCount={survivorCount}
-      killerCount={killerCount}
-      characterCount={characterCount}
-      padding="tight"
-      outerClassName="h-dvh overflow-hidden text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
-      mainClassName="relative flex h-full min-h-0 flex-col overflow-hidden gap-3 sm:gap-4"
-    >
-      <div className="relative z-10 flex h-full min-h-0 flex-col overflow-hidden gap-3 sm:gap-4">
-        <div className="shrink-0">
-          <PerkFilters
-            search={search}
-            setSearch={(v) => {
-              setSearch(v);
-              setPage(1);
-            }}
-            role={role}
-            setRole={handleRoleChange}
-            scope={scope}
-            setScope={(s) => {
-              setScope(s);
-              setPage(1);
-            }}
-            ownershipFilter={ownershipFilter}
-            setOwnershipFilter={(o) => {
-              setOwnershipFilter(o);
-              setPage(1);
-            }}
-            sortBy={sortBy}
-            setSortBy={(s) => setSortBy(s)}
-            order={order}
-            setOrder={(o) => setOrder(o)}
-            onReset={handleResetFilters}
-            locale={locale}
-            survivorCount={survivorCount}
-            killerCount={killerCount}
-            allCount={role === 'Survivor' ? survivorCount : killerCount}
-            ownedCount={role === 'Survivor' ? survivorOwnedCount : killerOwnedCount}
-            isLoggedIn={Boolean(user)}
-          />
-        </div>
+    <div className="relative z-10 flex h-full min-h-0 flex-col overflow-hidden gap-3 sm:gap-4">
+      <div className="shrink-0">
+        <PerkFilters
+          search={search}
+          setSearch={(v) => {
+            setSearch(v);
+            setPage(1);
+          }}
+          role={role}
+          setRole={handleRoleChange}
+          scope={scope}
+          setScope={(s) => {
+            setScope(s);
+            setPage(1);
+          }}
+          ownershipFilter={ownershipFilter}
+          setOwnershipFilter={(o) => {
+            setOwnershipFilter(o);
+            setPage(1);
+          }}
+          sortBy={sortBy}
+          setSortBy={(s) => setSortBy(s)}
+          order={order}
+          setOrder={(o) => setOrder(o)}
+          onReset={handleResetFilters}
+          locale={locale}
+          survivorCount={survivorCount}
+          killerCount={killerCount}
+          allCount={role === 'Survivor' ? survivorCount : killerCount}
+          ownedCount={role === 'Survivor' ? survivorOwnedCount : killerOwnedCount}
+          isLoggedIn={Boolean(user)}
+        />
+      </div>
 
-        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-          {fetchError && perks.length === 0 ? (
-            <div className="flex flex-col items-center justify-center gap-4 p-12 text-center my-auto">
-              <p className="text-text-secondary text-base">{dict.filters.loadError}</p>
-              <Button
-                variant="primary"
-                size="md"
-                onClick={() => { void fetchPerks(); }}
-              >
-                {dict.modal.retry}
-              </Button>
-            </div>
-          ) : loading ? (
-            <PerksGridSkeleton />
-          ) : perks.length === 0 ? (
-            <EmptyState
-              variant="solid"
-              icon={SearchX}
-              iconClassName="mx-auto h-12 w-12 text-text-muted mb-3"
-              title={dict.empty.title}
-              subtitle={dict.empty.subtitle}
-              action={{
-                label: dict.app.resetFilters,
-                onClick: handleResetFilters,
-              }}
-            />
-          ) : (
-            <section aria-label={dict.filters.viewMode} className="flex min-h-0 flex-1 flex-col">
-              <div
-                ref={measureGridArea}
-                className="grid min-h-0 w-full flex-1 grid-cols-3 phone-lg:grid-cols-4 sm:grid-cols-5 gap-3"
-                style={rowHeightPx ? { gridAutoRows: `${rowHeightPx}px` } : undefined}
-              >
-                {perks.map((perk, idx) => (
-                  <PerkCard
-                    key={`${perk.name}-${idx}`}
-                    perk={perk}
-                    size="fill"
-                    onSelect={setSelectedPerk}
-                  />
-                ))}
-              </div>
-            </section>
-          )}
-        </div>
-
-        {!loading && perks.length > 0 && (
-          <div className="shrink-0 w-full">
-            <Pagination
-              page={page}
-              totalPages={totalPages}
-              totalResults={totalResults}
-              limit={limit}
-              onPageChange={setPage}
-              onLimitChange={(newLimit) => {
-                setLimit(newLimit);
-                setPage(1);
-              }}
-            />
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+        {fetchError && perks.length === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-4 p-12 text-center my-auto">
+            <p className="text-text-secondary text-base">{dict.filters.loadError}</p>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => { void fetchPerks(); }}
+            >
+              {dict.modal.retry}
+            </Button>
           </div>
-        )}
-
-        {selectedPerk && (
-          <PerkModal
-            perk={selectedPerk}
-            onClose={() => setSelectedPerk(null)}
+        ) : loading ? (
+          <PerksGridSkeleton />
+        ) : perks.length === 0 ? (
+          <EmptyState
+            variant="solid"
+            icon={SearchX}
+            iconClassName="mx-auto h-12 w-12 text-text-muted mb-3"
+            title={dict.empty.title}
+            subtitle={dict.empty.subtitle}
+            action={{
+              label: dict.app.resetFilters,
+              onClick: handleResetFilters,
+            }}
           />
+        ) : (
+          <section aria-label={dict.filters.viewMode} className="flex min-h-0 flex-1 flex-col">
+            <div
+              ref={measureGridArea}
+              className="grid min-h-0 w-full flex-1 grid-cols-3 phone-lg:grid-cols-4 sm:grid-cols-5 gap-3"
+              style={rowHeightPx ? { gridAutoRows: `${rowHeightPx}px` } : undefined}
+            >
+              {perks.map((perk, idx) => (
+                <PerkCard
+                  key={`${perk.name}-${idx}`}
+                  perk={perk}
+                  size="fill"
+                  onSelect={setSelectedPerk}
+                />
+              ))}
+            </div>
+          </section>
         )}
       </div>
-    </PageShell>
+
+      {!loading && perks.length > 0 && (
+        <div className="shrink-0 w-full">
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            totalResults={totalResults}
+            limit={limit}
+            onPageChange={setPage}
+            onLimitChange={(newLimit) => {
+              setLimit(newLimit);
+              setPage(1);
+            }}
+          />
+        </div>
+      )}
+
+      {selectedPerk && (
+        <PerkModal
+          perk={selectedPerk}
+          onClose={() => setSelectedPerk(null)}
+        />
+      )}
+    </div>
   );
 }
 
 export function PerksClient() {
   return (
-    <Suspense
-      fallback={
-        <PageShellFallback
-          outerClassName="h-dvh overflow-hidden text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300"
-          padding="tight"
-          mainClassName="flex h-full min-h-0 flex-col overflow-hidden gap-3 sm:gap-4"
-          skeleton={<PerksGridSkeleton />}
-        />
-      }
-    >
+    <Suspense fallback={<PerksGridSkeleton />}>
       <PerksContent />
     </Suspense>
   );

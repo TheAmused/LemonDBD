@@ -9,7 +9,8 @@
 import React from 'react';
 import Link from 'next/link';
 import { Home, RotateCcw } from 'lucide-react';
-import { PageShell } from '@/components/layout/PageShell';
+import { useShellOverride } from '@/components/layout/AppShell';
+import { ERROR_SHELL } from '@/components/layout/shellRoutes';
 import { LemonIcon } from '@/components/LemonIcon';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useAuth } from '@/context/AuthContext';
@@ -57,47 +58,42 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ variant, onRetry, referenc
             };
 
   useDocumentTitle(`${dict.app.title} - ${title}`);
+  // This page replaces whichever page crashed or was blocked, so it asks for its own centred shell
+  // instead of the one that route's URL maps to.
+  useShellOverride(ERROR_SHELL);
 
   return (
-    <PageShell
-      locale={locale}
-      activeCategory=""
-      mainId="main-error-content"
-      customPadding="p-4 sm:p-8 lg:p-12"
-      mainClassName="flex items-center justify-center min-h-screen-nav lg:min-h-screen"
-    >
-      <div className="relative z-10 mx-auto flex w-full max-w-xl flex-col items-center py-8 text-center sm:py-12">
-        <div className="group relative mb-8 flex h-36 w-36 items-center justify-center rounded-card border-2 border-accent-red/40 bg-bg-elevated p-6 shadow-md transition-transform duration-300 hover:scale-105 sm:h-44 sm:w-44">
-          <LemonIcon className="dbd-lemon-glow h-full w-full transition-transform duration-300 group-hover:rotate-6" />
-        </div>
-
-        <div className={ERROR_CODE_BADGE}>
-          <span>{code}</span>
-        </div>
-
-        <h1 className={ERROR_PAGE_TITLE}>{title}</h1>
-        <p className={ERROR_PAGE_TEXT}>{text}</p>
-
-        <div className={ERROR_PAGE_ACTIONS}>
-          {onRetry ? (
-            <Button variant="secondary" size="lg" onClick={onRetry} leftIcon={<RotateCcw className="h-4 w-4" aria-hidden="true" />}>
-              <span>{copy.error.retry}</span>
-            </Button>
-          ) : null}
-          <Link
-            href={`/${locale}`}
-            className={buttonClassName('primary', 'lg')}
-          >
-            <Home className="h-4 w-4" aria-hidden="true" />
-            <span>{copy.backHome}</span>
-          </Link>
-        </div>
-        {reference ? (
-          <p className={ERROR_PAGE_REFERENCE}>
-            {copy.error.reference}: <code>{reference}</code>
-          </p>
-        ) : null}
+    <div className="relative z-10 mx-auto flex w-full max-w-xl flex-col items-center py-8 text-center sm:py-12">
+      <div className="group relative mb-8 flex h-36 w-36 items-center justify-center rounded-card border-2 border-accent-red/40 bg-bg-elevated p-6 shadow-md transition-transform duration-300 hover:scale-105 sm:h-44 sm:w-44">
+        <LemonIcon className="dbd-lemon-glow h-full w-full transition-transform duration-300 group-hover:rotate-6" />
       </div>
-    </PageShell>
+
+      <div className={ERROR_CODE_BADGE}>
+        <span>{code}</span>
+      </div>
+
+      <h1 className={ERROR_PAGE_TITLE}>{title}</h1>
+      <p className={ERROR_PAGE_TEXT}>{text}</p>
+
+      <div className={ERROR_PAGE_ACTIONS}>
+        {onRetry ? (
+          <Button variant="secondary" size="lg" onClick={onRetry} leftIcon={<RotateCcw className="h-4 w-4" aria-hidden="true" />}>
+            <span>{copy.error.retry}</span>
+          </Button>
+        ) : null}
+        <Link
+          href={`/${locale}`}
+          className={buttonClassName('primary', 'lg')}
+        >
+          <Home className="h-4 w-4" aria-hidden="true" />
+          <span>{copy.backHome}</span>
+        </Link>
+      </div>
+      {reference ? (
+        <p className={ERROR_PAGE_REFERENCE}>
+          {copy.error.reference}: <code>{reference}</code>
+        </p>
+      ) : null}
+    </div>
   );
 };

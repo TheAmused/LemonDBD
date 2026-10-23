@@ -3,10 +3,8 @@
 
 import React, { Suspense, useCallback, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Search, Mic } from 'lucide-react';
-import { PageShell } from '@/components/layout/PageShell';
-import { PageShellFallback } from '@/components/layout/PageShellFallback';
 import type { SegmentedControlOption } from '@/components/common/SegmentedControl';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
 import { MapExplorer } from '@/components/maps/MapExplorer';
@@ -75,8 +73,6 @@ function MapsClientInner() {
     },
   ], [dict.maps.searchTextTab, dict.maps.searchVoiceTab]);
 
-  const router = useRouter();
-
   const handleSelectMap = useCallback((name: string, mapId?: number) => {
     setSelectedMap({ mapName: name, mapId, timestamp: Date.now(), via: 'voice' });
   }, []);
@@ -114,47 +110,27 @@ function MapsClientInner() {
     [locale, handleSelectMap, handleAction, availableMaps, searchMode, toggleSwitchElement]
   );
 
-  const handleSelectCategory = useCallback(() => {
-    router.push(`/${locale}`);
-  }, [router, locale]);
-
   return (
-    <PageShell
-      locale={locale}
-      activeCategory="maps"
-      onSelectCategory={handleSelectCategory}
-      customPadding="p-4 sm:p-6 lg:p-7"
-      mainClassName="relative min-h-screen flex flex-col gap-4"
-    >
-      <div className="relative z-10 flex flex-col gap-4">
-        <MapExplorer
-          initialMapName={selectedMap.mapName}
-          selectedMap={selectedMap}
-          onAvailableMapsLoaded={(maps) => {
-            setAvailableMaps(maps);
-          }}
-          backendBase={backendBase}
-          locale={locale}
-          hideSearch={searchMode === 'voice'}
-          voiceSlot={voiceBanner}
-          modeSwitcherSlot={toggleSwitchElement}
-        />
-      </div>
-    </PageShell>
+    <div className="relative z-10 flex flex-col gap-4">
+      <MapExplorer
+        initialMapName={selectedMap.mapName}
+        selectedMap={selectedMap}
+        onAvailableMapsLoaded={(maps) => {
+          setAvailableMaps(maps);
+        }}
+        backendBase={backendBase}
+        locale={locale}
+        hideSearch={searchMode === 'voice'}
+        voiceSlot={voiceBanner}
+        modeSwitcherSlot={toggleSwitchElement}
+      />
+    </div>
   );
 }
 
 export function MapsClient() {
   return (
-    <Suspense
-      fallback={
-        <PageShellFallback
-          customPadding="p-4 sm:p-6 lg:p-7"
-          mainClassName="min-h-screen flex flex-col gap-4"
-          skeleton={<MapsPageSkeleton />}
-        />
-      }
-    >
+    <Suspense fallback={<MapsPageSkeleton />}>
       <MapsClientInner />
     </Suspense>
   );

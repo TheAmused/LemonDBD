@@ -1,5 +1,4 @@
 import { pageMetadata } from '@/i18n/metadata';
-import { PageShell } from '@/components/layout/PageShell';
 import { TierListHub } from '@/features/tier-lists';
 import type { Locale } from '@/i18n/config';
 
@@ -16,12 +15,6 @@ export default async function TierListsPage({
   const { locale } = await params;
 
   return (
-    <PageShell
-      locale={locale}
-      activeCategory="tier-lists"
-      mainClassName="relative flex flex-col"
-    >
-      <TierListHub locale={locale} />
-    </PageShell>
+    <TierListHub locale={locale} />
   );
 }

@@ -3,7 +3,6 @@
 
 import React, { Suspense, useEffect, useState, useSyncExternalStore } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { PageShell } from '@/components/layout/PageShell';
 import { ChallengeRunner } from '@/components/minigames/ChallengeRunner';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
@@ -129,11 +128,7 @@ function PlayTrialContent() {
   useDocumentTitle(challenge ? `${challenge.title} - LemonDBD` : dict.minigames.pageTitle);
 
   return (
-    <PageShell
-      locale={locale}
-      activeCategory="minigames"
-      mainClassName="relative flex flex-col items-center justify-center min-h-vh-70"
-    >
+    <>
       {loading || (isCustomTrial && authLoading) ? (
         <LoadingState label={dict.app.loading} />
       ) : isCustomTrial && !isAuthenticated ? (
@@ -185,7 +180,7 @@ function PlayTrialContent() {
           )}
         </>
       ) : null}
-    </PageShell>
+    </>
   );
 }
 

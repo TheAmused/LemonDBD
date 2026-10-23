@@ -22,6 +22,7 @@
 // change too), creates or reuses the website, and caches the ID in memory
 // for the life of this container -- self-healing on every reset with zero
 // manual steps, and with no build-time dependency at all.
+import { logger } from '@/utils/logger';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
@@ -50,7 +51,6 @@ export function getRuntimePublicUrl(): string {
   const raw =
     process.env['UMAMI_PUBLIC_URL'] ||
     process.env['NEXT_PUBLIC_UMAMI_URL'] ||
-    process.env.NEXT_PUBLIC_UMAMI_URL ||
     '';
   return raw.trim().replace(/\/+$/, '');
 }
@@ -58,7 +58,6 @@ export function getRuntimePublicUrl(): string {
 async function umamiFetch(path: string, init?: RequestInit) {
   const internalUrl = (
     process.env['UMAMI_INTERNAL_URL'] ||
-    process.env.UMAMI_INTERNAL_URL ||
     'http://umami:3000'
   ).replace(/\/+$/, '');
 
@@ -76,13 +75,13 @@ async function umamiFetch(path: string, init?: RequestInit) {
 
 export async function provisionWebsite(): Promise<string | null> {
   const adminUsername =
-    process.env['UMAMI_ADMIN_USERNAME'] || process.env.UMAMI_ADMIN_USERNAME || 'admin';
+    process.env['UMAMI_ADMIN_USERNAME'] || 'admin';
   const adminPassword =
-    process.env['UMAMI_ADMIN_PASSWORD'] || process.env.UMAMI_ADMIN_PASSWORD || 'umami';
+    process.env['UMAMI_ADMIN_PASSWORD'] || 'umami';
   const siteName =
-    process.env['UMAMI_SITE_NAME'] || process.env.UMAMI_SITE_NAME || 'LemonDBD';
+    process.env['UMAMI_SITE_NAME'] || 'LemonDBD';
   const rawDomain =
-    process.env['UMAMI_SITE_DOMAIN'] || process.env.UMAMI_SITE_DOMAIN || 'localhost';
+    process.env['UMAMI_SITE_DOMAIN'] || 'localhost';
   const siteDomain = getSanitizedDomain(rawDomain);
 
   const login = await umamiFetch('/api/auth/login', {
@@ -131,7 +130,7 @@ export async function getWebsiteId(): Promise<string | null> {
       .catch((err) => {
         // Best-effort: Umami might just not be up yet right after a reset.
         // Don't cache the failure -- the next request tries again.
-        console.warn(
+        logger.warn(
           '[umami-config] website provisioning notice:',
           err instanceof Error ? err.message : err,
         );

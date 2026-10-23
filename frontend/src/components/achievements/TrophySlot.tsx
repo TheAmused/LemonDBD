@@ -1,7 +1,7 @@
 // frontend/src/components/achievements/TrophySlot.tsx
 import React from 'react';
-import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
-import { FullRosterLaurelIcon } from '@/components/icons/DbdIcons';
+import { AdeptBadgeIcon,FullRosterLaurelIcon } from '@/components/icons/DbdIcons';
+
 
 import { tip } from '@/components/common/Tooltip';
 export type TrophyVariant = 'owned' | 'all';

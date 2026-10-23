@@ -3,8 +3,8 @@
 
 import React from 'react';
 import { DbdButton } from '@/components/common/Button';
-import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
-import { ChaosMutator } from '@/types/chaos';
+import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
+import type { ChaosMutator } from '@/types/chaos';
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -104,21 +104,11 @@ export const WheelStage: React.FC<WheelStageProps> = ({
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 z-20 h-full w-full"
             />
-            <div
-              role={!isSpinning && sortedPerks.length > 0 ? 'button' : undefined}
-              tabIndex={!isSpinning && sortedPerks.length > 0 ? 0 : undefined}
+            <button
+              type="button"
+              disabled={isSpinning || sortedPerks.length === 0}
               aria-label={dict.generator.spinWheelButton}
-              onClick={!isSpinning && sortedPerks.length > 0 ? handleStartSpin : undefined}
-              onKeyDown={
-                !isSpinning && sortedPerks.length > 0
-                  ? (e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        handleStartSpin();
-                      }
-                    }
-                  : undefined
-              }
+              onClick={() => { void handleStartSpin(); }}
               // Width and height are driven by the *same* min() expression at every
               // breakpoint (matching PerkSlot's `fill` size pattern) instead of an
               // independent max-w (vw-based) paired with an independent max-h
@@ -130,7 +120,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
               // without re-deriving width from the new aspect ratio, flattening the
               // circle into an oval. Deriving both axes from one shared min()
               // makes them structurally identical, so they can never diverge.
-              className={`w-wheel h-wheel min-w-50 min-h-50 sm:w-wheel-sm sm:h-wheel-sm md:w-wheel-md md:h-wheel-md lg:w-wheel-lg lg:h-wheel-lg xl:w-wheel-xl xl:h-wheel-xl 2xl:w-wheel-2xl 2xl:h-wheel-2xl wide:w-wheel-wide! wide:h-wheel-wide! wide-2k:w-wheel-2k! wide-2k:h-wheel-2k! wide-4k:w-wheel-4k! wide-4k:h-wheel-4k! transition-all duration-300 ease-out transform select-none ${
+              className={`block disabled:cursor-default w-wheel h-wheel min-w-50 min-h-50 sm:w-wheel-sm sm:h-wheel-sm md:w-wheel-md md:h-wheel-md lg:w-wheel-lg lg:h-wheel-lg xl:w-wheel-xl xl:h-wheel-xl 2xl:w-wheel-2xl 2xl:h-wheel-2xl wide:w-wheel-wide! wide:h-wheel-wide! wide-2k:w-wheel-2k! wide-2k:h-wheel-2k! wide-4k:w-wheel-4k! wide-4k:h-wheel-4k! transition-all duration-300 ease-out transform select-none ${
                 !isSpinning && sortedPerks.length > 0
                   ? 'cursor-pointer hover:scale-[1.02] active:scale-[0.98] hover:drop-shadow-glow-amber-md'
                   : ''
@@ -144,13 +134,13 @@ export const WheelStage: React.FC<WheelStageProps> = ({
                 height={800}
                 className="h-full w-full"
               />
-            </div>
+            </button>
           </div>
 
           <DbdButton
             role={role}
             size="md"
-            onClick={handleStartSpin}
+            onClick={() => { void handleStartSpin(); }}
             disabled={isSpinning || sortedPerks.length === 0}
             className="mt-2 sm:mt-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
           >

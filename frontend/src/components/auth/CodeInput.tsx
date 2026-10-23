@@ -4,7 +4,7 @@
 // Six single-digit boxes for a one-time code (authenticator app). Controlled: `value` is the digits
 // typed so far. Pasting a whole code fills every box; Backspace on an empty box steps back.
 
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 
@@ -14,13 +14,17 @@ interface CodeInputProps {
   value: string;
   onChange: (value: string) => void;
   disabled?: boolean;
-  autoFocus?: boolean;
+  /** Focus the first box when it appears: it replaces the step the user just finished. */
+  focusOnMount?: boolean;
   invalid?: boolean;
 }
 
-export const CodeInput: React.FC<CodeInputProps> = ({ value, onChange, disabled, autoFocus, invalid }) => {
+export const CodeInput: React.FC<CodeInputProps> = ({ value, onChange, disabled, focusOnMount, invalid }) => {
   const dict = useDictionary();
   const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
+  useEffect(() => {
+    if (focusOnMount) inputsRef.current[0]?.focus({ preventScroll: true });
+  }, [focusOnMount]);
   const digits = Array.from({ length: CODE_LENGTH }, (_, i) => value[i] ?? '');
 
   const setDigitAt = (index: number, digit: string) => {
@@ -80,7 +84,6 @@ export const CodeInput: React.FC<CodeInputProps> = ({ value, onChange, disabled,
           inputMode="numeric"
           pattern="[0-9]*"
           autoComplete="one-time-code"
-          autoFocus={autoFocus && index === 0}
           maxLength={CODE_LENGTH}
           value={digit}
           disabled={disabled}

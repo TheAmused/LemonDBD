@@ -1,13 +1,14 @@
 'use client';
 // frontend/src/components/streaks/chaos/SlotMachineStage.tsx
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { RefreshCw } from 'lucide-react';
-import { Perk } from '@/types/gauntletStreak';
-import { AddonRarity } from '@/types/chaosStreak';
+import React, { useCallback, useEffect, useEffectEvent, useMemo, useRef, useState } from 'react';
+
+import type { Perk } from '@/types/gauntletStreak';
+import type { AddonRarity } from '@/types/chaosStreak';
 import { ADDON_RARITY_ICONS } from '@/constants/addonRarityIcons';
 import { PerkIcon } from '@/components/ui/PerkIcon';
-import { useSlotReels, ReelDirection, REEL_SPIN_MS } from './useSlotReels';
+import type { ReelDirection} from './useSlotReels';
+import { useSlotReels, REEL_SPIN_MS } from './useSlotReels';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { Button } from '@/components/common/Button';
@@ -15,6 +16,9 @@ import { Spinner } from '@/components/common/Spinner';
 import { useDictionary } from "@/context/DictionaryContext";
 import { useChallengeAnimations } from '../useChallengeAnimations';
 import { TileButton } from '@/components/common/TileButton';
+import { Img } from '@/components/common/Img';
+import { useReducedMotion } from 'framer-motion';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 const REEL_DIRECTIONS: ReelDirection[] = ['up', 'down', 'down', 'up'];
 const STRIP_LENGTH = 16;
@@ -48,7 +52,22 @@ const ReelStrip: React.FC<{
   const [spinning, setSpinning] = useState(false);
   const [offsetPx, setOffsetPx] = useState(0);
   const [animated, setAnimated] = useState(false);
-  const lastToken = useRef(spinToken);
+  const reduceMotion = useReducedMotion();
+  // The spin token this reel has started (or skipped); a newer one starts the next spin while rendering.
+  const [handledToken, setHandledToken] = useState(spinToken);
+  const [landedAtOnce, setLandedAtOnce] = useState<number | null>(null);
+  if (spinToken !== handledToken && finalPerk && itemPx) {
+    setHandledToken(spinToken);
+    if (!animate || reduceMotion) {
+      setSpinning(false);
+      setLandedAtOnce(spinToken);
+    } else {
+      setSpinning(true);
+      setAnimated(false);
+      setOffsetPx(direction === 'up' ? 0 : -(STRIP_LENGTH - 1) * itemPx);
+    }
+  }
+  const land = useEffectEvent(() => onLanded());
 
   useEffect(() => {
     const el = windowRef.current;
@@ -67,30 +86,27 @@ const ReelStrip: React.FC<{
     return direction === 'up' ? [...passers, finalPerk] : [finalPerk, ...passers];
   }, [finalPerk, pool, direction]);
 
+  // A reel that skips its spin reports landing straight away.
   useEffect(() => {
-    if (spinToken === lastToken.current) return;
-    if (!finalPerk || !itemPx) return;
-    lastToken.current = spinToken;
+    if (landedAtOnce !== null) land();
+  }, [landedAtOnce]);
+
+  // Once the start position has painted, the next frame sets off the transition to the landed perk.
+  useEffect(() => {
+    if (!spinning || animated) return;
     const landedOffset = direction === 'up' ? -(STRIP_LENGTH - 1) * itemPx : 0;
-
-    if (!animate || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setSpinning(false);
-      onLanded();
-      return;
-    }
-
-    setSpinning(true);
-    setAnimated(false);
-    setOffsetPx(direction === 'up' ? 0 : -(STRIP_LENGTH - 1) * itemPx);
-
+    let inner = 0;
     const raf = requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
+      inner = requestAnimationFrame(() => {
         setAnimated(true);
         setOffsetPx(landedOffset);
       });
     });
-    return () => cancelAnimationFrame(raf);
-  }, [spinToken, itemPx, finalPerk, direction, animate, onLanded]);
+    return () => {
+      cancelAnimationFrame(raf);
+      cancelAnimationFrame(inner);
+    };
+  }, [spinning, animated, direction, itemPx]);
 
   return (
     <div
@@ -133,7 +149,7 @@ const RarityBadge: React.FC<{ rarity: AddonRarity; visible: boolean }> = ({ rari
   if (!visible) return <div className="h-9 w-28 sm:h-10" />;
   return (
     <span className="chaos-badge-pop inline-flex items-center gap-1.5 rounded-chip border border-accent-red/30 bg-bg-surface/80 pl-1 pr-2.5 py-1 type-card-title text-text-primary sm:gap-2 sm:pr-3">
-      <img
+      <Img
         src={ADDON_RARITY_ICONS[rarity]}
         alt=""
         className="h-7 w-7 rounded-chip object-cover border border-border-color sm:h-9 sm:w-9"
@@ -158,14 +174,23 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({ perks, addon
   const [animations] = useChallengeAnimations();
   const [leverPulled, setLeverPulled] = useState(false);
   const [hasSpunThisBuild, setHasSpunThisBuild] = useState(revealed);
-  const pendingSpinRef = useRef(false);
+  // A lever pull waiting for its reveal: that reveal spins the reels; any other one shows the perks at once.
+  const [pendingSpin, setPendingSpin] = useState(false);
+  const spinStartedRef = useRef(false);
   const leverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
-    if (revealed) {
-      if (leverTimerRef.current) clearTimeout(leverTimerRef.current);
+  // (Adjusted while rendering.) A new build hides its perks again; a reveal nobody pulled for shows them.
+  useOnValueChange(revealed, (isRevealed) => {
+    if (isRevealed) {
       setLeverPulled(false);
+    } else {
+      setHasSpunThisBuild(false);
+      setPendingSpin(false);
     }
+  });
+  if (revealed && !hasSpunThisBuild && !pendingSpin) setHasSpunThisBuild(true);
+  useEffect(() => {
+    if (revealed && leverTimerRef.current) clearTimeout(leverTimerRef.current);
   }, [revealed]);
 
   useEffect(() => () => {
@@ -173,23 +198,18 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({ perks, addon
   }, []);
 
   useEffect(() => {
-    if (!revealed) {
-      setHasSpunThisBuild(false);
-      pendingSpinRef.current = false;
-      return;
-    }
-    if (hasSpunThisBuild) return;
-    if (pendingSpinRef.current) {
-      pendingSpinRef.current = false;
-      start(() => setHasSpunThisBuild(true));
-    } else {
+    if (!revealed || !pendingSpin || spinStartedRef.current) return;
+    spinStartedRef.current = true;
+    start(() => {
+      spinStartedRef.current = false;
+      setPendingSpin(false);
       setHasSpunThisBuild(true);
-    }
-  }, [revealed, perks, hasSpunThisBuild, start]);
+    });
+  }, [revealed, pendingSpin, start]);
 
   const handlePull = () => {
     if (revealed || loading || locked) return;
-    pendingSpinRef.current = true;
+    setPendingSpin(true);
     setLeverPulled(true);
     leverTimerRef.current = setTimeout(() => setLeverPulled(false), LEVER_PENDING_MS);
     onPullLever();

@@ -6,13 +6,33 @@ import socket
 _INTERNAL_HOSTNAMES = frozenset({"localhost", "backend", "frontend", "db", "redis", "nginx", "umami"})
 
 
+#: The NAT64 well-known prefix: 64:ff9b::a.b.c.d reaches the IPv4 address a.b.c.d through a translator.
+_NAT64 = ipaddress.ip_network("64:ff9b::/96")
+
+
+def _embedded_ipv4(ip: ipaddress.IPv6Address) -> list[ipaddress.IPv4Address]:
+    """IPv4 addresses an IPv6 address carries (mapped, NAT64, 6to4, Teredo) -- each a way to reach v4."""
+    found = [a for a in (ip.ipv4_mapped, ip.sixtofour) if a is not None]
+    if ip.teredo:
+        found.extend(ip.teredo)
+    if ip in _NAT64:
+        found.append(ipaddress.IPv4Address(int(ip) & 0xFFFFFFFF))
+    return found
+
+
 def is_blocked_ip(ip: ipaddress.IPv4Address | ipaddress.IPv6Address) -> bool:
-    """True for any address an outbound fetch must never reach."""
-    mapped = getattr(ip, "ipv4_mapped", None)
-    if mapped is not None:
-        ip = mapped
+    """True for any address an outbound fetch must never reach.
+
+    Anything that is not globally routable is blocked -- private, loopback, link-local, reserved,
+    unspecified, and the ranges those checks miss, such as carrier-grade NAT (100.64.0.0/10) and
+    benchmarking or documentation nets -- plus multicast, and any IPv6 address that embeds a blocked
+    IPv4 address.
+    """
+    if isinstance(ip, ipaddress.IPv6Address) and any(is_blocked_ip(v4) for v4 in _embedded_ipv4(ip)):
+        return True
     return (
-        ip.is_private
+        not ip.is_global
+        or ip.is_private
         or ip.is_loopback
         or ip.is_reserved
         or ip.is_unspecified

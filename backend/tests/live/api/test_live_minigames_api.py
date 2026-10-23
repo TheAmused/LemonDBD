@@ -1,5 +1,4 @@
 # backend/tests/live/api/test_live_minigames_api.py
-from typing import Any, Callable
 import pytest
 from flask.testing import FlaskClient
 

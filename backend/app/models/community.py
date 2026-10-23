@@ -1,7 +1,7 @@
 # backend/app/models/community.py
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text, false
+from sqlalchemy import Boolean, DateTime, ForeignKey, String, Text, false
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.core.extensions import Base
 from app.core.json_provider import safe_json_loads, safe_json_dumps
@@ -36,6 +36,12 @@ class BugReport(Base, ColumnDictMixin):
     )
 
     user: Mapped["User | None"] = relationship(back_populates="bug_reports")
+
+    @staticmethod
+    def parse_images(images_json: str | None) -> list[str]:
+        """The attachment paths stored in an `images_json` value (an empty list for anything unexpected)."""
+        value = safe_json_loads(images_json, default=[])
+        return [item for item in value if isinstance(item, str)] if isinstance(value, list) else []
 
     @property
     def images(self) -> list[str]:

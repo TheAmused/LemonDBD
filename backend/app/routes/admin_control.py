@@ -1,12 +1,10 @@
 import logging
-from datetime import datetime, timezone
 from typing import Any
-from flask import Blueprint, Response, g, jsonify, request
+from flask import Blueprint, g, jsonify, request
 from sqlalchemy import select
 from sqlalchemy.orm import joinedload
 
 from app.core.extensions import db
-from app.core.json_provider import safe_json_dumps, safe_json_loads
 from app.core.redis_cache import bump_catalog_version
 from app.core.security import admin_required
 from app.utils.pagination import paginate_args
@@ -18,7 +16,6 @@ from app.services.admin_control_service import (
     get_audit_logs,
     get_challenge_mode_settings,
     log_admin_action,
-    purge_database_tables,
     set_challenge_mode_enabled,
     set_character_disabled as svc_set_character_disabled,
     set_perk_disabled as svc_set_perk_disabled,
@@ -28,7 +25,6 @@ from app.services.content_moderation_service import (
     get_report_preview,
     resolve_report,
 )
-from app.services.db.export_import import DatabaseExportImportService
 from app.services.moderation_actions import (
     ModerationError,
     apply_sanction,
@@ -42,7 +38,6 @@ from app.services.user.admin import fetch_admin_metrics
 from pydantic import ValidationError
 from app.schemas.admin import (
     DisableItemDTO,
-    PurgeDatabaseDTO,
     UpdateChallengeModeDTO,
     UpdateSiteSettingsDTO,
 )
@@ -314,126 +309,6 @@ def get_admin_stats():
     return jsonify(stats), 200
 
 
-@admin_control_bp.route("/database/purge", methods=["POST"])
-@admin_required
-def purge_database_tables_route():
-    """Purge specific database entity tables on demand.
-
-    Named `*_route` on purpose: it used to be called `purge_database_tables`, the same name as the
-    service it imports, so the module-level name became this view and every purge called itself
-    with an argument (500: "takes 0 positional arguments but 1 was given").
-    """
-    try:
-        dto = PurgeDatabaseDTO.model_validate(request.get_json(silent=True) or {})
-    except ValidationError as err:
-        return api_error("No valid purge targets specified.", 400, details=err.errors())
-
-    targets: list[str] = dto.targets
-    try:
-        purged = purge_database_tables(targets)
-        # Cached catalogs (characters, perks, maps) would otherwise keep serving purged rows for a day.
-        bump_catalog_version()
-        logger.info(f"Admin {g.current_user.login} purged tables: {purged}")
-        log_admin_action(g.current_user.id, action="database_purged", target_type="database", details={"targets": purged})
-        return jsonify({
-            "status": "success",
-            "message": f"Successfully purged tables: {', '.join(purged)}",
-            "purged_tables": purged,
-            "stats": fetch_admin_metrics(),
-        }), 200
-
-
-    except Exception as e:
-        db.session.rollback()
-        logger.error(f"Error purging database tables: {e}", exc_info=True)
-        return jsonify({"error": f"Database purge failed: {str(e)}", "status": 500}), 500
-
-
-@admin_control_bp.route("/database/export", methods=["GET"])
-@admin_required
-def export_database():
-    """Export complete or selective database entities as JSON."""
-    targets_param = request.args.get("targets")
-    targets = [t.strip() for t in targets_param.split(",") if t.strip()] if targets_param else None
-    include_assets = request.args.get("include_assets", "true").lower() not in ["false", "0", "no"]
-
-    try:
-        data = DatabaseExportImportService.export_database(targets=targets, include_assets=include_assets)
-        # The export holds every account's password hash: who took one, and of what, is on record.
-        log_admin_action(
-            g.current_user.id,
-            action="database_exported",
-            target_type="database",
-            details={"targets": targets or "all", "include_assets": include_assets},
-        )
-        download = request.args.get("download", "false").lower() in ["true", "1", "yes"]
-        if download:
-            timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-            json_str = safe_json_dumps(data)
-            return Response(
-                json_str,
-                mimetype="application/json",
-                headers={
-                    "Content-Disposition": f"attachment; filename=lemondbd_export_{timestamp}.json"
-                },
-            )
-        return jsonify(data), 200
-    except Exception as e:
-        logger.error(f"Database export error: {e}", exc_info=True)
-        return jsonify({"error": f"Failed to export database: {str(e)}", "status": 500}), 500
-
-
-@admin_control_bp.route("/database/import", methods=["POST"])
-@admin_required
-def import_database():
-    """Import database entities from JSON payload or uploaded .json file."""
-    mode = request.form.get("mode") or request.args.get("mode") or "merge"
-    targets_param = request.form.get("targets") or request.args.get("targets")
-    targets = [t.strip() for t in targets_param.split(",") if t.strip()] if targets_param else None
-
-    payload = None
-
-    if "file" in request.files:
-        file = request.files["file"]
-        if not file or not file.filename:
-            return jsonify({"error": "Uploaded file is empty.", "status": 400}), 400
-        try:
-            content = file.read().decode("utf-8")
-            payload = safe_json_loads(content)
-        except Exception as json_err:
-            return jsonify({"error": f"Invalid JSON file: {str(json_err)}", "status": 400}), 400
-
-    if payload is None:
-        body = request.get_json(silent=True) or {}
-        if not isinstance(body, dict):
-            return jsonify({"error": "Invalid JSON payload: root must be an object.", "status": 400}), 400
-        mode = body.get("mode", mode)
-        if "targets" in body and isinstance(body["targets"], list):
-            targets = body["targets"]
-        payload = body.get("data", body)
-
-    if not payload or not isinstance(payload, dict):
-        return jsonify({"error": "No valid JSON payload provided for import.", "status": 400}), 400
-
-    try:
-        result = DatabaseExportImportService.import_database(
-            payload=payload,
-            mode=mode,
-            targets=targets,
-        )
-        logger.info(f"Admin {g.current_user.login} imported database (mode={mode}): {result.get('summary')}")
-        log_admin_action(
-            g.current_user.id,
-            action="database_imported",
-            target_type="database",
-            details={"mode": mode, "targets": targets or "all", "summary": result.get("summary")},
-        )
-        return jsonify(result), 200
-    except Exception as e:
-        logger.error(f"Database import error: {e}", exc_info=True)
-        return jsonify({"error": f"Database import failed: {str(e)}", "status": 500}), 500
-
-
 @admin_control_bp.route("/content-reports", methods=["GET"])
 @admin_required
 def list_content_reports():
@@ -556,3 +431,7 @@ def restore_user_account(user_id: int):
     except ModerationError as err:
         return api_error(err.message, err.status)
     return jsonify({"status": "success", "lifted": lifted}), 200
+
+
+# The backup routes (export, import, purge) live in their own module on this blueprint.
+from app.routes import admin_database  # noqa: E402,F401

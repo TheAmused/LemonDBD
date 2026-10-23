@@ -3,10 +3,9 @@
 
 import React, { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { PageShell } from '@/components/layout/PageShell';
 import { SmashRosterCreator } from '@/components/smash-or-pass/creator/SmashRosterCreator';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
-import { Locale } from '@/i18n/config';
+import type { Locale } from '@/i18n/config';
 
 function SmashRosterCreateContent({ locale }: { locale: Locale }) {
   const editId = useSearchParams().get('edit') ?? undefined;
@@ -20,15 +19,8 @@ export function SmashRosterCreateClient() {
   if (!dict) return null;
 
   return (
-    <PageShell
-      locale={locale}
-      activeCategory="smash-or-pass"
-      padding="tight"
-      mainClassName="relative flex flex-col"
-    >
-      <Suspense fallback={null}>
-        <SmashRosterCreateContent locale={locale} />
-      </Suspense>
-    </PageShell>
+    <Suspense fallback={null}>
+      <SmashRosterCreateContent locale={locale} />
+    </Suspense>
   );
 }

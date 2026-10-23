@@ -4,12 +4,13 @@
 // Asks the admin why a decision is being taken back (revoke / restore). The reason is required and
 // goes to the audit log; it is never shown to the user.
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/common/Button';
 import { Textarea } from '@/components/common/Field';
 import { Modal } from '@/components/common/Modal';
 import { useDictionary } from '@/context/DictionaryContext';
 import { MAX_REVOKE_REASON_LENGTH } from '@/types/moderation';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface ModerationReasonModalProps {
   open: boolean;
@@ -25,9 +26,9 @@ export function ModerationReasonModal({ open, title, message, confirmLabel, busy
   const dict = useDictionary();
   const [reason, setReason] = useState('');
 
-  useEffect(() => {
-    if (open) setReason('');
-  }, [open]);
+  useOnValueChange(open, (isOpen) => {
+    if (isOpen) setReason('');
+  });
 
   return (
     <Modal

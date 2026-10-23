@@ -5,7 +5,6 @@ from pydantic import BaseModel
 
 from app.schemas.common import CleanImageUrl
 from app.schemas.tier_list import TierListAdminItem, TierListAdminTier
-from app.schemas.smash_or_pass import SmashRosterAdminCreate
 
 
 class SampleImageModel(BaseModel):

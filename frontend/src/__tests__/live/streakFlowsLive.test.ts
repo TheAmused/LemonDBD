@@ -17,7 +17,7 @@ test("Live Frontend Workflow: Game Streaks & Challenges", async () => {
     }),
   });
   assert.strictEqual(regRes.status, 201);
-  const { token, user } = await regRes.json();
+  const { token } = await regRes.json();
   const authHeaders = {
     Authorization: `Bearer ${token}`,
     "Content-Type": "application/json",

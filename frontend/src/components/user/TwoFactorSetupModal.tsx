@@ -17,6 +17,7 @@ import { ApiError } from '@/utils/api';
 import { enableTwoFactor, startTwoFactorSetup, type TwoFactorSetup } from '@/services/twoFactorApi';
 import { twoFactorErrorMessage } from '@/utils/twoFactorErrors';
 import { trackEvent } from '@/utils/analytics';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 type Step = 'password' | 'scan' | 'codes';
 
@@ -39,8 +40,7 @@ export const TwoFactorSetupModal: React.FC<TwoFactorSetupModalProps> = ({ isOpen
   const [keyCopied, setKeyCopied] = useState(false);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const reset = () => {
-    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+  const resetFields = () => {
     setStep('password');
     setPassword('');
     setSetup(null);
@@ -50,9 +50,16 @@ export const TwoFactorSetupModal: React.FC<TwoFactorSetupModalProps> = ({ isOpen
     setBusy(false);
     setKeyCopied(false);
   };
+  const reset = () => {
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    resetFields();
+  };
 
+  // Closing starts the next opening from the first step (the effect below stops the copy timer).
+  useOnValueChange(isOpen, (open) => {
+    if (!open) resetFields();
+  });
   useEffect(() => {
-    if (!isOpen) reset();
     return () => {
       if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
     };
@@ -130,7 +137,7 @@ export const TwoFactorSetupModal: React.FC<TwoFactorSetupModalProps> = ({ isOpen
           className="flex flex-col gap-4"
           onSubmit={(e) => {
             e.preventDefault();
-            begin();
+            void begin();
           }}
         >
           <p className="type-body-lg text-text-secondary">{t.setupPasswordIntro}</p>
@@ -142,7 +149,7 @@ export const TwoFactorSetupModal: React.FC<TwoFactorSetupModalProps> = ({ isOpen
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             invalid={!!error}
-            autoFocus
+            data-autofocus
           />
           <Button type="submit" variant="primary" loading={busy} spinnerOnly disabled={!password} className="w-full">
             <span>{t.continueButton}</span>
@@ -155,7 +162,7 @@ export const TwoFactorSetupModal: React.FC<TwoFactorSetupModalProps> = ({ isOpen
           className="flex flex-col items-center gap-4"
           onSubmit={(e) => {
             e.preventDefault();
-            confirm();
+            void confirm();
           }}
         >
           <p className="type-body-lg text-text-secondary text-center">{t.scanIntro}</p>
@@ -166,14 +173,14 @@ export const TwoFactorSetupModal: React.FC<TwoFactorSetupModalProps> = ({ isOpen
               <code className="break-all rounded-chip bg-bg-primary px-2.5 py-1.5 text-xs tracking-widest text-text-primary shadow-inner select-all">
                 {setup.secret.match(/.{1,4}/g)?.join(' ')}
               </code>
-              <Button type="button" variant="secondary" size="sm" onClick={copyKey} leftIcon={keyCopied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}>
+              <Button type="button" variant="secondary" size="sm" onClick={() => { void copyKey(); }} leftIcon={keyCopied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}>
                 <span>{keyCopied ? t.copied : t.copyKey}</span>
               </Button>
             </div>
           </div>
           <div className="flex w-full flex-col items-center gap-2">
             <span className="type-label-xs text-text-secondary">{t.codeLabel}</span>
-            <CodeInput value={code} onChange={setCode} disabled={busy} invalid={!!error} autoFocus />
+            <CodeInput value={code} onChange={setCode} disabled={busy} invalid={!!error} focusOnMount />
           </div>
           <Button type="submit" variant="primary" loading={busy} spinnerOnly disabled={code.length !== CODE_LENGTH} className="w-full">
             <span>{t.confirmButton}</span>

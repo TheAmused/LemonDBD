@@ -1,4 +1,5 @@
 # backend/app/services/page_streak/roster.py
+import logging
 from collections.abc import Callable
 from typing import Any
 from sqlalchemy import func, select
@@ -9,6 +10,8 @@ from app.services.challenge_completions import fetch_completed_variants
 from app.services.ownership.characters import get_owned_killers
 from app.services.ownership_service import OwnershipService
 from app.services.perks import PerkService
+
+logger = logging.getLogger(__name__)
 
 # Synthetic variant name for the mode-wide "every owned killer cleared"
 # badge -- never stored, only ever synthesized by get_live_roster_badge into
@@ -26,6 +29,7 @@ def get_character_release_numbers(perk_service: PerkService) -> dict[str, int]:
     try:
         characters = get_characters() or []
     except Exception:
+        logger.warning("Could not load characters for release numbers", exc_info=True)
         return {}
 
     numbers: dict[str, int] = {}

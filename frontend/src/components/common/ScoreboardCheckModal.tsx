@@ -13,9 +13,12 @@ import { Input, Select } from '@/components/common/Field';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useSiteConfig } from '@/context/SiteConfigContext';
 import { ApiError } from '@/utils/api';
+import { formatMessage } from '@/utils/i18nFormat';
 import { cn } from '@/utils/cn';
 import { analyzeScoreboard, type ScoreboardReport } from '@/services/scoreboardApi';
 import { Table, TableBody, TableHead, TableRow, Td, Th } from '@/components/common/Table';
+import { Img } from '@/components/common/Img';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface ScoreboardCheckModalProps {
   isOpen: boolean;
@@ -26,8 +29,11 @@ type RoleChoice = '' | 'survivor' | 'killer';
 
 export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOpen, onClose }) => {
   const t = useDictionary().scoreboardCheck;
-  // The upload limit is an admin setting, served with the public configuration.
-  const maxBytes = useSiteConfig().limits.scoreboardUploadMaxBytes;
+  // The upload limit and the on/off switch are admin settings, served with the public configuration.
+  const site = useSiteConfig();
+  const maxBytes = site.limits.scoreboardUploadMaxBytes;
+  const switchedOff = site.loaded && !site.features.scoreboardOcr;
+  const tooLarge = formatMessage(t.tooLarge, { mb: Math.max(1, Math.round(maxBytes / (1024 * 1024))) });
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -39,39 +45,36 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
   const [error, setError] = useState<string | null>(null);
   const [report, setReport] = useState<ScoreboardReport | null>(null);
 
+  // The preview URL is made when a file is picked and released when it is replaced or the modal unmounts.
   useEffect(() => {
-    if (!file) {
-      setPreviewUrl(null);
-      return;
-    }
-    const url = URL.createObjectURL(file);
-    setPreviewUrl(url);
-    return () => URL.revokeObjectURL(url);
-  }, [file]);
+    if (!previewUrl) return;
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [previewUrl]);
 
   const reset = useCallback(() => {
     setFile(null);
+    setPreviewUrl(null);
     setReport(null);
     setError(null);
   }, []);
 
-  useEffect(() => {
-    if (!isOpen) {
-      reset();
-      setPlayer('');
-      setRole('');
-      setCharacter('');
-      setKills('');
-    }
-  }, [isOpen, reset]);
+  useOnValueChange(isOpen, (open) => {
+    if (open) return;
+    reset();
+    setPlayer('');
+    setRole('');
+    setCharacter('');
+    setKills('');
+  });
 
   const pick = (f: File | undefined | null) => {
-    if (!f) return;
+    if (!f || switchedOff) return;
     setReport(null);
     if (!f.type.startsWith('image/')) return setError(t.notImage);
-    if (f.size > maxBytes) return setError(t.tooLarge);
+    if (f.size > maxBytes) return setError(tooLarge);
     setError(null);
     setFile(f);
+    setPreviewUrl(URL.createObjectURL(f));
   };
 
   const run = async () => {
@@ -93,9 +96,9 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
       const status = e instanceof ApiError ? e.status : 0;
       setError(
         code === 'engine_unavailable'
-          ? t.unavailable
+          ? switchedOff ? t.switchedOff : t.unavailable
           : code === 'too_large'
-          ? t.tooLarge
+          ? tooLarge
           : code === 'not_a_scoreboard'
           ? t.notAScoreboard
           : status === 429
@@ -133,7 +136,7 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
       <Button variant="secondary" onClick={onClose} disabled={busy}>
         {t.close}
       </Button>
-      <Button variant="primary" onClick={run} disabled={!file} loading={busy}>
+      <Button variant="primary" onClick={() => { void run(); }} disabled={!file || switchedOff} loading={busy}>
         {busy ? t.analyzing : t.analyze}
       </Button>
     </>
@@ -156,6 +159,13 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
           </div>
         )}
 
+        {switchedOff && !error && (
+          <output className="flex items-start gap-2 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3 text-accent-amber">
+            <CircleSlash className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+            <p className="type-body">{t.switchedOff}</p>
+          </output>
+        )}
+
         {!report && (
           <>
             <input
@@ -170,7 +180,7 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
             />
             {previewUrl ? (
               <div className="relative overflow-hidden rounded-card border border-border-color bg-bg-elevated">
-                <img src={previewUrl} alt={t.previewAlt} className="mx-auto max-h-72 w-auto object-contain" />
+                <Img src={previewUrl} alt={t.previewAlt} className="mx-auto max-h-72 w-auto object-contain" />
                 <Button
                   size="sm"
                   className="absolute right-2 top-2"
@@ -184,13 +194,14 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
             ) : (
               <button
                 type="button"
+                disabled={switchedOff}
                 onClick={() => inputRef.current?.click()}
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={(e) => {
                   e.preventDefault();
                   pick(e.dataTransfer.files?.[0]);
                 }}
-                className="flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-control border-2 border-dashed border-border-color bg-bg-elevated px-4 py-10 text-text-secondary transition-colors hover:border-accent-red/50"
+                className="flex w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-control border-2 border-dashed border-border-color bg-bg-elevated px-4 py-10 text-text-secondary transition-colors hover:border-accent-red/50 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-border-color"
               >
                 <ImagePlus className="h-7 w-7" />
                 <span className="type-strong text-text-primary">{t.chooseImage}</span>

@@ -5,7 +5,6 @@ import React from 'react';
 import {
   ImageUploadDropzone,
   processImageFile,
-  type ImageUploadDropzoneProps,
 } from '@/components/common/ImageUploadDropzone';
 import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
@@ -171,7 +170,7 @@ describe('ImageUploadDropzone: Preview and Remove mode (when value is present)',
     assert.ok(!previewHtml.includes('data-testid="empty-action"'));
   });
 
-  it('renders keyboard accessibility attributes when onPreviewClick is provided', () => {
+  it('renders a native preview button when onPreviewClick is provided', () => {
     const html = renderWithDictionary(
       h(ImageUploadDropzone, {
         value: 'https://example.com/banner.png',
@@ -179,8 +178,9 @@ describe('ImageUploadDropzone: Preview and Remove mode (when value is present)',
         onPreviewClick: () => {},
       })
     );
-    assert.ok(html.includes('role="button"'));
-    assert.ok(html.includes('tabindex="0"'));
+    assert.ok(!html.includes('role="button"'));
+    // The preview button plus the remove button.
+    assert.equal(html.match(/<button type="button"/g)?.length, 2);
     assert.ok(html.includes('cursor-pointer'));
   });
 });

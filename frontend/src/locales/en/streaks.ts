@@ -138,7 +138,7 @@ export default {
   chaosCheckpointRule: "A checkpoint saves your progress, so a loss falls back to your last checkpoint instead of zero.",
   chaosCompletionRule: "Clear the pool with every killer to complete the run.",
   runFreezeNotice: "Your run freezes. New unlocks join after your next reset, loss to zero, or completion.",
-  inactivityLossNotice: "An in-progress run untouched for 90 days automatically counts as a loss.",
+  inactivityLossNotice: "An in-progress run untouched for {days} days automatically counts as a loss.",
   difficultyAndCheckpoints: "Difficulty",
   exceptions: "Exceptions",
   clarifications: "Clarifications",

@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { HelpCircle, Check, X } from 'lucide-react';
+import { Check, X } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter, CatalogPerk } from '@/types/minigame';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Surface } from '@/components/common/Surface';
@@ -16,7 +16,7 @@ interface EmojiRiddleGuesserProps {
   children?: React.ReactNode;
 }
 
-export const EmojiRiddleGuesser: React.FC<EmojiRiddleGuesserProps> = ({ roundConfig, characters, perks, guesses, isSolved, children }) => {
+export const EmojiRiddleGuesser: React.FC<EmojiRiddleGuesserProps> = ({ roundConfig, guesses, isSolved, children }) => {
   const dict = useDictionary();
   const emojis = roundConfig.custom_data?.emojis || '';
   const attempts = guesses.length;

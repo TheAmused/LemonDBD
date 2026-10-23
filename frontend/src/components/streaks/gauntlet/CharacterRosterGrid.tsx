@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Role } from '@/types/gauntletStreak';
+import type { Role } from '@/types/gauntletStreak';
 import type { OwnedCharacterItem } from '../useOwnedRoster';
 import { Check, User, ShieldCheck } from 'lucide-react';
 import { avatarUrlForCharacter, staticUrl } from '@/utils/staticUrl';
@@ -12,6 +12,7 @@ import { KillerIcon } from '@/components/icons/DbdIcons';
 import { SkeletonBlock } from '@/components/common/Skeleton';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Surface } from '@/components/common/Surface';
+import { Img } from '@/components/common/Img';
 
 export interface CharacterRosterGridProps {
   role: Role;
@@ -29,8 +30,8 @@ export interface CharacterRosterGridProps {
 
 export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
       role,
-      characters = [],
-      completedCharacters = [],
+      characters,
+      completedCharacters,
       checkpointCharacters = [],
       activeCharacterIds = [],
       onSelectCharacter,
@@ -130,7 +131,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
 
                 <div className="w-full aspect-square bg-bg-elevated overflow-hidden flex items-center justify-center relative">
                   {avatarUrl && !hasError ? (
-                    <img
+                    <Img
                       src={avatarUrl}
                       alt={displayName(char.name)}
                       draggable={false}

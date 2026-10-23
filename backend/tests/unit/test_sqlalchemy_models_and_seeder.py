@@ -2,7 +2,7 @@
 import os
 from importlib import reload
 import pytest
-from sqlalchemy import delete, select
+from sqlalchemy import select
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.orm import Session
 from tests.unit.conftest import make_chapter

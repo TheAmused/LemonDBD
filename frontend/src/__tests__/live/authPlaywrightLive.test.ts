@@ -26,7 +26,7 @@ test("Live Frontend Playwright E2E: Sign In, Admin Demo, Registration & Button E
     await signInNavBtn.waitFor({ state: "visible" });
     await signInNavBtn.click();
 
-    const modal = page.locator('[role="dialog"]');
+    const modal = page.getByRole('dialog');
     await modal.waitFor({ state: "visible" });
 
     // -------------------------------------------------------------------------

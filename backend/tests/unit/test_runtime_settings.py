@@ -181,6 +181,26 @@ class TestSaving:
         entry = db.session.query(AdminAuditLog).filter_by(action="site_settings_updated").one()
         assert "ALTCHA outage" in str(entry.details)
 
+    def test_use_default_needs_confirmation_when_the_default_is_the_unsafe_value(
+        self, client: FlaskClient, admin: User, app: Flask, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setitem(app.config, "ALTCHA_ENFORCED", False)  # this deployment's default is "off"
+        site_settings.update_settings({"altcha_enforced": True})
+        assert site_settings.altcha_enforced() is True
+        url = "/api/v1/admin/settings"
+        refused = client.put(url, headers=_headers(admin), json={"settings": {"altcha_enforced": None}})
+        assert refused.status_code == 400 and refused.get_json()["error_code"] == "confirmation_required"
+        assert site_settings.altcha_enforced() is True
+        ok = client.put(url, headers=_headers(admin), json={"settings": {"altcha_enforced": None}, "confirm_risky": True, "reason": "check is broken"})
+        assert ok.status_code == 200
+        assert site_settings.altcha_enforced() is False
+
+    def test_use_default_needs_no_confirmation_when_the_default_is_safe(self, admin: User, app: Flask, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setitem(app.config, "ALTCHA_ENFORCED", True)
+        site_settings.update_settings({"altcha_enforced": False}, confirm_risky=True, reason="for the test")
+        site_settings.update_settings({"altcha_enforced": None})
+        assert site_settings.altcha_enforced() is True
+
     def test_tightening_never_needs_confirmation(self, admin: User) -> None:
         site_settings.update_settings({"altcha_enforced": True, "email_verification_required": True})
 
@@ -304,6 +324,12 @@ class TestPublicConfig:
         features = client.get(self.URL).get_json()["features"]
         assert features["registration_open"] is False and features["google_sign_in"] is False
 
+    def test_the_guest_bug_report_switch_is_public(self, client: FlaskClient) -> None:
+        """The form needs it up front, to ask a signed-out visitor to sign in instead."""
+        assert client.get(self.URL).get_json()["features"]["guest_bug_reports"] is True
+        site_settings.update_settings({"guest_bug_reports": False})
+        assert client.get(self.URL).get_json()["features"]["guest_bug_reports"] is False
+
     def test_google_is_unavailable_without_a_client_id(self, client: FlaskClient, app: Flask, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setitem(app.config, "GOOGLE_CLIENT_ID", "")
         assert client.get(self.URL).get_json()["features"]["google_sign_in"] is False
@@ -379,6 +405,18 @@ class TestRateLimitProvider:
             assert [client.get("/ping").status_code for _ in range(4)] == [200, 200, 200, 429]
             current["n"] = 50  # a new number is a new window: honest traffic recovers at once
             assert client.get("/ping").status_code == 200
+
+    def test_every_email_code_endpoint_has_a_request_limit(self) -> None:
+        """verify-email and resend-verification had none, so no Abuse-limit setting covered them."""
+        import inspect
+        import re
+
+        from app.routes import auth
+
+        source = inspect.getsource(auth)
+        for path in ("/verify-email", "/resend-verification", "/forgot-password", "/reset-password"):
+            block = re.search(rf'@auth_bp.route\("{re.escape(path)}".*?\ndef ', source, re.S).group(0)
+            assert 'per_minute("rate_recovery_per_minute")' in block, path
 
     def test_routes_use_the_dynamic_provider(self) -> None:
         import inspect
@@ -508,3 +546,19 @@ def test_every_banner_locale_has_its_own_setting() -> None:
 def test_risky_error_type_is_a_value_error() -> None:
     assert issubclass(RiskyChangeError, ValueError)
     assert hash_password and totp  # imported helpers used by the 2FA-based test
+
+
+
+@pytest.mark.unit
+def test_capped_settings_cannot_be_set_above_their_cap() -> None:
+    """A spec maximum above the code's own ceiling was accepted in Settings and silently ignored."""
+    from app.services.content_moderation_service import EVIDENCE_TTL_DAYS
+    from app.services.match_log_retention import MAX_LOGGED_MATCHES
+    from app.services.sanction_outbox import MAX_NOTIFY_ATTEMPTS
+    from app.utils.site_settings_spec import SPEC_BY_KEY
+
+    assert SPEC_BY_KEY["sanction_email_attempts"].maximum == MAX_NOTIFY_ATTEMPTS
+    assert SPEC_BY_KEY["content_evidence_days"].maximum == EVIDENCE_TTL_DAYS
+    assert SPEC_BY_KEY["match_log_max_entries"].maximum == MAX_LOGGED_MATCHES
+    with pytest.raises(ValueError):
+        validate_setting("sanction_email_attempts", 6)

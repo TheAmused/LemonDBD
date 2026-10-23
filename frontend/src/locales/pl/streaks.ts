@@ -132,7 +132,7 @@ export default {
   boostPickHint: "Wybierz killera z listy poniżej.",
   boostConfirmPick: "Wybierz",
   pageStreakIntro: "Wybierz zabójcę i wygrywaj najlepszym zestawem, jaki zbudujesz z każdej strony jego perków.",
-  inactivityLossNotice: "Przebieg nieaktywny przez 90 dni jest automatycznie uznawany za przegrany.",
+  inactivityLossNotice: "Przebieg nieaktywny przez {days} dni jest automatycznie uznawany za przegrany.",
   difficultyAndCheckpoints: "Poziom trudności",
   exceptions: "Wyjątki",
   clarifications: "Wyjaśnienia",

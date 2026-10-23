@@ -1,6 +1,6 @@
 // frontend/scripts/lib/globalCss.ts
-import { readFileSync } from "fs";
-import { dirname, resolve } from "path";
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 
 /**
  * Local (relative) `@import` statements, in any of the forms CSS allows: `@import "./x.css";`,

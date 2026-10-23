@@ -12,7 +12,6 @@ from flask import Flask
 from sqlalchemy.orm import Session
 
 from app.models.smash_or_pass import Entity, Roster
-from app.seeds.smash_roster_seeder import seed_smash_rosters
 from app.services.smash_or_pass_service import SmashOrPassService
 
 
@@ -73,7 +72,7 @@ class TestSmashOrPassVoteStateEdges:
         """The 'last card' -> 'deck exhausted' transition: once every entity in a
         roster has a vote from this session, the feed must report zero remaining,
         not loop back and hand out an already-voted entity."""
-        roster = _make_roster(db_session, "small_roster", n_entities=3)
+        _make_roster(db_session, "small_roster", n_entities=3)
         service = SmashOrPassService()
         session_id = "state-edge-session"
 

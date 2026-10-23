@@ -146,7 +146,7 @@ export function VoiceBannerHeader({
             size="sm"
             value={currentSource === 'hens333' ? 'hens333' : 'lemondbd'}
             onChange={(source) => {
-              if (source === 'hens333') onSourceChange('hens333');
+              if (source === 'hens333') onSourceChange?.('hens333');
             }}
             options={[
               { value: 'hens333', label: dict.maps.sourceHensClock },

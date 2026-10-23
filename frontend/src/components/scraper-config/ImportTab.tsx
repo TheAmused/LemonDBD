@@ -5,6 +5,7 @@ import { FileJson, RotateCcw, ShieldCheck, Upload, X } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from '@/context/DictionaryContext';
+import { formatMessage } from '@/utils/i18nFormat';
 import { StatusBanner } from './StatusBanner';
 import type { useImportTab } from './useImportTab';
 
@@ -43,16 +44,6 @@ export function ImportTab({ tab }: { tab: ReturnType<typeof useImportTab> }) {
       />
 
       <div
-        role="button"
-        tabIndex={0}
-        aria-label={dict.admin.clickOrDragBackup}
-        onClick={() => fileInputRef.current?.click()}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            fileInputRef.current?.click();
-          }
-        }}
         onDragEnter={handleDragEnter}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -63,6 +54,14 @@ export function ImportTab({ tab }: { tab: ReturnType<typeof useImportTab> }) {
             : 'border-border-color bg-bg-primary hover:border-accent-green hover:bg-bg-elevated/40'
         }`}
       >
+        {/* Clicking anywhere in the drop zone picks a file: an overlay button, so the "remove file"
+            button inside the zone stays its own control (it sits above the overlay). */}
+        <button
+          type="button"
+          aria-label={dict.admin.clickOrDragBackup}
+          onClick={() => fileInputRef.current?.click()}
+          className="absolute inset-0 cursor-pointer rounded-card focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-green"
+        />
         <div
           className={`flex h-14 w-14 items-center justify-center rounded-card transition-all mb-2 ${
             isDragging
@@ -91,6 +90,7 @@ export function ImportTab({ tab }: { tab: ReturnType<typeof useImportTab> }) {
                 variant="ghost"
                 onClick={handleClearFile}
                 pill
+                className="relative z-10"
                 {...tip(dict.admin.removeFile, undefined, 'action')}
                 aria-label={dict.admin.removeFile}
               >
@@ -120,35 +120,49 @@ export function ImportTab({ tab }: { tab: ReturnType<typeof useImportTab> }) {
           {dict.admin.chooseImportStrategy}
         </span>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <div
-            onClick={() => setImportMode('merge')}
-            className={`flex items-start gap-2.5 p-3 rounded-card border cursor-pointer transition-all ${
+          <label
+            className={`flex items-start gap-2.5 p-3 rounded-card border cursor-pointer transition-all has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent-red ${
               importMode === 'merge'
                 ? 'border-accent-green/50 bg-accent-green/10 text-accent-green'
                 : 'border-border-color bg-bg-primary'
             }`}
           >
+            <input
+              type="radio"
+              name="import-mode"
+              value="merge"
+              checked={importMode === 'merge'}
+              onChange={() => setImportMode('merge')}
+              className="sr-only"
+            />
             <ShieldCheck className="h-4 w-4 text-accent-green mt-0.5 shrink-0" />
-            <div>
-              <p className="type-strong">{dict.admin.mergeUpdate}</p>
-              <p className="type-micro text-text-muted">{dict.admin.mergeUpdateDesc}</p>
-            </div>
-          </div>
+            <span>
+              <span className="block type-strong">{dict.admin.mergeUpdate}</span>
+              <span className="block type-micro text-text-muted">{dict.admin.mergeUpdateDesc}</span>
+            </span>
+          </label>
 
-          <div
-            onClick={() => setImportMode('replace')}
-            className={`flex items-start gap-2.5 p-3 rounded-card border cursor-pointer transition-all ${
+          <label
+            className={`flex items-start gap-2.5 p-3 rounded-card border cursor-pointer transition-all has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-accent-red ${
               importMode === 'replace'
                 ? 'border-accent-amber/50 bg-accent-amber/10 text-accent-amber'
                 : 'border-border-color bg-bg-primary'
             }`}
           >
+            <input
+              type="radio"
+              name="import-mode"
+              value="replace"
+              checked={importMode === 'replace'}
+              onChange={() => setImportMode('replace')}
+              className="sr-only"
+            />
             <RotateCcw className="h-4 w-4 text-accent-amber mt-0.5 shrink-0" />
-            <div>
-              <p className="type-strong">{dict.admin.wipeReplace}</p>
-              <p className="type-micro text-text-muted">{dict.admin.wipeReplaceDesc}</p>
-            </div>
-          </div>
+            <span>
+              <span className="block type-strong">{dict.admin.wipeReplace}</span>
+              <span className="block type-micro text-text-muted">{dict.admin.wipeReplaceDesc}</span>
+            </span>
+          </label>
         </div>
       </div>
 
@@ -165,8 +179,11 @@ export function ImportTab({ tab }: { tab: ReturnType<typeof useImportTab> }) {
                   {dict.admin.createdCountPrefix}
                   {counts.created}{' '}
                   <span className="text-text-muted font-normal">
-                    ({counts.updated} {dict.admin.updatedCountSuffix})
+                    ({counts.updated} {dict.admin.updatedCountSuffix}
                   </span>
+                  {counts.skipped ? (
+                    <span className="block type-micro text-accent-amber">{formatMessage(dict.admin.skippedCount, { count: counts.skipped })}</span>
+                  ) : null}
                 </p>
               </div>
             ))}

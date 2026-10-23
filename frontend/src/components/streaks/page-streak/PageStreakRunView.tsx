@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/streaks/page-streak/PageStreakRunView.tsx
-import { Button } from '@/components/common/Button';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+
+import React, { useEffect, useRef, useState } from 'react';
 import { usePageStreakRun } from './usePageStreakRun';
 import { RunHeader } from './RunHeader';
 import { PerkPageGrid } from './PerkPageGrid';
@@ -17,6 +17,7 @@ import { staticUrl } from '@/utils/staticUrl';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface BuildState {
   /** The page and attempt this build was made for. */
@@ -46,8 +47,8 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
-  // What the last reported result was. A ref, so reporting it does not re-render the page that is still on screen.
-  const lastResultRef = useRef<'win' | 'loss'>('win');
+  // What the last reported result was; the next page's entrance follows it (see pageVariant).
+  const [lastResult, setLastResult] = useState<'win' | 'loss'>('win');
   const { celebrating, celebrate } = useCelebration();
 
   // Opening a killer with no run starts one straight away. A failed start sets `error`,
@@ -56,7 +57,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
   useEffect(() => {
     if (loading || run || busy || error || autoStartedRef.current) return;
     autoStartedRef.current = true;
-    startRun();
+    void startRun();
   }, [loading, run, busy, error, startRun]);
   // Abandoning (or another killer) leaves no run again, so allow the next auto-start.
   useEffect(() => {
@@ -72,7 +73,8 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
 
   // Fixed when the page changes, so the page that is leaving never replays an animation while the result is in flight.
   const pageKey = run ? `${run.attempt}-${run.current_page}` : '';
-  const pageVariant = useMemo(() => (lastResultRef.current === 'loss' ? 'reset' : 'enter'), [pageKey]);
+  const [pageVariant, setPageVariant] = useState<'reset' | 'enter'>('enter');
+  useOnValueChange(pageKey, () => setPageVariant(lastResult === 'loss' ? 'reset' : 'enter'));
 
   const currentPagePerks = run ? run.pages[run.current_page - 1] ?? [] : [];
   const buildSize = Math.min(4, currentPagePerks.length);
@@ -136,8 +138,8 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
                       variant="red"
                       disabled={busy}
                       onClick={() => {
-                        lastResultRef.current = 'loss';
-                        submitResult(run.current_page, selected, 'loss');
+                        setLastResult('loss');
+                        void submitResult(run.current_page, selected, 'loss');
                       }}
                     >
                       {dict.streaks.loseMatch}
@@ -146,8 +148,8 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
                       variant="green"
                       disabled={busy}
                       onClick={() => {
-                        lastResultRef.current = 'win';
-                        submitResult(run.current_page, selected, 'win');
+                        setLastResult('win');
+                        void submitResult(run.current_page, selected, 'win');
                       }}
                     >
                       {dict.streaks.winMatch}
@@ -215,7 +217,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
             onCancel={() => setConfirmingAbandon(false)}
             onConfirm={() => {
               setConfirmingAbandon(false);
-              abandonRun();
+              void abandonRun();
             }}
           />
 

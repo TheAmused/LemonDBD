@@ -4,13 +4,14 @@
 import React, { useState } from 'react';
 import { Modal } from '@/components/common/Modal';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
+import { ReauthFields, useReauthReady } from '@/components/admin/ReauthFields';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import { ExportTab } from './scraper-config/ExportTab';
 import { ImportTab } from './scraper-config/ImportTab';
 import { PurgeTab } from './scraper-config/PurgeTab';
 import { ScraperConfigTabs } from './scraper-config/ScraperConfigTabs';
-import type { ScraperTab } from './scraper-config/scraperTargets';
+import { PURGE_CASCADES, type ScraperTab } from './scraper-config/scraperTargets';
 import { useExportTab } from './scraper-config/useExportTab';
 import { useImportTab } from './scraper-config/useImportTab';
 import { usePurgeTab } from './scraper-config/usePurgeTab';
@@ -18,7 +19,7 @@ import { usePurgeTab } from './scraper-config/usePurgeTab';
 interface ScraperConfigModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onPurgeSuccess?: () => void;
+  onPurgeSuccess?: () => void | Promise<void>;
   initialTab?: ScraperTab;
 }
 
@@ -30,6 +31,8 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess, initialTab
   const exportTab = useExportTab();
   const importTab = useImportTab(onPurgeSuccess);
   const purgeTab = usePurgeTab(onPurgeSuccess);
+  const importReady = useReauthReady(importTab.reauth);
+  const purgeReady = useReauthReady(purgeTab.reauth);
 
   if (!isOpen) return null;
 
@@ -60,23 +63,36 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess, initialTab
 
       <ConfirmModal
         open={importTab.showReplaceConfirm}
-        title={dict.admin.wipeReplace}
-        message={dict.admin.wipeReplaceConfirm}
-        confirmLabel={dict.admin.wipeReplace}
+        title={importTab.importMode === 'replace' ? dict.admin.wipeReplace : dict.admin.mergeUpdate}
+        message={
+          <div className="space-y-3">
+            {importTab.importMode === 'replace' && <p>{dict.admin.wipeReplaceConfirm}</p>}
+            <ReauthFields value={importTab.reauth} onChange={importTab.setReauth} hint={dict.admin.reauthDatabaseHint} disabled={importTab.isImporting} />
+          </div>
+        }
+        confirmLabel={importTab.importMode === 'replace' ? dict.admin.wipeReplace : dict.admin.executeImport}
         cancelLabel={dict.admin.cancel}
         busy={importTab.isImporting}
-        onConfirm={importTab.runImport}
+        confirmDisabled={!importReady}
+        onConfirm={() => { void importTab.runImport(); }}
         onCancel={() => importTab.setShowReplaceConfirm(false)}
       />
 
       <ConfirmModal
         open={purgeTab.showPurgeConfirm}
         title={dict.admin.purgeReset}
-        message={formatMessage(dict.admin.purgeConfirm, { count: purgeTab.purgeTargets.length }, locale)}
+        message={
+          <div className="space-y-3">
+            <p>{formatMessage(dict.admin.purgeConfirm, { count: purgeTab.purgeTargets.length }, locale)}</p>
+            {purgeTab.purgeTargets.some((id) => PURGE_CASCADES.includes(id)) && <p className="type-body text-accent-amber">{dict.admin.purgeCascadeNote}</p>}
+            <ReauthFields value={purgeTab.reauth} onChange={purgeTab.setReauth} hint={dict.admin.reauthDatabaseHint} disabled={purgeTab.isPurging} />
+          </div>
+        }
         confirmLabel={dict.admin.purgeReset}
         cancelLabel={dict.admin.cancel}
         busy={purgeTab.isPurging}
-        onConfirm={purgeTab.runPurge}
+        confirmDisabled={!purgeReady}
+        onConfirm={() => { void purgeTab.runPurge(); }}
         onCancel={() => purgeTab.setShowPurgeConfirm(false)}
       />
     </>

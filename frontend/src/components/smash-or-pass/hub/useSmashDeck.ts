@@ -8,6 +8,8 @@ import { shuffleArray } from '@/utils/shuffleArray';
 import { customEntityToEntityItem, isLocalRosterSlug, localRosterIdFromSlug } from '@/utils/smashOrPass/localRoster';
 import { SmashSounds } from '../SmashSoundEffects';
 
+const NO_LEADERBOARD: LeaderboardItem[] = [];
+
 interface UseSmashDeckOptions {
   selectedRosterSlug: string;
   customRosterStore: SmashRosterStoreState;
@@ -17,78 +19,105 @@ interface UseSmashDeckOptions {
 
 /** The shuffled stack of candidates for the active roster, the filters on it, and its leaderboard. */
 export function useSmashDeck({ selectedRosterSlug, customRosterStore, onFeedSettled }: UseSmashDeckOptions) {
-  const [roleFilter, setRoleFilter] = useState<'all' | string>('all');
-  const [genderFilter, setGenderFilter] = useState<'all' | string>('all');
+  const [roleFilter, setRoleFilter] = useState<string>('all');
+  const [genderFilter, setGenderFilter] = useState<string>('all');
   const [deck, setDeck] = useState<EntityItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [totalRemaining, setTotalRemaining] = useState<number>(0);
   const [leaderboardItems, setLeaderboardItems] = useState<LeaderboardItem[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [leaderboardFor, setLeaderboardFor] = useState<string | null>(null);
 
-  const loadLeaderboard = useCallback(async () => {
-    // No leaderboards for custom rosters (see the smash-or-pass roster creator plan's explicit
-    // non-goals) -- there is no shared vote table row for a roster the backend has never heard of.
-    if (isLocalRosterSlug(selectedRosterSlug)) {
-      setLeaderboardItems([]);
-      return;
-    }
-    try {
-      const items = await fetchLeaderboard(selectedRosterSlug);
-      if (items) {
+  // No leaderboards for custom rosters (see the smash-or-pass roster creator plan's explicit
+  // non-goals) -- there is no shared vote table row for a roster the backend has never heard of.
+  const isLocal = isLocalRosterSlug(selectedRosterSlug);
+  const shownLeaderboard = isLocal || leaderboardFor !== selectedRosterSlug ? NO_LEADERBOARD : leaderboardItems;
+
+  const loadLeaderboard = useCallback((): Promise<void> => {
+    if (isLocalRosterSlug(selectedRosterSlug)) return Promise.resolve();
+    const slug = selectedRosterSlug;
+    return fetchLeaderboard(slug).then(
+      (items) => {
+        if (!items) return;
         setLeaderboardItems(items);
+        setLeaderboardFor(slug);
+      },
+      () => {
+        // Best-effort: failure here is non-fatal.
       }
-    } catch {
-      // Best-effort: failure here is non-fatal.
-    }
+    );
   }, [selectedRosterSlug]);
 
+  /** The shuffled deck for the roster and filters, or null when the feed could not be read. */
+  const fetchDeck = useCallback((): Promise<{ deck: EntityItem[]; remaining: number } | null> => {
+    // A local roster has no server-side feed (no session, no vote table row to filter
+    // "already voted" candidates against) -- it is simply its own entity list, played in full
+    // every time, shuffled the same way an API feed's entities are.
+    if (isLocalRosterSlug(selectedRosterSlug)) {
+      const id = localRosterIdFromSlug(selectedRosterSlug);
+      const stored = customRosterStore.custom[id];
+      const entities = (stored?.entities ?? [])
+        .filter((e) => roleFilter === 'all' || e.role === roleFilter)
+        .filter((e) => genderFilter === 'all' || e.gender === genderFilter)
+        .map((e, i) => customEntityToEntityItem(selectedRosterSlug, e, i));
+      const shuffled = shuffleArray(entities);
+      return Promise.resolve({ deck: shuffled, remaining: shuffled.length });
+    }
+    return fetchRosterFeed(selectedRosterSlug, {
+      role: roleFilter !== 'all' ? roleFilter : undefined,
+      gender: genderFilter !== 'all' ? genderFilter : undefined,
+      limit: 300,
+    }).then(
+      (feed) =>
+        feed && feed.entities
+          ? { deck: shuffleArray(feed.entities), remaining: feed.total_remaining ?? feed.entities.length }
+          : null,
+      () => null
+    );
+  }, [selectedRosterSlug, roleFilter, genderFilter, customRosterStore]);
+
+  const showDeck = useCallback((next: { deck: EntityItem[]; remaining: number } | null) => {
+    if (!next) return;
+    setDeck(next.deck);
+    setCurrentIndex(0);
+    setTotalRemaining(next.remaining);
+  }, []);
+
+  // The deck is loading until the feed for the current roster and filters has settled (a manual
+  // reload shows as loading too).
+  const [loadedWith, setLoadedWith] = useState<typeof fetchDeck | null>(null);
+  const [reloading, setReloading] = useState(false);
+  const loading = reloading || loadedWith !== fetchDeck;
+
   const loadFeed = useCallback(async () => {
-    setLoading(true);
+    setReloading(true);
     try {
-      // A local roster has no server-side feed (no session, no vote table row to filter
-      // "already voted" candidates against) -- it is simply its own entity list, played in full
-      // every time, shuffled the same way an API feed's entities are.
-      if (isLocalRosterSlug(selectedRosterSlug)) {
-        const id = localRosterIdFromSlug(selectedRosterSlug);
-        const stored = customRosterStore.custom[id];
-        const entities = (stored?.entities ?? [])
-          .filter((e) => roleFilter === 'all' || e.role === roleFilter)
-          .filter((e) => genderFilter === 'all' || e.gender === genderFilter)
-          .map((e, i) => customEntityToEntityItem(selectedRosterSlug, e, i));
-        const shuffled = shuffleArray(entities);
-        setDeck(shuffled);
-        setCurrentIndex(0);
-        setTotalRemaining(shuffled.length);
-        return;
-      }
-
-      const feed = await fetchRosterFeed(selectedRosterSlug, {
-        role: roleFilter !== 'all' ? roleFilter : undefined,
-        gender: genderFilter !== 'all' ? genderFilter : undefined,
-        limit: 300,
-      });
-
-      if (feed && feed.entities) {
-        const shuffled = shuffleArray(feed.entities);
-        setDeck(shuffled);
-        setCurrentIndex(0);
-        setTotalRemaining(feed.total_remaining ?? feed.entities.length);
-      }
-    } catch {
-      // Best-effort: failure here is non-fatal.
+      showDeck(await fetchDeck());
     } finally {
-      setLoading(false);
+      setReloading(false);
       onFeedSettled();
     }
-  }, [selectedRosterSlug, roleFilter, genderFilter, customRosterStore, onFeedSettled]);
+  }, [fetchDeck, showDeck, onFeedSettled]);
 
-  // Must stay separate from the vote sync (useSmashVotes): `loadFeed` reshuffles the deck, and
+  // Must stay separate from the vote sync (useSmashVotes): a feed load reshuffles the deck, and
   // `syncVotes` is rebuilt on every auth transition, so sharing one effect reordered the deck
   // under the user on load.
   useEffect(() => {
-    loadFeed();
-    loadLeaderboard();
-  }, [loadFeed, loadLeaderboard]);
+    let cancelled = false;
+    void fetchDeck()
+      .then((next) => !cancelled && showDeck(next))
+      .finally(() => {
+        if (cancelled) return;
+        setLoadedWith(() => fetchDeck);
+        onFeedSettled();
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [fetchDeck, showDeck, onFeedSettled]);
+
+  useEffect(() => {
+    void loadLeaderboard();
+  }, [loadLeaderboard]);
 
   const currentCharacter = deck[currentIndex] || null;
   const nextCharacter = deck[currentIndex + 1] || null;
@@ -139,7 +168,7 @@ export function useSmashDeck({ selectedRosterSlug, customRosterStore, onFeedSett
     currentIndex,
     totalRemaining,
     loading,
-    leaderboardItems,
+    leaderboardItems: shownLeaderboard,
     setLeaderboardItems,
     loadFeed,
     loadLeaderboard,

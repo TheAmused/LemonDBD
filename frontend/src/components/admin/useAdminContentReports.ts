@@ -2,7 +2,8 @@
 // frontend/src/components/admin/useAdminContentReports.ts
 //
 // The content-report queue: the filtered, paged list, the selected report's evidence, and its decision.
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { logger } from '@/utils/logger';
+import { useCallback, useEffect, useState } from 'react';
 import { ADMIN_STORAGE, CONTENT_REPORT_FILTERS, oneOf } from '@/components/admin/adminStorage';
 import { DEFAULT_PAGE_SIZE, lastPage } from '@/constants/pagination';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -31,21 +32,25 @@ export function useAdminContentReports({ enabled, refreshKey, notify, onChanged 
   const [items, setItems] = useState<AdminContentReport[]>([]);
   const [stats, setStats] = useState<QueueStats<ContentReportStatus> | null>(null);
   const [total, setTotal] = useState(0);
-  const [loading, setLoading] = useState(true);
   const [status, setStatusState] = usePersistentString<ContentReportStatus | 'all'>(ADMIN_STORAGE.contentStatus, 'pending', oneOf(CONTENT_REPORT_FILTERS));
   const [page, setPage] = useState(1);
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [detail, setDetail] = useState<AdminContentReportDetail | null>(null);
-  const [loadingDetail, setLoadingDetail] = useState(false);
   const [resolving, setResolving] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
-  /** Only the newest detail request may set state: a slow answer for a report no longer selected is dropped. */
-  const latestDetailRequest = useRef(0);
+  // The list is loading until the request for the current filters has settled.
+  const requestKey = `${page}|${status}|${refreshKey}|${reloadKey}`;
+  const [loadedKey, setLoadedKey] = useState<string | null>(null);
+  const loading = loadedKey !== requestKey;
+  // The selected report's detail: the last one loaded stays on screen while the next one loads,
+  // and a slow answer for a report no longer selected is dropped.
+  const detailKey = enabled && selectedId !== null ? `${selectedId}|${refreshKey}|${reloadKey}` : null;
+  const [loadedDetail, setLoadedDetail] = useState<{ key: string; body: AdminContentReportDetail | null } | null>(null);
+  const detail = detailKey === null ? null : (loadedDetail?.body ?? null);
+  const loadingDetail = detailKey !== null && loadedDetail?.key !== detailKey;
 
   useEffect(() => {
     if (!enabled) return;
     let cancelled = false;
-    setLoading(true);
     listContentReports({ page, per_page: DEFAULT_PAGE_SIZE, status })
       .then((data) => {
         if (cancelled) return;
@@ -63,33 +68,28 @@ export function useAdminContentReports({ enabled, refreshKey, notify, onChanged 
         if (!cancelled) notify({ type: 'error', text: getErrorMessage(err, t.contentReportsLoadFailed) });
       })
       .finally(() => {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) setLoadedKey(requestKey);
       });
     return () => {
       cancelled = true;
     };
-  }, [enabled, page, status, refreshKey, reloadKey, notify, t.contentReportsLoadFailed]);
+  }, [enabled, page, status, requestKey, notify, t.contentReportsLoadFailed]);
 
   useEffect(() => {
-    const request = ++latestDetailRequest.current;
-    if (!enabled || selectedId === null) {
-      setDetail(null);
-      setLoadingDetail(false);
-      return;
-    }
-    setLoadingDetail(true);
+    if (detailKey === null || selectedId === null) return;
+    let cancelled = false;
     fetchContentReport(selectedId)
-      .then((body) => {
-        if (request === latestDetailRequest.current) setDetail(body);
-      })
-      .catch((err: unknown) => {
-        console.error('Failed to load the content report:', err);
-        if (request === latestDetailRequest.current) setDetail(null);
-      })
-      .finally(() => {
-        if (request === latestDetailRequest.current) setLoadingDetail(false);
-      });
-  }, [enabled, selectedId, refreshKey, reloadKey]);
+      .then(
+        (body) => !cancelled && setLoadedDetail({ key: detailKey, body }),
+        (err: unknown) => {
+          logger.error('Failed to load the content report:', err);
+          if (!cancelled) setLoadedDetail({ key: detailKey, body: null });
+        }
+      );
+    return () => {
+      cancelled = true;
+    };
+  }, [detailKey, selectedId]);
 
   const resolve = useCallback(
     async (id: number, action: ContentReportAction, author: AuthorDecision | null, notes: string): Promise<boolean> => {

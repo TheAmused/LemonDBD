@@ -1,11 +1,10 @@
 import { notFound } from 'next/navigation';
-import { pageMetadata } from '@/i18n/metadata';
-import { PageShell } from '@/components/layout/PageShell';
+import { pageMetadata, withSegment } from '@/i18n/metadata';
 import { OfficialTierListView } from '@/features/tier-lists';
 import type { Locale } from '@/i18n/config';
 import { safeDecodeParam } from '@/utils/safeDecodeParam';
 
-export const generateMetadata = pageMetadata('/tier-lists', (d) => ({
+export const generateMetadata = pageMetadata((p) => withSegment('/tier-lists', p.slug), (d) => ({
   title: d.tierLists.pageTitle,
   description: d.tierLists.metaDescription,
 }));
@@ -20,13 +19,6 @@ export default async function OfficialTierListPage({
   if (decodedSlug === null) notFound();
 
   return (
-    <PageShell
-      locale={locale}
-      activeCategory="tier-lists"
-      padding="tight"
-      mainClassName="relative flex flex-col"
-    >
-      <OfficialTierListView key={slug} slug={decodedSlug} locale={locale} />
-    </PageShell>
+    <OfficialTierListView key={slug} slug={decodedSlug} locale={locale} />
   );
 }

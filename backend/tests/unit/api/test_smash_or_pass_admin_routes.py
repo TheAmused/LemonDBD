@@ -205,7 +205,7 @@ class TestSmashOrPassAdminCreate:
         assert res.status_code == 201
         slug = res.get_json()["data"]["slug"]
 
-        default = client.get(f"/api/v1/smash-or-pass/rosters?lang=en").get_json()["data"]
+        default = client.get("/api/v1/smash-or-pass/rosters?lang=en").get_json()["data"]
         row_en = next(r for r in default if r["slug"] == slug)
         assert row_en["name"] == "Test Admin Roster"
 

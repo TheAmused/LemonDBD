@@ -1,5 +1,5 @@
 // frontend/src/services/mapApi.ts
-import { MapRealm, Realm } from '@/types/map';
+import type { MapRealm, Realm } from '@/types/map';
 import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
 
 /*

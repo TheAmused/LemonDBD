@@ -2,13 +2,15 @@
 'use client';
 import type { Dictionary } from '@/locales/types';
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Swords, Sparkles, User, Users, UsersRound } from 'lucide-react';
-import { ChallengeIntroTile } from '../ChallengeIntroModalShell';
+import type { ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { ChallengeModeModal, type ModeInfo } from '../ChallengeModeModal';
 import { GauntletRulesModal } from './GauntletRulesModal';
-import { GAUNTLET_GAME_MODES, GauntletGameMode } from '@/types/gauntletStreak';
+import type { GauntletGameMode } from '@/types/gauntletStreak';
+import { GAUNTLET_GAME_MODES } from '@/types/gauntletStreak';
 import { useDictionary } from "@/context/DictionaryContext";
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 export interface GauntletModeModalProps {
   isOpen: boolean;
@@ -111,9 +113,9 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
   const dict = useDictionary();
   const [stage, setStage] = useState<Stage>('root');
 
-  useEffect(() => {
-    if (!isOpen) setStage('root');
-  }, [isOpen]);
+  useOnValueChange(isOpen, (open) => {
+    if (!open) setStage('root');
+  });
 
   const isLemonStage = stage === 'lemon';
 

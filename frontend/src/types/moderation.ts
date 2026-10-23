@@ -136,6 +136,8 @@ export interface ModerationSummary {
   suggestion: ModerationSuggestion | null;
   suspended_until: string | null;
   content_blocked: number;
+  /** The length Settings > Moderation gives this account's next suspension (first or a later one). */
+  next_suspension_days?: number;
 }
 
 /** Where an account stands for the moderation drawer: the avatar's ring colour. */
@@ -176,6 +178,18 @@ export const EMPTY_SANCTION_DRAFT: SanctionDraft = {
   internal_notes: '',
   send_email: true,
 };
+
+/**
+ * A form change, with the suspension length taken from the admin's settings (`suspensionDays`) when
+ * the decision becomes a suspension and no length was typed yet: it used to start at a fixed 7 days.
+ */
+export function patchDraft(draft: SanctionDraft, patch: Partial<SanctionDraft>, suspensionDays?: number | null): SanctionDraft {
+  const next = { ...draft, ...patch };
+  if (patch.kind === 'suspension' && draft.kind !== 'suspension' && draft.duration_days === DEFAULT_SUSPENSION_DAYS && suspensionDays) {
+    next.duration_days = suspensionDays;
+  }
+  return next;
+}
 
 /** The form with the suggested kind (and length) filled in; whatever the admin already typed stays. */
 export function draftFromSuggestion(draft: SanctionDraft, suggestion: ModerationSuggestion): SanctionDraft {

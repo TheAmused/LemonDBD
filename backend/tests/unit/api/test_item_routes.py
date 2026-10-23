@@ -1,10 +1,8 @@
 # backend/tests/unit/api/test_item_routes.py
 import pytest
-from flask import Flask
 from flask.testing import FlaskClient
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app import create_app
 from app.models import Item, ItemAddon, ItemCategory
 from app.services.perks import PerkService
 

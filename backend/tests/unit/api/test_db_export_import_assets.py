@@ -14,6 +14,7 @@ from tests.unit.api.db_export_import_support import (
 from tests.unit.api.db_export_import_support import (  # noqa: F401  (pytest fixtures)
     export_import_app,
 )
+from tests.unit.conftest import tiny_image
 
 
 @pytest.mark.unit
@@ -23,7 +24,7 @@ class TestDatabaseExportImportAssetBundling:
     def test_export_embeds_character_avatar_bytes(self, export_import_app, monkeypatch, tmp_path):
         icon_dir = tmp_path / "icons" / "characters"
         icon_dir.mkdir(parents=True)
-        raw = b"fake-avatar-bytes"
+        raw = tiny_image(1)
         (icon_dir / "trapper.webp").write_bytes(raw)
         monkeypatch.setattr(export_import_module, "get_static_dir", lambda: tmp_path)
 
@@ -40,7 +41,7 @@ class TestDatabaseExportImportAssetBundling:
 
     def test_import_restores_character_avatar_file(self, export_import_app, monkeypatch, tmp_path):
         monkeypatch.setattr(export_import_module, "get_static_dir", lambda: tmp_path)
-        raw = b"restored-avatar-bytes"
+        raw = tiny_image(2)
 
         with export_import_app.app_context():
             trapper = db.session.scalars(select(Killer).where(Killer.name == "The Trapper")).first()
@@ -66,7 +67,7 @@ class TestDatabaseExportImportAssetBundling:
     def test_export_omits_asset_bytes_when_include_assets_false(self, export_import_app, monkeypatch, tmp_path):
         icon_dir = tmp_path / "icons" / "characters"
         icon_dir.mkdir(parents=True)
-        (icon_dir / "trapper.webp").write_bytes(b"bytes")
+        (icon_dir / "trapper.webp").write_bytes(tiny_image(3))
         monkeypatch.setattr(export_import_module, "get_static_dir", lambda: tmp_path)
 
         with export_import_app.app_context():
@@ -86,7 +87,7 @@ class TestDatabaseExportImportUserAvatars:
         monkeypatch.setattr(export_import_module, "get_static_dir", lambda: tmp_path)
         avatar_dir = tmp_path / "uploads" / "avatars"
         avatar_dir.mkdir(parents=True)
-        raw = b"user-avatar-bytes"
+        raw = tiny_image(4)
         (avatar_dir / "avatar_u1_test.webp").write_bytes(raw)
 
         with export_import_app.app_context():

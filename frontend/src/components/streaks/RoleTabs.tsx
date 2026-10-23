@@ -57,15 +57,13 @@ export const RoleTabs: React.FC<RoleTabsProps> = ({ locale }) => {
   ];
 
   return (
-    <div role="radiogroup" aria-label={dict.streaks.streakRoleTabs} className="flex flex-wrap items-center gap-2">
+    <nav aria-label={dict.streaks.streakRoleTabs} className="flex flex-wrap items-center gap-2">
       {options.map((opt) => {
         const isActive = opt.value === activeRole;
         return (
           <Link
             key={opt.value}
             href={opt.href}
-            role="radio"
-            aria-checked={isActive}
             aria-current={isActive ? 'page' : undefined}
             className={`flex items-center gap-1.5 sm:gap-2 whitespace-nowrap rounded-control border px-3 sm:px-4 py-2 sm:py-2.5 pointer-coarse:min-h-11 text-mini sm:text-xs font-black shadow-sm transition-colors cursor-pointer ${
               isActive
@@ -77,6 +75,6 @@ export const RoleTabs: React.FC<RoleTabsProps> = ({ locale }) => {
           </Link>
         );
       })}
-    </div>
+    </nav>
   );
 };

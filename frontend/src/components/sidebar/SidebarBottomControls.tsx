@@ -12,6 +12,7 @@ import { FogReportIcon, CampfireMugIcon } from '@/components/icons/DbdIcons';
 import { tip } from '@/components/common/Tooltip';
 import { FitText } from '@/components/common/FitText';
 import { useDictionary } from "@/context/DictionaryContext";
+import { useIsClient } from '@/hooks/useIsClient';
 
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
@@ -82,7 +83,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
   const setTheme = propSetTheme ?? themeContext.setTheme;
   const pathname = usePathname();
 
-  const [clientMounted, setClientMounted] = useState(false);
+  const clientMounted = useIsClient();
   const isMounted = propMounted ?? (propTheme !== undefined ? true : clientMounted);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   // Guards against a second locale switch landing while the first is still
@@ -92,8 +93,10 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
   // lands) is the one window where the applied theme class can momentarily
   // drop out from under a still-resolving navigation. Blocking overlap here
   // is cheaper and more certain than trying to make every intermediate
-  // frame themed. Cleared once `pathname` reflects the new locale.
-  const [isSwitchingLang, setIsSwitchingLang] = useState(false);
+  // frame themed. Held for the path the switch started from, so it clears
+  // itself once `pathname` reflects the new locale.
+  const [switchingFrom, setSwitchingFrom] = useState<string | null>(null);
+  const isSwitchingLang = switchingFrom !== null && switchingFrom === pathname;
   const langMenuRef = useRef<HTMLDivElement>(null);
   const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
   const themeMenuRef = useRef<HTMLDivElement>(null);
@@ -135,16 +138,6 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
     return segments.join('/') + query;
   };
 
-  useEffect(() => {
-    setClientMounted(true);
-  }, []);
-
-  // The in-flight navigation has landed once the URL reflects it; release
-  // the guard so the next switch is allowed.
-  useEffect(() => {
-    setIsSwitchingLang(false);
-  }, [pathname]);
-
   return (
     <div className="space-y-2 pt-3 mt-3 border-t border-border-color">
       {/* Language & Theme Controls */}
@@ -154,7 +147,6 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
             type="button"
             onClick={() => !isSwitchingLang && setIsLangMenuOpen((v) => !v)}
             aria-label={dict.sidebar.switchLanguage}
-            aria-haspopup="listbox"
             aria-expanded={isLangMenuOpen}
             aria-disabled={isSwitchingLang}
             className={isSwitchingLang ? 'w-full pointer-events-none opacity-60' : 'w-full'}
@@ -165,21 +157,21 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
 
           {isLangMenuOpen && (
             <Surface
-              role="listbox"
               padding="none" className="absolute bottom-full left-0 z-50 mb-2 w-44 overflow-hidden shadow-lg"
             >
               {LANGUAGES.map((lang) => (
                 <Link
                   key={lang.code}
                   href={redirectedPathName(lang.code)}
-                  role="option"
-                  aria-selected={lang.code === currentLocale}
+                  hrefLang={lang.code}
+                  lang={lang.code}
+                  aria-current={lang.code === currentLocale ? 'true' : undefined}
                   onClick={(e) => {
                     if (isSwitchingLang) {
                       e.preventDefault();
                       return;
                     }
-                    setIsSwitchingLang(true);
+                    setSwitchingFrom(pathname);
                     setIsLangMenuOpen(false);
                   }}
                   className={
@@ -204,7 +196,6 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
             type="button"
             onClick={() => setIsThemeMenuOpen((v) => !v)}
             aria-label={dict.sidebar.toggleTheme}
-            aria-haspopup="listbox"
             aria-expanded={isThemeMenuOpen}
             className="w-full min-w-0"
           >
@@ -220,14 +211,11 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
 
           {isThemeMenuOpen && (
             <Surface
-              role="listbox"
-              aria-label={dict.sidebar.toggleTheme}
               padding="none" className="absolute bottom-full right-0 z-50 mb-2 w-56 overflow-hidden shadow-lg"
             >
               {THEME_OPTIONS.map((opt) => (
                 <MenuItem selected={isMounted && theme === opt.id} flush
                   key={opt.id}
-                  role="option"
                   onClick={() => {
                     setTheme(opt.id);
                     setIsThemeMenuOpen(false);
@@ -265,6 +253,17 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           <FitText minScale={0.6} maxLines={2} className="min-w-0 text-center">{dict.sidebar.buyCoffee}</FitText>
         </Button>
       </div>
+
+      {/* Legal pages, reachable from every page (not only from About). */}
+      <nav aria-label={dict.sidebar.about} className="flex items-center justify-center gap-3 pt-1 type-caption text-text-muted">
+        <Link href={`/${currentLocale}/privacy-policy`} className={`hover:text-text-primary ${FOCUS_RING}`}>
+          {dict.sidebar.privacyPolicy}
+        </Link>
+        <span aria-hidden="true">·</span>
+        <Link href={`/${currentLocale}/terms-of-service`} className={`hover:text-text-primary ${FOCUS_RING}`}>
+          {dict.sidebar.termsOfService}
+        </Link>
+      </nav>
     </div>
   );
 };

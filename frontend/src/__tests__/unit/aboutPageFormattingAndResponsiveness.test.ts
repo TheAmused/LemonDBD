@@ -6,6 +6,7 @@ import path from 'node:path';
 import React from 'react';
 import { renderWithDictionary } from '../helpers/renderWithDictionary';
 import { RichText } from '@/components/common/RichText';
+import { matchShell } from '@/components/layout/shellRoutes';
 
 describe('RichText: Semantic Formatting & i18n Markup', () => {
   it('renders <brand> and [brand] tags with bold accent-red styling', () => {
@@ -143,10 +144,11 @@ describe('About Page: Layout, Typography & LocalStorage', () => {
     );
   });
 
-  it('centers the entire page layout vertically and horizontally within PageShell', () => {
+  it('centers the entire page layout vertically and horizontally within the shell', () => {
+    const main = matchShell(['about']).shell;
     assert.ok(
-      source.includes('flex flex-col items-center justify-center') && source.includes('lg:min-h-screen'),
-      'Must configure PageShell main to center entire page layout vertically and horizontally'
+      main && main.mainClassName?.includes('flex flex-col items-center justify-center') && main.mainClassName.includes('lg:min-h-screen'),
+      'The /about shell (shellRoutes.ts) must center the entire page layout vertically and horizontally'
     );
   });
 });

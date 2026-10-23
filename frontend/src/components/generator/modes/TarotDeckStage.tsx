@@ -4,10 +4,11 @@
 import React, { useRef, useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { DbdButton } from '@/components/common/Button';
-import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
-import { ChaosMutator } from '@/types/chaos';
-import { Dictionary } from '@/locales/types';
-import { pickRandomLoadout, buildDrawnSlots, pickPerkTarotType, TarotType } from '../lib/perkPicker';
+import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
+import type { ChaosMutator } from '@/types/chaos';
+
+import type { TarotType } from '../lib/perkPicker';
+import { pickRandomLoadout, buildDrawnSlots, pickPerkTarotType } from '../lib/perkPicker';
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
@@ -15,6 +16,7 @@ import { StageIdleColumn, StagePrompt, StageProp } from '../shared/StageIdle';
 import { playCardFlip } from '@/utils/perkAudio';
 import { useDictionary } from "@/context/DictionaryContext";
 import { TileButton } from '@/components/common/TileButton';
+import { Img } from '@/components/common/Img';
 
 export interface TarotDeckStageProps {
   role: RoleCategory;
@@ -100,7 +102,7 @@ const CardImage: React.FC<{ type: TarotType; side: TarotSide }> = ({ type, side 
   if (errored) return null;
 
   return (
-    <img
+    <Img
       src={tarotImageUrl(type, side)}
       alt=""
       aria-hidden="true"
@@ -121,7 +123,6 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
       onRevealSlot,
       onSelectPerk,
       isBlind = false,
-      backendBase,
     }) => {
   const dict = useDictionary();
   const [cards, setCards] = useState<TarotCard[] | null>(null);

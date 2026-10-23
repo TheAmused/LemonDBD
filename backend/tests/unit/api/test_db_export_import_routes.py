@@ -12,6 +12,7 @@ from app.models.map import Realm
 from app.models.perk import Perk
 from app.services.db import export_import as export_import_module
 from tests.unit.api.db_export_import_support import (
+    REAUTH,
     _flat,
 )
 from tests.unit.api.db_export_import_support import (  # noqa: F401  (pytest fixtures)
@@ -27,7 +28,7 @@ class TestDatabaseExportImport:
     """Tests for administrative full database export JSON generation and merging."""
 
     def test_export_database_all(self, client: FlaskClient, admin_token: str) -> None:
-        res = client.get(
+        res = client.post(
             "/api/v1/admin/database/export",
             headers={"Authorization": f"Bearer {admin_token}"},
         )
@@ -47,8 +48,9 @@ class TestDatabaseExportImport:
         assert any(c["name"] == "The Trapper" for c in data["groups"]["content"]["killers"])
 
     def test_export_database_selective(self, client: FlaskClient, admin_token: str) -> None:
-        res = client.get(
-            "/api/v1/admin/database/export?targets=perks",
+        res = client.post(
+            "/api/v1/admin/database/export",
+            json={"targets": ["perks"]},
             headers={"Authorization": f"Bearer {admin_token}"},
         )
         assert res.status_code == 200
@@ -59,21 +61,35 @@ class TestDatabaseExportImport:
         assert "killers" not in data["groups"].get("content", {})
 
     def test_export_database_download_header(self, client: FlaskClient, admin_token: str) -> None:
-        res = client.get(
-            "/api/v1/admin/database/export?download=true",
+        res = client.post(
+            "/api/v1/admin/database/export",
             headers={"Authorization": f"Bearer {admin_token}"},
         )
         assert res.status_code == 200
-        assert "attachment; filename=lemondbd_export_" in res.headers.get("Content-Disposition", "")
+        assert 'attachment; filename="lemondbd_backup_' in res.headers.get("Content-Disposition", "")
+
+    def test_export_is_not_a_get(self, client: FlaskClient, admin_token: str) -> None:
+        """A GET could be started by an <img> in reported content or by a link from another site."""
+        res = client.get("/api/v1/admin/database/export", headers={"Authorization": f"Bearer {admin_token}"})
+        assert res.status_code == 405
+
+    def test_export_refuses_unknown_targets(self, client: FlaskClient, admin_token: str) -> None:
+        res = client.post(
+            "/api/v1/admin/database/export",
+            json={"targets": ["perks", "characters"]},
+            headers={"Authorization": f"Bearer {admin_token}"},
+        )
+        assert res.status_code == 400
+        assert "characters" in res.get_json()["error"]
 
     def test_export_database_unauthorized(self, client: FlaskClient, user_token: str) -> None:
-        res = client.get(
+        res = client.post(
             "/api/v1/admin/database/export",
             headers={"Authorization": f"Bearer {user_token}"},
         )
         assert res.status_code == 403
 
-        res_no_auth = client.get("/api/v1/admin/database/export")
+        res_no_auth = client.post("/api/v1/admin/database/export")
         assert res_no_auth.status_code == 401
 
     def test_import_database_merge_json_body(self, client: FlaskClient, admin_token: str) -> None:
@@ -110,7 +126,7 @@ class TestDatabaseExportImport:
         res = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
-            json={"mode": "merge", "data": payload["data"]},
+            json={**REAUTH, "mode": "merge", "data": payload["data"]},
         )
         assert res.status_code == 200
         res_data = res.get_json()
@@ -156,7 +172,7 @@ class TestDatabaseExportImport:
         res = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}"},
-            data={"file": (file_bytes, "backup.json"), "mode": "merge"},
+            data={"file": (file_bytes, "backup.json"), "mode": "merge", **REAUTH},
             content_type="multipart/form-data",
         )
         assert res.status_code == 200
@@ -183,7 +199,7 @@ class TestDatabaseExportImport:
         res = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
-            json={"mode": "replace", "targets": ["killers"], "data": payload},
+            json={**REAUTH, "mode": "replace", "targets": ["killers"], "data": payload},
         )
         assert res.status_code == 200
 
@@ -207,8 +223,9 @@ class TestDatabaseExportImport:
         db.session.add(realm)
         db.session.commit()
 
-        res = client.get(
-            "/api/v1/admin/database/export?targets=maps",
+        res = client.post(
+            "/api/v1/admin/database/export",
+            json={"targets": ["maps"]},
             headers={"Authorization": f"Bearer {admin_token}"},
         )
         assert res.status_code == 200
@@ -246,7 +263,7 @@ class TestDatabaseExportImport:
         res = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
-            json={"mode": "merge", "targets": ["maps"], "data": payload},
+            json={**REAUTH, "mode": "merge", "targets": ["maps"], "data": payload},
         )
         assert res.status_code == 200
         res_data = res.get_json()
@@ -260,7 +277,7 @@ class TestDatabaseExportImport:
         res2 = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
-            json={"mode": "merge", "targets": ["maps"], "data": payload},
+            json={**REAUTH, "mode": "merge", "targets": ["maps"], "data": payload},
         )
         assert res2.status_code == 200
         assert res2.get_json()["summary"]["realms"]["updated"] == 1
@@ -284,7 +301,7 @@ class TestDatabaseExportImport:
         res = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
-            json={"mode": "replace", "targets": ["maps"], "data": payload},
+            json={**REAUTH, "mode": "replace", "targets": ["maps"], "data": payload},
         )
         assert res.status_code == 200
         assert "realms" not in res.get_json()["summary"]
@@ -306,7 +323,7 @@ class TestDatabaseExportImport:
         res = client.post(
             "/api/v1/admin/database/import",
             headers={"Authorization": f"Bearer {admin_token}", "Content-Type": "application/json"},
-            json={"mode": "replace", "targets": ["maps"], "data": payload},
+            json={**REAUTH, "mode": "replace", "targets": ["maps"], "data": payload},
         )
         assert res.status_code == 200
 
@@ -324,8 +341,9 @@ class TestDatabaseExportRouteIncludeAssets:
             char.avatar_local_path = "icons/characters/trapper.webp"
             db.session.commit()
 
-        resp = client.get(
-            "/api/v1/admin/database/export?targets=killers&include_assets=false",
+        resp = client.post(
+            "/api/v1/admin/database/export",
+            json={"targets": ["killers"], "include_assets": False},
             headers={"Authorization": f"Bearer {admin_token}"},
         )
         assert resp.status_code == 200

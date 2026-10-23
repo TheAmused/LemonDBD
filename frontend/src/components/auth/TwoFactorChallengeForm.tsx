@@ -11,6 +11,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { CODE_LENGTH, CodeInput } from '@/components/auth/CodeInput';
+import { useFocusWhen } from '@/hooks/useFocusWhen';
 import { twoFactorErrorMessage } from '@/utils/twoFactorErrors';
 import type { BlockedInfo } from '@/types/moderation';
 
@@ -26,6 +27,7 @@ export const TwoFactorChallengeForm: React.FC<TwoFactorChallengeFormProps> = ({ 
   const t = useDictionary().twoFactor;
   const { completeTwoFactorLogin } = useAuth();
   const [useRecovery, setUseRecovery] = useState(false);
+  const recoveryInputRef = useFocusWhen<HTMLInputElement>(useRecovery);
   const [appCode, setAppCode] = useState('');
   const [recoveryCode, setRecoveryCode] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -61,7 +63,7 @@ export const TwoFactorChallengeForm: React.FC<TwoFactorChallengeFormProps> = ({ 
   };
 
   return (
-    <form onSubmit={submit} className="flex w-full flex-col items-center gap-5">
+    <form onSubmit={(e) => { void submit(e); }} className="flex w-full flex-col items-center gap-5">
       <p className="w-full text-center type-body-lg text-text-secondary">
         {useRecovery ? t.challengeRecoverySubtitle : t.challengeSubtitle}
       </p>
@@ -76,7 +78,7 @@ export const TwoFactorChallengeForm: React.FC<TwoFactorChallengeFormProps> = ({ 
           autoComplete="off"
           autoCapitalize="characters"
           spellCheck={false}
-          autoFocus
+          ref={recoveryInputRef}
           aria-label={t.recoveryCodeLabel}
           placeholder={t.recoveryCodePlaceholder}
           value={recoveryCode}
@@ -85,7 +87,7 @@ export const TwoFactorChallengeForm: React.FC<TwoFactorChallengeFormProps> = ({ 
           className="bg-bg-primary px-3.5 text-center tracking-widest shadow-inner"
         />
       ) : (
-        <CodeInput value={appCode} onChange={setAppCode} disabled={busy} invalid={!!error} autoFocus />
+        <CodeInput value={appCode} onChange={setAppCode} disabled={busy} invalid={!!error} focusOnMount />
       )}
       <Button type="submit" variant="primary" disabled={!ready || busy || expired} loading={busy} spinnerOnly className="w-full">
         {t.challengeSubmit}

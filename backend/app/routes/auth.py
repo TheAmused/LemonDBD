@@ -4,20 +4,22 @@ import os
 from flask import Blueprint, current_app, g, jsonify, make_response, request, send_from_directory
 from pydantic import ValidationError
 
-from app.core.account_state import AccountBlockedError
+from app.core.account_state import AccountBlockedError, is_blocked
 from app.core.config import demo_accounts_enabled
 from app.core.altcha_guard import require_altcha
 from app.core.limiter import limiter, validate_honeypot
 from app.core.rate_limits import per_minute
-from app.core.static_files import USER_CONTENT_MAX_AGE as AVATAR_MAX_AGE
 from app.core.security import (
     generate_token,
     clear_session_cookie,
     get_current_user,
     login_required,
+    request_token,
+    revoke_token,
     set_session_cookie,
     widen_legacy_session_cookie,
 )
+from app.core.transaction import transaction
 from app.schemas.user import UserRegister, UserResponse
 from app.services import site_settings
 from app.services.altcha_service import AltchaService
@@ -25,6 +27,9 @@ from app.services.user import (
     authenticate_user_credentials,
     clear_user_avatar,
     create_user_account,
+    create_verification_pending_token,
+    needs_email_verification,
+    user_from_verification_pending_token,
     delete_own_account,
     export_filename,
     export_user_data,
@@ -48,6 +53,18 @@ logger = logging.getLogger(__name__)
 auth_bp = Blueprint("auth_bp", __name__, url_prefix="/api/v1/auth")
 
 ownership_service = OwnershipService()
+
+# API clients that authenticate with `Authorization: Bearer` send this header to get the session
+# token in the JSON body. Browsers never do: their session is the HttpOnly cookie, and a token in
+# a response body is readable by any script running on the page, which would undo HttpOnly.
+TOKEN_IN_BODY_HEADER = "X-Return-Token"
+
+
+def token_fields(token: str) -> dict:
+    """`{"token", "token_type"}` for an API client that asked for them, else nothing."""
+    if request.headers.get(TOKEN_IN_BODY_HEADER, "").strip() == "1":
+        return {"token": token, "token_type": "Bearer"}
+    return {}
 
 
 @auth_bp.route("/register", methods=["POST"])
@@ -79,18 +96,20 @@ def register():
         return api_error(err, 400)
 
     ownership_service.seed_default_ownership_for_new_user(user.id)
-    token = generate_token(user.id, user.role)
-    summary = ownership_service.get_user_ownership_summary(user.id)
+    if needs_email_verification(user):
+        return _account_created_response(user)
+    return session_response(user, generate_token(user.id, user.role), "User registered successfully", status=201)
 
-    response = make_response(jsonify({
-        "status": "success",
-        "message": "User registered successfully",
-        "token": token,
-        "token_type": "Bearer",
+
+def _account_created_response(user):
+    """"New accounts must confirm their address before signing in": no session yet. The code form
+    finishes the sign-in with this token once the code checks out."""
+    return jsonify({
+        "status": "verification_required",
+        "message": "Account created. Enter the code we sent to your e-mail address to sign in.",
         "user": UserResponse.model_validate(user).model_dump(),
-        "ownership": summary,
-    }), 201)
-    return set_session_cookie(response, token)
+        "verification_token": create_verification_pending_token(user),
+    }), 201
 
 
 def session_response(user, token: str, message: str, status: int = 200, extra: dict | None = None):
@@ -98,8 +117,9 @@ def session_response(user, token: str, message: str, status: int = 200, extra: d
     response = make_response(jsonify({
         "status": "success",
         "message": message,
-        "token": token,
-        "token_type": "Bearer",
+        # A signed-in session was started (the cookie carries it).
+        "session": True,
+        **token_fields(token),
         "user": UserResponse.model_validate(user).model_dump(),
         "ownership": ownership_service.get_user_ownership_summary(user.id),
         "moderation": {"warnings": pending_warnings(user.id)},
@@ -126,11 +146,19 @@ def login():
         return api_error("Login/email and password are required.", 400)
 
     try:
-        user, token = authenticate_user_credentials(login_or_email.strip(), password.strip())
+        # The password exactly as typed: sign-up, reset and password change all store it untrimmed, so
+        # trimming it here locked out every password that starts or ends with a space. A stray space
+        # around a password that has none is still forgiven, as before.
+        user, token = authenticate_user_credentials(login_or_email.strip(), password)
+        if not user and password.strip() and password.strip() != password:
+            user, token = authenticate_user_credentials(login_or_email.strip(), password.strip())
     except AccountBlockedError as blocked:
         return blocked_response(blocked.user)
     if not user:
         return api_error("Invalid credentials", 401)
+
+    if needs_email_verification(user):
+        return _verification_required_response(user)
 
     if two_factor.is_enabled(user.id):
         # Password accepted, but no session yet: the client must finish with POST /auth/login/two-factor.
@@ -143,7 +171,20 @@ def login():
     return session_response(user, token or generate_token(user.id, user.role), "Login successful")
 
 
+def _verification_required_response(user):
+    """The password was right, but the address is not confirmed yet: no session, a code and a token instead."""
+    resend_verification_email(user.email)  # a fresh code unless one went out within the cooldown
+    return jsonify({
+        "error": "Confirm your e-mail address to sign in. Enter the code we sent you.",
+        "error_code": "email_not_verified",
+        "status": 403,
+        "email": user.email,
+        "verification_token": create_verification_pending_token(user),
+    }), 403
+
+
 @auth_bp.route("/verify-email", methods=["POST"])
+@limiter.limit(per_minute("rate_recovery_per_minute"))
 def verify_email():
     data = request.get_json(silent=True) or {}
     email = data.get("email")
@@ -151,6 +192,19 @@ def verify_email():
     user, err = verify_email_code(email, code)
     if err:
         return jsonify({"status": "error", "message": err}), 400
+
+    # Finishing a sign-in that waited for the code (the token proves the password step passed).
+    pending = user_from_verification_pending_token(data.get("verification_token"))
+    if pending is not None and pending.id == user.id:
+        if two_factor.is_enabled(user.id):
+            return jsonify({
+                "status": "two_factor_required",
+                "two_factor_token": two_factor.create_challenge(user),
+                "methods": ["totp", "recovery"],
+            }), 200
+        if is_blocked(user):
+            return blocked_response(user)
+        return session_response(user, generate_token(user.id, user.role), "Email verified successfully.")
 
     return jsonify({
         "status": "success",
@@ -160,6 +214,7 @@ def verify_email():
 
 
 @auth_bp.route("/resend-verification", methods=["POST"])
+@limiter.limit(per_minute("rate_recovery_per_minute"))
 def resend_verification():
     data = request.get_json(silent=True) or {}
     email = data.get("email")
@@ -211,7 +266,23 @@ def reset_password():
 
 @auth_bp.route("/logout", methods=["POST"])
 def logout():
+    # Deleting the cookie is not enough: a copy of the token would stay valid until it expired.
+    revoke_token(request_token())
     response = make_response(jsonify({"status": "success", "message": "Logged out successfully"}), 200)
+    return clear_session_cookie(response)
+
+
+@auth_bp.route("/logout-all", methods=["POST"])
+@limiter.limit("10 per hour")
+@login_required
+def logout_everywhere():
+    """Sign out every session of this account, on every device (this one included)."""
+    user = g.current_user
+    with transaction():
+        user.token_version = int(user.token_version or 0) + 1
+    response = make_response(
+        jsonify({"status": "success", "message": "Signed out on every device."}), 200
+    )
     return clear_session_cookie(response)
 
 
@@ -286,8 +357,7 @@ def update_profile():
 
     # The password changed, so every older session was just signed out: hand this one a fresh token.
     token = generate_token(updated_user.id, updated_user.role)
-    body["token"] = token
-    body["token_type"] = "Bearer"
+    body.update(token_fields(token))
     return set_session_cookie(make_response(jsonify(body), 200), token)
 
 

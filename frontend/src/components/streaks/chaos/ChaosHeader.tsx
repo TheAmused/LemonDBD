@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/chaos/ChaosHeader.tsx
 
 import React from 'react';
-import { Difficulty } from '@/types/chaosStreak';
+import type { Difficulty } from '@/types/chaosStreak';
 import { Flame } from 'lucide-react';
 import { FreezeBadge } from '../FreezeBadge';
 import { ChallengeHeaderLayout, HeaderButton, ModeSelectButton, StandardHeaderActions } from '../ChallengePanel';

@@ -12,6 +12,7 @@ import {
   nameFromUrl,
   parseLinkLines,
 } from '@/utils/tierLists/creator';
+import { matchShell } from '@/components/layout/shellRoutes';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import enDict from '@/locales/en';
 
@@ -102,9 +103,10 @@ describe('creator: adding items', () => {
 
 describe('creator: page wiring', () => {
   const SRC = path.resolve(__dirname, '../..');
-  it('/tier-lists/new renders the creator through PageShell with a loading state', () => {
+  it('/tier-lists/new renders the creator inside the workspace shell with a loading state', () => {
     const page = fs.readFileSync(path.join(SRC, 'app/[locale]/tier-lists/new/page.tsx'), 'utf-8');
-    assert.ok(page.includes('<PageShell') && page.includes('<TierListCreator'));
+    assert.ok(page.includes('<TierListCreator') && !page.includes('PageShell'));
+    assert.equal(matchShell(['tier-lists', 'new']).shell && (matchShell(['tier-lists', 'new']).shell as { padding?: string }).padding, 'tight');
     assert.ok(
       fs.existsSync(path.join(SRC, 'app/[locale]/tier-lists/new/loading.tsx')) ||
       fs.existsSync(path.join(SRC, 'app/[locale]/tier-lists/loading.tsx'))

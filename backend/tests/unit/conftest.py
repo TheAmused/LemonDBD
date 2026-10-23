@@ -21,6 +21,8 @@ from app.models import Chapter, Killer, Perk, Survivor, User
 @pytest.fixture(scope="session")
 def app() -> Generator[Flask, None, None]:
     """Create and configure a Flask application instance for unit testing."""
+    import tempfile
+
     flask_app = create_app(TestingConfig)
     flask_app.config.update(
         {
@@ -28,6 +30,8 @@ def app() -> Generator[Flask, None, None]:
             "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
             "SECRET_KEY": "unit-test-super-secret-key-3.14",
             "WTF_CSRF_ENABLED": False,
+            # Screenshots written by tests never land in the checkout.
+            "BUG_REPORT_UPLOAD_DIR": tempfile.mkdtemp(prefix="lemondbd-bug-uploads-"),
         }
     )
     with flask_app.app_context():
@@ -78,6 +82,17 @@ def sample_user(db_session: Session) -> User:
     db_session.add(user)
     db_session.commit()
     return user
+
+
+def tiny_image(seed: int = 0, image_format: str = "WEBP") -> bytes:
+    """A real 2x2 image (distinct per `seed`): asset imports refuse bytes that are not an image."""
+    from io import BytesIO
+
+    from PIL import Image
+
+    buffer = BytesIO()
+    Image.new("RGB", (2, 2), (seed % 256, 64, 128)).save(buffer, format=image_format)
+    return buffer.getvalue()
 
 
 def make_chapter(db_session: Session, name: str = "Test Chapter") -> Chapter:

@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/streaks/chaos/KillerPickerGrid.tsx
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Check } from 'lucide-react';
 import { avatarUrlForCharacter } from '@/utils/staticUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';

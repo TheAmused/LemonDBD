@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/smash-or-pass/SmashRosterImportModal.tsx
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ImportModal, ImportPreview, Notice, useImportDraft } from '@/components/common/ImportModal';
 import {
   type SmashRosterErrorCode,
@@ -17,6 +17,7 @@ import { LABEL } from './creator/styles';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useLocale, useDictionary } from '@/context/DictionaryContext';
 import { trackEvent } from '@/utils/analytics';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface SmashRosterImportModalProps {
   isOpen: boolean;
@@ -46,9 +47,9 @@ export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImport
     revocationCheck: { contentType: 'smash_roster', documentOf: (r) => (r.ok ? r.doc : null) },
   });
 
-  useEffect(() => {
-    if (isOpen) setSaveError(null);
-  }, [isOpen, sharePayload]);
+  useOnValueChange(isOpen ? `open:${sharePayload ?? ''}` : null, (opened) => {
+    if (opened !== null) setSaveError(null);
+  });
 
   const canImport = Boolean(result?.ok && !revoked && !unsigned && !checkingRevocation);
   const errorText = (code: SmashRosterErrorCode) => t.errors?.[code] || code;

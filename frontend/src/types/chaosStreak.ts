@@ -1,5 +1,5 @@
 // frontend/src/types/chaosStreak.ts
-import { Perk } from './gauntletStreak';
+import type { Perk } from './gauntletStreak';
 
 export type Difficulty = 'easy' | 'medium' | 'hell';
 

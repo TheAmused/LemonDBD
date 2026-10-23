@@ -21,7 +21,7 @@ describe('Characters: Skeletons & DBD Framer Motion Spinner Integrity', () => {
       })
     );
 
-    assert.ok(html.includes('role="status"'), 'Skeleton should have role="status"');
+    assert.ok(html.includes('<output'), 'Skeleton should have a status region (<output>)');
     assert.ok(html.includes('aria-busy="true"'), 'Skeleton should indicate busy state');
     assert.ok(html.includes('viewBox="0 0 160 160"'), 'Grid skeleton must render DBD Skill Check SVG');
   });
@@ -32,7 +32,7 @@ describe('Characters: Skeletons & DBD Framer Motion Spinner Integrity', () => {
       })
     );
 
-    assert.ok(html.includes('role="status"'), 'Detail skeleton should have status role');
+    assert.ok(html.includes('<output'), 'Detail skeleton should have a status region (<output>)');
     assert.ok(html.includes('aria-busy="true"'), 'Detail skeleton should indicate busy state');
     assert.ok(html.includes('viewBox="0 0 160 160"'), 'Detail skeleton must render DBD Skill Check SVG');
   });

@@ -1,17 +1,18 @@
 // frontend/src/components/minigames/guessers/AudioGuesser.tsx
 'use client';
 
+import { logger } from '@/utils/logger';
 import { Button } from '@/components/common/Button';
 import { AUDIO_ENDPOINT_PATTERN } from '@/utils/minigames/jsonExportImport';
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import Image from 'next/image';
-import { Volume2, VolumeX, Play, Pause, Activity, Check, X, Disc3 } from 'lucide-react';
+import { Volume2, VolumeX, Play, Pause, Check, X, Disc3 } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter } from '@/types/minigame';
 import { soundEngine } from '@/utils/minigames/MinigameSoundEngine';
 import { staticUrl } from '@/utils/api';
 
 import { tip } from '@/components/common/Tooltip';
-import { useDictionary } from "@/context/DictionaryContext";
+import { useDictionary, useLocale } from "@/context/DictionaryContext";
 import { InfoChip } from '@/components/common/InfoChip';
 import { Surface } from '@/components/common/Surface';
 
@@ -25,6 +26,7 @@ interface AudioGuesserProps {
 
 export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, characters, guesses, isSolved, children }) => {
   const dict = useDictionary();
+  const captionLang = useLocale();
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioProgress, setAudioProgress] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -35,7 +37,6 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const synthTimerRef = useRef<NodeJS.Timeout | null>(null);
   const t = dict.minigames;
-  const mode = roundConfig.mode;
 
   const targetChar = useMemo(() => {
     if (roundConfig.target_type) {
@@ -68,19 +69,24 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
   const heightClue = attempts >= 3 && targetChar ? `${t.attributes.height}: ${targetChar.height || ''}` : null;
 
   // Cleanup on unmount or round switch
+  // Reads the element when it runs: the <audio> only mounts once the round has a source.
+  const rewindAudio = useCallback(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.pause();
+    audio.currentTime = 0;
+  }, []);
+
   useEffect(() => {
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-      }
+      rewindAudio();
       if (synthTimerRef.current) {
         clearTimeout(synthTimerRef.current);
       }
       soundEngine.stopAll();
       setIsPlaying(false);
     };
-  }, [roundConfig.round_number]);
+  }, [roundConfig.round_number, rewindAudio]);
 
   const togglePlay = useCallback(() => {
     if (isPlaying) {
@@ -111,7 +117,7 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
       audioRef.current
         .play()
         .catch((err) => {
-          console.warn('[AudioGuesser] HTML5 audio play failed, falling back to Web Audio synth:', err);
+          logger.warn('[AudioGuesser] HTML5 audio play failed, falling back to Web Audio synth:', err);
           setUseFallback(true);
           soundEngine.playHeartbeat(32, 6);
           synthTimerRef.current = setTimeout(() => setIsPlaying(false), 6000);
@@ -144,6 +150,10 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
     return `${m}:${s < 10 ? '0' : ''}${s}`;
   };
 
+  const captionTrack = useMemo(
+    () => `data:text/vtt;charset=utf-8,${encodeURIComponent(`WEBVTT\n\n00:00:00.000 --> 99:59:59.000\n${t.audioCaption}\n`)}`,
+    [t.audioCaption]
+  );
   const rawAvatarUrl = targetChar?.avatar_url || '';
   const avatarUrl = staticUrl(rawAvatarUrl) || rawAvatarUrl;
 
@@ -158,10 +168,13 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
           onTimeUpdate={handleTimeUpdate}
           onEnded={() => setIsPlaying(false)}
           onError={() => {
-            console.warn('[AudioGuesser] Audio source error, switching to synthetic fallback.');
+            logger.warn('[AudioGuesser] Audio source error, switching to synthetic fallback.');
             setUseFallback(true);
           }}
-        />
+        >
+          {/* A text description of the sound (it is music, not speech) that never names the Killer. */}
+          <track kind="captions" srcLang={captionLang} label={t.audioCaption} src={captionTrack} default />
+        </audio>
       )}
 
       {/* Audio Player Clue Card */}

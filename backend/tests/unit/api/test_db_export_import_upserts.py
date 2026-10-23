@@ -122,8 +122,8 @@ class TestDatabaseExportImportGroupsAndUpsertHardening:
             assert summary["summary"]["users"]["updated"] == 1
 
             reloaded_beta = db.session.scalar(select(User).where(User.username == "user_beta"))
-            assert reloaded_beta.role == "admin"
-            # Email was protected from causing a unique constraint crash
+            # An import never grants a role or moves an address on an existing account.
+            assert reloaded_beta.role == "user"
             assert reloaded_beta.email == "beta@conflict.com"
 
 

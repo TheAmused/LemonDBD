@@ -393,7 +393,7 @@ test('SmashPersona: Clipboard Copy With Fallback', async (t) => {
 
     const fakeElements: any[] = [];
     (globalThis as any).document = {
-      createElement: (tag: string) => {
+      createElement: (_tag: string) => {
         const el = {
           style: {},
           setAttribute: () => {},

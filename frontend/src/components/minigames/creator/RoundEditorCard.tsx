@@ -6,13 +6,10 @@ import { Button } from '@/components/common/Button';
 import { Input, Select, Textarea } from '@/components/common/Field';
 import React, { useMemo } from 'react';
 import {
-  GripVertical,
   ChevronUp,
   ChevronDown,
   Trash2,
   Sparkles,
-  Check,
-  Package,
 } from 'lucide-react';
 import type {
   RoundConfig,
@@ -130,7 +127,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({ round, index, 
     onUpdate({
       ...round,
       custom_data: {
-        ...(round.custom_data || {}),
+        ...round.custom_data,
         [key]: value,
       },
     });

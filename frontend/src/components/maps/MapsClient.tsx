@@ -1,20 +1,20 @@
 'use client';
 // frontend/src/components/maps/MapsClient.tsx
 
-import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { Suspense, useCallback, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Search, Mic } from 'lucide-react';
-import { PageShell } from '@/components/layout/PageShell';
-import { PageShellFallback } from '@/components/layout/PageShellFallback';
-import { SegmentedControl, SegmentedControlOption } from '@/components/common/SegmentedControl';
+import type { SegmentedControlOption } from '@/components/common/SegmentedControl';
+import { SegmentedControl } from '@/components/common/SegmentedControl';
 import { MapExplorer } from '@/components/maps/MapExplorer';
 import { MapsPageSkeleton } from '@/components/maps/MapsSkeleton';
-import { Locale } from '@/i18n/config';
-import { MapRealm } from '@/types/map';
+import type { Locale } from '@/i18n/config';
+import type { MapRealm } from '@/types/map';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { usePersistentString } from '@/hooks/usePersistentString';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 const isValidSearchMode = (v: string): v is 'text' | 'voice' => v === 'text' || v === 'voice';
 
@@ -39,24 +39,26 @@ function MapsClientInner() {
     mapId?: number;
     timestamp: number;
     via?: 'voice' | 'link';
-  }>({
+  }>(() => ({
     mapName: initialMapName,
     mapId: initialMapId,
     timestamp: Date.now(),
     via: 'link',
-  });
-  useEffect(() => {
+  }));
+  // A new link target (client navigation to another map) is handled like a fresh selection:
+  // the bumped timestamp makes it a new target even when it names the map already open.
+  useOnValueChange(`${initialMapName}|${initialMapId ?? ''}`, () => {
     if (initialMapName || initialMapId !== undefined) {
-      setSelectedMap({ mapName: initialMapName, mapId: initialMapId, timestamp: Date.now(), via: 'link' });
+      setSelectedMap((prev) => ({ mapName: initialMapName, mapId: initialMapId, timestamp: prev.timestamp + 1, via: 'link' }));
     }
-  }, [initialMapName, initialMapId]);
+  });
 
   const backendBase = getBackendBaseUrl();
 
   const searchModeOptions: readonly [
     SegmentedControlOption<'text' | 'voice'>,
     SegmentedControlOption<'text' | 'voice'>,
-  ] = [
+  ] = useMemo(() => [
     {
       value: 'text',
       icon: <Search className="h-4 w-4" aria-hidden="true" />,
@@ -69,11 +71,8 @@ function MapsClientInner() {
       label: dict.maps.searchVoiceTab,
       activeClassName: 'bg-accent-red',
     },
-  ];
+  ], [dict.maps.searchTextTab, dict.maps.searchVoiceTab]);
 
-  const router = useRouter();
-
-  const handleSourceChange = useCallback(() => {}, []);
   const handleSelectMap = useCallback((name: string, mapId?: number) => {
     setSelectedMap({ mapName: name, mapId, timestamp: Date.now(), via: 'voice' });
   }, []);
@@ -100,7 +99,6 @@ function MapsClientInner() {
       <VoiceCommandBanner
         locale={locale}
         currentSource="hens333"
-        onSourceChange={handleSourceChange}
         onSelectMap={handleSelectMap}
         onAction={handleAction}
         availableMaps={availableMaps}
@@ -109,50 +107,30 @@ function MapsClientInner() {
         embedded={true}
       />
     ),
-    [locale, handleSourceChange, handleSelectMap, handleAction, availableMaps, searchMode, toggleSwitchElement]
+    [locale, handleSelectMap, handleAction, availableMaps, searchMode, toggleSwitchElement]
   );
 
-  const handleSelectCategory = useCallback(() => {
-    router.push(`/${locale}`);
-  }, [router, locale]);
-
   return (
-    <PageShell
-      locale={locale}
-      activeCategory="maps"
-      onSelectCategory={handleSelectCategory}
-      customPadding="p-4 sm:p-6 lg:p-7"
-      mainClassName="relative min-h-screen flex flex-col gap-4"
-    >
-      <div className="relative z-10 flex flex-col gap-4">
-        <MapExplorer
-          initialMapName={selectedMap.mapName}
-          selectedMap={selectedMap}
-          onAvailableMapsLoaded={(maps) => {
-            setAvailableMaps(maps);
-          }}
-          backendBase={backendBase}
-          locale={locale}
-          hideSearch={searchMode === 'voice'}
-          voiceSlot={voiceBanner}
-          modeSwitcherSlot={toggleSwitchElement}
-        />
-      </div>
-    </PageShell>
+    <div className="relative z-10 flex flex-col gap-4">
+      <MapExplorer
+        initialMapName={selectedMap.mapName}
+        selectedMap={selectedMap}
+        onAvailableMapsLoaded={(maps) => {
+          setAvailableMaps(maps);
+        }}
+        backendBase={backendBase}
+        locale={locale}
+        hideSearch={searchMode === 'voice'}
+        voiceSlot={voiceBanner}
+        modeSwitcherSlot={toggleSwitchElement}
+      />
+    </div>
   );
 }
 
 export function MapsClient() {
   return (
-    <Suspense
-      fallback={
-        <PageShellFallback
-          customPadding="p-4 sm:p-6 lg:p-7"
-          mainClassName="min-h-screen flex flex-col gap-4"
-          skeleton={<MapsPageSkeleton />}
-        />
-      }
-    >
+    <Suspense fallback={<MapsPageSkeleton />}>
       <MapsClientInner />
     </Suspense>
   );

@@ -33,11 +33,22 @@ class TestSniff:
 @pytest.mark.unit
 class TestHostChecks:
     @pytest.mark.parametrize(
-        "host", ["localhost", "redis", "127.0.0.1", "10.1.2.3", "169.254.169.254", "::1", "::ffff:127.0.0.1", "x.internal"]
+        "host",
+        [
+            "localhost", "redis", "127.0.0.1", "10.1.2.3", "169.254.169.254", "::1", "::ffff:127.0.0.1", "x.internal",
+            # not private, but not globally routable either: carrier-grade NAT, NAT64, 6to4 and
+            # Teredo wrapping a loopback address, benchmarking and documentation nets
+            "100.64.0.1", "100.127.255.254", "64:ff9b::7f00:1", "64:ff9b::a00:1", "2002:7f00:1::",
+            "2001:0:4136:e378:8000:63bf:3fff:fdd2", "198.18.0.1", "192.0.2.10",
+        ],
     )
     def test_internal_hosts_are_refused(self, host: str) -> None:
         assert network.resolve_public_addresses(host) == []
         assert network.is_private_host(host)
+
+    @pytest.mark.parametrize("host", ["8.8.8.8", "1.1.1.1", "2606:4700::1111"])
+    def test_public_addresses_are_allowed(self, host: str) -> None:
+        assert network.resolve_public_addresses(host) == [host]
 
     def test_a_name_resolving_to_any_private_address_is_refused(self, monkeypatch) -> None:
         monkeypatch.setattr(

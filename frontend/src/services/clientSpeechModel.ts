@@ -136,7 +136,7 @@ export class AudioCaptureSession {
 
     if (this.audioContext && this.audioContext.state !== 'closed') {
       try {
-        this.audioContext.close();
+        this.audioContext.close().catch(() => {});
       } catch {}
       this.audioContext = null;
     }

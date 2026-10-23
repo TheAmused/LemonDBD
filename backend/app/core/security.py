@@ -1,6 +1,7 @@
 # backend/app/core/security.py
 import functools
 import logging
+import secrets
 from datetime import datetime, timedelta, timezone
 from typing import Any
 import jwt
@@ -9,6 +10,7 @@ from sqlalchemy import select
 from werkzeug.security import check_password_hash, generate_password_hash
 from app.core.account_state import is_blocked
 from app.core.extensions import db
+from app.models.revoked_session import RevokedSession
 from app.models.user import User
 
 logger = logging.getLogger(__name__)
@@ -62,7 +64,7 @@ def set_session_cookie(response, token: str):
 
         max_age = int(session_lifetime().total_seconds())
     except Exception:
-        pass
+        logger.debug("Admin session lifetime unavailable; using the default", exc_info=True)
     return _write_session_cookie(response, token, max_age)
 
 
@@ -111,7 +113,10 @@ def enforce_cookie_csrf_protection():
     """
     if request.method in _SAFE_METHODS or SESSION_COOKIE_NAME not in request.cookies:
         return None
-    if request.headers.get("Authorization"):
+    # Only a real Bearer token exempts the request: it is then authenticated by that header alone
+    # (get_current_user ignores the cookie), so a cross-site page cannot ride on the cookie. Any
+    # other Authorization value still goes through the origin check.
+    if _bearer_token() is not None:
         return None
     origin = request.headers.get("Origin")
     if not origin:
@@ -131,6 +136,22 @@ def enforce_cookie_csrf_protection():
 def hash_password(password: str) -> str:
     """Hash a plaintext password for secure database storage."""
     return generate_password_hash(password)
+
+
+_dummy_password_hash: str | None = None
+
+
+def spend_password_check(password: str) -> None:
+    """Does the work of one password check against a throwaway hash and discards the result.
+
+    Called when there is no hash to check (unknown login, or an account with no password), so a
+    failed sign-in takes as long whether or not the account exists -- the timing no longer tells
+    an attacker which logins and e-mail addresses are registered.
+    """
+    global _dummy_password_hash
+    if _dummy_password_hash is None:
+        _dummy_password_hash = generate_password_hash(secrets.token_urlsafe(16))
+    check_password_hash(_dummy_password_hash, password or "")
 
 
 def verify_password(password: str, password_hash: str | None) -> bool:
@@ -202,7 +223,7 @@ def generate_token(
 
             expires_delta = session_lifetime()
         except Exception:
-            pass
+            logger.debug("Admin session lifetime unavailable; using the configured default", exc_info=True)
         secret_key = current_app.config.get("JWT_SECRET_KEY") or current_app.config.get("SECRET_KEY") or DEFAULT_SECRET_KEY
         algorithm = current_app.config.get("JWT_ALGORITHM") or DEFAULT_JWT_ALGORITHM
     else:
@@ -220,6 +241,8 @@ def generate_token(
         "exp": now + expires_delta,
         "typ": token_type,
         "ver": token_version if token_version is not None else _current_token_version(user_id),
+        # Random id, so this one token can be signed out (RevokedSession) without the others.
+        "jti": secrets.token_hex(16),
     }
 
     if extra_claims:
@@ -254,25 +277,90 @@ def decode_token(token: str) -> dict[str, Any] | None:
         return None
 
 
+def _bearer_token() -> str | None:
+    """The token of an `Authorization: Bearer <token>` header, or None."""
+    auth_header = request.headers.get("Authorization", "")
+    if auth_header.startswith("Bearer "):
+        return auth_header.split(" ", 1)[1].strip() or None
+    return None
+
+
+def request_token() -> str | None:
+    """The session token this request carries.
+
+    With an Authorization header present only a Bearer token counts and the cookie is ignored:
+    falling back to the cookie would let a request that skipped the CSRF origin check (because it
+    had *some* Authorization header) still act as the signed-in user.
+    """
+    if request.headers.get("Authorization", "").strip():
+        return _bearer_token()
+    return request.cookies.get(SESSION_COOKIE_NAME, "").strip() or None
+
+
+def _revocation_cache() -> dict[str, bool]:
+    """Per-request memo of revocation lookups (kept in the WSGI environ, which dies with the request)."""
+    from flask import has_request_context
+
+    if not has_request_context():
+        return {}
+    return request.environ.setdefault("lemondbd.revoked_jti", {})
+
+
+def is_revoked(payload: dict[str, Any]) -> bool:
+    """True when this token was signed out (looked up once per request)."""
+    jti = payload.get("jti")
+    if not jti:
+        return False
+    cache = _revocation_cache()
+    if jti not in cache:
+        cache[jti] = db.session.get(RevokedSession, str(jti)) is not None
+    return cache[jti]
+
+
+def revoke_token(token: str | None) -> bool:
+    """Sign out one session token until it would have expired. True when it was valid."""
+    payload = decode_token(token or "")
+    if not payload or not payload.get("jti") or not payload.get("exp"):
+        return False
+    expires_at = datetime.fromtimestamp(int(payload["exp"]), tz=timezone.utc)
+    if expires_at <= datetime.now(timezone.utc):
+        return False
+    try:
+        db.session.merge(RevokedSession(jti=str(payload["jti"]), expires_at=expires_at))
+        db.session.commit()
+    except Exception as err:
+        db.session.rollback()
+        logger.warning("Could not record a signed-out session: %s", err)
+        return False
+    _revocation_cache()[str(payload["jti"])] = True
+    return True
+
+
+def purge_expired_revocations() -> int:
+    """Delete revocation rows whose token has expired on its own (scheduler job)."""
+    from sqlalchemy import delete
+
+    result = db.session.execute(
+        delete(RevokedSession).where(RevokedSession.expires_at <= datetime.now(timezone.utc))
+    )
+    db.session.commit()
+    return int(result.rowcount or 0)
+
+
 def get_current_user() -> User | None:
     """Extract and verify the current user from the Authorization Bearer header or the session cookie.
 
     A token in the query string (`?token=`) is deliberately not accepted: URLs end up in access
     logs, browser history and `Referer` headers, and nothing in the app sends one.
     """
-    auth_header = request.headers.get("Authorization")
-    token: str | None = None
-
-    if auth_header and auth_header.startswith("Bearer "):
-        token = auth_header.split(" ", 1)[1].strip()
-    elif request.cookies.get(SESSION_COOKIE_NAME):
-        token = request.cookies.get(SESSION_COOKIE_NAME, "").strip()
-
+    token = request_token()
     if not token:
         return None
 
     payload = decode_token(token)
     if not payload or "sub" not in payload:
+        return None
+    if is_revoked(payload):
         return None
 
     try:

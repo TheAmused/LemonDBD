@@ -298,7 +298,9 @@ def preview_sanction(body: dict[str, Any]) -> dict[str, Any]:
 
 def _issue(kind: str, admin: User | None, user_id: int, **fields: Any) -> UserSanction:
     with transaction():
-        user = _check_target(admin, db.session.get(User, user_id))
+        # The account row is locked for the decision, so two admins banning the same account at once
+        # cannot both pass the "already banned" check.
+        user = _check_target(admin, db.session.get(User, user_id, with_for_update=True))
         sanction = create_sanction(kind, admin, user, **fields)
     dispatch_notifications(queued_notification_ids([sanction.id]))
     return sanction
@@ -354,7 +356,7 @@ def _lift(admin: User | None, sanction: UserSanction, reason: str, now: datetime
 def revoke_sanction(admin: User | None, sanction_id: int, reason: Any) -> UserSanction:
     clean_reason = _clean_text(reason, "reason", required=True, limit=1000)
     with transaction():
-        sanction = db.session.get(UserSanction, sanction_id)
+        sanction = db.session.get(UserSanction, sanction_id, with_for_update=True)
         if sanction is None:
             raise ModerationError("Sanction not found", 404)
         if sanction.revoked_at is not None:
@@ -409,6 +411,13 @@ def list_user_sanctions(user_id: int) -> list[dict[str, Any]]:
     ]
 
 
+def next_suspension_days(user_id: int) -> int:
+    """The length the admin's escalation settings give this account's next suspension (first or later)."""
+    thresholds = escalation_thresholds()
+    earlier = sum(1 for s in _sanctions_of(user_id) if s.kind == "suspension" and s.revoked_at is None)
+    return thresholds["second_suspension_days"] if earlier else thresholds["first_suspension_days"]
+
+
 def moderation_summary(user_id: int) -> dict[str, Any]:
     now = _now()
     sanctions = _sanctions_of(user_id)
@@ -429,6 +438,8 @@ def moderation_summary(user_id: int) -> dict[str, Any]:
             thresholds=escalation_thresholds(),
         ),
         "suspended_until": as_utc(suspension.expires_at).isoformat() if suspension else None,
+        # What a suspension starts at in the form (Settings > Moderation), whatever the suggestion is.
+        "next_suspension_days": next_suspension_days(user_id),
         "content_blocked": db.session.scalar(
             select(func.count(ContentRevocation.id)).where(ContentRevocation.author_id == user_id)
         )

@@ -4,9 +4,18 @@ from flask import Blueprint, Response, g, jsonify, request
 from pydantic import ValidationError
 
 from app.core.limiter import limiter
-from app.core.security import admin_required, login_required, verify_password
+from app.core.reauth import reauth_error
+from app.core.security import admin_required, login_required
 from app.models.admin import CHALLENGE_MODES
-from app.schemas.user import UserCreate, UserResponse, UserUpdate
+from app.schemas.user import (
+    BulkCharacterOwnershipRequest,
+    BulkPerkOwnershipRequest,
+    CharacterOwnershipSet,
+    PerkOwnershipSet,
+    UserCreate,
+    UserResponse,
+    UserUpdate,
+)
 from app.utils.pagination import paginate_args
 from app.services.admin_control_service import log_admin_action
 from app.services.challenge_reset import CHALLENGE_RESET_NOTE_MAX, list_user_challenges, reset_user_challenge
@@ -36,21 +45,17 @@ users_bp = Blueprint("users_bp", __name__, url_prefix="/api/v1")
 ownership_service = OwnershipService()
 
 
-def _other_admin_confirmation_error(target, password: str | None) -> tuple[Response, int] | None:
-    """A 403 unless the acting admin re-entered their own password, when `target` is another admin.
+def _other_admin_confirmation_error(target, data: dict | None) -> tuple[Response, int] | None:
+    """A 403 unless the acting admin re-authenticated, when `target` is another admin.
 
     Sanctions already refuse admin targets; demoting or resetting the second factor of another
     admin did not, so one stolen admin session could strip every other admin. Re-entering the
-    password is what a stolen session cookie cannot do.
+    password (and a 2FA code) is what a stolen session cookie cannot do.
     """
     actor = g.current_user
     if target is None or target.role != "admin" or target.id == actor.id:
         return None
-    if not actor.password_hash:
-        return api_error("Set a password on your own account before changing another administrator.", 403)
-    if not password or not verify_password(str(password), actor.password_hash):
-        return api_error("Confirm with your own password to change another administrator.", 403)
-    return None
+    return reauth_error(actor, data)
 
 
 def _unverified_owner_error(user_id: int) -> tuple[Response, int] | None:
@@ -65,6 +70,10 @@ def _unverified_owner_error(user_id: int) -> tuple[Response, int] | None:
     if email_verification_required():
         return api_error("Verify your email address before changing what you own.", 403, code="email_not_verified")
     return None
+
+
+def _invalid_body(err: ValidationError) -> tuple[Response, int]:
+    return api_error("Validation failed", 400, details=err.errors(include_url=False, include_context=False))
 
 
 def _self_or_admin_error(user_id: int, message: str = "Unauthorized.") -> tuple[Response, int] | None:
@@ -100,6 +109,12 @@ def create_user_by_admin():
         validated_data = UserCreate.model_validate(payload)
     except ValidationError as err:
         return api_error("Validation failed", 400, details=err.errors())
+
+    # Creating an admin grants admin rights: a stolen session must not be able to mint one whose
+    # password the attacker chose (and then pass every "your own password" check through it).
+    if (validated_data.role or "").lower() == "admin":
+        if err_resp := reauth_error(g.current_user, payload):
+            return err_resp
 
     user, err = create_user_account(
         login=validated_data.login,
@@ -175,11 +190,8 @@ def update_user_by_admin(user_id: int):
     except ValidationError as err:
         return api_error("Validation failed", 400, details=err.errors())
 
-    # Taking the admin role from another admin needs the acting admin's password (banning one is
-    # refused by the sanctions themselves).
-    if (validated_data.role or "").lower() == "user":
-        if err_resp := _other_admin_confirmation_error(fetch_user_by_id(user_id), validated_data.current_password):
-            return err_resp
+    if err_resp := _role_change_confirmation_error(user_id, validated_data.role, payload):
+        return err_resp
 
     user, err = admin_modify_user(
         user_id=user_id,
@@ -197,7 +209,7 @@ def update_user_by_admin(user_id: int):
         action="user_updated",
         target_type="user",
         target_id=user_id,
-        details=validated_data.model_dump(exclude_none=True, exclude={"current_password"}),
+        details=validated_data.model_dump(exclude_none=True, exclude={"current_password", "two_factor_code"}),
     )
 
     return jsonify({
@@ -205,6 +217,18 @@ def update_user_by_admin(user_id: int):
         "message": "User updated successfully",
         "user": UserResponse.model_validate(user).model_dump(),
     }), 200
+
+
+def _role_change_confirmation_error(user_id: int, role: str | None, payload: dict):
+    """Taking the admin role from another admin, or granting it to anyone, needs the acting admin to
+    re-authenticate (banning an admin is refused by the sanctions themselves). None when allowed."""
+    new_role = (role or "").lower()
+    target = fetch_user_by_id(user_id)
+    if new_role == "user":
+        return _other_admin_confirmation_error(target, payload)
+    if new_role == "admin" and target is not None and target.role != "admin":
+        return reauth_error(g.current_user, payload)
+    return None
 
 
 @users_bp.route("/users/<int:user_id>/two-factor/reset", methods=["POST"])
@@ -215,8 +239,12 @@ def reset_user_two_factor(user_id: int):
     target = fetch_user_by_id(user_id)
     if not target:
         return api_error("User not found.", 404)
+    if target.id == g.current_user.id:
+        # Your own second factor is switched off on your profile, which asks for the password and a
+        # code; this reset asks for neither, so a stolen session could have removed it.
+        return api_error("Switch off your own two-factor sign-in on your profile page.", 400)
     body = request.get_json(silent=True) or {}
-    if err_resp := _other_admin_confirmation_error(target, body.get("current_password")):
+    if err_resp := _other_admin_confirmation_error(target, body):
         return err_resp
 
     had_two_factor = two_factor.admin_reset(target)
@@ -328,21 +356,22 @@ def set_single_character_ownership(user_id: int):
     if err_resp := _unverified_owner_error(user_id):
         return err_resp
 
-    data = request.get_json(silent=True) or {}
-    character_id = positive_id(data.get("character_id"))
-    is_owned = bool(data.get("is_owned", True))
-
+    try:
+        change = CharacterOwnershipSet.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return _invalid_body(err)
+    character_id = positive_id(change.character_id)
     if character_id is None:
         return api_error("character_id is required.", 400)
     # Never guessed: survivor 7 and killer 7 are different characters, and the guess used to
     # prefer the killer whenever both existed.
     try:
-        role = normalize_role(data.get("role"))
+        role = normalize_role(change.role)
     except ValueError:
         return api_error("role is required and must be 'survivor' or 'killer'.", 400)
 
     try:
-        result = ownership_service.set_character_ownership(user_id, character_id, is_owned, role=role)
+        result = ownership_service.set_character_ownership(user_id, character_id, change.is_owned, role=role)
         return jsonify({"status": "success", "data": result}), 200
     except ValueError as ve:
         return api_error(str(ve), 404)
@@ -357,11 +386,13 @@ def bulk_set_character_ownership(user_id: int):
     if err_resp := _unverified_owner_error(user_id):
         return err_resp
 
-    data = request.get_json(silent=True) or {}
-    updates = data.get("updates", [])
+    try:
+        bulk = BulkCharacterOwnershipRequest.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return _invalid_body(err)
 
     try:
-        result = ownership_service.bulk_set_character_ownership(user_id, updates)
+        result = ownership_service.bulk_set_character_ownership(user_id, [u.model_dump() for u in bulk.updates])
     except ValueError as err:
         return api_error(str(err), 400)
     return jsonify({"status": "success", "data": result}), 200
@@ -438,15 +469,16 @@ def set_single_perk_ownership(user_id: int):
     if err_resp := _unverified_owner_error(user_id):
         return err_resp
 
-    data = request.get_json(silent=True) or {}
-    perk_id = positive_id(data.get("perk_id"))
-    is_unlocked = bool(data.get("is_unlocked", True))
-
+    try:
+        change = PerkOwnershipSet.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return _invalid_body(err)
+    perk_id = positive_id(change.perk_id)
     if perk_id is None:
         return api_error("perk_id is required.", 400)
 
     try:
-        result = ownership_service.set_perk_ownership(user_id, perk_id, is_unlocked)
+        result = ownership_service.set_perk_ownership(user_id, perk_id, change.is_unlocked)
         return jsonify({"status": "success", "data": result}), 200
     except ValueError as ve:
         return api_error(str(ve), 404)
@@ -461,11 +493,13 @@ def bulk_set_perk_ownership(user_id: int):
     if err_resp := _unverified_owner_error(user_id):
         return err_resp
 
-    data = request.get_json(silent=True) or {}
-    updates = data.get("updates", [])
+    try:
+        bulk = BulkPerkOwnershipRequest.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return _invalid_body(err)
 
     try:
-        result = ownership_service.bulk_set_perk_ownership(user_id, updates)
+        result = ownership_service.bulk_set_perk_ownership(user_id, [u.model_dump() for u in bulk.updates])
     except ValueError as err:
         return api_error(str(err), 400)
     return jsonify({"status": "success", "data": result}), 200

@@ -1,38 +1,39 @@
 // frontend/src/components/streaks/chaos/useKillerPerkPool.ts
 'use client';
 
+import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useState } from 'react';
-import { Perk } from '@/types/gauntletStreak';
+import type { Perk } from '@/types/gauntletStreak';
 import { useAuth } from '@/context/AuthContext';
 import { backendBase } from '@/utils/staticUrl';
 
 export function useKillerPerkPool() {
   const { token, user } = useAuth();
   const [pool, setPool] = useState<Perk[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const load = useCallback(async () => {
-    if (!token || !user) return;
-    setLoading(true);
-    try {
-      const res = await fetch(`${backendBase}/api/v1/users/${user.id}/perks?category=Killer`, {
-        credentials: 'include',
-      });
-      if (res.ok) {
-        const data = await res.json();
-        const unlocked = (data.data || []).filter((p: { is_unlocked?: boolean }) => p.is_unlocked);
-        setPool(unlocked);
-      }
-    } catch (err) {
-      console.error('Failed to load killer perk pool:', err);
-    } finally {
-      setLoading(false);
-    }
-  }, [token, user?.id]);
+  const userId = user?.id;
+  const [reloadCount, setReloadCount] = useState(0);
+  // Loading until the request for this account has settled (and while signed out).
+  const requestKey = token && userId != null ? `${userId}|${reloadCount}` : null;
+  const [settledKey, setSettledKey] = useState<string | null>(null);
+  const loading = requestKey === null || settledKey !== requestKey;
 
   useEffect(() => {
-    load();
-  }, [load]);
+    if (requestKey === null) return;
+    let cancelled = false;
+    fetch(`${backendBase}/api/v1/users/${userId}/perks?category=Killer`, { credentials: 'include' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (cancelled || !data) return;
+        setPool((data.data || []).filter((p: { is_unlocked?: boolean }) => p.is_unlocked));
+      })
+      .catch((err: unknown) => logger.error('Failed to load killer perk pool:', err))
+      .finally(() => !cancelled && setSettledKey(requestKey));
+    return () => {
+      cancelled = true;
+    };
+  }, [requestKey, userId]);
 
-  return { pool, loading, reload: load };
+  const reload = useCallback(() => setReloadCount((count) => count + 1), []);
+
+  return { pool, loading, reload };
 }

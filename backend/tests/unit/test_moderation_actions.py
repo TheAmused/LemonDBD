@@ -402,3 +402,15 @@ def test_a_refused_author_action_rolls_the_whole_resolution_back(client, admin, 
     assert db_session.get(ContentReport, report_id).status == "pending"
     assert db_session.scalars(select(ContentRevocation)).all() == []
     assert db_session.scalars(select(SanctionNotification)).all() == []
+
+
+
+@pytest.mark.unit
+def test_the_summary_carries_the_length_of_the_next_suspension(db_session: Session) -> None:
+    """The form starts a suspension at Settings > Moderation's length (first, then second), not a fixed 7."""
+    admin, target = _user(db_session, "len_admin", "admin"), _user(db_session, "len_target")
+    site_settings.update_settings({"suspension_first_days": 10, "suspension_second_days": 40})
+    site_settings.invalidate_cache()
+    assert actions.moderation_summary(target.id)["next_suspension_days"] == 10
+    actions.suspend(admin, target.id, reason_code="spam", facts="spam", duration_days=10, send_email=False)
+    assert actions.moderation_summary(target.id)["next_suspension_days"] == 40

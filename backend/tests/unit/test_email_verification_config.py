@@ -2,14 +2,13 @@
 from unittest.mock import patch
 import pytest
 from flask import Flask
-from app.services.user.auth import create_user_account
 from app.services.user import UserService
 
 
 @pytest.mark.unit
-def test_create_user_account_with_verification_enabled(app: Flask):
+def test_create_user_account_with_verification_enabled(app: Flask, monkeypatch: pytest.MonkeyPatch):
     """When REQUIRE_EMAIL_VERIFICATION is True, new users must be unverified and receive a code."""
-    app.config["REQUIRE_EMAIL_VERIFICATION"] = True
+    monkeypatch.setitem(app.config, "REQUIRE_EMAIL_VERIFICATION", True)
     user_service = UserService()
 
     with patch("app.services.user.auth.send_verification_email") as mock_send_email:
@@ -27,9 +26,9 @@ def test_create_user_account_with_verification_enabled(app: Flask):
 
 
 @pytest.mark.unit
-def test_create_user_account_with_verification_disabled(app: Flask):
+def test_create_user_account_with_verification_disabled(app: Flask, monkeypatch: pytest.MonkeyPatch):
     """When REQUIRE_EMAIL_VERIFICATION is False, new users must be auto-verified with no email sent."""
-    app.config["REQUIRE_EMAIL_VERIFICATION"] = False
+    monkeypatch.setitem(app.config, "REQUIRE_EMAIL_VERIFICATION", False)
     user_service = UserService()
 
     with patch("app.services.user.auth.send_verification_email") as mock_send_email:
@@ -47,9 +46,9 @@ def test_create_user_account_with_verification_disabled(app: Flask):
 
 
 @pytest.mark.unit
-def test_authenticate_auto_verifies_unverified_user_when_disabled(app: Flask):
+def test_authenticate_auto_verifies_unverified_user_when_disabled(app: Flask, monkeypatch: pytest.MonkeyPatch):
     """When REQUIRE_EMAIL_VERIFICATION is toggled to False, existing unverified users auto-verify on login."""
-    app.config["REQUIRE_EMAIL_VERIFICATION"] = True
+    monkeypatch.setitem(app.config, "REQUIRE_EMAIL_VERIFICATION", True)
     user_service = UserService()
 
     with patch("app.services.user.auth.send_verification_email"):
@@ -62,7 +61,7 @@ def test_authenticate_auto_verifies_unverified_user_when_disabled(app: Flask):
         assert user.is_verified is False
 
     # Now verification is turned off in config
-    app.config["REQUIRE_EMAIL_VERIFICATION"] = False
+    monkeypatch.setitem(app.config, "REQUIRE_EMAIL_VERIFICATION", False)
 
     authenticated_user, token = user_service.authenticate(
         login_or_email="unverified_legacy_user",

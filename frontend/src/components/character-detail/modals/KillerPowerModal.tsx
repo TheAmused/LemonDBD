@@ -1,9 +1,11 @@
 // frontend/src/components/character-detail/modals/KillerPowerModal.tsx
 import React from 'react';
 import { BookOpen, Flame } from 'lucide-react';
-import { KillerPowerInfo, CharacterItem, getAssetUrl, CharacterDetailDictionary } from '../types';
+import type { KillerPowerInfo, CharacterItem, CharacterDetailDictionary } from '../types';
+import { getAssetUrl } from '../types';
 import { RichText } from '@/components/common/RichText';
 import { Modal } from '@/components/common/Modal';
+import { Img } from '@/components/common/Img';
 
 interface KillerPowerModalProps {
   isOpen: boolean;
@@ -18,7 +20,6 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
   isOpen,
   onClose,
   killerPower,
-  character,
   backendBase,
   t,
 }) => {
@@ -36,7 +37,7 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
       <div className="flex justify-center px-6 pt-5">
         <div className="w-20 h-20 shrink-0 rounded-card bg-bg-elevated border-2 border-accent-red/50 flex items-center justify-center p-2 shadow-lg">
           {killerPower.icon_url || killerPower.icon_local_path ? (
-            <img
+            <Img
               src={getAssetUrl(backendBase, killerPower.icon_local_path, killerPower.icon_url)}
               alt=""
               className="h-full w-full object-contain"

@@ -1,22 +1,23 @@
 // frontend/src/components/generator/GeneratorPage.tsx
 'use client';
 
-import React, { useState, useEffect, useMemo, useCallback, useRef, Suspense } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { AlertTriangle, RotateCcw } from 'lucide-react';
-import {
+import type {
   Perk,
   DrawnSlot,
   RoleCategory,
   GeneratorMode,
 } from '@/types/perks';
-import { Dictionary } from '@/locales/types';
+
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAudioEnabled, setAudioEnabled } from '@/utils/perkAudio';
 import { computeEligiblePool, computePlayablePool } from './lib/perkPicker';
+import type {
+  GeneratorStoredState} from './lib/generatorStorage';
 import {
-  GeneratorStoredState,
   getStoredGeneratorState,
   saveStoredGeneratorState,
   getDrawnPerksForRole,
@@ -35,6 +36,7 @@ import { StageFrame } from './shared/StageFrame';
 import type { ChaosMutator } from '../ChaosWheelModal';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useLocale, useDictionary } from '@/context/DictionaryContext';
+import { useIsClient } from '@/hooks/useIsClient';
 
 const ChaosWheelModal = dynamic(() => import('../ChaosWheelModal').then((m) => m.ChaosWheelModal), { ssr: false });
 const ConfirmModal = dynamic(() => import('../common/ConfirmModal').then((m) => m.ConfirmModal), { ssr: false });
@@ -80,14 +82,23 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   // the falling edge (pool just dropped under the threshold) rather than on
   // every render at a low count, so closing it doesn't just reopen it.
   const [showLowPoolWarning, setShowLowPoolWarning] = useState(false);
-  const prevPlayableCountRef = useRef<number | null>(null);
+  const [prevPlayableCount, setPrevPlayableCount] = useState<number | null>(null);
 
-  useEffect(() => {
+  // The saved generator comes back once, on the first render after hydration (the server and
+  // the hydrating client render the defaults, so they agree). Saving waits for it, below.
+  const isClient = useIsClient();
+  const [restored, setRestored] = useState(false);
+  if (isClient && !restored) {
+    setRestored(true);
     setAudioEnabledState(getAudioEnabled());
 
     const saved = getStoredGeneratorState();
+    const restoredRole: RoleCategory = saved?.role === 'Survivor' || saved?.role === 'Killer' ? saved.role : role;
+    // Drawn perks and the active mutator (curse) are kept per role, so they persist until reset.
+    setDrawnPerks(getDrawnPerksForRole(restoredRole));
+    setActiveMutator(getActiveMutatorForRole(restoredRole));
     if (saved) {
-      if (saved.role === 'Survivor' || saved.role === 'Killer') setRole(saved.role);
+      setRole(restoredRole);
       if (saved.genMode && KNOWN_MODES.includes(saved.genMode)) setGenMode(saved.genMode);
       if (typeof saved.noRepeatPerks === 'boolean') setNoRepeatPerks(saved.noRepeatPerks);
       if (typeof saved.spinDurationSec === 'number' && saved.spinDurationSec >= 1 && saved.spinDurationSec <= 30) {
@@ -105,21 +116,11 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         }
       }
       if (typeof saved.blindMode === 'boolean') setBlindMode(saved.blindMode);
-      if (saved.activeMutator && typeof saved.activeMutator === 'object' && typeof saved.activeMutator.id === 'string') {
-        setActiveMutator(saved.activeMutator);
-      }
     }
-  }, []);
+  }
 
   useEffect(() => {
-    // 1. Restore local drawn perks immediately so all modes and tabs share state instantly
-    setDrawnPerks(getDrawnPerksForRole(role));
-
-    // 2. Restore active mutator (curse) for this role so it persists until reset
-    setActiveMutator(getActiveMutatorForRole(role));
-  }, [role]);
-
-  useEffect(() => {
+    if (!restored) return;
     const payload: GeneratorStoredState = {
       role,
       genMode,
@@ -131,7 +132,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
       activeMutator,
     };
     saveStoredGeneratorState(payload);
-  }, [role, genMode, noRepeatPerks, spinDurationSec, loadout, activeSlotIdx, blindMode, activeMutator]);
+  }, [restored, role, genMode, noRepeatPerks, spinDurationSec, loadout, activeSlotIdx, blindMode, activeMutator]);
 
   const baseEligibleRolePerks = useMemo(
     () => computeEligiblePool(allPerks, role, Boolean(user)),
@@ -149,25 +150,27 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   const totalPages = Math.max(1, Math.ceil(totalPlayableCount / PERKS_PER_PAGE));
   const lastPagePerks = totalPlayableCount % PERKS_PER_PAGE || (totalPlayableCount > 0 ? PERKS_PER_PAGE : 0);
 
-  useEffect(() => {
-    // Skip until real perk data has actually loaded -- allPerks/baseEligibleRolePerks
-    // start empty before the fetch resolves, which used to read as "the pool just hit
-    // zero" and fire the warning on every page load before any perk had even been drawn.
-    if (baseEligibleRolePerks.length === 0) return;
-
-    const prev = prevPlayableCountRef.current;
+  // (Adjusted while rendering.) Skip until real perk data has actually loaded -- allPerks/baseEligibleRolePerks
+  // start empty before the fetch resolves, which used to read as "the pool just hit
+  // zero" and fire the warning on every page load before any perk had even been drawn.
+  if (baseEligibleRolePerks.length > 0 && prevPlayableCount !== totalPlayableCount) {
+    setPrevPlayableCount(totalPlayableCount);
     // Only the falling edge counts -- and only once we've already seen a real
     // (non-null) prior reading, so the first post-load measurement never fires by itself.
-    const crossedDown = noRepeatPerks && totalPlayableCount < FULL_LOADOUT_SIZE && prev !== null && prev >= FULL_LOADOUT_SIZE;
+    const crossedDown =
+      noRepeatPerks && totalPlayableCount < FULL_LOADOUT_SIZE && prevPlayableCount !== null && prevPlayableCount >= FULL_LOADOUT_SIZE;
     if (crossedDown) setShowLowPoolWarning(true);
-    // Belt-and-suspenders: if the pool is healthy again (role switch, reset, etc.),
-    // never leave a stale warning open showing a live count that no longer matches it.
-    if (totalPlayableCount >= FULL_LOADOUT_SIZE) setShowLowPoolWarning(false);
-    prevPlayableCountRef.current = totalPlayableCount;
-  }, [totalPlayableCount, noRepeatPerks, baseEligibleRolePerks.length]);
+  }
+  // Belt-and-suspenders: if the pool is healthy again (role switch, reset, etc.),
+  // never leave a stale warning open showing a live count that no longer matches it.
+  if (showLowPoolWarning && baseEligibleRolePerks.length > 0 && totalPlayableCount >= FULL_LOADOUT_SIZE) {
+    setShowLowPoolWarning(false);
+  }
 
   const handleRoleChange = useCallback((newRole: RoleCategory) => {
     setRole(newRole);
+    setDrawnPerks(getDrawnPerksForRole(newRole));
+    setActiveMutator(getActiveMutatorForRole(newRole));
     setLoadout([null, null, null, null]);
     setActiveSlotIdx(0);
     setRevealedSlots([false, false, false, false]);

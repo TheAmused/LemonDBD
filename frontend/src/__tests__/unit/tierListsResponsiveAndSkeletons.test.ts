@@ -7,6 +7,7 @@ import path from 'node:path';
 import { readGlobalCss } from '../../../scripts/lib/globalCss';
 import React from 'react';
 import { TierListSkeleton } from '@/components/tier-lists/TierListSkeleton';
+import { matchShell } from '@/components/layout/shellRoutes';
 import { TierItemTile } from '@/components/tier-lists/TierItemTile';
 import { OfficialTierListCard, CustomTierListCard } from '@/components/tier-lists/TierListCards';
 import { tierColorProps } from '@/components/tier-lists/tierColor';
@@ -24,7 +25,7 @@ const read = (rel: string) => fs.readFileSync(path.join(SRC, rel), 'utf-8');
 describe('Tier lists: skeleton', () => {
   it('renders role="status", aria-busy and the DBD skill-check spinner', () => {
     const html = renderWithDictionary(React.createElement(TierListSkeleton, {}));
-    assert.ok(html.includes('role="status"'));
+    assert.ok(html.includes('<output'));
     assert.ok(html.includes('aria-busy="true"'));
     assert.ok(html.includes('viewBox="0 0 160 160"'), 'must render the DBD Skill Check SVG');
     assert.ok(html.includes(enDict.tierLists.loading));
@@ -122,10 +123,10 @@ describe('Tier lists: pages and navigation', () => {
   const pages = ['tier-lists/page.tsx', 'tier-lists/[slug]/page.tsx', 'tier-lists/custom/[id]/page.tsx'];
 
   for (const rel of pages) {
-    it(`${rel} renders through <PageShell> and has a loading.tsx`, () => {
+    it(`${rel} renders inside the tier-list shell and has a loading.tsx`, () => {
       const source = read(`app/[locale]/${rel}`);
-      assert.ok(source.includes('<PageShell'));
-      assert.ok(source.includes('activeCategory="tier-lists"'));
+      assert.ok(!source.includes('PageShell'), 'pages render content only; AppShell supplies the sidebar');
+      assert.ok(matchShell(['tier-lists', ...(rel === 'tier-lists/page.tsx' ? [] : ['x'])]).listed);
       assert.ok(
         fs.existsSync(path.join(SRC, 'app/[locale]', path.dirname(rel), 'loading.tsx')) ||
         fs.existsSync(path.join(SRC, 'app/[locale]/tier-lists/loading.tsx'))

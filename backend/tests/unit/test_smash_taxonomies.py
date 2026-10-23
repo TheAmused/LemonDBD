@@ -1,5 +1,4 @@
 # backend/tests/unit/test_smash_taxonomies.py
-import pytest
 from sqlalchemy.orm import Session
 
 from app.core.security import generate_token

@@ -12,9 +12,11 @@ import { useCatalogPerks } from '@/hooks/useCatalogPerks';
 import { tip } from '@/components/common/Tooltip';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 import { useDictionary } from "@/context/DictionaryContext";
+import { TileButton } from '@/components/common/TileButton';
 
 interface MainCardProps {
-  role: RoleCategory;
+  /** The character's side (not an ARIA role). */
+  characterRole: RoleCategory;
   loadout: MainLoadout;
   onCharacterChange: (name: string) => void;
   onPrestigeChange: (prestige: number) => void;
@@ -36,10 +38,8 @@ const SLOT_POSITIONS = [
 const LOADOUT_SIZE = `calc(var(--perk-size) * ${1 + 2 * SLOT_OFFSET})`;
 
 export const MainCard: React.FC<MainCardProps> = ({
-      role,
+      characterRole: role,
       loadout,
-      onCharacterChange,
-      onPrestigeChange,
       onPerkChange,
       onOpenCharacterModal,
       onOpenPerkModal,
@@ -73,18 +73,11 @@ export const MainCard: React.FC<MainCardProps> = ({
       >
         {/* Left: Bigger Character Portrait & Name */}
         <div className="flex flex-col items-center text-center gap-3 shrink-0">
-          <div
-            role="button"
-            tabIndex={0}
+          <TileButton
             onClick={onOpenCharacterModal}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                onOpenCharacterModal();
-              }
-            }}
             {...tip(dict.user.changeMain, undefined, 'action')}
             aria-label={dict.user.changeMain}
-            className="relative group w-28 h-28 sm:w-36 sm:h-36 rounded-card overflow-hidden border-2 border-border-color hover:border-accent-red cursor-pointer shadow-lg bg-bg-elevated shrink-0 transition-all hover:scale-102 focus:outline-none focus:ring-2 focus:ring-accent-red"
+            className="relative group w-28 h-28 sm:w-36 sm:h-36 rounded-card overflow-hidden border-2 border-border-color hover:border-accent-red shadow-lg bg-bg-elevated shrink-0 transition-all hover:scale-102 focus-visible:ring-accent-red"
           >
             <PerkIcon
               src={avatarSrc}
@@ -104,7 +97,7 @@ export const MainCard: React.FC<MainCardProps> = ({
             <div className="absolute inset-0 bg-bg-primary/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center type-label-sm text-text-inverted backdrop-blur-xs">
               {dict.user.changeMain}
             </div>
-          </div>
+          </TileButton>
 
           <h3 className="max-w-45 line-clamp-2 break-words text-base sm:text-lg font-black leading-tight text-text-primary tracking-wide">
             {loadout.characterName}

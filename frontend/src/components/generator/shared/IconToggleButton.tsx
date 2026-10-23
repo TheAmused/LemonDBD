@@ -9,7 +9,8 @@ interface IconToggleButtonProps {
   label: string;
   isActive?: boolean;
   badge?: string | number;
-  onClick: () => void;
+  /** Omitted for a purely informational icon whose tooltip is the point. */
+  onClick?: () => void;
   className?: string;
 }
 

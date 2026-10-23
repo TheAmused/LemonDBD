@@ -262,7 +262,9 @@ def registration_open() -> bool:
 
 
 def email_verification_required() -> bool:
-    """Whether a new account must confirm its e-mail address before it can sign in."""
+    """Whether an account must confirm its e-mail address before it can sign in (sign-up and
+    sign-in hand out a verification token instead of a session). While off, accounts are
+    confirmed on sign-in."""
     return bool(get_setting("email_verification_required"))
 
 
@@ -392,6 +394,9 @@ def public_config() -> dict[str, Any]:
             "email_verification_required": email_verification_required(),
             "google_sign_in": google_sign_in_available(),
             "content_reports_open": content_reports_open(),
+            # The bug-report form needs it up front: with guest reports off it asks a signed-out
+            # visitor to sign in instead of letting them fill the form in for nothing.
+            "guest_bug_reports": guest_bug_reports_allowed(),
             "scoreboard_ocr": scoreboard_ocr_enabled(),
         },
         "limits": {
@@ -414,6 +419,7 @@ def list_settings() -> list[dict[str, Any]]:
     try:
         overrides = _stored_overrides()
     except Exception:
+        logger.warning("Could not read the stored settings; listing defaults", exc_info=True)
         if has_app_context():
             db.session.rollback()
         overrides = {}
@@ -476,6 +482,19 @@ def _check_combination(cleaned: dict[str, str | int | bool | None]) -> None:
         raise ValueError("Write the banner text (English) before switching the banner on.")
 
 
+def _redate_existing_records(cleaned: dict[str, Any]) -> None:
+    """A new warning lifetime or ban-list retention applies to the records already stored too."""
+    from app.services import retention
+
+    now = datetime.now(timezone.utc)
+    for key, redate in (("warning_lifetime_days", retention.redate_warnings), ("ban_list_retention_days", retention.redate_ban_list)):
+        if key in cleaned:
+            days = int(default_value(key) if cleaned[key] is None else cleaned[key])
+            changed = redate(days, now)
+            if changed:
+                logger.info("%s set to %s days: %s existing record(s) re-dated", key, days, changed)
+
+
 def update_settings(
     changes: dict[str, Any], *, confirm_risky: bool = False, reason: str = ""
 ) -> dict[str, Any]:
@@ -491,7 +510,15 @@ def update_settings(
             raise ValueError(f"Unknown setting '{key}'.")
         cleaned[key] = None if raw is None else validate_setting(key, raw)
 
-    risky = sorted(key for key, value in cleaned.items() if is_risky_change(key, value))
+    def lowers_protection(key: str, value: str | int | bool | None) -> bool:
+        if value is not None:
+            return is_risky_change(key, value)
+        # "Use default" lowers a protection too when the default is the unsafe value and the
+        # setting is not already at it (a deployment whose env turns the check off).
+        default = default_value(key)
+        return is_risky_change(key, default) and get_setting(key) != default
+
+    risky = sorted(key for key, value in cleaned.items() if lowers_protection(key, value))
     if risky and not (confirm_risky and len(reason.strip()) >= 5):
         raise RiskyChangeError(
             "This lowers a protection (" + ", ".join(risky) + "). Confirm it and give a reason (at least 5 characters)."
@@ -519,6 +546,8 @@ def update_settings(
                     row.value = text
                 else:
                     db.session.add(SiteSetting(key=key, value=text))
+            # In the same transaction: a new period reaches existing records, or nothing changes.
+            _redate_existing_records(cleaned)
     finally:
         invalidate_cache()
 

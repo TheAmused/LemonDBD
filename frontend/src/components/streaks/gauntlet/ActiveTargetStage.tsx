@@ -6,7 +6,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import type { GauntletPlayerLoadout, GauntletRun, Role } from '@/types/gauntletStreak';
 import type { OwnedCharacterItem } from '../useOwnedRoster';
 import { useTargetDraw } from './useTargetDraw';
-import { staticUrl } from '@/utils/staticUrl';
+
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
 import { RevealPortrait, CompactPlayerBuild } from "./ActiveTargetStageParts";
@@ -61,7 +61,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   const [animations] = useChallengeAnimations();
 
   const targetName = run?.current_character_id || run?.current_loadout?.character || '';
-  const completed = run?.completed_characters || [];
+  const completed = useMemo(() => run?.completed_characters || [], [run?.completed_characters]);
 
   // Duo/squad roll two distinct characters at once; each gets its own reel.
   const teamPlayers = run?.current_loadout?.players ?? [];
@@ -132,9 +132,8 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   }, [isRevealed, targetName, shownTarget, isDrawingAny, beginDraw, holdReel, skipDraw, onShownTargetChange]);
 
   const [revealing, setRevealing] = useState<boolean>(false);
-  useEffect(() => {
-    if (isRevealed && !isDrawingAny) setRevealing(false);
-  }, [isRevealed, isDrawingAny]);
+  // The reveal is over once the target is shown and no reel is spinning (adjusted while rendering).
+  if (revealing && isRevealed && !isDrawingAny) setRevealing(false);
 
   if (!run || !run.current_loadout) {
     return (

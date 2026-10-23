@@ -28,7 +28,7 @@ async function call<T extends object>(path: string, method: 'GET' | 'POST', body
     credentials: 'include',
     cache: 'no-store',
     headers: { ...authHeaders(undefined, { json: body !== undefined }) },
-    body: body === undefined ? undefined : JSON.stringify(body),
+    ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
   let data: (ApiErrorBody & Partial<T>) | undefined;
   try {

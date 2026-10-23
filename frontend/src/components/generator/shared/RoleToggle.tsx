@@ -7,8 +7,8 @@
 
 import React from 'react';
 
-import { RoleCategory } from '@/types/perks';
-import { Dictionary } from '@/locales/types';
+import type { RoleCategory } from '@/types/perks';
+
 import { cn } from '@/utils/cn';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { isKiller as isKillerRole } from '@/utils/characterUtils';

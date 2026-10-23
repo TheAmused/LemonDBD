@@ -1,6 +1,6 @@
 // frontend/src/components/generator/lib/blindnessCurse.ts
-import { Perk } from '@/types/perks';
-import { ChaosMutator } from '@/types/chaos';
+import type { Perk } from '@/types/perks';
+import type { ChaosMutator } from '@/types/chaos';
 
 export interface SlotInteraction {
   isObscured: boolean;

@@ -3,8 +3,8 @@
 
 import React from 'react';
 import { Repeat, Volume2, VolumeX, RotateCcw, EyeOff, Info } from 'lucide-react';
-import { ChaosMutator } from '@/types/chaos';
-import { Dictionary } from '@/locales/types';
+import type { ChaosMutator } from '@/types/chaos';
+
 import { IconToggleButton } from './shared/IconToggleButton';
 import { Tooltip } from '@/components/common/Tooltip';
 import { getLocalizedMutator } from './lib/chaosMutatorLocalization';
@@ -49,7 +49,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         {/* Explains the [P/S] tag every drawn perk carries, across every mode
          * (Wheel, Instant, Slot Machine, Tarot, Loot Crate) since this toolbar
          * is mounted regardless of which one is active. Purely informational --
-         * onClick is a no-op, the tooltip (hover/focus/touch) is the point. */}
+         * no onClick, the tooltip (hover/focus/touch) is the point. */}
         <Tooltip variant="action"
           title={dict.generator.coordinateLegendTooltipTitle}
           description={
@@ -59,7 +59,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           <IconToggleButton
             icon={<Info className="h-5 w-5" />}
             label={dict.generator.coordinateLegendTooltip}
-            onClick={() => {}}
           />
         </Tooltip>
 

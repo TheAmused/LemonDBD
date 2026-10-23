@@ -28,6 +28,7 @@ import { AccordionSection } from '@/components/common/AccordionSection';
 import { Tooltip } from '@/components/common/Tooltip';
 import { ThunderPulseIcon } from '@/components/icons/DbdIcons';
 import { useGlobalNsfwPreference, hasSeenNsfwOnboarding } from '@/utils/nsfwAck';
+import { useOnceInBrowser } from '@/hooks/useOnceInBrowser';
 
 const NsfwOnboardingModal = dynamic(
   () => import('@/components/common/NsfwOnboardingModal').then((m) => m.NsfwOnboardingModal),
@@ -61,11 +62,9 @@ export function TierListHub({ locale }: TierListHubProps) {
   const [showNsfw, setShowNsfw] = useGlobalNsfwPreference();
   const [onboardingOpen, setOnboardingOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (!hasSeenNsfwOnboarding()) {
-      setOnboardingOpen(true);
-    }
-  }, []);
+  useOnceInBrowser(() => {
+    if (!hasSeenNsfwOnboarding()) setOnboardingOpen(true);
+  });
 
   // A share link lands here as `/tier-lists#import=...`. Read it once, then
   // strip it from the address bar so a reload does not re-open the dialog.

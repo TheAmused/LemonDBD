@@ -11,7 +11,7 @@ import { SmashHubSkeleton, SmashLeaderboardSkeleton } from '../../components/sma
 test('SmashOrPass: Skeletons & DBD Framer Motion Spinner Suite', async (t) => {
   await t.test('SmashHubSkeleton renders with correct accessibility and DBD Skill Check Spinner', () => {
     const html = renderWithDictionary(React.createElement(SmashHubSkeleton));
-    assert.ok(html.includes('role="status"'));
+    assert.ok(html.includes('<output'));
     assert.ok(html.includes('aria-busy="true"'));
     assert.ok(html.includes(`aria-label="${enDict.smashOrPass.loadingArena}"`));
     assert.ok(html.includes('min-h-screen-smash'));
@@ -19,7 +19,7 @@ test('SmashOrPass: Skeletons & DBD Framer Motion Spinner Suite', async (t) => {
 
   await t.test('SmashLeaderboardSkeleton renders with status role and accessibility label', () => {
     const html = renderWithDictionary(React.createElement(SmashLeaderboardSkeleton, { count: 5 }));
-    assert.ok(html.includes('role="status"'));
+    assert.ok(html.includes('<output'));
     assert.ok(html.includes(`aria-label="${enDict.smashOrPass.loadingRankings}"`));
     assert.ok(html.includes('aria-busy="true"'));
   });

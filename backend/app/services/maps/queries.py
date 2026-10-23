@@ -6,15 +6,6 @@ from sqlalchemy import func, or_, select
 
 from app.core.extensions import db
 from app.models import MapRealm, MapSource, Realm
-from app.models.map import (
-    DEFAULT_IS_MAIN_BUILDING,
-    DEFAULT_IS_SHACK,
-    DEFAULT_JUNGLE_GYMS,
-    DEFAULT_LAYOUT_TYPE,
-    DEFAULT_PALLET_DENSITY,
-    DEFAULT_SOURCE_LABEL,
-    DEFAULT_SOURCE_CODE,
-)
 
 logger = logging.getLogger(__name__)
 
@@ -59,7 +50,7 @@ def fetch_maps(
             try:
                 db.session.rollback()
             except Exception:
-                pass
+                logger.debug("Rollback after a failed maps query failed", exc_info=True)
             raise
 
     return []
@@ -76,6 +67,6 @@ def fetch_realms(lang: str | None = None) -> list[dict[str, Any]]:
         try:
             db.session.rollback()
         except Exception:
-            pass
+            logger.debug("Rollback after a failed realms query failed", exc_info=True)
         raise
     return []

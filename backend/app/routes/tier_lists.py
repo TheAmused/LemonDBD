@@ -87,6 +87,27 @@ def create_tier_list():
     return jsonify({"status": "success", "data": row.to_dict(extract_lang())}), 201
 
 
+def _update_kwargs(payload: TierListAdminUpdate) -> dict[str, object]:
+    """The fields this PATCH actually sent, in the service's argument names.
+
+    An omitted field is left alone; most fields also ignore an explicit null, but
+    `cover_image_url` and `default_placements` accept null to clear them."""
+    fields_set = payload.model_fields_set
+    kwargs: dict[str, object] = {}
+    for name in ("title", "description", "is_nsfw", "is_active"):
+        value = getattr(payload, name)
+        if name in fields_set and value is not None:
+            kwargs[name] = value
+    for name in ("cover_image_url", "default_placements"):
+        if name in fields_set:
+            kwargs[name] = getattr(payload, name)
+    if "tiers" in fields_set and payload.tiers is not None:
+        kwargs["tiers"] = [t.model_dump(exclude_none=True) for t in payload.tiers]
+    if "items" in fields_set and payload.items is not None:
+        kwargs["custom_items"] = [i.model_dump(exclude_none=True) for i in payload.items]
+    return kwargs
+
+
 @tier_lists_bp.route("/<string:slug>", methods=["PUT", "PATCH"])
 @admin_required
 def update_tier_list(slug: str):
@@ -104,26 +125,8 @@ def update_tier_list(slug: str):
         return jsonify({"error": "Invalid cover image URL", "status": 400}), 400
 
     fields_set = payload.model_fields_set
-    kwargs: dict[str, object] = {}
-    if "title" in fields_set and payload.title is not None:
-        kwargs["title"] = payload.title
-    if "description" in fields_set and payload.description is not None:
-        kwargs["description"] = payload.description
-    if "cover_image_url" in fields_set:
-        kwargs["cover_image_url"] = payload.cover_image_url
-    if "tiers" in fields_set and payload.tiers is not None:
-        kwargs["tiers"] = [t.model_dump(exclude_none=True) for t in payload.tiers]
-    if "items" in fields_set and payload.items is not None:
-        kwargs["custom_items"] = [i.model_dump(exclude_none=True) for i in payload.items]
-    if "default_placements" in fields_set:
-        kwargs["default_placements"] = payload.default_placements
-    if "is_nsfw" in fields_set and payload.is_nsfw is not None:
-        kwargs["is_nsfw"] = payload.is_nsfw
-    if "is_active" in fields_set and payload.is_active is not None:
-        kwargs["is_active"] = payload.is_active
-
     try:
-        row = tier_list_service.update_tier_list(slug, **kwargs)
+        row = tier_list_service.update_tier_list(slug, **_update_kwargs(payload))
     except ValueError as err:
         return jsonify({"error": str(err)}), 400
 

@@ -1,11 +1,13 @@
 'use client';
 // frontend/src/components/UserAvatar.tsx
 
-import React, { useState, useEffect } from 'react';
+import { logger } from '@/utils/logger';
+import React, { useState } from 'react';
 import { LemonIcon } from '@/components/LemonIcon';
 import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
+import { Img } from '@/components/common/Img';
 interface UserAvatarProps {
   user?: {
     username?: string;
@@ -97,7 +99,8 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   adminAriaLabel,
   alt,
 }) => {
-  const [imgError, setImgError] = useState(false);
+  // The source that failed to load; a new avatar URL gets its own try.
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
   const sizeConfig = SIZE_MAP[size] || SIZE_MAP.md;
   const containerClasses = shape === 'circle'
     ? sizeConfig.container.replace(/rounded-\S+/, 'rounded-full')
@@ -105,12 +108,8 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
 
   const rawAvatarUrl = previewUrl || user?.avatar_url;
 
-  useEffect(() => {
-    setImgError(false);
-  }, [rawAvatarUrl]);
-
   const finalSrc = rawAvatarUrl ? avatarImageSrc(rawAvatarUrl, Boolean(previewUrl)) : '';
-  const isCustomAvatar = finalSrc !== '' && !imgError;
+  const isCustomAvatar = finalSrc !== '' && failedSrc !== finalSrc;
 
   const defaultBorder =
     borderClassName ||
@@ -122,12 +121,12 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
         className={`relative flex items-center justify-center overflow-hidden ${containerClasses} ${defaultBorder}`}
       >
         {isCustomAvatar ? (
-          <img
+          <Img
             src={finalSrc}
-            alt={alt || user?.username}
+            alt={alt || user?.username || ''}
             onError={() => {
-              console.warn('Avatar image failed to load from:', finalSrc);
-              setImgError(true);
+              logger.warn('Avatar image failed to load from:', finalSrc);
+              setFailedSrc(finalSrc);
             }}
             className="h-full w-full object-cover"
           />

@@ -37,8 +37,12 @@ def _submit(client: FlaskClient, headers: dict[str, str], images: list) -> list[
 @pytest.mark.unit
 def test_a_real_screenshot_is_stored_as_webp(app: Flask, client: FlaskClient, headers) -> None:
     [path] = _submit(client, headers, [_png_data_url()])
-    assert path.startswith("/static/uploads/bug_reports/") and path.endswith(".webp")
-    stored = Path(app.root_path) / path.lstrip("/")
+    # Stored privately and served by the attachment route, never under the public static folder.
+    assert path.startswith("/api/v1/bug-reports/attachments/") and path.endswith(".webp")
+    from app.services import bug_report_files
+
+    stored = bug_report_files.upload_dir() / path.rsplit("/", 1)[1]
+    assert Path(app.root_path) / "static" not in stored.parents
     try:
         with Image.open(stored) as img:
             assert img.format == "WEBP"

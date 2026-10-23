@@ -19,7 +19,6 @@ describe('ScraperConfigModal export/import targets', () => {
     'chapters',
     'user_showcases',
     'changelog_posts',
-    'draft_sessions',
     'challenge_mode_settings',
     'admin_audit_logs',
     'banned_email_hashes',
@@ -48,10 +47,17 @@ describe('ScraperConfigModal export/import targets', () => {
     }
   });
 
-  it('ALL_TARGETS covers all 25 supported database targets', () => {
+  it('ALL_TARGETS covers all 26 backend database targets (backend test_admin_backup_targets checks the names)', () => {
     const targetsContent = fs.readFileSync(path.join(featureDir, 'scraperTargets.ts'), 'utf-8');
     const idMatches = targetsContent.match(/id:\s*'[a-z_]+'/g) || [];
-    assert.equal(idMatches.length, 25, 'ALL_TARGETS should contain exactly 25 target entries');
+    assert.equal(idMatches.length, 26, 'ALL_TARGETS should contain exactly 26 target entries');
+  });
+
+  it('a purge selection always includes the tables that point at what was chosen', async () => {
+    const { withPurgeDependencies, PURGEABLE_TARGET_IDS } = await import('../../components/scraper-config/scraperTargets');
+    assert.deepEqual(withPurgeDependencies(['chapters']), ['survivors', 'killers', 'chapters'].filter((id) => PURGEABLE_TARGET_IDS.includes(id)).sort((a, b) => PURGEABLE_TARGET_IDS.indexOf(a) - PURGEABLE_TARGET_IDS.indexOf(b)));
+    assert.ok(withPurgeDependencies(['item_categories']).includes('item_addons'));
+    assert.ok(!PURGEABLE_TARGET_IDS.includes('users') && !PURGEABLE_TARGET_IDS.includes('admin_audit_logs'));
   });
 
   it('TARGET_GROUPS_CONFIG organizes targets into content, users, community, and settings', () => {

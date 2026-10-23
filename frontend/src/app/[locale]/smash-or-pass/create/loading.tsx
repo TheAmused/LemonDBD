@@ -1,15 +1,12 @@
 // frontend/src/app/[locale]/smash-or-pass/create/loading.tsx
 import React from 'react';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
-import { PageShellFallback } from '@/components/layout/PageShellFallback';
+import { RouteLoading } from '@/components/layout/RouteLoading';
 
 export default function SmashRosterCreateLoading() {
   return (
-    <PageShellFallback
-      mainClassName="min-h-skeleton-page flex items-center justify-center"
-      skeleton={
-        <DbdSpinner size="responsive" layout="inline" accent="blood" needleSpeed={1.6} labelKey="smashOrPass.loadingCreator" />
-      }
-    />
+    <RouteLoading>
+      <DbdSpinner size="responsive" layout="inline" accent="blood" needleSpeed={1.6} labelKey="smashOrPass.loadingCreator" />
+    </RouteLoading>
   );
 }

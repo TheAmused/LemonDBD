@@ -13,7 +13,7 @@ export function ContentRemovedNotice({ count, onDismiss }: { count: number; onDi
     <div className="pointer-events-none fixed inset-x-0 bottom-4 z-50 flex justify-center px-4 lemon-modal-overlay-sidebar-aware">
       <Surface
         padding="none"
-        role="status"
+        as="output"
         aria-live="polite"
         className="pointer-events-auto flex max-w-xl items-start gap-3 border-accent-amber/40 px-4 py-3 shadow-lg"
       >

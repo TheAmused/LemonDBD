@@ -2,12 +2,12 @@
 'use client';
 
 import React from 'react';
-import { GeneratorMode } from '@/types/perks';
-import { Dictionary } from '@/locales/types';
+import type { GeneratorMode } from '@/types/perks';
+
 import { SegmentedControl } from '@/components/common/SegmentedControl';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 
-import { cn } from '@/utils/cn';
+
 import { useDictionary } from "@/context/DictionaryContext";
 
 interface ModeSwitcherProps {

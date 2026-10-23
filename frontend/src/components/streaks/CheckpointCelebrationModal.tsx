@@ -5,6 +5,8 @@ import React, { useEffect, useState } from 'react';
 import { Trophy } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { useDictionary } from "@/context/DictionaryContext";
+import { useReducedMotion } from 'framer-motion';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 export interface CheckpointCelebrationModalProps {
   checkpoint: number | null;
@@ -27,15 +29,13 @@ const SPARKS = Array.from({ length: SPARK_COUNT }, (_, i) => {
 
 /** Counts up from 0 to `target` so the number lands after the trophy does. Jumps straight there under reduced motion. */
 function useCountUp(target: number | null, durationMs = 900, delayMs = 450) {
+  const reduceMotion = useReducedMotion();
   const [value, setValue] = useState(0);
+  // Each new target counts up from 0 again.
+  useOnValueChange(target, () => setValue(0));
 
   useEffect(() => {
-    if (target == null) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setValue(target);
-      return;
-    }
-    setValue(0);
+    if (target == null || reduceMotion) return;
     let frame = 0;
     let startedAt = 0;
     const tick = (now: number) => {
@@ -51,9 +51,9 @@ function useCountUp(target: number | null, durationMs = 900, delayMs = 450) {
       clearTimeout(timer);
       cancelAnimationFrame(frame);
     };
-  }, [target, durationMs, delayMs]);
+  }, [target, durationMs, delayMs, reduceMotion]);
 
-  return value;
+  return reduceMotion && target != null ? target : value;
 }
 
 /** Shown when a win banks a checkpoint. Shared by every challenge that has them. */

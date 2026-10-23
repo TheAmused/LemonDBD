@@ -18,7 +18,7 @@ describe('User Page: Skeletons & DBD Framer Motion Spinner Integrity', () => {
   it('UserProfileSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
     const html = renderWithDictionary(React.createElement(UserProfileSkeleton));
 
-    assert.ok(html.includes('role="status"'), 'Skeleton should declare role="status"');
+    assert.ok(html.includes('<output'), 'Skeleton should declare a status region (<output>)');
     assert.ok(html.includes('aria-busy="true"'), 'Skeleton should declare aria-busy="true"');
     assert.ok(html.includes('viewBox="0 0 160 160"'), 'Profile skeleton must render DBD Skill Check SVG');
   });
@@ -27,7 +27,7 @@ describe('User Page: Skeletons & DBD Framer Motion Spinner Integrity', () => {
     const html = renderWithDictionary(
       React.createElement(UserBugReportsSkeleton, {})
     );
-    assert.ok(html.includes('role="status"'));
+    assert.ok(html.includes('<output'));
     assert.ok(html.includes('aria-busy="true"'));
     assert.ok(html.includes('viewBox="0 0 160 160"'));
   });

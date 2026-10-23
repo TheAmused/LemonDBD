@@ -10,15 +10,7 @@ import {
   isExhaustionPerk,
   isHexOrBoonPerk,
 } from "@/components/generator/lib/perkPicker";
-import {
-  getDrawnPerksForRole,
-  saveDrawnPerksForRole,
-  clearDrawnPerksForRole,
-  getActiveMutatorForRole,
-  saveActiveMutatorForRole,
-  safeGetJSON,
-  safeSetJSON,
-} from "@/components/generator/lib/generatorStorage";
+
 import { Perk } from "@/types/perks";
 import { ChaosMutator } from "@/types/chaos";
 

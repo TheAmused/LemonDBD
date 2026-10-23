@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/streaks/chaos/ChaosBoard.tsx
 
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import type { Difficulty } from '@/types/chaosStreak';
@@ -80,11 +80,7 @@ export const ChaosBoard: React.FC = () => {
   // instead. That stays true for the run's whole lifetime, only resetting
   // when abandon/completion swaps in a different run id.
   const [engagedRunId, setEngagedRunId] = useState<number | null>(null);
-  useEffect(() => {
-    if (run?.perks_revealed && run.id !== engagedRunId) {
-      setEngagedRunId(run.id);
-    }
-  }, [run?.perks_revealed, run?.id, engagedRunId]);
+  if (run?.perks_revealed && run.id !== engagedRunId) setEngagedRunId(run.id);
   const poolFrozen = Boolean(run?.pool_frozen) && run?.id === engagedRunId;
 
   const rosterKillers = useMemo(() => {
@@ -138,7 +134,7 @@ export const ChaosBoard: React.FC = () => {
   const handleAbandon = () => {
     setConfirmingAbandon(false);
     clearPick();
-    abandon();
+    void abandon();
   };
 
   const handleDevSkipToWin = async () => {
@@ -187,13 +183,13 @@ export const ChaosBoard: React.FC = () => {
         >
 
         {isCompleted ? (
-          <ChallengeVictoryCard title={completionTitle} onRestart={abandon} busy={busy} />
+          <ChallengeVictoryCard title={completionTitle} onRestart={() => { void abandon(); }} busy={busy} />
         ) : (
           <SlotMachineStage
             perks={run?.current_perks || []}
             addonRarities={run?.current_addon_rarities || []}
             revealed={Boolean(run?.perks_revealed)}
-            onPullLever={reveal}
+            onPullLever={() => { void reveal(); }}
             loading={loading || busy}
             locked={Boolean(acceptedKillerId)}
           />
@@ -233,10 +229,10 @@ export const ChaosBoard: React.FC = () => {
                 </StreakActionButton>
               ) : (
                 <>
-                  <StreakActionButton variant="red" onClick={() => handleResult('loss')} disabled={busy}>
+                  <StreakActionButton variant="red" onClick={() => { void handleResult('loss'); }} disabled={busy}>
                     {dict.streaks.loseMatch}
                   </StreakActionButton>
-                  <StreakActionButton variant="green" onClick={() => handleResult('win')} disabled={busy}>
+                  <StreakActionButton variant="green" onClick={() => { void handleResult('win'); }} disabled={busy}>
                     {dict.streaks.winMatch}
                   </StreakActionButton>
                 </>
@@ -249,7 +245,7 @@ export const ChaosBoard: React.FC = () => {
           <Surface padding="none" className="mt-6 border-border-color/80 bg-bg-surface/90 backdrop-blur-sm px-4 py-4 shadow-sm">
             <Button
               type="button"
-              onClick={handleDevSkipToWin}
+              onClick={() => { void handleDevSkipToWin(); }}
               disabled={busy || !killers.length}
               {...tip(dict.streaks.devSkipWinTitle, undefined, 'action')} aria-label={dict.streaks.devSkipWinTitle}
               variant="amberSoft" size="sm"

@@ -7,7 +7,6 @@ from sqlalchemy import create_engine
 from app.core.extensions import db
 from app.services.db.connection import MemConnectionWrapper, create_sqlite_connection
 from app.services.db.maintenance import prune_stale_character_rows as _prune_rows
-from app.services.db.seeders import seed_default_configs
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +53,6 @@ class DatabaseService:
             if current_app:
                 import os
                 db.create_all()
-                seed_default_configs(db)
 
                 is_testing = current_app.config.get("TESTING", False) or ("PYTEST_CURRENT_TEST" in os.environ)
                 if not is_testing:

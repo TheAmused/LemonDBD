@@ -124,19 +124,19 @@ export function VoiceCommandBanner({
         onSelectEngine={(eng) => {
           setActiveEngine(eng);
           if (eng === 'client-model') {
-            initClientSpeechModel(locale);
+            void initClientSpeechModel(locale);
           }
         }}
         browserName={browserInfo.browserName}
         hasNativeWebSpeech={browserInfo.hasNativeWebSpeech}
         modelProgress={modelProgress}
-        onPreloadModel={() => initClientSpeechModel(locale)}
+        onPreloadModel={() => { void initClientSpeechModel(locale); }}
         modelQuality={modelQuality}
         onSelectModelQuality={(quality) => {
           if (setModelQuality(quality)) {
             setModelQualityState(quality);
             if (activeEngine === 'client-model') {
-              initClientSpeechModel(locale);
+              void initClientSpeechModel(locale);
             }
           }
         }}

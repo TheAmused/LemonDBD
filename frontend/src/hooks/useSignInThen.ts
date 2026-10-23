@@ -1,6 +1,6 @@
 'use client';
 // frontend/src/hooks/useSignInThen.ts
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 
 /**
@@ -11,7 +11,8 @@ import { useAuth } from '@/context/AuthContext';
 export function useSignInThen() {
   const { isAuthenticated } = useAuth();
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [pending, setPending] = useState<(() => void) | null>(null);
+  // The action waiting for sign-in; a ref, since holding it changes nothing on screen.
+  const pending = useRef<(() => void) | null>(null);
 
   const run = useCallback(
     (action: () => void) => {
@@ -19,7 +20,7 @@ export function useSignInThen() {
         action();
         return;
       }
-      setPending(() => action);
+      pending.current = action;
       setIsAuthModalOpen(true);
     },
     [isAuthenticated]
@@ -28,10 +29,11 @@ export function useSignInThen() {
   const closeAuthModal = useCallback(() => setIsAuthModalOpen(false), []);
 
   useEffect(() => {
-    if (isAuthModalOpen || !pending) return;
-    setPending(null);
-    if (isAuthenticated) pending();
-  }, [isAuthModalOpen, pending, isAuthenticated]);
+    const action = pending.current;
+    if (isAuthModalOpen || !action) return;
+    pending.current = null;
+    if (isAuthenticated) action();
+  }, [isAuthModalOpen, isAuthenticated]);
 
   return { run, isAuthModalOpen, closeAuthModal };
 }

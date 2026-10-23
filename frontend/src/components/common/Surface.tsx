@@ -37,7 +37,8 @@ export interface SurfaceProps extends React.HTMLAttributes<HTMLElement> {
   tone?: SurfaceTone;
   padding?: SurfacePadding;
   radius?: SurfaceRadius;
-  as?: 'div' | 'section' | 'article' | 'aside' | 'li';
+  /** `output` for a live status message (its implicit role is status). */
+  as?: 'div' | 'section' | 'article' | 'aside' | 'li' | 'output';
 }
 
 /** The Surface look for an element that is not a div (<ul>, <pre>): same tones, same radius. */

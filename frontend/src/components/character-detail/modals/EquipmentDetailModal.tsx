@@ -1,8 +1,10 @@
 // frontend/src/components/character-detail/modals/EquipmentDetailModal.tsx
 import React from 'react';
-import { AddonItem, EquipmentItem, getAssetUrl, getRarityTileStyle, CharacterDetailDictionary } from '../types';
+import type { AddonItem, EquipmentItem, CharacterDetailDictionary } from '../types';
+import { getAssetUrl, getRarityTileStyle } from '../types';
 import { RichText } from '@/components/common/RichText';
 import { Modal } from '@/components/common/Modal';
+import { Img } from '@/components/common/Img';
 
 interface EquipmentDetailModalProps {
   item: AddonItem | EquipmentItem | null;
@@ -36,7 +38,7 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
           className={`h-20 w-20 rounded-card border-2 p-2 flex items-center justify-center shrink-0 shadow-md overflow-hidden ${rarityTile.bg}`}
           style={rarityTile.style}
         >
-          <img
+          <Img
             src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
             alt=""
             className="h-full w-full object-contain"

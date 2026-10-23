@@ -10,6 +10,7 @@ import { Modal } from '@/components/common/Modal';
 import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
+import { Img } from '@/components/common/Img';
 
 export interface ChallengeIntroTile {
   value: string;
@@ -138,7 +139,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
           const content = (
             <>
               {tile.image ? (
-                <img
+                <Img
                   src={tile.image}
                   alt=""
                   className="w-full max-w-22 sm:max-w-28 aspect-square rounded-card object-cover shadow-sm"

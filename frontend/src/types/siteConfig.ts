@@ -31,6 +31,8 @@ export interface SiteConfig {
     emailVerificationRequired: boolean;
     googleSignIn: boolean;
     contentReportsOpen: boolean;
+    /** Whether signed-out visitors may send bug reports. */
+    guestBugReports: boolean;
     scoreboardOcr: boolean;
   };
   limits: {

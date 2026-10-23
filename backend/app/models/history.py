@@ -7,7 +7,7 @@ from app.models.challenge_mixins import RetryableRunMixin, StreakLogMixin
 from app.models.base import ColumnDictMixin, JSON_LIST
 
 if TYPE_CHECKING:
-    from app.schemas.history import HistoryMatchLogDict, HistoryRunDict
+    from app.schemas.history import HistoryMatchLogDict, HistoryRunDict  # noqa: F401 -- named in the ColumnDictMixin["..."] string generic
 
 
 class HistoryRun(RetryableRunMixin, ColumnDictMixin["HistoryRunDict"], Base):

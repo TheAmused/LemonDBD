@@ -37,12 +37,14 @@ const variantLabel = (variant: string): string => {
 export function AdminUserChallengesModal({ user, notify, onClose }: AdminUserChallengesModalProps) {
   const dict = useDictionary();
   const t = dict.admin;
-  const [challenges, setChallenges] = useState<UserChallengeProgress[] | null>(null);
+  const [loaded, setLoaded] = useState<{ userId: number; list: UserChallengeProgress[] } | null>(null);
   const [pending, setPending] = useState<UserChallengeProgress | null>(null);
   const [note, setNote] = useState('');
   const [busy, setBusy] = useState(false);
   const noteId = useId();
   const userId = user?.id;
+  // Still loading while the list on hand belongs to another user (or none was fetched yet).
+  const challenges = loaded && loaded.userId === userId ? loaded.list : null;
 
   const modeLabel: Record<ChallengeMode, string> = {
     gauntlet: t.challengeModeGauntlet,
@@ -62,11 +64,10 @@ export function AdminUserChallengesModal({ user, notify, onClose }: AdminUserCha
   }, [notify, t.networkError]);
 
   useEffect(() => {
-    setChallenges(null);
     if (userId === undefined) return;
     let cancelled = false;
     void load(userId).then((list) => {
-      if (!cancelled) setChallenges(list ?? []);
+      if (!cancelled) setLoaded({ userId, list: list ?? [] });
     });
     return () => {
       cancelled = true;
@@ -86,7 +87,7 @@ export function AdminUserChallengesModal({ user, notify, onClose }: AdminUserCha
       notify(emailed
         ? { type: 'success', text: formatMessage(t.challengeResetDone, { challenge: nameOf(pending), username: user.username }) }
         : { type: 'error', text: t.challengeResetEmailFailed });
-      setChallenges(await load(user.id) ?? []);
+      setLoaded({ userId: user.id, list: await load(user.id) ?? [] });
     } catch (err: unknown) {
       notify({ type: 'error', text: getErrorMessage(err, t.networkError) });
     } finally {
@@ -152,7 +153,7 @@ export function AdminUserChallengesModal({ user, notify, onClose }: AdminUserCha
         closeButtonAriaLabel={dict.modal.close}
         size="sm"
         busy={busy}
-        onConfirm={confirmReset}
+        onConfirm={() => void confirmReset()}
         onCancel={closeConfirm}
       />
     </>

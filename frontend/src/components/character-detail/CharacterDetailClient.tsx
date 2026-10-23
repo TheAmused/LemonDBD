@@ -8,12 +8,13 @@ import { ChevronLeft, UserX } from 'lucide-react';
 import { PageShell } from '@/components/layout/PageShell';
 import { EmptyState } from '@/components/common/EmptyState';
 import { CharacterDetailSkeleton } from '@/components/character-detail/CharactersSkeleton';
-import {
-  CharacterSubpageView,
+import type {
   CharacterDetailPayload,
-  CharacterItem,
+  CharacterItem} from '@/components/character-detail/CharacterSubpageView';
+import {
+  CharacterSubpageView
 } from '@/components/character-detail/CharacterSubpageView';
-import { Locale } from '@/i18n/config';
+import type { Locale } from '@/i18n/config';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useCachedData } from '@/hooks/useCachedData';

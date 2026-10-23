@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { GeneratorMode } from '@/types/perks';
+import type { GeneratorMode } from '@/types/perks';
 
 import { SegmentedControl } from '@/components/common/SegmentedControl';
 import { CustomDropdown } from '@/components/common/CustomDropdown';

@@ -332,7 +332,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
           closeButtonAriaLabel={t.cancel}
           busy={announcing}
           busyLabel={pendingDiscord.kind === 'announce' ? t.discordConfirmSend : t.discordUpdateConfirmSend}
-          onConfirm={() => runDiscordAction(pendingDiscord)}
+          onConfirm={() => { void runDiscordAction(pendingDiscord); }}
           onCancel={() => setPendingDiscord(null)}
         />
       )}
@@ -376,7 +376,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
           title={t.deleteConfirmTitle}
           message={t.deleteConfirmMessage}
           confirmLabel={t.delete}
-          onConfirm={handleDelete}
+          onConfirm={() => { void handleDelete(); }}
           onCancel={() => setPendingDeleteId(null)}
         />
       )}

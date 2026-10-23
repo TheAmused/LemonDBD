@@ -1,7 +1,8 @@
 // frontend/src/utils/streakDifficultyPrefs.ts
-import { Difficulty } from '@/types/chaosStreak';
-import { HistoryMode } from '@/types/historyStreak';
-import { GAUNTLET_GAME_MODES, GauntletGameMode } from '@/types/gauntletStreak';
+import type { Difficulty } from '@/types/chaosStreak';
+import type { HistoryMode } from '@/types/historyStreak';
+import type { GauntletGameMode } from '@/types/gauntletStreak';
+import { GAUNTLET_GAME_MODES } from '@/types/gauntletStreak';
 import { safeGetItem, safeSetItem } from '@/utils/safeStorage';
 
 const CHAOS_DIFFICULTY_KEY = 'lemon_dbd_chaos_streak_difficulty_v1';

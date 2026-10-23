@@ -267,7 +267,7 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
         cancelLabel={t.cancel}
         busy={busy}
         confirmDisabled={needsOwnPassword && !reauthReady}
-        onConfirm={confirm}
+        onConfirm={() => { void confirm(); }}
         onCancel={() => {
           setPending(null);
           setReauth(EMPTY_REAUTH);

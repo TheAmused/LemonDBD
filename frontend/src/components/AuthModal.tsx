@@ -270,7 +270,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       {showSecurityCheck && <SecurityCheck />}
 
       {showAuthBody && (
-        <form onSubmit={handleSubmit} className="space-y-3.5">
+        <form onSubmit={(e) => { void handleSubmit(e); }} className="space-y-3.5">
           {mode === 'forgot' && (
             <p className="type-body-lg text-text-secondary">{dict.user.authResetSubtitle}</p>
           )}
@@ -320,7 +320,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
             isVerifying={isAltchaVerifying}
             isVerified={isAltchaVerified}
             error={altchaError}
-            onRetry={refreshChallenge}
+            onRetry={() => { void refreshChallenge(); }}
             honeypotProps={honeypotProps}
           />
 
@@ -343,7 +343,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
       )}
 
       {showAuthBody && mode !== 'forgot' && googleClientId && (
-        <GoogleSignInSection clientId={googleClientId} onCredential={handleGoogleCredential} />
+        <GoogleSignInSection clientId={googleClientId} onCredential={(credential) => { void handleGoogleCredential(credential); }} />
       )}
 
       {showAuthBody && mode !== 'forgot' && demoAccounts.length > 0 && <DemoAccountButtons onFill={handleFillDemo} />}

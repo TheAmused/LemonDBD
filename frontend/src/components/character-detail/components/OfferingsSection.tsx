@@ -10,12 +10,13 @@ import {
   Layers,
   Box,
 } from 'lucide-react';
-import {
+import type {
   OfferingItem,
+  CharacterDetailDictionary} from '../types';
+import {
   getAssetUrl,
   getRarityTileStyle,
-  getRarityRank,
-  CharacterDetailDictionary,
+  getRarityRank
 } from '../types';
 import { CategoryPicker } from './CategoryPicker';
 import { MoriCharmIcon, WardCharmIcon } from '@/components/icons/DbdIcons';

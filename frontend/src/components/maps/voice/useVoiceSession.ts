@@ -4,12 +4,12 @@ import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createDeduper, trackEvent } from '@/utils/analytics';
 import {
-  AudioCaptureSession,
   getBrowserCompatibility,
   getModelQuality,
   initClientSpeechModel,
   subscribeModelProgress,
   transcribeClientAudio,
+  type AudioCaptureSession,
   type BrowserCompatibilityInfo,
   type ModelProgressInfo,
   type ModelQuality,
@@ -114,7 +114,7 @@ export function useVoiceSession({
   // mode -- it only loads once `active` first turns true.
   useEffect(() => {
     if (active && activeEngine === 'client-model') {
-      initClientSpeechModel(locale);
+      void initClientSpeechModel(locale);
     }
   }, [active, activeEngine, locale]);
 
@@ -372,9 +372,9 @@ export function useVoiceSession({
         if (!isListeningRef.current) {
           isHoldingRef.current = true;
           holdStartTimeRef.current = Date.now();
-          startListening(true);
+          void startListening(true);
         } else {
-          stopListeningAndProcess();
+          void stopListeningAndProcess();
         }
       }
     };
@@ -392,7 +392,7 @@ export function useVoiceSession({
         e.preventDefault();
         isHoldingRef.current = false;
         if (isListeningRef.current) {
-          stopListeningAndProcess();
+          void stopListeningAndProcess();
         }
       }
     };

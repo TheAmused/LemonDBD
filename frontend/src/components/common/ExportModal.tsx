@@ -188,10 +188,11 @@ export function ExportModal<D>({
             <Button
               variant="primary"
               disabled={!shareUrl}
-              onClick={async () => {
-                const ok = await copyTextWithFallback(shareUrl);
-                setLinkCopy(ok ? 'copied' : 'failed');
-                if (ok) onExport?.('link');
+              onClick={() => {
+                void copyTextWithFallback(shareUrl).then((ok) => {
+                  setLinkCopy(ok ? 'copied' : 'failed');
+                  if (ok) onExport?.('link');
+                });
               }}
               className={buttonClassName}
               aria-live="polite"
@@ -236,10 +237,11 @@ export function ExportModal<D>({
             <Button
               variant="secondary"
               disabled={isSigning || authLoading || !exportedJson}
-              onClick={async () => {
-                const ok = await copyTextWithFallback(exportedJson);
-                setJsonCopy(ok ? 'copied' : 'failed');
-                if (ok) onExport?.('json_copy');
+              onClick={() => {
+                void copyTextWithFallback(exportedJson).then((ok) => {
+                  setJsonCopy(ok ? 'copied' : 'failed');
+                  if (ok) onExport?.('json_copy');
+                });
               }}
               className={buttonClassName}
               aria-live="polite"

@@ -3,7 +3,7 @@
 
 
 import React from 'react';
-import { HistoryMode } from '@/types/historyStreak';
+import type { HistoryMode } from '@/types/historyStreak';
 import { Flame } from 'lucide-react';
 import { FreezeBadge } from '../FreezeBadge';
 import { ChallengeHeaderLayout, ModeSelectButton, StandardHeaderActions } from '../ChallengePanel';

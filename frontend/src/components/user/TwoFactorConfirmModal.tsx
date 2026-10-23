@@ -98,7 +98,7 @@ export const TwoFactorConfirmModal: React.FC<TwoFactorConfirmModalProps> = ({ ac
           className="flex flex-col gap-4"
           onSubmit={(e) => {
             e.preventDefault();
-            submit();
+            void submit();
           }}
         >
           <p className="type-body-lg text-text-secondary">{isDisable ? t.disableIntro : t.regenerateIntro}</p>

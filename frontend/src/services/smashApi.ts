@@ -1,5 +1,5 @@
 // frontend/src/services/smashApi.ts
-import {
+import type {
   EntityItem,
   RosterItem,
   FeedResponse,

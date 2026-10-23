@@ -63,7 +63,7 @@ export const TwoFactorChallengeForm: React.FC<TwoFactorChallengeFormProps> = ({ 
   };
 
   return (
-    <form onSubmit={submit} className="flex w-full flex-col items-center gap-5">
+    <form onSubmit={(e) => { void submit(e); }} className="flex w-full flex-col items-center gap-5">
       <p className="w-full text-center type-body-lg text-text-secondary">
         {useRecovery ? t.challengeRecoverySubtitle : t.challengeSubtitle}
       </p>

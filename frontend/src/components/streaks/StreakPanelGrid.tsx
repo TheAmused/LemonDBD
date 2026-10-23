@@ -10,8 +10,8 @@ import {
   getSurvivorStreakPanels,
   getChallengeStreakPanels,
 } from './panels';
-import { Difficulty } from '@/types/chaosStreak';
-import { HistoryMode } from '@/types/historyStreak';
+import type { Difficulty } from '@/types/chaosStreak';
+import type { HistoryMode } from '@/types/historyStreak';
 import type { GauntletGameMode } from '@/types/gauntletStreak';
 import { fetchChallengeModeStatus, type ChallengeModeStatusMap } from '@/services/challengeModesApi';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -107,7 +107,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
   const pageStreakCardFullCount = pageStreakFullRoster['roster_complete'] ?? null;
 
   useEffect(() => {
-    fetchChallengeModeStatus().then(setModeStatus);
+    void fetchChallengeModeStatus().then(setModeStatus);
   }, []);
 
   return (

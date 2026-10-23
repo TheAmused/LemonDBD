@@ -9,9 +9,10 @@ import {
   ArrowUpAZ,
   ArrowDownZA,
 } from 'lucide-react';
-import { SegmentedControl, SegmentedControlOption } from '@/components/common/SegmentedControl';
+import type { SegmentedControlOption } from '@/components/common/SegmentedControl';
+import { SegmentedControl } from '@/components/common/SegmentedControl';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
-import {
+import type {
   RoleCategory,
   ScopeFilter,
   OwnershipFilter,
@@ -122,7 +123,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     abortControllerRef.current = new AbortController();
     const { signal } = abortControllerRef.current;
 
-    const timer = setTimeout(async () => {
+    const fetchSuggestions = async () => {
       try {
         const res = await fetch(
           `${backendBase}/api/v1/perks/suggestions?q=${encodeURIComponent(
@@ -139,6 +140,9 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           logger.error('Failed fetching perk suggestions:', err);
         }
       }
+    };
+    const timer = setTimeout(() => {
+      void fetchSuggestions();
     }, 180);
     return () => {
       clearTimeout(timer);

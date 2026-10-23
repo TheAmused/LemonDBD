@@ -7,7 +7,7 @@ export function toRoleCategory(role: string): RoleCategory {
   return role.toLowerCase() === 'killer' ? 'Killer' : 'Survivor';
 }
 
-export function toLowercaseRole(role: RoleCategory | string): LowercaseRole {
+export function toLowercaseRole(role: string): LowercaseRole {
   return role.toLowerCase() === 'killer' ? 'killer' : 'survivor';
 }
 export type GeneratorMode = 'instant' | 'wheel' | 'slot' | 'tarot' | 'crate';
@@ -24,7 +24,8 @@ export interface Perk {
   character: string;
   character_real_name?: string;
   character_avatar_path?: string;
-  category: RoleCategory | string;
+  /** Usually a {@link RoleCategory}; stale cached data may carry other values. */
+  category: string;
   //: What the perk is for — the single source of truth for Chaos Mutator
   //: weighting, Tarot Deck card assignment and the Perk Guesser. An ordered
   //: list of 1-3 of: hex, boon, sacrifice, exhaustion, obsession, aura,
@@ -45,7 +46,8 @@ export interface CharacterItem {
   id?: number;
   name: string;
   real_name?: string;
-  category?: RoleCategory | string;
+  /** Usually a {@link RoleCategory}; stale cached data may carry other values. */
+  category?: string;
   avatar_local_path?: string;
   portrait_url?: string;
   is_disabled?: boolean;

@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import { ImageOff } from 'lucide-react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
-import { Perk } from '@/types/perks';
+import type { Perk } from '@/types/perks';
 import {
   getPerkIconUrl,
   getCharacterAvatarUrl,

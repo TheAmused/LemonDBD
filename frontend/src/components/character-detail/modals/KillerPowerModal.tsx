@@ -1,7 +1,8 @@
 // frontend/src/components/character-detail/modals/KillerPowerModal.tsx
 import React from 'react';
 import { BookOpen, Flame } from 'lucide-react';
-import { KillerPowerInfo, CharacterItem, getAssetUrl, CharacterDetailDictionary } from '../types';
+import type { KillerPowerInfo, CharacterItem, CharacterDetailDictionary } from '../types';
+import { getAssetUrl } from '../types';
 import { RichText } from '@/components/common/RichText';
 import { Modal } from '@/components/common/Modal';
 import { Img } from '@/components/common/Img';

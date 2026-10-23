@@ -21,15 +21,13 @@ export function createStreakApiClient(prefix: string) {
   const base = `${backendBase}/api/v1/${prefix}`;
 
   return {
-    getJson<T>(token: string, path: string): Promise<T> {
-      return fetch(`${base}${path}`, { headers: authHeaders(token) }).then(handleResponse<T>);
-    },
-    postJson<T>(token: string, path: string, body: unknown): Promise<T> {
-      return fetch(`${base}${path}`, {
+    getJson: <T>(token: string, path: string): Promise<T> =>
+      fetch(`${base}${path}`, { headers: authHeaders(token) }).then(handleResponse<T>),
+    postJson: <T>(token: string, path: string, body: unknown): Promise<T> =>
+      fetch(`${base}${path}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...authHeaders(token) },
         body: JSON.stringify(body),
-      }).then(handleResponse<T>);
-    },
+      }).then(handleResponse<T>),
   };
 }

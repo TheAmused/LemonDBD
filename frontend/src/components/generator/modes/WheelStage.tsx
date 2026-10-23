@@ -3,8 +3,8 @@
 
 import React from 'react';
 import { DbdButton } from '@/components/common/Button';
-import { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
-import { ChaosMutator } from '@/types/chaos';
+import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
+import type { ChaosMutator } from '@/types/chaos';
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -108,7 +108,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
               type="button"
               disabled={isSpinning || sortedPerks.length === 0}
               aria-label={dict.generator.spinWheelButton}
-              onClick={handleStartSpin}
+              onClick={() => { void handleStartSpin(); }}
               // Width and height are driven by the *same* min() expression at every
               // breakpoint (matching PerkSlot's `fill` size pattern) instead of an
               // independent max-w (vw-based) paired with an independent max-h
@@ -140,7 +140,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
           <DbdButton
             role={role}
             size="md"
-            onClick={handleStartSpin}
+            onClick={() => { void handleStartSpin(); }}
             disabled={isSpinning || sortedPerks.length === 0}
             className="mt-2 sm:mt-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
           >

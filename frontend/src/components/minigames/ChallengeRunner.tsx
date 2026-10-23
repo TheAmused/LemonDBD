@@ -484,7 +484,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
               <CharacterAutocomplete
                 catalog={catalog}
                 targetType={activeTargetType}
-                onSelect={handleSelectGuess}
+                onSelect={(item) => { void handleSelectGuess(item); }}
                 disabled={isSubmitting}
                 placeholder={t.guessPlaceholder}
                 excludeKeys={excludeKeys}

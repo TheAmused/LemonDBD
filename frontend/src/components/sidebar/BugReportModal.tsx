@@ -229,7 +229,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
         <>
     {errorMsg && <Alert>{errorMsg}</Alert>}
 
-    <form id="bug-report-form" onSubmit={handleSubmit} className="space-y-4">
+    <form id="bug-report-form" onSubmit={(e) => { void handleSubmit(e); }} className="space-y-4">
       {isAuthenticated && user ? (
         <Surface tone="elevated" padding="sm" className="flex items-center justify-between bg-bg-elevated/60 text-xs">
           <div className="flex items-center gap-2.5 text-text-secondary">
@@ -357,7 +357,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
         isVerifying={isAltchaVerifying}
         isVerified={isAltchaVerified}
         error={altchaError}
-        onRetry={refreshChallenge}
+        onRetry={() => { void refreshChallenge(); }}
         honeypotProps={honeypotProps}
       />
         </form>

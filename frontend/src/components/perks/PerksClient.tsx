@@ -13,10 +13,10 @@ import { PerksGridSkeleton } from '@/components/PerksSkeleton';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Pagination } from '@/components/common/Pagination';
 import { Button } from '@/components/common/Button';
-import { Locale } from '@/i18n/config';
+import type { Locale } from '@/i18n/config';
 import { SearchX } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import {
+import type {
   Perk,
   CharacterItem,
   RoleCategory,
@@ -305,7 +305,7 @@ function PerksContent() {
               <Button
                 variant="primary"
                 size="md"
-                onClick={() => fetchPerks()}
+                onClick={() => { void fetchPerks(); }}
               >
                 {dict.modal.retry}
               </Button>

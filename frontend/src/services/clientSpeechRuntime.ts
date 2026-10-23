@@ -349,8 +349,9 @@ async function loadTransformersStandalone(): Promise<TransformersModule | null> 
   if (typeof window === 'undefined') return null;
 
   try {
-    const importDynamic = new Function('url', 'return import(url)');
-    const mod: TransformersModule | undefined = await importDynamic(`${TRANSFORMERS_CDN}transformers.min.js`);
+    // The URL is a runtime CDN address, so the bundler must leave this import alone.
+    const cdnUrl = `${TRANSFORMERS_CDN}transformers.min.js`;
+    const mod: TransformersModule | undefined = await import(/* webpackIgnore: true */ /* turbopackIgnore: true */ cdnUrl);
     if (mod && (mod.AutoModelForSpeechSeq2Seq || mod.default?.AutoModelForSpeechSeq2Seq || mod.pipeline || mod.default?.pipeline)) {
       return mod.AutoModelForSpeechSeq2Seq || mod.pipeline ? mod : mod.default ?? null;
     }

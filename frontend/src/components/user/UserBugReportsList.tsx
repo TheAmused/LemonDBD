@@ -15,12 +15,12 @@ import {
   X,
   Maximize2,
 } from 'lucide-react';
-import { UserBugReport } from '@/types/userProfile';
+import type { UserBugReport } from '@/types/userProfile';
 import { UserBugReportsSkeleton } from './UserBugReportsSkeleton';
 import { Pagination } from '@/components/common/Pagination';
 import { bugAttachmentUrl } from '@/utils/api';
-import { FogReportIcon } from '@/components/icons/DbdIcons';
-import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
+import { FogReportIcon,OverseerEyeIcon } from '@/components/icons/DbdIcons';
+
 import { EmptyState } from '@/components/common/EmptyState';
 import { UnreadDot } from '@/components/common/UnreadDot';
 import { formatDate } from '@/utils/format';

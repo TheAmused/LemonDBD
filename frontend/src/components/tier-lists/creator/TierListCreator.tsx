@@ -359,7 +359,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
     <Button
       variant="primary"
       data-tier-create=""
-      onClick={submit}
+      onClick={() => { void submit(); }}
       disabled={publishingNow}
       className={cn(extra ?? 'min-h-12 2xl:min-h-hit-2xl px-8 2xl:px-10 text-base 2xl:text-lg')}
     >

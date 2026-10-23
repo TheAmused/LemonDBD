@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/chaos/ChaosModeModal.tsx
 
 import React from 'react';
-import { Difficulty } from '@/types/chaosStreak';
+import type { Difficulty } from '@/types/chaosStreak';
 import { ChallengeModeModal, buildCompletionTiles } from '../ChallengeModeModal';
 import { ChaosRulesModal } from './ChaosRulesModal';
 import { CHAOS_DIFFICULTY_ORDER } from '@/utils/challengeTierCompletion';

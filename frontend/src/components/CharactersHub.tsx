@@ -19,8 +19,8 @@ import { OwnershipSaveBar } from '@/components/characters/hub/OwnershipSaveBar';
 import { SavedChangesModal } from '@/components/characters/hub/SavedChangesModal';
 import { VerificationNotice } from '@/components/characters/hub/VerificationNotice';
 import { useCharacterOwnership } from '@/components/characters/hub/useCharacterOwnership';
-import { CharacterItem, PerkItem, AddonItem, EquipmentItem } from '@/components/character-detail/types';
-import { RoleCategory } from '@/types/perks';
+import type { CharacterItem, PerkItem, AddonItem, EquipmentItem } from '@/components/character-detail/types';
+import type { RoleCategory } from '@/types/perks';
 import { getBackendBaseUrl, normalizeSearchText } from '@/utils/perkUtils';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
@@ -127,7 +127,7 @@ export const CharactersHub: React.FC = () => {
         ownershipMode={ownershipMode}
         ownershipLoading={ownershipLoading}
         ownershipSaving={ownershipSaving}
-        onToggleOwnershipMode={handleToggleOwnershipMode}
+        onToggleOwnershipMode={() => { void handleToggleOwnershipMode(); }}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
@@ -208,7 +208,7 @@ export const CharactersHub: React.FC = () => {
         <OwnershipSaveBar
           ownershipSaveError={ownershipSaveError}
           ownershipSaving={ownershipSaving}
-          onSave={handleSaveOwnership}
+          onSave={() => { void handleSaveOwnership(); }}
         />
       )}
 

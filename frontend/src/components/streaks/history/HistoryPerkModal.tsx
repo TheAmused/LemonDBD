@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Sparkles, Lock } from 'lucide-react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { Modal } from '@/components/common/Modal';
-import { Perk } from '@/types/gauntletStreak';
+import type { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge } from '../CelebrationBadge';

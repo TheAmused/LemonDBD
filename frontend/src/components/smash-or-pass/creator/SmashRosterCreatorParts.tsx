@@ -6,7 +6,7 @@ import type { Dictionary } from '@/locales/types';
 import { type SmashRosterErrorCode } from '@/utils/smashOrPass/codec';
 import { defaultRosterThemeColor, SMASH_ROSTER_LIMITS, TRANSLATABLE_LOCALES } from '@/utils/smashOrPass/constants';
 import type { CustomRomanceArchetype, RosterCustomLabels, SmashRosterDocumentEntity } from '@/types/smashOrPass';
-import { DraftEntity, emptyDraftEntity, type EntityTranslationDraft } from '@/components/smash-or-pass/creator/EntityEditor';
+import { emptyDraftEntity, type DraftEntity, type EntityTranslationDraft } from '@/components/smash-or-pass/creator/EntityEditor';
 import { Badge } from '@/components/common/Badge';
 import { useDictionary } from '@/context/DictionaryContext';
 import { AccordionSection } from '@/components/common/AccordionSection';

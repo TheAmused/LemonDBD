@@ -19,7 +19,7 @@ import { usePurgeTab } from './scraper-config/usePurgeTab';
 interface ScraperConfigModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onPurgeSuccess?: () => void;
+  onPurgeSuccess?: () => void | Promise<void>;
   initialTab?: ScraperTab;
 }
 
@@ -74,7 +74,7 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess, initialTab
         cancelLabel={dict.admin.cancel}
         busy={importTab.isImporting}
         confirmDisabled={!importReady}
-        onConfirm={importTab.runImport}
+        onConfirm={() => { void importTab.runImport(); }}
         onCancel={() => importTab.setShowReplaceConfirm(false)}
       />
 
@@ -92,7 +92,7 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess, initialTab
         cancelLabel={dict.admin.cancel}
         busy={purgeTab.isPurging}
         confirmDisabled={!purgeReady}
-        onConfirm={purgeTab.runPurge}
+        onConfirm={() => { void purgeTab.runPurge(); }}
         onCancel={() => purgeTab.setShowPurgeConfirm(false)}
       />
     </>

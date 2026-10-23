@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { Lock, HelpCircle } from 'lucide-react';
-import { Perk } from '@/types/perks';
+import type { Perk } from '@/types/perks';
 import { getPerkIconUrl, getCharacterAvatarUrl } from '@/utils/perkUtils';
 import { DisabledBadge } from '@/components/DisabledBadge';
 

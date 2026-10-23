@@ -22,7 +22,7 @@ export const ChallengeModeGate: React.FC<ChallengeModeGateProps> = ({ mode, chil
 
   useEffect(() => {
     let cancelled = false;
-    fetchChallengeModeStatus().then((modes) => {
+    void fetchChallengeModeStatus().then((modes) => {
       if (cancelled) return;
       const modeInfo = modes[mode];
       if (modeInfo && !modeInfo.is_enabled) {

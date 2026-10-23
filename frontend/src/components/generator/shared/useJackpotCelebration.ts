@@ -4,7 +4,7 @@
 import { useCallback } from 'react';
 import { playFanfare } from '@/utils/perkAudio';
 import { triggerDbdBurst } from '../lib/dbdBurst';
-import { RoleCategory } from '@/types/perks';
+import type { RoleCategory } from '@/types/perks';
 
 export function useJackpotCelebration() {
   const celebrate = useCallback((role: RoleCategory, originEl?: HTMLElement | null) => {

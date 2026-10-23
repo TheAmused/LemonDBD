@@ -3,13 +3,13 @@
 //
 // One account's challenge progress: every challenge it has a run or a win in, with its completion status
 // and a reset for each. Used to wipe the progress of someone who cheated.
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useId, useState } from 'react';
 import { RotateCcw } from 'lucide-react';
 import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { EmptyState } from '@/components/common/EmptyState';
-import { Textarea } from '@/components/common/Field';
+import { FormField, Textarea } from '@/components/common/Field';
 import { LoadingState } from '@/components/common/LoadingState';
 import { Modal } from '@/components/common/Modal';
 import { Surface } from '@/components/common/Surface';
@@ -41,6 +41,7 @@ export function AdminUserChallengesModal({ user, notify, onClose }: AdminUserCha
   const [pending, setPending] = useState<UserChallengeProgress | null>(null);
   const [note, setNote] = useState('');
   const [busy, setBusy] = useState(false);
+  const noteId = useId();
   const userId = user?.id;
 
   const modeLabel: Record<ChallengeMode, string> = {
@@ -136,21 +137,19 @@ export function AdminUserChallengesModal({ user, notify, onClose }: AdminUserCha
         open={pending !== null}
         title={t.resetChallengeTitle}
         message={
-          <>
-            {formatMessage(t.resetChallengeMessage, { challenge: pending ? nameOf(pending) : '' })}
+          <FormField label={t.challengeNoteLabel} htmlFor={noteId} hint={t.resetChallengeMessage} className="text-left">
             <Textarea
-              className="mt-3"
+              id={noteId}
               rows={3}
               maxLength={NOTE_MAX_LENGTH}
-              aria-label={t.challengeNotePlaceholder}
-              placeholder={t.challengeNotePlaceholder}
               value={note}
               onChange={(e) => setNote(e.target.value)}
             />
-          </>
+          </FormField>
         }
         confirmLabel={t.resetChallenge}
-        cancelLabel={t.cancel}
+        closeButton="header"
+        closeButtonAriaLabel={dict.modal.close}
         size="sm"
         busy={busy}
         onConfirm={confirmReset}

@@ -26,6 +26,23 @@ class ChallengeCompletionDict(TypedDict):
     completed_at: str | None
 
 
+class AdminChallengeEntry(TypedDict):
+    """One challenge a player has progress in, as the admin reset dialog lists it."""
+    mode: str
+    variant: str
+    #: Whether the player ever completed it; the run (when it still exists) may since have started over.
+    completed: bool
+    #: Progress of the player's run as its progress bar counts it; None when only past completions remain.
+    current: int | None
+    #: How long the run is; None while the run has no frozen pool yet.
+    total: int | None
+
+
+class ChallengeResetResult(TypedDict):
+    runs_deleted: int
+    completions_deleted: int
+
+
 from typing import Literal
 from pydantic import BaseModel, Field
 

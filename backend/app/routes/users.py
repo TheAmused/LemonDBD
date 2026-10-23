@@ -6,6 +6,7 @@ from pydantic import ValidationError
 from app.core.limiter import limiter
 from app.core.reauth import reauth_error
 from app.core.security import admin_required, login_required
+from app.models.admin import CHALLENGE_MODES
 from app.schemas.user import (
     BulkCharacterOwnershipRequest,
     BulkPerkOwnershipRequest,
@@ -17,6 +18,8 @@ from app.schemas.user import (
 )
 from app.utils.pagination import paginate_args
 from app.services.admin_control_service import log_admin_action
+from app.services.challenge_reset import CHALLENGE_RESET_NOTE_MAX, list_user_challenges, reset_user_challenge
+from app.services.challenge_reset_email import notify_challenge_reset
 from app.services.ownership.characters import normalize_role, positive_id
 from app.services.ownership_service import OwnershipService
 from app.services.user import (
@@ -253,6 +256,53 @@ def reset_user_two_factor(user_id: int):
         details={"had_two_factor": had_two_factor},
     )
     return jsonify({"status": "success", "had_two_factor": had_two_factor}), 200
+
+
+@users_bp.route("/users/<int:user_id>/challenges", methods=["GET"])
+@admin_required
+def list_user_challenges_by_admin(user_id: int):
+    """The challenges a user has progress in, with their completion status (for the admin reset dialog)."""
+    if not fetch_user_by_id(user_id):
+        return api_error("User not found.", 404)
+    return jsonify({"challenges": list_user_challenges(user_id)}), 200
+
+
+@users_bp.route("/users/<int:user_id>/challenges/reset", methods=["POST"])
+@limiter.limit("60 per hour")
+@admin_required
+def reset_user_challenge_by_admin(user_id: int):
+    """Wipe one user's progress in one challenge (run, match logs and completions), e.g. after cheating.
+
+    The user is emailed (with the admin's optional `note`) and the reset is audited.
+    """
+    user = fetch_user_by_id(user_id)
+    if not user:
+        return api_error("User not found.", 404)
+    body = request.get_json(silent=True) or {}
+    mode, variant, note = body.get("mode"), body.get("variant"), body.get("note")
+    if mode not in CHALLENGE_MODES:
+        return api_error("Unknown challenge mode.", 400)
+    if not isinstance(variant, str) or not variant.strip():
+        return api_error("variant is required.", 400)
+    if note is not None and not isinstance(note, str):
+        return api_error("note must be text.", 400)
+    note = (note or "").strip() or None
+    if note and len(note) > CHALLENGE_RESET_NOTE_MAX:
+        return api_error(f"note is longer than {CHALLENGE_RESET_NOTE_MAX} characters.", 400)
+
+    result = reset_user_challenge(user_id, mode, variant)
+    if not (result["runs_deleted"] or result["completions_deleted"]):
+        return api_error("This user has no progress in that challenge.", 404)
+
+    emailed = notify_challenge_reset(user, mode, variant, note)
+    log_admin_action(
+        g.current_user.id,
+        action="user_challenge_reset",
+        target_type="user",
+        target_id=user_id,
+        details={"mode": mode, "variant": variant, "note": note, "emailed": emailed, **result},
+    )
+    return jsonify({"status": "success", "emailed": emailed, **result}), 200
 
 
 @users_bp.route("/users/<int:user_id>", methods=["DELETE"])

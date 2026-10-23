@@ -92,7 +92,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
             <Button
               variant="primary"
               size="lg"
-              onClick={handleCopy}
+              onClick={() => { void handleCopy(); }}
               className="flex-1"
             >
               {copied ? (

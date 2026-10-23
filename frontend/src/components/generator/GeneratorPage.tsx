@@ -4,7 +4,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { AlertTriangle, RotateCcw } from 'lucide-react';
-import {
+import type {
   Perk,
   DrawnSlot,
   RoleCategory,
@@ -15,8 +15,9 @@ import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAudioEnabled, setAudioEnabled } from '@/utils/perkAudio';
 import { computeEligiblePool, computePlayablePool } from './lib/perkPicker';
+import type {
+  GeneratorStoredState} from './lib/generatorStorage';
 import {
-  GeneratorStoredState,
   getStoredGeneratorState,
   saveStoredGeneratorState,
   getDrawnPerksForRole,

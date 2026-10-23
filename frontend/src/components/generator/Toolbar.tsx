@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { Repeat, Volume2, VolumeX, RotateCcw, EyeOff, Info } from 'lucide-react';
-import { ChaosMutator } from '@/types/chaos';
+import type { ChaosMutator } from '@/types/chaos';
 
 import { IconToggleButton } from './shared/IconToggleButton';
 import { Tooltip } from '@/components/common/Tooltip';

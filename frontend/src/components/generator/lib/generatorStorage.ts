@@ -1,7 +1,7 @@
 // frontend/src/components/generator/lib/generatorStorage.ts
 import { logger } from '@/utils/logger';
-import { RoleCategory, DrawnSlot, GeneratorMode } from '@/types/perks';
-import { ChaosMutator } from '@/types/chaos';
+import type { RoleCategory, DrawnSlot, GeneratorMode } from '@/types/perks';
+import type { ChaosMutator } from '@/types/chaos';
 import { getLocalStorage } from '@/utils/safeStorage';
 
 export const GENERATOR_STORAGE_KEY = 'lemon_dbd_generator_v9';

@@ -3,7 +3,8 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import { GauntletBoard } from '@/components/streaks/gauntlet/GauntletBoard';
 import { ChallengeModeGate } from '@/components/streaks/ChallengeModeGate';
-import { parseGauntletGameMode, Role } from '@/types/gauntletStreak';
+import type { Role } from '@/types/gauntletStreak';
+import { parseGauntletGameMode } from '@/types/gauntletStreak';
 import { pageMetadata, withSegment } from '@/i18n/metadata';
 
 // Its own canonical URL (the streaks layout's would point every challenge at /streaks).

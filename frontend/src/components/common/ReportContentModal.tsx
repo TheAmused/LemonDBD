@@ -193,7 +193,7 @@ export function ReportContentModalBody({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4 py-1">
+    <form onSubmit={(e) => { void handleSubmit(e); }} className="flex flex-col gap-4 py-1">
       {!manifest && (
         <div className="flex items-start gap-3 rounded-card border border-border-color bg-bg-elevated/40 p-3 text-xs text-text-secondary">
           <ShieldAlert className="h-4 w-4 shrink-0 text-accent-amber mt-0.5" aria-hidden="true" />

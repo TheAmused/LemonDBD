@@ -96,7 +96,7 @@ export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnl
               <span>{t.deleteAccountCancel}</span>
             </Button>
             {usesGoogle ? null : (
-              <Button variant="danger" onClick={() => confirm()} loading={busy} disabled={!password || (requiresCode && !code.trim())} className="flex-1">
+              <Button variant="danger" onClick={() => { void confirm(); }} loading={busy} disabled={!password || (requiresCode && !code.trim())} className="flex-1">
                 <span>{t.deleteAccountConfirm}</span>
               </Button>
             )}
@@ -109,7 +109,7 @@ export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnl
           </p>
           {usesGoogle ? (
             googleClientId && (
-              <GoogleSignInButton clientId={googleClientId} onCredential={confirm} />
+              <GoogleSignInButton clientId={googleClientId} onCredential={(googleCredential) => { void confirm(googleCredential); }} />
             )
           ) : (
             <Input
@@ -120,7 +120,7 @@ export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnl
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') confirm();
+                if (e.key === 'Enter') void confirm();
               }}
               invalid={!!error}
               data-autofocus
@@ -136,7 +136,7 @@ export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnl
               value={code}
               onChange={(e) => setCode(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') confirm();
+                if (e.key === 'Enter') void confirm();
               }}
             />
           ) : null}

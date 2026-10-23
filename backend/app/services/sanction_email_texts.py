@@ -300,8 +300,11 @@ class SanctionEmailContent:
     preheader: str
     footer: str
     #: ("p", text) plain paragraph; ("field", label, value); ("quote", label, value) for the
-    #: moderator's own words.
+    #: moderator's own words; ("title", text) the headline; ("heading", text) opens a section;
+    #: ("note", text) the moderator's own words as plain italic text.
     blocks: list[tuple[str, ...]] = field(default_factory=list)
+    #: Red bar on the top edge of the card.
+    accent_bar: bool = False
 
 
 def build_sanction_email(

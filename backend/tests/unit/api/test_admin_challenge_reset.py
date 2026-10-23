@@ -18,6 +18,7 @@ from app.models import (
     User,
 )
 from app.services.challenge_completions import record_challenge_completion
+from app.services.challenge_reset_email import build_challenge_reset_email
 
 
 def _user(db_session: Session, login: str, role: str = "user") -> User:
@@ -163,7 +164,7 @@ class TestAdminChallengeReset:
         assert [m.recipients for m in outbox] == [[seeded.email]]
         assert outbox[0].subject == "LemonDBD: Postęp w Twoim wyzwaniu został zresetowany"
         assert "Chaos Streak: Easy" in outbox[0].body and "Wynik z exploita." in outbox[0].body
-        assert "Wynik z exploita." in outbox[0].html and "Sekcja 2: Fair play" in outbox[0].body
+        assert "Wynik z exploita." in outbox[0].html and "sekcję Fair play" in outbox[0].body
         log = db_session.query(AdminAuditLog).filter_by(action="user_challenge_reset").one()
         assert '"emailed":true' in log.details and "Wynik z exploita." in log.details
 
@@ -176,6 +177,32 @@ class TestAdminChallengeReset:
             )
         assert outbox[0].subject == "LemonDBD: Your progress in a challenge was reset"
         assert "Gauntlet: Killer original" in outbox[0].body and "Note from the team" not in outbox[0].body
+
+    def test_the_email_is_in_sections_with_the_note_last_and_human_review_in_the_footer(
+        self, app: Flask, client: FlaskClient, admin: User, seeded: User
+    ) -> None:
+        with mail.record_messages() as outbox:
+            client.post(
+                f"/api/v1/users/{seeded.id}/challenges/reset",
+                json={"mode": "chaos", "variant": "easy", "note": "Exploit."},
+                headers=_headers(app, admin),
+            )
+        body, html = outbox[0].body, outbox[0].html
+        headings = ["What happened", "Why", "Your options", "Note from the team"]
+        positions = [body.index(heading) for heading in headings]
+        assert positions == sorted(positions)
+        main, footer = body.split("\n\n--\n")
+        assert main.rstrip().endswith("Exploit.") and "No automated decision-making" in footer
+        assert "No automated decision-making" not in main and "Sent by LemonDBD" not in html
+        assert "Your actions broke the Fair play section of our Rules" in main and "Section" not in main
+        assert "border-top:3px solid #b91c1c" in html
+
+    def test_the_reason_sentence_ends_with_the_link_or_with_a_full_stop(self, app: Flask) -> None:
+        with app.app_context():
+            linked = build_challenge_reset_email("en", username="u", mode="chaos", variant="easy", rules_url="https://x/en/rules#fairPlay")
+            plain = build_challenge_reset_email("en", username="u", mode="chaos", variant="easy")
+        assert ("p", "Your actions broke the Fair play section of our Rules: https://x/en/rules#fairPlay") in linked.blocks
+        assert ("p", "Your actions broke the Fair play section of our Rules.") in plain.blocks
 
     def test_a_failed_email_does_not_undo_the_reset(
         self, app: Flask, client: FlaskClient, db_session: Session, admin: User, seeded: User, monkeypatch: pytest.MonkeyPatch

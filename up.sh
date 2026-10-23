@@ -135,7 +135,7 @@ if [ "$SKIP_UP_FLOW" = false ]; then
   export PYTHONPATH="$(pwd)/backend:${PYTHONPATH:-}"
 
   # 1.1 Backend Unit Tests
-  echo -e "\n${YELLOW}> [1/3] Running Backend Unit Tests (pytest)...${NC}"
+  echo -e "\n${YELLOW}> [1/2] Running Backend Unit Tests (pytest)...${NC}"
   PYTHON_CMD="python3"
   if ! command -v python3 &> /dev/null; then
     if command -v py &> /dev/null; then
@@ -152,8 +152,11 @@ if [ "$SKIP_UP_FLOW" = false ]; then
   fi
   echo -e "${GREEN}[PASS] Backend Unit Tests Passed.${NC}"
 
-  # 1.2 Frontend Unit Tests
-  echo -e "\n${YELLOW}> [2/3] Running Frontend Unit Tests (npm run test:unit)...${NC}"
+  # 1.2 Frontend unit tests (npm run test:unit). This one run is also the static check: the
+  # hardcoded-string, global-style and typography scans are unit tests, and so are the
+  # architecture / i18n / quality / lint-suppression guard suites. `npm run check` is a subset of
+  # it, so it is not run again.
+  echo -e "\n${YELLOW}> [2/2] Running Frontend Unit Tests + static guards (npm run test:unit)...${NC}"
   if ! (cd frontend && npm run test:unit); then
     echo -e "\n${RED}[FAIL] Frontend unit tests did not pass!${NC}"
     echo -e "${RED}[STOP] Docker build and startup has been ABORTED.${NC}"
@@ -161,27 +164,10 @@ if [ "$SKIP_UP_FLOW" = false ]; then
   fi
   echo -e "${GREEN}[PASS] Frontend Unit Tests Passed.${NC}"
 
-  # 1.3 Frontend static checks (npm run check): hardcoded strings, global styles/typography and the
-  # architecture/i18n/quality guard suites.
-  echo -e "\n${YELLOW}> [3/3] Running Frontend Checks (npm run check)...${NC}"
-  if ! (cd frontend && npm run check); then
-    echo -e "\n${RED}[FAIL] Frontend checks did not pass!${NC}"
-    echo -e "${RED}[STOP] Docker build and startup has been ABORTED.${NC}"
-    exit 1
-  fi
-  echo -e "${GREEN}[PASS] Frontend Checks Passed.${NC}"
-
-  # 1.4 Built-output check (npm run check:built) runs as `postbuild`, so the Docker image build in
-  # Gate 2 already enforces it. Strict mode also builds locally so the failure shows up here first.
-  if $STRICT; then
-    echo -e "\n${YELLOW}> [Strict] Production build + built-output check (npm run build -> check:built)...${NC}"
-    if ! (cd frontend && npm run build); then
-      echo -e "\n${RED}[FAIL] Frontend build or built-output check did not pass!${NC}"
-      echo -e "${RED}[STOP] Docker build and startup has been ABORTED.${NC}"
-      exit 1
-    fi
-    echo -e "${GREEN}[PASS] Built-output check passed.${NC}"
-  fi
+  # Lint, the type-check and the built-output check are not run here: the Docker image build in
+  # Gate 2 runs `npm run build`, which stops on any lint error or warning (prebuild), on a type
+  # error (next build) and on a broken bundle (postbuild: check:built). Building locally first
+  # would run the same build twice.
 
   # ====================================================================
   # [GATE 2] Build & Start Docker Cluster

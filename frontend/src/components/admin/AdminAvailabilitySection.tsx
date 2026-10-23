@@ -172,7 +172,7 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
                   {setting.is_enabled ? t.enabledLabel : setting.disabled_reason || t.disabledLabel}
                 </p>
               </div>
-              <Switch checked={setting.is_enabled} onChange={() => toggleMode(setting)} ariaLabel={modeLabel[setting.mode]} />
+              <Switch checked={setting.is_enabled} onChange={() => { void toggleMode(setting); }} ariaLabel={modeLabel[setting.mode]} />
             </li>
           ))}
         </ul>
@@ -230,7 +230,7 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
                   <li key={`${kind}-${item.id}`}>
                     <TileButton
                       press={false}
-                      onClick={() => (isCharacter ? toggleCharacter(item as AdminCharacterRow) : togglePerk(item as AdminPerkRow))}
+                      onClick={() => { void (isCharacter ? toggleCharacter(item as AdminCharacterRow) : togglePerk(item as AdminPerkRow)); }}
                       aria-pressed={!item.is_disabled}
                       aria-label={label}
                       {...tip(item.name, item.disabled_reason || undefined, 'status')}

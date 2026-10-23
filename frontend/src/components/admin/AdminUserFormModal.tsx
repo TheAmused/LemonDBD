@@ -121,7 +121,7 @@ export function AdminUserFormModal({ target, currentUserId, onClose, onCreate, o
         </>
       }
     >
-      <form id={FORM_ID} onSubmit={submit} className="space-y-4">
+      <form id={FORM_ID} onSubmit={(e) => { void submit(e); }} className="space-y-4">
         {editing ? (
           <Surface as="aside" tone="inset" padding="sm">
             <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">

@@ -209,11 +209,11 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
                 disabled={running !== null}
                 leftIcon={<Play className="icon-sm" aria-hidden="true" />}
                 onClick={() =>
-                  run(key, async () => {
+                  { void run(key, async () => {
                     const result = await runMaintenanceJob(key);
                     setJobs((list) => list.map((job) => (job.key === key ? { ...job, last_run: result.last_run } : job)));
                     return formatMessage(t.maintenanceDone, { name, count: result.affected }, locale);
-                  })
+                  }); }
                 }
               >
                 {t.runNow}
@@ -264,7 +264,7 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
             loading={running === 'email'}
             disabled={running !== null}
             leftIcon={<Mail className="icon-sm" aria-hidden="true" />}
-            onClick={() => run('email', async () => formatMessage(t.testEmailSent, { email: (await sendTestEmail()).sent_to }))}
+            onClick={() => { void run('email', async () => formatMessage(t.testEmailSent, { email: (await sendTestEmail()).sent_to })); }}
           >
             {t.sendTest}
           </Button>
@@ -276,10 +276,10 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
             disabled={running !== null}
             leftIcon={<MessageSquare className="icon-sm" aria-hidden="true" />}
             onClick={() =>
-              run('discord', async () => {
+              { void run('discord', async () => {
                 await sendTestDiscord();
                 return t.testDiscordSent;
-              })
+              }); }
             }
           >
             {t.sendTest}

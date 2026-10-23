@@ -9,7 +9,7 @@ import type { Reauth } from '@/types/admin';
 import { backupErrorMessage } from './backupErrors';
 
 /** Staging a JSON backup (file picker or drag-and-drop) and importing it in merge or replace mode. */
-export function useImportTab(onPurgeSuccess?: () => void) {
+export function useImportTab(onPurgeSuccess?: () => void | Promise<void>) {
   const dict = useDictionary();
   const apiBase = getBackendBaseUrl();
   const [importFile, setImportFile] = useState<File | null>(null);
@@ -46,7 +46,9 @@ export function useImportTab(onPurgeSuccess?: () => void) {
     const reader = new FileReader();
     reader.onload = (event) => {
       try {
-        const parsed: unknown = JSON.parse(String(event.target?.result ?? ''));
+        const raw = event.target?.result;
+        if (typeof raw !== 'string') throw new Error(dict.admin.invalidJsonFile);
+        const parsed: unknown = JSON.parse(raw);
         if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
           throw new Error(dict.admin.invalidJsonFile);
         }

@@ -368,9 +368,9 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
                                 type="button"
                                 disabled={saving}
                                 onClick={() =>
-                                  row.kind === 'bool' && row.risky_when !== null && row.default === row.risky_when && row.value !== row.default
+                                  { void (row.kind === 'bool' && row.risky_when !== null && row.default === row.risky_when && row.value !== row.default
                                     ? setRiskyReset(row)
-                                    : send({ [row.key]: null }, undefined, row.key)
+                                    : send({ [row.key]: null }, undefined, row.key)); }
                                 }
                                 variant="linkDanger"
                                 size="sm"
@@ -409,7 +409,7 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
             size="sm"
             loading={saving}
             disabled={changed.length === 0 || problems.length > 0}
-            onClick={() => (risky.length > 0 ? setConfirmOpen(true) : send(payload()))}
+            onClick={() => { void (risky.length > 0 ? setConfirmOpen(true) : send(payload())); }}
           >
             {t.configSave}
           </Button>
@@ -448,9 +448,9 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
         busy={saving}
         confirmDisabled={!reasonOk}
         onConfirm={() =>
-          riskyReset
+          { void (riskyReset
             ? send({ [riskyReset.key]: null }, { confirmRisky: true, reason: reason.trim() }, riskyReset.key)
-            : send(payload(), { confirmRisky: true, reason: reason.trim() })
+            : send(payload(), { confirmRisky: true, reason: reason.trim() })); }
         }
         onCancel={() => {
           setConfirmOpen(false);

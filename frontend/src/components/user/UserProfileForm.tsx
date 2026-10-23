@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import { Lock, Mail, Eye, EyeOff, CheckCircle2, AlertCircle } from 'lucide-react';
-import { StatusFeedback } from '@/types/userProfile';
+import type { StatusFeedback } from '@/types/userProfile';
 import { updateUserProfile, ApiError, type UpdateProfilePayload } from '@/services/userProfileApi';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { Button } from '@/components/common/Button';
@@ -195,7 +195,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
         </div>
       )}
 
-      <form onSubmit={handleUpdateProfile} className="max-w-2xl w-full mx-auto space-y-4 sm:space-y-5">
+      <form onSubmit={(e) => { void handleUpdateProfile(e); }} className="max-w-2xl w-full mx-auto space-y-4 sm:space-y-5">
         <div className="space-y-4 sm:space-y-5">
           <div className="space-y-1.5">
             <label className="block type-label-xs text-text-secondary" htmlFor="profile-login">
@@ -307,7 +307,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 variant="secondary"
                 size="sm"
                 loading={isSendingSetPassword}
-                onClick={handleSendSetPasswordLink}
+                onClick={() => { void handleSendSetPasswordLink(); }}
                 leftIcon={<Mail className="h-3.5 w-3.5" />}
               >
                 <span>{t.setPasswordButton}</span>
@@ -402,7 +402,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
       {/* Optional second sign-in step (authenticator app) inside Account Management */}
       <TwoFactorSection
         refreshTrigger={twoFactorRefresh}
-        onStatusChange={onRefreshUser}
+        onStatusChange={() => { void onRefreshUser(); }}
         needsPassword={!hasPassword}
       />
     </AccordionSection>

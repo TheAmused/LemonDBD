@@ -87,7 +87,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
         selectedLanguage={language.selectedLanguage}
         savingLanguage={language.savingLanguage}
         onSelect={language.handleLanguageSelect}
-        onContinue={language.handleLanguageContinue}
+        onContinue={() => { void language.handleLanguageContinue(); }}
       />
     );
   }
@@ -218,7 +218,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
       {/* Sticky full-screen bottom continue banner so Continue stays reachable while scrolling */}
       <StickyActionBar sidebarAware={false}>
-        <ActionBarButton variant="red" wide disabled={saving} onClick={handleContinue}>
+        <ActionBarButton variant="red" wide disabled={saving} onClick={() => { void handleContinue(); }}>
           {saving ? t.savingLabel : t.continueButton}
         </ActionBarButton>
       </StickyActionBar>
@@ -237,7 +237,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
       <SkipOnboardingModal
         isOpen={isSkipModalOpen}
         onCancel={() => setIsSkipModalOpen(false)}
-        onConfirm={handleSkipConfirm}
+        onConfirm={() => { void handleSkipConfirm(); }}
       />
     </div>
   );

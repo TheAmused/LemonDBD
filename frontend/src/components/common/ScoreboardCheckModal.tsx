@@ -136,7 +136,7 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
       <Button variant="secondary" onClick={onClose} disabled={busy}>
         {t.close}
       </Button>
-      <Button variant="primary" onClick={run} disabled={!file || switchedOff} loading={busy}>
+      <Button variant="primary" onClick={() => { void run(); }} disabled={!file || switchedOff} loading={busy}>
         {busy ? t.analyzing : t.analyze}
       </Button>
     </>

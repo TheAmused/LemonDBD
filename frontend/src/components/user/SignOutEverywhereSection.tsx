@@ -41,7 +41,7 @@ export const SignOutEverywhereSection: React.FC<{ className?: string }> = ({ cla
         size="sm"
         icon
         className={className}
-        onClick={handleClick}
+        onClick={() => { void handleClick(); }}
         loading={busy}
         leftIcon={<LogOut className="h-3.5 w-3.5" />}
         aria-label={t.signOutEverywhereTitle}

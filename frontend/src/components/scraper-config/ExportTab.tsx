@@ -40,7 +40,7 @@ export function ExportTab({ tab }: { tab: ReturnType<typeof useExportTab> }) {
         <Button
           variant="primary"
           size="sm"
-          onClick={handleExecuteExport}
+          onClick={() => { void handleExecuteExport(); }}
           loading={isExporting}
           disabled={exportTargets.length === 0}
           leftIcon={<Download className="h-3.5 w-3.5" />}

@@ -222,7 +222,7 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
               {authorDecision ? <UserX className="icon-md" /> : <Ban className="icon-md" />}
               {dict.admin.contentReportBanAction}
             </Button>
-            <Button size="sm" disabled={resolving} onClick={() => onResolve('dismiss', null, notes)}>
+            <Button size="sm" disabled={resolving} onClick={() => { void onResolve('dismiss', null, notes); }}>
               <CheckCircle className="icon-md" />
               {dict.admin.contentReportDismissAction}
             </Button>
@@ -244,7 +244,7 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
         confirmLabel={dict.admin.contentReportBanAction}
         cancelLabel={dict.admin.cancel}
         busy={resolving}
-        onConfirm={runBan}
+        onConfirm={() => { void runBan(); }}
         onCancel={() => setConfirmBan(false)}
       />
     </article>

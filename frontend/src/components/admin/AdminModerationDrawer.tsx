@@ -88,6 +88,16 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
     setConfirmingDraft(false);
   };
 
+  const confirmRevoke = async (reason: string) => {
+    if (revoking) await revoke(revoking.id, reason);
+    setRevoking(null);
+  };
+
+  const confirmRestore = async (reason: string) => {
+    await restore(reason);
+    setRestoring(false);
+  };
+
   return (
     <>
       <Modal
@@ -113,7 +123,7 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
         {loadFailed && (
           <div className="flex flex-col items-center gap-3 text-center">
             <p role="alert" className="type-body text-accent-red">{t.loadFailed}</p>
-            <Button size="sm" onClick={reload}>{dict.admin.refresh}</Button>
+            <Button size="sm" onClick={() => { void reload(); }}>{dict.admin.refresh}</Button>
           </div>
         )}
 
@@ -192,7 +202,7 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
         message={confirmMessage}
         confirmLabel={submitLabel}
         busy={saving}
-        onConfirm={submit}
+        onConfirm={() => { void submit(); }}
         onCancel={() => setConfirmingDraft(false)}
       />
 
@@ -203,9 +213,8 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
         confirmLabel={t.revokeConfirm}
         busy={saving}
         onCancel={() => setRevoking(null)}
-        onConfirm={async (reason) => {
-          if (revoking) await revoke(revoking.id, reason);
-          setRevoking(null);
+        onConfirm={(reason) => {
+          void confirmRevoke(reason);
         }}
       />
 
@@ -216,9 +225,8 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
         confirmLabel={t.restoreConfirm}
         busy={saving}
         onCancel={() => setRestoring(false)}
-        onConfirm={async (reason) => {
-          await restore(reason);
-          setRestoring(false);
+        onConfirm={(reason) => {
+          void confirmRestore(reason);
         }}
       />
     </>

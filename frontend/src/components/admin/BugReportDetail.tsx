@@ -88,7 +88,7 @@ export function BugReportDetail({ report, onStatusChange, onReply, onDelete, onS
             align="right"
             value={report.status}
             onChange={(status) => {
-              if (!busy) run(() => onStatusChange(status, unchanged ? undefined : notes.trim()));
+              if (!busy) void run(() => onStatusChange(status, unchanged ? undefined : notes.trim()));
             }}
             options={BUG_STATUSES.map((s) => ({ value: s, label: bugStatusLabel(dict, s) }))}
           />
@@ -153,7 +153,7 @@ export function BugReportDetail({ report, onStatusChange, onReply, onDelete, onS
             loading={busy}
             disabled={unchanged}
             leftIcon={<Send className="icon-sm" aria-hidden="true" />}
-            onClick={() => run(() => onReply(notes.trim()))}
+            onClick={() => { void run(() => onReply(notes.trim())); }}
           >
             {t.devFeedbackSubmit}
           </Button>
@@ -168,11 +168,11 @@ export function BugReportDetail({ report, onStatusChange, onReply, onDelete, onS
         cancelLabel={t.cancel}
         busy={busy}
         onConfirm={() =>
-          run(async () => {
+          { void run(async () => {
             const ok = await onDelete();
             setConfirmDelete(false);
             return ok;
-          })
+          }); }
         }
         onCancel={() => setConfirmDelete(false)}
       />

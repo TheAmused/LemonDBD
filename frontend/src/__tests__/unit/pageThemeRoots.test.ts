@@ -3,164 +3,92 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import { DEFAULT_SHELL_OUTER_CLASSNAME, ROUTE_SHELLS } from '@/components/layout/shellRoutes';
 
-describe('Page Root Theme Wrapper Consistency', () => {
-  // These pages render their shell through the shared <PageShell> component
-  // (frontend/src/components/layout/PageShell.tsx), whose default outer
-  // wrapper uses the theme-token classes `bg-bg-primary`/`text-text-primary`
-  // -- which track all 3 site themes (light, light-lemon, dark) -- instead of
-  // the old per-page `bg-slate-50 dark:bg-slate-950` pattern, which silently
-  // broke the light-lemon theme on every page still using it.
-  const shellPageRoutes = [
-    'admin/page.tsx',
-    '../../components/landing/HomePage.tsx',
-    'perks/page.tsx',
-    'characters/page.tsx',
-    'characters/[slug]/page.tsx',
-    'randomizer/page.tsx',
-    'smash-or-pass/page.tsx',
-    'user/page.tsx',
-    'maps/page.tsx',
-    'tier-lists/page.tsx',
-    'tier-lists/[slug]/page.tsx',
-    'tier-lists/custom/[id]/page.tsx',
-  ];
+const SRC = path.resolve(__dirname, '../..');
 
-  for (const relPath of shellPageRoutes) {
-    it(`${relPath} renders its shell via <PageShell> with theme-token colors, not a raw hex background`, () => {
-      const fullPath = path.resolve(__dirname, '../../app/[locale]', relPath);
-      let content = fs.readFileSync(fullPath, 'utf-8');
-      const clientImport = content.match(/from\s+['"](@\/(?:components|features)\/[^'"]+)['"]/);
-      if (clientImport) {
-        const spec = clientImport[1].replace('@/', '');
-        const candidates = [
-          path.resolve(__dirname, '../../', spec + '.tsx'),
-          path.resolve(__dirname, '../../', spec, 'index.ts'),
-        ];
-        for (const c of candidates) {
-          if (fs.existsSync(c)) {
-            const extra = fs.readFileSync(c, 'utf-8');
-            content += '\n' + extra;
-            for (const rem of extra.matchAll(/from\s+['"](@\/components\/[^'"]+)['"]/g)) {
-              const compFile = path.resolve(__dirname, '../../', rem[1].replace('@/', '') + '.tsx');
-              if (fs.existsSync(compFile)) {
-                content += '\n' + fs.readFileSync(compFile, 'utf-8');
-              }
-            }
-          }
-        }
-      }
-      assert.ok(!content.includes('bg-[#070b12]'), `${relPath} still contains raw hardcoded bg-[#070b12]`);
-      assert.ok(content.includes('<PageShell'), `${relPath} must render through the shared <PageShell> component`);
-      // A page may override PageShell's default outer wrapper (e.g. for a
-      // decoration slot) -- when it does, the override must still use the
-      // theme tokens rather than reintroducing hardcoded slate colors.
-      const outerOverrideMatch = content.match(/outerClassName=["'`]([^"'`]+)["'`]/);
-      if (outerOverrideMatch) {
-        assert.ok(
-          outerOverrideMatch[1].includes('text-text-primary'),
-          `${relPath}'s outerClassName override must use the text-text-primary token, not hardcoded slate colors`
-        );
-      }
-    });
-  }
+const walk = (dir: string): string[] =>
+  fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory() ? walk(path.join(dir, e.name)) : /\.tsx?$/.test(e.name) ? [path.join(dir, e.name)] : []
+  );
 
-  it("PageShell's own default outer wrapper uses theme tokens, not hardcoded slate colors", () => {
-    // The assertions above only catch a page's own outerClassName override --
-    // 13 of the 16 shell pages pass none and rely entirely on this default,
-    // so it's the actual source of truth for the light-lemon theme fix.
-    const shellPath = path.resolve(__dirname, '../../components/layout/PageShell.tsx');
-    const content = fs.readFileSync(shellPath, 'utf-8');
-    const defaultMatch = content.match(/DEFAULT_OUTER_CLASSNAME\s*=\s*\n?\s*['"`]([^'"`]+)['"`]/);
-    assert.ok(defaultMatch, 'Could not find DEFAULT_OUTER_CLASSNAME in PageShell.tsx');
-    const defaultClassName = defaultMatch![1];
-    assert.ok(
-      defaultClassName.includes('text-text-primary'),
-      `PageShell's DEFAULT_OUTER_CLASSNAME must use the text-text-primary token, not hardcoded slate colors: "${defaultClassName}"`
-    );
-    assert.ok(
-      !defaultClassName.includes('slate'),
-      `PageShell's DEFAULT_OUTER_CLASSNAME must not reintroduce hardcoded slate colors: "${defaultClassName}"`
-    );
+const rel = (file: string) => path.relative(SRC, file).replace(/\\/g, '/');
+
+describe('Page shell: one persistent sidebar + <main>, theme tokens only', () => {
+  it("the shell's default outer wrapper uses theme tokens (they track all 3 site themes), not hardcoded slate colors", () => {
+    assert.ok(DEFAULT_SHELL_OUTER_CLASSNAME.includes('text-text-primary'));
+    assert.ok(!DEFAULT_SHELL_OUTER_CLASSNAME.includes('slate'));
   });
 
-  // These loading skeletons render independently of <PageShell> (no sidebar
-  // props to thread through a Suspense fallback) and still use the older
-  // slate-based pattern -- unchanged by the PageShell migration, so they keep
-  // the original literal-class check.
-  const legacySlateRoutes = [
-    'characters/loading.tsx',
-    'characters/[slug]/loading.tsx',
-    'smash-or-pass/loading.tsx',
-  ];
+  it('every outer wrapper override in the route table also uses the text-text-primary token', () => {
+    for (const { prefix, shell } of ROUTE_SHELLS) {
+      if (shell && shell.outerClassName) {
+        assert.ok(shell.outerClassName.includes('text-text-primary'), `/${prefix.join('/')} outerClassName must use text-text-primary`);
+        assert.ok(!shell.outerClassName.includes('slate'), `/${prefix.join('/')} outerClassName must not use slate colors`);
+      }
+    }
+  });
 
-  for (const relPath of legacySlateRoutes) {
-    it(`${relPath} does not have hardcoded bg-[#070b12] without dark: variant`, () => {
-      const fullPath = path.resolve(__dirname, '../../app/[locale]', relPath);
-      const content = fs.readFileSync(fullPath, 'utf-8');
-      assert.ok(!content.includes('bg-[#070b12]'), `${relPath} still contains raw hardcoded bg-[#070b12]`);
-      assert.ok(
-        (content.includes('dark:bg-slate-950') && content.includes('dark:text-slate-100')) ||
-        content.includes('text-text-primary'),
-        `${relPath} must include theme classes or semantic tokens`
-      );
-    });
-  }
+  it('no page, loading state or component paints a raw hex page background or a hardcoded slate one', () => {
+    for (const file of walk(path.join(SRC, 'app/[locale]'))) {
+      const content = fs.readFileSync(file, 'utf-8');
+      assert.ok(!content.includes('bg-[#070b12]'), `${rel(file)} contains raw hardcoded bg-[#070b12]`);
+      assert.ok(!/\bbg-slate-(50|950)\b/.test(content), `${rel(file)} hardcodes a slate page background`);
+    }
+  });
 
-  // These route-level loading.tsx files (and the maps/perks/randomizer
-  // page.tsx Suspense fallbacks above) render before PageShell/Sidebar ever
-  // mount, so they render through PageShellFallback -- PageShell's
-  // pre-hydration twin -- rather than <PageShell> itself.
-  const pageShellFallbackRoutes = ['maps/loading.tsx', 'perks/loading.tsx', 'randomizer/loading.tsx'];
+  it('the shell paints no background colour of its own and mounts no effects (AppBackground in the layout does)', () => {
+    assert.ok(!/\bbg-bg-primary\b/.test(DEFAULT_SHELL_OUTER_CLASSNAME));
+    for (const f of ['components/layout/AppShell.tsx', 'components/layout/shellRoutes.ts']) {
+      assert.ok(!fs.readFileSync(path.join(SRC, f), 'utf-8').includes('decoration'), f);
+    }
+  });
 
-  for (const relPath of pageShellFallbackRoutes) {
-    it(`${relPath} renders through the shared <PageShellFallback>, not a raw hex background`, () => {
-      const fullPath = path.resolve(__dirname, '../../app/[locale]', relPath);
-      const content = fs.readFileSync(fullPath, 'utf-8');
-      assert.ok(!content.includes('bg-[#070b12]'), `${relPath} still contains raw hardcoded bg-[#070b12]`);
-      assert.ok(
-        !content.includes('bg-slate-50') && !content.includes('dark:bg-slate-950'),
-        `${relPath} must not reintroduce the hardcoded slate background PageShellFallback replaced`
-      );
-      assert.ok(
-        content.includes('<PageShellFallback'),
-        `${relPath} must render through the shared <PageShellFallback> component`
-      );
-    });
-  }
+  it('the locale layout mounts <AppShell> once, around the pages', () => {
+    const layout = fs.readFileSync(path.join(SRC, 'app/[locale]/layout.tsx'), 'utf-8');
+    assert.ok(layout.includes('<AppShell>{children}</AppShell>'));
+  });
 
-  // A fallback that already sits inside a real shell (the streaks layout's
-  // Sidebar + <main>, or a page's own <PageShell>) must not render another
-  // shell: PageShellFallback would nest a fake sidebar placeholder in the page.
-  const insideShellFallbacks = ['streaks/loading.tsx', 'tier-lists/new/page.tsx'];
+  it('only AppShell renders the Sidebar: no page, loading state or layout builds a second shell', () => {
+    for (const file of walk(SRC)) {
+      if (file.includes('__tests__')) continue;
+      const content = fs.readFileSync(file, 'utf-8');
+      if (rel(file) === 'components/layout/AppShell.tsx') {
+        assert.ok(/<Sidebar\b/.test(content));
+        continue;
+      }
+      assert.ok(!/<Sidebar\b/.test(content), `${rel(file)} renders its own <Sidebar>; the shell comes from AppShell`);
+      assert.ok(!/<PageShell\b|PageShellFallback/.test(content), `${rel(file)} still uses the removed PageShell`);
+      if (file.endsWith('.tsx') && rel(file) !== 'components/Sidebar.tsx') {
+        assert.ok(!content.includes('lemon-shell-aside'), `${rel(file)} fakes a sidebar slot (lemon-shell-aside)`);
+      }
+    }
+  });
 
-  for (const relPath of insideShellFallbacks) {
-    it(`${relPath} does not nest a second shell via PageShellFallback`, () => {
-      const content = fs.readFileSync(path.resolve(__dirname, '../../app/[locale]', relPath), 'utf-8');
-      assert.ok(!/<PageShellFallback|TierListsLoading/.test(content), `${relPath} would nest a fake sidebar inside the real shell`);
-    });
-  }
+  it('route loading states render content only, inside the persistent <main>', () => {
+    const loadings = walk(path.join(SRC, 'app/[locale]')).filter((f) => f.endsWith('loading.tsx'));
+    assert.ok(loadings.length > 0);
+    for (const file of loadings) {
+      const content = fs.readFileSync(file, 'utf-8').replace(/\/\/.*$/gm, '');
+      assert.ok(!/<main\b/.test(content), `${rel(file)} renders its own <main>`);
+      assert.ok(!/min-h-screen/.test(content), `${rel(file)} sizes itself to the whole screen`);
+    }
+  });
+
+  it('the home page loading fallback is an in-page spinner, not a fixed overlay over the whole viewport', () => {
+    const home = fs.readFileSync(path.join(SRC, 'components/landing/HomePage.tsx'), 'utf-8');
+    assert.ok(!home.includes('layout="fullscreen"'));
+  });
 });
 
 describe('Page background: one source of truth', () => {
-  it('PageShell no longer paints a background colour or mounts effects (AppBackground in the layout does)', () => {
-    const content = fs.readFileSync(path.resolve(__dirname, '../../components/layout/PageShell.tsx'), 'utf-8');
-    assert.ok(!/DEFAULT_OUTER_CLASSNAME\s*=\s*\n?\s*['"`][^'"`]*\bbg-bg-primary\b/.test(content));
-    assert.ok(!content.includes('decoration'));
-  });
-
   it('only AppBackground mounts a background effect, and the locale layout mounts it', () => {
-    const src = path.resolve(__dirname, '../..');
-    const walk = (dir: string): string[] =>
-      fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
-        e.isDirectory() ? walk(path.join(dir, e.name)) : /\.tsx$/.test(e.name) ? [path.join(dir, e.name)] : []
-      );
-    for (const file of walk(src)) {
-      if (file.endsWith('AppBackground.tsx')) continue;
+    for (const file of walk(SRC)) {
+      if (file.endsWith('AppBackground.tsx') || !/\.tsx$/.test(file)) continue;
       const content = fs.readFileSync(file, 'utf-8');
       assert.ok(!/<CampfireParticles\b/.test(content), `${file} mounts its own background effect`);
     }
-    const layout = fs.readFileSync(path.resolve(src, 'app/[locale]/layout.tsx'), 'utf-8');
+    const layout = fs.readFileSync(path.resolve(SRC, 'app/[locale]/layout.tsx'), 'utf-8');
     assert.ok(layout.includes('<AppBackground />'));
   });
 });

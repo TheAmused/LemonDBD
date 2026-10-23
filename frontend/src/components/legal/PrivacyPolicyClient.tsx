@@ -86,7 +86,6 @@ export function PrivacyPolicyClient() {
 
   return (
     <LegalPageLayout
-      locale={locale}
       heading={privacy.heading}
       lastUpdated={`${privacy.lastUpdatedLabel}: ${privacy.lastUpdated}`}
     >

@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation';
 import { pageMetadata, withSegment } from '@/i18n/metadata';
-import { PageShell } from '@/components/layout/PageShell';
 import { CustomTierListView } from '@/features/tier-lists';
 import type { Locale } from '@/i18n/config';
 import { safeDecodeParam } from '@/utils/safeDecodeParam';
@@ -20,13 +19,6 @@ export default async function CustomTierListPage({
   if (decodedId === null) notFound();
 
   return (
-    <PageShell
-      locale={locale}
-      activeCategory="tier-lists"
-      padding="tight"
-      mainClassName="relative flex flex-col"
-    >
-      <CustomTierListView key={id} id={decodedId} locale={locale} />
-    </PageShell>
+    <CustomTierListView key={id} id={decodedId} locale={locale} />
   );
 }

@@ -14,6 +14,7 @@ import { FormValidationProvider } from '@/components/common/FormValidation';
 import { ContentRevocationSync } from '@/components/common/ContentRevocationSync';
 import { WarningModal } from '@/components/moderation/WarningModal';
 import { AppBackground } from '@/components/layout/AppBackground';
+import { AppShell } from '@/components/layout/AppShell';
 import { SiteBannerGate } from '@/components/layout/SiteBannerGate';
 import { SiteConfigProvider } from '@/context/SiteConfigContext';
 import { Playfair_Display } from 'next/font/google';
@@ -92,7 +93,7 @@ export default async function RootLayout({
                 <ImagePreloadProvider>
                   <AppBackground />
                   <SiteBannerGate />
-                  {children}
+                  <AppShell>{children}</AppShell>
                 </ImagePreloadProvider>
                 <TooltipProvider />
                 <FormValidationProvider />

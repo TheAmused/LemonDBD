@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { PageShell } from '@/components/layout/PageShell';
 import { SmashRosterCreator } from '@/components/smash-or-pass/creator/SmashRosterCreator';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
-import { Locale } from '@/i18n/config';
+import type { Locale } from '@/i18n/config';
 
 function SmashRosterCreateContent({ locale }: { locale: Locale }) {
   const editId = useSearchParams().get('edit') ?? undefined;

@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
-import { EntityItem, EntityStatItem } from '@/types/smashOrPass';
+import type { EntityItem, EntityStatItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { Modal } from '@/components/common/Modal';
 import { EldritchVoidIcon, FriendzoneIcon, RankFirstIcon } from '@/components/icons/DbdIcons';

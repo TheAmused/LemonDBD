@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { Modal } from '@/components/common/Modal';
+import { Spinner } from '@/components/common/Spinner';
 import type { ModalCloseButton, ModalSize } from '@/components/common/modalConfig';
 
 export interface ConfirmModalProps {
@@ -12,6 +13,7 @@ export interface ConfirmModalProps {
   confirmLabel?: React.ReactNode;
   confirmIcon?: React.ReactNode;
   cancelLabel?: React.ReactNode;
+  /** Text shown on the confirm button while `busy`; without it the button shows a spinner. */
   busyLabel?: React.ReactNode;
   busy?: boolean;
   /** Keeps the confirm button off until the dialog's own fields are filled in. */
@@ -70,12 +72,20 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
         <button
           type="button"
           data-autofocus
+          aria-busy={busy || undefined}
           onClick={onConfirm}
           disabled={busy || confirmDisabled}
           className="min-w-0 flex-1 px-3 inline-flex items-center justify-center gap-2 rounded-control bg-accent-red py-3 type-card-title text-text-inverted shadow-md shadow-accent-red/20 transition-all hover:bg-accent-red-hover disabled:opacity-50 cursor-pointer"
         >
           {!busy && confirmIcon}
-          <span>{busy ? busyLabel : confirmLabel}</span>
+          {busy && !busyLabel ? (
+            <>
+              <Spinner size="sm" tone="inverted" />
+              <span className="sr-only">{confirmLabel}</span>
+            </>
+          ) : (
+            <span>{busy ? busyLabel : confirmLabel}</span>
+          )}
         </button>
       </>
     }

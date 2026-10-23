@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 _ACCENT = "#d97706"
 # Mail clients ignore CSS variables, so the e-mail palette lives here, once, as literals.
+_ALERT = "#b91c1c"
 _INK = "#0f172a"
 _MUTED = "#64748b"
 _FAINT = "#94a3b8"
@@ -53,13 +54,17 @@ def _greeting_name(user: User) -> str:
     return safe_username
 
 
-def _email_shell(preheader: str, body_html: str, footer: str | None = None) -> str:
-    """Wrap templated content in a shared header/footer shell (`footer`: plain text, escaped here)."""
+def _email_shell(preheader: str, body_html: str, footer: str | None = None, accent_bar: bool = False) -> str:
+    """Wrap templated content in a shared header/footer shell (`footer`: plain text, escaped here).
+
+    `accent_bar` puts a red bar on the top edge of the card.
+    """
     footer_html = (
         html.escape(footer)
         if footer
         else "Sent by LemonDBD &middot; if you didn't request this, you can safely ignore this email."
     )
+    card_bar = f" border-top:3px solid {_ALERT};" if accent_bar else ""
     return f"""\
 <!DOCTYPE html>
 <html>
@@ -84,7 +89,7 @@ def _email_shell(preheader: str, body_html: str, footer: str | None = None) -> s
               </td>
             </tr>
             <tr>
-              <td style="background-color:#ffffff; border:1px solid #e2e8f0; border-radius:12px; padding:32px;">
+              <td style="background-color:#ffffff; border:1px solid #e2e8f0;{card_bar} border-radius:12px; padding:32px;">
                 {body_html}
               </td>
             </tr>
@@ -278,15 +283,33 @@ def send_content_moderation_notice_email(
         logger.warning(f"Failed to send moderation notice to '{user.email}': {err}")
 
 
-def _sanction_block_html(block: tuple[str, ...], first: bool) -> str:
+#: Block kinds that carry one piece of text (the rest carry a label and a value).
+_SINGLE_TEXT_BLOCKS = ("p", "title", "heading", "note")
+
+
+def _sanction_block_html(block: tuple[str, ...], previous: str | None) -> str:
+    """One content block as HTML; `previous` is the kind of the block before it (None for the first)."""
     kind = block[0]
     if kind == "p":
         style = (
             f"margin:0 0 4px; font-size:14px; color:{_INK};"
-            if first
+            if previous is None
             else f"margin:0 0 12px; font-size:13px; color:{_MUTED}; line-height:1.6;"
         )
         return f'<p style="{style}">{html.escape(block[1])}</p>'
+    if kind == "title":
+        return f'<p style="margin:12px 0 20px; font-size:17px; font-weight:700; color:{_INK}; line-height:1.4;">{html.escape(block[1])}</p>'
+    if kind == "heading":
+        divider = "" if previous == "title" else f"margin-top:6px; padding-top:16px; border-top:1px solid {_RULE}; "
+        return (
+            f'<p style="margin:0 0 6px; {divider}font-size:11px; font-weight:700; letter-spacing:0.08em; '
+            f'text-transform:uppercase; color:{_ALERT};">{html.escape(block[1])}</p>'
+        )
+    if kind == "note":
+        return (
+            f'<p style="margin:0 0 12px; font-size:13px; font-style:italic; color:{_MUTED}; line-height:1.6; '
+            f'white-space:pre-wrap;">{html.escape(block[1])}</p>'
+        )
     if kind == "field":
         return (
             f'<p style="margin:0 0 8px; font-size:13px; color:{_INK}; line-height:1.6;">'
@@ -306,16 +329,17 @@ def send_sanction_email(user: User, content: SanctionEmailContent) -> None:
     Unlike the other senders this one RAISES when the message cannot be sent: the caller is the
     sanction outbox, which records the failure and retries.
     """
-    body_html = "".join(_sanction_block_html(block, index == 0) for index, block in enumerate(content.blocks))
+    previous_kinds = [None, *(block[0] for block in content.blocks)]
+    body_html = "".join(_sanction_block_html(block, previous) for block, previous in zip(content.blocks, previous_kinds))
     plain = "\n\n".join(
-        block[1] if block[0] == "p" else f"{block[1]}: {block[2]}" if block[0] == "field" else f"{block[1]}:\n{block[2]}"
+        block[1] if block[0] in _SINGLE_TEXT_BLOCKS else f"{block[1]}: {block[2]}" if block[0] == "field" else f"{block[1]}:\n{block[2]}"
         for block in content.blocks
     )
     message = Message(
         subject=f"LemonDBD: {content.subject}",
         recipients=[user.email],
         body=f"{plain}\n\n--\n{content.footer}",
-        html=_email_shell(html.escape(content.preheader), body_html, footer=content.footer),
+        html=_email_shell(html.escape(content.preheader), body_html, footer=content.footer, accent_bar=content.accent_bar),
         charset=_BASE64_CHARSET,
     )
     _attach_logo(message)

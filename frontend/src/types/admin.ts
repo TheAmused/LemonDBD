@@ -52,6 +52,18 @@ export interface UserPatch extends Partial<Reauth> {
   is_verified?: boolean;
 }
 
+/** One challenge a player has progress in (GET /users/<id>/challenges). `variant` is the difficulty, game mode or killer. */
+export interface UserChallengeProgress {
+  mode: ChallengeMode;
+  variant: string;
+  /** Whether the player ever completed it; the run may since have started over. */
+  completed: boolean;
+  /** Progress of the player's run as its progress bar counts it; null when only past completions remain. */
+  current: number | null;
+  /** How long the run is; null while its pool is not frozen yet (nothing played). */
+  total: number | null;
+}
+
 export interface NewUser extends Partial<Reauth> {
   login: string;
   username: string;

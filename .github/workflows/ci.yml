@@ -55,14 +55,9 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
-      - name: Type-check
-        run: npx tsc --noEmit -p .
-      - name: Lint (oxlint; errors fail the build)
-        run: npm run lint
-      - name: i18n and style guards
-        run: |
-          npm run check:i18n
-          npm run check:styles
+      # No separate type-check, lint or i18n/style steps: `npm run build` below runs the lint
+      # (prebuild) and Next's type-check, and `npm run test:unit` already runs the i18n, style and
+      # typography scans and every guard suite (including the lint-suppression guard).
       - name: Compose env for the docker guard test
         # dockerGuards.test.ts validates the prod compose file, which needs .env.prod and the
         # required passwords. Throwaway values, never used to run anything.
@@ -72,5 +67,5 @@ jobs:
           sed -i -E 's/^(POSTGRES_PASSWORD|UMAMI_APP_SECRET|PGADMIN_DEFAULT_PASSWORD|UMAMI_ADMIN_PASSWORD)=\r?$/\1=ci-only/' .env.prod
       - name: Unit tests
         run: npm run test:unit
-      - name: Production build
+      - name: Production build (lint, type-check, build, built-output check)
         run: npm run build

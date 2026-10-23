@@ -334,10 +334,16 @@ services:
     sysctls:
       - net.ipv4.ip_unprivileged_port_start=0
     depends_on:
+      # restart: true -- nginx resolves `backend` and `frontend` once, at startup. When either is
+      # recreated (new image, `up --build`) it gets a new address, and without this nginx keeps
+      # proxying to the old one and answers every /api/ and page request with 502 until it is
+      # restarted by hand. With it, `docker compose up` restarts nginx after them.
       backend:
         condition: service_healthy
+        restart: true
       frontend:
         condition: service_healthy
+        restart: true
       umami:
         condition: service_started
       pgadmin:

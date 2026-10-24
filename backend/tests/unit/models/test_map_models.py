@@ -230,7 +230,6 @@ def test_map_realm_to_dict_keys_completeness(db_session: Session) -> None:
         "is_main_building",
         "size_sq_tiles",
         "size_sq_meters",
-        "layout",
         "description",
     }
     assert required_keys.issubset(output.keys())

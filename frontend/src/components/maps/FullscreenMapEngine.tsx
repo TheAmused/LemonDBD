@@ -82,6 +82,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
     const el = containerRef.current;
     if (!el) return;
     const onWheel = (e: WheelEvent) => {
+      if ((e.target as Element).closest?.('[data-legend-panel]') != null) return;
       e.preventDefault();
       const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
       setZoom((prev) => Math.min(Math.max(prev * zoomFactor, 0.5), 5.0));

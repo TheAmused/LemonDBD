@@ -59,7 +59,7 @@ export const MapLegend: React.FC<MapLegendProps> = ({
       data-legend-panel
       aria-label={dict.maps.legendTitle}
       className={cn(
-        'absolute top-3 right-3 sm:top-4 sm:right-4 z-30 w-72 sm:w-80 max-w-[calc(100vw-2rem)] max-h-[calc(100%-2rem)]',
+        'absolute top-3 right-3 sm:top-4 sm:right-4 z-30 w-72 sm:w-80 max-w-xs sm:max-w-sm max-h-96 sm:max-h-128',
         'flex flex-col overflow-hidden rounded-card border border-border-color bg-bg-elevated/95 backdrop-blur-md shadow-2xl',
         'pointer-events-auto select-none transition-opacity duration-150',
         className,
@@ -67,7 +67,7 @@ export const MapLegend: React.FC<MapLegendProps> = ({
     >
       {/* Header */}
       <div className="flex items-center justify-between border-b border-border-color/80 px-3.5 py-2.5">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-text-primary">
+        <h3 className="type-label-sm font-bold text-text-primary">
           {dict.maps.legendTitle}
         </h3>
         <Button
@@ -121,10 +121,10 @@ export const MapLegend: React.FC<MapLegendProps> = ({
                 const fullName = getFeatureLandmarkName(code, dict);
                 return (
                   <div key={code} className="flex items-center gap-2">
-                    <span className="inline-flex min-w-8 h-5 items-center justify-center px-1.5 rounded-control bg-bg-surface border border-border-color text-text-primary font-mono type-micro font-bold shrink-0">
+                    <span className="inline-flex min-w-8 h-5 items-center justify-center px-1.5 rounded-control bg-bg-surface border border-border-color text-text-primary type-micro font-bold shrink-0">
                       {code}
                     </span>
-                    <span className="text-text-secondary type-micro font-medium truncate" title={fullName}>
+                    <span className="text-text-secondary type-micro font-medium truncate">
                       {fullName}
                     </span>
                   </div>

@@ -69,6 +69,7 @@ const scoreboardCheck = {
   "status": {
     "escaped": "Uciekł",
     "dead": "Martwy",
+    "surrendered": "Poddał się",
     "in_trial": "W próbie",
     "killer": "Zabójca",
     "unknown": "Nieznany"
@@ -82,6 +83,7 @@ const scoreboardCheck = {
   "outcomes": {
     "escaped": "Uciekł",
     "died": "Zginął",
+    "surrendered": "Poddał się",
     "killer": "Zabójca",
     "in_trial": "Wciąż w próbie",
     "unknown": "Nieznany"

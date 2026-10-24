@@ -171,10 +171,13 @@ def split_row_text(texts: list[str], known: Iterable[str] | None) -> tuple[str, 
     texts = [t.strip() for t in texts if t and t.strip()]
     is_bot = any(_is_bot(t) for t in texts)
     texts = [t for t in texts if not _is_bot(t)]
-    if texts and texts[-1].endswith("[BOT]"):  # "Feng Min_01 [BOT]" in one box
-        trimmed = texts[-1][: -len("[BOT]")].strip()
-        if trimmed:
-            is_bot, texts[-1] = True, trimmed
+    if texts:
+        for sfx in ("[BOT]", "(BOT)", " BOT", " [BOT]", " (BOT)"):
+            if texts[-1].upper().endswith(sfx):
+                trimmed = texts[-1][: -len(sfx)].strip()
+                if trimmed:
+                    is_bot, texts[-1] = True, trimmed
+                    break
     full = " ".join(texts)
     if not full:
         return "", "", False, is_bot
@@ -368,6 +371,10 @@ def _split_at_known_player(texts: list[str], names: list[str], known: Iterable[s
     right, or the logged-in user's -- splits right there: "A2A2's Used Fleshlight" with
     the account "A2's Used Fleshlight" is character "A2"."""
     full = " ".join(t.strip() for t in texts if t and t.strip())
+    for sfx in ("[BOT]", "(BOT)", " BOT", " [BOT]", " (BOT)"):
+        if full.upper().endswith(sfx):
+            full = full[: -len(sfx)].strip()
+            break
     flat = norm(full)
     for name in names:
         target = norm(name or "")

@@ -28,9 +28,10 @@ def verdict_for(kills: int, kills_for_win: int = KILLS_FOR_KILLER_WIN) -> str:
 
 
 def summarize(statuses: list[str], *, has_spectate: bool, kills_for_win: int = KILLS_FOR_KILLER_WIN) -> dict:
-    """`statuses` are the survivor rows' icon classes (escaped/dead/in_trial/unknown)."""
+    """`statuses` are the survivor rows' icon classes (escaped/dead/surrendered/in_trial/unknown)."""
     escapes = statuses.count("escaped")
-    kills = statuses.count("dead")
+    surrenders = statuses.count("surrendered")
+    kills = statuses.count("dead") + surrenders
     in_trial = statuses.count("in_trial")
     unknown = len(statuses) - escapes - kills - in_trial
     settled_rows = in_trial == 0 and unknown == 0
@@ -45,6 +46,7 @@ def summarize(statuses: list[str], *, has_spectate: bool, kills_for_win: int = K
         "kills": kills,          # dead so far (exact once the match ended)
         "kills_max": kills_max,  # what it could still become
         "escapes": escapes,
+        "surrenders": surrenders,
         "in_trial": in_trial,
         "unknown": unknown,
         "verdict": lowest if verdict_final else "incomplete",
@@ -59,6 +61,8 @@ def pov_outcome(role: str | None, status: str | None, match: dict) -> dict:
             return {"outcome": "escaped", "result": "won", "survived": True, "final": True}
         if status == "dead":
             return {"outcome": "died", "result": "lost", "survived": False, "final": True}
+        if status == "surrendered":
+            return {"outcome": "surrendered", "result": "lost", "survived": False, "final": True}
         return {"outcome": status or "unknown", "result": None, "survived": None, "final": False}
     if role == "killer":
         result = {"killer_win": "won", "draw": "draw", "survivor_win": "lost"}.get(match["verdict"])

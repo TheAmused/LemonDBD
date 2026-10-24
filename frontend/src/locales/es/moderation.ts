@@ -19,7 +19,7 @@ export default {
     bannedBody: "Un moderador bloqueó esta cuenta de forma permanente, así que ya no se puede iniciar sesión.",
     suspendedBody: "Un moderador suspendió esta cuenta hasta el {date}. Después de esa fecha podrás volver a iniciar sesión.",
     reasonLabel: "Motivo",
-    appealWithContact: "Si crees que es un error, escribe en un plazo de 14 días a {contact} y una persona revisará la decisión.",
+    appealWithContact: "Si crees que es un error, escribe en un plazo de 6 meses a {contact} y una persona revisará la decisión.",
     appealNoContact: "Si crees que es un error, ponte en contacto con el equipo del sitio y pide que se revise la decisión.",
     close: "Cerrar",
   },

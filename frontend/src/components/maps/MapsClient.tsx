@@ -75,9 +75,12 @@ function MapsClientInner() {
     },
   ], [dict.maps.searchTextTab, dict.maps.searchVoiceTab]);
 
-  const handleSelectMap = useCallback((name: string, mapId?: number) => {
+  const handleSelectMap = useCallback((name: string, mapId?: number, source?: string) => {
+    if (source === 'hens333' || source === 'lemondbd') {
+      setMapSource(source);
+    }
     setSelectedMap({ mapName: name, mapId, timestamp: Date.now(), via: 'voice' });
-  }, []);
+  }, [setMapSource]);
   const handleAction = useCallback((action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close') => {
     if (action === 'close') {
       setSelectedMap((prev) => ({ ...prev, mapName: '', mapId: undefined, timestamp: Date.now() }));

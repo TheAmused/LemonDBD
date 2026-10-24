@@ -91,8 +91,15 @@ def test_macmillan_variants_and_corrected_sizes() -> None:
 
 @pytest.mark.unit
 def test_map_ids_are_unique_and_contiguous() -> None:
-    ids = sorted(m["id"] for m in _maps())
-    assert ids == list(range(1, len(ids) + 1))
+    lemon_ids = sorted(m["id"] for m in _maps())
+    assert lemon_ids == list(range(1, len(lemon_ids) + 1))
+
+    with open(CONTENT / "maps" / "hens.json", encoding="utf-8") as f:
+        hens_maps = json.load(f)["maps"]
+    assert all(m["source_id"] == 1 for m in hens_maps)
+    hens_ids = sorted(m["id"] for m in hens_maps)
+    assert hens_ids == list(range(201, 201 + len(hens_maps)))
+    assert set(lemon_ids).isdisjoint(hens_ids)
 
 
 def _point_in_ring(x: float, y: float, ring: list[list[float]]) -> bool:

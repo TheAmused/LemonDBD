@@ -110,7 +110,11 @@ def test_get_maps_filtering(client: FlaskClient, db_session: Session) -> None:
     assert len(maps_search) == 1
     assert maps_search[0]["id"] == 43
 
-    # Filter by source
+
+@pytest.mark.unit
+def test_get_maps_filter_by_source(client: FlaskClient, db_session: Session) -> None:
+    """Test GET /api/v1/maps filtering by map source."""
+    _seed_route_data(db_session)
     realm_springwood = db_session.query(Realm).filter_by(name="Springwood").one()
     source_lemon = MapSource(id=2, code="lemondbd", label="LemonDBD Vector Layouts")
     db_session.add(source_lemon)

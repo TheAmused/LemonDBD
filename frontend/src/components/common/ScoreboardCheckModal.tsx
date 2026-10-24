@@ -2,30 +2,75 @@
 // frontend/src/components/common/ScoreboardCheckModal.tsx
 //
 // Admin tool: upload an end-of-match scoreboard screenshot and see what the OCR
-// reads. The image is analysed in memory on the server and never stored.
+// reads. The image is analysed in memory on the server and never stored. Nothing
+// is typed in: the server compares the screenshot with the logged-in account's
+// alias (or login) and reads role, character, result and loadout from the image.
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Check, CircleSlash, ImagePlus, TriangleAlert, X } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
-import { Input, Select } from '@/components/common/Field';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useSiteConfig } from '@/context/SiteConfigContext';
 import { ApiError } from '@/utils/api';
 import { formatMessage } from '@/utils/i18nFormat';
 import { cn } from '@/utils/cn';
-import { analyzeScoreboard, type ScoreboardReport } from '@/services/scoreboardApi';
+import { analyzeScoreboard, type Loadout, type LoadoutSlot, type ScoreboardReport } from '@/services/scoreboardApi';
 import { Table, TableBody, TableHead, TableRow, Td, Th } from '@/components/common/Table';
 import { Img } from '@/components/common/Img';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
+import type { Dictionary } from '@/locales/types';
 
 interface ScoreboardCheckModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-type RoleChoice = '' | 'survivor' | 'killer';
+type Dict = Dictionary['scoreboardCheck'];
+
+function slotLabel(t: Dict, slot: LoadoutSlot | null | undefined): string {
+  if (!slot || slot.empty) return t.emptySlot;
+  if (!slot.name) return t.unrecognized;
+  return slot.uncertain ? `${slot.name} (${t.unsure})` : slot.name;
+}
+
+const LoadoutCell: React.FC<{ t: Dict; loadout: Loadout | null }> = ({ t, loadout }) => {
+  if (!loadout) return <span className="text-text-muted">—</span>;
+  if (loadout.hidden) return <span className="text-text-muted">{t.hiddenLoadout}</span>;
+  return (
+    <div className="space-y-0.5">
+      <p>
+        <span className="text-text-muted">{t.perks}: </span>
+        {loadout.perks.map((p) => slotLabel(t, p)).join(', ')}
+      </p>
+      {/* Survivors bring an item; the killer's slot shows their power, so `item` is null there. */}
+      {loadout.item && (
+        <p>
+          <span className="text-text-muted">{t.item}: </span>
+          {slotLabel(t, loadout.item)}
+        </p>
+      )}
+      <p>
+        <span className="text-text-muted">{t.addons}: </span>
+        {loadout.addons.map((a) => slotLabel(t, a)).join(', ')}
+      </p>
+      <p>
+        <span className="text-text-muted">{t.offering}: </span>
+        {slotLabel(t, loadout.offering)}
+      </p>
+    </div>
+  );
+};
+
+const CheckMark: React.FC<{ ok: boolean | null | undefined }> = ({ ok }) =>
+  ok === true ? (
+    <Check className="h-4 w-4 text-accent-green" />
+  ) : ok === false ? (
+    <X className="h-4 w-4 text-accent-red" />
+  ) : (
+    <CircleSlash className="h-4 w-4 text-text-muted" />
+  );
 
 export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOpen, onClose }) => {
   const t = useDictionary().scoreboardCheck;
@@ -37,10 +82,6 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [player, setPlayer] = useState('');
-  const [role, setRole] = useState<RoleChoice>('');
-  const [character, setCharacter] = useState('');
-  const [kills, setKills] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [report, setReport] = useState<ScoreboardReport | null>(null);
@@ -59,12 +100,7 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
   }, []);
 
   useOnValueChange(isOpen, (open) => {
-    if (open) return;
-    reset();
-    setPlayer('');
-    setRole('');
-    setCharacter('');
-    setKills('');
+    if (!open) reset();
   });
 
   const pick = (f: File | undefined | null) => {
@@ -82,15 +118,7 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
     setBusy(true);
     setError(null);
     try {
-      const n = parseInt(kills, 10);
-      setReport(
-        await analyzeScoreboard(file, {
-          expectedPlayer: player.trim() || undefined,
-          expectedRole: role || undefined,
-          expectedCharacter: character.trim() || undefined,
-          killsForWin: Number.isFinite(n) && n > 0 ? n : undefined,
-        })
-      );
+      setReport(await analyzeScoreboard(file));
     } catch (e) {
       const code = e instanceof ApiError ? e.code : undefined;
       const status = e instanceof ApiError ? e.status : 0;
@@ -114,13 +142,25 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
     ? [
         [t.checkPovIdentified, report.checks.pov_identified],
         [t.checkPlayerName, report.checks.player_name_matches],
-        [t.checkRole, report.checks.role_matches],
-        [t.checkCharacter, report.checks.character_matches],
       ]
     : [];
 
   const povText =
     report?.pov_won === true ? t.povWon : report?.pov_won === false ? t.povLost : t.povUnknown;
+
+  const match = report?.match;
+  const pov = report?.pov;
+  const identity = report?.identity;
+  const killsText = match
+    ? match.ended
+      ? String(match.kills_at_least)
+      : formatMessage(t.killsAtLeast, { n: match.kills_at_least })
+    : '—';
+  const verdictText = match
+    ? match.verdict_final && !match.ended
+      ? `${t.verdicts[match.verdict]} (${t.verdictEarly})`
+      : t.verdicts[match.verdict]
+    : '—';
 
   const footer = report ? (
     <>
@@ -208,39 +248,7 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
                 <span className="type-body">{t.dropHint}</span>
               </button>
             )}
-
-            <div>
-              <p className="type-strong mb-2 text-text-primary">{t.optionalChecks}</p>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <label className="space-y-1">
-                  <span className="type-body text-text-secondary">{t.expectedPlayer}</span>
-                  <Input value={player} onChange={(e) => setPlayer(e.target.value)} maxLength={64} />
-                </label>
-                <label className="space-y-1">
-                  <span className="type-body text-text-secondary">{t.expectedRole}</span>
-                  <Select value={role} onChange={(e) => setRole(e.target.value as RoleChoice)}>
-                    <option value="">{t.roleAny}</option>
-                    <option value="survivor">{t.roleSurvivor}</option>
-                    <option value="killer">{t.roleKiller}</option>
-                  </Select>
-                </label>
-                <label className="space-y-1">
-                  <span className="type-body text-text-secondary">{t.expectedCharacter}</span>
-                  <Input value={character} onChange={(e) => setCharacter(e.target.value)} maxLength={64} />
-                </label>
-                <label className="space-y-1">
-                  <span className="type-body text-text-secondary">{t.killsForWin}</span>
-                  <Input
-                    type="number"
-                    inputMode="numeric"
-                    min={1}
-                    max={4}
-                    value={kills}
-                    onChange={(e) => setKills(e.target.value)}
-                  />
-                </label>
-              </div>
-            </div>
+            <p className="type-body text-text-secondary">{t.autoNote}</p>
             <p className="type-body text-text-muted">{t.privacyNote}</p>
           </>
         )}
@@ -252,15 +260,39 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
               <span className="type-body text-text-secondary">{povText}</span>
             </div>
 
-            {report.summary && (
+            {identity?.expected && (
+              <p className="flex items-center gap-2 type-body text-text-secondary">
+                <CheckMark ok={identity.matched} />
+                <span>
+                  {t.identity}: <span className="type-strong text-text-primary">{identity.expected}</span>{' '}
+                  {identity.matched === true ? t.identityMatched : identity.matched === false ? t.identityMismatch : t.identityUnknown}
+                </span>
+              </p>
+            )}
+
+            {pov && (
+              <div className="rounded-card border border-border-color bg-bg-elevated p-3">
+                <p className="type-body text-text-muted">{t.yourResult}</p>
+                <p className="type-strong text-text-primary">
+                  {pov.role === 'killer' ? t.roleKiller : t.roleSurvivor}
+                  {pov.character ? ` · ${pov.character}` : ''} · {t.outcomes[pov.outcome]}
+                  {pov.result ? ` · ${t.results[pov.result]}` : ''}
+                </p>
+                <p className={cn('type-body', pov.result_final ? 'text-accent-green' : 'text-accent-amber')}>
+                  {pov.result_final ? t.resultSettled : t.resultOpen}
+                </p>
+              </div>
+            )}
+
+            {report.summary && match && (
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
                 {(
                   [
-                    [t.verdict, t.verdicts[report.summary.verdict]],
-                    [t.kills, report.summary.kills],
+                    [t.colStatus, match.ended ? t.matchEnded : t.matchInProgress],
+                    [t.verdict, verdictText],
+                    [t.kills, killsText],
                     [t.escapes, report.summary.escapes],
-                    [t.inTrial, report.summary.in_trial],
-                    [t.unknown, report.summary.unknown],
+                    [t.inTrial, report.summary.in_trial + report.summary.unknown],
                   ] as Array<[string, React.ReactNode]>
                 ).map(([label, value]) => (
                   <div key={label} className="rounded-card border border-border-color bg-bg-elevated p-3">
@@ -281,19 +313,26 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
               <Table framed density="sm">
                 <TableHead>
                   <tr>
-                    {[t.colRole, t.colCharacter, t.colPlayer, t.colBloodpoints, t.colStatus].map((h) => (
+                    {[t.colRole, t.colCharacter, t.colPlayer, t.colPrestige, t.colBloodpoints, t.colStatus, t.colLoadout].map((h) => (
                       <Th key={h}>{h}</Th>
                     ))}
                   </tr>
                 </TableHead>
                 <TableBody>
                   {report.rows.map((r, i) => (
-                    <TableRow key={i}>
+                    <TableRow key={i} className={cn(pov?.row === i && 'bg-accent-amber/5')}>
                       <Td>{r.role === 'killer' ? t.roleKiller : t.roleSurvivor}</Td>
                       <Td>{r.character ?? '—'}</Td>
-                      <Td>{r.player_name ?? '—'}</Td>
+                      <Td>
+                        {r.player_name || '—'}
+                        {r.is_bot && <span className="text-text-muted"> ({t.bot})</span>}
+                      </Td>
+                      <Td>{r.prestige ?? '—'}</Td>
                       <Td>{r.bloodpoints ?? '—'}</Td>
                       <Td>{t.status[r.status]}</Td>
+                      <Td className="type-body">
+                        <LoadoutCell t={t} loadout={r.loadout} />
+                      </Td>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -306,15 +345,9 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
                 <ul className="space-y-1.5">
                   {checkRows.map(([label, ok]) => (
                     <li key={label} className="flex items-center gap-2 type-body text-text-primary">
-                      {ok === true ? (
-                        <Check className="h-4 w-4 text-accent-green" />
-                      ) : ok === false ? (
-                        <X className="h-4 w-4 text-accent-red" />
-                      ) : (
-                        <CircleSlash className="h-4 w-4 text-text-muted" />
-                      )}
+                      <CheckMark ok={ok} />
                       <span>{label}</span>
-                      <span className={cn('text-text-muted')}>
+                      <span className="text-text-muted">
                         {ok === true ? t.checkMatched : ok === false ? t.checkFailed : t.checkSkipped}
                       </span>
                     </li>

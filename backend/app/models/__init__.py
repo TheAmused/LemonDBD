@@ -25,6 +25,7 @@ from app.models.gauntlet import (
     GauntletRun,
 )
 from app.models.map import MapRealm, MapSource, Realm
+from app.models.map_layout import MapLayout
 from app.models.page_streak import PageStreakPageLog, PageStreakRun
 from app.models.perk import Perk
 from app.models.revoked_session import RevokedSession
@@ -74,6 +75,7 @@ __all__ = [
     "Realm",
     "MapRealm",
     "MapSource",
+    "MapLayout",
     "GauntletRun",
     "GauntletMatchLog",
     "PageStreakRun",

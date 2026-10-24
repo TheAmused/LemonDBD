@@ -283,24 +283,25 @@ def _import_maps(
             # carries it, and the name it held is matched as a
             # fallback so such a backup still restores.
             row_id = mdata.get("id")
+            source_id = mdata.get("source_id") or 1
             map_obj = (
                 db.session.get(MapRealm, row_id) if isinstance(row_id, int) else None
             )
-            if map_obj is None:
+            if map_obj is None and not isinstance(row_id, int):
                 name = mdata.get("name") or mdata.get("map_id")
                 if not name:
                     continue
                 map_obj = db.session.scalar(
                     select(MapRealm).where(
                         MapRealm.name == name,
-                        MapRealm.source_id == mdata.get("source_id"),
+                        MapRealm.source_id == source_id,
                     )
                 )
             if not map_obj:
                 map_obj = MapRealm(
                     name=mdata.get("name") or mdata.get("map_id"),
                     realm_id=mdata.get("realm_id"),
-                    source_id=mdata.get("source_id"),
+                    source_id=source_id,
                 )
                 if isinstance(row_id, int):
                     map_obj.id = row_id

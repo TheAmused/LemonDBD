@@ -33,7 +33,6 @@ jobs:
       - name: Install dependencies (hash-checked, as in the image)
         run: |
           python -m pip install --require-hashes -r requirements.lock
-          python -m pip install --no-deps --ignore-requires-python --require-hashes -r requirements-ocr.txt
           python -m pip install -r requirements-dev.txt
       - name: ruff (unused imports and variables, undefined names; config in ruff.toml)
         run: ruff check .

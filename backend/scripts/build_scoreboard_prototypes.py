@@ -16,18 +16,16 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from app.services.scoreboard_ocr import load_image, read_lines  # noqa: E402
-from app.services.scoreboard_ocr.icons import CLASSES, icon_patch, icon_window  # noqa: E402
-from app.services.scoreboard_ocr.parse import Line, _is_name_line  # noqa: E402
+from app.services.scoreboard_ocr import ImageProbes, load_image, read_lines, status_window  # noqa: E402
+from app.services.scoreboard_ocr.icons import CLASSES, icon_patch  # noqa: E402
+from app.services.scoreboard_ocr.parse import locate_rows  # noqa: E402
 
 
-def row_centres(lines: list[Line]) -> list[float]:
-    centres: list[float] = []
-    for ln in sorted((ln for ln in lines if _is_name_line(ln)), key=lambda ln: ln.cy):
-        if centres and abs(ln.cy - centres[-1]) < 30:
-            continue
-        centres.append(ln.cy)
-    return centres
+def row_windows(rgb: np.ndarray, lines) -> list[np.ndarray | None]:
+    """The status-icon window of every row, top to bottom."""
+    gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
+    panel, rows = locate_rows(lines, ImageProbes(rgb, ocr=False))
+    return [status_window(gray, panel, r.name_cy) for r in rows]
 
 
 def main(folder: Path) -> None:
@@ -37,12 +35,10 @@ def main(folder: Path) -> None:
         if name.startswith("_"):
             continue
         rgb = load_image((folder / name).read_bytes())
-        gray = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY)
-        centres = row_centres(read_lines(rgb))
-        if len(centres) != len(spec["rows"]):
-            raise SystemExit(f"{name}: expected {len(spec['rows'])} rows, OCR found {len(centres)}")
-        for cy, (_, status) in zip(centres, spec["rows"]):
-            window = icon_window(gray, cy)
+        windows = row_windows(rgb, read_lines(rgb))
+        if len(windows) != len(spec["rows"]):
+            raise SystemExit(f"{name}: expected {len(spec['rows'])} rows, found {len(windows)}")
+        for window, (_, status) in zip(windows, spec["rows"]):
             patch = None if window is None else icon_patch(window)
             if patch is not None:
                 patches[status].append(patch)

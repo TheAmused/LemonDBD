@@ -17,12 +17,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Exact versions with hashes (requirements.lock is generated from requirements.txt): every build
 # installs the same, reviewed packages, and a tampered or swapped file on PyPI fails the build.
 COPY requirements.lock .
-RUN pip install --no-cache-dir --user --require-hashes -r requirements.lock
-COPY requirements-ocr.txt .
-# rapidocr-onnxruntime declares Requires-Python <3.13 but is pure Python and runs on 3.14
-# (checked); its dependencies are installed above, hence --no-deps. The import is a build-time smoke test.
-RUN pip install --no-cache-dir --user --no-deps --ignore-requires-python --require-hashes -r requirements-ocr.txt \
-    && python -c "import rapidocr_onnxruntime"
+# The OCR import is a build-time smoke test for the scoreboard check (rapidocr, in the lock).
+RUN pip install --no-cache-dir --user --require-hashes -r requirements.lock \
+    && python -c "import rapidocr"
 
 # Stage 2: Final Runtime Container
 FROM python:3.14-slim-trixie AS runner

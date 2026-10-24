@@ -1,11 +1,9 @@
 'use client';
 // frontend/src/components/PerkFilters.tsx
 
-import { logger } from '@/utils/logger';
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import {
   SlidersHorizontal,
-  X,
   ArrowUpAZ,
   ArrowDownZA,
 } from 'lucide-react';
@@ -18,19 +16,18 @@ import type {
   OwnershipFilter,
   SortField,
   SortOrder,
-  PerkSuggestion,
+  Perk,
 } from '@/types/perks';
-import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { Checkbox } from '@/components/common/Checkbox';
-import { Button } from '@/components/common/Button';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Surface } from '@/components/common/Surface';
-import { SearchInput } from '@/components/common/Field';
 import { Badge } from '@/components/common/Badge';
-import { MenuItem } from '@/components/common/MenuItem';
+import { PerkSearchBox } from '@/components/perks/PerkSearchBox';
+import type { PerkType } from '@/utils/perkTypes';
 
-const NO_SUGGESTIONS: PerkSuggestion[] = [];
+const NO_PERKS: readonly Perk[] = [];
+const NO_TYPES: readonly PerkType[] = [];
 
 /** The icon beside a filter label: grows with the screen. */
 const FILTER_ICON = 'h-3 w-3 sm:h-3.5 sm:w-3.5 wide:h-4 wide:w-4 wide-2k:h-5 wide-2k:w-5';
@@ -43,9 +40,11 @@ export function computeHasActiveFilters(state: {
   ownershipFilter: OwnershipFilter;
   sortBy: SortField;
   order: SortOrder;
+  types?: readonly string[];
 }): boolean {
   return (
     state.search !== '' ||
+    (state.types?.length ?? 0) > 0 ||
     state.scope !== 'all' ||
     state.ownershipFilter !== 'all' ||
     state.sortBy !== 'name' ||
@@ -67,7 +66,10 @@ interface PerkFiltersProps {
   order: SortOrder;
   setOrder: (val: SortOrder) => void;
   onReset: () => void;
-  locale?: string;
+  /** The current role's perks: type counts and search suggestions come from them. */
+  rolePerks?: readonly Perk[];
+  activeTypes?: readonly PerkType[];
+  onTypesChange?: (types: PerkType[]) => void;
   survivorCount?: number;
   killerCount?: number;
   allCount?: number;
@@ -88,7 +90,9 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       setSortBy,
       order,
       setOrder,
-      locale,
+      rolePerks = NO_PERKS,
+      activeTypes = NO_TYPES,
+      onTypesChange = () => {},
       survivorCount,
       killerCount,
       allCount,
@@ -96,59 +100,6 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       isLoggedIn,
     }) => {
   const dict = useDictionary();
-  const backendBase = getBackendBaseUrl();
-
-  const [fetchedSuggestions, setPerkSuggestions] = useState<PerkSuggestion[]>([]);
-  // An empty search box suggests nothing; otherwise the last answer stays until the next arrives.
-  const perkSuggestions = search && search.trim().length > 0 ? fetchedSuggestions : NO_SUGGESTIONS;
-  const [isPerkSuggestionsOpen, setIsPerkSuggestionsOpen] = useState<boolean>(false);
-  const searchDropdownRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (searchDropdownRef.current && !searchDropdownRef.current.contains(target)) {
-        setIsPerkSuggestionsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const abortControllerRef = useRef<AbortController | null>(null);
-
-  useEffect(() => {
-    if (!search || search.trim().length < 1) return;
-    abortControllerRef.current?.abort();
-    abortControllerRef.current = new AbortController();
-    const { signal } = abortControllerRef.current;
-
-    const fetchSuggestions = async () => {
-      try {
-        const res = await fetch(
-          `${backendBase}/api/v1/perks/suggestions?q=${encodeURIComponent(
-            search
-          )}&category=${role}&limit=8&lang=${encodeURIComponent(locale || 'en')}`,
-          { signal }
-        );
-        if (res.ok) {
-          const json = await res.json();
-          setPerkSuggestions(json.data || []);
-        }
-      } catch (err: unknown) {
-        if (!(err instanceof Error && err.name === 'AbortError')) {
-          logger.error('Failed fetching perk suggestions:', err);
-        }
-      }
-    };
-    const timer = setTimeout(() => {
-      void fetchSuggestions();
-    }, 180);
-    return () => {
-      clearTimeout(timer);
-      abortControllerRef.current?.abort();
-    };
-  }, [search, role, backendBase, locale]);
 
   const roleOptions: readonly [SegmentedControlOption<RoleCategory>, SegmentedControlOption<RoleCategory>] = [
     {
@@ -352,76 +303,16 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
         />
       </div>
 
-      <div ref={searchDropdownRef} className="relative z-40 w-full sm:ml-auto sm:w-64 xl:w-40 2xl:w-48 wide:w-64 wide-2k:w-72">
-        <SearchInput
-          pill
-          fieldSize="sm"
-          value={search}
-          onFocus={() => setIsPerkSuggestionsOpen(true)}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setIsPerkSuggestionsOpen(true);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Escape') {
-              setIsPerkSuggestionsOpen(false);
-            }
-          }}
-          placeholder={dict.filters.searchPlaceholder}
-          aria-label={dict.filters.searchPlaceholder}
-          className="bg-bg-elevated/60 pr-8 font-medium sm:py-2.5 sm:pr-9 lg:py-3 lg:text-sm wide:py-3.5"
-        />
-        {search && (
-          <Button
-            icon
-            size="xs"
-            variant="ghost"
-            onClick={() => {
-              setSearch('');
-              setIsPerkSuggestionsOpen(false);
-            }}
-            aria-label={dict.filters.clearSearch}
-            pill
-            className="absolute right-2.5 top-1/2 -translate-y-1/2"
-          >
-            <X className="h-3 w-3" />
-          </Button>
-        )}
-
-        {isPerkSuggestionsOpen && perkSuggestions.length > 0 && (
-          // Suggestions are ordinary buttons under the search box (Tab reaches them), not a listbox.
-          <Surface
-            padding="none" className="absolute top-full left-0 right-0 mt-2 max-h-60 overflow-y-auto shadow-2xl z-50 p-1.5 flex flex-col gap-1"
-          >
-            {perkSuggestions.map((item, idx) => (
-              <MenuItem className="justify-between"
-                key={`${item.name}-${idx}`}
-                onClick={() => {
-                  setSearch(item.name);
-                  setIsPerkSuggestionsOpen(false);
-                }}
-              >
-                <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="flex flex-col min-w-0">
-                    <span className="type-strong text-text-primary truncate">
-                      {item.name}
-                    </span>
-                    {item.alternate_name && (
-                      <span className="type-strong-2xs text-accent-amber truncate">
-                        {dict.filters.aliasLabel && `${dict.filters.aliasLabel} `}
-                        {item.alternate_name}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <span className="type-strong-2xs text-text-muted shrink-0">
-                  {item.character || dict.modal.generalPerk}
-                </span>
-              </MenuItem>
-            ))}
-          </Surface>
-        )}
-      </div>
+      {/* Takes whatever the row has left (wrapping below the toggles when that is under 18rem). */}
+      <PerkSearchBox
+        rolePerks={rolePerks}
+        search={search}
+        setSearch={setSearch}
+        activeTypes={activeTypes}
+        onTypesChange={onTypesChange}
+        suggestPerks
+        className="relative z-40 sm:min-w-72 sm:flex-1"
+      />
     </Surface>
   );
 };

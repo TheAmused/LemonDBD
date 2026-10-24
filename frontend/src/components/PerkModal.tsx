@@ -15,6 +15,8 @@ import { Modal } from '@/components/common/Modal';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Img } from '@/components/common/Img';
+import { PerkTypeBadges } from '@/components/perks/PerkTypeBadges';
+import type { PerkType } from '@/utils/perkTypes';
 
 /** Perk icon and owner avatar share this size. */
 const SLOT_SIZE = 'h-14 w-14 phone-lg:h-20 phone-lg:w-20 md:h-24 md:w-24';
@@ -22,9 +24,12 @@ const SLOT_SIZE = 'h-14 w-14 phone-lg:h-20 phone-lg:w-20 md:h-24 md:w-24';
 interface PerkModalProps {
   perk: Perk | null;
   onClose: () => void;
+  /** Makes the type badges filter buttons (the Perks page); without it they are plain labels. */
+  onSelectType?: (type: PerkType) => void;
+  activeTypes?: readonly PerkType[];
 }
 
-export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose }) => {
+export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose, onSelectType, activeTypes }) => {
   const dict = useDictionary();
   const [avatarError, setAvatarError] = useState(false);
 
@@ -107,6 +112,7 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose }) => {
       header={header}
     >
       <div className="mx-4 mt-5 border-t border-border-color pb-5 pt-4 phone-lg:mx-6 phone-lg:mt-6 phone-lg:pb-6 phone-lg:pt-5 md:mx-8 md:pb-8">
+        <PerkTypeBadges perk={perk} onSelectType={onSelectType} activeTypes={activeTypes} className="mb-4" />
         <div id="perk-modal-description">
           <PerkDescription description={perk.description} variant="modal" />
         </div>

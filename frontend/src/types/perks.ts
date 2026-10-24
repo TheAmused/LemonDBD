@@ -54,16 +54,6 @@ export interface CharacterItem {
   disabled_reason?: string | null;
 }
 
-export interface PerkSuggestion {
-  id?: number;
-  name: string;
-  alternate_name?: string;
-  category?: string;
-  character?: string;
-  icon_local_path?: string;
-  icon_url?: string;
-}
-
 export interface DrawnSlot {
   page: number;
   slot: number;

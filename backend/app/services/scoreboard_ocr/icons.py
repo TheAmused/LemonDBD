@@ -20,7 +20,8 @@ import numpy as np
 
 CLASSES = ("escaped", "dead", "in_trial", "killer")
 
-# Search window for the icon, relative to the vertical centre of the name text.
+# Default search window for the icon (reference frame), around the centre of the name
+# text. The analyzer passes the window of the located panel instead (see layout.py).
 WIN_X0, WIN_X1, WIN_HALF_H = 203, 243, 18
 PATCH = 28
 MIN_SCORE = 0.5    # best correlation below this -> "unknown"
@@ -29,13 +30,16 @@ MIN_MARGIN = 0.06  # best minus runner-up below this -> "unknown"
 _PROTOTYPES_FILE = Path(__file__).with_name("prototypes.npz")
 
 
-def icon_window(gray: np.ndarray, centre_y: float) -> np.ndarray | None:
+def icon_window(
+    gray: np.ndarray, centre_y: float, x0: float = WIN_X0, x1: float = WIN_X1, half_h: float = WIN_HALF_H
+) -> np.ndarray | None:
     """The grayscale strip where a row's status icon lives (None when off-image)."""
     cy = int(round(centre_y))
-    top, bottom = cy - WIN_HALF_H, cy + WIN_HALF_H
-    if top < 0 or bottom > gray.shape[0] or WIN_X1 > gray.shape[1]:
+    top, bottom = cy - int(round(half_h)), cy + int(round(half_h))
+    left, right = int(round(x0)), int(round(x1))
+    if top < 0 or left < 0 or bottom > gray.shape[0] or right > gray.shape[1] or right - left < 10:
         return None
-    return gray[top:bottom, WIN_X0:WIN_X1]
+    return gray[top:bottom, left:right]
 
 
 def icon_patch(window: np.ndarray) -> np.ndarray | None:

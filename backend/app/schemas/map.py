@@ -8,8 +8,8 @@ DEFAULT_PALLET_DENSITY = "Medium"
 DEFAULT_JUNGLE_GYMS = 3
 DEFAULT_IS_SHACK = True
 DEFAULT_IS_MAIN_BUILDING = False
-DEFAULT_SOURCE_CODE = "hens333"
-DEFAULT_SOURCE_LABEL = "Hens333 12-Clock Callouts"
+DEFAULT_SOURCE_CODE = "lemondbd"
+DEFAULT_SOURCE_LABEL = "LemonDBD 12-Clock Callouts"
 
 
 class RealmBase(BaseModel):
@@ -62,6 +62,7 @@ class MapRealmBase(BaseModel):
     is_main_building: bool | None = DEFAULT_IS_MAIN_BUILDING
     size_sq_tiles: float | None = None
     size_sq_meters: int | None = None
+    layout: dict[str, Any] | None = None
     translations: dict[str, Any] | None = None
 
 
@@ -87,6 +88,7 @@ class MapRealmResponse(BaseModel):
     is_main_building: bool = DEFAULT_IS_MAIN_BUILDING
     size_sq_tiles: float | None = None
     size_sq_meters: int | None = None
+    layout: dict[str, Any] | None = None
     description: str | None = None
 
     model_config = ConfigDict(from_attributes=True)

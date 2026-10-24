@@ -150,6 +150,7 @@ def _export_maps(
             # `source_label` are read through `source_id`.
             "callout_image_url": r.callout_image_url,
             "callout_image_local_path": r.callout_image_local_path,
+            "layout": r.layout,
             "translations": r.translations or {},
         })
     for row in map_list:

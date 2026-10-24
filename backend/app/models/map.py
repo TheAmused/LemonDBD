@@ -21,8 +21,8 @@ if TYPE_CHECKING:
     from app.models.equipment import Offering
 
 #: The callout provider every map currently uses.
-DEFAULT_SOURCE_CODE = "hens333"
-DEFAULT_SOURCE_LABEL = "Hens333 12-Clock Callouts"
+DEFAULT_SOURCE_CODE = "lemondbd"
+DEFAULT_SOURCE_LABEL = "LemonDBD 12-Clock Callouts"
 
 #: Fallback layout figures if a map record has not defined specific values.
 DEFAULT_LAYOUT_TYPE = "Outdoor"
@@ -110,6 +110,14 @@ class MapRealm(Base, TranslatableModelMixin):
     size_sq_tiles: Mapped[float | None] = mapped_column(Float, nullable=True)
     size_sq_meters: Mapped[int | None] = mapped_column(Integer, nullable=True)
 
+    # The map's footprint drawn in metres, one entry per floor: outline rings
+    # traced from the current wiki.gg outline (8 m grid), plus optional
+    # `blocked` rings. NULL for maps with no published to-scale outline; the
+    # frontend then shows the callout image instead.
+    layout: Mapped[dict[str, Any] | None] = mapped_column(
+        JSONB().with_variant(JSON(), "sqlite"), nullable=True
+    )
+
     translations: Mapped[dict[str, Any] | None] = mapped_column(
         JSONB().with_variant(JSON(), "sqlite"), default=dict, nullable=True
     )
@@ -151,5 +159,6 @@ class MapRealm(Base, TranslatableModelMixin):
             ),
             "size_sq_tiles": self.size_sq_tiles,
             "size_sq_meters": self.size_sq_meters,
+            "layout": self.layout,
             "description": self.description,
         }

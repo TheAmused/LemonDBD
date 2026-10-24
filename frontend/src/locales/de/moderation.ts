@@ -19,7 +19,7 @@ export default {
     bannedBody: "Ein Moderator hat dieses Konto dauerhaft gebannt, deshalb ist keine Anmeldung mehr möglich.",
     suspendedBody: "Ein Moderator hat dieses Konto bis zum {date} gesperrt. Danach kannst du dich wieder anmelden.",
     reasonLabel: "Grund",
-    appealWithContact: "Wenn du glaubst, dass das ein Fehler ist, schreib innerhalb von 14 Tagen an {contact}. Dann prüft ein Mensch die Entscheidung erneut.",
+    appealWithContact: "Wenn du glaubst, dass das ein Fehler ist, schreib innerhalb von 6 Monaten an {contact}. Dann prüft ein Mensch die Entscheidung erneut.",
     appealNoContact: "Wenn du glaubst, dass das ein Fehler ist, wende dich an das Team der Seite und bitte um eine erneute Prüfung.",
     close: "Schließen",
   },

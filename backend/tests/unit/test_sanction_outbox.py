@@ -15,7 +15,7 @@ from app.models import SanctionNotification, UserSanction
 from app.models.user import User
 from app.services import moderation_actions as actions
 from app.services import sanction_outbox as outbox
-from app.services.sanction_email_texts import SUPPORTED, build_sanction_email, texts_for
+from app.services.sanction_email_texts import SUPPORTED, build_content_blocked_email, build_sanction_email, texts_for
 from app.services.sanction_outbox import deliver_notification
 
 FACTS = "Posted a tier list with slurs."
@@ -256,18 +256,14 @@ def test_issued_email_has_the_statement_of_reasons(language, kind) -> None:
 
 
 @pytest.mark.parametrize("language", SUPPORTED)
-def test_redress_is_for_restrictions_only(language) -> None:
-    redress = texts_for(language)["redress"]
-
-    def flat(kind: str, content_type: str | None = None) -> str:
-        content = build_sanction_email(
-            language, event="issued", kind=kind, username="Ada", reason_code="spam", content_type=content_type
-        )
-        return " ".join(" ".join(block[1:]) for block in content.blocks)
-
-    assert redress not in flat("warning")
-    assert redress in flat("warning", "tier_list")  # the content was removed, which is a restriction
-    assert redress in flat("suspension") and redress in flat("ban")
+@pytest.mark.parametrize("kind", ["warning", "suspension", "ban"])
+def test_every_decision_points_to_the_terms_for_contesting_it(language, kind) -> None:
+    t = texts_for(language)
+    terms = "https://lemon.test/en/terms-of-service#termination"
+    linked = build_sanction_email(language, event="issued", kind=kind, username="Ada", reason_code="spam", contact="a@b.test", terms_url=terms)
+    plain = build_sanction_email(language, event="issued", kind=kind, username="Ada", reason_code="spam", contact="a@b.test")
+    assert ("p", t["terms_more"].format(url=terms)) in linked.blocks and terms in t["terms_more"].format(url=terms)
+    assert ("p", t["terms_more_no_link"]) in plain.blocks and "{" not in t["terms_more_no_link"]
 
 
 @pytest.mark.parametrize("language", SUPPORTED)
@@ -276,7 +272,7 @@ def test_follow_up_emails_exist_in_every_language(language, event) -> None:
     content = build_sanction_email(
         language, event=event, kind="suspension", username="Ada", reason_code="spam", issued_at=datetime(2026, 10, 15, tzinfo=timezone.utc)
     )
-    assert content.subject and len(content.blocks) == 2
+    assert content.subject and [block[0] for block in content.blocks] == ["p", "title", "p"]
     assert "{" not in " ".join(block[1] for block in content.blocks)
 
 
@@ -295,6 +291,33 @@ def test_email_follows_the_account_language(admin, db_session) -> None:
     with mail.record_messages() as sent:
         deliver_notification(note.id)
     assert texts_for("pl")["subject"]["suspension"] in sent[0].subject
+
+
+@pytest.mark.parametrize("language", SUPPORTED)
+def test_issued_email_is_in_the_same_sections_as_the_other_moderation_emails(language) -> None:
+    t = texts_for(language)
+    content = build_sanction_email(
+        language, event="issued", kind="suspension", username="Ada", reason_code="spam", facts=FACTS, from_report=True
+    )
+    headings = [block[1] for block in content.blocks if block[0] == "heading"]
+    assert headings == [t["what_heading"], t["why_heading"], t["options_heading"]]
+    kinds = [block[0] for block in content.blocks]
+    assert content.blocks[1] == ("title", t["subject"]["suspension"]) and ("note", FACTS) in content.blocks
+    assert kinds.index("note") < kinds.index("heading", kinds.index("heading", kinds.index("heading") + 1) + 1)  # the note sits under Why
+    assert content.footer == t["human_review"] + " " + t["report_note"] and content.accent_bar
+
+
+@pytest.mark.parametrize("language", [*SUPPORTED, None])
+@pytest.mark.parametrize("deactivated", [False, True])
+def test_content_blocked_email_follows_the_language_and_the_sections(language, deactivated) -> None:
+    t = texts_for(language)
+    content = build_content_blocked_email(
+        language, username="Ada", content_type="tier_list", reason_code="spam", account_deactivated=deactivated, contact="help@lemondbd.test"
+    )
+    flat = " ".join(" ".join(block[1:]) for block in content.blocks)
+    assert [block[1] for block in content.blocks if block[0] == "heading"] == [t["what_heading"], t["why_heading"], t["options_heading"]]
+    assert (t["deactivated"] in flat) is deactivated and t["reasons"]["spam"] in flat and "help@lemondbd.test" in flat
+    assert "{" not in flat and content.footer == t["human_review"] and content.accent_bar
 
 
 def test_no_contact_address_falls_back_to_the_generic_appeal_sentence() -> None:

@@ -165,6 +165,7 @@ class TestAdminChallengeReset:
         assert outbox[0].subject == "LemonDBD: Postęp w Twoim wyzwaniu został zresetowany"
         assert "Chaos Streak: Easy" in outbox[0].body and "Wynik z exploita." in outbox[0].body
         assert "Wynik z exploita." in outbox[0].html and "sekcję Fair play" in outbox[0].body
+        assert "/pl/terms-of-service#termination" in outbox[0].body
         log = db_session.query(AdminAuditLog).filter_by(action="user_challenge_reset").one()
         assert '"emailed":true' in log.details and "Wynik z exploita." in log.details
 
@@ -176,9 +177,9 @@ class TestAdminChallengeReset:
                 f"/api/v1/users/{seeded.id}/challenges/reset", json={"mode": "gauntlet", "variant": "killer_original"}, headers=_headers(app, admin)
             )
         assert outbox[0].subject == "LemonDBD: Your progress in a challenge was reset"
-        assert "Gauntlet: Killer original" in outbox[0].body and "Note from the team" not in outbox[0].body
+        assert "Gauntlet: Killer original" in outbox[0].body
 
-    def test_the_email_is_in_sections_with_the_note_last_and_human_review_in_the_footer(
+    def test_the_email_is_in_sections_with_the_note_under_why_and_human_review_in_the_footer(
         self, app: Flask, client: FlaskClient, admin: User, seeded: User
     ) -> None:
         with mail.record_messages() as outbox:
@@ -188,11 +189,11 @@ class TestAdminChallengeReset:
                 headers=_headers(app, admin),
             )
         body, html = outbox[0].body, outbox[0].html
-        headings = ["What happened", "Why", "Your options", "Note from the team"]
+        headings = ["What happened", "Why", "Exploit.", "Your options"]
         positions = [body.index(heading) for heading in headings]
         assert positions == sorted(positions)
         main, footer = body.split("\n\n--\n")
-        assert main.rstrip().endswith("Exploit.") and "No automated decision-making" in footer
+        assert "No automated decision-making" in footer
         assert "No automated decision-making" not in main and "Sent by LemonDBD" not in html
         assert "Your actions broke the Fair play section of our Rules" in main and "Section" not in main
         assert "border-top:3px solid #b91c1c" in html

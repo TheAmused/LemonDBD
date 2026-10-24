@@ -19,7 +19,7 @@ export default {
     bannedBody: "A moderator permanently banned this account, so it can no longer sign in.",
     suspendedBody: "A moderator suspended this account until {date}. You can sign in again after that.",
     reasonLabel: "Reason",
-    appealWithContact: "If you think this is a mistake, write to {contact} within 14 days and a person will review the decision.",
+    appealWithContact: "If you think this is a mistake, write to {contact} within 6 months and a person will review the decision.",
     appealNoContact: "If you think this is a mistake, contact the site team and ask for the decision to be reviewed.",
     close: "Close",
   },

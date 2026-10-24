@@ -122,10 +122,30 @@ def test_fetch_maps_filter_by_realm(db_session: Session) -> None:
 def test_fetch_maps_filter_by_source(db_session: Session) -> None:
     """Verify filtering maps by source code."""
     _seed_map_catalog(db_session)
+    source_lemon = MapSource(id=2, code="lemondbd", label="LemonDBD Vector Layouts")
+    db_session.add(source_lemon)
+    db_session.flush()
+
+    m_lemon = MapRealm(
+        id=101,
+        name="Coal Tower",
+        realm_id=2,
+        source_id=source_lemon.id,
+        layout_type="Outdoor",
+    )
+    db_session.add(m_lemon)
+    db_session.commit()
+
     service = MapService()
 
     hens_maps = service.get_maps(source="hens333")
     assert len(hens_maps) == 3
+    assert all(m["source"] == "hens333" for m in hens_maps)
+
+    lemon_maps = service.get_maps(source="lemondbd")
+    assert len(lemon_maps) == 1
+    assert lemon_maps[0]["name"] == "Coal Tower"
+    assert lemon_maps[0]["source"] == "lemondbd"
 
     empty_maps = service.get_maps(source="unknown_source")
     assert len(empty_maps) == 0
@@ -159,5 +179,13 @@ def test_get_maps_returns_seeded_catalog() -> None:
     """MapService.get_maps() over the real static seed (not a hand-built fixture)."""
     seed_from_static_json(force=True)
     maps = MapService().get_maps()
-    assert len(maps) >= 6
+    assert len(maps) == 111
     assert "Coal Tower" in [m["name"] for m in maps]
+
+    lemon_maps = MapService().get_maps(source="lemondbd")
+    hens_maps = MapService().get_maps(source="hens333")
+    assert len(lemon_maps) == 58
+    assert len(hens_maps) == 53
+    assert all(m["source"] == "lemondbd" for m in lemon_maps)
+    assert all(m["source"] == "hens333" for m in hens_maps)
+

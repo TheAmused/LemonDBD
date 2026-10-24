@@ -110,6 +110,35 @@ def test_get_maps_filtering(client: FlaskClient, db_session: Session) -> None:
     assert len(maps_search) == 1
     assert maps_search[0]["id"] == 43
 
+    # Filter by source
+    realm_springwood = db_session.query(Realm).filter_by(name="Springwood").one()
+    source_lemon = MapSource(id=2, code="lemondbd", label="LemonDBD Vector Layouts")
+    db_session.add(source_lemon)
+    db_session.flush()
+
+    m_lemon = MapRealm(
+        id=1,
+        name="Coal Tower",
+        realm_id=realm_springwood.id,
+        source_id=source_lemon.id,
+    )
+    db_session.add(m_lemon)
+    db_session.commit()
+
+    resp_lemon = client.get("/api/v1/maps?source=lemondbd")
+    assert resp_lemon.status_code == 200
+    maps_lemon = resp_lemon.get_json()["maps"]
+    assert len(maps_lemon) == 1
+    assert maps_lemon[0]["name"] == "Coal Tower"
+    assert maps_lemon[0]["source"] == "lemondbd"
+
+    resp_hens = client.get("/api/v1/maps?source=hens333")
+    assert resp_hens.status_code == 200
+    maps_hens = resp_hens.get_json()["maps"]
+    assert len(maps_hens) == 2
+    assert all(m["source"] == "hens333" for m in maps_hens)
+
+
 
 @pytest.mark.unit
 def test_get_maps_localization_header(client: FlaskClient, db_session: Session) -> None:

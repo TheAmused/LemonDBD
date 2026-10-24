@@ -228,6 +228,7 @@ def test_map_realm_to_dict_keys_completeness(db_session: Session) -> None:
         "is_main_building",
         "size_sq_tiles",
         "size_sq_meters",
+        "layout",
         "description",
     }
     assert required_keys.issubset(output.keys())
@@ -262,19 +263,21 @@ def test_map_realm_to_dict_exposes_english_names(db_session: Session) -> None:
 
 @pytest.mark.unit
 def test_localized_map_names_unique_per_locale_in_seed() -> None:
-    """No two maps share the exact same localized name within any locale in maps.json."""
+    """No two maps share the exact same localized name within any locale in maps seed files."""
     import json
     from pathlib import Path
 
-    json_path = Path(__file__).resolve().parents[3] / "app" / "seeds" / "data" / "content" / "maps.json"
-    with open(json_path, "r", encoding="utf-8") as f:
-        data = json.load(f)["maps"]
+    maps_dir = Path(__file__).resolve().parents[3] / "app" / "seeds" / "data" / "content" / "maps"
+    for seed_name in ("lemondbd.json", "hens.json"):
+        with open(maps_dir / seed_name, "r", encoding="utf-8") as f:
+            data = json.load(f)["maps"]
 
-    for lang in ("de", "es", "ja", "pl"):
-        names_seen = set()
-        for m in data:
-            loc_name = m.get("translations", {}).get(lang, {}).get("name")
-            if loc_name:
-                assert loc_name not in names_seen, f"Duplicate map name '{loc_name}' found in locale '{lang}'"
-                names_seen.add(loc_name)
+        for lang in ("de", "es", "ja", "pl"):
+            names_seen = set()
+            for m in data:
+                loc_name = m.get("translations", {}).get(lang, {}).get("name")
+                if loc_name:
+                    assert loc_name not in names_seen, f"Duplicate map name '{loc_name}' found in locale '{lang}' in {seed_name}"
+                    names_seen.add(loc_name)
+
 

@@ -19,7 +19,7 @@ export default {
     bannedBody: "Moderator zbanował to konto na stałe, więc nie można się już na nie zalogować.",
     suspendedBody: "Moderator zawiesił to konto do {date}. Po tym terminie znów będziesz mógł się zalogować.",
     reasonLabel: "Powód",
-    appealWithContact: "Jeśli uważasz, że to pomyłka, napisz w ciągu 14 dni na adres {contact}, a decyzję ponownie rozpatrzy człowiek.",
+    appealWithContact: "Jeśli uważasz, że to pomyłka, napisz w ciągu 6 miesięcy na adres {contact}, a decyzję ponownie rozpatrzy człowiek.",
     appealNoContact: "Jeśli uważasz, że to pomyłka, skontaktuj się z zespołem serwisu i poproś o ponowne rozpatrzenie decyzji.",
     close: "Zamknij",
   },

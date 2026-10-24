@@ -37,13 +37,19 @@ _TEXTS: dict[str, dict] = {
         "reason_label": "Reason",
         "rule_label": "Rule",
         "rule_format": "Section {number}: {name}",
-        "facts_label": "What happened (written in the moderator's language)",
+        "what_heading": "What happened",
+        "why_heading": "Why",
+        "options_heading": "Your options",
+        "content_subject": "Your {content} was blocked",
+        "content_what": "After a review by the LemonDBD team, a {content} created with your account was blocked. It can no longer be imported or opened on LemonDBD, and the copy saved in your browser is removed the next time you visit. Edited versions are separate content and are not affected, but they must follow the Rules too.",
+        "deactivated": "Because of the seriousness of the breach, your account has also been deactivated.",
         "human_review": "This decision was made by a member of the LemonDBD team after human review. No automated decision-making was used.",
         "report_note": "It followed a report from another user.",
         "content_blocked": "The content concerned ({content}) was also blocked: it can no longer be imported or opened on LemonDBD, and the copy saved in your browser is removed the next time you visit.",
-        "appeal": "If you think we got this wrong, write to {contact} within 14 days and we will review the decision.",
-        "appeal_no_contact": "If you think we got this wrong, contact the LemonDBD team within 14 days and we will review the decision.",
-        "redress": "You can also turn to an out-of-court dispute settlement body or bring the matter before a court in your country.",
+        "appeal": "If you think we got this wrong, write to {contact} within 6 months and we will review the decision and reply, normally within 14 days.",
+        "appeal_no_contact": "If you think we got this wrong, contact the LemonDBD team within 6 months and we will review the decision and reply, normally within 14 days.",
+        "terms_more": "More about contesting a decision, and about your other rights, is in our Terms of Service: {url}",
+        "terms_more_no_link": "More about contesting a decision, and about your other rights, is in our Terms of Service.",
         "lifted_body": "The restriction placed on your account on {date} has been lifted. You can use your account again.",
         "ended_body": "Your suspension has ended. You can use your account again. Please keep to our Terms of Service and Rules.",
         "footer": "Sent by LemonDBD because of a moderation decision about your account.",
@@ -90,13 +96,19 @@ _TEXTS: dict[str, dict] = {
         "reason_label": "Powód",
         "rule_label": "Zasada",
         "rule_format": "Sekcja {number}: {name}",
-        "facts_label": "Co się wydarzyło (w języku moderatora)",
+        "what_heading": "Co się stało",
+        "why_heading": "Dlaczego",
+        "options_heading": "Twoje możliwości",
+        "content_subject": "Twoja treść została zablokowana ({content})",
+        "content_what": "Po przeglądzie zespołu LemonDBD treść utworzona na Twoim koncie ({content}) została zablokowana. Nie można jej już zaimportować ani otworzyć w LemonDBD, a kopia zapisana w Twojej przeglądarce zostanie usunięta przy następnej wizycie. Edytowane wersje to osobne treści i ta decyzja ich nie obejmuje, ale również muszą przestrzegać Zasad.",
+        "deactivated": "Ze względu na wagę naruszenia Twoje konto zostało również dezaktywowane.",
         "human_review": "Decyzję podjął członek zespołu LemonDBD po weryfikacji przez człowieka. Nie zastosowano zautomatyzowanego podejmowania decyzji.",
         "report_note": "Poprzedziło ją zgłoszenie innego użytkownika.",
         "content_blocked": "Zablokowano również objętą sprawą treść ({content}): nie można jej już zaimportować ani otworzyć w LemonDBD, a kopia zapisana w Twojej przeglądarce zostanie usunięta przy następnej wizycie.",
-        "appeal": "Jeśli uważasz, że popełniliśmy błąd, napisz w ciągu 14 dni na {contact}, a ponownie rozpatrzymy decyzję.",
-        "appeal_no_contact": "Jeśli uważasz, że popełniliśmy błąd, skontaktuj się z zespołem LemonDBD w ciągu 14 dni, a ponownie rozpatrzymy decyzję.",
-        "redress": "Możesz też skorzystać z pozasądowego organu rozstrzygania sporów albo wnieść sprawę do sądu w swoim kraju.",
+        "appeal": "Jeśli uważasz, że popełniliśmy błąd, napisz w ciągu 6 miesięcy na {contact}, a ponownie rozpatrzymy decyzję i odpowiemy, co do zasady w ciągu 14 dni.",
+        "appeal_no_contact": "Jeśli uważasz, że popełniliśmy błąd, skontaktuj się z zespołem LemonDBD w ciągu 6 miesięcy, a ponownie rozpatrzymy decyzję i odpowiemy, co do zasady w ciągu 14 dni.",
+        "terms_more": "Więcej o odwołaniu od decyzji i o Twoich pozostałych prawach znajdziesz w naszym Regulaminie: {url}",
+        "terms_more_no_link": "Więcej o odwołaniu od decyzji i o Twoich pozostałych prawach znajdziesz w naszym Regulaminie.",
         "lifted_body": "Ograniczenie nałożone na Twoje konto dnia {date} zostało zniesione. Możesz znów korzystać z konta.",
         "ended_body": "Zawieszenie dobiegło końca. Możesz znów korzystać z konta. Pamiętaj o przestrzeganiu Regulaminu i Zasad.",
         "footer": "Wiadomość wysłana przez LemonDBD w związku z decyzją moderacyjną dotyczącą Twojego konta.",
@@ -143,13 +155,19 @@ _TEXTS: dict[str, dict] = {
         "reason_label": "Grund",
         "rule_label": "Regel",
         "rule_format": "Abschnitt {number}: {name}",
-        "facts_label": "Was passiert ist (in der Sprache des Moderators)",
+        "what_heading": "Was passiert ist",
+        "why_heading": "Warum",
+        "options_heading": "Deine Möglichkeiten",
+        "content_subject": "Dein Inhalt wurde gesperrt ({content})",
+        "content_what": "Nach einer Prüfung durch das LemonDBD-Team wurde ein mit deinem Konto erstellter Inhalt ({content}) gesperrt. Er kann auf LemonDBD nicht mehr importiert oder geöffnet werden, und die in deinem Browser gespeicherte Kopie wird bei deinem nächsten Besuch entfernt. Bearbeitete Versionen sind eigene Inhalte und nicht betroffen, müssen aber ebenfalls die Regeln einhalten.",
+        "deactivated": "Wegen der Schwere des Verstoßes wurde dein Konto außerdem deaktiviert.",
         "human_review": "Diese Entscheidung hat ein Mitglied des LemonDBD-Teams nach menschlicher Prüfung getroffen. Es wurde keine automatisierte Entscheidungsfindung eingesetzt.",
         "report_note": "Ihr ging eine Meldung eines anderen Nutzers voraus.",
         "content_blocked": "Der betroffene Inhalt ({content}) wurde ebenfalls gesperrt: Er kann auf LemonDBD nicht mehr importiert oder geöffnet werden, und die in deinem Browser gespeicherte Kopie wird bei deinem nächsten Besuch entfernt.",
-        "appeal": "Wenn du glaubst, dass wir uns geirrt haben, schreibe uns innerhalb von 14 Tagen an {contact}; wir prüfen die Entscheidung erneut.",
-        "appeal_no_contact": "Wenn du glaubst, dass wir uns geirrt haben, wende dich innerhalb von 14 Tagen an das LemonDBD-Team; wir prüfen die Entscheidung erneut.",
-        "redress": "Du kannst dich außerdem an eine außergerichtliche Streitbeilegungsstelle wenden oder den Rechtsweg vor einem Gericht in deinem Land beschreiten.",
+        "appeal": "Wenn du glaubst, dass wir uns geirrt haben, schreibe uns innerhalb von 6 Monaten an {contact}; wir prüfen die Entscheidung erneut und antworten in der Regel innerhalb von 14 Tagen.",
+        "appeal_no_contact": "Wenn du glaubst, dass wir uns geirrt haben, wende dich innerhalb von 6 Monaten an das LemonDBD-Team; wir prüfen die Entscheidung erneut und antworten in der Regel innerhalb von 14 Tagen.",
+        "terms_more": "Mehr dazu, wie du eine Entscheidung anfechten kannst, und zu deinen weiteren Rechten findest du in unseren Nutzungsbedingungen: {url}",
+        "terms_more_no_link": "Mehr dazu, wie du eine Entscheidung anfechten kannst, und zu deinen weiteren Rechten findest du in unseren Nutzungsbedingungen.",
         "lifted_body": "Die am {date} verhängte Einschränkung deines Kontos wurde aufgehoben. Du kannst dein Konto wieder nutzen.",
         "ended_body": "Deine Sperre ist beendet. Du kannst dein Konto wieder nutzen. Bitte halte dich an unsere Nutzungsbedingungen und Regeln.",
         "footer": "Gesendet von LemonDBD wegen einer Moderationsentscheidung zu deinem Konto.",
@@ -196,13 +214,19 @@ _TEXTS: dict[str, dict] = {
         "reason_label": "Motivo",
         "rule_label": "Regla",
         "rule_format": "Sección {number}: {name}",
-        "facts_label": "Qué ocurrió (en el idioma del moderador)",
+        "what_heading": "Qué ocurrió",
+        "why_heading": "Por qué",
+        "options_heading": "Tus opciones",
+        "content_subject": "Tu contenido fue bloqueado ({content})",
+        "content_what": "Tras una revisión del equipo de LemonDBD, un contenido creado con tu cuenta ({content}) fue bloqueado. Ya no se puede importar ni abrir en LemonDBD, y la copia guardada en tu navegador se eliminará la próxima vez que lo visites. Las versiones editadas son contenido aparte y no se ven afectadas, pero también deben cumplir las Reglas.",
+        "deactivated": "Por la gravedad del incumplimiento, tu cuenta también ha sido desactivada.",
         "human_review": "Esta decisión la tomó un miembro del equipo de LemonDBD tras una revisión humana. No se utilizó ninguna toma de decisiones automatizada.",
         "report_note": "Fue precedida por una denuncia de otro usuario.",
         "content_blocked": "El contenido afectado ({content}) también fue bloqueado: ya no se puede importar ni abrir en LemonDBD, y la copia guardada en tu navegador se eliminará la próxima vez que lo visites.",
-        "appeal": "Si crees que nos hemos equivocado, escribe a {contact} en un plazo de 14 días y revisaremos la decisión.",
-        "appeal_no_contact": "Si crees que nos hemos equivocado, ponte en contacto con el equipo de LemonDBD en un plazo de 14 días y revisaremos la decisión.",
-        "redress": "También puedes acudir a un organismo de resolución extrajudicial de litigios o llevar el asunto ante un tribunal de tu país.",
+        "appeal": "Si crees que nos hemos equivocado, escribe a {contact} en un plazo de 6 meses y revisaremos la decisión y responderemos, normalmente en un plazo de 14 días.",
+        "appeal_no_contact": "Si crees que nos hemos equivocado, ponte en contacto con el equipo de LemonDBD en un plazo de 6 meses y revisaremos la decisión y responderemos, normalmente en un plazo de 14 días.",
+        "terms_more": "Encontrarás más información sobre cómo impugnar una decisión y sobre tus demás derechos en nuestras Condiciones de servicio: {url}",
+        "terms_more_no_link": "Encontrarás más información sobre cómo impugnar una decisión y sobre tus demás derechos en nuestras Condiciones de servicio.",
         "lifted_body": "Se ha levantado la restricción impuesta a tu cuenta el {date}. Ya puedes volver a usar tu cuenta.",
         "ended_body": "Tu suspensión ha terminado. Ya puedes volver a usar tu cuenta. Respeta nuestras Condiciones de servicio y Reglas.",
         "footer": "Enviado por LemonDBD a raíz de una decisión de moderación sobre tu cuenta.",
@@ -249,13 +273,19 @@ _TEXTS: dict[str, dict] = {
         "reason_label": "理由",
         "rule_label": "ルール",
         "rule_format": "第{number}節：{name}",
-        "facts_label": "経緯（モデレーターの言語で記載）",
+        "what_heading": "経緯",
+        "why_heading": "理由",
+        "options_heading": "対応について",
+        "content_subject": "コンテンツがブロックされました（{content}）",
+        "content_what": "LemonDBDチームによる確認の結果、お客様のアカウントで作成されたコンテンツ（{content}）をブロックしました。LemonDBDでインポートまたは開くことはできなくなり、ブラウザに保存されたコピーは次回の訪問時に削除されます。編集版は別のコンテンツであり、この決定の対象外ですが、ルールを守っていただく必要があります。",
+        "deactivated": "違反の重大性により、アカウントも無効化されました。",
         "human_review": "この決定は、LemonDBDチームのメンバーが人による確認を経て行いました。自動化された意思決定は使用していません。",
         "report_note": "他のユーザーからの報告を受けて行われました。",
         "content_blocked": "対象のコンテンツ（{content}）もブロックされました。LemonDBDでインポートまたは開くことはできなくなり、ブラウザに保存されたコピーは次回の訪問時に削除されます。",
-        "appeal": "決定に誤りがあると思われる場合は、14日以内に{contact}までご連絡ください。決定を再審査いたします。",
-        "appeal_no_contact": "決定に誤りがあると思われる場合は、14日以内にLemonDBDチームまでご連絡ください。決定を再審査いたします。",
-        "redress": "また、裁判外紛争解決機関を利用することや、お住まいの国の裁判所に申し立てることもできます。",
+        "appeal": "決定に誤りがあると思われる場合は、6か月以内に{contact}までご連絡ください。決定を再審査し、原則として14日以内に回答いたします。",
+        "appeal_no_contact": "決定に誤りがあると思われる場合は、6か月以内にLemonDBDチームまでご連絡ください。決定を再審査し、原則として14日以内に回答いたします。",
+        "terms_more": "決定への異議申し立て方法やその他のお客様の権利については、利用規約をご覧ください: {url}",
+        "terms_more_no_link": "決定への異議申し立て方法やその他のお客様の権利については、利用規約をご覧ください。",
         "lifted_body": "{date}にお客様のアカウントに課された制限は解除されました。アカウントを再び利用できます。",
         "ended_body": "一時停止は終了しました。アカウントを再び利用できます。利用規約とルールをお守りください。",
         "footer": "このメールは、お客様のアカウントに関するモデレーション決定のためLemonDBDから送信されました。",
@@ -299,12 +329,20 @@ class SanctionEmailContent:
     subject: str
     preheader: str
     footer: str
-    #: ("p", text) plain paragraph; ("field", label, value); ("quote", label, value) for the
-    #: moderator's own words; ("title", text) the headline; ("heading", text) opens a section;
-    #: ("note", text) the moderator's own words as plain italic text.
+    #: ("p", text) plain paragraph; ("field", label, value); ("title", text) the headline;
+    #: ("heading", text) opens a section; ("note", text) the moderator's own words as plain italic text.
     blocks: list[tuple[str, ...]] = field(default_factory=list)
     #: Red bar on the top edge of the card.
     accent_bar: bool = False
+
+
+def options_blocks(t: dict, contact: str, terms_url: str) -> list[tuple[str, ...]]:
+    """The "Your options" section: how to contest the decision, and where the Terms say more about it."""
+    return [
+        ("heading", t["options_heading"]),
+        ("p", t["appeal"].format(contact=contact) if contact else t["appeal_no_contact"]),
+        ("p", t["terms_more"].format(url=terms_url) if terms_url else t["terms_more_no_link"]),
+    ]
 
 
 def build_sanction_email(
@@ -322,47 +360,81 @@ def build_sanction_email(
     content_type: str | None = None,
     contact: str = "",
     rules_url: str = "",
+    terms_url: str = "",
 ) -> SanctionEmailContent:
-    """The email for `event` ("issued", "lifted" or "ended") about a sanction of `kind`."""
+    """The email for `event` ("issued", "lifted" or "ended") about a sanction of `kind`.
+
+    Laid out like every moderation email: greeting, title, then the sections what happened, why (the reason,
+    the Rules section and the moderator's own words explaining the situation) and the account holder's
+    options, with who decided in the footer.
+    """
     t = texts_for(language)
-    greeting = t["greeting"].format(name=username)
-    footer = t["footer"]
+    greeting = ("p", t["greeting"].format(name=username))
 
-    if event == "lifted":
-        body = t["lifted_body"].format(date=format_moment(issued_at))
+    if event in ("lifted", "ended"):
+        body = t["lifted_body"].format(date=format_moment(issued_at)) if event == "lifted" else t["ended_body"]
         return SanctionEmailContent(
-            subject=t["subject"]["lifted"],
-            preheader=t["subject"]["lifted"],
-            footer=footer,
-            blocks=[("p", greeting), ("p", body)],
-        )
-    if event == "ended":
-        return SanctionEmailContent(
-            subject=t["subject"]["ended"],
-            preheader=t["subject"]["ended"],
-            footer=footer,
-            blocks=[("p", greeting), ("p", t["ended_body"])],
+            subject=t["subject"][event],
+            preheader=t["subject"][event],
+            footer=t["footer"],
+            blocks=[greeting, ("title", t["subject"][event]), ("p", body)],
         )
 
-    headline = t["headline"][kind].format(until=format_moment(until))
-    blocks: list[tuple[str, ...]] = [("p", greeting), ("p", headline), ("p", t["meaning"][kind])]
-    reason_name = t["reasons"].get(reason_code, t["reasons"]["other"])
-    blocks.append(("field", t["reason_label"], reason_name))
+    blocks: list[tuple[str, ...]] = [
+        greeting,
+        ("title", t["subject"][kind]),
+        ("heading", t["what_heading"]),
+        ("p", t["headline"][kind].format(until=format_moment(until))),
+        ("p", t["meaning"][kind]),
+    ]
+    has_content = bool(content_type and content_type in t["content_names"])
+    if has_content:
+        blocks.append(("p", t["content_blocked"].format(content=t["content_names"][content_type])))
+    blocks.append(("heading", t["why_heading"]))
+    blocks.append(("field", t["reason_label"], t["reasons"].get(reason_code, t["reasons"]["other"])))
     if rule_ref and rule_ref in t["rules"]:
         rule_text = t["rule_format"].format(number=RULE_SECTION_NUMBERS[rule_ref], name=t["rules"][rule_ref])
         if rules_url:
             rule_text += f" ({rules_url})"
         blocks.append(("field", t["rule_label"], rule_text))
     if facts:
-        blocks.append(("quote", t["facts_label"], facts))
-    blocks.append(("p", t["human_review"] + (" " + t["report_note"] if from_report else "")))
-    if content_type and content_type in t["content_names"]:
-        blocks.append(("p", t["content_blocked"].format(content=t["content_names"][content_type])))
-    blocks.append(("p", t["appeal"].format(contact=contact) if contact else t["appeal_no_contact"]))
-    # Out-of-court and judicial redress is owed for a restriction (account suspension or termination, removed
-    # content); a plain warning restricts nothing, so it carries the internal complaint route only.
-    if kind != "warning" or (content_type and content_type in t["content_names"]):
-        blocks.append(("p", t["redress"]))
+        blocks.append(("note", facts))
+    blocks += options_blocks(t, contact, terms_url)
     return SanctionEmailContent(
-        subject=t["subject"][kind], preheader=t["subject"][kind], footer=footer, blocks=blocks
+        subject=t["subject"][kind],
+        preheader=t["subject"][kind],
+        footer=t["human_review"] + (" " + t["report_note"] if from_report else ""),
+        blocks=blocks,
+        accent_bar=True,
     )
+
+
+def build_content_blocked_email(
+    language: str | None,
+    *,
+    username: str,
+    content_type: str,
+    reason_code: str,
+    account_deactivated: bool,
+    contact: str = "",
+    terms_url: str = "",
+) -> SanctionEmailContent:
+    """The statement of reasons for content that was blocked on its own, with no account decision beside it."""
+    t = texts_for(language)
+    content = t["content_names"].get(content_type, content_type.replace("_", " "))
+    subject = t["content_subject"].format(content=content)
+    what = t["content_what"].format(content=content)
+    blocks: list[tuple[str, ...]] = [
+        ("p", t["greeting"].format(name=username)),
+        ("title", subject),
+        ("heading", t["what_heading"]),
+        ("p", what),
+    ]
+    if account_deactivated:
+        blocks.append(("p", t["deactivated"]))
+    blocks += [
+        ("heading", t["why_heading"]),
+        ("field", t["reason_label"], t["reasons"].get(reason_code, t["reasons"]["other"])),
+        *options_blocks(t, contact, terms_url),
+    ]
+    return SanctionEmailContent(subject=subject, preheader=subject, footer=t["human_review"], blocks=blocks, accent_bar=True)

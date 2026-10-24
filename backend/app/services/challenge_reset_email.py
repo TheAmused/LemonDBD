@@ -1,18 +1,17 @@
 # backend/app/services/challenge_reset_email.py
 """The email a player gets when an admin resets their progress in a challenge.
 
-It reuses the moderation emails' wording where it says the same thing (greeting, the way to contest it, and
-in the footer that a person decided) but is laid out in sections: what happened, why, the player's options,
-and last the admin's optional note, shown as written. Who reported or any internal notes are never included.
+It is built like every moderation email (see sanction_email_texts): greeting, title, then the sections what
+happened, why (with the admin's optional note, shown as written) and the player's options, with the fact that
+a person decided in the footer. Who reported or any internal notes are never included.
 """
 import logging
 
-from flask import current_app
-
 from app.models import User
 from app.services.mail_service import send_sanction_email
-from app.services.sanction_email_texts import DEFAULT_LANGUAGE, SanctionEmailContent, texts_for
+from app.services.sanction_email_texts import DEFAULT_LANGUAGE, SanctionEmailContent, options_blocks, texts_for
 from app.services.site_settings import contact_email
+from app.utils.site_urls import site_page_url
 
 logger = logging.getLogger(__name__)
 
@@ -23,61 +22,41 @@ _TEXTS: dict[str, dict] = {
         "modes": _MODES_LATIN,
         "subject": "Your progress in a challenge was reset",
         "title": "Your progress in {challenge} was reset",
-        "what_heading": "What happened",
         "what": "After a review by the LemonDBD team, the run, match history and completions in this challenge were deleted. You can start it again from the beginning. Your account and your other challenges are not affected.",
-        "why_heading": "Why",
         "why": "Your actions broke the Fair play section of our Rules.",
         "why_link": "Your actions broke the Fair play section of our Rules: {url}",
-        "options_heading": "Your options",
-        "note_heading": "Note from the team",
     },
     "pl": {
         "modes": _MODES_LATIN,
         "subject": "Postęp w Twoim wyzwaniu został zresetowany",
         "title": "Twój postęp w wyzwaniu {challenge} został zresetowany",
-        "what_heading": "Co się stało",
         "what": "Po przeglądzie zespołu LemonDBD przebieg, historia meczów i ukończenia w tym wyzwaniu zostały usunięte. Możesz zacząć je od nowa. Twoje konto i pozostałe wyzwania nie są naruszone.",
-        "why_heading": "Dlaczego",
         "why": "Twoje działania naruszyły sekcję Fair play naszych Zasad społeczności.",
         "why_link": "Twoje działania naruszyły sekcję Fair play naszych Zasad społeczności: {url}",
-        "options_heading": "Twoje możliwości",
-        "note_heading": "Notatka od zespołu",
     },
     "de": {
         "modes": _MODES_LATIN,
         "subject": "Dein Fortschritt in einer Challenge wurde zurückgesetzt",
         "title": "Dein Fortschritt in {challenge} wurde zurückgesetzt",
-        "what_heading": "Was passiert ist",
         "what": "Nach einer Prüfung durch das LemonDBD-Team wurden Lauf, Matchverlauf und Abschlüsse in dieser Challenge gelöscht. Du kannst sie von vorn beginnen. Dein Konto und deine anderen Challenges sind nicht betroffen.",
-        "why_heading": "Warum",
         "why": "Dein Verhalten verstieß gegen den Abschnitt „Fair Play“ unserer Regeln.",
         "why_link": "Dein Verhalten verstieß gegen den Abschnitt „Fair Play“ unserer Regeln: {url}",
-        "options_heading": "Deine Möglichkeiten",
-        "note_heading": "Hinweis vom Team",
     },
     "es": {
         "modes": _MODES_LATIN,
         "subject": "Tu progreso en un desafío fue restablecido",
         "title": "Tu progreso en {challenge} fue restablecido",
-        "what_heading": "Qué ocurrió",
         "what": "Tras una revisión del equipo de LemonDBD, se eliminaron la partida, el historial de combates y las victorias de este desafío. Puedes empezarlo de nuevo. Tu cuenta y tus otros desafíos no se ven afectados.",
-        "why_heading": "Por qué",
         "why": "Tus acciones incumplieron la sección «Juego limpio» de nuestras Normas.",
         "why_link": "Tus acciones incumplieron la sección «Juego limpio» de nuestras Normas: {url}",
-        "options_heading": "Tus opciones",
-        "note_heading": "Nota del equipo",
     },
     "ja": {
         "modes": {"gauntlet": "ガントレット", "chaos": "カオスストリーク", "history": "ヒストリーストリーク", "page_streak": "ページストリーク"},
         "subject": "チャレンジの進行状況がリセットされました",
         "title": "{challenge} の進行状況がリセットされました",
-        "what_heading": "経緯",
         "what": "LemonDBDチームによる確認の結果、このチャレンジの進行状況、対戦履歴、クリア記録を削除しました。最初からやり直せます。アカウントやほかのチャレンジには影響ありません。",
-        "why_heading": "理由",
         "why": "お客様の行為が、ルールの「フェアプレイ」の項目に反していました。",
         "why_link": "お客様の行為が、ルールの「フェアプレイ」の項目に反していました: {url}",
-        "options_heading": "対応について",
-        "note_heading": "チームからのメモ",
     },
 }
 
@@ -89,24 +68,21 @@ def challenge_label(language: str | None, mode: str, variant: str) -> str:
 
 
 def build_challenge_reset_email(
-    language: str | None, *, username: str, mode: str, variant: str, note: str | None = None, rules_url: str = ""
+    language: str | None, *, username: str, mode: str, variant: str, note: str | None = None, rules_url: str = "",
+    terms_url: str = "",
 ) -> SanctionEmailContent:
     own = _TEXTS.get(language or "", _TEXTS[DEFAULT_LANGUAGE])
     shared = texts_for(language)
-    contact = contact_email()
     blocks: list[tuple[str, ...]] = [
         ("p", shared["greeting"].format(name=username)),
         ("title", own["title"].format(challenge=challenge_label(language, mode, variant))),
-        ("heading", own["what_heading"]),
+        ("heading", shared["what_heading"]),
         ("p", own["what"]),
-        ("heading", own["why_heading"]),
+        ("heading", shared["why_heading"]),
         ("p", own["why_link"].format(url=rules_url) if rules_url else own["why"]),
-        ("heading", own["options_heading"]),
-        ("p", shared["appeal"].format(contact=contact) if contact else shared["appeal_no_contact"]),
-        ("p", shared["redress"]),
+        *([("note", note)] if note else []),
+        *options_blocks(shared, contact_email(), terms_url),
     ]
-    if note:
-        blocks += [("heading", own["note_heading"]), ("note", note)]
     return SanctionEmailContent(
         subject=own["subject"], preheader=own["subject"], footer=shared["human_review"], blocks=blocks, accent_bar=True
     )
@@ -116,11 +92,11 @@ def notify_challenge_reset(user: User, mode: str, variant: str, note: str | None
     """Emails the player that their progress in a challenge was reset. False, logged, when it could not be
     sent: the reset has already happened and must not be undone by a mail failure."""
     language = user.preferred_language
-    base = str(current_app.config.get("FRONTEND_URL") or "").rstrip("/")
     try:
         content = build_challenge_reset_email(
             language, username=user.username, mode=mode, variant=variant, note=note,
-            rules_url=f"{base}/{language or DEFAULT_LANGUAGE}/rules#fairPlay" if base else "",
+            rules_url=site_page_url(language, "rules", "fairPlay"),
+            terms_url=site_page_url(language, "terms-of-service", "termination"),
         )
         send_sanction_email(user, content)
     except Exception as err:

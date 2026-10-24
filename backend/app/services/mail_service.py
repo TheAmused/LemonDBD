@@ -9,9 +9,10 @@ from flask_mail import Message
 
 from app.core.extensions import mail
 from app.models import User
-from app.services.sanction_email_texts import SanctionEmailContent
+from app.services.sanction_email_texts import SanctionEmailContent, build_content_blocked_email
 from app.services.site_settings import reset_lifetime, verification_lifetime
 from app.utils.durations import describe_duration
+from app.utils.site_urls import site_page_url
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,6 @@ _ACCENT = "#d97706"
 _ALERT = "#b91c1c"
 _INK = "#0f172a"
 _MUTED = "#64748b"
-_FAINT = "#94a3b8"
 _RULE = "#e2e8f0"
 _LOGO_CID = "lemondbd-logo"
 _LOGO_PATH = Path(__file__).resolve().parent.parent / "static" / "email" / "logo.png"
@@ -218,21 +218,6 @@ _SECURITY_NOTICES: dict[str, tuple[str, str]] = {
 }
 
 
-_CONTENT_TYPE_NAMES = {
-    "tier_list": "tier list",
-    "smash_roster": "Smash or Pass roster",
-    "minigame": "minigame",
-}
-_REASON_NAMES = {
-    "hate_speech": "hate speech or discrimination",
-    "harassment": "harassment",
-    "explicit": "explicit or inappropriate content",
-    "illegal": "illegal content",
-    "spam": "spam",
-    "other": "a breach of our Rules",
-}
-
-
 def send_content_moderation_notice_email(
     user: User,
     content_type: str,
@@ -246,39 +231,17 @@ def send_content_moderation_notice_email(
     notes), what it means, and how to contest it. The content itself is not repeated: the server
     has already wiped its copy.
     """
-    content_name = _CONTENT_TYPE_NAMES.get(content_type, "item")
-    reason_name = _REASON_NAMES.get(reason, _REASON_NAMES["other"])
-    subject = f"Your {content_name} was blocked"
-    lines = [
-        f"After a review by the LemonDBD team, a {content_name} created with your account was blocked "
-        f"because it was found to involve {reason_name}, which our Terms of Service and Rules do not allow.",
-        "This copy can no longer be imported or opened on LemonDBD, and the copy saved in your browser "
-        "is removed the next time you visit. Edited versions are separate content and are not affected "
-        "by this decision, but they must follow the Rules too.",
-    ]
-    if account_deactivated:
-        lines.append("Because of the seriousness of the breach, your account has also been deactivated.")
-    contest = (
-        f"If you think we got this wrong, write to {contact_email} and we will review the decision, "
-        "normally within 14 days."
-        if contact_email
-        else "If you think we got this wrong, contact the LemonDBD team and we will review the decision."
-    )
-    lines.append(contest)
-    body_html = f"""\
-<p style="margin:0 0 4px; font-size:14px; color:#0f172a;">Hi {_greeting_name(user)},</p>
-{"".join(f'<p style="margin:0 0 12px; font-size:13px; color:#64748b; line-height:1.6;">{html.escape(line)}</p>' for line in lines)}
-"""
     try:
-        message = Message(
-            subject=f"LemonDBD: {subject}",
-            recipients=[user.email],
-            body=f"Hi {user.username},\n\n" + "\n\n".join(lines),
-            html=_email_shell(html.escape(subject), body_html),
-            charset=_BASE64_CHARSET,
+        content = build_content_blocked_email(
+            user.preferred_language,
+            username=user.username,
+            content_type=content_type,
+            reason_code=reason,
+            account_deactivated=account_deactivated,
+            contact=contact_email,
+            terms_url=site_page_url(user.preferred_language, "terms-of-service", "termination"),
         )
-        _attach_logo(message)
-        mail.send(message)
+        send_sanction_email(user, content)
     except Exception as err:
         logger.warning(f"Failed to send moderation notice to '{user.email}': {err}")
 
@@ -315,12 +278,7 @@ def _sanction_block_html(block: tuple[str, ...], previous: str | None) -> str:
             f'<p style="margin:0 0 8px; font-size:13px; color:{_INK}; line-height:1.6;">'
             f"<strong>{html.escape(block[1])}:</strong> {html.escape(block[2])}</p>"
         )
-    # "quote": the moderator's own words, kept as written
-    return (
-        f'<p style="margin:12px 0 4px; font-size:12px; color:{_FAINT};">{html.escape(block[1])}</p>'
-        f'<blockquote style="margin:0 0 12px; padding:6px 0 6px 12px; border-left:3px solid {_RULE}; '
-        f'font-size:13px; color:{_INK}; line-height:1.6; white-space:pre-wrap;">{html.escape(block[2])}</blockquote>'
-    )
+    raise ValueError(f"unknown moderation email block kind: {kind}")
 
 
 def send_sanction_email(user: User, content: SanctionEmailContent) -> None:

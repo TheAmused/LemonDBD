@@ -15,7 +15,6 @@ from dataclasses import asdict
 from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from flask import current_app
 from sqlalchemy import func, select
 
 from app.core.account_state import as_utc, block_kind
@@ -38,6 +37,7 @@ from app.services.sanction_email_texts import build_sanction_email
 from app.services.sanction_outbox import dispatch_notifications, queued_notification_ids
 from app.services.site_settings import contact_email, escalation_thresholds, warning_lifetime_days
 from app.utils.responses import api_error
+from app.utils.site_urls import site_page_url
 
 logger = logging.getLogger(__name__)
 
@@ -270,7 +270,6 @@ def preview_sanction(body: dict[str, Any]) -> dict[str, Any]:
         until = _now() + timedelta(days=_duration(body.get("duration_days")))
 
     language = user.preferred_language
-    base = str(current_app.config.get("FRONTEND_URL") or "").rstrip("/")
     email = build_sanction_email(
         language,
         event="issued",
@@ -284,7 +283,8 @@ def preview_sanction(body: dict[str, Any]) -> dict[str, Any]:
         from_report=report is not None,
         content_type=report.content_type if report is not None else None,
         contact=contact_email(),
-        rules_url=f"{base}/{language or 'en'}/rules" if base and rule_ref else "",
+        rules_url=site_page_url(language, "rules") if rule_ref else "",
+        terms_url=site_page_url(language, "terms-of-service", "termination"),
     )
     return {
         "language": language or "en",

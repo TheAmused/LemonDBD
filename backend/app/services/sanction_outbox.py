@@ -21,6 +21,7 @@ from app.models.sanction import SanctionNotification, UserSanction
 from app.models.user import User
 from app.services.mail_service import send_sanction_email
 from app.services.sanction_email_texts import build_sanction_email
+from app.utils.site_urls import site_page_url
 from app.services.site_settings import contact_email, sanction_email_attempts
 
 logger = logging.getLogger(__name__)
@@ -104,7 +105,6 @@ def _build_content(notification: SanctionNotification, sanction: UserSanction, u
         report = db.session.get(ContentReport, sanction.report_id)
         if report is not None and report.status == "resolved_banned":
             content_type = report.content_type
-    base = str(current_app.config.get("FRONTEND_URL") or "").rstrip("/")
     return build_sanction_email(
         language,
         event=notification.event,
@@ -118,7 +118,8 @@ def _build_content(notification: SanctionNotification, sanction: UserSanction, u
         from_report=sanction.source == "content_report",
         content_type=content_type,
         contact=contact_email(),
-        rules_url=f"{base}/{language or 'en'}/rules" if base and sanction.rule_ref else "",
+        rules_url=site_page_url(language, "rules") if sanction.rule_ref else "",
+        terms_url=site_page_url(language, "terms-of-service", "termination"),
     )
 
 

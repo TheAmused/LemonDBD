@@ -19,7 +19,7 @@ export default {
     bannedBody: "モデレーターがこのアカウントを永久にBANしたため、ログインできません。",
     suspendedBody: "モデレーターがこのアカウントを{date}まで停止しました。その後は再びログインできます。",
     reasonLabel: "理由",
-    appealWithContact: "誤りだと思われる場合は、14日以内に{contact}までご連絡ください。担当者が決定を再確認します。",
+    appealWithContact: "誤りだと思われる場合は、6か月以内に{contact}までご連絡ください。担当者が決定を再確認します。",
     appealNoContact: "誤りだと思われる場合は、サイトの運営チームに連絡し、決定の再確認を依頼してください。",
     close: "閉じる",
   },

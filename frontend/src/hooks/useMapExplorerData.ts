@@ -17,6 +17,7 @@ export interface UseMapExplorerDataOptions {
   /** Called when a map opens by itself (a voice command or a `?mapName=` link), not from a card click. */
   onAutoOpen?: (map: MapRealm, via: 'voice' | 'link') => void;
   locale?: string;
+  source?: 'lemondbd' | 'hens333';
 }
 
 export function normalizeMapSearch(s: string): string {
@@ -79,12 +80,13 @@ export interface UseMapExplorerDataReturn {
 }
 
 export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): UseMapExplorerDataReturn {
-  const { initialMapName = '', selectedMap, onAvailableMapsLoaded, onAutoOpen, locale } = options;
+  const { initialMapName = '', selectedMap, onAvailableMapsLoaded, onAutoOpen, locale, source } = options;
+  const activeSource = source || 'lemondbd';
 
   // Seed straight from the cache during the first render. Waiting for the
   // effect below would repaint the spinner for a frame on every return visit,
   // even though the data is already in memory.
-  const cachedMaps = readCache<{ maps: MapRealm[] }>(mapsCacheKey('', 'hens333', undefined, locale))?.maps;
+  const cachedMaps = readCache<{ maps: MapRealm[] }>(mapsCacheKey('', activeSource, undefined, locale))?.maps;
 
   const [maps, setMaps] = useState<MapRealm[]>(cachedMaps ?? []);
   const [realmImages, setRealmImages] = useState<Record<string, Realm>>(() => {
@@ -111,6 +113,11 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
     onAutoOpenRef.current = onAutoOpen;
   }, [onAutoOpen]);
 
+  const mapsRef = useRef(maps);
+  useEffect(() => {
+    mapsRef.current = maps;
+  }, [maps]);
+
   // Below the minimum length there is no search at once; otherwise it settles after the debounce.
   const trimmedSearch = search.trim();
   const searchTooShort = trimmedSearch.length > 0 && trimmedSearch.length < SEARCH_MIN_CHARS;
@@ -126,16 +133,26 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
       try {
         // Only show the spinner when there is genuinely nothing to display;
         // a cached result should swap in without a loading flash.
-        if (readCache(mapsCacheKey('', 'hens333', undefined, locale)) === undefined) {
+        if (readCache(mapsCacheKey('', activeSource, undefined, locale)) === undefined) {
           setLoading(true);
         }
         // Fetch the full list once; filtering is done client-side (M4: backend only
         // searches the English name column, so non-English searches produce 0 results)
-        const data = await fetchMaps(undefined, '', 'hens333', locale);
+        const data = await fetchMaps(undefined, '', activeSource, locale);
         const loaded: MapRealm[] = data?.maps || [];
         if (!isCancelled) {
           setMaps(loaded);
           onAvailableMapsLoadedRef.current?.(loaded);
+          setOpenMapId((currentId) => {
+            if (currentId === null) return null;
+            if (loaded.some((m) => m.id === currentId)) return currentId;
+            const prevMap = mapsRef.current.find((m) => m.id === currentId);
+            if (prevMap) {
+              const matched = findMapByName(loaded, prevMap.raw_name || prevMap.name);
+              if (matched) return matched.id;
+            }
+            return null;
+          });
         }
       } catch (err) {
         logger.error('Failed loading maps:', err);
@@ -149,7 +166,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
     return () => {
       isCancelled = true;
     };
-  }, [locale]);
+  }, [locale, activeSource]);
 
   useEffect(() => {
     let isCancelled = false;

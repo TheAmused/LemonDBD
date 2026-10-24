@@ -1,9 +1,9 @@
 'use client';
 // frontend/src/components/maps/voice/VoiceBannerHeader.tsx
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
-import { Brain, Globe, Lock, Volume2, VolumeX } from 'lucide-react';
+import { Brain, Globe, Volume2, VolumeX } from 'lucide-react';
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from '@/context/DictionaryContext';
 import type { ModelProgressInfo, VoiceEngineType } from '@/services/clientSpeechModel';
@@ -11,7 +11,9 @@ import type { VoiceStatusConfigEntry } from './voiceStatusConfig';
 import type { VoiceCommandBannerProps } from './voiceTypes';
 
 import { Button } from '@/components/common/Button';
+import type { SegmentedControlOption } from '@/components/common/SegmentedControl';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
+
 interface VoiceBannerHeaderProps {
   activeEngine: VoiceEngineType;
   modelProgress: ModelProgressInfo;
@@ -21,10 +23,10 @@ interface VoiceBannerHeaderProps {
   setIsInfoModalOpen: Dispatch<SetStateAction<boolean>>;
   centerHeaderSlot?: React.ReactNode;
   currentSource: VoiceCommandBannerProps['currentSource'];
-  onSourceChange: VoiceCommandBannerProps['onSourceChange'];
+  onSourceChange?: VoiceCommandBannerProps['onSourceChange'];
 }
 
-/** Engine badge, sound toggle, optional centre slot and source switcher. */
+/** Engine badge, sound toggle, optional centre slot and interactive source switcher. */
 export function VoiceBannerHeader({
   activeEngine,
   modelProgress,
@@ -38,6 +40,24 @@ export function VoiceBannerHeader({
 }: VoiceBannerHeaderProps) {
   const dict = useDictionary();
   const rawVoiceDict = dict.voice;
+
+  const sourceOptions: readonly [
+    SegmentedControlOption<'hens333' | 'lemondbd'>,
+    SegmentedControlOption<'hens333' | 'lemondbd'>,
+  ] = useMemo(
+    () => [
+      {
+        value: 'lemondbd',
+        label: dict.maps.sourceLemonDbd,
+      },
+      {
+        value: 'hens333',
+        label: dict.maps.sourceHensClock,
+        shortLabel: dict.maps.sourceHens,
+      },
+    ],
+    [dict.maps.sourceLemonDbd, dict.maps.sourceHensClock, dict.maps.sourceHens]
+  );
 
   return (
     <div className="relative z-20 flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3 w-full mb-3">
@@ -125,16 +145,13 @@ export function VoiceBannerHeader({
           )}
         </Button>
 
-        <div
-          className="inline-flex items-center gap-1.5 rounded-full border border-border-color bg-bg-elevated px-2.5 py-1 text-xs text-text-secondary shadow-xs"
-        >
-          <span className="type-label-2xs text-text-muted">
-            {dict.maps.sourceLabel}
-          </span>
-          <span className="font-extrabold text-accent-red">
-            {dict.maps.sourceHens}
-          </span>
-        </div>
+        <SegmentedControl<'hens333' | 'lemondbd'>
+          ariaLabel={dict.maps.providerAria}
+          size="sm"
+          value={currentSource === 'hens333' ? 'hens333' : 'lemondbd'}
+          onChange={(source) => onSourceChange?.(source)}
+          options={sourceOptions}
+        />
       </div>
 
       {/* Desktop Right: Source switcher */}
@@ -145,19 +162,8 @@ export function VoiceBannerHeader({
             ariaLabel={dict.maps.providerAria}
             size="sm"
             value={currentSource === 'hens333' ? 'hens333' : 'lemondbd'}
-            onChange={(source) => {
-              if (source === 'hens333') onSourceChange?.('hens333');
-            }}
-            options={[
-              { value: 'hens333', label: dict.maps.sourceHensClock },
-              {
-                value: 'lemondbd',
-                label: dict.maps.sourceLemonDbd,
-                icon: <Lock className="h-3 w-3" aria-hidden="true" />,
-                disabled: true,
-                tooltip: { title: dict.maps.sourceLemonDbd, description: dict.maps.lemonDbdSourceLocked },
-              },
-            ]}
+            onChange={(source) => onSourceChange?.(source)}
+            options={sourceOptions}
           />
         </div>
       </div>

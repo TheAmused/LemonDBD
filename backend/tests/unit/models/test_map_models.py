@@ -1,3 +1,5 @@
+from pathlib import Path
+import json
 # backend/tests/unit/models/test_map_models.py
 """Unit tests for Map SQLAlchemy models: Realm, MapSource, and MapRealm."""
 import pytest
@@ -264,9 +266,6 @@ def test_map_realm_to_dict_exposes_english_names(db_session: Session) -> None:
 @pytest.mark.unit
 def test_localized_map_names_unique_per_locale_in_seed() -> None:
     """No two maps share the exact same localized name within any locale in maps seed files."""
-    import json
-    from pathlib import Path
-
     maps_dir = Path(__file__).resolve().parents[3] / "app" / "seeds" / "data" / "content" / "maps"
     for seed_name in ("lemondbd.json", "hens.json"):
         with open(maps_dir / seed_name, "r", encoding="utf-8") as f:

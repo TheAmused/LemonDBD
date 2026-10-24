@@ -7,6 +7,7 @@ import type { AttributeEvaluation, GuessRecord } from '@/types/minigame';
 import { staticUrl } from '@/utils/api';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Thumb } from '@/components/common/Thumb';
+import { isPerkType, type PerkType } from '@/utils/perkTypes';
 
 interface ClassicPerkGuesserProps {
   guesses: GuessRecord[];
@@ -61,7 +62,7 @@ export const ClassicPerkGuesser: React.FC<ClassicPerkGuesserProps> = ({ guesses 
 
                 <PerkAttrCell
                   evaluation={attrs.perk_types}
-                  value={formatPerkTypes(guess.perk_types)}
+                  value={formatPerkTypes(guess.perk_types, dict.perkTypes.labels)}
                   wrap
                 />
 
@@ -78,9 +79,9 @@ export const ClassicPerkGuesser: React.FC<ClassicPerkGuesserProps> = ({ guesses 
   );
 };
 
-/** "generator, aura" -- primary type first, the order the backend sends. */
-const formatPerkTypes = (types?: string[] | null): string =>
-  types && types.length > 0 ? types.join(', ') : 'General';
+/** "Generator, Aura" -- primary type first, the order the backend sends, in the UI language. */
+const formatPerkTypes = (types: string[] | null | undefined, labels: Readonly<Record<PerkType, string>>): string =>
+  types && types.length > 0 ? types.map((t) => (isPerkType(t) ? labels[t] : t)).join(', ') : labels.entity;
 
 // `wrap` lets a long value (several perk types) break onto lines instead of being cut off.
 const PerkAttrCell: React.FC<{ evaluation?: AttributeEvaluation; value?: string | null; wrap?: boolean }> = ({ evaluation, value, wrap = false }) => {

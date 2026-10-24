@@ -29,6 +29,7 @@ import errorPages from './errorPages';
 import scoreboardCheck from './scoreboardCheck';
 import validation from './validation';
 import moderation from './moderation';
+import perkTypes from './perkTypes';
 import type { Dictionary } from '../types';
 
 const de = {
@@ -62,6 +63,7 @@ const de = {
   scoreboardCheck,
   validation,
   moderation,
+  perkTypes,
 } satisfies Dictionary;
 
 export default de;

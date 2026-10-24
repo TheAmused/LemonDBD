@@ -1,8 +1,12 @@
 'use client';
 // frontend/src/components/perks/PerksClient.tsx
+//
+// The perk grid filters the full catalog in memory: the page already holds it
+// (the role and owned counts come from it), so search, type filters, sorting
+// and paging never wait on the network. The search understands perk types
+// ("healing", "gens", "type:chase") -- see utils/perkSearch.
 
-import { logger } from '@/utils/logger';
-import React, { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { Suspense, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 import { PerkFilters } from '@/components/PerkFilters';
@@ -25,49 +29,113 @@ import type {
 import { useImagePrefetch } from '@/components/common/ImagePreloadProvider';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useCatalogPerks } from '@/hooks/useCatalogPerks';
-import { catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
-import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
+import { usePerkTypeVocabulary } from '@/hooks/usePerkTypeVocabulary';
+import { isPerkType, perkTypesByRole, type PerkType } from '@/utils/perkTypes';
+import { parsePerkQuery } from '@/utils/perkSearch/parse';
+import { isGeneralPerk, roleOnlyConflict, searchPerks } from '@/utils/perkSearch/match';
+import { sortPerks } from '@/utils/perkSearch/sort';
+import { formatMessage } from '@/utils/i18nFormat';
+import { roleLabel, roleOnlyMessage } from '@/components/perks/roleOnlyMessage';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
 
-interface PerksResponse {
-  data?: Perk[];
-  pagination?: { total_pages: number; total: number };
+const DEFAULT_PERKS_PER_PAGE = 15;
+
+/** `?type=healing,chase` -> the known types, once each. */
+function parseTypeParam(value: string): PerkType[] {
+  return [...new Set(value.split(',').map((t) => t.trim().toLowerCase()).filter(isPerkType))];
 }
 
-const DEFAULT_PERKS_PER_PAGE = 15;
+/** Mirrors the type filters into the address bar so a filtered view can be shared. */
+function writeTypeParam(types: readonly PerkType[]): void {
+  const params = new URLSearchParams(window.location.search);
+  if (types.length > 0) params.set('type', types.join(','));
+  else params.delete('type');
+  const query = params.toString();
+  window.history.replaceState(null, '', `${window.location.pathname}${query ? `?${query}` : ''}`);
+}
 
 function PerksContent() {
   const searchParams = useSearchParams();
   const locale = useLocale() as Locale;
   const { user } = useAuth();
+  const dict = useDictionary();
+  const vocab = usePerkTypeVocabulary();
 
   const paramRole = searchParams ? searchParams.get('role') : null;
-
-  const dict = useDictionary();
-  const [perks, setPerks] = useState<Perk[]>([]);
+  const paramTypes = (searchParams ? searchParams.get('type') : null) ?? '';
 
   const [role, setRole] = useState<RoleCategory>(paramRole === 'Killer' ? 'Killer' : 'Survivor');
   const [scope, setScope] = useState<ScopeFilter>('all');
   const [ownershipFilter, setOwnershipFilter] = useState<OwnershipFilter>('all');
   const [search, setSearch] = useState<string>('');
-  const [debouncedSearch, setDebouncedSearch] = useState<string>('');
+  const [typeParam, setTypeParam] = useState<string>(paramTypes);
   const [sortBy, setSortBy] = useState<SortField>('name');
   const [order, setOrder] = useState<SortOrder>('asc');
-
-  useEffect(() => {
-    const id = setTimeout(() => setDebouncedSearch(search), SEARCH_DEBOUNCE_MS);
-    return () => clearTimeout(id);
-  }, [search]);
-
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(DEFAULT_PERKS_PER_PAGE);
-  const [totalPages, setTotalPages] = useState<number>(1);
-  const [totalResults, setTotalResults] = useState<number>(0);
-
-
   const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
+
+  const types = useMemo(() => parseTypeParam(typeParam), [typeParam]);
+  // Filtering ~320 perks is instant; deferring keeps typing smooth on slow phones anyway.
+  const deferredSearch = useDeferredValue(search);
+
+  useOnValueChange(paramRole, (next) => {
+    if (next === 'Killer' || next === 'Survivor') setRole(next);
+  });
+  useOnValueChange(paramTypes, (next) => setTypeParam(next));
+
+  const setTypes = useCallback((next: readonly PerkType[]) => {
+    setTypeParam(next.join(','));
+    setPage(1);
+    writeTypeParam(next);
+  }, []);
+  const addType = useCallback(
+    (type: PerkType) => {
+      if (!types.includes(type)) setTypes([...types, type]);
+    },
+    [types, setTypes]
+  );
+
+  // Shares its cache entry with the tier lists and the profile showcase.
+  const { perks: allPerksList, loading, error, refresh } = useCatalogPerks(locale);
+  const [retrying, setRetrying] = useState(false);
+
+  // The full catalog feeds the role counts.
+  const survivorCount = useMemo(() => allPerksList.filter((p) => p.category === 'Survivor').length, [allPerksList]);
+  const killerCount = useMemo(() => allPerksList.filter((p) => p.category === 'Killer').length, [allPerksList]);
+  const survivorOwnedCount = useMemo(
+    () => allPerksList.filter((p) => p.category === 'Survivor' && p.is_owned !== false).length,
+    [allPerksList]
+  );
+  const killerOwnedCount = useMemo(
+    () => allPerksList.filter((p) => p.category === 'Killer' && p.is_owned !== false).length,
+    [allPerksList]
+  );
+
+  const rolePerks = useMemo(() => allPerksList.filter((p) => p.category === role), [allPerksList, role]);
+  const query = useMemo(() => parsePerkQuery(deferredSearch, vocab), [deferredSearch, vocab]);
+  const ownedOnly = ownershipFilter === 'owned' && Boolean(user);
+
+  const sortedPerks = useMemo(() => {
+    const scoped = rolePerks.filter(
+      (p) => (scope !== 'general' || isGeneralPerk(p)) && (!ownedOnly || p.is_owned !== false)
+    );
+    const matched = searchPerks(scoped, query, types).map((hit) => hit.perk);
+    return sortPerks(matched, sortBy, order, locale);
+  }, [rolePerks, scope, ownedOnly, query, types, sortBy, order, locale]);
+
+  const totalResults = sortedPerks.length;
+  const totalPages = Math.max(1, Math.ceil(totalResults / limit));
+  const currentPage = Math.min(page, totalPages);
+  const perks = useMemo(
+    () => sortedPerks.slice((currentPage - 1) * limit, currentPage * limit),
+    [sortedPerks, currentPage, limit]
+  );
+
+  const typesByRole = useMemo(() => perkTypesByRole(allPerksList), [allPerksList]);
+  const conflict = totalResults === 0 ? roleOnlyConflict(query, types, role, typesByRole) : null;
 
   const [rowHeightPx, setRowHeightPx] = useState<number | null>(null);
   const gridResizeObserverRef = useRef<ResizeObserver | null>(null);
@@ -121,95 +189,24 @@ function PerksContent() {
     };
   }, []);
 
-  useOnValueChange(paramRole, (next) => {
-    if (next === 'Killer' || next === 'Survivor') setRole(next);
-  });
-
   const { prefetchPerkIcons } = useImagePrefetch();
-  const fetchSeqRef = useRef(0);
-
-  const [fetchError, setFetchError] = useState<string | null>(null);
-
-  const perksUrl = catalogKey('perks', {
-    page,
-    limit,
-    sort_by: sortBy,
-    order,
-    category: role,
-    lang: locale,
-    scope: scope === 'general' ? 'general' : undefined,
-    // Debounced: the list refetches once typing pauses, not on every keystroke.
-    search: debouncedSearch,
-    owned_only: ownershipFilter === 'owned' && user ? 'true' : undefined,
-    user_id: user?.id,
-  });
-  // The spinner shows only while there is nothing on screen yet for this request (or a retry runs).
-  const [settledUrl, setSettledUrl] = useState<string | null>(null);
-  const [retrying, setRetrying] = useState(false);
-  const loading = retrying || (settledUrl !== perksUrl && perks.length === 0);
-
-  /** Fetches one page of perks; only the newest request's answer is shown. */
-  const requestPerks = useCallback(
-    (url: string) => {
-      const requestId = ++fetchSeqRef.current;
-      const latest = () => requestId === fetchSeqRef.current;
-      return fetchCached<PerksResponse>(url, () => fetchJson(url))
-        .then(
-          (result) => {
-            if (!latest()) return;
-            const perkList = result.data || [];
-            setPerks(perkList);
-            prefetchPerkIcons(perkList);
-            if (result.pagination) {
-              setTotalPages(result.pagination.total_pages);
-              setTotalResults(result.pagination.total);
-            }
-            setFetchError(null);
-          },
-          (err: unknown) => {
-            logger.error('Failed fetching perks:', err);
-            if (latest()) setFetchError(err instanceof Error ? err.message : 'Failed fetching perks');
-          }
-        )
-        .finally(() => {
-          if (latest()) setSettledUrl(url);
-        });
-    },
-    [prefetchPerkIcons]
-  );
 
   useEffect(() => {
-    void requestPerks(perksUrl);
-  }, [perksUrl, requestPerks]);
-
-  const fetchPerks = async () => {
-    setRetrying(true);
-    setFetchError(null);
-    try {
-      await requestPerks(perksUrl);
-    } finally {
-      setRetrying(false);
-    }
-  };
-
-  // Shares its cache entry with the tier lists and the profile showcase.
-  const { perks: allPerksList } = useCatalogPerks(locale);
-
-  // The full catalog feeds the role counts (derived while rendering) and warms the first icons.
-  const survivorCount = useMemo(() => allPerksList.filter((p) => p.category === 'Survivor').length, [allPerksList]);
-  const killerCount = useMemo(() => allPerksList.filter((p) => p.category === 'Killer').length, [allPerksList]);
-  const survivorOwnedCount = useMemo(
-    () => allPerksList.filter((p) => p.category === 'Survivor' && p.is_owned !== false).length,
-    [allPerksList]
-  );
-  const killerOwnedCount = useMemo(
-    () => allPerksList.filter((p) => p.category === 'Killer' && p.is_owned !== false).length,
-    [allPerksList]
-  );
+    prefetchPerkIcons(perks);
+  }, [perks, prefetchPerkIcons]);
 
   useEffect(() => {
     if (allPerksList.length > 0) prefetchPerkIcons(allPerksList.slice(0, 60));
   }, [allPerksList, prefetchPerkIcons]);
+
+  const fetchPerks = async () => {
+    setRetrying(true);
+    try {
+      await refresh();
+    } finally {
+      setRetrying(false);
+    }
+  };
 
   const handleResetFilters = () => {
     setSearch('');
@@ -217,6 +214,7 @@ function PerksContent() {
     setOwnershipFilter('all');
     setSortBy('name');
     setOrder('asc');
+    setTypes([]);
     setPage(1);
   };
 
@@ -224,6 +222,8 @@ function PerksContent() {
     setRole(newRole);
     setPage(1);
   };
+
+  const fetchError = Boolean(error) && allPerksList.length === 0;
 
   return (
     <div className="relative z-10 flex h-full min-h-0 flex-col overflow-hidden gap-3 sm:gap-4">
@@ -251,7 +251,9 @@ function PerksContent() {
           order={order}
           setOrder={(o) => setOrder(o)}
           onReset={handleResetFilters}
-          locale={locale}
+          rolePerks={rolePerks}
+          activeTypes={types}
+          onTypesChange={setTypes}
           survivorCount={survivorCount}
           killerCount={killerCount}
           allCount={role === 'Survivor' ? survivorCount : killerCount}
@@ -261,7 +263,7 @@ function PerksContent() {
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
-        {fetchError && perks.length === 0 ? (
+        {fetchError ? (
           <div className="flex flex-col items-center justify-center gap-4 p-12 text-center my-auto">
             <p className="text-text-secondary text-base">{dict.filters.loadError}</p>
             <Button
@@ -272,8 +274,19 @@ function PerksContent() {
               {dict.modal.retry}
             </Button>
           </div>
-        ) : loading ? (
+        ) : loading || retrying ? (
           <PerksGridSkeleton />
+        ) : perks.length === 0 && conflict ? (
+          <EmptyState
+            variant="solid"
+            icon={SearchX}
+            iconClassName="mx-auto h-12 w-12 text-text-muted mb-3"
+            title={roleOnlyMessage(conflict, dict, locale)}
+            action={{
+              label: formatMessage(dict.perkTypes.switchRole, { role: roleLabel(conflict.role, dict) }, locale),
+              onClick: () => handleRoleChange(conflict.role),
+            }}
+          />
         ) : perks.length === 0 ? (
           <EmptyState
             variant="solid"
@@ -309,7 +322,7 @@ function PerksContent() {
       {!loading && perks.length > 0 && (
         <div className="shrink-0 w-full">
           <Pagination
-            page={page}
+            page={currentPage}
             totalPages={totalPages}
             totalResults={totalResults}
             limit={limit}
@@ -326,6 +339,11 @@ function PerksContent() {
         <PerkModal
           perk={selectedPerk}
           onClose={() => setSelectedPerk(null)}
+          activeTypes={types}
+          onSelectType={(type) => {
+            addType(type);
+            setSelectedPerk(null);
+          }}
         />
       )}
     </div>

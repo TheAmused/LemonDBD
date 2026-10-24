@@ -29,6 +29,7 @@ import errorPages from './errorPages';
 import scoreboardCheck from './scoreboardCheck';
 import validation from './validation';
 import moderation from './moderation';
+import perkTypes from './perkTypes';
 
 const en = {
   app,
@@ -61,6 +62,7 @@ const en = {
   scoreboardCheck,
   validation,
   moderation,
+  perkTypes,
 };
 
 export default en;

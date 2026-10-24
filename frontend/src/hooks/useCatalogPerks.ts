@@ -16,9 +16,12 @@ import { useOnValueChange } from '@/hooks/useOnValueChange';
  * catalog arrives, and a failed first load ends as an empty list rather than an
  * endless loading state.
  */
-export function useCatalogPerks(locale: string, enabled = true): { perks: Perk[]; loading: boolean } {
+export function useCatalogPerks(
+  locale: string,
+  enabled = true
+): { perks: Perk[]; loading: boolean; error: unknown; refresh: () => Promise<void> } {
   const key = catalogKey('perks', { limit: 1000, lang: locale });
-  const { data, loading, error } = useCachedData<ListPayload<Perk>>(key, () => fetchJson<ListPayload<Perk>>(key), {
+  const { data, loading, error, refresh } = useCachedData<ListPayload<Perk>>(key, () => fetchJson<ListPayload<Perk>>(key), {
     ttlMs: CATALOG_TTL_MS,
     enabled,
   });
@@ -31,5 +34,5 @@ export function useCatalogPerks(locale: string, enabled = true): { perks: Perk[]
   });
   const perks = loaded ?? lastLoaded;
 
-  return { perks, loading: loading && !error && perks.length === 0 };
+  return { perks, loading: loading && !error && perks.length === 0, error, refresh };
 }

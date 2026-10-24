@@ -9,7 +9,6 @@ import {
   getCharacterAvatarUrl,
   formatPerkSlug,
   normalizeSearchText,
-  matchesPerkSearch,
 } from '@/utils/perkUtils';
 import { staticUrl, sanitizeName, avatarUrlForCharacter, perkIconUrl } from '@/utils/staticUrl';
 
@@ -137,62 +136,3 @@ test('perkUtils: normalizeSearchText strips accents and converts to lowercase', 
   assert.strictEqual(normalizeSearchText('  Pośpiech  '), 'pospiech');
   assert.strictEqual(normalizeSearchText('DEAD HARD'), 'dead hard');
 });
-
-test('perkUtils: matchesPerkSearch correctly filters survivor and killer perks', () => {
-  const sprintBurst = {
-    id: 1,
-    name: 'Sprint Burst',
-    alternate_name: 'SB',
-    character: 'Meg Thomas',
-    category: 'Survivor',
-    description: 'Sprint at 150% speed',
-    icon_url: '',
-    icon_local_path: '',
-  };
-
-  const hexRuin = {
-    id: 2,
-    name: 'Hex: Ruin',
-    alternate_name: 'Ruin',
-    character: 'The Hag',
-    character_real_name: 'Lisa Sherwood',
-    category: 'Killer',
-    description: 'All generators regress',
-    icon_url: '',
-    icon_local_path: '',
-  };
-
-  const generalPerk = {
-    id: 3,
-    name: 'Spine Chill',
-    character: 'General',
-    category: 'Survivor',
-    description: 'An unnatural tingle warns you',
-    icon_url: '',
-    icon_local_path: '',
-  };
-
-  // Match by perk name
-  assert.strictEqual(matchesPerkSearch(sprintBurst, 'sprint', 'Survivor'), true);
-  assert.strictEqual(matchesPerkSearch(hexRuin, 'ruin', 'Killer'), true);
-
-  // Match by character name
-  assert.strictEqual(matchesPerkSearch(sprintBurst, 'meg', 'Survivor'), true);
-  assert.strictEqual(matchesPerkSearch(hexRuin, 'hag', 'Killer'), true);
-
-  // Match by character real name
-  assert.strictEqual(matchesPerkSearch(hexRuin, 'sherwood', 'Killer'), true);
-
-  // Match by alternate name
-  assert.strictEqual(matchesPerkSearch(sprintBurst, 'sb', 'Survivor'), true);
-
-  // Match general perk by "general"
-  assert.strictEqual(matchesPerkSearch(generalPerk, 'general', 'Survivor'), true);
-
-  // Respect role filtering
-  assert.strictEqual(matchesPerkSearch(sprintBurst, 'sprint', 'Killer'), false);
-  assert.strictEqual(matchesPerkSearch(hexRuin, 'ruin', 'Survivor'), false);
-
-  // Mismatch returns false
-  assert.strictEqual(matchesPerkSearch(sprintBurst, 'barbecue', 'Survivor'), false);
-});

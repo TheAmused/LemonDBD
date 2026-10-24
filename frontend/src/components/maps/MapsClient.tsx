@@ -17,6 +17,7 @@ import { usePersistentString } from '@/hooks/usePersistentString';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 const isValidSearchMode = (v: string): v is 'text' | 'voice' => v === 'text' || v === 'voice';
+const isValidMapSource = (v: string): v is 'lemondbd' | 'hens333' => v === 'lemondbd' || v === 'hens333';
 
 const VoiceCommandBanner = dynamic(
   () => import('@/components/maps/VoiceCommandBanner').then((m) => m.VoiceCommandBanner),
@@ -32,6 +33,7 @@ function MapsClientInner() {
   const initialMapName = searchParams?.get('mapName') || '';
 
   const [searchMode, setSearchMode] = usePersistentString('lemondbd_maps_search_mode', 'text', isValidSearchMode);
+  const [mapSource, setMapSource] = usePersistentString<'lemondbd' | 'hens333'>('lemondbd_maps_source', 'lemondbd', isValidMapSource);
 
   const [availableMaps, setAvailableMaps] = useState<MapRealm[]>([]);
   const [selectedMap, setSelectedMap] = useState<{
@@ -94,11 +96,19 @@ function MapsClientInner() {
     [searchMode, setSearchMode, dict.maps.searchModeAria, searchModeOptions]
   );
 
+  const handleSourceChange = useCallback(
+    (src: 'all' | 'lemondbd' | 'hens333' | 'samoelcolt') => {
+      setMapSource(src === 'hens333' ? 'hens333' : 'lemondbd');
+    },
+    [setMapSource]
+  );
+
   const voiceBanner = useMemo(
     () => (
       <VoiceCommandBanner
         locale={locale}
-        currentSource="hens333"
+        currentSource={mapSource}
+        onSourceChange={handleSourceChange}
         onSelectMap={handleSelectMap}
         onAction={handleAction}
         availableMaps={availableMaps}
@@ -107,7 +117,7 @@ function MapsClientInner() {
         embedded={true}
       />
     ),
-    [locale, handleSelectMap, handleAction, availableMaps, searchMode, toggleSwitchElement]
+    [locale, mapSource, handleSourceChange, handleSelectMap, handleAction, availableMaps, searchMode, toggleSwitchElement]
   );
 
   return (
@@ -120,6 +130,8 @@ function MapsClientInner() {
         }}
         backendBase={backendBase}
         locale={locale}
+        source={mapSource}
+        onSourceChange={setMapSource}
         hideSearch={searchMode === 'voice'}
         voiceSlot={voiceBanner}
         modeSwitcherSlot={toggleSwitchElement}

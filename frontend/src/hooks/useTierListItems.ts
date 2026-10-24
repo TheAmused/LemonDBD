@@ -40,7 +40,7 @@ function sourceFor(kind: TierListKind | undefined): CatalogSource {
  * with no request at all, and vice versa:
  *   perks      -> `perks?lang=&limit=1000`  (user/MainCard)
  *   characters -> `characters?lang=`        (CharactersHub, character detail)
- *   maps       -> `maps?lang=&source=hens333` (MapExplorer)
+ *   maps       -> `maps?lang=&source=lemondbd` (MapExplorer)
  */
 function keyFor(source: CatalogSource, lang: string): string | null {
   switch (source) {

@@ -1,6 +1,6 @@
 import { MAP_VARIANT_GROUPS } from '@/utils/mapVoiceData';
 
-export type MapSource = 'all' | 'hens333' | 'samoelcolt';
+export type MapSource = 'all' | 'lemondbd' | 'hens333' | 'samoelcolt';
 
 export interface MatchResult {
   matchedMapName: string;
@@ -370,11 +370,11 @@ export function createMapMatchResult(
     }
 
     if (!found) {
-      // Find matching map from any source, prioritizing hens333 then samoelcolt
+      // Find matching map from any source, prioritizing our own (lemondbd)
       found = allMaps.find(
         (m) =>
           normalizeForComparison(m.name) === targetNorm &&
-          m.source?.toLowerCase() === 'hens333'
+          m.source?.toLowerCase() === 'lemondbd'
       );
     }
 

@@ -7,6 +7,7 @@ import type { MapRealm } from '@/types/map';
 import { getMapThumbSrc } from '@/utils/mapUtils';
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
+import { MapLayoutView } from '@/components/maps/MapLayoutView';
 
 export interface MapCardProps {
   map: MapRealm;
@@ -25,7 +26,9 @@ export const MapCard: React.FC<MapCardProps> = ({ map, backendBase, onSelect }) 
       data-testid={`map-card-${map.id}`}
     >
       <div className="h-24 w-24 sm:h-36 sm:w-36 md:h-40 md:w-40 overflow-hidden rounded-card bg-bg-elevated flex items-center justify-center">
-        {imageSrc && !imageFailed ? (
+        {map.layout ? (
+          <MapLayoutView layout={map.layout} title={map.name} variant="thumb" className="h-full w-full" />
+        ) : imageSrc && !imageFailed ? (
           <Img
             src={imageSrc}
             alt={map.name}

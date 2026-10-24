@@ -291,7 +291,10 @@ def _import_maps(
                 if not name:
                     continue
                 map_obj = db.session.scalar(
-                    select(MapRealm).where(MapRealm.name == name)
+                    select(MapRealm).where(
+                        MapRealm.name == name,
+                        MapRealm.source_id == mdata.get("source_id"),
+                    )
                 )
             if not map_obj:
                 map_obj = MapRealm(
@@ -311,7 +314,7 @@ def _import_maps(
                 "callout_image_url", "callout_image_local_path", "translations",
                 "layout_type", "pallet_density", "jungle_gyms_count",
                 "is_shack", "is_main_building",
-                "size_sq_tiles", "size_sq_meters",
+                "size_sq_tiles", "size_sq_meters", "layout",
             ]:
                 if k in mdata:
                     setattr(map_obj, k, mdata[k])

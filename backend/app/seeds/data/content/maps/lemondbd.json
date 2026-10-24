@@ -1,0 +1,6636 @@
+{
+  "version": "3.1",
+  "exported_at": "2026-09-14T10:00:00.000000+00:00",
+  "source": "LemonDBD",
+  "target": "maps",
+  "maps": [
+    {
+      "id": 1,
+      "name": "Azarov's Resting Place",
+      "realm_id": 2,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 176.0,
+      "size_sq_meters": 11264,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 144,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  16,
+                  0
+                ],
+                [
+                  80,
+                  0
+                ],
+                [
+                  80,
+                  16
+                ],
+                [
+                  96,
+                  16
+                ],
+                [
+                  96,
+                  48
+                ],
+                [
+                  80,
+                  48
+                ],
+                [
+                  80,
+                  64
+                ],
+                [
+                  64,
+                  64
+                ],
+                [
+                  64,
+                  80
+                ],
+                [
+                  96,
+                  80
+                ],
+                [
+                  96,
+                  128
+                ],
+                [
+                  80,
+                  128
+                ],
+                [
+                  80,
+                  144
+                ],
+                [
+                  16,
+                  144
+                ],
+                [
+                  16,
+                  128
+                ],
+                [
+                  0,
+                  128
+                ],
+                [
+                  0,
+                  96
+                ],
+                [
+                  16,
+                  96
+                ],
+                [
+                  16,
+                  80
+                ],
+                [
+                  32,
+                  80
+                ],
+                [
+                  32,
+                  64
+                ],
+                [
+                  0,
+                  64
+                ],
+                [
+                  0,
+                  16
+                ],
+                [
+                  16,
+                  16
+                ]
+              ]
+            ],
+            "blocked": [
+              [
+                [
+                  80,
+                  48
+                ],
+                [
+                  96,
+                  48
+                ],
+                [
+                  96,
+                  80
+                ],
+                [
+                  64,
+                  80
+                ],
+                [
+                  64,
+                  64
+                ],
+                [
+                  80,
+                  64
+                ]
+              ],
+              [
+                [
+                  0,
+                  64
+                ],
+                [
+                  32,
+                  64
+                ],
+                [
+                  32,
+                  80
+                ],
+                [
+                  16,
+                  80
+                ],
+                [
+                  16,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ]
+              ]
+            ],
+            "area_m2": 11264,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 46.5,
+                "y": 125.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 48.0,
+                "y": 18.0,
+                "w": 24,
+                "h": 24,
+                "est": true
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Azarov's Resting Place (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Azarovs%20Resting%20Place.webp",
+      "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/azarovs_resting_place.webp",
+      "translations": {
+        "de": {
+          "name": "Azarovs Ruhestätte"
+        },
+        "es": {
+          "name": "Lugar de Descanso de Azarov"
+        },
+        "ja": {
+          "name": "アザロフの休憩所"
+        },
+        "pl": {
+          "name": "Miejsce Spoczynku Azarova"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "name": "Blood Lodge",
+      "realm_id": 2,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "High",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 156.0,
+      "size_sq_meters": 9984,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  16
+                ],
+                [
+                  112,
+                  16
+                ],
+                [
+                  112,
+                  96
+                ],
+                [
+                  16,
+                  96
+                ],
+                [
+                  16,
+                  64
+                ],
+                [
+                  0,
+                  64
+                ]
+              ]
+            ],
+            "area_m2": 9984,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 96.0,
+                "y": 69.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 53.0,
+                "y": 47.0,
+                "w": 24,
+                "h": 24,
+                "est": true
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Blood Lodge (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Blood%20Lodge.webp",
+      "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/blood_lodge.webp",
+      "translations": {
+        "de": {
+          "name": "Bluthütte"
+        },
+        "es": {
+          "name": "Cabaña de Sangre"
+        },
+        "ja": {
+          "name": "ブラッド・ロッジ"
+        },
+        "pl": {
+          "name": "Krwawa Stróżówka"
+        }
+      }
+    },
+    {
+      "id": 3,
+      "name": "Gas Heaven",
+      "realm_id": 2,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 156.0,
+      "size_sq_meters": 9984,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  16,
+                  0
+                ],
+                [
+                  112,
+                  0
+                ],
+                [
+                  112,
+                  64
+                ],
+                [
+                  96,
+                  64
+                ],
+                [
+                  96,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ],
+                [
+                  0,
+                  16
+                ],
+                [
+                  16,
+                  16
+                ]
+              ]
+            ],
+            "area_m2": 9984,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 33.0,
+                "y": 80.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 62.0,
+                "y": 25.0,
+                "w": 33,
+                "h": 26
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Gas Heaven (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Gas%20Heaven.webp",
+      "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/gas_heaven.webp",
+      "translations": {
+        "de": {
+          "name": "Sprithimmel"
+        },
+        "es": {
+          "name": "Gasolinera"
+        },
+        "ja": {
+          "name": "ガス・ヘヴン"
+        },
+        "pl": {
+          "name": "Stacja Paliw"
+        }
+      }
+    },
+    {
+      "id": 4,
+      "name": "Wreckers' Yard",
+      "realm_id": 2,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Low",
+      "jungle_gyms_count": 3,
+      "is_shack": true,
+      "is_main_building": false,
+      "size_sq_tiles": 144.0,
+      "size_sq_meters": 9216,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 128,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  32,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  32
+                ],
+                [
+                  128,
+                  32
+                ],
+                [
+                  128,
+                  64
+                ],
+                [
+                  112,
+                  64
+                ],
+                [
+                  112,
+                  80
+                ],
+                [
+                  96,
+                  80
+                ],
+                [
+                  96,
+                  96
+                ],
+                [
+                  16,
+                  96
+                ],
+                [
+                  16,
+                  64
+                ],
+                [
+                  0,
+                  64
+                ],
+                [
+                  0,
+                  32
+                ],
+                [
+                  16,
+                  32
+                ],
+                [
+                  16,
+                  16
+                ],
+                [
+                  32,
+                  16
+                ]
+              ]
+            ],
+            "area_m2": 9216,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 64.0,
+                "y": 47.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Wreckers' Yard (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Wreckers.webp",
+      "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/wreckers_yard.webp",
+      "translations": {
+        "de": {
+          "name": "Schrottplatz"
+        },
+        "es": {
+          "name": "Desguace"
+        },
+        "ja": {
+          "name": "レッカーズ・ヤード"
+        },
+        "pl": {
+          "name": "Podwórze Złomowiska"
+        }
+      }
+    },
+    {
+      "id": 5,
+      "name": "Wretched Shop",
+      "realm_id": 2,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 164.0,
+      "size_sq_meters": 10496,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  32,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  16
+                ],
+                [
+                  112,
+                  16
+                ],
+                [
+                  112,
+                  80
+                ],
+                [
+                  96,
+                  80
+                ],
+                [
+                  96,
+                  96
+                ],
+                [
+                  80,
+                  96
+                ],
+                [
+                  80,
+                  112
+                ],
+                [
+                  16,
+                  112
+                ],
+                [
+                  16,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ],
+                [
+                  0,
+                  32
+                ],
+                [
+                  16,
+                  32
+                ],
+                [
+                  16,
+                  16
+                ],
+                [
+                  32,
+                  16
+                ]
+              ]
+            ],
+            "area_m2": 10496,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 84.0,
+                "y": 33.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 29.0,
+                "y": 71.0,
+                "w": 24,
+                "h": 24,
+                "est": true
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Wretched Shop (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Wretched%20Shop.webp",
+      "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/wretched_shop.webp",
+      "translations": {
+        "de": {
+          "name": "Werkstatt"
+        },
+        "es": {
+          "name": "Taller Ruinoso"
+        },
+        "ja": {
+          "name": "レッチド・ショップ"
+        },
+        "pl": {
+          "name": "Sklep Nędzy"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "name": "Preschool I",
+      "realm_id": 9,
+      "source_id": 2,
+      "layout_type": "Hybrid",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 2,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 144.0,
+      "size_sq_meters": 9216,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ]
+              ]
+            ],
+            "area_m2": 9216,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 81.0,
+                "y": 76.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 30.0,
+                "y": 74.5,
+                "label": "H/FB",
+                "w": 42,
+                "h": 20
+              },
+              {
+                "kind": "main",
+                "x": 30.5,
+                "y": 28.0,
+                "w": 42,
+                "h": 40
+              },
+              {
+                "kind": "feature",
+                "x": 78.5,
+                "y": 27.5,
+                "label": "H/FB",
+                "w": 22,
+                "h": 39
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Preschool I (Springwood). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool1.webp",
+      "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_i.webp",
+      "translations": {
+        "de": {
+          "name": "Badham-Vorschule I"
+        },
+        "es": {
+          "name": "Guardería Badham I"
+        },
+        "ja": {
+          "name": "バダム幼稚園 I"
+        },
+        "pl": {
+          "name": "Przedszkole w Badham I"
+        }
+      }
+    },
+    {
+      "id": 7,
+      "name": "Preschool II",
+      "realm_id": 9,
+      "source_id": 2,
+      "layout_type": "Hybrid",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 2,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 144.0,
+      "size_sq_meters": 9216,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ]
+              ]
+            ],
+            "area_m2": 9216,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 50.0,
+                "y": 77.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 16.0,
+                "y": 71.0,
+                "label": "H/FB",
+                "w": 14,
+                "h": 25
+              },
+              {
+                "kind": "feature",
+                "x": 80.5,
+                "y": 71.0,
+                "label": "H/FB",
+                "w": 14,
+                "h": 25
+              },
+              {
+                "kind": "main",
+                "x": 49.5,
+                "y": 28.0,
+                "w": 42,
+                "h": 40
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Preschool II (Springwood). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool2.webp",
+      "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_ii.webp",
+      "translations": {
+        "de": {
+          "name": "Badham-Vorschule II"
+        },
+        "es": {
+          "name": "Guardería Badham II"
+        },
+        "ja": {
+          "name": "バダム幼稚園 II"
+        },
+        "pl": {
+          "name": "Przedszkole w Badham II"
+        }
+      }
+    },
+    {
+      "id": 8,
+      "name": "Preschool III",
+      "realm_id": 9,
+      "source_id": 2,
+      "layout_type": "Hybrid",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 2,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 144.0,
+      "size_sq_meters": 9216,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ]
+              ]
+            ],
+            "area_m2": 9216,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 81.5,
+                "y": 75.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 39.5,
+                "y": 75.0,
+                "label": "H/FB",
+                "w": 30,
+                "h": 14
+              },
+              {
+                "kind": "feature",
+                "x": 80.5,
+                "y": 35.5,
+                "label": "H/FB",
+                "w": 16,
+                "h": 28
+              },
+              {
+                "kind": "main",
+                "x": 33.5,
+                "y": 36.0,
+                "w": 45,
+                "h": 29
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Preschool III (Springwood). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool3.webp",
+      "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_iii.webp",
+      "translations": {
+        "de": {
+          "name": "Badham-Vorschule III"
+        },
+        "es": {
+          "name": "Guardería Badham III"
+        },
+        "ja": {
+          "name": "バダム幼稚園 III"
+        },
+        "pl": {
+          "name": "Przedszkole w Badham III"
+        }
+      }
+    },
+    {
+      "id": 9,
+      "name": "Preschool IV",
+      "realm_id": 9,
+      "source_id": 2,
+      "layout_type": "Hybrid",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 2,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 140.0,
+      "size_sq_meters": 8960,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 128,
+        "height_m": 80,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  48,
+                  0
+                ],
+                [
+                  112,
+                  0
+                ],
+                [
+                  112,
+                  16
+                ],
+                [
+                  128,
+                  16
+                ],
+                [
+                  128,
+                  64
+                ],
+                [
+                  112,
+                  64
+                ],
+                [
+                  112,
+                  80
+                ],
+                [
+                  0,
+                  80
+                ],
+                [
+                  0,
+                  16
+                ],
+                [
+                  48,
+                  16
+                ]
+              ]
+            ],
+            "area_m2": 8960,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 115.0,
+                "y": 27.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 73.5,
+                "y": 17.0,
+                "label": "H/FB",
+                "w": 35,
+                "h": 20
+              },
+              {
+                "kind": "feature",
+                "x": 73.5,
+                "y": 60.5,
+                "label": "H/FB",
+                "w": 35,
+                "h": 20
+              },
+              {
+                "kind": "main",
+                "x": 25.5,
+                "y": 47.0,
+                "w": 32,
+                "h": 48
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Preschool IV (Springwood). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool4.webp",
+      "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_iiiv.webp",
+      "translations": {
+        "de": {
+          "name": "Badham-Vorschule IV"
+        },
+        "es": {
+          "name": "Guardería Badham IV"
+        },
+        "ja": {
+          "name": "バダム幼稚園 IV"
+        },
+        "pl": {
+          "name": "Przedszkole w Badham IV"
+        }
+      }
+    },
+    {
+      "id": 10,
+      "name": "Preschool V",
+      "realm_id": 9,
+      "source_id": 2,
+      "layout_type": "Hybrid",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 2,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 148.0,
+      "size_sq_meters": 9472,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 128,
+        "height_m": 80,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  32,
+                  0
+                ],
+                [
+                  128,
+                  0
+                ],
+                [
+                  128,
+                  64
+                ],
+                [
+                  112,
+                  64
+                ],
+                [
+                  112,
+                  80
+                ],
+                [
+                  0,
+                  80
+                ],
+                [
+                  0,
+                  16
+                ],
+                [
+                  32,
+                  16
+                ]
+              ]
+            ],
+            "area_m2": 9472,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 48.5,
+                "y": 14.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 92.0,
+                "y": 15.5,
+                "label": "H/FB",
+                "w": 31,
+                "h": 18
+              },
+              {
+                "kind": "feature",
+                "x": 25.5,
+                "y": 48.0,
+                "label": "H/FB",
+                "w": 31,
+                "h": 18
+              },
+              {
+                "kind": "main",
+                "x": 82.0,
+                "y": 56.0,
+                "w": 42,
+                "h": 28
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Preschool V (Springwood). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool5.webp",
+      "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_v.webp",
+      "translations": {
+        "de": {
+          "name": "Badham-Vorschule V"
+        },
+        "es": {
+          "name": "Guardería Badham V"
+        },
+        "ja": {
+          "name": "バダム幼稚園 V"
+        },
+        "pl": {
+          "name": "Przedszkole w Badham V"
+        }
+      }
+    },
+    {
+      "id": 11,
+      "name": "Fractured Cowshed",
+      "realm_id": 3,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "High",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 152.0,
+      "size_sq_meters": 9728,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  80
+                ],
+                [
+                  80,
+                  80
+                ],
+                [
+                  80,
+                  96
+                ],
+                [
+                  48,
+                  96
+                ],
+                [
+                  48,
+                  112
+                ],
+                [
+                  0,
+                  112
+                ]
+              ]
+            ],
+            "area_m2": 9728,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 15.0,
+                "y": 97.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 51.0,
+                "y": 39.0,
+                "w": 22,
+                "h": 22
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Fractured Cowshed (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Fractured%20Cowshed.webp",
+      "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/fractured_cowshed.webp",
+      "translations": {
+        "de": {
+          "name": "Verfallener Kuhstall"
+        },
+        "es": {
+          "name": "Establo en Ruinas"
+        },
+        "ja": {
+          "name": "フラクチャード・カウシェッド"
+        },
+        "pl": {
+          "name": "Spękana Obora"
+        }
+      }
+    },
+    {
+      "id": 12,
+      "name": "Rancid Abbatoir",
+      "realm_id": 3,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 3,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 140.0,
+      "size_sq_meters": 8960,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  64,
+                  0
+                ],
+                [
+                  112,
+                  0
+                ],
+                [
+                  112,
+                  80
+                ],
+                [
+                  80,
+                  80
+                ],
+                [
+                  80,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ],
+                [
+                  0,
+                  32
+                ],
+                [
+                  16,
+                  32
+                ],
+                [
+                  16,
+                  16
+                ],
+                [
+                  64,
+                  16
+                ]
+              ]
+            ],
+            "area_m2": 8960,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 98.0,
+                "y": 67.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 58.0,
+                "y": 33.5,
+                "w": 40,
+                "h": 20
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Rancid Abbatoir (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Rancid%20Abbatoir.webp",
+      "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/rancid_abbatoir.webp",
+      "translations": {
+        "de": {
+          "name": "Widerliches Schlachthaus"
+        },
+        "es": {
+          "name": "Matadero Pestilente"
+        },
+        "ja": {
+          "name": "ランシッド・アバトワー"
+        },
+        "pl": {
+          "name": "Zjęłczała Rzeźnia"
+        }
+      }
+    },
+    {
+      "id": 13,
+      "name": "Rotten Fields",
+      "realm_id": 3,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Low",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": false,
+      "size_sq_tiles": 160.0,
+      "size_sq_meters": 10240,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 128,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  16,
+                  0
+                ],
+                [
+                  64,
+                  0
+                ],
+                [
+                  64,
+                  16
+                ],
+                [
+                  80,
+                  16
+                ],
+                [
+                  80,
+                  32
+                ],
+                [
+                  96,
+                  32
+                ],
+                [
+                  96,
+                  112
+                ],
+                [
+                  80,
+                  112
+                ],
+                [
+                  80,
+                  128
+                ],
+                [
+                  32,
+                  128
+                ],
+                [
+                  32,
+                  112
+                ],
+                [
+                  16,
+                  112
+                ],
+                [
+                  16,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ],
+                [
+                  0,
+                  16
+                ],
+                [
+                  16,
+                  16
+                ]
+              ]
+            ],
+            "area_m2": 10240,
+            "landmarks": [
+              {
+                "kind": "feature",
+                "x": 34.0,
+                "y": 91.5,
+                "label": "C|H"
+              },
+              {
+                "kind": "shack",
+                "x": 48.0,
+                "y": 61.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 64.5,
+                "y": 33.0,
+                "label": "C|H"
+              },
+              {
+                "kind": "feature",
+                "x": 17.5,
+                "y": 30.0,
+                "label": "C|H"
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Rotten Fields (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Rotten%20Fields.webp",
+      "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/rotten_fields.webp",
+      "translations": {
+        "de": {
+          "name": "Faulige Felder"
+        },
+        "es": {
+          "name": "Campos Podridos"
+        },
+        "ja": {
+          "name": "ロトン・フィールズ"
+        },
+        "pl": {
+          "name": "Zbutwiałe Pola"
+        }
+      }
+    },
+    {
+      "id": 14,
+      "name": "The Thompson House",
+      "realm_id": 3,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 3,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 152.0,
+      "size_sq_meters": 9728,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  112,
+                  0
+                ],
+                [
+                  112,
+                  48
+                ],
+                [
+                  96,
+                  48
+                ],
+                [
+                  96,
+                  112
+                ],
+                [
+                  64,
+                  112
+                ],
+                [
+                  64,
+                  96
+                ],
+                [
+                  16,
+                  96
+                ],
+                [
+                  16,
+                  48
+                ],
+                [
+                  0,
+                  48
+                ]
+              ]
+            ],
+            "area_m2": 9728,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 80.0,
+                "y": 98.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 41.5,
+                "y": 82.0,
+                "label": "C|H"
+              },
+              {
+                "kind": "main",
+                "x": 56.0,
+                "y": 25.5,
+                "w": 30,
+                "h": 30
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for The Thompson House (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/The%20Thompson%20House.webp",
+      "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/the_thompson_house.webp",
+      "translations": {
+        "de": {
+          "name": "Das Thompson-Haus"
+        },
+        "es": {
+          "name": "La Casa de los Thompson"
+        },
+        "ja": {
+          "name": "トンプソン・ハウス"
+        },
+        "pl": {
+          "name": "Dom Thompsona"
+        }
+      }
+    },
+    {
+      "id": 15,
+      "name": "Torment Creek",
+      "realm_id": 3,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 156.0,
+      "size_sq_meters": 9984,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  16,
+                  0
+                ],
+                [
+                  112,
+                  0
+                ],
+                [
+                  112,
+                  80
+                ],
+                [
+                  96,
+                  80
+                ],
+                [
+                  96,
+                  96
+                ],
+                [
+                  16,
+                  96
+                ],
+                [
+                  16,
+                  80
+                ],
+                [
+                  0,
+                  80
+                ],
+                [
+                  0,
+                  16
+                ],
+                [
+                  16,
+                  16
+                ]
+              ]
+            ],
+            "area_m2": 9984,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 27.5,
+                "y": 69.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 83.5,
+                "y": 40.0,
+                "w": 28,
+                "h": 28
+              }
+            ]
+          }
+        ],
+        "landmarks_approx": true
+      },
+      "description": "12-Clock Callout System for Torment Creek (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Torment%20Creek.webp",
+      "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/torment_creek.webp",
+      "translations": {
+        "de": {
+          "name": "Tal der Qual"
+        },
+        "es": {
+          "name": "Arroyo del Tormento"
+        },
+        "ja": {
+          "name": "トーメント・クリーク"
+        },
+        "pl": {
+          "name": "Przełęcz Udręki"
+        }
+      }
+    },
+    {
+      "id": 16,
+      "name": "Disturbed Ward",
+      "realm_id": 4,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "High",
+      "jungle_gyms_count": 5,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 152.0,
+      "size_sq_meters": 9728,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  16,
+                  0
+                ],
+                [
+                  64,
+                  0
+                ],
+                [
+                  64,
+                  16
+                ],
+                [
+                  80,
+                  16
+                ],
+                [
+                  80,
+                  32
+                ],
+                [
+                  112,
+                  32
+                ],
+                [
+                  112,
+                  64
+                ],
+                [
+                  96,
+                  64
+                ],
+                [
+                  96,
+                  96
+                ],
+                [
+                  64,
+                  96
+                ],
+                [
+                  64,
+                  112
+                ],
+                [
+                  0,
+                  112
+                ],
+                [
+                  0,
+                  16
+                ],
+                [
+                  16,
+                  16
+                ]
+              ]
+            ],
+            "area_m2": 9728,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 80.0,
+                "y": 78.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 41.0,
+                "y": 53.0,
+                "w": 37,
+                "h": 37
+              },
+              {
+                "kind": "feature",
+                "x": 39.5,
+                "y": 22.0,
+                "label": "GARDEN"
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Disturbed Ward (Crotus Prenn Asylum). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Crotus%20Pen/Disturbed%20Ward.webp",
+      "callout_image_local_path": "maps/callouts/hens333/disturbed_ward/disturbed_ward.webp",
+      "translations": {
+        "de": {
+          "name": "Gestörtenabteilung"
+        },
+        "es": {
+          "name": "Sala de Trastornados"
+        },
+        "ja": {
+          "name": "ディスターブド・ウォード"
+        },
+        "pl": {
+          "name": "Niespokojny Oddział"
+        }
+      }
+    },
+    {
+      "id": 17,
+      "name": "Father Campbells Chapel",
+      "realm_id": 4,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 3,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 140.0,
+      "size_sq_meters": 8960,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 128,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  32,
+                  0
+                ],
+                [
+                  80,
+                  0
+                ],
+                [
+                  80,
+                  16
+                ],
+                [
+                  96,
+                  16
+                ],
+                [
+                  96,
+                  96
+                ],
+                [
+                  80,
+                  96
+                ],
+                [
+                  80,
+                  112
+                ],
+                [
+                  64,
+                  112
+                ],
+                [
+                  64,
+                  128
+                ],
+                [
+                  16,
+                  128
+                ],
+                [
+                  16,
+                  112
+                ],
+                [
+                  0,
+                  112
+                ],
+                [
+                  0,
+                  80
+                ],
+                [
+                  16,
+                  80
+                ],
+                [
+                  16,
+                  48
+                ],
+                [
+                  32,
+                  48
+                ]
+              ]
+            ],
+            "area_m2": 8960,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 28.5,
+                "y": 117.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 57.0,
+                "y": 64.5,
+                "w": 32,
+                "h": 32
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Father Campbells Chapel (Crotus Prenn Asylum). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Crotus%20Pen/Father%20Campbells%20Chapel.webp",
+      "callout_image_local_path": "maps/callouts/hens333/disturbed_ward/father_campbells_chapel.webp",
+      "translations": {
+        "de": {
+          "name": "Pater Campbells Kapelle"
+        },
+        "es": {
+          "name": "Capilla del Padre Campbell"
+        },
+        "ja": {
+          "name": "ファザー・キャンベルズ・チャペル"
+        },
+        "pl": {
+          "name": "Kaplica Ojca Campbella"
+        }
+      }
+    },
+    {
+      "id": 18,
+      "name": "Shattered Square",
+      "realm_id": 19,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "High",
+      "jungle_gyms_count": 3,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 144.0,
+      "size_sq_meters": 9216,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ]
+              ]
+            ],
+            "area_m2": 9216,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 13.5,
+                "y": 83.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 75.5,
+                "y": 20.5,
+                "w": 21,
+                "h": 17
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Shattered Square (The Decimated Borgo). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Borgo/Shattered%20Square.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_decimated_borgo/shattered_square.webp",
+      "translations": {
+        "de": {
+          "name": "Der zerstörte Platz"
+        },
+        "es": {
+          "name": "El Cuadrado Roto"
+        },
+        "ja": {
+          "name": "瓦礫と化した広場"
+        },
+        "pl": {
+          "name": "Roztrzaskany Plac"
+        }
+      }
+    },
+    {
+      "id": 19,
+      "name": "Forgotten Ruins",
+      "realm_id": 19,
+      "source_id": 2,
+      "layout_type": "Hybrid",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 2,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 132.0,
+      "size_sq_meters": 8448,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 88,
+        "height_m": 80,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  16,
+                  0
+                ],
+                [
+                  80,
+                  0
+                ],
+                [
+                  80,
+                  24
+                ],
+                [
+                  88,
+                  24
+                ],
+                [
+                  88,
+                  64
+                ],
+                [
+                  80,
+                  64
+                ],
+                [
+                  80,
+                  80
+                ],
+                [
+                  0,
+                  80
+                ],
+                [
+                  0,
+                  32
+                ],
+                [
+                  16,
+                  32
+                ]
+              ]
+            ],
+            "area_m2": 6208,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 12.5,
+                "y": 70.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 63.0,
+                "y": 20.0,
+                "w": 24,
+                "h": 24
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Forgotten Ruins (The Decimated Borgo). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Borgo/Forgotten%20Ruins.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_decimated_borgo/forgotten_ruins.webp",
+      "translations": {
+        "de": {
+          "name": "Vergessene Ruinen"
+        },
+        "es": {
+          "name": "Ruinas Olvidadas"
+        },
+        "ja": {
+          "name": "忘れ去られた遺跡"
+        },
+        "pl": {
+          "name": "Zapomniane Ruiny"
+        }
+      }
+    },
+    {
+      "id": 20,
+      "name": "Eyrie of Crows",
+      "realm_id": 17,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 3,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 148.0,
+      "size_sq_meters": 9472,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  16,
+                  0
+                ],
+                [
+                  80,
+                  0
+                ],
+                [
+                  80,
+                  16
+                ],
+                [
+                  112,
+                  16
+                ],
+                [
+                  112,
+                  80
+                ],
+                [
+                  96,
+                  80
+                ],
+                [
+                  96,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ],
+                [
+                  0,
+                  32
+                ],
+                [
+                  16,
+                  32
+                ]
+              ]
+            ],
+            "area_m2": 9472,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 12.0,
+                "y": 84.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 54.0,
+                "y": 17.5,
+                "w": 24,
+                "h": 24
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Eyrie of Crows (Forsaken Boneyard). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Boneyard/Eyrie%20of%20Crows.webp",
+      "callout_image_local_path": "maps/callouts/hens333/forsaken_boneyard/eyrie_of_crows.webp",
+      "translations": {
+        "de": {
+          "name": "Krähenhorst"
+        },
+        "es": {
+          "name": "Aviario de Cuervos"
+        },
+        "ja": {
+          "name": "カラスの巣"
+        },
+        "pl": {
+          "name": "Gniazdo Kruków"
+        }
+      }
+    },
+    {
+      "id": 21,
+      "name": "Dead Sands",
+      "realm_id": 17,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Low",
+      "jungle_gyms_count": 3,
+      "is_shack": true,
+      "is_main_building": false,
+      "size_sq_tiles": 140.0,
+      "size_sq_meters": 8960,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  16,
+                  0
+                ],
+                [
+                  80,
+                  0
+                ],
+                [
+                  80,
+                  16
+                ],
+                [
+                  112,
+                  16
+                ],
+                [
+                  112,
+                  80
+                ],
+                [
+                  96,
+                  80
+                ],
+                [
+                  96,
+                  96
+                ],
+                [
+                  32,
+                  96
+                ],
+                [
+                  32,
+                  80
+                ],
+                [
+                  0,
+                  80
+                ],
+                [
+                  0,
+                  32
+                ],
+                [
+                  16,
+                  32
+                ]
+              ]
+            ],
+            "area_m2": 8960,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 51.0,
+                "y": 49.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Dead Sands (Forsaken Boneyard). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Boneyard/Dead%20Sands.webp",
+      "callout_image_local_path": "maps/callouts/hens333/forsaken_boneyard/dead_sands.webp",
+      "translations": {
+        "de": {
+          "name": "Tote Sande"
+        },
+        "es": {
+          "name": "Arenas Mortales"
+        },
+        "ja": {
+          "name": "死の砂漠"
+        },
+        "pl": {
+          "name": "Martwe Piaski"
+        }
+      }
+    },
+    {
+      "id": 22,
+      "name": "The Underground Complex",
+      "realm_id": 13,
+      "source_id": 2,
+      "layout_type": "Indoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 0,
+      "is_shack": false,
+      "is_main_building": false,
+      "size_sq_tiles": 138.0,
+      "size_sq_meters": 8832,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 132,
+        "height_m": 104,
+        "approx": true,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  72,
+                  0
+                ],
+                [
+                  80,
+                  0
+                ],
+                [
+                  80,
+                  12
+                ],
+                [
+                  100,
+                  12
+                ],
+                [
+                  100,
+                  16
+                ],
+                [
+                  104,
+                  16
+                ],
+                [
+                  104,
+                  36
+                ],
+                [
+                  112,
+                  36
+                ],
+                [
+                  112,
+                  40
+                ],
+                [
+                  132,
+                  40
+                ],
+                [
+                  132,
+                  68
+                ],
+                [
+                  104,
+                  68
+                ],
+                [
+                  104,
+                  88
+                ],
+                [
+                  60,
+                  88
+                ],
+                [
+                  60,
+                  92
+                ],
+                [
+                  56,
+                  92
+                ],
+                [
+                  56,
+                  96
+                ],
+                [
+                  60,
+                  96
+                ],
+                [
+                  60,
+                  100
+                ],
+                [
+                  56,
+                  100
+                ],
+                [
+                  56,
+                  104
+                ],
+                [
+                  48,
+                  104
+                ],
+                [
+                  48,
+                  88
+                ],
+                [
+                  4,
+                  88
+                ],
+                [
+                  4,
+                  68
+                ],
+                [
+                  0,
+                  68
+                ],
+                [
+                  0,
+                  40
+                ],
+                [
+                  4,
+                  40
+                ],
+                [
+                  4,
+                  12
+                ],
+                [
+                  72,
+                  12
+                ]
+              ]
+            ],
+            "area_m2": 8768
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for The Underground Complex (Hawkins National Laboratory). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Hawkins.webp",
+      "callout_image_local_path": "maps/callouts/hens333/hawkins_national_laboratory/the_underground_complex.webp",
+      "translations": {
+        "de": {
+          "name": "Der Untergrundkomplex"
+        },
+        "es": {
+          "name": "El Complejo Subterráneo"
+        },
+        "ja": {
+          "name": "地下施設"
+        },
+        "pl": {
+          "name": "Podziemny Kompleks"
+        }
+      }
+    },
+    {
+      "id": 23,
+      "name": "Coal Tower",
+      "realm_id": 1,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 3,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 132.0,
+      "size_sq_meters": 8448,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 80,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  80,
+                  0
+                ],
+                [
+                  80,
+                  96
+                ],
+                [
+                  64,
+                  96
+                ],
+                [
+                  64,
+                  112
+                ],
+                [
+                  16,
+                  112
+                ],
+                [
+                  16,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ]
+              ]
+            ],
+            "area_m2": 8448,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 47.5,
+                "y": 100.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 28.0,
+                "y": 67.5,
+                "label": "WT"
+              },
+              {
+                "kind": "main",
+                "x": 40.5,
+                "y": 18.5,
+                "w": 18,
+                "h": 18
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Coal Tower (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Coal%20Tower.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/coal_tower.webp",
+      "translations": {
+        "de": {
+          "name": "Kohlelager"
+        },
+        "es": {
+          "name": "Torre de Carbón"
+        },
+        "ja": {
+          "name": "コール・タワー"
+        },
+        "pl": {
+          "name": "Wieża Węglowa"
+        }
+      }
+    },
+    {
+      "id": 24,
+      "name": "Groaning Storehouse",
+      "realm_id": 1,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 156.0,
+      "size_sq_meters": 9984,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 128,
+        "height_m": 128,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  80,
+                  0
+                ],
+                [
+                  80,
+                  32
+                ],
+                [
+                  128,
+                  32
+                ],
+                [
+                  128,
+                  64
+                ],
+                [
+                  96,
+                  64
+                ],
+                [
+                  96,
+                  80
+                ],
+                [
+                  80,
+                  80
+                ],
+                [
+                  80,
+                  96
+                ],
+                [
+                  64,
+                  96
+                ],
+                [
+                  64,
+                  128
+                ],
+                [
+                  32,
+                  128
+                ],
+                [
+                  32,
+                  80
+                ],
+                [
+                  0,
+                  80
+                ]
+              ]
+            ],
+            "area_m2": 9984,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 68.5,
+                "y": 84.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 41.0,
+                "y": 32.0,
+                "w": 30,
+                "h": 31
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Groaning Storehouse (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Groaning%20Storehouse.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/groaning_storehouse.webp",
+      "translations": {
+        "de": {
+          "name": "Seufzendes Lagerhaus"
+        },
+        "es": {
+          "name": "Almacén Quejumbroso"
+        },
+        "ja": {
+          "name": "グロウニング・ストアハウス"
+        },
+        "pl": {
+          "name": "Jęczący Magazyn"
+        }
+      }
+    },
+    {
+      "id": 25,
+      "name": "Ironworks Of Misery",
+      "realm_id": 1,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 160.0,
+      "size_sq_meters": 10240,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  16
+                ],
+                [
+                  112,
+                  16
+                ],
+                [
+                  112,
+                  80
+                ],
+                [
+                  96,
+                  80
+                ],
+                [
+                  96,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ]
+              ]
+            ],
+            "area_m2": 10240,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 100.0,
+                "y": 66.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 85.5,
+                "y": 29.0,
+                "label": "WT"
+              },
+              {
+                "kind": "feature",
+                "x": 26.0,
+                "y": 78.0,
+                "label": "WT"
+              },
+              {
+                "kind": "main",
+                "x": 31.0,
+                "y": 39.5,
+                "w": 28,
+                "h": 28
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Ironworks Of Misery (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Ironworks%20Of%20Misery.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/ironworks_of_misery.webp",
+      "translations": {
+        "de": {
+          "name": "Eisenwerk der Qual"
+        },
+        "es": {
+          "name": "Fundición de la Miseria"
+        },
+        "ja": {
+          "name": "アイアンワークス・オブ・ミザリー"
+        },
+        "pl": {
+          "name": "Huta Niedoli"
+        }
+      }
+    },
+    {
+      "id": 26,
+      "name": "Shelter Woods",
+      "realm_id": 1,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Low",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 176.0,
+      "size_sq_meters": 11264,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  16
+                ],
+                [
+                  112,
+                  16
+                ],
+                [
+                  112,
+                  80
+                ],
+                [
+                  96,
+                  80
+                ],
+                [
+                  96,
+                  96
+                ],
+                [
+                  80,
+                  96
+                ],
+                [
+                  80,
+                  112
+                ],
+                [
+                  16,
+                  112
+                ],
+                [
+                  16,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ]
+              ]
+            ],
+            "area_m2": 11264,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 51.5,
+                "y": 86.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 51.0,
+                "y": 46.5,
+                "w": 26,
+                "h": 26
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Shelter Woods (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Shelter%20Woods.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/shelter_woods.webp",
+      "translations": {
+        "de": {
+          "name": "Schutzwald"
+        },
+        "es": {
+          "name": "Bosque Refugio"
+        },
+        "ja": {
+          "name": "シェルター・ウッズ"
+        },
+        "pl": {
+          "name": "Leśne Schronisko"
+        }
+      }
+    },
+    {
+      "id": 27,
+      "name": "Suffocation Pit",
+      "realm_id": 1,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 160.0,
+      "size_sq_meters": 10240,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 80,
+        "height_m": 128,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  80,
+                  0
+                ],
+                [
+                  80,
+                  128
+                ],
+                [
+                  0,
+                  128
+                ]
+              ]
+            ],
+            "area_m2": 10240,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 40.5,
+                "y": 112.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 56.0,
+                "y": 94.0,
+                "label": "WT"
+              },
+              {
+                "kind": "feature",
+                "x": 65.0,
+                "y": 55.0,
+                "label": "WT"
+              },
+              {
+                "kind": "main",
+                "x": 40.5,
+                "y": 21.5,
+                "w": 24,
+                "h": 24
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Suffocation Pit (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Suffocation%20Pit.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/suffocation_pit.webp",
+      "translations": {
+        "de": {
+          "name": "Grubenschacht"
+        },
+        "es": {
+          "name": "Pozo de Asfixia"
+        },
+        "ja": {
+          "name": "サファケーション・ピット"
+        },
+        "pl": {
+          "name": "Duszna Kopalnia"
+        }
+      }
+    },
+    {
+      "id": 28,
+      "name": "Mother's Dwelling",
+      "realm_id": 8,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "High",
+      "jungle_gyms_count": 5,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 152.0,
+      "size_sq_meters": 9728,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  32
+                ],
+                [
+                  112,
+                  32
+                ],
+                [
+                  112,
+                  96
+                ],
+                [
+                  32,
+                  96
+                ],
+                [
+                  32,
+                  80
+                ],
+                [
+                  0,
+                  80
+                ]
+              ]
+            ],
+            "area_m2": 9728,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 85.5,
+                "y": 22.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 52.5,
+                "y": 51.0,
+                "w": 23,
+                "h": 23
+              }
+            ]
+          }
+        ],
+        "landmarks_approx": true
+      },
+      "description": "12-Clock Callout System for Mother's Dwelling (Red Forest). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Red%20Forest/Mothers%20Dwelling.webp",
+      "callout_image_local_path": "maps/callouts/hens333/red_forest/mothers_dwelling.webp",
+      "translations": {
+        "de": {
+          "name": "Mutters Behausung"
+        },
+        "es": {
+          "name": "Morada Maternal"
+        },
+        "ja": {
+          "name": "マザーズ・ドゥエリング"
+        },
+        "pl": {
+          "name": "Dom Matki"
+        }
+      }
+    },
+    {
+      "id": 29,
+      "name": "Temple of Purgation",
+      "realm_id": 8,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "High",
+      "jungle_gyms_count": 3,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 136.0,
+      "size_sq_meters": 8704,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  80,
+                  0
+                ],
+                [
+                  80,
+                  16
+                ],
+                [
+                  96,
+                  16
+                ],
+                [
+                  96,
+                  80
+                ],
+                [
+                  80,
+                  80
+                ],
+                [
+                  80,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ]
+              ]
+            ],
+            "area_m2": 8704,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 12.0,
+                "y": 55.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 49.0,
+                "y": 34.5,
+                "w": 27,
+                "h": 27
+              }
+            ]
+          }
+        ],
+        "landmarks_approx": true
+      },
+      "description": "12-Clock Callout System for Temple of Purgation (Red Forest). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Red%20Forest/Temple%20of%20Purgation.webp",
+      "callout_image_local_path": "maps/callouts/hens333/red_forest/temple_of_purgation.webp",
+      "translations": {
+        "de": {
+          "name": "Der Tempel der Reinigung"
+        },
+        "es": {
+          "name": "El Templo de la Purgación"
+        },
+        "ja": {
+          "name": "浄罪の神殿"
+        },
+        "pl": {
+          "name": "Świątynia Oczyszczenia"
+        }
+      }
+    },
+    {
+      "id": 30,
+      "name": "Grim Pantry",
+      "realm_id": 6,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 168.0,
+      "size_sq_meters": 10752,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  48,
+                  0
+                ],
+                [
+                  48,
+                  16
+                ],
+                [
+                  64,
+                  16
+                ],
+                [
+                  64,
+                  0
+                ],
+                [
+                  112,
+                  0
+                ],
+                [
+                  112,
+                  80
+                ],
+                [
+                  80,
+                  80
+                ],
+                [
+                  80,
+                  112
+                ],
+                [
+                  16,
+                  112
+                ],
+                [
+                  16,
+                  80
+                ],
+                [
+                  0,
+                  80
+                ]
+              ]
+            ],
+            "area_m2": 10752,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 55.0,
+                "y": 27.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 46.5,
+                "y": 83.0,
+                "w": 37,
+                "h": 37
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Grim Pantry (Backwater Swamp). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Swamp/Grim%20Pantry.webp",
+      "callout_image_local_path": "maps/callouts/hens333/backwater_swamp/grim_pantry.webp",
+      "translations": {
+        "de": {
+          "name": "Schaurige Speisekammer"
+        },
+        "es": {
+          "name": "Despensa Sombría"
+        },
+        "ja": {
+          "name": "おぞましい貯蔵室"
+        },
+        "pl": {
+          "name": "Ponura Spiżarnia"
+        }
+      }
+    },
+    {
+      "id": 31,
+      "name": "The Pale Rose",
+      "realm_id": 6,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 161.0,
+      "size_sq_meters": 10304,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  80
+                ],
+                [
+                  88,
+                  80
+                ],
+                [
+                  88,
+                  104
+                ],
+                [
+                  64,
+                  104
+                ],
+                [
+                  64,
+                  112
+                ],
+                [
+                  0,
+                  112
+                ]
+              ]
+            ],
+            "area_m2": 10304,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 77.0,
+                "y": 92.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 27.0,
+                "y": 28.0,
+                "w": 36,
+                "h": 15,
+                "angle": 45
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for The Pale Rose (Backwater Swamp). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Swamp/Pale%20Rose.webp",
+      "callout_image_local_path": "maps/callouts/hens333/backwater_swamp/the_pale_rose.webp",
+      "translations": {
+        "de": {
+          "name": "Die Pale Rose"
+        },
+        "es": {
+          "name": "La Rosa Pálida"
+        },
+        "ja": {
+          "name": "ペイル・ローズ"
+        },
+        "pl": {
+          "name": "Blada Róża"
+        }
+      }
+    },
+    {
+      "id": 32,
+      "name": "Family Residence",
+      "realm_id": 11,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "High",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 156.0,
+      "size_sq_meters": 9984,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 128,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  64,
+                  0
+                ],
+                [
+                  128,
+                  0
+                ],
+                [
+                  128,
+                  80
+                ],
+                [
+                  48,
+                  80
+                ],
+                [
+                  48,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ],
+                [
+                  0,
+                  16
+                ],
+                [
+                  64,
+                  16
+                ]
+              ]
+            ],
+            "area_m2": 9984,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 113.0,
+                "y": 64.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 97.5,
+                "y": 17.5,
+                "label": "P"
+              },
+              {
+                "kind": "feature",
+                "x": 81.0,
+                "y": 64.0,
+                "label": "P"
+              },
+              {
+                "kind": "main",
+                "x": 26.0,
+                "y": 56.0,
+                "w": 31,
+                "h": 32
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Family Residence (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Family%20Residence.webp",
+      "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/family_residence.webp",
+      "translations": {
+        "de": {
+          "name": "Familiensitz I"
+        },
+        "es": {
+          "name": "Residencia Familiar I"
+        },
+        "ja": {
+          "name": "ファミリー・レジデンス I"
+        },
+        "pl": {
+          "name": "Rezydencja Rodzinna I"
+        }
+      }
+    },
+    {
+      "id": 33,
+      "name": "Family Residence II",
+      "realm_id": 11,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "High",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 156.0,
+      "size_sq_meters": 9984,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 128,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  64,
+                  0
+                ],
+                [
+                  64,
+                  16
+                ],
+                [
+                  80,
+                  16
+                ],
+                [
+                  80,
+                  32
+                ],
+                [
+                  112,
+                  32
+                ],
+                [
+                  112,
+                  48
+                ],
+                [
+                  128,
+                  48
+                ],
+                [
+                  128,
+                  96
+                ],
+                [
+                  16,
+                  96
+                ],
+                [
+                  16,
+                  80
+                ],
+                [
+                  0,
+                  80
+                ]
+              ]
+            ],
+            "area_m2": 9984,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 116.5,
+                "y": 64.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 85.5,
+                "y": 48.5,
+                "label": "P"
+              },
+              {
+                "kind": "feature",
+                "x": 48.0,
+                "y": 79.0,
+                "label": "P"
+              },
+              {
+                "kind": "main",
+                "x": 38.5,
+                "y": 22.0,
+                "w": 38,
+                "h": 30
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Family Residence II (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Family%20Residence%20II.webp",
+      "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/family_residence_ii.webp",
+      "translations": {
+        "de": {
+          "name": "Familiensitz II"
+        },
+        "es": {
+          "name": "Residencia Familiar II"
+        },
+        "ja": {
+          "name": "ファミリー・レジデンス II"
+        },
+        "pl": {
+          "name": "Rezydencja Rodzinna II"
+        }
+      }
+    },
+    {
+      "id": 34,
+      "name": "Sanctum of Wrath",
+      "realm_id": 11,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 156.0,
+      "size_sq_meters": 9984,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  16,
+                  0
+                ],
+                [
+                  112,
+                  0
+                ],
+                [
+                  112,
+                  48
+                ],
+                [
+                  80,
+                  48
+                ],
+                [
+                  80,
+                  64
+                ],
+                [
+                  96,
+                  64
+                ],
+                [
+                  96,
+                  112
+                ],
+                [
+                  0,
+                  112
+                ],
+                [
+                  0,
+                  64
+                ],
+                [
+                  32,
+                  64
+                ],
+                [
+                  32,
+                  48
+                ],
+                [
+                  16,
+                  48
+                ]
+              ]
+            ],
+            "area_m2": 9984,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 85.5,
+                "y": 100.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 46.5,
+                "y": 100.5,
+                "label": "P"
+              },
+              {
+                "kind": "main",
+                "x": 56.5,
+                "y": 55.0,
+                "w": 22,
+                "h": 37
+              },
+              {
+                "kind": "shack",
+                "x": 101.0,
+                "y": 35.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 65.5,
+                "y": 11.0,
+                "label": "P"
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Sanctum of Wrath (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Sanctum%20of%20Wrath.webp",
+      "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/sanctum_of_wrath.webp",
+      "translations": {
+        "de": {
+          "name": "Heiligtum des Zorns I"
+        },
+        "es": {
+          "name": "Santuario de la Ira I"
+        },
+        "ja": {
+          "name": "怒りの聖所 I"
+        },
+        "pl": {
+          "name": "Sanktuarium Gniewu I"
+        }
+      }
+    },
+    {
+      "id": 35,
+      "name": "Sanctum of Wrath II",
+      "realm_id": 11,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 148.0,
+      "size_sq_meters": 9472,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  48,
+                  0
+                ],
+                [
+                  48,
+                  32
+                ],
+                [
+                  112,
+                  32
+                ],
+                [
+                  112,
+                  112
+                ],
+                [
+                  32,
+                  112
+                ],
+                [
+                  32,
+                  80
+                ],
+                [
+                  0,
+                  80
+                ]
+              ]
+            ],
+            "area_m2": 9472,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 10.5,
+                "y": 11.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 25.0,
+                "y": 31.0,
+                "label": "P"
+              },
+              {
+                "kind": "main",
+                "x": 72.5,
+                "y": 71.5,
+                "w": 36,
+                "h": 26
+              },
+              {
+                "kind": "feature",
+                "x": 103.5,
+                "y": 71.5,
+                "label": "P"
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Sanctum of Wrath II (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Sanctum%20of%20Wrath%20II.webp",
+      "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/sanctum_of_wrath_ii.webp",
+      "translations": {
+        "de": {
+          "name": "Heiligtum des Zorns II"
+        },
+        "es": {
+          "name": "Santuario de la Ira II"
+        },
+        "ja": {
+          "name": "怒りの聖所 II"
+        },
+        "pl": {
+          "name": "Sanktuarium Gniewu II"
+        }
+      }
+    },
+    {
+      "id": 36,
+      "name": "Police Station East Wing",
+      "realm_id": 16,
+      "source_id": 2,
+      "layout_type": "Indoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 0,
+      "is_shack": false,
+      "is_main_building": false,
+      "size_sq_tiles": 125.0,
+      "size_sq_meters": 8000,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 68,
+        "approx": true,
+        "floors": [
+          {
+            "label": "lower",
+            "outline": [
+              [
+                [
+                  60,
+                  0
+                ],
+                [
+                  76,
+                  0
+                ],
+                [
+                  76,
+                  4
+                ],
+                [
+                  80,
+                  4
+                ],
+                [
+                  80,
+                  8
+                ],
+                [
+                  96,
+                  8
+                ],
+                [
+                  96,
+                  60
+                ],
+                [
+                  92,
+                  60
+                ],
+                [
+                  92,
+                  64
+                ],
+                [
+                  60,
+                  64
+                ],
+                [
+                  60,
+                  68
+                ],
+                [
+                  32,
+                  68
+                ],
+                [
+                  32,
+                  64
+                ],
+                [
+                  4,
+                  64
+                ],
+                [
+                  4,
+                  60
+                ],
+                [
+                  0,
+                  60
+                ],
+                [
+                  0,
+                  48
+                ],
+                [
+                  4,
+                  48
+                ],
+                [
+                  4,
+                  8
+                ],
+                [
+                  36,
+                  8
+                ],
+                [
+                  36,
+                  28
+                ],
+                [
+                  32,
+                  28
+                ],
+                [
+                  32,
+                  32
+                ],
+                [
+                  36,
+                  32
+                ],
+                [
+                  36,
+                  28
+                ],
+                [
+                  40,
+                  28
+                ],
+                [
+                  40,
+                  12
+                ],
+                [
+                  68,
+                  12
+                ],
+                [
+                  68,
+                  8
+                ],
+                [
+                  60,
+                  8
+                ]
+              ]
+            ],
+            "area_m2": 5232
+          },
+          {
+            "label": "upper",
+            "outline": [
+              [
+                [
+                  4,
+                  0
+                ],
+                [
+                  56,
+                  0
+                ],
+                [
+                  56,
+                  4
+                ],
+                [
+                  84,
+                  4
+                ],
+                [
+                  84,
+                  0
+                ],
+                [
+                  92,
+                  0
+                ],
+                [
+                  92,
+                  36
+                ],
+                [
+                  56,
+                  36
+                ],
+                [
+                  56,
+                  40
+                ],
+                [
+                  52,
+                  40
+                ],
+                [
+                  52,
+                  20
+                ],
+                [
+                  48,
+                  20
+                ],
+                [
+                  48,
+                  12
+                ],
+                [
+                  40,
+                  12
+                ],
+                [
+                  40,
+                  20
+                ],
+                [
+                  36,
+                  20
+                ],
+                [
+                  36,
+                  40
+                ],
+                [
+                  4,
+                  40
+                ],
+                [
+                  4,
+                  36
+                ],
+                [
+                  0,
+                  36
+                ],
+                [
+                  0,
+                  20
+                ],
+                [
+                  4,
+                  20
+                ]
+              ]
+            ],
+            "area_m2": 2944
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Police Station East Wing (Raccoon City). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Raccoon%20City/Rpd%20East%20Wing.webp",
+      "callout_image_local_path": "maps/callouts/hens333/raccoon_city/police_station_east_wing.webp",
+      "translations": {
+        "de": {
+          "name": "Ostflügel der Polizeistation von Raccoon City"
+        },
+        "es": {
+          "name": "Ala Este del Departamento de Policía de Raccoon City"
+        },
+        "ja": {
+          "name": "ラクーンシティ警察署東棟"
+        },
+        "pl": {
+          "name": "Posterunek Policji Raccoon City – Wschodnie Skrzydło"
+        }
+      }
+    },
+    {
+      "id": 37,
+      "name": "Police Station West Wing",
+      "realm_id": 16,
+      "source_id": 2,
+      "layout_type": "Indoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 0,
+      "is_shack": false,
+      "is_main_building": false,
+      "size_sq_tiles": 125.0,
+      "size_sq_meters": 8000,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 92,
+        "height_m": 72,
+        "approx": true,
+        "floors": [
+          {
+            "label": "lower",
+            "outline": [
+              [
+                [
+                  24,
+                  0
+                ],
+                [
+                  44,
+                  0
+                ],
+                [
+                  44,
+                  8
+                ],
+                [
+                  40,
+                  8
+                ],
+                [
+                  40,
+                  20
+                ],
+                [
+                  68,
+                  20
+                ],
+                [
+                  68,
+                  16
+                ],
+                [
+                  60,
+                  16
+                ],
+                [
+                  60,
+                  8
+                ],
+                [
+                  76,
+                  8
+                ],
+                [
+                  76,
+                  12
+                ],
+                [
+                  92,
+                  12
+                ],
+                [
+                  92,
+                  68
+                ],
+                [
+                  60,
+                  68
+                ],
+                [
+                  60,
+                  72
+                ],
+                [
+                  32,
+                  72
+                ],
+                [
+                  32,
+                  68
+                ],
+                [
+                  4,
+                  68
+                ],
+                [
+                  4,
+                  64
+                ],
+                [
+                  0,
+                  64
+                ],
+                [
+                  0,
+                  52
+                ],
+                [
+                  4,
+                  52
+                ],
+                [
+                  4,
+                  16
+                ],
+                [
+                  16,
+                  16
+                ],
+                [
+                  16,
+                  4
+                ],
+                [
+                  24,
+                  4
+                ]
+              ]
+            ],
+            "area_m2": 5200
+          },
+          {
+            "label": "upper",
+            "outline": [
+              [
+                [
+                  4,
+                  0
+                ],
+                [
+                  56,
+                  0
+                ],
+                [
+                  56,
+                  4
+                ],
+                [
+                  80,
+                  4
+                ],
+                [
+                  80,
+                  0
+                ],
+                [
+                  88,
+                  0
+                ],
+                [
+                  88,
+                  36
+                ],
+                [
+                  56,
+                  36
+                ],
+                [
+                  56,
+                  40
+                ],
+                [
+                  52,
+                  40
+                ],
+                [
+                  52,
+                  20
+                ],
+                [
+                  48,
+                  20
+                ],
+                [
+                  48,
+                  12
+                ],
+                [
+                  40,
+                  12
+                ],
+                [
+                  40,
+                  20
+                ],
+                [
+                  36,
+                  20
+                ],
+                [
+                  36,
+                  40
+                ],
+                [
+                  32,
+                  40
+                ],
+                [
+                  32,
+                  36
+                ],
+                [
+                  0,
+                  36
+                ],
+                [
+                  0,
+                  20
+                ],
+                [
+                  4,
+                  20
+                ]
+              ]
+            ],
+            "area_m2": 2704
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Police Station West Wing (Raccoon City). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Raccoon%20City/Rpd%20West%20Wing.webp",
+      "callout_image_local_path": "maps/callouts/hens333/raccoon_city/police_station_west_wing.webp",
+      "translations": {
+        "de": {
+          "name": "Westflügel der Polizeistation von Raccoon City"
+        },
+        "es": {
+          "name": "Ala Oeste del Departamento de Policía de Raccoon City"
+        },
+        "ja": {
+          "name": "ラクーンシティ警察署西棟"
+        },
+        "pl": {
+          "name": "Posterunek Policji Raccoon City – Zachodnie Skrzydło"
+        }
+      }
+    },
+    {
+      "id": 38,
+      "name": "Dead Dawg Saloon",
+      "realm_id": 14,
+      "source_id": 2,
+      "layout_type": "Hybrid",
+      "pallet_density": "Low",
+      "jungle_gyms_count": 2,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 136.0,
+      "size_sq_meters": 8704,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  64,
+                  0
+                ],
+                [
+                  64,
+                  16
+                ],
+                [
+                  96,
+                  16
+                ],
+                [
+                  96,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ]
+              ]
+            ],
+            "area_m2": 8704,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 34.5,
+                "y": 48.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 74.0,
+                "y": 38.0,
+                "w": 29,
+                "h": 29
+              },
+              {
+                "kind": "feature",
+                "x": 36.0,
+                "y": 30.5,
+                "label": "P"
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Dead Dawg Saloon (Grave of Glenvale). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Dead%20Dawg%20Saloon.webp",
+      "callout_image_local_path": "maps/callouts/hens333/grave_of_glenvale/dead_dawg_saloon.webp",
+      "translations": {
+        "es": {
+          "name": "Cantina El Perro Muerto"
+        },
+        "ja": {
+          "name": "死んだ犬の酒場"
+        },
+        "pl": {
+          "name": "Knajpa pod Martwym Ziomkiem"
+        }
+      }
+    },
+    {
+      "id": 39,
+      "name": "Garden of Joy",
+      "realm_id": 18,
+      "source_id": 2,
+      "layout_type": "Hybrid",
+      "pallet_density": "High",
+      "jungle_gyms_count": 3,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 164.0,
+      "size_sq_meters": 10496,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  112
+                ],
+                [
+                  16,
+                  112
+                ],
+                [
+                  16,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ]
+              ]
+            ],
+            "area_m2": 10496,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 80.0,
+                "y": 14.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 23.5,
+                "y": 55.0,
+                "w": 24,
+                "h": 24
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Garden of Joy (Withered Isle). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Garden%20of%20Joy.webp",
+      "callout_image_local_path": "maps/callouts/hens333/withered_isle/garden_of_joy.webp",
+      "translations": {
+        "de": {
+          "name": "Garten der Freude"
+        },
+        "es": {
+          "name": "Jardín de Dicha"
+        },
+        "ja": {
+          "name": "喜びの庭"
+        },
+        "pl": {
+          "name": "Ogród Radości"
+        }
+      }
+    },
+    {
+      "id": 40,
+      "name": "Greenville Square",
+      "realm_id": 18,
+      "source_id": 2,
+      "layout_type": "Hybrid",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 3,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 160.0,
+      "size_sq_meters": 10240,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 144,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  32,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  80
+                ],
+                [
+                  80,
+                  80
+                ],
+                [
+                  80,
+                  96
+                ],
+                [
+                  64,
+                  96
+                ],
+                [
+                  64,
+                  112
+                ],
+                [
+                  48,
+                  112
+                ],
+                [
+                  48,
+                  144
+                ],
+                [
+                  0,
+                  144
+                ],
+                [
+                  0,
+                  48
+                ],
+                [
+                  16,
+                  48
+                ],
+                [
+                  16,
+                  32
+                ],
+                [
+                  32,
+                  32
+                ]
+              ]
+            ],
+            "area_m2": 10240,
+            "landmarks": [
+              {
+                "kind": "feature",
+                "x": 24.5,
+                "y": 126.5,
+                "label": "STATUE"
+              },
+              {
+                "kind": "shack",
+                "x": 18.0,
+                "y": 62.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 54.5,
+                "y": 21.0,
+                "w": 29,
+                "h": 27
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Greenville Square (Withered Isle). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Greenville%20Square.webp",
+      "callout_image_local_path": "maps/callouts/hens333/withered_isle/greenville_square.webp",
+      "translations": {
+        "de": {
+          "name": "Hauptplatz von Greenville"
+        },
+        "es": {
+          "name": "Plaza de Greenville"
+        },
+        "ja": {
+          "name": "グリーンビル広場"
+        },
+        "pl": {
+          "name": "Plac Greenville"
+        }
+      }
+    },
+    {
+      "id": 41,
+      "name": "Fallen Refuge",
+      "realm_id": 18,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Low",
+      "jungle_gyms_count": 2,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 128.0,
+      "size_sq_meters": 8192,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 80,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  48,
+                  0
+                ],
+                [
+                  48,
+                  16
+                ],
+                [
+                  80,
+                  16
+                ],
+                [
+                  80,
+                  112
+                ],
+                [
+                  16,
+                  112
+                ],
+                [
+                  16,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ]
+              ]
+            ],
+            "area_m2": 8192,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 48.0,
+                "y": 80.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 32.5,
+                "y": 33.0,
+                "w": 24,
+                "h": 24,
+                "est": true
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Fallen Refuge (Withered Isle). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Fallen%20Refuge.webp",
+      "callout_image_local_path": "maps/callouts/hens333/withered_isle/fallen_refuge.webp",
+      "translations": {
+        "de": {
+          "name": "Gefallene Zuflucht"
+        },
+        "es": {
+          "name": "Refugio Caído"
+        },
+        "ja": {
+          "name": "落ちた避難所"
+        },
+        "pl": {
+          "name": "Upadły Azyl"
+        }
+      }
+    },
+    {
+      "id": 42,
+      "name": "Freddy Fazbears Pizza",
+      "realm_id": 18,
+      "source_id": 2,
+      "layout_type": "Hybrid",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 2,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 148.0,
+      "size_sq_meters": 9472,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  16,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  16
+                ],
+                [
+                  112,
+                  16
+                ],
+                [
+                  112,
+                  96
+                ],
+                [
+                  32,
+                  96
+                ],
+                [
+                  32,
+                  80
+                ],
+                [
+                  16,
+                  80
+                ],
+                [
+                  16,
+                  64
+                ],
+                [
+                  0,
+                  64
+                ],
+                [
+                  0,
+                  16
+                ],
+                [
+                  16,
+                  16
+                ]
+              ]
+            ],
+            "area_m2": 9472,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 80.0,
+                "y": 79.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 64.0,
+                "y": 32.0,
+                "w": 47,
+                "h": 47
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Freddy Fazbears Pizza (Withered Isle). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Freddy%20Fazbears%20Pizza.webp",
+      "callout_image_local_path": "maps/callouts/hens333/withered_isle/freddy_fazbears_pizza.webp",
+      "translations": {
+        "de": {
+          "name": "Freddy Fazbear's Pizza"
+        },
+        "es": {
+          "name": "Freddy Fazbear's Pizza"
+        },
+        "ja": {
+          "name": "フレディファズベアーズピザ"
+        },
+        "pl": {
+          "name": "Pizzeria Freddy Fazbear"
+        }
+      }
+    },
+    {
+      "id": 43,
+      "name": "The Game",
+      "realm_id": 10,
+      "source_id": 2,
+      "layout_type": "Indoor",
+      "pallet_density": "Very High",
+      "jungle_gyms_count": 0,
+      "is_shack": false,
+      "is_main_building": false,
+      "size_sq_tiles": 142.0,
+      "size_sq_meters": 9088,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 72,
+        "floors": [
+          {
+            "label": "upper",
+            "outline": [
+              [
+                [
+                  16,
+                  0
+                ],
+                [
+                  80,
+                  0
+                ],
+                [
+                  80,
+                  16
+                ],
+                [
+                  96,
+                  16
+                ],
+                [
+                  96,
+                  32
+                ],
+                [
+                  80,
+                  32
+                ],
+                [
+                  80,
+                  64
+                ],
+                [
+                  32,
+                  64
+                ],
+                [
+                  32,
+                  72
+                ],
+                [
+                  8,
+                  72
+                ],
+                [
+                  8,
+                  48
+                ],
+                [
+                  16,
+                  48
+                ],
+                [
+                  16,
+                  32
+                ],
+                [
+                  0,
+                  32
+                ],
+                [
+                  0,
+                  16
+                ],
+                [
+                  16,
+                  16
+                ]
+              ]
+            ],
+            "area_m2": 4928
+          },
+          {
+            "label": "lower",
+            "outline": [
+              [
+                [
+                  8,
+                  0
+                ],
+                [
+                  72,
+                  0
+                ],
+                [
+                  72,
+                  64
+                ],
+                [
+                  8,
+                  64
+                ],
+                [
+                  8,
+                  56
+                ],
+                [
+                  0,
+                  56
+                ],
+                [
+                  0,
+                  48
+                ],
+                [
+                  8,
+                  48
+                ]
+              ]
+            ],
+            "area_m2": 4160
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for The Game (Gideon Meat Plant). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/The%20Game.webp",
+      "callout_image_local_path": "maps/callouts/hens333/gideon_meat_plant/the_game.webp",
+      "translations": {
+        "de": {
+          "name": "Das Spiel"
+        },
+        "es": {
+          "name": "El Juego"
+        },
+        "ja": {
+          "name": "ザ・ゲーム"
+        },
+        "pl": {
+          "name": "Rozgrywka"
+        }
+      }
+    },
+    {
+      "id": 44,
+      "name": "Lampkin Lane",
+      "realm_id": 5,
+      "source_id": 2,
+      "layout_type": "Hybrid",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 1,
+      "is_shack": false,
+      "is_main_building": true,
+      "size_sq_tiles": 132.0,
+      "size_sq_meters": 8448,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 80,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  80,
+                  0
+                ],
+                [
+                  80,
+                  80
+                ],
+                [
+                  64,
+                  80
+                ],
+                [
+                  64,
+                  112
+                ],
+                [
+                  0,
+                  112
+                ]
+              ]
+            ],
+            "area_m2": 8448,
+            "landmarks": [
+              {
+                "kind": "main",
+                "x": 17.0,
+                "y": 64.0,
+                "w": 19,
+                "h": 21
+              }
+            ]
+          }
+        ],
+        "landmarks_approx": true
+      },
+      "description": "12-Clock Callout System for Lampkin Lane (Haddonfield). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Haddonfield.webp",
+      "callout_image_local_path": "maps/callouts/hens333/haddonfield/lampkin_lane.webp",
+      "translations": {
+        "es": {
+          "name": "Avenida Lampkin"
+        },
+        "ja": {
+          "name": "ランプキン・レーン"
+        },
+        "pl": {
+          "name": "Alejka Lampkin"
+        }
+      }
+    },
+    {
+      "id": 45,
+      "name": "Midwich Elementary School",
+      "realm_id": 15,
+      "source_id": 2,
+      "layout_type": "Indoor",
+      "pallet_density": "Low",
+      "jungle_gyms_count": 0,
+      "is_shack": false,
+      "is_main_building": false,
+      "size_sq_tiles": 113.5,
+      "size_sq_meters": 7264,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 64,
+        "height_m": 64,
+        "floors": [
+          {
+            "label": "lower",
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  64,
+                  0
+                ],
+                [
+                  64,
+                  64
+                ],
+                [
+                  0,
+                  64
+                ]
+              ]
+            ],
+            "area_m2": 4096,
+            "landmarks": [
+              {
+                "kind": "feature",
+                "x": 40.5,
+                "y": 42.0,
+                "label": "CT"
+              }
+            ]
+          },
+          {
+            "label": "upper",
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  56,
+                  0
+                ],
+                [
+                  56,
+                  56
+                ],
+                [
+                  0,
+                  56
+                ]
+              ]
+            ],
+            "area_m2": 3136
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Midwich Elementary School (Silent Hill). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Midwich.gif",
+      "callout_image_local_path": "maps/callouts/hens333/silent_hill/midwich_elementary_school.webp",
+      "translations": {
+        "es": {
+          "name": "Escuela Primaria Midwich"
+        },
+        "ja": {
+          "name": "ミッドウィッチ小学校"
+        },
+        "pl": {
+          "name": "Szkoła Podstawowa Midwich"
+        }
+      }
+    },
+    {
+      "id": 46,
+      "name": "Mount Ormond Resort",
+      "realm_id": 12,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "High",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 156.0,
+      "size_sq_meters": 9984,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  80,
+                  0
+                ],
+                [
+                  112,
+                  0
+                ],
+                [
+                  112,
+                  96
+                ],
+                [
+                  32,
+                  96
+                ],
+                [
+                  32,
+                  112
+                ],
+                [
+                  0,
+                  112
+                ],
+                [
+                  0,
+                  16
+                ],
+                [
+                  80,
+                  16
+                ]
+              ]
+            ],
+            "area_m2": 9984,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 15.0,
+                "y": 97.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 56.5,
+                "y": 56.5,
+                "w": 32,
+                "h": 32
+              },
+              {
+                "kind": "feature",
+                "x": 84.0,
+                "y": 72.0,
+                "label": "H"
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Mount Ormond Resort (Ormond). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond.webp",
+      "callout_image_local_path": "maps/callouts/hens333/ormond/mount_ormond_resort.webp",
+      "translations": {
+        "de": {
+          "name": "Skiort am Mount Ormond I"
+        },
+        "es": {
+          "name": "Complejo del Monte Ormond I"
+        },
+        "ja": {
+          "name": "オーモンド山のリゾート I"
+        },
+        "pl": {
+          "name": "Ośrodek Mount Ormond I"
+        }
+      }
+    },
+    {
+      "id": 47,
+      "name": "Mount Ormond Resort II",
+      "realm_id": 12,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "High",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 160.0,
+      "size_sq_meters": 10240,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 128,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  16,
+                  0
+                ],
+                [
+                  48,
+                  0
+                ],
+                [
+                  48,
+                  16
+                ],
+                [
+                  80,
+                  16
+                ],
+                [
+                  80,
+                  32
+                ],
+                [
+                  96,
+                  32
+                ],
+                [
+                  96,
+                  112
+                ],
+                [
+                  80,
+                  112
+                ],
+                [
+                  80,
+                  128
+                ],
+                [
+                  16,
+                  128
+                ],
+                [
+                  16,
+                  112
+                ],
+                [
+                  0,
+                  112
+                ],
+                [
+                  0,
+                  32
+                ],
+                [
+                  16,
+                  32
+                ]
+              ]
+            ],
+            "area_m2": 10240,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 32.0,
+                "y": 12.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 35.5,
+                "y": 72.5,
+                "w": 36,
+                "h": 36
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Mount Ormond Resort II (Ormond). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20II.webp",
+      "callout_image_local_path": "maps/callouts/hens333/ormond/mount_ormond_resort_ii.webp",
+      "translations": {
+        "de": {
+          "name": "Skiort am Mount Ormond II"
+        },
+        "es": {
+          "name": "Complejo del Monte Ormond II"
+        },
+        "ja": {
+          "name": "オーモンド山のリゾート II"
+        },
+        "pl": {
+          "name": "Ośrodek Mount Ormond II"
+        }
+      }
+    },
+    {
+      "id": 48,
+      "name": "Mount Ormond Resort III",
+      "realm_id": 12,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "High",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 156.0,
+      "size_sq_meters": 9984,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  16,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  48
+                ],
+                [
+                  112,
+                  48
+                ],
+                [
+                  112,
+                  80
+                ],
+                [
+                  96,
+                  80
+                ],
+                [
+                  96,
+                  112
+                ],
+                [
+                  64,
+                  112
+                ],
+                [
+                  64,
+                  96
+                ],
+                [
+                  32,
+                  96
+                ],
+                [
+                  32,
+                  112
+                ],
+                [
+                  0,
+                  112
+                ],
+                [
+                  0,
+                  48
+                ],
+                [
+                  16,
+                  48
+                ]
+              ]
+            ],
+            "area_m2": 9984,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 12.0,
+                "y": 100.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 18.5,
+                "y": 62.5,
+                "label": "H"
+              },
+              {
+                "kind": "main",
+                "x": 56.0,
+                "y": 28.5,
+                "w": 33,
+                "h": 33
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Mount Ormond Resort III (Ormond). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20III.webp",
+      "callout_image_local_path": "maps/callouts/hens333/ormond/mount_ormond_resort_iii.webp",
+      "translations": {
+        "de": {
+          "name": "Skiort am Mount Ormond III"
+        },
+        "es": {
+          "name": "Complejo del Monte Ormond III"
+        },
+        "ja": {
+          "name": "オーモンド山のリゾート III"
+        },
+        "pl": {
+          "name": "Ośrodek Mount Ormond III"
+        }
+      }
+    },
+    {
+      "id": 49,
+      "name": "Ormond Lake Mine",
+      "realm_id": 12,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 3,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 132.0,
+      "size_sq_meters": 8448,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 96,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  64
+                ],
+                [
+                  80,
+                  64
+                ],
+                [
+                  80,
+                  96
+                ],
+                [
+                  16,
+                  96
+                ],
+                [
+                  16,
+                  80
+                ],
+                [
+                  0,
+                  80
+                ]
+              ]
+            ],
+            "area_m2": 8448,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 67.0,
+                "y": 84.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 11.5,
+                "y": 14.5,
+                "label": "T"
+              },
+              {
+                "kind": "main",
+                "x": 49.5,
+                "y": 19.0,
+                "w": 38,
+                "h": 25
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Ormond Lake Mine (Ormond). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20Lake%20Mine.webp",
+      "callout_image_local_path": "maps/callouts/hens333/ormond/ormond_lake_mine.webp",
+      "translations": {
+        "de": {
+          "name": "Mine am Ormond-See"
+        },
+        "es": {
+          "name": "Mina del Lago Ormond"
+        },
+        "ja": {
+          "name": "オーモンド湖採掘場"
+        },
+        "pl": {
+          "name": "Kopalnia nad Jeziorem Ormond"
+        }
+      }
+    },
+    {
+      "id": 50,
+      "name": "Treatment Theatre",
+      "realm_id": 7,
+      "source_id": 2,
+      "layout_type": "Indoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 0,
+      "is_shack": false,
+      "is_main_building": false,
+      "size_sq_tiles": 98.0,
+      "size_sq_meters": 6272,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 104,
+        "height_m": 88,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  40,
+                  0
+                ],
+                [
+                  56,
+                  0
+                ],
+                [
+                  56,
+                  16
+                ],
+                [
+                  104,
+                  16
+                ],
+                [
+                  104,
+                  72
+                ],
+                [
+                  56,
+                  72
+                ],
+                [
+                  56,
+                  88
+                ],
+                [
+                  40,
+                  88
+                ],
+                [
+                  40,
+                  72
+                ],
+                [
+                  0,
+                  72
+                ],
+                [
+                  0,
+                  16
+                ],
+                [
+                  40,
+                  16
+                ]
+              ]
+            ],
+            "area_m2": 6336
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Treatment Theatre (Lery's Memorial Institute). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Lerys.webp",
+      "callout_image_local_path": "maps/callouts/hens333/lerys_memorial_institute/treatment_theatre.webp",
+      "translations": {
+        "de": {
+          "name": "Behandlungsbereich"
+        },
+        "es": {
+          "name": "Centro de Tratamiento"
+        },
+        "ja": {
+          "name": "治療シアター"
+        },
+        "pl": {
+          "name": "Placówka Medyczna"
+        }
+      }
+    },
+    {
+      "id": 51,
+      "name": "Toba Landing",
+      "realm_id": 20,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 3,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 136.0,
+      "size_sq_meters": 8704,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 109.5,
+        "height_m": 93,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  109.5,
+                  46.5
+                ],
+                [
+                  109.5,
+                  93
+                ],
+                [
+                  38,
+                  93
+                ],
+                [
+                  0,
+                  55.5
+                ],
+                [
+                  0,
+                  0
+                ],
+                [
+                  40,
+                  0
+                ],
+                [
+                  48,
+                  8
+                ],
+                [
+                  87.5,
+                  8
+                ],
+                [
+                  109.5,
+                  30.5
+                ]
+              ]
+            ],
+            "area_m2": 8700,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 47.0,
+                "y": 79.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 54.5,
+                "y": 42.0,
+                "w": 30,
+                "h": 30
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Toba Landing (Dvarka Deepwood). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Dvarka%20Deepwood/Toba%20Landing.webp",
+      "callout_image_local_path": "maps/callouts/hens333/dvarka_deepwood/toba_landing.webp",
+      "translations": {
+        "de": {
+          "name": "Toba-Landeplatz"
+        },
+        "es": {
+          "name": "Desembarco en Toba"
+        },
+        "ja": {
+          "name": "トーバ着陸地点"
+        },
+        "pl": {
+          "name": "Ziemie Toba"
+        }
+      }
+    },
+    {
+      "id": 52,
+      "name": "Nostromo Wreckage",
+      "realm_id": 20,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 3,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 152.0,
+      "size_sq_meters": 9728,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96.5,
+        "height_m": 109.5,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  96.5,
+                  0
+                ],
+                [
+                  96.5,
+                  109.5
+                ],
+                [
+                  36.5,
+                  109.5
+                ],
+                [
+                  0,
+                  69
+                ],
+                [
+                  0,
+                  19
+                ],
+                [
+                  20.5,
+                  0
+                ]
+              ]
+            ],
+            "area_m2": 9633,
+            "landmarks": [
+              {
+                "kind": "feature",
+                "x": 76.5,
+                "y": 93.0,
+                "label": "UFO"
+              },
+              {
+                "kind": "main",
+                "x": 53.0,
+                "y": 18.5,
+                "w": 37,
+                "h": 37
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Nostromo Wreckage (Dvarka Deepwood). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Dvarka%20Deepwood/Nostromo%20Wreckage.webp",
+      "callout_image_local_path": "maps/callouts/hens333/dvarka_deepwood/nostromo_wreckage.webp",
+      "translations": {
+        "de": {
+          "name": "Nostromo-Wrack"
+        },
+        "es": {
+          "name": "Ruinas de la Nostromo"
+        },
+        "ja": {
+          "name": "ノストロモ号の残骸"
+        },
+        "pl": {
+          "name": "Wrak Nostromo"
+        }
+      }
+    },
+    {
+      "id": 53,
+      "name": "Trickster's Delusion",
+      "realm_id": 21,
+      "source_id": 2,
+      "layout_type": "Hybrid",
+      "pallet_density": "High",
+      "jungle_gyms_count": 2,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 136.0,
+      "size_sq_meters": 8704,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 96,
+        "approx": true,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  48,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ],
+                [
+                  0,
+                  16
+                ],
+                [
+                  8,
+                  16
+                ],
+                [
+                  8,
+                  8
+                ],
+                [
+                  48,
+                  8
+                ]
+              ]
+            ],
+            "area_m2": 8768,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 15.5,
+                "y": 64.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 76.0,
+                "y": 23.5,
+                "w": 30,
+                "h": 23
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Trickster's Delusion (Sleepless District). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/Sleepless%20District/Tricksters%20Delusion.webp",
+      "callout_image_local_path": "maps/callouts/hens333/sleepless_district/tricksters_delusion.webp",
+      "translations": {
+        "de": {
+          "name": "Illusion des Tricksters"
+        },
+        "es": {
+          "name": "Delirio del Embaucador"
+        },
+        "ja": {
+          "name": "トリックスターの妄想"
+        },
+        "pl": {
+          "name": "Urojenia Magika"
+        }
+      }
+    },
+    {
+      "id": 54,
+      "name": "Coal Tower II",
+      "realm_id": 1,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 3,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 136.0,
+      "size_sq_meters": 8704,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  32,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  80
+                ],
+                [
+                  64,
+                  80
+                ],
+                [
+                  64,
+                  112
+                ],
+                [
+                  16,
+                  112
+                ],
+                [
+                  16,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ],
+                [
+                  0,
+                  32
+                ],
+                [
+                  16,
+                  32
+                ],
+                [
+                  16,
+                  16
+                ],
+                [
+                  32,
+                  16
+                ]
+              ]
+            ],
+            "area_m2": 8704,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 50.5,
+                "y": 101.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 25.0,
+                "y": 60.0,
+                "label": "WT"
+              },
+              {
+                "kind": "main",
+                "x": 79.0,
+                "y": 36.5,
+                "w": 19,
+                "h": 19
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Coal Tower II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Coal%20Tower%20II.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/coal_tower_ii.webp",
+      "translations": {
+        "de": {
+          "name": "Kohlelager II"
+        },
+        "es": {
+          "name": "Torre de Carbón II"
+        },
+        "ja": {
+          "name": "コール・タワー II"
+        },
+        "pl": {
+          "name": "Wieża Węglowa II"
+        }
+      }
+    },
+    {
+      "id": 55,
+      "name": "Groaning Storehouse II",
+      "realm_id": 1,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 148.0,
+      "size_sq_meters": 9472,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  32,
+                  0
+                ],
+                [
+                  80,
+                  0
+                ],
+                [
+                  80,
+                  32
+                ],
+                [
+                  112,
+                  32
+                ],
+                [
+                  112,
+                  64
+                ],
+                [
+                  96,
+                  64
+                ],
+                [
+                  96,
+                  80
+                ],
+                [
+                  80,
+                  80
+                ],
+                [
+                  80,
+                  112
+                ],
+                [
+                  0,
+                  112
+                ],
+                [
+                  0,
+                  32
+                ],
+                [
+                  16,
+                  32
+                ],
+                [
+                  16,
+                  16
+                ],
+                [
+                  32,
+                  16
+                ]
+              ]
+            ],
+            "area_m2": 9472,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 66.0,
+                "y": 10.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 49.5,
+                "y": 68.5,
+                "w": 25,
+                "h": 25
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Groaning Storehouse II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Groaning%20Storehouse%20II.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/groaning_storehouse_ii.webp",
+      "translations": {
+        "de": {
+          "name": "Seufzendes Lagerhaus II"
+        },
+        "es": {
+          "name": "Almacén Quejumbroso II"
+        },
+        "ja": {
+          "name": "グロウニング・ストアハウス II"
+        },
+        "pl": {
+          "name": "Jęczący Magazyn II"
+        }
+      }
+    },
+    {
+      "id": 56,
+      "name": "Ironworks Of Misery II",
+      "realm_id": 1,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 156.0,
+      "size_sq_meters": 9984,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 96,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  16,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  96
+                ],
+                [
+                  80,
+                  96
+                ],
+                [
+                  80,
+                  112
+                ],
+                [
+                  0,
+                  112
+                ],
+                [
+                  0,
+                  32
+                ],
+                [
+                  16,
+                  32
+                ]
+              ]
+            ],
+            "area_m2": 9984,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 13.5,
+                "y": 99.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 47.0,
+                "y": 68.5,
+                "label": "WT"
+              },
+              {
+                "kind": "main",
+                "x": 71.5,
+                "y": 34.5,
+                "w": 26,
+                "h": 33
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Ironworks Of Misery II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Ironworks%20Of%20Misery%20II.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/ironworks_of_misery_ii.webp",
+      "translations": {
+        "de": {
+          "name": "Eisenwerk der Qual II"
+        },
+        "es": {
+          "name": "Fundición de la Miseria II"
+        },
+        "ja": {
+          "name": "アイアンワークス・オブ・ミザリー II"
+        },
+        "pl": {
+          "name": "Huta Niedoli II"
+        }
+      }
+    },
+    {
+      "id": 57,
+      "name": "Shelter Woods II",
+      "realm_id": 1,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Low",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 176.0,
+      "size_sq_meters": 11264,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  0,
+                  0
+                ],
+                [
+                  96,
+                  0
+                ],
+                [
+                  96,
+                  48
+                ],
+                [
+                  112,
+                  48
+                ],
+                [
+                  112,
+                  112
+                ],
+                [
+                  32,
+                  112
+                ],
+                [
+                  32,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ]
+              ]
+            ],
+            "area_m2": 11264,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 16.0,
+                "y": 82.0,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 52.5,
+                "y": 43.0,
+                "w": 26,
+                "h": 26
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Shelter Woods II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Shelter%20Woods%20II.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/shelter_woods_ii.webp",
+      "translations": {
+        "de": {
+          "name": "Schutzwald II"
+        },
+        "es": {
+          "name": "Bosque Refugio II"
+        },
+        "ja": {
+          "name": "シェルター・ウッズ II"
+        },
+        "pl": {
+          "name": "Leśne Schronisko II"
+        }
+      }
+    },
+    {
+      "id": 58,
+      "name": "Suffocation Pit II",
+      "realm_id": 1,
+      "source_id": 2,
+      "layout_type": "Outdoor",
+      "pallet_density": "Medium",
+      "jungle_gyms_count": 4,
+      "is_shack": true,
+      "is_main_building": true,
+      "size_sq_tiles": 152.0,
+      "size_sq_meters": 9728,
+      "layout": {
+        "v": 1,
+        "cell_m": 8,
+        "width_m": 112,
+        "height_m": 112,
+        "floors": [
+          {
+            "label": null,
+            "outline": [
+              [
+                [
+                  32,
+                  0
+                ],
+                [
+                  112,
+                  0
+                ],
+                [
+                  112,
+                  64
+                ],
+                [
+                  96,
+                  64
+                ],
+                [
+                  96,
+                  96
+                ],
+                [
+                  48,
+                  96
+                ],
+                [
+                  48,
+                  112
+                ],
+                [
+                  16,
+                  112
+                ],
+                [
+                  16,
+                  96
+                ],
+                [
+                  0,
+                  96
+                ],
+                [
+                  0,
+                  32
+                ],
+                [
+                  32,
+                  32
+                ]
+              ]
+            ],
+            "area_m2": 9728,
+            "landmarks": [
+              {
+                "kind": "shack",
+                "x": 82.0,
+                "y": 73.5,
+                "w": 8,
+                "h": 8,
+                "est": true
+              },
+              {
+                "kind": "main",
+                "x": 75.0,
+                "y": 19.0,
+                "w": 24,
+                "h": 24,
+                "est": true
+              },
+              {
+                "kind": "feature",
+                "x": 51.5,
+                "y": 74.5,
+                "label": "WT"
+              }
+            ]
+          }
+        ]
+      },
+      "description": "12-Clock Callout System for Suffocation Pit II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
+      "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Suffocation%20Pit%20II.webp",
+      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/suffocation_pit_ii.webp",
+      "translations": {
+        "de": {
+          "name": "Grubenschacht II"
+        },
+        "es": {
+          "name": "Pozo de Asfixia II"
+        },
+        "ja": {
+          "name": "サファケーション・ピット II"
+        },
+        "pl": {
+          "name": "Duszna Kopalnia II"
+        }
+      }
+    }
+  ]
+}

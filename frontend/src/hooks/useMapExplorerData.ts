@@ -103,6 +103,18 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
   const [loading, setLoading] = useState(cachedMaps === undefined);
   const [openMapId, setOpenMapId] = useState<number | null>(null);
 
+  const [prevSource, setPrevSource] = useState(activeSource);
+  if (prevSource !== activeSource) {
+    setPrevSource(activeSource);
+    if (cachedMaps) {
+      setMaps(cachedMaps);
+      setLoading(false);
+    } else {
+      setMaps([]);
+      setLoading(true);
+    }
+  }
+
   const onAvailableMapsLoadedRef = useRef(onAvailableMapsLoaded);
   useEffect(() => {
     onAvailableMapsLoadedRef.current = onAvailableMapsLoaded;

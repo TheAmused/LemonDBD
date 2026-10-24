@@ -18,7 +18,7 @@ from pathlib import Path
 import cv2
 import numpy as np
 
-CLASSES = ("escaped", "dead", "in_trial", "killer")
+CLASSES = ("escaped", "dead", "surrendered", "in_trial", "killer")
 
 # Default search window for the icon (reference frame), around the centre of the name
 # text. The analyzer passes the window of the located panel instead (see layout.py).

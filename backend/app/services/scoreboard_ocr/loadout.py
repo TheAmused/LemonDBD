@@ -66,7 +66,7 @@ STRONG_LEAD = {"perk": 0.10, "offering": 0.15, "item": 0.15, "addon": 0.10}
 # still leads the field by far. With the right icon removed, a wrong winner never led by
 # more than 0.074 (add-ons) / 0.142 (other kinds) on the samples, so such a lead decides.
 DECISIVE_SCORE = 0.70
-DECISIVE_LEAD = {"perk": 0.20, "offering": 0.20, "item": 0.20, "addon": 0.12}
+DECISIVE_LEAD = {"perk": 0.20, "offering": 0.15, "item": 0.20, "addon": 0.12}
 NEAR_TIE_SCORE = 0.94
 NEAR_TIE_LEAD = 0.025
 CENTRE_GRID = 64

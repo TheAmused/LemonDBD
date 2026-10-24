@@ -22,7 +22,7 @@ export type FeatureCode = (typeof KNOWN_FEATURE_CODES)[number];
  */
 export function getFeatureLandmarkName(
   code: string,
-  dict?: Partial<Dictionary> | { maps?: Record<string, string | undefined> } | null,
+  dict?: Partial<Dictionary> | null,
 ): string {
   if (!dict || !('maps' in dict) || !dict.maps) return code;
   const maps = dict.maps;

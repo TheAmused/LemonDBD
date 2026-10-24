@@ -77,7 +77,7 @@ export default {
   legendClockDesc: 'Numery zegara 1–12 wskazują kierunki od środka mapy',
   legendFeatures: 'Punkty Orientacyjne i Elementy',
   landmarkCowTreeHarvester: 'Krowie Drzewo / Kombajn',
-  landmarkHouseFallBuilding: 'Dom / Budynek Spadania',
+  landmarkHouseFallBuilding: 'Dom / Budynek z Zeskokiem',
   landmarkWaterTower: 'Wieża Ciśnień',
   landmarkCourtyard: 'Dziedziniec',
   landmarkGarden: 'Ogród z Altaną',

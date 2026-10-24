@@ -24,7 +24,7 @@ export interface MapLandmark {
   x: number;
   y: number;
   /** Short callout code of a `feature` (e.g. "WT", "C|H"). */
-  label?: FeatureCode | string;
+  label?: FeatureCode | (string & {});
   /** Footprint in metres (centred on x, y). Absent: drawn as a marker. */
   w?: number;
   h?: number;

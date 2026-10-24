@@ -85,5 +85,5 @@ export default {
   landmarkHill: 'Hügel',
   landmarkTower: 'Minenturm',
   landmarkPagoda: 'Pagode / Plattform',
-  landmarkShuttle: 'Abstürzendes Shuttle',
+  landmarkShuttle: 'Abgestürztes Shuttle',
 } as const;

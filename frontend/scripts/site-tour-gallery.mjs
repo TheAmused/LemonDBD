@@ -12,7 +12,7 @@ import { CATEGORIES, VIEWPORTS } from './site-tour-catalog.mjs';
  * @param {object} [options] - Additional generator options.
  * @returns {string} Fully formed standalone HTML5 document.
  */
-export function generateGalleryHtml(manifest = null, options = {}) {
+export function generateGalleryHtml(manifest = null, _options = {}) {
   const safeManifest = manifest && typeof manifest === 'object' ? manifest : {
     generatedAt: new Date().toISOString(),
     summary: { totalPages: 0, totalModals: 0, viewports: ['desktop', 'laptop', 'tablet', 'mobile'], totalScreenshots: 0 },
@@ -417,6 +417,19 @@ export function generateGalleryHtml(manifest = null, options = {}) {
 
     .gallery-card:hover .card-thumbnail {
       transform: scale(1.02);
+    }
+
+    .card-placeholder {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      background: #090d16;
     }
 
     .card-badges {
@@ -1089,6 +1102,7 @@ export function generateGalleryHtml(manifest = null, options = {}) {
           panX: 0,
           panY: 0,
           isDragging: false,
+          didDrag: false,
           startX: 0,
           startY: 0,
         },
@@ -1159,6 +1173,21 @@ export function generateGalleryHtml(manifest = null, options = {}) {
       }
 
       // Format helpers
+      function getItemPath(item) {
+        if (!item || !item.path) return '';
+        return String(item.path).replace(/\\/g, '/');
+      }
+
+      function escapeHtml(str) {
+        if (str == null) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
       function getItemDevice(item) {
         if (item.device) return item.device.toLowerCase();
         if (item.viewport) return item.viewport.split('-')[0].toLowerCase();
@@ -1207,7 +1236,7 @@ export function generateGalleryHtml(manifest = null, options = {}) {
           const btn = document.createElement('button');
           btn.className = 'pill-btn';
           btn.dataset.category = cat.id;
-          btn.innerHTML = \`\${cat.title} <span class="pill-badge">\${count}</span>\`;
+          btn.innerHTML = escapeHtml(cat.title) + ' <span class="pill-badge">' + count + '</span>';
           categoryPillsContainer.appendChild(btn);
         }
       }
@@ -1278,36 +1307,37 @@ export function generateGalleryHtml(manifest = null, options = {}) {
           const type = getItemType(item);
           const route = item.route || '';
           const dims = item.width && item.height ? \`\${item.width} &times; \${item.height}\` : dev.toUpperCase();
-          const size = item.filesize ? \`&bull; \${item.filesize}\` : '';
+          const size = item.filesize ? \`&bull; \${escapeHtml(item.filesize)}\` : '';
           const typeClass = type === 'modal' ? 'badge-type-modal' : 'badge-type-page';
+          const normPath = getItemPath(item);
 
           return \`
-            <div class="gallery-card" data-index="\${index}" data-id="\${item.id || ''}">
+            <div class="gallery-card" data-index="\${index}" data-id="\${escapeHtml(item.id || '')}">
               <div class="card-thumbnail-wrap">
                 <img
                   class="card-thumbnail"
-                  src="\${item.path}"
-                  alt="\${title}"
+                  src="\${escapeHtml(normPath)}"
+                  alt="\${escapeHtml(title)}"
                   loading="lazy"
-                  onerror="this.onerror=null;this.parentElement.innerHTML='<div style=\\\'color:#64748b;font-size:0.8rem;text-align:center;padding:20px;\\\'>Image pending capture<br/>(\${item.path})</div>';"
+                  onerror="this.onerror=null;const d=document.createElement('div');d.className='card-placeholder';d.textContent='Image pending capture';this.replaceWith(d);"
                 />
                 <div class="card-badges">
-                  <span class="badge \${typeClass}">\${type}</span>
-                  <span class="badge badge-device">\${dev}</span>
+                  <span class="badge \${typeClass}">\${escapeHtml(type)}</span>
+                  <span class="badge badge-device">\${escapeHtml(dev)}</span>
                 </div>
               </div>
               <div class="card-body">
                 <div class="card-title-row">
-                  <div class="card-title">\${title}</div>
+                  <div class="card-title">\${escapeHtml(title)}</div>
                 </div>
-                \${route ? \`<div class="card-route" title="\${route}">\${route}</div>\` : ''}
+                \${route ? \`<div class="card-route" title="\${escapeHtml(route)}">\${escapeHtml(route)}</div>\` : ''}
                 <div class="card-footer">
                   <div class="card-meta-dim">
                     <span>\${dims}</span>
                     <span>\${size}</span>
                   </div>
                   <div class="card-actions">
-                    <button class="card-action-btn action-compare" data-id="\${item.id}" title="Compare with another viewport">Compare</button>
+                    <button class="card-action-btn action-compare" data-id="\${escapeHtml(item.id || '')}" title="Compare with another viewport">Compare</button>
                     <button class="card-action-btn action-zoom" data-index="\${index}" title="Open high-res lightbox">Inspect</button>
                   </div>
                 </div>
@@ -1353,9 +1383,9 @@ export function generateGalleryHtml(manifest = null, options = {}) {
         lightboxBadgeType.className = \`badge \${type === 'modal' ? 'badge-type-modal' : 'badge-type-page'}\`;
         lightboxBadgeDevice.textContent = dev;
         lightboxCounter.textContent = \`\${state.lightbox.currentIndex + 1} of \${state.filteredItems.length}\`;
-        lightboxOpenRaw.href = item.path;
-
-        lightboxImg.src = item.path;
+        const normPath = getItemPath(item);
+        lightboxOpenRaw.href = normPath;
+        lightboxImg.src = normPath;
         applyLightboxTransform();
       }
 
@@ -1405,14 +1435,27 @@ export function generateGalleryHtml(manifest = null, options = {}) {
           featureMap.get(key).push(item);
         }
 
-        // Populate Feature Dropdown
-        compareFeatureSelect.innerHTML = Array.from(featureMap.keys()).map(feat => {
-          return \`<option value="\${feat}">\${feat}</option>\`;
-        }).join('');
+        // Synchronize feature with leftId if set
+        if (state.compare.leftId) {
+          const selectedItem = allItems.find(i => i.id === state.compare.leftId);
+          if (selectedItem) {
+            const itemFeature = selectedItem.route || selectedItem.category || 'general';
+            if (featureMap.has(itemFeature)) {
+              state.compare.feature = itemFeature;
+            }
+          }
+        }
 
         if (!state.compare.feature && featureMap.size > 0) {
           state.compare.feature = featureMap.keys().next().value;
         }
+
+        // Populate Feature Dropdown
+        compareFeatureSelect.innerHTML = Array.from(featureMap.keys()).map(feat => {
+          const sel = feat === state.compare.feature ? 'selected' : '';
+          return '<option value="' + escapeHtml(feat) + '" ' + sel + '>' + escapeHtml(feat) + '</option>';
+        }).join('');
+
         if (state.compare.feature) {
           compareFeatureSelect.value = state.compare.feature;
         }
@@ -1428,18 +1471,23 @@ export function generateGalleryHtml(manifest = null, options = {}) {
 
         function makeOptions(selectedId) {
           return optionsList.map(item => {
-            const label = \`[\${getItemDevice(item)}] \${getItemTitle(item)} (\${getItemType(item)})\`;
+            const label = '[' + getItemDevice(item) + '] ' + getItemTitle(item) + ' (' + getItemType(item) + ')';
             const sel = item.id === selectedId ? 'selected' : '';
-            return \`<option value="\${item.id}" \${sel}>\${label}</option>\`;
+            return '<option value="' + escapeHtml(item.id) + '" ' + sel + '>' + escapeHtml(label) + '</option>';
           }).join('');
         }
 
         // Try smart auto-pair: desktop on left, mobile on right
-        let leftItem = optionsList.find(i => getItemDevice(i) === 'desktop') || optionsList[0];
-        let rightItem = optionsList.find(i => getItemDevice(i) === 'mobile') || optionsList[Math.min(1, optionsList.length - 1)];
+        let leftItem = optionsList.find(i => i.id === state.compare.leftId) ||
+          optionsList.find(i => getItemDevice(i) === 'desktop') ||
+          optionsList[0];
+        let rightItem = optionsList.find(i => i.id === state.compare.rightId && i.id !== leftItem?.id) ||
+          optionsList.find(i => getItemDevice(i) === 'mobile' && i.id !== leftItem?.id) ||
+          optionsList.find(i => i.id !== leftItem?.id) ||
+          optionsList[0];
 
-        if (!state.compare.leftId && leftItem) state.compare.leftId = leftItem.id;
-        if (!state.compare.rightId && rightItem) state.compare.rightId = rightItem.id;
+        state.compare.leftId = leftItem ? leftItem.id : '';
+        state.compare.rightId = rightItem ? rightItem.id : '';
 
         compareLeftSelect.innerHTML = makeOptions(state.compare.leftId);
         compareRightSelect.innerHTML = makeOptions(state.compare.rightId);
@@ -1455,12 +1503,12 @@ export function generateGalleryHtml(manifest = null, options = {}) {
         if (leftItem) {
           compareLeftTitle.textContent = getItemTitle(leftItem);
           compareLeftBadge.textContent = getItemDevice(leftItem);
-          compareLeftImg.src = leftItem.path;
+          compareLeftImg.src = getItemPath(leftItem);
         }
         if (rightItem) {
           compareRightTitle.textContent = getItemTitle(rightItem);
           compareRightBadge.textContent = getItemDevice(rightItem);
-          compareRightImg.src = rightItem.path;
+          compareRightImg.src = getItemPath(rightItem);
         }
       }
 
@@ -1556,6 +1604,10 @@ export function generateGalleryHtml(manifest = null, options = {}) {
           if (compareBtn) {
             e.stopPropagation();
             const itemId = compareBtn.dataset.id;
+            const item = (state.manifest.items || []).find(i => i.id === itemId);
+            if (item) {
+              state.compare.feature = item.route || item.category || 'general';
+            }
             state.compare.leftId = itemId;
             document.getElementById('view-compare-btn').click();
             return;
@@ -1565,6 +1617,13 @@ export function generateGalleryHtml(manifest = null, options = {}) {
           if (!card) return;
           const index = parseInt(card.dataset.index, 10);
           openLightbox(index);
+        });
+
+        // Close on clicking backdrop
+        lightboxModal.addEventListener('click', (e) => {
+          if ((e.target === lightboxModal || e.target === lightboxStage) && !state.lightbox.didDrag) {
+            closeLightbox();
+          }
         });
 
         // Lightbox Navigation & Actions
@@ -1577,6 +1636,7 @@ export function generateGalleryHtml(manifest = null, options = {}) {
 
         // Lightbox Panning / Dragging
         lightboxStage.addEventListener('mousedown', (e) => {
+          state.lightbox.didDrag = false;
           if (state.lightbox.zoom <= 1) return;
           state.lightbox.isDragging = true;
           state.lightbox.startX = e.clientX - state.lightbox.panX;
@@ -1586,6 +1646,7 @@ export function generateGalleryHtml(manifest = null, options = {}) {
 
         window.addEventListener('mousemove', (e) => {
           if (!state.lightbox.isDragging) return;
+          state.lightbox.didDrag = true;
           state.lightbox.panX = e.clientX - state.lightbox.startX;
           state.lightbox.panY = e.clientY - state.lightbox.startY;
           applyLightboxTransform();

@@ -392,10 +392,10 @@ export const MODAL_TARGETS = [
     id: 'streaks-scoreboard',
     title: 'Scoreboard OCR Scan Modal',
     category: 'modals',
-    route: '/en/admin',
+    route: '/en/admin?tab=tools',
     folder: 'streaks-scoreboard',
     requiresAuth: 'admin',
-    triggerSelector: 'button:has-text("Scoreboard"), button:has-text("OCR")',
+    triggerSelector: 'li:has-text("OCR") button, li:has-text("Scoreboard") button, button:has-text("OCR")',
     modalSelector: 'dialog[open], [role="dialog"]',
   },
   {

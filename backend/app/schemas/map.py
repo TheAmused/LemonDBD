@@ -62,7 +62,6 @@ class MapRealmBase(BaseModel):
     is_main_building: bool | None = DEFAULT_IS_MAIN_BUILDING
     size_sq_tiles: float | None = None
     size_sq_meters: int | None = None
-    layout: dict[str, Any] | None = None
     translations: dict[str, Any] | None = None
 
 
@@ -88,7 +87,16 @@ class MapRealmResponse(BaseModel):
     is_main_building: bool = DEFAULT_IS_MAIN_BUILDING
     size_sq_tiles: float | None = None
     size_sq_meters: int | None = None
-    layout: dict[str, Any] | None = None
     description: str | None = None
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class MapLayoutDetailResponse(BaseModel):
+    """Vector layout footprint for a single map served on demand."""
+
+    map_id: int
+    version: int
+    layout: dict[str, Any]
+
+    model_config = ConfigDict(from_attributes=True)

@@ -365,6 +365,7 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
   const markConfigured = useCallback(() => {
     setIsConfigured(true);
+    writeLocalPreferences(preferencesRef.current);
     if (typeof window !== 'undefined') {
       try {
         localStorage.setItem(PREFERENCES_CONFIGURED_KEY, 'true');

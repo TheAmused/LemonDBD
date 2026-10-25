@@ -46,9 +46,16 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
   const prefs = useSmashPrefs();
   const { effectsEnabled } = prefs;
   const isPromptOpen = !isConfigured && !promptDismissed;
-  const overlays = useHubOverlays(prefs.isOpen || isPromptOpen);
+  const overlays = useHubOverlays(isPromptOpen);
   const exit = useCardExit();
   useSmashSound();
+
+  const { close: closeSmashPrefs, isOpen: isSmashPrefsOpen } = prefs;
+  useEffect(() => {
+    if (isSmashPrefsOpen) {
+      closeSmashPrefs();
+    }
+  }, [isSmashPrefsOpen, closeSmashPrefs]);
 
   const deck = useSmashDeck({
     selectedRosterSlug,

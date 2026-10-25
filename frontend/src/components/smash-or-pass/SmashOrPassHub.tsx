@@ -43,19 +43,11 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
   // Order matters: the votes' initial state reads the roster the rosters hook just restored.
   const rosters = useSmashRosters(locale);
   const { activeRoster, selectedRosterSlug } = rosters;
-  const prefs = useSmashPrefs();
-  const { effectsEnabled } = prefs;
+  const { effectsEnabled } = useSmashPrefs();
   const isPromptOpen = !isConfigured && !promptDismissed;
   const overlays = useHubOverlays(isPromptOpen);
   const exit = useCardExit();
   useSmashSound();
-
-  const { close: closeSmashPrefs, isOpen: isSmashPrefsOpen } = prefs;
-  useEffect(() => {
-    if (isSmashPrefsOpen) {
-      closeSmashPrefs();
-    }
-  }, [isSmashPrefsOpen, closeSmashPrefs]);
 
   const deck = useSmashDeck({
     selectedRosterSlug,

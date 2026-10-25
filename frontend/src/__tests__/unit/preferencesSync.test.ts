@@ -76,4 +76,46 @@ describe('Preferences synchronization and database precedence', () => {
       chosenAt: 1700000000,
     });
   });
+
+  it('writeLocalPreferences dispatches nsfw-pref-change and preferences-changed with real EventTarget without unbounded loops', () => {
+    const store = new Map<string, string>();
+    const originalWindow = (globalThis as Record<string, unknown>).window;
+    const originalLocalStorage = (globalThis as Record<string, unknown>).localStorage;
+
+    const eventTarget = new EventTarget();
+    let nsfwEventFired = 0;
+    let prefsEventFired = 0;
+
+    eventTarget.addEventListener('nsfw-pref-change', () => {
+      nsfwEventFired++;
+    });
+    eventTarget.addEventListener('preferences-changed', () => {
+      prefsEventFired++;
+    });
+
+    (globalThis as Record<string, unknown>).window = {
+      dispatchEvent: (e: Event) => eventTarget.dispatchEvent(e),
+      addEventListener: eventTarget.addEventListener.bind(eventTarget),
+      removeEventListener: eventTarget.removeEventListener.bind(eventTarget),
+    };
+    (globalThis as Record<string, unknown>).localStorage = {
+      getItem: (k: string) => store.get(k) ?? null,
+      setItem: (k: string, v: string) => void store.set(k, v),
+    };
+
+    try {
+      const { writeLocalPreferences } = require('@/context/PreferencesContext');
+      writeLocalPreferences(local);
+      assert.equal(store.get(PREFERENCES_CONFIGURED_KEY), 'true');
+      assert.equal(nsfwEventFired, 1, 'nsfw-pref-change should fire exactly once');
+      assert.equal(prefsEventFired, 1, 'preferences-changed should fire exactly once');
+    } finally {
+      (globalThis as Record<string, unknown>).window = originalWindow;
+      if (originalLocalStorage) {
+        (globalThis as Record<string, unknown>).localStorage = originalLocalStorage;
+      } else {
+        delete (globalThis as Record<string, unknown>).localStorage;
+      }
+    }
+  });
 });

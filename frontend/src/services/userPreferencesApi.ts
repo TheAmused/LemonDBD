@@ -36,16 +36,20 @@ export async function fetchUserPreferences(token?: string | null): Promise<Remot
 export async function saveUserPreferences(
   prefs: RemoteUserPreferences,
   token?: string | null
-): Promise<void> {
+): Promise<RemoteUserPreferences | null> {
   try {
     const base = getBackendBaseUrl();
-    await fetch(`${base}/api/v1/user/preferences`, {
+    const res = await fetch(`${base}/api/v1/user/preferences`, {
       method: 'PUT',
       credentials: 'include',
       headers: authHeaders(token, { json: true }),
       body: JSON.stringify(prefs),
     });
+    if (!res.ok) return null;
+    const json = (await res.json()) as { data?: RemoteUserPreferences | null };
+    return json?.data ?? null;
   } catch {
     // Network or storage failure ignored on background sync
+    return null;
   }
 }

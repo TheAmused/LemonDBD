@@ -2,7 +2,11 @@
 export default {
   title: '設定',
   pageTitle: '設定',
-  subtitle: '音声、視覚効果、コンテンツの設定をカスタマイズします。',
+  subtitle: 'サイト全体の機能、マッチの音響、視覚パフォーマンスを細かく調整します。',
+  sectionGlobalTitle: 'サイト全体の基本設定',
+  sectionGlobalDesc: 'すべてのページ、アーカイブ、ナビゲーションに適用される設定です。',
+  sectionMinigamesTitle: 'Smash or Pass ＆ ミニゲーム',
+  sectionMinigamesDesc: 'マッチ内音声、脅威範囲の心音、インタラクティブモードのモーション物理演算。',
   audio: 'オーディオ',
   soundEffects: '効果音',
   soundEffectsDesc: '操作時やイベント発生時に効果音を再生します。',

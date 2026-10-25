@@ -19,8 +19,13 @@ import { useCardExit } from './hub/useCardExit';
 import { useHubHotkeys } from './hub/useHubHotkeys';
 import { CalmVoteMark } from './hub/CalmVoteMark';
 import { useHubOverlays } from './hub/useHubOverlays';
-import { PreferencesPromptModal } from '@/components/common/PreferencesPromptModal';
+import {
+  PreferencesPromptModal,
+  isSmashEntryAcknowledged,
+  markSmashEntryAcknowledged,
+} from '@/components/common/PreferencesPromptModal';
 import { usePreferences } from '@/hooks/usePreferences';
+import { useOnceInBrowser } from '@/hooks/useOnceInBrowser';
 import { useSmashPrefs } from './prefs/useSmashPrefs';
 import { useSmashDeck } from './hub/useSmashDeck';
 import { useSmashRosters } from './hub/useSmashRosters';
@@ -38,13 +43,18 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
   const dict = useDictionary();
   const { isAuthenticated } = useAuth();
   const { isConfigured } = usePreferences();
+  const [smashAck, setSmashAck] = useState<boolean>(true);
   const [promptDismissed, setPromptDismissed] = useState<boolean>(false);
+
+  useOnceInBrowser(() => {
+    setSmashAck(isSmashEntryAcknowledged());
+  });
 
   // Order matters: the votes' initial state reads the roster the rosters hook just restored.
   const rosters = useSmashRosters(locale);
   const { activeRoster, selectedRosterSlug } = rosters;
   const { effectsEnabled } = useSmashPrefs();
-  const isPromptOpen = !isConfigured && !promptDismissed;
+  const isPromptOpen = (!smashAck || !isConfigured) && !promptDismissed;
   const overlays = useHubOverlays(isPromptOpen);
   const exit = useCardExit();
   useSmashSound();
@@ -279,7 +289,12 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
 
       <PreferencesPromptModal
         isOpen={isPromptOpen}
-        onClose={() => setPromptDismissed(true)}
+        mode="smash"
+        onClose={() => {
+          markSmashEntryAcknowledged();
+          setSmashAck(true);
+          setPromptDismissed(true);
+        }}
       />
 
       <HubModals

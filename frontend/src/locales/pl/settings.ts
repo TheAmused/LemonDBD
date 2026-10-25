@@ -2,7 +2,11 @@
 export default {
   title: 'Ustawienia',
   pageTitle: 'Ustawienia',
-  subtitle: 'Dostosuj preferencje dźwięku, efektów wizualnych i treści.',
+  subtitle: 'Dostosuj globalne funkcje strony, oprawę dźwiękową prób i wydajność grafiki.',
+  sectionGlobalTitle: 'Globalne ustawienia strony',
+  sectionGlobalDesc: 'Ustawienia obowiązujące na wszystkich stronach, w archiwach i nawigacji.',
+  sectionMinigamesTitle: 'Smash or Pass i minigry',
+  sectionMinigamesDesc: 'Dźwięki w próbie, bicie serca promienia terroru i fizyka ruchu w trybach interaktywnych.',
   audio: 'Dźwięk',
   soundEffects: 'Efekty dźwiękowe',
   soundEffectsDesc: 'Odtwarzaj efekty dźwiękowe podczas interakcji i zdarzeń.',

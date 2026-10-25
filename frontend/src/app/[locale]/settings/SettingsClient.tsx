@@ -3,10 +3,11 @@
 
 import React from 'react';
 import {
+  CampfireIcon,
+  ThornHeartIcon,
   ThunderPulseIcon,
   EntityHeartIcon,
   ChaosSwirlIcon,
-  CampfireIcon,
   CautionVeilIcon,
   SealCheckIcon,
   WardCharmIcon,
@@ -22,13 +23,19 @@ import { useAuth } from '@/context/AuthContext';
 interface SectionCardHeaderProps {
   icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' | 'false' }>;
   title: string;
+  description?: string;
 }
 
-function SectionCardHeader({ icon: Icon, title }: SectionCardHeaderProps) {
+function SectionCardHeader({ icon: Icon, title, description }: SectionCardHeaderProps) {
   return (
-    <div className="flex items-center gap-2.5 pb-2 border-b border-border-subtle">
-      <Icon className="h-5 w-5 text-accent-red" aria-hidden="true" />
-      <h2 className="type-section-title text-text-primary">{title}</h2>
+    <div className="space-y-1 pb-3 border-b border-border-subtle">
+      <div className="flex items-center gap-2.5">
+        <Icon className="h-5 w-5 text-accent-red" aria-hidden="true" />
+        <h2 className="type-section-title text-text-primary">{title}</h2>
+      </div>
+      {description && (
+        <p className="type-body-2xs text-text-muted">{description}</p>
+      )}
     </div>
   );
 }
@@ -70,70 +77,17 @@ export function SettingsClient() {
         </div>
       </header>
 
-      {/* 1. Audio Surface Card */}
+      {/* 1. Global Site Preferences (Applies site-wide across all pages) */}
       <Surface tone="flat" padding="lg" className="space-y-5">
-        <SectionCardHeader icon={ThunderPulseIcon} title={dict.settings.audio} />
+        <SectionCardHeader
+          icon={CampfireIcon}
+          title={dict.settings.sectionGlobalTitle}
+          description={dict.settings.sectionGlobalDesc}
+        />
 
         <div className="space-y-4 divide-y divide-border-subtle/60">
-          <div className="pt-2 flex items-center justify-between gap-4">
-            <div className="space-y-1">
-              <span className="type-strong-fluid text-text-primary block">
-                {dict.settings.soundEffects}
-              </span>
-              <p className="type-body-fluid text-text-secondary">
-                {dict.settings.soundEffectsDesc}
-              </p>
-            </div>
-            <Switch
-              checked={preferences.sounds}
-              onChange={(checked) => void updatePreferences({ sounds: checked })}
-              ariaLabel={dict.settings.soundEffects}
-            />
-          </div>
-
-          <div className="pt-4 flex items-center justify-between gap-4">
-            <div className="space-y-1">
-              <div className="flex items-center gap-1.5">
-                <EntityHeartIcon className="h-4 w-4 text-accent-red" aria-hidden="true" />
-                <span className="type-strong-fluid text-text-primary">
-                  {dict.settings.music}
-                </span>
-              </div>
-              <p className="type-body-fluid text-text-secondary">
-                {dict.settings.musicDesc}
-              </p>
-            </div>
-            <Switch
-              checked={preferences.music}
-              onChange={(checked) => void updatePreferences({ music: checked })}
-              ariaLabel={dict.settings.music}
-            />
-          </div>
-        </div>
-      </Surface>
-
-      {/* 2. Visuals & Motion Surface Card */}
-      <Surface tone="flat" padding="lg" className="space-y-5">
-        <SectionCardHeader icon={ChaosSwirlIcon} title={dict.settings.visuals} />
-
-        <div className="space-y-4 divide-y divide-border-subtle/60">
-          <div className="pt-2 flex items-center justify-between gap-4">
-            <div className="space-y-1">
-              <span className="type-strong-fluid text-text-primary block">
-                {dict.settings.animations}
-              </span>
-              <p className="type-body-fluid text-text-secondary">
-                {dict.settings.animationsDesc}
-              </p>
-            </div>
-            <Switch
-              checked={preferences.effects}
-              onChange={(checked) => void updatePreferences({ effects: checked })}
-              ariaLabel={dict.settings.animations}
-            />
-          </div>
-
-          <div className="pt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          {/* Campfire Particles (Ambient Background) */}
+          <div className="pt-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-1.5">
                 <CampfireIcon className="h-4 w-4 text-accent-amber" aria-hidden="true" />
@@ -163,27 +117,100 @@ export function SettingsClient() {
               ))}
             </fieldset>
           </div>
+
+          {/* Mature / 18+ Content Toggle */}
+          <div className="pt-4 flex items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <CautionVeilIcon className="h-4 w-4 text-accent-amber" aria-hidden="true" />
+                <span className="type-strong-fluid text-text-primary">
+                  {dict.settings.nsfw}
+                </span>
+                <span className="type-label-2xs font-bold text-accent-amber px-2 py-0.5 rounded-full border border-accent-amber/40 bg-accent-amber/10">
+                  18+
+                </span>
+              </div>
+              <p className="type-body-fluid text-text-secondary">
+                {dict.settings.nsfwDesc}
+              </p>
+            </div>
+            <Switch
+              checked={preferences.nsfw}
+              onChange={(checked) => void updatePreferences({ nsfw: checked })}
+              ariaLabel={dict.settings.nsfw}
+            />
+          </div>
         </div>
       </Surface>
 
-      {/* 3. Content & Filters Surface Card */}
+      {/* 2. Smash or Pass & Minigames (In-trial effects) */}
       <Surface tone="flat" padding="lg" className="space-y-5">
-        <SectionCardHeader icon={CautionVeilIcon} title={dict.settings.content} />
+        <SectionCardHeader
+          icon={ThornHeartIcon}
+          title={dict.settings.sectionMinigamesTitle}
+          description={dict.settings.sectionMinigamesDesc}
+        />
 
-        <div className="pt-2 flex items-center justify-between gap-4">
-          <div className="space-y-1">
-            <span className="type-strong-fluid text-text-primary block">
-              {dict.settings.nsfw}
-            </span>
-            <p className="type-body-fluid text-text-secondary">
-              {dict.settings.nsfwDesc}
-            </p>
+        <div className="space-y-4 divide-y divide-border-subtle/60">
+          {/* Sound Effects */}
+          <div className="pt-2 flex items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-1.5">
+                <ThunderPulseIcon className="h-4 w-4 text-accent-red" aria-hidden="true" />
+                <span className="type-strong-fluid text-text-primary">
+                  {dict.settings.soundEffects}
+                </span>
+              </div>
+              <p className="type-body-fluid text-text-secondary">
+                {dict.settings.soundEffectsDesc}
+              </p>
+            </div>
+            <Switch
+              checked={preferences.sounds}
+              onChange={(checked) => void updatePreferences({ sounds: checked })}
+              ariaLabel={dict.settings.soundEffects}
+            />
           </div>
-          <Switch
-            checked={preferences.nsfw}
-            onChange={(checked) => void updatePreferences({ nsfw: checked })}
-            ariaLabel={dict.settings.nsfw}
-          />
+
+          {/* Music */}
+          <div className="pt-4 flex items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-1.5">
+                <EntityHeartIcon className="h-4 w-4 text-accent-red" aria-hidden="true" />
+                <span className="type-strong-fluid text-text-primary">
+                  {dict.settings.music}
+                </span>
+              </div>
+              <p className="type-body-fluid text-text-secondary">
+                {dict.settings.musicDesc}
+              </p>
+            </div>
+            <Switch
+              checked={preferences.music}
+              onChange={(checked) => void updatePreferences({ music: checked })}
+              ariaLabel={dict.settings.music}
+            />
+          </div>
+
+          {/* Visual Animations */}
+          <div className="pt-4 flex items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-1.5">
+                <ChaosSwirlIcon className="h-4 w-4 text-accent-red" aria-hidden="true" />
+                <span className="type-strong-fluid text-text-primary">
+                  {dict.settings.animations}
+                </span>
+              </div>
+              <p className="type-body-fluid text-text-secondary">
+                {dict.settings.animationsDesc}
+              </p>
+            </div>
+            <Switch
+              checked={preferences.effects}
+              onChange={(checked) => void updatePreferences({ effects: checked })}
+              ariaLabel={dict.settings.animations}
+            />
+          </div>
         </div>
       </Surface>
     </div>

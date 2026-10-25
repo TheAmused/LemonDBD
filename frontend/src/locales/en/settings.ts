@@ -2,7 +2,11 @@
 export default {
   title: 'Settings',
   pageTitle: 'Settings',
-  subtitle: 'Customize your audio, visual effects, and content preferences.',
+  subtitle: 'Fine-tune global site features, trial soundscapes, and visual performance.',
+  sectionGlobalTitle: 'Global Site Settings',
+  sectionGlobalDesc: 'Preferences that apply across all pages, character archives, and navigation.',
+  sectionMinigamesTitle: 'Smash or Pass & Minigames',
+  sectionMinigamesDesc: 'In-trial audio, terror-radius heartbeats, and motion physics for interactive modes.',
   audio: 'Audio',
   soundEffects: 'Sound Effects',
   soundEffectsDesc: 'Play sound effects during interactions and events.',

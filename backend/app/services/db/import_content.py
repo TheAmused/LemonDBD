@@ -12,6 +12,7 @@ from app.models.chapter import Chapter
 from app.models.character import Killer, Survivor
 from app.models.equipment import Item, ItemAddon, ItemCategory, KillerAddon, Offering
 from app.models.map import MapRealm, MapSource, Realm
+from app.models.map_layout import MapLayout
 from app.models.perk import Perk
 from app.models.perk_types import DEFAULT_PERK_TYPES
 from app.schemas.perk import PerkTypeSpec
@@ -315,7 +316,7 @@ def _import_maps(
                 "callout_image_url", "callout_image_local_path", "translations",
                 "layout_type", "pallet_density", "jungle_gyms_count",
                 "is_shack", "is_main_building",
-                "size_sq_tiles", "size_sq_meters", "layout",
+                "size_sq_tiles", "size_sq_meters",
             ]:
                 if k in mdata:
                     setattr(map_obj, k, mdata[k])
@@ -334,6 +335,37 @@ def _import_maps(
             )
         db.session.flush()
         summary["maps"] = {"created": created, "updated": updated}
+
+
+def _import_map_layouts(
+    data: dict[str, Any],
+    target_keys: set[str],
+    summary: dict[str, dict[str, int]],
+) -> None:
+    """Map vector layouts, keyed by map_id."""
+    if "map_layouts" in target_keys and "map_layouts" in data:
+        created = updated = 0
+        for ldata in data["map_layouts"]:
+            map_id = ldata.get("map_id")
+            if not isinstance(map_id, int):
+                continue
+            layout_obj = db.session.scalar(
+                select(MapLayout).where(MapLayout.map_id == map_id)
+            )
+            if not layout_obj:
+                layout_obj = MapLayout(
+                    map_id=map_id,
+                    version=ldata.get("version", 1),
+                    layout_data=ldata.get("layout_data", {}),
+                )
+                db.session.add(layout_obj)
+                created += 1
+            else:
+                layout_obj.version = ldata.get("version", 1)
+                layout_obj.layout_data = ldata.get("layout_data", {})
+                updated += 1
+        db.session.flush()
+        summary["map_layouts"] = {"created": created, "updated": updated}
 
 
 def import_content(
@@ -356,4 +388,5 @@ def import_content(
     _import_characters(data, target_keys, summary, static_dir)
     _import_equipment(data, target_keys, summary, static_dir)
     _import_maps(data, target_keys, summary, static_dir)
+    _import_map_layouts(data, target_keys, summary)
     import_tier_lists(data, target_keys, summary)

@@ -1,5 +1,5 @@
 # backend/tests/unit/test_map_layouts_seed.py
-"""The map footprints in maps/lemondbd.json (`layout`) agree with the map sizes beside them.
+"""The map footprints in map_layouts.json agree with the map sizes beside them.
 
 Each layout is the current wiki.gg outline traced on the 8 m (sqT) grid, in metres. A wrong
 trace, a stale outline or a size typo shows up as an area that no longer matches `size_sq_meters`.
@@ -11,6 +11,7 @@ import pytest
 
 CONTENT = Path(__file__).resolve().parents[2] / "app" / "seeds" / "data" / "content"
 SEED = CONTENT / "maps" / "lemondbd.json"
+LAYOUTS_SEED = CONTENT / "map_layouts.json"
 STATIC = Path(__file__).resolve().parents[2] / "app" / "static"
 
 #: Forgotten Ruins' size counts the Dungeon too, whose outline the wiki does not publish.
@@ -22,6 +23,11 @@ def _maps() -> list[dict]:
         return json.load(f)["maps"]
 
 
+def _map_layouts() -> dict[int, dict]:
+    with open(LAYOUTS_SEED, encoding="utf-8") as f:
+        return {item["map_id"]: item["layout_data"] for item in json.load(f)["map_layouts"]}
+
+
 def _ring_area(ring: list[list[float]]) -> float:
     return abs(sum(a[0] * b[1] - b[0] * a[1] for a, b in zip(ring, ring[1:] + ring[:1]))) / 2
 
@@ -29,7 +35,11 @@ def _ring_area(ring: list[list[float]]) -> float:
 @pytest.mark.unit
 def test_every_map_is_drawn_and_from_our_own_source() -> None:
     maps = _maps()
-    assert all(m.get("layout") for m in maps)
+    layouts = _map_layouts()
+    assert all("layout" not in m for m in maps), "lemondbd.json maps must not contain inlined layout"
+    assert len(maps) == 58
+    assert len(layouts) == 58
+    assert all(m["id"] in layouts for m in maps)
     assert {m["source_id"] for m in maps} == {2}
     with open(CONTENT / "map_sources.json", encoding="utf-8") as f:
         sources = {s["id"]: s["code"] for s in json.load(f)["map_sources"]}
@@ -38,14 +48,16 @@ def test_every_map_is_drawn_and_from_our_own_source() -> None:
 
 @pytest.mark.unit
 def test_only_maps_without_a_published_outline_are_approximate() -> None:
-    approx = {m["name"] for m in _maps() if m["layout"].get("approx")}
+    layouts = _map_layouts()
+    approx = {m["name"] for m in _maps() if layouts.get(m["id"], {}).get("approx")}
     assert approx == {"The Underground Complex", "Police Station East Wing", "Police Station West Wing", "Trickster's Delusion"}
 
 
 @pytest.mark.unit
 def test_every_layout_matches_the_map_size() -> None:
+    layouts = _map_layouts()
     for m in _maps():
-        layout = m.get("layout")
+        layout = layouts.get(m["id"])
         if not layout or m["name"] in PARTIAL_FLOORS:
             continue
         total = sum(_ring_area(r) for floor in layout["floors"] for r in floor["outline"])
@@ -54,8 +66,9 @@ def test_every_layout_matches_the_map_size() -> None:
 
 @pytest.mark.unit
 def test_layout_shape_is_well_formed() -> None:
+    layouts = _map_layouts()
     for m in _maps():
-        layout = m.get("layout")
+        layout = layouts.get(m["id"])
         if not layout:
             continue
         assert layout["v"] == 1 and layout["cell_m"] == 8
@@ -112,12 +125,17 @@ def _point_in_ring(x: float, y: float, ring: list[list[float]]) -> bool:
 
 @pytest.mark.unit
 def test_every_landmark_stands_on_its_floor() -> None:
+    layouts = _map_layouts()
     kinds = set()
     for m in _maps():
-        for floor in m["layout"]["floors"]:
+        layout = layouts.get(m["id"])
+        if not layout:
+            continue
+        for floor in layout["floors"]:
             for lm in floor.get("landmarks", []):
                 kinds.add(lm["kind"])
                 assert lm["kind"] in ("main", "shack", "feature"), m["name"]
                 assert (lm["kind"] == "feature") == ("label" in lm), m["name"]
                 assert any(_point_in_ring(lm["x"], lm["y"], r) for r in floor["outline"]), (m["name"], lm)
     assert kinds == {"main", "shack", "feature"}
+

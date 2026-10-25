@@ -3,10 +3,12 @@ import assert from 'node:assert/strict';
 import {
   defaultPreferences,
   reconcileWithDatabase,
+  fromRemote,
   PREFERENCES_STORAGE_KEY,
   PREFERENCES_CONFIGURED_KEY,
   type SitePreferences,
 } from '@/context/PreferencesContext';
+import type { RemoteUserPreferences } from '@/services/userPreferencesApi';
 
 describe('Preferences synchronization and database precedence', () => {
   const local: SitePreferences = {
@@ -52,5 +54,26 @@ describe('Preferences synchronization and database precedence', () => {
   it('exports valid localStorage keys for preferences and configured status', () => {
     assert.equal(PREFERENCES_STORAGE_KEY, 'lemondbd_preferences_v2');
     assert.equal(PREFERENCES_CONFIGURED_KEY, 'lemondbd_preferences_configured_v2');
+  });
+
+  it('fromRemote correctly converts snake_case RemoteUserPreferences to camelCase SitePreferences', () => {
+    const remoteInput: RemoteUserPreferences = {
+      effects: false,
+      sounds: true,
+      music: false,
+      nsfw: true,
+      background_animation: 'eco',
+      chosen_at: 1700000000,
+    };
+
+    const converted = fromRemote(remoteInput);
+    assert.deepEqual(converted, {
+      effects: false,
+      sounds: true,
+      music: false,
+      nsfw: true,
+      backgroundAnimation: 'eco',
+      chosenAt: 1700000000,
+    });
   });
 });

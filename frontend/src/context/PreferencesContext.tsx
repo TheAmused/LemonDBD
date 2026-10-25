@@ -3,7 +3,6 @@
 
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { useOptionalAuth } from '@/context/AuthContext';
-import { SmashSounds } from '@/components/smash-or-pass/SmashSoundEffects';
 import {
   fetchUserPreferences,
   saveUserPreferences,
@@ -150,6 +149,11 @@ export function readLocalPreferences(): SitePreferences | null {
           chosenAt: typeof p.chosenAt === 'number' ? p.chosenAt : 0,
         };
       }
+    } else if (rawNsfw !== null) {
+      return {
+        ...defaultPreferences(),
+        nsfw: rawNsfw === 'true',
+      };
     }
   } catch {
     return null;
@@ -222,11 +226,17 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
   const [isSyncing, setIsSyncing] = useState<boolean>(false);
 
   const syncedUserIdRef = useRef<number | null>(null);
+  const preferencesRef = useRef<SitePreferences>(preferences);
+
+  useEffect(() => {
+    preferencesRef.current = preferences;
+  }, [preferences]);
 
   // Initialize from localStorage once running in the browser
   useOnceInBrowser(() => {
     const local = readLocalPreferences();
     if (local) {
+      preferencesRef.current = local;
       setPreferences(local);
     }
     setIsConfigured(readIsConfigured());
@@ -249,12 +259,13 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
         const remote = await fetchUserPreferences(token);
         if (cancelled) return;
 
-        const currentLocal = readLocalPreferences() ?? defaultPreferences();
+        const currentLocal = readLocalPreferences() ?? preferencesRef.current;
         const { preferences: reconciled, pushToAccount } = reconcileWithDatabase(
           currentLocal,
           remote
         );
 
+        preferencesRef.current = reconciled;
         setPreferences(reconciled);
         writeLocalPreferences(reconciled);
         setIsConfigured(true);
@@ -276,15 +287,29 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
     };
   }, [isAuthenticated, userId, token]);
 
-  // Synchronize sounds & music with SmashSoundEffects audio engine
+  const updatePreferences = useCallback(
+    async (change: Partial<SitePreferences>) => {
+      const next: SitePreferences = {
+        ...preferencesRef.current,
+        ...change,
+        chosenAt: Date.now(),
+      };
+      preferencesRef.current = next;
+      setPreferences(next);
+      setIsConfigured(true);
+      writeLocalPreferences(next);
+
+      if (isAuthenticated && userId !== null) {
+        await saveUserPreferences(toRemote(next), token);
+      }
+    },
+    [isAuthenticated, userId, token]
+  );
+
+  const updatePreferencesRef = useRef(updatePreferences);
   useEffect(() => {
-    try {
-      SmashSounds.applyPreferences({
-        sounds: preferences.sounds,
-        music: preferences.music,
-      });
-    } catch {}
-  }, [preferences.sounds, preferences.music]);
+    updatePreferencesRef.current = updatePreferences;
+  });
 
   // Listen to external/tab updates
   useEffect(() => {
@@ -293,23 +318,22 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
     const handlePreferencesChange = (e: Event) => {
       const custom = e as CustomEvent<SitePreferences>;
       if (custom.detail) {
+        preferencesRef.current = custom.detail;
         setPreferences(custom.detail);
         setIsConfigured(true);
       } else {
         const local = readLocalPreferences();
-        if (local) setPreferences(local);
+        if (local) {
+          preferencesRef.current = local;
+          setPreferences(local);
+        }
       }
     };
 
     const handleNsfwChange = (e: Event) => {
       const custom = e as CustomEvent<boolean>;
       if (typeof custom.detail === 'boolean') {
-        setPreferences((prev) => {
-          if (prev.nsfw === custom.detail) return prev;
-          const next = { ...prev, nsfw: custom.detail, chosenAt: Date.now() };
-          writeLocalPreferences(next);
-          return next;
-        });
+        void updatePreferencesRef.current({ nsfw: custom.detail });
       }
     };
 
@@ -320,7 +344,10 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
         e.key === 'lemondbd_show_nsfw'
       ) {
         const local = readLocalPreferences();
-        if (local) setPreferences(local);
+        if (local) {
+          preferencesRef.current = local;
+          setPreferences(local);
+        }
         setIsConfigured(readIsConfigured());
       }
     };
@@ -335,27 +362,6 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
       window.removeEventListener('storage', handleStorage);
     };
   }, []);
-
-  const updatePreferences = useCallback(
-    async (change: Partial<SitePreferences>) => {
-      setPreferences((prev) => {
-        const next: SitePreferences = {
-          ...prev,
-          ...change,
-          chosenAt: Date.now(),
-        };
-        writeLocalPreferences(next);
-        setIsConfigured(true);
-
-        if (isAuthenticated && userId !== null) {
-          saveUserPreferences(toRemote(next), token).catch(() => {});
-        }
-
-        return next;
-      });
-    },
-    [isAuthenticated, userId, token]
-  );
 
   const markConfigured = useCallback(() => {
     setIsConfigured(true);

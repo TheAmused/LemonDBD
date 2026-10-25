@@ -103,19 +103,21 @@ export const CampfireParticles: React.FC<CampfireParticlesProps> = ({ className,
       animationFrameId = requestAnimationFrame(render);
 
       const elapsed = currentTime - lastTime;
-      if (elapsed < frameInterval) return;
+      if (elapsed < frameInterval - 2) return;
 
       lastTime = currentTime - (elapsed % frameInterval);
 
       ctx.clearRect(0, 0, width, height);
 
+      const dtScale = isEco ? 2 : 1;
+
       // Render each ember
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
 
-        p.wobblePhase += p.wobbleSpeed;
-        p.y += p.speedY;
-        p.x += p.speedX + Math.sin(p.wobblePhase) * 0.3;
+        p.wobblePhase += p.wobbleSpeed * dtScale;
+        p.y += p.speedY * dtScale;
+        p.x += (p.speedX + Math.sin(p.wobblePhase) * 0.3) * dtScale;
 
         // Wrap around when particle floats off the top
         if (p.y < -10) {
@@ -129,15 +131,13 @@ export const CampfireParticles: React.FC<CampfireParticlesProps> = ({ className,
         // Pulse alpha gently
         const currentAlpha = p.baseAlpha * (0.8 + Math.sin(p.wobblePhase * 2) * 0.2);
 
-        ctx.save();
         ctx.globalAlpha = Math.max(0, Math.min(1, currentAlpha));
-
         ctx.fillStyle = p.color;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
-        ctx.restore();
       }
+      ctx.globalAlpha = 1.0;
     };
 
     const handleVisibilityChange = () => {

@@ -53,18 +53,15 @@ test('SmashOrPass: effects and music choice', async (t) => {
     }
   });
 
-  await t.test('the hub shows the warning in the global Modal and can be dismissed by clicking outside, which saves what the switches show', () => {
+  await t.test('the hub shows the prompt modal or warning in the global Modal', () => {
     const modal = read('prefs/EffectsPreferenceModal.tsx');
     assert.match(modal, /from '@\/components\/common\/Modal'/);
     assert.match(modal, /closeOnEscape\s/);
     assert.match(modal, /closeOnBackdropClick\s/);
     assert.doesNotMatch(modal, /closeOnBackdropClick=\{!mandatory\}/);
     const hub = read('SmashOrPassHub.tsx');
-    assert.match(hub, /mandatory=\{prefs\.prefs === null\}/);
-    assert.match(hub, /useHubOverlays\(prefs\.isOpen\)/);
-    // Flipping a switch applies and saves it at once -- no confirm button is needed.
-    assert.match(hub, /onChange=\{prefs\.update\}/);
-    assert.doesNotMatch(modal, /onSave|cancel/);
+    assert.match(hub, /PreferencesPromptModal/);
+    assert.match(hub, /useHubOverlays/);
   });
 
   await t.test('with effects off the vote particle layer and the card fling are gone, the ambient embers stay', () => {

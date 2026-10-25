@@ -281,6 +281,10 @@ export default {
     continue: '続ける',
     button: 'エフェクト・効果音・音楽',
     buttonDesc: 'どのエフェクト、効果音、音楽を再生するかを変更します。',
+    promptTitle: '体験のカスタマイズ',
+    promptMessage: '効果音、音楽、ビジュアルアニメーション、成人向けコンテンツフィルターは設定ページでいつでもカスタマイズできます。',
+    goToSettings: '設定へ移動',
+    continueDefaults: 'デフォルトで続ける',
   },
   tooltips: {
     filter: '候補者を絞り込む',

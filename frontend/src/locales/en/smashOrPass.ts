@@ -281,6 +281,10 @@ export default {
     continue: 'Continue',
     button: 'Effects, sounds and music',
     buttonDesc: 'Change which effects, sounds and music play.',
+    promptTitle: 'Personalize Your Experience',
+    promptMessage: 'Sound effects, music, visual animations, and mature content filters can be customized in Settings at any time.',
+    goToSettings: 'Go to Settings',
+    continueDefaults: 'Continue with Defaults',
   },
   tooltips: {
     filter: 'Filter Candidates',

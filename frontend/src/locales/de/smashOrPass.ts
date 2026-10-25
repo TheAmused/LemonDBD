@@ -281,6 +281,10 @@ export default {
     continue: 'Weiter',
     button: 'Effekte, Sounds und Musik',
     buttonDesc: 'Ändere, was an Effekten, Sounds und Musik abgespielt wird.',
+    promptTitle: 'Passe dein Erlebnis an',
+    promptMessage: 'Soundeffekte, Musik, visuelle Animationen und Filter für jugendgefährdende Inhalte können jederzeit in den Einstellungen angepasst werden.',
+    goToSettings: 'Zu den Einstellungen',
+    continueDefaults: 'Mit Standardwerten fortfahren',
   },
   tooltips: {
     filter: 'Kandidaten filtern',

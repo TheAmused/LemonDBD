@@ -5,7 +5,7 @@
 // and restore, and the tests that prove a feature works end to end (OCR, email, Discord).
 import React, { useCallback, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Database, Download, ExternalLink, LineChart, Mail, MessageSquare, Play, RefreshCw, ScanText, Trash2, Upload } from 'lucide-react';
+import { Database, Download, ExternalLink, LineChart, Mail, MapPin, MessageSquare, Play, RefreshCw, ScanText, Trash2, Upload } from 'lucide-react';
 import { Badge, type BadgeTone } from '@/components/common/Badge';
 import { Button, buttonClassName } from '@/components/common/Button';
 import { AccordionSection } from '@/components/common/AccordionSection';
@@ -29,6 +29,7 @@ import type { ActionMessage, MaintenanceJob, MaintenanceRun, SystemCheck, System
 
 const DatabaseBackupModal = dynamic(() => import('@/components/ScraperConfigModal').then((m) => m.ScraperConfigModal), { ssr: false });
 const ScoreboardCheckModal = dynamic(() => import('@/components/common/ScoreboardCheckModal').then((m) => m.ScoreboardCheckModal), { ssr: false });
+const VectorMapTestModal = dynamic(() => import('@/components/admin/VectorMapTestModal').then((m) => m.VectorMapTestModal), { ssr: false });
 
 const CHECK_KEYS = {
   database: ['systemDatabase', 'systemDatabaseDesc'],
@@ -123,6 +124,7 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
   const [running, setRunning] = useState<string | null>(null);
   const [backupTab, setBackupTab] = useState<ScraperTab | null>(null);
   const [ocrOpen, setOcrOpen] = useState(false);
+  const [vectorMapOpen, setVectorMapOpen] = useState(false);
 
   const fail = useCallback((err: unknown) => notify({ type: 'error', text: getErrorMessage(err, t.networkError) }), [notify, t.networkError]);
 
@@ -253,6 +255,11 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
       </ToolCard>
 
       <ToolCard id="testing" title={t.testingTitle} subtitle={t.testingSubtitle}>
+        <ToolRow title={t.vectorMapTest} description={t.vectorMapTestDesc}>
+          <Button size="sm" leftIcon={<MapPin className="icon-sm" aria-hidden="true" />} onClick={() => setVectorMapOpen(true)}>
+            {t.openTest}
+          </Button>
+        </ToolRow>
         <ToolRow title={t.ocrCheck} description={t.ocrCheckDesc}>
           <Button size="sm" leftIcon={<ScanText className="icon-sm" aria-hidden="true" />} onClick={() => setOcrOpen(true)}>
             {t.openTest}
@@ -307,6 +314,7 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
         />
       )}
       <ScoreboardCheckModal isOpen={ocrOpen} onClose={() => setOcrOpen(false)} />
+      <VectorMapTestModal isOpen={vectorMapOpen} onClose={() => setVectorMapOpen(false)} />
     </div>
   );
 }

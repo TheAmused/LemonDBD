@@ -5,6 +5,7 @@
 // carrying the server's own message so the admin toast shows what actually went wrong).
 
 import { apiRequest } from '@/utils/api';
+import type { MapLayout, MapRealm } from '@/types/map';
 import type {
   AdminAuditLogPage,
   AdminBugReport,
@@ -98,3 +99,8 @@ export const runMaintenanceJob = (key: string) =>
   apiRequest<{ key: string; affected: number; last_run: MaintenanceRun | null }>(`/admin/maintenance/${key}`, 'POST');
 export const sendTestEmail = () => apiRequest<{ sent_to: string }>('/admin/diagnostics/email', 'POST');
 export const sendTestDiscord = () => apiRequest<{ status: number }>('/admin/diagnostics/discord', 'POST');
+
+export const fetchMapsForTesting = (source = 'lemondbd') =>
+  apiRequest<{ maps: MapRealm[] }>('/maps', 'GET', undefined, { source });
+export const fetchMapLayout = (mapId: number) =>
+  apiRequest<{ map_id: number; version: number; layout: MapLayout }>(`/maps/${mapId}/layout`);

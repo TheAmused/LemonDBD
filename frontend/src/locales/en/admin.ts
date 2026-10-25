@@ -445,4 +445,9 @@ export default {
   neverRun: "Has not run yet",
   lastRunScheduled: "Last ran on schedule {date}",
   lastRunManual: "Last run by an admin {date}",
+  vectorMapTest: "Vector Map Engine",
+  vectorMapTestDesc: "Inspect interactive SVG vector layouts, multi-floor plans, and landmark legends.",
+  vectorMapSelect: "Select a map",
+  vectorMapNoLayout: "No vector layout footprint found for this map.",
+  vectorMapLoading: "Loading layout...",
 } as const;

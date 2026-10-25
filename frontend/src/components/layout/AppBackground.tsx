@@ -36,7 +36,7 @@ const BACKGROUND_EFFECT_COMPONENTS: Record<
 
 const EFFECT_CLASS = 'absolute inset-0 h-full w-full opacity-90 transition-opacity duration-700';
 
-export function AppBackground({ mode = 'on' }: AppBackgroundProps = {}) {
+export const AppBackground: React.FC<AppBackgroundProps> = ({ mode = 'on' }) => {
   const pathname = usePathname() || '/';
   const effect = useMemo(() => {
     const segments = pathname.split('/').filter(Boolean);

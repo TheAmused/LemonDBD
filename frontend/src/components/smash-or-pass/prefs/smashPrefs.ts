@@ -27,8 +27,13 @@ export function readLocalPrefs(): SmashPrefs | null {
   if (typeof window === 'undefined') return null;
   try {
     const raw = localStorage.getItem(PREFS_KEY);
-    const parsed: unknown = raw ? JSON.parse(raw) : null;
-    return parsePrefs(parsed);
+    if (raw) return parsePrefs(JSON.parse(raw));
+    const v2Raw = localStorage.getItem('lemondbd_preferences_v2');
+    if (v2Raw) {
+      const v2 = JSON.parse(v2Raw);
+      return parsePrefs(v2);
+    }
+    return null;
   } catch {
     return null;
   }
@@ -38,8 +43,29 @@ export function writeLocalPrefs(prefs: SmashPrefs): void {
   if (typeof window === 'undefined') return;
   try {
     localStorage.setItem(PREFS_KEY, JSON.stringify(prefs));
+    const v2Raw = localStorage.getItem('lemondbd_preferences_v2');
+    const existing = v2Raw ? JSON.parse(v2Raw) : {};
+    const updated = {
+      effects: prefs.effects,
+      sounds: prefs.sounds,
+      music: prefs.music,
+      nsfw: typeof existing.nsfw === 'boolean' ? existing.nsfw : false,
+      backgroundAnimation: existing.backgroundAnimation || 'on',
+      chosenAt: prefs.chosenAt,
+    };
+    localStorage.setItem('lemondbd_preferences_v2', JSON.stringify(updated));
+    localStorage.setItem('lemondbd_preferences_configured_v2', 'true');
   } catch {
     // Storage unavailable: the choice lasts for this visit only.
+  }
+  if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+    try {
+      window.dispatchEvent(
+        typeof CustomEvent !== 'undefined'
+          ? new CustomEvent('preferences-changed')
+          : new Event('preferences-changed')
+      );
+    } catch {}
   }
 }
 

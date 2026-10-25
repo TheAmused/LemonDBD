@@ -297,6 +297,10 @@ export default {
     continue: 'Dalej',
     button: 'Efekty, dźwięki i muzyka',
     buttonDesc: 'Zmień, jakie efekty, dźwięki i muzyka mają być odtwarzane.',
+    promptTitle: 'Dostosuj swoje wrażenia',
+    promptMessage: 'Efekty dźwiękowe, muzykę, animacje wizualne i filtry treści dla dorosłych można w każdej chwili dostosować w Ustawieniach.',
+    goToSettings: 'Przejdź do Ustawień',
+    continueDefaults: 'Kontynuuj z domyślnymi',
   },
   tooltips: {
     filter: 'Filtruj kandydatów',

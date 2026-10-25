@@ -281,6 +281,10 @@ export default {
     continue: 'Continuar',
     button: 'Efectos, sonidos y música',
     buttonDesc: 'Cambia qué efectos, sonidos y música se reproducen.',
+    promptTitle: 'Personaliza tu experiencia',
+    promptMessage: 'Los efectos de sonido, la música, las animaciones visuales y los filtros de contenido para adultos se pueden personalizar en cualquier momento en Ajustes.',
+    goToSettings: 'Ir a Ajustes',
+    continueDefaults: 'Continuar con valores predeterminados',
   },
   tooltips: {
     filter: 'Filtrar candidatos',

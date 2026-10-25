@@ -7,10 +7,6 @@ import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { usePreferences } from '@/hooks/usePreferences';
-import type { NsfwOnboardingModal } from '@/components/common/NsfwOnboardingModal';
-import type { EffectsPreferenceModal } from '@/components/smash-or-pass/prefs/EffectsPreferenceModal';
-
-export type DeprecatedOnboardingModals = typeof NsfwOnboardingModal | typeof EffectsPreferenceModal;
 
 export interface PreferencesPromptModalProps {
   isOpen: boolean;
@@ -22,9 +18,10 @@ export function PreferencesPromptModal({ isOpen, onClose }: PreferencesPromptMod
   const locale = useLocale();
   const dict = useDictionary();
   const text = dict.smashOrPass.effectsPrefs;
-  const { markConfigured } = usePreferences();
+  const { preferences, updatePreferences, markConfigured } = usePreferences();
 
   const handleContinueDefaults = () => {
+    void updatePreferences(preferences);
     markConfigured();
     onClose();
   };

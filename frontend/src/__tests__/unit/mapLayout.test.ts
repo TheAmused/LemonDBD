@@ -129,42 +129,23 @@ test('thumbnails share one frame so map sizes compare', () => {
   assert.ok(!big.includes('</text>'), 'thumbnails carry no labels');
 });
 
-test('MapCard draws the layout instead of loading the callout image', () => {
-  const html = renderWithDictionary(React.createElement(MapCard, { map: baseMap, backendBase: 'http://x', onSelect: () => {} }));
-  assert.ok(html.includes('<svg'));
-  assert.ok(!html.includes('<img'));
-  const noLayout = renderWithDictionary(
-    React.createElement(MapCard, { map: { ...baseMap, layout: null }, backendBase: 'http://x', onSelect: () => {} })
+test('MapCard shows the callout image', () => {
+  const html = renderWithDictionary(
+    React.createElement(MapCard, { map: baseMap, backendBase: 'http://x', onSelect: () => {} })
   );
-  assert.ok(noLayout.includes('<img'), 'maps without a layout keep their image');
+  assert.ok(html.includes('<img'));
 });
 
-test('the fullscreen view draws the map, offers its floors and no longer switches to a callout image', () => {
+test('the fullscreen view shows the callout image with pan target', () => {
   const html = renderWithDictionary(
     React.createElement(FullscreenMapEngineView, {
       mapId: 45,
-      availableMaps: [{ ...baseMap, id: 45, name: 'Midwich Elementary School', layout: twoFloors }],
+      availableMaps: [{ ...baseMap, id: 45, name: 'Midwich Elementary School' }],
       backendBase: 'http://x',
       onClose: () => {},
     })
   );
-  assert.ok(html.includes('<svg') && html.includes('data-pan-target'));
-  assert.ok(!html.includes('<img'), 'the callout image is not loaded');
-  assert.ok(!html.includes('Hens333'), 'there is no switch back to the Hens333 image');
-  assert.ok(html.includes('Lower floor') && html.includes('Upper floor'));
-  assert.ok(!html.includes('Approximate'), 'measured maps carry no approximation note');
-});
-
-test('maps without a measured outline say their scale is approximate', () => {
-  const html = renderWithDictionary(
-    React.createElement(FullscreenMapEngineView, {
-      mapId: 14,
-      availableMaps: [{ ...baseMap, layout: { ...thompson, approx: true } }],
-      backendBase: 'http://x',
-      onClose: () => {},
-    })
-  );
-  assert.ok(html.includes('Approximate scale'));
+  assert.ok(html.includes('data-pan-target'));
 });
 
 test('landmarks are drawn with their names, and clock numbers keep clear of them', () => {
@@ -207,13 +188,11 @@ test('landmarks with a size are drawn as their footprint in metres, estimates da
   assert.ok(distanceToLandmark(boat, 50, 90) > 4);
 });
 
-test('pictures for tier lists come from the layout, not the callout image', () => {
+test('layoutPictureDataUri produces valid SVG data URI', () => {
   const uri = layoutPictureDataUri(thompson);
   assert.ok(uri.startsWith('data:image/svg+xml;utf8,'));
   assert.ok(decodeURIComponent(uri).includes('M0 0L112 0L112 48'));
-  assert.strictEqual(getMapThumbSrc(baseMap), uri);
-  assert.strictEqual(getMapImageSrc(baseMap), uri);
-  assert.ok(getMapImageSrc({ ...baseMap, layout: null }).includes('thompson.webp'), 'falls back without a layout');
+  assert.ok(getMapImageSrc(baseMap).includes('thompson.webp'));
 });
 
 test('the fullscreen view shows the image for maps without a layout', () => {
@@ -356,16 +335,5 @@ test('MapLegend renders correctly when open and closed', () => {
   assert.ok(openWithFeatures.includes('Water Tower'));
 });
 
-test('FullscreenMapEngineView provides legend toggle button when layout is present', () => {
-  const html = renderWithDictionary(
-    React.createElement(FullscreenMapEngineView, {
-      mapId: 14,
-      availableMaps: [baseMap],
-      backendBase: 'http://x',
-      onClose: () => {},
-    })
-  );
-  assert.ok(html.includes('aria-label="Toggle Map Legend"'));
-});
 
 

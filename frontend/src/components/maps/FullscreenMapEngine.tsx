@@ -12,7 +12,6 @@ import {
   Home,
   Building2,
   Maximize2,
-  Info,
 } from 'lucide-react';
 import type { MapRealm } from '@/types/map';
 import { getLayoutTypeLabel, getMapImageSrc } from '@/utils/mapUtils';
@@ -24,9 +23,6 @@ import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Surface } from '@/components/common/Surface';
 import { Img } from '@/components/common/Img';
-import { SegmentedControl } from '@/components/common/SegmentedControl';
-import { MapLayoutView } from '@/components/maps/MapLayoutView';
-import { MapLegend } from '@/components/maps/MapLegend';
 
 interface FullscreenMapEngineProps {
   mapId: number;
@@ -44,15 +40,6 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
     [availableMaps, mapId]
   );
   const imageSrc = getMapImageSrc(activeMap, backendBase);
-  // Every map is drawn from its layout; the image only stands in if a map ever arrives without one.
-  const [floorIndex, setFloorIndex] = useState(0);
-  const layout = activeMap?.layout ?? null;
-  const showLayout = layout !== null;
-  const [isLegendOpen, setIsLegendOpen] = useState(false);
-  const activeFloorLandmarks = useMemo(
-    () => layout?.floors[floorIndex]?.landmarks,
-    [layout, floorIndex]
-  );
 
   const [zoom, setZoom] = useState<number>(1.0);
   const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -68,8 +55,6 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
   if (viewedMapId !== mapId) {
     setViewedMapId(mapId);
     setImageFailed(false);
-    setFloorIndex(0);
-    setIsLegendOpen(false);
     setZoom(1.0);
     setPan({ x: 0, y: 0 });
   }
@@ -82,7 +67,6 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
     const el = containerRef.current;
     if (!el) return;
     const onWheel = (e: WheelEvent) => {
-      if ((e.target as Element).closest?.('[data-legend-panel]') != null) return;
       e.preventDefault();
       const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
       setZoom((prev) => Math.min(Math.max(prev * zoomFactor, 0.5), 5.0));
@@ -93,12 +77,11 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
     };
   }, []);
 
-  // The picture being panned: the callout <img> or the drawn map <svg> (and anything inside it).
+  // The picture being panned: the callout <img>.
   const isImageTarget = (target: EventTarget) => (target as Element).closest?.('[data-pan-target]') != null;
-  const isLegendTarget = (target: EventTarget) => (target as Element).closest?.('[data-legend-panel]') != null;
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    if (e.button !== 0 || isLegendTarget(e.target)) return;
+    if (e.button !== 0) return;
     pointerDownPosRef.current = { x: e.clientX, y: e.clientY };
     draggedRef.current = false;
     if (isImageTarget(e.target)) {
@@ -125,11 +108,10 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
   };
 
   const handleBackgroundClick = (e: React.MouseEvent) => {
-    if (!draggedRef.current && !isImageTarget(e.target) && !isLegendTarget(e.target)) onClose();
+    if (!draggedRef.current && !isImageTarget(e.target)) onClose();
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    if (isLegendTarget(e.target)) return;
     if (e.touches.length === 1) {
       pointerDownPosRef.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
       draggedRef.current = false;
@@ -244,32 +226,6 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
           )}
 
           <div className="flex items-center gap-2 shrink-0">
-            {showLayout && layout.floors.length > 1 && (
-              <SegmentedControl<string>
-                size="sm"
-                ariaLabel={dict.maps.floorAria}
-                value={String(floorIndex)}
-                onChange={(v) => setFloorIndex(Number(v))}
-                options={layout.floors.map((f, i) => ({
-                  value: String(i),
-                  label: f.label === 'upper' ? dict.maps.floorUpper : f.label === 'lower' ? dict.maps.floorLower : dict.maps.floorAria,
-                }))}
-              />
-            )}
-            {showLayout && (
-              <Button
-                variant="ghost"
-                size="md"
-                icon
-                onClick={() => setIsLegendOpen((prev) => !prev)}
-                aria-label={dict.maps.legendToggleAria}
-                aria-pressed={isLegendOpen}
-                className={isLegendOpen ? 'text-accent-red bg-accent-red/10 hover:bg-accent-red/20' : undefined}
-                {...tip(dict.maps.legendTitle, undefined, 'action')}
-              >
-                <Info className="h-5 w-5" aria-hidden="true" />
-              </Button>
-            )}
             <Button
               variant="ghost"
               size="md"
@@ -300,20 +256,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
         style={{ touchAction: 'none' }}
         className="relative flex-1 min-h-0 w-full cursor-default overflow-hidden flex items-center justify-center bg-bg-primary pt-4 pb-20 px-4"
       >
-        {showLayout ? (
-          <MapLayoutView
-            data-pan-target
-            layout={layout}
-            floorIndex={floorIndex}
-            title={activeMap?.name || ''}
-            style={{
-              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
-              transformOrigin: 'center center',
-              transition: isDragging ? 'none' : 'transform 75ms ease-out',
-            }}
-            className={`h-full w-full max-w-full max-h-full select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
-          />
-        ) : imageSrc && !imageFailed ? (
+        {imageSrc && !imageFailed ? (
           <Img
             data-pan-target
             src={imageSrc}
@@ -336,21 +279,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
             </span>
           </div>
         )}
-
-        {showLayout && (
-          <MapLegend
-            isOpen={isLegendOpen}
-            onClose={() => setIsLegendOpen(false)}
-            landmarks={activeFloorLandmarks}
-          />
-        )}
       </div>
-
-      {showLayout && (layout.approx || layout.landmarks_approx) && (
-        <p className="absolute left-4 bottom-20 sm:bottom-5 z-40 max-w-xs type-micro text-text-muted pointer-events-none">
-          {layout.approx ? dict.maps.layoutApprox : dict.maps.landmarksApprox}
-        </p>
-      )}
 
       <footer className="absolute inset-x-0 bottom-4 sm:inset-x-auto sm:right-6 z-40 flex justify-center sm:justify-end pointer-events-none">
         <Surface

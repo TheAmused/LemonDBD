@@ -3,7 +3,6 @@ import type { MapRealm } from '@/types/map';
 import type { AnalyticsEvents } from '@/utils/analytics';
 import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl } from '@/utils/api';
-import { layoutPictureDataUri } from '@/utils/mapLayout';
 
 const DEFAULT_BACKEND_BASE = getBackendBaseUrl();
 
@@ -32,8 +31,6 @@ export function getMapImageSrc(
   backendBase: string = DEFAULT_BACKEND_BASE
 ): string {
   if (!map) return '';
-  // Maps are drawn from their own layout; the stored callout image is only a fallback.
-  if (map.layout) return layoutPictureDataUri(map.layout);
   return resolveLocalOrRemoteImage(map.callout_image_local_path, map.callout_image_url || map.image_url, backendBase);
 }
 
@@ -46,7 +43,6 @@ export function getMapThumbSrc(
   map: Partial<MapRealm> | null | undefined,
   backendBase: string = DEFAULT_BACKEND_BASE
 ): string {
-  if (map?.layout) return layoutPictureDataUri(map.layout);
   const local = map?.callout_image_local_path;
   if (!local) return getMapImageSrc(map, backendBase);
   const clean = local.replace(/^\/?(static\/)?(maps\/)?/, '');

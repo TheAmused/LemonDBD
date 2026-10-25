@@ -300,7 +300,13 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
       writeLocalPreferences(next);
 
       if (isAuthenticated && userId !== null) {
-        await saveUserPreferences(toRemote(next), token);
+        const saved = await saveUserPreferences(toRemote(next), token);
+        if (saved && typeof saved.chosen_at === 'number' && saved.chosen_at > next.chosenAt) {
+          const fromServer = fromRemote(saved);
+          preferencesRef.current = fromServer;
+          setPreferences(fromServer);
+          writeLocalPreferences(fromServer);
+        }
       }
     },
     [isAuthenticated, userId, token]
@@ -332,7 +338,7 @@ export const PreferencesProvider: React.FC<{ children: React.ReactNode }> = ({ c
 
     const handleNsfwChange = (e: Event) => {
       const custom = e as CustomEvent<boolean>;
-      if (typeof custom.detail === 'boolean') {
+      if (typeof custom.detail === 'boolean' && custom.detail !== preferencesRef.current.nsfw) {
         void updatePreferencesRef.current({ nsfw: custom.detail });
       }
     };

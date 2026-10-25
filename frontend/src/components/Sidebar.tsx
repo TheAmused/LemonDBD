@@ -14,6 +14,7 @@ import {
   Info,
   LayoutList,
   Gamepad2,
+  Settings,
 } from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { LemonIcon } from './LemonIcon';
@@ -161,6 +162,14 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
       color: 'text-accent-red',
       activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
       href: `/${currentLocale}/about`,
+    },
+    {
+      id: 'settings',
+      label: dict.sidebar.settings,
+      icon: Settings,
+      color: 'text-accent-red',
+      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
+      href: `/${currentLocale}/settings`,
     },
   ], [dict, currentLocale]);
 

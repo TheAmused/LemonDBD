@@ -68,6 +68,8 @@ export default {
   targetItemsDesc: "Survivor items and tools",
   targetMapsLabel: "Maps & Callouts",
   targetMapsDesc: "Map realms, tiles, and objective landmarks",
+  targetMapLayoutsLabel: "Map Layouts",
+  targetMapLayoutsDesc: "Vector layout footprints for drawn maps",
   targetUsersLabel: "User Accounts",
   targetUsersDesc: "Registered user profiles and roles",
   targetOwnershipsLabel: "User Ownership Records",

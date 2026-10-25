@@ -137,10 +137,9 @@ export function SettingsClient() {
                 {dict.settings.campfireDesc}
               </p>
             </div>
-            <div
-              role="group"
+            <fieldset
               aria-label={dict.settings.campfire}
-              className="flex items-center gap-2 self-start sm:self-auto shrink-0"
+              className="flex items-center gap-2 self-start sm:self-auto shrink-0 border-0 p-0 m-0"
             >
               {campfireModes.map(({ mode, label }) => (
                 <Button
@@ -154,7 +153,7 @@ export function SettingsClient() {
                   {label}
                 </Button>
               ))}
-            </div>
+            </fieldset>
           </div>
         </div>
       </Surface>

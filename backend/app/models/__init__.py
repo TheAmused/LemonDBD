@@ -51,6 +51,8 @@ from app.models.user import (
     UserPerkOwnership,
     UserShowcase,
 )
+from app.models.user_preference import UserPreference
+
 
 __all__ = [
     "utcnow",
@@ -94,6 +96,7 @@ __all__ = [
     "UserCharacterOwnership",
     "UserPerkOwnership",
     "UserShowcase",
+    "UserPreference",
     "UserTwoFactor",
     "UserRecoveryCode",
     "ChallengeModeSetting",

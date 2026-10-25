@@ -19,15 +19,18 @@ interface Particle {
   wobblePhase: number;
 }
 
-interface CampfireParticlesProps {
+export interface CampfireParticlesProps {
   className?: string;
+  mode?: 'on' | 'eco' | 'off';
 }
 
-export const CampfireParticles: React.FC<CampfireParticlesProps> = ({ className }) => {
+export const CampfireParticles: React.FC<CampfireParticlesProps> = ({ className, mode = 'on' }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const { resolvedTheme, theme } = useTheme();
 
   useEffect(() => {
+    if (mode === 'off') return;
+
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -54,12 +57,17 @@ export const CampfireParticles: React.FC<CampfireParticlesProps> = ({ className 
       : [paletteColor('amber-600'), paletteColor('orange-600'), paletteColor('amber-500'), paletteColor('amber-700'), paletteColor('stone-500')];
 
     const baseOpacityMult = isDark ? 0.85 : isLemon ? 0.7 : 0.55;
-    const particleCount = typeof window !== 'undefined'
-      ? (window.innerWidth < 768 ? 32 : window.innerWidth < 1440 ? 52 : window.innerWidth < 2560 ? 75 : 100)
-      : 52;
 
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
+
+    const isEco = mode === 'eco';
+    const targetFps = isEco ? 30 : 60;
+    const frameInterval = 1000 / targetFps;
+
+    const particleCount = isEco
+      ? (width < 768 ? 14 : 28)
+      : (width < 768 ? 28 : width < 1440 ? 48 : 64);
 
     const handleResize = () => {
       if (!canvas) return;
@@ -87,9 +95,18 @@ export const CampfireParticles: React.FC<CampfireParticlesProps> = ({ className 
 
     let animationFrameId: number;
     let isRunning = true;
+    let lastTime = performance.now();
 
-    const render = () => {
-      if (!isRunning) return;
+    const render = (currentTime: number) => {
+      if (!isRunning || document.hidden) return;
+
+      animationFrameId = requestAnimationFrame(render);
+
+      const elapsed = currentTime - lastTime;
+      if (elapsed < frameInterval) return;
+
+      lastTime = currentTime - (elapsed % frameInterval);
+
       ctx.clearRect(0, 0, width, height);
 
       // Render each ember
@@ -115,30 +132,39 @@ export const CampfireParticles: React.FC<CampfireParticlesProps> = ({ className 
         ctx.save();
         ctx.globalAlpha = Math.max(0, Math.min(1, currentAlpha));
 
-        // Soft glow for larger embers
-        if (isDark && p.size > 2) {
-          ctx.shadowBlur = p.size * 3;
-          ctx.shadowColor = p.color;
-        }
-
         ctx.fillStyle = p.color;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
       }
-
-      animationFrameId = requestAnimationFrame(render);
     };
 
-    render();
+    const handleVisibilityChange = () => {
+      if (!isRunning) return;
+      if (document.hidden) {
+        cancelAnimationFrame(animationFrameId);
+      } else {
+        lastTime = performance.now();
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = requestAnimationFrame(render);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    animationFrameId = requestAnimationFrame(render);
 
     return () => {
       isRunning = false;
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', handleResize);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [resolvedTheme, theme]);
+  }, [resolvedTheme, theme, mode]);
+
+  if (mode === 'off') {
+    return null;
+  }
 
   return (
     <canvas

@@ -18,7 +18,7 @@
       "size_sq_meters": 11264,
       "description": "12-Clock Callout System for Azarov's Resting Place (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Azarovs%20Resting%20Place.webp",
-      "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/azarovs_resting_place.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/autohaven_wreckers/azarovs_resting_place.webp",
       "translations": {
         "de": {
           "name": "Azarovs Ruhestätte"
@@ -48,7 +48,7 @@
       "size_sq_meters": 9984,
       "description": "12-Clock Callout System for Blood Lodge (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Blood%20Lodge.webp",
-      "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/blood_lodge.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/autohaven_wreckers/blood_lodge.webp",
       "translations": {
         "de": {
           "name": "Bluthütte"
@@ -78,7 +78,7 @@
       "size_sq_meters": 9984,
       "description": "12-Clock Callout System for Gas Heaven (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Gas%20Heaven.webp",
-      "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/gas_heaven.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/autohaven_wreckers/gas_heaven.webp",
       "translations": {
         "de": {
           "name": "Sprithimmel"
@@ -108,7 +108,7 @@
       "size_sq_meters": 9216,
       "description": "12-Clock Callout System for Wreckers' Yard (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Wreckers.webp",
-      "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/wreckers_yard.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/autohaven_wreckers/wreckers_yard.webp",
       "translations": {
         "de": {
           "name": "Schrottplatz"
@@ -138,7 +138,7 @@
       "size_sq_meters": 10496,
       "description": "12-Clock Callout System for Wretched Shop (Autohaven Wreckers). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Azarovs/Wretched%20Shop.webp",
-      "callout_image_local_path": "maps/callouts/hens333/autohaven_wreckers/wretched_shop.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/autohaven_wreckers/wretched_shop.webp",
       "translations": {
         "de": {
           "name": "Werkstatt"
@@ -168,7 +168,7 @@
       "size_sq_meters": 9216,
       "description": "12-Clock Callout System for Preschool I (Springwood). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool1.webp",
-      "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_i.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/springwood/preschool_i.webp",
       "translations": {
         "de": {
           "name": "Badham-Vorschule I"
@@ -198,7 +198,7 @@
       "size_sq_meters": 9216,
       "description": "12-Clock Callout System for Preschool II (Springwood). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool2.webp",
-      "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_ii.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/springwood/preschool_ii.webp",
       "translations": {
         "de": {
           "name": "Badham-Vorschule II"
@@ -228,7 +228,7 @@
       "size_sq_meters": 9216,
       "description": "12-Clock Callout System for Preschool III (Springwood). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool3.webp",
-      "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_iii.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/springwood/preschool_iii.webp",
       "translations": {
         "de": {
           "name": "Badham-Vorschule III"
@@ -258,7 +258,7 @@
       "size_sq_meters": 8960,
       "description": "12-Clock Callout System for Preschool IV (Springwood). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool4.webp",
-      "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_iiiv.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/springwood/preschool_iv.webp",
       "translations": {
         "de": {
           "name": "Badham-Vorschule IV"
@@ -288,7 +288,7 @@
       "size_sq_meters": 9472,
       "description": "12-Clock Callout System for Preschool V (Springwood). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Badham/Preschool5.webp",
-      "callout_image_local_path": "maps/callouts/hens333/springwood/preschool_v.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/springwood/preschool_v.webp",
       "translations": {
         "de": {
           "name": "Badham-Vorschule V"
@@ -318,7 +318,7 @@
       "size_sq_meters": 9728,
       "description": "12-Clock Callout System for Fractured Cowshed (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Fractured%20Cowshed.webp",
-      "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/fractured_cowshed.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/coldwind_farm/fractured_cowshed.webp",
       "translations": {
         "de": {
           "name": "Verfallener Kuhstall"
@@ -348,7 +348,7 @@
       "size_sq_meters": 8960,
       "description": "12-Clock Callout System for Rancid Abbatoir (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Rancid%20Abbatoir.webp",
-      "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/rancid_abbatoir.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/coldwind_farm/rancid_abbatoir.webp",
       "translations": {
         "de": {
           "name": "Widerliches Schlachthaus"
@@ -378,7 +378,7 @@
       "size_sq_meters": 10240,
       "description": "12-Clock Callout System for Rotten Fields (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Rotten%20Fields.webp",
-      "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/rotten_fields.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/coldwind_farm/rotten_fields.webp",
       "translations": {
         "de": {
           "name": "Faulige Felder"
@@ -408,7 +408,7 @@
       "size_sq_meters": 9728,
       "description": "12-Clock Callout System for The Thompson House (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/The%20Thompson%20House.webp",
-      "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/the_thompson_house.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/coldwind_farm/the_thompson_house.webp",
       "translations": {
         "de": {
           "name": "Das Thompson-Haus"
@@ -438,7 +438,7 @@
       "size_sq_meters": 9984,
       "description": "12-Clock Callout System for Torment Creek (Coldwind Farm). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Coldwind/Torment%20Creek.webp",
-      "callout_image_local_path": "maps/callouts/hens333/coldwind_farm/torment_creek.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/coldwind_farm/torment_creek.webp",
       "translations": {
         "de": {
           "name": "Tal der Qual"
@@ -468,7 +468,7 @@
       "size_sq_meters": 9728,
       "description": "12-Clock Callout System for Disturbed Ward (Crotus Prenn Asylum). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Crotus%20Pen/Disturbed%20Ward.webp",
-      "callout_image_local_path": "maps/callouts/hens333/disturbed_ward/disturbed_ward.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/crotus_prenn_asylum/disturbed_ward.webp",
       "translations": {
         "de": {
           "name": "Gestörtenabteilung"
@@ -498,7 +498,7 @@
       "size_sq_meters": 8960,
       "description": "12-Clock Callout System for Father Campbells Chapel (Crotus Prenn Asylum). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Crotus%20Pen/Father%20Campbells%20Chapel.webp",
-      "callout_image_local_path": "maps/callouts/hens333/disturbed_ward/father_campbells_chapel.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/crotus_prenn_asylum/father_campbells_chapel.webp",
       "translations": {
         "de": {
           "name": "Pater Campbells Kapelle"
@@ -528,7 +528,7 @@
       "size_sq_meters": 9216,
       "description": "12-Clock Callout System for Shattered Square (The Decimated Borgo). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Borgo/Shattered%20Square.webp",
-      "callout_image_local_path": "maps/callouts/hens333/the_decimated_borgo/shattered_square.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/the_decimated_borgo/shattered_square.webp",
       "translations": {
         "de": {
           "name": "Der zerstörte Platz"
@@ -558,7 +558,7 @@
       "size_sq_meters": 8448,
       "description": "12-Clock Callout System for Forgotten Ruins (The Decimated Borgo). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Borgo/Forgotten%20Ruins.webp",
-      "callout_image_local_path": "maps/callouts/hens333/the_decimated_borgo/forgotten_ruins.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/the_decimated_borgo/forgotten_ruins.webp",
       "translations": {
         "de": {
           "name": "Vergessene Ruinen"
@@ -588,7 +588,7 @@
       "size_sq_meters": 9472,
       "description": "12-Clock Callout System for Eyrie of Crows (Forsaken Boneyard). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Boneyard/Eyrie%20of%20Crows.webp",
-      "callout_image_local_path": "maps/callouts/hens333/forsaken_boneyard/eyrie_of_crows.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/forsaken_boneyard/eyrie_of_crows.webp",
       "translations": {
         "de": {
           "name": "Krähenhorst"
@@ -618,7 +618,7 @@
       "size_sq_meters": 8960,
       "description": "12-Clock Callout System for Dead Sands (Forsaken Boneyard). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Boneyard/Dead%20Sands.webp",
-      "callout_image_local_path": "maps/callouts/hens333/forsaken_boneyard/dead_sands.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/forsaken_boneyard/dead_sands.webp",
       "translations": {
         "de": {
           "name": "Tote Sande"
@@ -648,7 +648,7 @@
       "size_sq_meters": 8832,
       "description": "12-Clock Callout System for The Underground Complex (Hawkins National Laboratory). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Hawkins.webp",
-      "callout_image_local_path": "maps/callouts/hens333/hawkins_national_laboratory/the_underground_complex.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/hawkins_national_laboratory/the_underground_complex.webp",
       "translations": {
         "de": {
           "name": "Der Untergrundkomplex"
@@ -678,7 +678,7 @@
       "size_sq_meters": 8448,
       "description": "12-Clock Callout System for Coal Tower (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Coal%20Tower.webp",
-      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/coal_tower.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/the_macmillan_estate/coal_tower.webp",
       "translations": {
         "de": {
           "name": "Kohlelager"
@@ -708,7 +708,7 @@
       "size_sq_meters": 9984,
       "description": "12-Clock Callout System for Groaning Storehouse (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Groaning%20Storehouse.webp",
-      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/groaning_storehouse.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/the_macmillan_estate/groaning_storehouse.webp",
       "translations": {
         "de": {
           "name": "Seufzendes Lagerhaus"
@@ -738,7 +738,7 @@
       "size_sq_meters": 10240,
       "description": "12-Clock Callout System for Ironworks Of Misery (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Ironworks%20Of%20Misery.webp",
-      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/ironworks_of_misery.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/the_macmillan_estate/ironworks_of_misery.webp",
       "translations": {
         "de": {
           "name": "Eisenwerk der Qual"
@@ -768,7 +768,7 @@
       "size_sq_meters": 11264,
       "description": "12-Clock Callout System for Shelter Woods (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Shelter%20Woods.webp",
-      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/shelter_woods.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/the_macmillan_estate/shelter_woods.webp",
       "translations": {
         "de": {
           "name": "Schutzwald"
@@ -798,7 +798,7 @@
       "size_sq_meters": 10240,
       "description": "12-Clock Callout System for Suffocation Pit (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Suffocation%20Pit.webp",
-      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/suffocation_pit.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/the_macmillan_estate/suffocation_pit.webp",
       "translations": {
         "de": {
           "name": "Grubenschacht"
@@ -828,7 +828,7 @@
       "size_sq_meters": 9728,
       "description": "12-Clock Callout System for Mother's Dwelling (Red Forest). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Red%20Forest/Mothers%20Dwelling.webp",
-      "callout_image_local_path": "maps/callouts/hens333/red_forest/mothers_dwelling.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/red_forest/mothers_dwelling.webp",
       "translations": {
         "de": {
           "name": "Mutters Behausung"
@@ -858,7 +858,7 @@
       "size_sq_meters": 8704,
       "description": "12-Clock Callout System for Temple of Purgation (Red Forest). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Red%20Forest/Temple%20of%20Purgation.webp",
-      "callout_image_local_path": "maps/callouts/hens333/red_forest/temple_of_purgation.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/red_forest/temple_of_purgation.webp",
       "translations": {
         "de": {
           "name": "Der Tempel der Reinigung"
@@ -888,7 +888,7 @@
       "size_sq_meters": 10752,
       "description": "12-Clock Callout System for Grim Pantry (Backwater Swamp). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Swamp/Grim%20Pantry.webp",
-      "callout_image_local_path": "maps/callouts/hens333/backwater_swamp/grim_pantry.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/backwater_swamp/grim_pantry.webp",
       "translations": {
         "de": {
           "name": "Schaurige Speisekammer"
@@ -918,7 +918,7 @@
       "size_sq_meters": 10304,
       "description": "12-Clock Callout System for The Pale Rose (Backwater Swamp). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Swamp/Pale%20Rose.webp",
-      "callout_image_local_path": "maps/callouts/hens333/backwater_swamp/the_pale_rose.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/backwater_swamp/the_pale_rose.webp",
       "translations": {
         "de": {
           "name": "Die Pale Rose"
@@ -948,7 +948,7 @@
       "size_sq_meters": 9984,
       "description": "12-Clock Callout System for Family Residence (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Family%20Residence.webp",
-      "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/family_residence.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/yamaoka_estate/family_residence.webp",
       "translations": {
         "de": {
           "name": "Familiensitz I"
@@ -978,7 +978,7 @@
       "size_sq_meters": 9984,
       "description": "12-Clock Callout System for Family Residence II (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Family%20Residence%20II.webp",
-      "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/family_residence_ii.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/yamaoka_estate/family_residence_ii.webp",
       "translations": {
         "de": {
           "name": "Familiensitz II"
@@ -1008,7 +1008,7 @@
       "size_sq_meters": 9984,
       "description": "12-Clock Callout System for Sanctum of Wrath (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Sanctum%20of%20Wrath.webp",
-      "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/sanctum_of_wrath.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/yamaoka_estate/sanctum_of_wrath.webp",
       "translations": {
         "de": {
           "name": "Heiligtum des Zorns I"
@@ -1038,7 +1038,7 @@
       "size_sq_meters": 9472,
       "description": "12-Clock Callout System for Sanctum of Wrath II (Yamaoka Estate). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Yamaoka/Sanctum%20of%20Wrath%20II.webp",
-      "callout_image_local_path": "maps/callouts/hens333/yamaoka_estate/sanctum_of_wrath_ii.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/yamaoka_estate/sanctum_of_wrath_ii.webp",
       "translations": {
         "de": {
           "name": "Heiligtum des Zorns II"
@@ -1068,7 +1068,7 @@
       "size_sq_meters": 8000,
       "description": "12-Clock Callout System for Police Station East Wing (Raccoon City). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Raccoon%20City/Rpd%20East%20Wing.webp",
-      "callout_image_local_path": "maps/callouts/hens333/raccoon_city/police_station_east_wing.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/raccoon_city/police_station_east_wing.webp",
       "translations": {
         "de": {
           "name": "Ostflügel der Polizeistation von Raccoon City"
@@ -1098,7 +1098,7 @@
       "size_sq_meters": 8000,
       "description": "12-Clock Callout System for Police Station West Wing (Raccoon City). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Raccoon%20City/Rpd%20West%20Wing.webp",
-      "callout_image_local_path": "maps/callouts/hens333/raccoon_city/police_station_west_wing.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/raccoon_city/police_station_west_wing.webp",
       "translations": {
         "de": {
           "name": "Westflügel der Polizeistation von Raccoon City"
@@ -1128,7 +1128,7 @@
       "size_sq_meters": 8704,
       "description": "12-Clock Callout System for Dead Dawg Saloon (Grave of Glenvale). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Dead%20Dawg%20Saloon.webp",
-      "callout_image_local_path": "maps/callouts/hens333/grave_of_glenvale/dead_dawg_saloon.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/grave_of_glenvale/dead_dawg_saloon.webp",
       "translations": {
         "es": {
           "name": "Cantina El Perro Muerto"
@@ -1155,7 +1155,7 @@
       "size_sq_meters": 10496,
       "description": "12-Clock Callout System for Garden of Joy (Withered Isle). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Garden%20of%20Joy.webp",
-      "callout_image_local_path": "maps/callouts/hens333/withered_isle/garden_of_joy.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/withered_isle/garden_of_joy.webp",
       "translations": {
         "de": {
           "name": "Garten der Freude"
@@ -1185,7 +1185,7 @@
       "size_sq_meters": 10240,
       "description": "12-Clock Callout System for Greenville Square (Withered Isle). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Greenville%20Square.webp",
-      "callout_image_local_path": "maps/callouts/hens333/withered_isle/greenville_square.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/withered_isle/greenville_square.webp",
       "translations": {
         "de": {
           "name": "Hauptplatz von Greenville"
@@ -1215,7 +1215,7 @@
       "size_sq_meters": 8192,
       "description": "12-Clock Callout System for Fallen Refuge (Withered Isle). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Fallen%20Refuge.webp",
-      "callout_image_local_path": "maps/callouts/hens333/withered_isle/fallen_refuge.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/withered_isle/fallen_refuge.webp",
       "translations": {
         "de": {
           "name": "Gefallene Zuflucht"
@@ -1245,7 +1245,7 @@
       "size_sq_meters": 9472,
       "description": "12-Clock Callout System for Freddy Fazbears Pizza (Withered Isle). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Freddy%20Fazbears%20Pizza.webp",
-      "callout_image_local_path": "maps/callouts/hens333/withered_isle/freddy_fazbears_pizza.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/withered_isle/freddy_fazbears_pizza.webp",
       "translations": {
         "de": {
           "name": "Freddy Fazbear's Pizza"
@@ -1275,7 +1275,7 @@
       "size_sq_meters": 9088,
       "description": "12-Clock Callout System for The Game (Gideon Meat Plant). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/The%20Game.webp",
-      "callout_image_local_path": "maps/callouts/hens333/gideon_meat_plant/the_game.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/gideon_meat_plant/the_game.webp",
       "translations": {
         "de": {
           "name": "Das Spiel"
@@ -1305,7 +1305,7 @@
       "size_sq_meters": 8448,
       "description": "12-Clock Callout System for Lampkin Lane (Haddonfield). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Haddonfield.webp",
-      "callout_image_local_path": "maps/callouts/hens333/haddonfield/lampkin_lane.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/haddonfield/lampkin_lane.webp",
       "translations": {
         "es": {
           "name": "Avenida Lampkin"
@@ -1332,7 +1332,7 @@
       "size_sq_meters": 7264,
       "description": "12-Clock Callout System for Midwich Elementary School (Silent Hill). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Midwich.gif",
-      "callout_image_local_path": "maps/callouts/hens333/silent_hill/midwich_elementary_school.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/silent_hill/midwich_elementary_school.webp",
       "translations": {
         "es": {
           "name": "Escuela Primaria Midwich"
@@ -1359,7 +1359,7 @@
       "size_sq_meters": 9984,
       "description": "12-Clock Callout System for Mount Ormond Resort (Ormond). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond.webp",
-      "callout_image_local_path": "maps/callouts/hens333/ormond/mount_ormond_resort.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/ormond/mount_ormond_resort.webp",
       "translations": {
         "de": {
           "name": "Skiort am Mount Ormond I"
@@ -1389,7 +1389,7 @@
       "size_sq_meters": 10240,
       "description": "12-Clock Callout System for Mount Ormond Resort II (Ormond). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20II.webp",
-      "callout_image_local_path": "maps/callouts/hens333/ormond/mount_ormond_resort_ii.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/ormond/mount_ormond_resort_ii.webp",
       "translations": {
         "de": {
           "name": "Skiort am Mount Ormond II"
@@ -1419,7 +1419,7 @@
       "size_sq_meters": 9984,
       "description": "12-Clock Callout System for Mount Ormond Resort III (Ormond). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20III.webp",
-      "callout_image_local_path": "maps/callouts/hens333/ormond/mount_ormond_resort_iii.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/ormond/mount_ormond_resort_iii.webp",
       "translations": {
         "de": {
           "name": "Skiort am Mount Ormond III"
@@ -1449,7 +1449,7 @@
       "size_sq_meters": 8448,
       "description": "12-Clock Callout System for Ormond Lake Mine (Ormond). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Ormond/Ormond%20Lake%20Mine.webp",
-      "callout_image_local_path": "maps/callouts/hens333/ormond/ormond_lake_mine.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/ormond/ormond_lake_mine.webp",
       "translations": {
         "de": {
           "name": "Mine am Ormond-See"
@@ -1479,7 +1479,7 @@
       "size_sq_meters": 6272,
       "description": "12-Clock Callout System for Treatment Theatre (Lery's Memorial Institute). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Other/Lerys.webp",
-      "callout_image_local_path": "maps/callouts/hens333/lerys_memorial_institute/treatment_theatre.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/lerys_memorial_institute/treatment_theatre.webp",
       "translations": {
         "de": {
           "name": "Behandlungsbereich"
@@ -1509,7 +1509,7 @@
       "size_sq_meters": 8704,
       "description": "12-Clock Callout System for Toba Landing (Dvarka Deepwood). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Dvarka%20Deepwood/Toba%20Landing.webp",
-      "callout_image_local_path": "maps/callouts/hens333/dvarka_deepwood/toba_landing.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/dvarka_deepwood/toba_landing.webp",
       "translations": {
         "de": {
           "name": "Toba-Landeplatz"
@@ -1539,7 +1539,7 @@
       "size_sq_meters": 9728,
       "description": "12-Clock Callout System for Nostromo Wreckage (Dvarka Deepwood). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Dvarka%20Deepwood/Nostromo%20Wreckage.webp",
-      "callout_image_local_path": "maps/callouts/hens333/dvarka_deepwood/nostromo_wreckage.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/dvarka_deepwood/nostromo_wreckage.webp",
       "translations": {
         "de": {
           "name": "Nostromo-Wrack"
@@ -1569,7 +1569,7 @@
       "size_sq_meters": 8704,
       "description": "12-Clock Callout System for Trickster's Delusion (Sleepless District). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/Sleepless%20District/Tricksters%20Delusion.webp",
-      "callout_image_local_path": "maps/callouts/hens333/sleepless_district/tricksters_delusion.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/sleepless_district/tricksters_delusion.webp",
       "translations": {
         "de": {
           "name": "Illusion des Tricksters"
@@ -1599,7 +1599,7 @@
       "size_sq_meters": 8704,
       "description": "12-Clock Callout System for Coal Tower II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Coal%20Tower%20II.webp",
-      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/coal_tower_ii.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/the_macmillan_estate/coal_tower_ii.webp",
       "translations": {
         "de": {
           "name": "Kohlelager II"
@@ -1629,7 +1629,7 @@
       "size_sq_meters": 9472,
       "description": "12-Clock Callout System for Groaning Storehouse II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Groaning%20Storehouse%20II.webp",
-      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/groaning_storehouse_ii.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/the_macmillan_estate/groaning_storehouse_ii.webp",
       "translations": {
         "de": {
           "name": "Seufzendes Lagerhaus II"
@@ -1659,7 +1659,7 @@
       "size_sq_meters": 9984,
       "description": "12-Clock Callout System for Ironworks Of Misery II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Ironworks%20Of%20Misery%20II.webp",
-      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/ironworks_of_misery_ii.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/the_macmillan_estate/ironworks_of_misery_ii.webp",
       "translations": {
         "de": {
           "name": "Eisenwerk der Qual II"
@@ -1689,7 +1689,7 @@
       "size_sq_meters": 11264,
       "description": "12-Clock Callout System for Shelter Woods II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Shelter%20Woods%20II.webp",
-      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/shelter_woods_ii.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/the_macmillan_estate/shelter_woods_ii.webp",
       "translations": {
         "de": {
           "name": "Schutzwald II"
@@ -1719,7 +1719,7 @@
       "size_sq_meters": 9728,
       "description": "12-Clock Callout System for Suffocation Pit II (The Macmillan Estate). Standard top-middle starts at 12 o'clock.",
       "callout_image_url": "https://hens333.com/img/dbd/callouts/McMillan/Suffocation%20Pit%20II.webp",
-      "callout_image_local_path": "maps/callouts/hens333/the_macmillan_estate/suffocation_pit_ii.webp",
+      "callout_image_local_path": "maps/callouts/lemondbd/the_macmillan_estate/suffocation_pit_ii.webp",
       "translations": {
         "de": {
           "name": "Grubenschacht II"

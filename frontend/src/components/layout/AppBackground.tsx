@@ -20,14 +20,23 @@ const CampfireParticles = dynamic(
   { ssr: false }
 );
 
+export type BackgroundMode = 'on' | 'eco' | 'off';
+
+export interface AppBackgroundProps {
+  mode?: BackgroundMode;
+}
+
 /** Every effect component fills the host (absolute inset-0) and ignores pointer events. */
-const BACKGROUND_EFFECT_COMPONENTS: Record<BackgroundEffect, React.ComponentType<{ className?: string }>> = {
+const BACKGROUND_EFFECT_COMPONENTS: Record<
+  BackgroundEffect,
+  React.ComponentType<{ className?: string; mode?: BackgroundMode }>
+> = {
   campfire: CampfireParticles,
 };
 
 const EFFECT_CLASS = 'absolute inset-0 h-full w-full opacity-90 transition-opacity duration-700';
 
-export function AppBackground() {
+export function AppBackground({ mode = 'on' }: AppBackgroundProps = {}) {
   const pathname = usePathname() || '/';
   const effect = useMemo(() => {
     const segments = pathname.split('/').filter(Boolean);
@@ -36,9 +45,13 @@ export function AppBackground() {
   }, [pathname]);
   const Effect = BACKGROUND_EFFECT_COMPONENTS[effect];
 
+  if (mode === 'off') {
+    return <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true" />;
+  }
+
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
-      <Effect className={EFFECT_CLASS} />
+      <Effect className={EFFECT_CLASS} mode={mode} />
     </div>
   );
 }

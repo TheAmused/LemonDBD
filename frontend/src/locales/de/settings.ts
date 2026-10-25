@@ -2,7 +2,11 @@
 export default {
   title: 'Einstellungen',
   pageTitle: 'Einstellungen',
-  subtitle: 'Passe Audio, visuelle Effekte und Inhaltseinstellungen an.',
+  subtitle: 'Passe globale Website-Funktionen, Klangwelten und visuelle Leistung an.',
+  sectionGlobalTitle: 'Globale Website-Einstellungen',
+  sectionGlobalDesc: 'Einstellungen, die für alle Seiten, Archive und die Navigation gelten.',
+  sectionMinigamesTitle: 'Smash or Pass & Minispiele',
+  sectionMinigamesDesc: 'Audio in Prüfungen, Herzschlag-Terrorradius und Bewegungsphysik für interaktive Modi.',
   audio: 'Audio',
   soundEffects: 'Soundeffekte',
   soundEffectsDesc: 'Soundeffekte bei Interaktionen und Ereignissen abspielen.',

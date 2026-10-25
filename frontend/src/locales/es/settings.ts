@@ -2,7 +2,11 @@
 export default {
   title: 'Ajustes',
   pageTitle: 'Ajustes',
-  subtitle: 'Personaliza tus preferencias de audio, efectos visuales y contenido.',
+  subtitle: 'Ajusta las funciones globales del sitio, los paisajes sonoros y el rendimiento visual.',
+  sectionGlobalTitle: 'Ajustes globales del sitio',
+  sectionGlobalDesc: 'Preferencias que se aplican a todas las páginas, archivos y navegación.',
+  sectionMinigamesTitle: 'Smash or Pass y minijuegos',
+  sectionMinigamesDesc: 'Audio en pruebas, latidos del radio de terror y física de movimiento en modos interactivos.',
   audio: 'Audio',
   soundEffects: 'Efectos de sonido',
   soundEffectsDesc: 'Reproducir efectos de sonido en interacciones y eventos.',

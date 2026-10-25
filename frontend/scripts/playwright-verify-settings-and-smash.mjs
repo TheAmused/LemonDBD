@@ -6,7 +6,10 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OUT_DIR = path.resolve(__dirname, '../../playwright/verification');
+const ARTIFACT_DIR = 'C:/Users/bezie/.gemini/antigravity/brain/311c8978-4571-4fef-ae7d-d322286a863d/screenshots';
+
 fs.mkdirSync(OUT_DIR, { recursive: true });
+fs.mkdirSync(ARTIFACT_DIR, { recursive: true });
 
 const BASE_URL = 'http://localhost:3005';
 
@@ -51,7 +54,9 @@ async function run() {
     console.log(`[${vp.name}] Settings SVG count: ${svgs}`);
 
     const shotPath = path.join(OUT_DIR, `settings-${vp.name}.png`);
+    const artifactPath = path.join(ARTIFACT_DIR, `settings-${vp.name}.png`);
     await page.screenshot({ path: shotPath, fullPage: true });
+    fs.copyFileSync(shotPath, artifactPath);
     console.log(`[${vp.name}] Saved Settings screenshot: ${shotPath}`);
 
     results.settings[vp.name] = { svgCount: svgs, screenshot: shotPath };
@@ -84,7 +89,9 @@ async function run() {
     console.log(`[${vp.name}] Modal bounds:`, bounds);
 
     const shotPath = path.join(OUT_DIR, `smash-prompt-${vp.name}.png`);
+    const artifactPath = path.join(ARTIFACT_DIR, `smash-prompt-${vp.name}.png`);
     await page.screenshot({ path: shotPath, fullPage: false });
+    fs.copyFileSync(shotPath, artifactPath);
     console.log(`[${vp.name}] Saved Smash Prompt screenshot: ${shotPath}`);
 
     // Verify touch target sizes of buttons
@@ -101,15 +108,17 @@ async function run() {
 
     results.smashPopup[vp.name] = { isVisible, bounds, buttons, screenshot: shotPath };
 
-    // On mobile-375 test button interaction: click "Continue with Defaults"
+    // On mobile-375 test button interaction: click "Enter Trial" / "I Understand & Enter Trial"
     if (vp.name === 'mobile-375') {
-      const continueBtn = page.getByRole('button', { name: /Continue with Defaults/i });
-      await continueBtn.click();
+      const enterBtn = page.getByRole('button', { name: /Enter Trial|Continue with Defaults/i });
+      await enterBtn.click();
       await page.waitForTimeout(600);
       const stillVisible = await modal.isVisible();
-      console.log(`[mobile-375] Modal visible after clicking Continue with Defaults: ${stillVisible}`);
+      console.log(`[mobile-375] Modal visible after clicking Enter Trial: ${stillVisible}`);
       const afterShot = path.join(OUT_DIR, `smash-after-defaults-mobile-375.png`);
+      const afterArtifact = path.join(ARTIFACT_DIR, `smash-after-defaults-mobile-375.png`);
       await page.screenshot({ path: afterShot, fullPage: false });
+      fs.copyFileSync(afterShot, afterArtifact);
       console.log(`[mobile-375] Saved after-defaults screenshot: ${afterShot}`);
     }
 

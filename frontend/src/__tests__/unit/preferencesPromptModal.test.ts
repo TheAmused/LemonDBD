@@ -10,6 +10,11 @@ import {
   PREFERENCES_STORAGE_KEY,
   PREFERENCES_CONFIGURED_KEY,
 } from '@/context/PreferencesContext';
+import {
+  isSmashEntryAcknowledged,
+  markSmashEntryAcknowledged,
+  SMASH_ENTRY_ACK_KEY,
+} from '@/components/common/PreferencesPromptModal';
 
 describe('PreferencesPromptModal & Hub Cleanup', () => {
   const modalPath = path.resolve(__dirname, '../../components/common/PreferencesPromptModal.tsx');
@@ -27,6 +32,28 @@ describe('PreferencesPromptModal & Hub Cleanup', () => {
     assert.ok(src.includes('/settings'), 'must link to /settings');
     assert.ok(src.includes('handleContinueDefaults'), 'must handle continue with defaults');
     assert.ok(src.includes('updatePreferences(preferences)'), 'must update preferences on continue defaults');
+  });
+
+  it('tracks smash entry acknowledgment in localStorage independently', () => {
+    const store = new Map<string, string>();
+    const originalLocalStorage = (globalThis as Record<string, unknown>).localStorage;
+    (globalThis as Record<string, unknown>).localStorage = {
+      getItem: (k: string) => store.get(k) ?? null,
+      setItem: (k: string, v: string) => void store.set(k, v),
+    };
+
+    try {
+      assert.equal(isSmashEntryAcknowledged(), false);
+      markSmashEntryAcknowledged();
+      assert.equal(store.get(SMASH_ENTRY_ACK_KEY), 'true');
+      assert.equal(isSmashEntryAcknowledged(), true);
+    } finally {
+      if (originalLocalStorage) {
+        (globalThis as Record<string, unknown>).localStorage = originalLocalStorage;
+      } else {
+        delete (globalThis as Record<string, unknown>).localStorage;
+      }
+    }
   });
 
   it('calling markConfigured populates storage with default preferences and marks configured', () => {

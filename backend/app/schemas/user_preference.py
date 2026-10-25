@@ -12,4 +12,4 @@ class UserPreferenceIn(BaseModel):
     music: bool = True
     nsfw: bool = False
     background_animation: Literal["on", "eco", "off"] = "on"
-    chosen_at: int = Field(ge=0)
+    chosen_at: int = Field(strict=True, ge=0)

@@ -36,8 +36,14 @@ def save_preferences(
     # A clock set far ahead must not pin the account to a choice nothing can ever replace.
     chosen_at = min(chosen_at, int(time.time() * 1000))
     row = db.session.get(SmashUserPreference, user_id)
-    if row and row.chosen_at > chosen_at:
-        return row.to_dict(), False
+    user_pref = db.session.get(UserPreference, user_id)
+    latest_chosen_at = max(
+        row.chosen_at if row else -1,
+        user_pref.chosen_at if (user_pref and user_pref.chosen_at is not None) else -1,
+    )
+    if latest_chosen_at > chosen_at:
+        return get_preferences(user_id) or (row.to_dict() if row else {}), False
+
     if row is None:
         row = SmashUserPreference(user_id=user_id)
         db.session.add(row)
@@ -47,7 +53,6 @@ def save_preferences(
     row.chosen_at = chosen_at
 
     # Keep UserPreference in sync
-    user_pref = db.session.get(UserPreference, user_id)
     if user_pref is None:
         user_pref = UserPreference(
             user_id=user_id,
@@ -59,7 +64,7 @@ def save_preferences(
             chosen_at=chosen_at,
         )
         db.session.add(user_pref)
-    elif user_pref.chosen_at <= chosen_at:
+    else:
         user_pref.effects_enabled = effects
         user_pref.sounds_enabled = sounds
         user_pref.music_enabled = music

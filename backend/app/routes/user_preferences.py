@@ -18,8 +18,9 @@ def read_preferences():
 @user_preferences_bp.route("", methods=["PUT"])
 @login_required
 def write_preferences():
+    raw_body = request.get_json(silent=True)
     try:
-        payload = UserPreferenceIn(**(request.get_json(silent=True) or {}))
+        payload = UserPreferenceIn.model_validate({} if raw_body is None else raw_body)
     except ValidationError as err:
         return jsonify(
             {"error": "Invalid preferences", "details": err.errors(include_url=False, include_context=False)}

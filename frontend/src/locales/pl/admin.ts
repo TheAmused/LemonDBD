@@ -68,6 +68,8 @@ export default {
   targetItemsDesc: "Przedmioty i narzędzia Ocalałych",
   targetMapsLabel: "Mapy i Oznaczenia",
   targetMapsDesc: "Krainy map, kafelki i punkty orientacyjne celów",
+  targetMapLayoutsLabel: "Układy Map",
+  targetMapLayoutsDesc: "Wektorowe plany i układy dla map",
   targetUsersLabel: "Konta Użytkowników",
   targetUsersDesc: "Zarejestrowane profile użytkowników i role",
   targetOwnershipsLabel: "Rekordy Własności Użytkowników",

@@ -68,6 +68,8 @@ export default {
   targetItemsDesc: "Objetos y herramientas de los Supervivientes",
   targetMapsLabel: "Mapas y Referencias",
   targetMapsDesc: "Reinos de mapas, mosaicos y puntos de referencia de objetivos",
+  targetMapLayoutsLabel: "Diseños de Mapas",
+  targetMapLayoutsDesc: "Diseños vectoriales para mapas dibujados",
   targetUsersLabel: "Cuentas de Usuario",
   targetUsersDesc: "Perfiles de usuario registrados y roles",
   targetOwnershipsLabel: "Registros de Propiedad de Usuario",

@@ -68,6 +68,8 @@ export default {
   targetItemsDesc: "サバイバーのアイテムと道具",
   targetMapsLabel: "マップ＆コールアウト",
   targetMapsDesc: "マップの領域、タイル、目標の目印",
+  targetMapLayoutsLabel: "マップレイアウト",
+  targetMapLayoutsDesc: "描画マップ用ベクターレイアウトフットプリント",
   targetUsersLabel: "ユーザーアカウント",
   targetUsersDesc: "登録済みユーザープロフィールと役割",
   targetOwnershipsLabel: "ユーザー所有記録",

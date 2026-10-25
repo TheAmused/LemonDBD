@@ -68,6 +68,8 @@ export default {
   targetItemsDesc: "Gegenstände und Werkzeuge der Überlebenden",
   targetMapsLabel: "Karten & Orientierungspunkte",
   targetMapsDesc: "Kartenreiche, Kacheln und Ziel-Orientierungspunkte",
+  targetMapLayoutsLabel: "Kartenlayouts",
+  targetMapLayoutsDesc: "Vektor-Layout-Grundrisse für gezeichnete Karten",
   targetUsersLabel: "Benutzerkonten",
   targetUsersDesc: "Registrierte Benutzerprofile und Rollen",
   targetOwnershipsLabel: "Benutzer-Besitzdaten",

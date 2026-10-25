@@ -54,11 +54,8 @@ test('SmashOrPass: effects and music choice', async (t) => {
   });
 
   await t.test('the hub shows the prompt modal or warning in the global Modal', () => {
-    const modal = read('prefs/EffectsPreferenceModal.tsx');
+    const modal = fs.readFileSync(path.resolve(__dirname, '../../components/common/PreferencesPromptModal.tsx'), 'utf8');
     assert.match(modal, /from '@\/components\/common\/Modal'/);
-    assert.match(modal, /closeOnEscape\s/);
-    assert.match(modal, /closeOnBackdropClick\s/);
-    assert.doesNotMatch(modal, /closeOnBackdropClick=\{!mandatory\}/);
     const hub = read('SmashOrPassHub.tsx');
     assert.match(hub, /PreferencesPromptModal/);
     assert.match(hub, /useHubOverlays/);

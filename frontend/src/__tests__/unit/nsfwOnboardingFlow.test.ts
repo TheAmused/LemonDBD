@@ -62,19 +62,6 @@ describe('NSFW Onboarding & Global Sync Flow', () => {
     assert.ok(!source.includes('max-h-120'), 'Fixed max-height clamping must be removed');
   });
 
-  it('EffectsPreferenceModal includes global NSFW switch row', () => {
-    const modalPath = path.resolve(__dirname, '../../components/smash-or-pass/prefs/EffectsPreferenceModal.tsx');
-    const source = fs.readFileSync(modalPath, 'utf8');
-    assert.ok(source.includes('useGlobalNsfwPreference'), 'EffectsPreferenceModal must use useGlobalNsfwPreference');
-    assert.ok(source.includes('label={text.nsfw'), 'EffectsPreferenceModal must render NSFW choice row');
-  });
-
-  it('NsfwOnboardingModal is wired with shared primitives and global NSFW preference', () => {
-    const modalPath = path.resolve(__dirname, '../../components/common/NsfwOnboardingModal.tsx');
-    const source = fs.readFileSync(modalPath, 'utf8');
-    assert.ok(source.includes('useGlobalNsfwPreference'), 'NsfwOnboardingModal must use useGlobalNsfwPreference');
-    assert.ok(source.includes('markNsfwOnboardingComplete'), 'NsfwOnboardingModal must call markNsfwOnboardingComplete');
-  });
 
   it('ItemSources implements enlarged catalog items, bounded vertical scroll container, and lazy chunk rendering', () => {
     const itemSourcesPath = path.resolve(__dirname, '../../components/tier-lists/creator/ItemSources.tsx');

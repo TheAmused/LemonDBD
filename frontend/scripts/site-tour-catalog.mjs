@@ -357,8 +357,8 @@ export const MODAL_TARGETS = [
     route: '/en/perks',
     folder: 'perks-mobile-filters',
     triggerSelector: 'button[aria-label*="filter" i], button:has-text("Filters")',
-    modalSelector: 'dialog[open], [role="dialog"]',
-    viewports: ['tablet', 'mobile'],
+    modalSelector: 'dialog[open], [role="dialog"], [data-popover-side], [role="group"]',
+    viewports: ['mobile'],
   },
   {
     id: 'randomizer-wheel',
@@ -366,7 +366,8 @@ export const MODAL_TARGETS = [
     category: 'modals',
     route: '/en/randomizer',
     folder: 'randomizer-wheel',
-    triggerSelector: 'button:has-text("Wheel"), button:has-text("Koło"), button[aria-label*="wheel" i]',
+    triggerSelector:
+      'button[aria-label*="mutator" i], button[aria-label*="chaos" i], button:has-text("🔮"), button[aria-label*="wheel" i]',
     modalSelector: 'dialog[open], [role="dialog"]',
   },
   {
@@ -391,18 +392,19 @@ export const MODAL_TARGETS = [
     id: 'streaks-scoreboard',
     title: 'Scoreboard OCR Scan Modal',
     category: 'modals',
-    route: '/en/streaks/killer/chaos-streak',
+    route: '/en/admin',
     folder: 'streaks-scoreboard',
-    triggerSelector: 'button:has-text("Scoreboard"), button:has-text("OCR"), button[aria-label*="scoreboard" i]',
+    requiresAuth: 'admin',
+    triggerSelector: 'button:has-text("Scoreboard"), button:has-text("OCR")',
     modalSelector: 'dialog[open], [role="dialog"]',
   },
   {
-    id: 'minigames-rules',
-    title: 'Minigames How to Play Modal',
+    id: 'smash-how-to-play',
+    title: 'Smash or Pass How to Play Modal',
     category: 'modals',
-    route: '/en/minigames',
-    folder: 'minigames-rules',
-    triggerSelector: 'button:has-text("How to Play"), button:has-text("Rules"), button[aria-label*="rules" i]',
+    route: '/en/smash-or-pass',
+    folder: 'smash-how-to-play',
+    triggerSelector: 'button:has-text("How to Play"), button:has-text("Jak grać"), button[aria-label*="help" i]',
     modalSelector: 'dialog[open], [role="dialog"]',
   },
   {
@@ -411,6 +413,7 @@ export const MODAL_TARGETS = [
     category: 'modals',
     route: '/en/maps',
     folder: 'maps-voice-info',
+    setup: 'enableMapsVoiceMode',
     triggerSelector: 'button[aria-label*="voice" i], button[aria-label*="info" i]',
     modalSelector: 'dialog[open], [role="dialog"]',
   },
@@ -420,7 +423,8 @@ export const MODAL_TARGETS = [
     category: 'modals',
     route: '/en/characters/the-trapper',
     folder: 'characters-killer-power',
-    triggerSelector: 'button:has-text("Power"), [data-testid="killer-power-card"], button:has-text("Moc")',
+    triggerSelector:
+      'article header button:has(img), button[aria-label*="Trap" i], button[aria-label*="Pułapka" i]',
     modalSelector: 'dialog[open], [role="dialog"]',
   },
   {
@@ -438,6 +442,7 @@ export const MODAL_TARGETS = [
     category: 'modals',
     route: '/en/tier-lists/new',
     folder: 'tier-lists-edit-item',
+    action: 'dblclick',
     triggerSelector: '[data-testid="tier-item"], .tier-item, [role="button"]:has(img)',
     modalSelector: 'dialog[open], [role="dialog"]',
   },
@@ -465,7 +470,8 @@ export const MODAL_TARGETS = [
     category: 'modals',
     route: '/en/smash-or-pass',
     folder: 'smash-roster-select',
-    triggerSelector: 'button:has-text("Select Roster"), button:has-text("Zmień listę"), button[aria-label*="roster" i]',
+    triggerSelector:
+      'header[data-hub-header] button:has(svg.lucide-chevron-down), [data-hub-header] button:has(img)',
     modalSelector: 'dialog[open], [role="dialog"]',
   },
   {
@@ -484,7 +490,7 @@ export const MODAL_TARGETS = [
     route: '/en/user',
     folder: 'user-2fa-setup',
     requiresAuth: 'user',
-    triggerSelector: 'button:has-text("2FA"), button:has-text("Two-Factor"), button:has-text("Uwierzytelnianie dwuskładnikowe")',
+    triggerSelector: 'button[role="switch"], [aria-label*="two-factor" i], [aria-label*="uwierzytelnianie" i]',
     modalSelector: 'dialog[open], [role="dialog"]',
   },
   {
@@ -511,5 +517,8 @@ export function getPageRoute(id) {
 }
 
 export function getModalTarget(id) {
+  if (id === 'minigames-rules') {
+    return MODAL_TARGETS.find((m) => m.id === 'smash-how-to-play');
+  }
   return MODAL_TARGETS.find((m) => m.id === id);
 }

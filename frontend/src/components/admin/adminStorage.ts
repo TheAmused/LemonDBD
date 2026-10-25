@@ -36,6 +36,9 @@ export const adminQueueDrawerKey = (queue: string, section: 'list' | 'case') => 
 /** A card on the Tools tab. */
 export const adminToolDrawerKey = (id: string) => `lemondbd_admin_tool_${id}`;
 
+/** A drawer on the Settings tab. */
+export const adminSettingDrawerKey = (group: string) => `lemondbd_admin_setting_${group}`;
+
 /** A type guard for "one of these strings", for usePersistentString: a stale stored value is ignored. */
 export const oneOf =
   <T extends string>(values: readonly T[]) =>

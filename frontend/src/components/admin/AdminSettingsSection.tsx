@@ -8,12 +8,12 @@
 // confirmation and a reason. The server validates and bounds every value again.
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { DoorOpen, Gauge, Hourglass, KeyRound, Link2, Megaphone, Plug, Scale, ShieldCheck, type LucideIcon } from 'lucide-react';
+import { AccordionSection } from '@/components/common/AccordionSection';
 import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { EmptyState } from '@/components/common/EmptyState';
 import { FieldLabel, Input, Select } from '@/components/common/Field';
-import { IconTile } from '@/components/common/IconTile';
 import { Surface } from '@/components/common/Surface';
 import { Switch } from '@/components/common/Switch';
 import { FogReportIcon } from '@/components/icons/DbdIcons';
@@ -31,6 +31,8 @@ import {
   type DraftProblem,
 } from '@/components/admin/settingsForm';
 import { AdminTabContentSkeleton } from '@/components/admin/AdminTabContentSkeleton';
+import { adminSettingDrawerKey } from '@/components/admin/adminStorage';
+import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useAdminSettingsDict } from '@/hooks/useAdminSettingsDict';
 import type { AdminSettingsDict } from '@/locales/adminSettings';
@@ -59,6 +61,140 @@ const REASON_MAX_LENGTH = 300;
 const BANNER_LEVEL_VALUES: readonly BannerLevel[] = ['info', 'warning', 'critical'];
 
 const asBannerLevel = (value: string): BannerLevel => BANNER_LEVEL_VALUES.find((level) => level === value) ?? 'info';
+
+export interface SettingGroupDrawerProps {
+  group: SiteSettingGroup;
+  rows: AdminSiteSetting[];
+  t: AdminSettingsDict;
+  text: (key: string) => string;
+  renderControl: (row: AdminSiteSetting, problem: DraftProblem | null) => React.ReactNode;
+  draftFor: (row: AdminSiteSetting) => string;
+  isDraftDirty: (row: AdminSiteSetting, draft: string) => boolean;
+  draftProblem: (row: AdminSiteSetting, draft: string) => DraftProblem | null;
+  problemText: (row: AdminSiteSetting, problem: DraftProblem) => string;
+  defaultLabel: (row: AdminSiteSetting) => string;
+  send: (
+    payload: Record<string, string | number | boolean | null>,
+    options?: { confirmRisky: boolean; reason: string },
+    resetKey?: string
+  ) => Promise<void>;
+  setRiskyReset: (row: AdminSiteSetting) => void;
+  saving: boolean;
+  bannerText?: string;
+  bannerLevelRow?: AdminSiteSetting;
+}
+
+export function SettingGroupDrawer({
+  group,
+  rows,
+  t,
+  text,
+  renderControl,
+  draftFor,
+  isDraftDirty,
+  draftProblem,
+  problemText,
+  defaultLabel,
+  send,
+  setRiskyReset,
+  saving,
+  bannerText,
+  bannerLevelRow,
+}: SettingGroupDrawerProps) {
+  const [open, toggle] = usePersistentDrawer(adminSettingDrawerKey(group), true);
+  const Icon = GROUP_ICONS[group];
+  const dirtyCount = rows.filter((row) => isDraftDirty(row, draftFor(row))).length;
+
+  return (
+    <AccordionSection
+      as="section"
+      title={
+        <span className="inline-flex items-center gap-2.5">
+          <Icon className="icon-sm text-text-muted" aria-hidden="true" />
+          <span>{text(`configGroup_${group}`)}</span>
+        </span>
+      }
+      open={open}
+      onToggle={toggle}
+      headerAction={
+        dirtyCount > 0 ? (
+          <Badge tone="amber" size="xs">
+            {formatMessage(t.configUnsaved, { count: dirtyCount })}
+          </Badge>
+        ) : null
+      }
+      className="rounded-card border border-border-color bg-bg-surface"
+      bodyClassName="p-0"
+    >
+      <p className="border-b border-border-color p-3 text-center type-caption text-text-muted sm:px-5">
+        {text(`configGroupDesc_${group}`)}
+      </p>
+
+      {group === 'notices' && bannerText && bannerLevelRow && (
+        <div className="border-b border-border-color p-4 sm:p-6">
+          <FieldLabel as="span">{t.configBannerPreview}</FieldLabel>
+          <Surface tone="well" padding="none" className="overflow-hidden">
+            <SiteBannerView level={asBannerLevel(draftFor(bannerLevelRow))} text={bannerText} />
+          </Surface>
+        </div>
+      )}
+
+      <div className="min-w-0 divide-y divide-border-color">
+        {rows.map((row) => {
+          const dirty = isDraftDirty(row, draftFor(row));
+          const problem = dirty ? draftProblem(row, draftFor(row)) : null;
+          const label = text(`config_${row.key}`) || row.key;
+          return (
+            <div
+              key={row.key}
+              className={cn('grid gap-3 p-4 sm:grid-cols-label-control sm:items-start sm:gap-6', dirty && 'bg-accent-amber/5')}
+            >
+              <div className="min-w-0">
+                <label htmlFor={row.kind === 'bool' ? undefined : `cfg-${row.key}`} className="flex flex-wrap items-center gap-2 type-strong text-text-primary">
+                  <span>{label}</span>
+                  {dirty ? (
+                    <Badge tone="amber" size="xs" square>{t.configModified}</Badge>
+                  ) : row.overridden && row.kind !== 'secret' ? (
+                    <Badge tone="neutral" size="xs" square>{t.configCustom}</Badge>
+                  ) : null}
+                  {row.risky_when !== null && (
+                    <Badge tone="red" size="xs" square>{t.configSecuritySwitch}</Badge>
+                  )}
+                </label>
+                <p className="mt-1 type-body text-text-muted">{text(`config_${row.key}_desc`)}</p>
+              </div>
+
+              <div className="flex flex-col gap-1.5 sm:items-end">
+                {renderControl(row, problem)}
+                {problem && (
+                  <p role="alert" className="type-caption font-medium text-accent-red">{problemText(row, problem)}</p>
+                )}
+                <div className="flex flex-wrap items-center gap-x-3 type-caption text-text-muted">
+                  <span className="min-w-0 break-all">{formatMessage(t.configDefaultValue, { value: defaultLabel(row) })}</span>
+                  {row.overridden && (
+                    <Button
+                      type="button"
+                      disabled={saving}
+                      onClick={() =>
+                        { void (row.kind === 'bool' && row.risky_when !== null && row.default === row.risky_when && row.value !== row.default
+                          ? setRiskyReset(row)
+                          : send({ [row.key]: null }, undefined, row.key)); }
+                      }
+                      variant="linkDanger"
+                      size="sm"
+                    >
+                      {row.kind === 'secret' ? t.configSecretRemove : t.configResetDefault}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </AccordionSection>
+  );
+}
 
 interface SettingsSectionProps {
   notify: (message: ActionMessage) => void;
@@ -165,7 +301,7 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
 
   if (loading) return <EmptyState variant="inline" title={dict.admin.loading} />;
 
-  const renderControl = (row: AdminSiteSetting, problem: DraftProblem) => {
+  const renderControl = (row: AdminSiteSetting, problem: DraftProblem | null) => {
     const draft = draftFor(row);
     const label = text(`config_${row.key}`) || row.key;
     const invalid = problem !== null;
@@ -301,97 +437,40 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
   const bannerText = bannerRow ? draftFor(bannerRow).trim() : '';
 
   return (
-    <Surface padding="none">
-      <p className="border-b border-border-color px-4 py-3 type-body text-text-muted sm:px-6">{t.configSubtitle}</p>
+    <div className="space-y-4">
+      <Surface padding="none" className="p-4 sm:p-5">
+        <p className="type-body text-text-muted">{t.configSubtitle}</p>
+      </Surface>
 
-      <div className="divide-y divide-border-color">
+      <div className="space-y-4">
         {SETTING_GROUP_ORDER.map((group) => {
           const rows = settings.filter((row) => row.group === group);
           if (rows.length === 0) return null;
-          const Icon = GROUP_ICONS[group];
           return (
-            <section key={group} aria-labelledby={`cfg-group-${group}`} className="grid gap-4 p-4 sm:p-6 lg:grid-cols-label-wide lg:gap-8">
-              <div className="flex items-start gap-3">
-                <IconTile size="xs" tone="neutral">
-                  <Icon className="icon-md" aria-hidden="true" />
-                </IconTile>
-                <div className="min-w-0">
-                  <h2 id={`cfg-group-${group}`} className="type-label-sm text-text-primary">{text(`configGroup_${group}`)}</h2>
-                  <p className="mt-1 type-body text-text-muted">{text(`configGroupDesc_${group}`)}</p>
-                </div>
-              </div>
-
-              <div className="min-w-0 space-y-3">
-                {group === 'notices' && bannerText && bannerLevelRow && (
-                  <div>
-                    <FieldLabel as="span">{t.configBannerPreview}</FieldLabel>
-                    <Surface tone="well" padding="none" className="overflow-hidden">
-                      <SiteBannerView level={asBannerLevel(draftFor(bannerLevelRow))} text={bannerText} />
-                    </Surface>
-                  </div>
-                )}
-
-                <Surface tone="well" padding="none" className="min-w-0 divide-y divide-border-color">
-                  {rows.map((row) => {
-                    const dirty = isDraftDirty(row, draftFor(row));
-                    const problem = dirty ? draftProblem(row, draftFor(row)) : null;
-                    const label = text(`config_${row.key}`) || row.key;
-                    return (
-                      <div
-                        key={row.key}
-                        className={cn('grid gap-3 p-4 sm:grid-cols-label-control sm:items-start sm:gap-6', dirty && 'bg-accent-amber/5')}
-                      >
-                        <div className="min-w-0">
-                          <label htmlFor={row.kind === 'bool' ? undefined : `cfg-${row.key}`} className="flex flex-wrap items-center gap-2 type-strong text-text-primary">
-                            <span>{label}</span>
-                            {dirty ? (
-                              <Badge tone="amber" size="xs" square>{t.configModified}</Badge>
-                            ) : row.overridden && row.kind !== 'secret' ? (
-                              <Badge tone="neutral" size="xs" square>{t.configCustom}</Badge>
-                            ) : null}
-                            {row.risky_when !== null && (
-                              <Badge tone="red" size="xs" square>{t.configSecuritySwitch}</Badge>
-                            )}
-                          </label>
-                          <p className="mt-1 type-body text-text-muted">{text(`config_${row.key}_desc`)}</p>
-                        </div>
-
-                        <div className="flex flex-col gap-1.5 sm:items-end">
-                          {renderControl(row, problem)}
-                          {problem && (
-                            <p role="alert" className="type-caption font-medium text-accent-red">{problemText(row, problem)}</p>
-                          )}
-                          <div className="flex flex-wrap items-center gap-x-3 type-caption text-text-muted">
-                            <span className="min-w-0 break-all">{formatMessage(t.configDefaultValue, { value: defaultLabel(row) })}</span>
-                            {row.overridden && (
-                              <Button
-                                type="button"
-                                disabled={saving}
-                                onClick={() =>
-                                  { void (row.kind === 'bool' && row.risky_when !== null && row.default === row.risky_when && row.value !== row.default
-                                    ? setRiskyReset(row)
-                                    : send({ [row.key]: null }, undefined, row.key)); }
-                                }
-                                variant="linkDanger"
-                                size="sm"
-                              >
-                                {row.kind === 'secret' ? t.configSecretRemove : t.configResetDefault}
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </Surface>
-              </div>
-            </section>
+            <SettingGroupDrawer
+              key={group}
+              group={group}
+              rows={rows}
+              t={t}
+              text={text}
+              renderControl={renderControl}
+              draftFor={draftFor}
+              isDraftDirty={isDraftDirty}
+              draftProblem={draftProblem}
+              problemText={problemText}
+              defaultLabel={defaultLabel}
+              send={send}
+              setRiskyReset={setRiskyReset}
+              saving={saving}
+              bannerText={group === 'notices' ? bannerText : undefined}
+              bannerLevelRow={group === 'notices' ? bannerLevelRow : undefined}
+            />
           );
         })}
       </div>
 
       {/* Save bar: stays in view while the form scrolls */}
-      <div className="sticky bottom-0 z-10 flex flex-wrap items-center justify-between gap-3 rounded-b-card border-t border-border-color bg-bg-surface/95 px-4 py-3 backdrop-blur-md sm:px-6">
+      <div className="sticky bottom-0 z-10 flex flex-wrap items-center justify-between gap-3 rounded-card border border-border-color bg-bg-surface/95 px-4 py-3 shadow-lg backdrop-blur-md sm:px-6">
         <output className={cn('block type-strong', changed.length > 0 ? 'text-accent-amber' : 'text-text-muted')}>
           {changed.length > 0 ? formatMessage(t.configUnsaved, { count: changed.length }) : t.configAllSaved}
         </output>
@@ -458,6 +537,6 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
           setReason('');
         }}
       />
-    </Surface>
+    </div>
   );
 }

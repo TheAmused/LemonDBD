@@ -404,7 +404,8 @@ export const MODAL_TARGETS = [
     category: 'modals',
     route: '/en/smash-or-pass',
     folder: 'smash-how-to-play',
-    triggerSelector: 'button:has-text("How to Play"), button:has-text("Jak grać"), button[aria-label*="help" i]',
+    triggerSelector:
+      'button[aria-label*="how to play" i], button[aria-label*="jak grać" i], button:has-text("How to Play"), button:has-text("Jak grać"), [role="menuitem"]:has-text("How to Play"), [role="menuitem"]:has-text("Jak grać")',
     modalSelector: 'dialog[open], [role="dialog"]',
   },
   {

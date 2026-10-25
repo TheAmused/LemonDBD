@@ -132,10 +132,50 @@ export async function authenticateRole(context, baseUrl, role, demoAccounts = nu
   }
 }
 
+export function getScreenshotFileName(vp) {
+  return `${vp.id}-${vp.width}x${vp.height}.png`;
+}
+
 export async function setDismissSmashPromptPreState(page) {
   await page.evaluate(() => {
-    try { localStorage.setItem('smash-preferences-prompt-dismissed', 'true'); } catch (_e) {}
+    try {
+      localStorage.setItem('lemondbd_preferences_configured_v2', 'true');
+      localStorage.setItem('lemondbd_smash_entry_acknowledged_v1', 'true');
+    } catch (_e) {}
   }).catch(() => {});
+}
+
+export function matchesFilter(item, config = {}, isModal = Boolean(item?.modalSelector)) {
+  if (config.category) {
+    const catQ = config.category.toLowerCase();
+    if (isModal) {
+      const matchModal =
+        catQ === 'modals' ||
+        Boolean(item.folder && item.folder.toLowerCase().includes(catQ)) ||
+        Boolean(item.route && item.route.toLowerCase().includes(catQ));
+      if (!matchModal) return false;
+    } else {
+      if (!item.category || item.category.toLowerCase() !== catQ) return false;
+    }
+  }
+
+  if (config.page) {
+    const normQ = config.page.toLowerCase().replace(/^\/en\/?/, '').replace(/^\//, '');
+    const itemId = (item.id || '').toLowerCase();
+    const itemRoute = (item.route || '').toLowerCase().replace(/^\/en\/?/, '');
+    const itemFolder = (item.folder || '').toLowerCase();
+
+    const matchesId = itemId.includes(normQ);
+    const matchesRoute = itemRoute.length > 0 && itemRoute.startsWith(normQ);
+    const matchesFolder = itemFolder.includes(normQ);
+    const matchesLanding = normQ === 'landing' && item.route === '/en';
+
+    if (!matchesId && !matchesRoute && !matchesFolder && !matchesLanding) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 async function stabilize(page, ms = 500) {
@@ -210,17 +250,8 @@ export async function runTour(options = {}) {
     return { failedCount: 1 };
   }
 
-  const matchesFilter = (item) => {
-    if (config.category && item.category.toLowerCase() !== config.category.toLowerCase() && item.category !== 'modals') return false;
-    if (config.page) {
-      const q = config.page.toLowerCase();
-      return item.id.toLowerCase() === q || item.route.toLowerCase() === q || item.id.toLowerCase().includes(q);
-    }
-    return true;
-  };
-
-  const activePages = config.modalsOnly ? [] : PAGE_ROUTES.filter(matchesFilter);
-  const activeModals = config.pagesOnly ? [] : MODAL_TARGETS.filter(matchesFilter);
+  const activePages = config.modalsOnly ? [] : PAGE_ROUTES.filter((p) => matchesFilter(p, config, false));
+  const activeModals = config.pagesOnly ? [] : MODAL_TARGETS.filter((m) => matchesFilter(m, config, true));
 
   console.log(`\nStarting LemonDBD Site Tour Automation...`);
   console.log(`Base URL  : ${config.baseUrl}`);
@@ -266,13 +297,38 @@ export async function runTour(options = {}) {
     if (vp.userAgent) contextOptions.userAgent = vp.userAgent;
 
     const context = await browser.newContext(contextOptions);
+
+    await context.addInitScript(() => {
+      try {
+        if (!window.__ALLOW_SMASH_PROMPT__ && !sessionStorage.getItem('__ALLOW_SMASH_PROMPT__')) {
+          localStorage.setItem('lemondbd_preferences_configured_v2', 'true');
+          localStorage.setItem('lemondbd_smash_entry_acknowledged_v1', 'true');
+        }
+      } catch (_e) {}
+
+      const injectStyle = () => {
+        if (document.getElementById('__tour_disable_animations__')) return;
+        const style = document.createElement('style');
+        style.id = '__tour_disable_animations__';
+        style.textContent =
+          '*, *::before, *::after { transition-duration: 0s !important; animation-duration: 0s !important; caret-color: transparent !important; }';
+        (document.head || document.documentElement)?.appendChild(style);
+      };
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', injectStyle);
+      } else {
+        injectStyle();
+      }
+    });
+
     let currentAuthRole = null;
 
     // 1. Capture Full Page Routes
     for (const route of activePages) {
       const pageDir = path.join(outDir, 'pages', route.folder);
-      const filePath = path.join(pageDir, `${vp.id}.png`);
-      const relPath = `pages/${route.folder}/${vp.id}.png`.replace(/\\/g, '/');
+      const fileName = getScreenshotFileName(vp);
+      const filePath = path.join(pageDir, fileName);
+      const relPath = `pages/${route.folder}/${fileName}`.replace(/\\/g, '/');
 
       if (!config.update && fs.existsSync(filePath)) {
         recordItem(itemsMap, route, vp, 'page', relPath, fs.statSync(filePath));
@@ -316,8 +372,9 @@ export async function runTour(options = {}) {
       if (target.viewports && !target.viewports.includes(vp.id)) continue;
 
       const modalDir = path.join(outDir, 'modals', target.folder);
-      const filePath = path.join(modalDir, `${vp.id}.png`);
-      const relPath = `modals/${target.folder}/${vp.id}.png`.replace(/\\/g, '/');
+      const fileName = getScreenshotFileName(vp);
+      const filePath = path.join(modalDir, fileName);
+      const relPath = `modals/${target.folder}/${fileName}`.replace(/\\/g, '/');
 
       if (!config.update && fs.existsSync(filePath)) {
         recordItem(itemsMap, target, vp, 'modal', relPath, fs.statSync(filePath));
@@ -340,7 +397,14 @@ export async function runTour(options = {}) {
         await page.goto(`${config.baseUrl}${target.route}`, { waitUntil: 'domcontentloaded', timeout: config.timeout });
 
         if (target.setup === 'clearPreferencesDismissed' || target.setup === 'clearSmashPrompt') {
-          await page.evaluate(() => { try { localStorage.removeItem('smash-preferences-prompt-dismissed'); } catch (_e) {} }).catch(() => {});
+          await page.evaluate(() => {
+            try {
+              window.__ALLOW_SMASH_PROMPT__ = true;
+              sessionStorage.setItem('__ALLOW_SMASH_PROMPT__', 'true');
+              localStorage.removeItem('lemondbd_preferences_configured_v2');
+              localStorage.removeItem('lemondbd_smash_entry_acknowledged_v1');
+            } catch (_e) {}
+          }).catch(() => {});
           await page.reload({ waitUntil: 'domcontentloaded', timeout: config.timeout });
         } else if (target.setup === 'enableMapsVoiceMode') {
           await page.evaluate(() => { try { localStorage.setItem('lemondbd_maps_search_mode', 'voice'); } catch (_e) {} }).catch(() => {});
@@ -364,13 +428,29 @@ export async function runTour(options = {}) {
         await stabilize(page, 500);
 
         if (target.triggerSelector) {
+          const isAuthRegister = target.id === 'auth-register' || target.setup === 'openAuthRegister';
+          const effectiveTrigger = isAuthRegister
+            ? 'button:has-text("Sign In"), button:has-text("Zaloguj"), [data-testid="sidebar-login-button"], button[aria-label*="Sign in" i]'
+            : target.triggerSelector;
+
           if ((vp.id === 'mobile' || vp.id === 'tablet') && target.folder.startsWith('sidebar-')) {
-            const hasVisible = (await page.locator(target.triggerSelector).locator('visible=true').count().catch(() => 0)) > 0;
+            const hasVisible = (await page.locator(effectiveTrigger).locator('visible=true').count().catch(() => 0)) > 0;
             if (!hasVisible) {
               const drawerToggle = page.locator('[data-testid="mobile-drawer-toggle"], button[aria-label*="menu" i]').first();
               if (await drawerToggle.isVisible().catch(() => false)) {
                 await drawerToggle.click().catch(() => {});
                 await page.waitForTimeout(400);
+              }
+            }
+          }
+
+          if (target.id === 'smash-how-to-play') {
+            const hasVisible = (await page.locator(effectiveTrigger).locator('visible=true').count().catch(() => 0)) > 0;
+            if (!hasVisible) {
+              const moreActionsBtn = page.locator('header[data-hub-header] button[aria-label*="more" i], header[data-hub-header] button[aria-label*="więcej" i]').first();
+              if (await moreActionsBtn.isVisible().catch(() => false)) {
+                await moreActionsBtn.click().catch(() => {});
+                await page.waitForTimeout(300);
               }
             }
           }
@@ -386,9 +466,9 @@ export async function runTour(options = {}) {
             }
           }
 
-          let triggerLocator = page.locator(target.triggerSelector).locator('visible=true').first();
+          let triggerLocator = page.locator(effectiveTrigger).locator('visible=true').first();
           if ((await triggerLocator.count().catch(() => 0)) === 0) {
-            triggerLocator = page.locator(target.triggerSelector).first();
+            triggerLocator = page.locator(effectiveTrigger).first();
           }
 
           await triggerLocator.waitFor({ state: 'visible', timeout: 5000 });
@@ -398,10 +478,11 @@ export async function runTour(options = {}) {
             await triggerLocator.click({ timeout: 5000 });
           }
 
-          if (target.id === 'auth-register' || target.setup === 'openAuthRegister') {
+          if (isAuthRegister) {
             const regTab = page.locator('button:has-text("Sign Up"), button:has-text("Register"), button:has-text("Rejestracja"), [data-testid="auth-register-tab"]').first();
-            if (await regTab.isVisible({ timeout: 2000 }).catch(() => false)) {
+            if (await regTab.isVisible({ timeout: 3000 }).catch(() => false)) {
               await regTab.click().catch(() => {});
+              await page.waitForTimeout(200);
             }
           }
         }

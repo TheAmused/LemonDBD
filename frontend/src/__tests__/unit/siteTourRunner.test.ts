@@ -6,7 +6,13 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
-import { parseArgs, formatFileSize, solveAltchaChallenge } from '../../../scripts/site-tour.mjs';
+import {
+  parseArgs,
+  formatFileSize,
+  solveAltchaChallenge,
+  matchesFilter,
+  getScreenshotFileName,
+} from '../../../scripts/site-tour.mjs';
 
 interface CliOptions {
   update: boolean;
@@ -180,3 +186,63 @@ describe('Site Tour Runner - Package.json NPM Scripts', () => {
     assert.strictEqual(pkg.scripts['screenshots:quick'], 'node scripts/site-tour.mjs --viewports=desktop,mobile');
   });
 });
+
+describe('Site Tour Runner - matchesFilter', () => {
+  it('matches all items when no filter is provided', () => {
+    const page = { id: 'perks', category: 'perks', route: '/en/perks', folder: '01-perks' };
+    assert.strictEqual(matchesFilter(page, {}, false), true);
+  });
+
+  it('matches pages by category strictly', () => {
+    const perksPage = { id: 'perks', category: 'perks', route: '/en/perks', folder: '01-perks' };
+    const buildsPage = { id: 'builds', category: 'builds', route: '/en/builds', folder: '02-builds' };
+
+    assert.strictEqual(matchesFilter(perksPage, { category: 'perks' }, false), true);
+    assert.strictEqual(matchesFilter(buildsPage, { category: 'perks' }, false), false);
+  });
+
+  it('matches modals when category is "modals" or matches folder or route', () => {
+    const perkModal = { id: 'perk-detail', category: 'modals', route: '/en/perks', folder: 'perk-detail' };
+    const authModal = { id: 'auth-login', category: 'modals', route: '/en', folder: 'auth-login' };
+
+    assert.strictEqual(matchesFilter(perkModal, { category: 'modals' }, true), true);
+    assert.strictEqual(matchesFilter(authModal, { category: 'modals' }, true), true);
+    assert.strictEqual(matchesFilter(perkModal, { category: 'perks' }, true), true);
+    assert.strictEqual(matchesFilter(authModal, { category: 'perks' }, true), false);
+  });
+
+  it('filters by page id or route, handling normalized /en prefix', () => {
+    const landingPage = { id: 'landing', category: 'general', route: '/en', folder: '01-landing' };
+    const perksPage = { id: 'perks', category: 'perks', route: '/en/perks', folder: '01-perks' };
+    const perkModal = { id: 'perk-detail', category: 'modals', route: '/en/perks', folder: 'perk-detail' };
+
+    assert.strictEqual(matchesFilter(landingPage, { page: 'landing' }, false), true);
+    assert.strictEqual(matchesFilter(landingPage, { page: '/en' }, false), true);
+    assert.strictEqual(matchesFilter(perksPage, { page: 'perks' }, false), true);
+    assert.strictEqual(matchesFilter(perksPage, { page: '/en/perks' }, false), true);
+    assert.strictEqual(matchesFilter(perkModal, { page: 'perks' }, true), true);
+    assert.strictEqual(matchesFilter(landingPage, { page: 'perks' }, false), false);
+  });
+});
+
+describe('Site Tour Runner - getScreenshotFileName', () => {
+  it('formats filenames with viewport id and dimensions per spec Section 4', () => {
+    assert.strictEqual(
+      getScreenshotFileName({ id: 'desktop', width: 1920, height: 1080 }),
+      'desktop-1920x1080.png'
+    );
+    assert.strictEqual(
+      getScreenshotFileName({ id: 'laptop', width: 1366, height: 768 }),
+      'laptop-1366x768.png'
+    );
+    assert.strictEqual(
+      getScreenshotFileName({ id: 'tablet', width: 768, height: 1024 }),
+      'tablet-768x1024.png'
+    );
+    assert.strictEqual(
+      getScreenshotFileName({ id: 'mobile', width: 390, height: 844 }),
+      'mobile-390x844.png'
+    );
+  });
+});
+

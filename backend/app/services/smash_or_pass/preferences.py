@@ -1,15 +1,27 @@
 """A signed-in viewer's effects, sound-effects and music choice for the Smash or Pass page."""
+
 import time
 from typing import Any
 
 from app.core.extensions import db
 from app.models.smash_or_pass import SmashUserPreference
+from app.models.user_preference import UserPreference
 
 
 def get_preferences(user_id: int) -> dict[str, Any] | None:
     """The account's saved choice, or None when it never made one."""
     row = db.session.get(SmashUserPreference, user_id)
-    return row.to_dict() if row else None
+    if row:
+        return row.to_dict()
+    user_pref = db.session.get(UserPreference, user_id)
+    if user_pref:
+        return {
+            "effects": user_pref.effects_enabled,
+            "sounds": user_pref.sounds_enabled,
+            "music": user_pref.music_enabled,
+            "chosen_at": user_pref.chosen_at,
+        }
+    return None
 
 
 def save_preferences(
@@ -33,5 +45,25 @@ def save_preferences(
     row.sounds_enabled = sounds
     row.music_enabled = music
     row.chosen_at = chosen_at
+
+    # Keep UserPreference in sync
+    user_pref = db.session.get(UserPreference, user_id)
+    if user_pref is None:
+        user_pref = UserPreference(
+            user_id=user_id,
+            effects_enabled=effects,
+            sounds_enabled=sounds,
+            music_enabled=music,
+            nsfw_enabled=False,
+            background_animation="on",
+            chosen_at=chosen_at,
+        )
+        db.session.add(user_pref)
+    elif user_pref.chosen_at <= chosen_at:
+        user_pref.effects_enabled = effects
+        user_pref.sounds_enabled = sounds
+        user_pref.music_enabled = music
+        user_pref.chosen_at = chosen_at
+
     db.session.commit()
     return row.to_dict(), True

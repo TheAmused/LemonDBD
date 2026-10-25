@@ -445,4 +445,9 @@ export default {
   neverRun: "Aún no se ha ejecutado",
   lastRunScheduled: "Última ejecución programada: {date}",
   lastRunManual: "Última ejecución por un administrador: {date}",
+  vectorMapTest: "Motor de Mapas Vectoriales",
+  vectorMapTestDesc: "Inspecciona diseños vectoriales SVG, planos de varios pisos y leyendas de puntos de referencia.",
+  vectorMapSelect: "Seleccionar mapa",
+  vectorMapNoLayout: "No se encontró ningún plano vectorial para este mapa.",
+  vectorMapLoading: "Cargando diseño...",
 } as const;

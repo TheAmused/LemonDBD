@@ -445,4 +445,9 @@ export default {
   neverRun: "Jeszcze nie uruchomiono",
   lastRunScheduled: "Ostatnio według harmonogramu: {date}",
   lastRunManual: "Ostatnio uruchomione przez administratora: {date}",
+  vectorMapTest: "Silnik map wektorowych",
+  vectorMapTestDesc: "Przeglądaj interaktywne wektorowe układy SVG, plany pięter i legendy punktów orientacyjnych.",
+  vectorMapSelect: "Wybierz mapę",
+  vectorMapNoLayout: "Nie znaleziono wektorowego obrysu dla tej mapy.",
+  vectorMapLoading: "Wczytywanie układu...",
 } as const;

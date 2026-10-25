@@ -137,12 +137,17 @@ export function SettingsClient() {
                 {dict.settings.campfireDesc}
               </p>
             </div>
-            <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
+            <div
+              role="group"
+              aria-label={dict.settings.campfire}
+              className="flex items-center gap-2 self-start sm:self-auto shrink-0"
+            >
               {campfireModes.map(({ mode, label }) => (
                 <Button
                   key={mode}
                   variant={preferences.backgroundAnimation === mode ? 'primary' : 'secondary'}
                   size="sm"
+                  aria-pressed={preferences.backgroundAnimation === mode}
                   onClick={() => void updatePreferences({ backgroundAnimation: mode })}
                   className="min-h-11 min-w-18"
                 >

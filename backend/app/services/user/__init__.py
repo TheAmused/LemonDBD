@@ -37,6 +37,7 @@ from app.services.user.profile import (
     set_preferred_language,
     update_user_showcase,
 )
+from app.services.user.preferences import get_user_preferences, save_user_preferences
 
 from app.services.user.service import UserService
 
@@ -72,5 +73,7 @@ __all__ = [
     "export_user_data",
     "fetch_admin_metrics",
     "seed_default_admin_if_empty",
+    "get_user_preferences",
+    "save_user_preferences",
     "UserService",
 ]

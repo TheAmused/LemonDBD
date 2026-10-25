@@ -2,7 +2,15 @@
 // frontend/src/app/[locale]/settings/SettingsClient.tsx
 
 import React from 'react';
-import { Volume2, Music, Sparkles, Flame, ShieldAlert, Cloud, HardDrive } from 'lucide-react';
+import {
+  ThunderPulseIcon,
+  EntityHeartIcon,
+  ChaosSwirlIcon,
+  CampfireIcon,
+  CautionVeilIcon,
+  SealCheckIcon,
+  WardCharmIcon,
+} from '@/components/icons/DbdIcons';
 import { Surface } from '@/components/common/Surface';
 import { Switch } from '@/components/common/Switch';
 import { Badge } from '@/components/common/Badge';
@@ -51,9 +59,9 @@ export function SettingsClient() {
             size="sm"
             icon={
               isAuthenticated ? (
-                <Cloud className="h-3.5 w-3.5" aria-hidden="true" />
+                <SealCheckIcon className="h-3.5 w-3.5" aria-hidden="true" />
               ) : (
-                <HardDrive className="h-3.5 w-3.5" aria-hidden="true" />
+                <WardCharmIcon className="h-3.5 w-3.5" aria-hidden="true" />
               )
             }
           >
@@ -64,7 +72,7 @@ export function SettingsClient() {
 
       {/* 1. Audio Surface Card */}
       <Surface tone="flat" padding="lg" className="space-y-5">
-        <SectionCardHeader icon={Volume2} title={dict.settings.audio} />
+        <SectionCardHeader icon={ThunderPulseIcon} title={dict.settings.audio} />
 
         <div className="space-y-4 divide-y divide-border-subtle/60">
           <div className="pt-2 flex items-center justify-between gap-4">
@@ -86,7 +94,7 @@ export function SettingsClient() {
           <div className="pt-4 flex items-center justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-1.5">
-                <Music className="h-4 w-4 text-accent-red" aria-hidden="true" />
+                <EntityHeartIcon className="h-4 w-4 text-accent-red" aria-hidden="true" />
                 <span className="type-strong-fluid text-text-primary">
                   {dict.settings.music}
                 </span>
@@ -106,7 +114,7 @@ export function SettingsClient() {
 
       {/* 2. Visuals & Motion Surface Card */}
       <Surface tone="flat" padding="lg" className="space-y-5">
-        <SectionCardHeader icon={Sparkles} title={dict.settings.visuals} />
+        <SectionCardHeader icon={ChaosSwirlIcon} title={dict.settings.visuals} />
 
         <div className="space-y-4 divide-y divide-border-subtle/60">
           <div className="pt-2 flex items-center justify-between gap-4">
@@ -128,7 +136,7 @@ export function SettingsClient() {
           <div className="pt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-1.5">
-                <Flame className="h-4 w-4 text-accent-amber" aria-hidden="true" />
+                <CampfireIcon className="h-4 w-4 text-accent-amber" aria-hidden="true" />
                 <span className="type-strong-fluid text-text-primary">
                   {dict.settings.campfire}
                 </span>
@@ -160,7 +168,7 @@ export function SettingsClient() {
 
       {/* 3. Content & Filters Surface Card */}
       <Surface tone="flat" padding="lg" className="space-y-5">
-        <SectionCardHeader icon={ShieldAlert} title={dict.settings.content} />
+        <SectionCardHeader icon={CautionVeilIcon} title={dict.settings.content} />
 
         <div className="pt-2 flex items-center justify-between gap-4">
           <div className="space-y-1">

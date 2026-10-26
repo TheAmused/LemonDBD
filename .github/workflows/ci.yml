@@ -38,8 +38,8 @@ jobs:
           python -m pip install -r requirements-dev.txt
       - name: ruff (unused imports and variables, undefined names; config in ruff.toml)
         run: ruff check .
-      - name: pytest (unit)
-        run: python -m pytest tests/unit -q -n auto
+      - name: pytest (unit + guards)
+        run: python -m pytest tests/unit tests/guards -q -n auto
 
   backend-live:
     # The unit suite runs on in-memory SQLite. This job runs the live suite on the same Postgres

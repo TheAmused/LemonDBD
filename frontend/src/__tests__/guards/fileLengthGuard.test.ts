@@ -7,7 +7,7 @@
 //   - dependency / build output: node_modules, .next, out, build, dist, coverage, .turbo, ...
 //   - binary files (a NUL byte in the first 8 KiB), e.g. images and fonts
 //   - generated files nobody edits by hand: package-lock.json and *.tsbuildinfo
-// The backend has the same rule in backend/tests/unit/test_file_length_guard.py.
+// The backend has the same rule in backend/tests/guards/test_file_length_guard.py.
 import { afterEach, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';

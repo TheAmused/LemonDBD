@@ -115,7 +115,7 @@ if (-not $skipUpFlow) {
     $xdist = @()
     & $pythonCmd -c "import xdist" 2>$null
     if ($LASTEXITCODE -eq 0) { $xdist = @("-n", "auto") }
-    & $pythonCmd -m pytest backend/tests/unit @xdist -v --tb=short
+    & $pythonCmd -m pytest backend/tests/unit backend/tests/guards @xdist -v --tb=short
 
     if ($LASTEXITCODE -ne 0) {
         Write-Host ""

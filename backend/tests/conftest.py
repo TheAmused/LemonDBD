@@ -19,6 +19,7 @@ TESTS_DIR = Path(__file__).resolve().parent
 #: (`pytestmark` in a conftest.py is ignored by pytest; this hook is the way to mark by folder.)
 FOLDER_MARKERS = (
     (TESTS_DIR / "unit", "unit"),
+    (TESTS_DIR / "guards", "guards"),
     (TESTS_DIR / "live", "live"),
     (TESTS_DIR / "live" / "workflows", "workflow"),
 )
@@ -27,6 +28,7 @@ FOLDER_MARKERS = (
 def pytest_configure(config: pytest.Config) -> None:
     """Configure custom pytest markers and test environment flags."""
     config.addinivalue_line("markers", "unit: isolated in-memory unit test (everything under tests/unit)")
+    config.addinivalue_line("markers", "guards: project rule checked on source or config files (tests/guards)")
     config.addinivalue_line("markers", "live: runs against a PostgreSQL copy of dbd_db (everything under tests/live)")
     config.addinivalue_line("markers", "workflow: multi-step end-to-end workflow (tests/live/workflows)")
 

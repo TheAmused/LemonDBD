@@ -256,13 +256,13 @@ if [ "$SKIP_UP_FLOW" = false ]; then
     fi
     echo -e "${GREEN}[PASS] Backend live tests passed.${NC}"
 
-    # 3.2 Frontend Live Tests
-    echo -e "\n${YELLOW}> [2/3] Running Frontend Live Tests (Next.js)...${NC}"
-    if ! (cd frontend && npm run test:live); then
-      echo -e "\n${RED}[FAIL] Frontend Live Tests Failed!${NC}"
+    # 3.2 Frontend browser journeys (frontend/e2e): sign-in/up, randomizer, smash or pass, ...
+    echo -e "\n${YELLOW}> [2/3] Running Frontend E2E Journeys (Playwright, needs chromium)...${NC}"
+    if ! (cd frontend && npm run test:e2e); then
+      echo -e "\n${RED}[FAIL] Frontend E2E journeys failed! (first time: npx playwright install chromium)${NC}"
       exit 1
     fi
-    echo -e "${GREEN}[PASS] Frontend live tests passed.${NC}"
+    echo -e "${GREEN}[PASS] Frontend E2E journeys passed.${NC}"
 
     # 3.3 Rendered checks: real touch-target sizes + text contrast in all three themes
     echo -e "\n${YELLOW}> [3/3] Rendered checks (touch targets + 3-theme contrast, needs Playwright chromium)...${NC}"

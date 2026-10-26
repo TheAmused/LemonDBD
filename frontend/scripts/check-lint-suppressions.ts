@@ -19,7 +19,7 @@ const ALLOWED_RULE_OFFS: ReadonlyArray<{ files: readonly string[]; rule: string 
   },
 ];
 
-/** Paths oxlint may skip: generated output and the test suite. Anything else is a hidden suppression. */
+/** Paths oxlint may skip: generated output and the tests (unit, guards, e2e). Anything else is a hidden suppression. */
 const ALLOWED_IGNORE_PATTERNS: readonly string[] = [
   ".next/**",
   "out/**",
@@ -28,6 +28,7 @@ const ALLOWED_IGNORE_PATTERNS: readonly string[] = [
   "next-env.d.ts",
   "coverage/**",
   "src/__tests__/**",
+  "e2e/**",
 ];
 
 const SKIPPED_DIRS = new Set(["node_modules", ".next", "out", "coverage", "public", ".git"]);

@@ -39,7 +39,8 @@
     "public/**",
     "next-env.d.ts",
     "coverage/**",
-    "src/__tests__/**"
+    "src/__tests__/**",
+    "e2e/**"
   ],
   "rules": {
     // --- React & React 19 / Compiler Core ---

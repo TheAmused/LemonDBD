@@ -26,7 +26,7 @@ NOT_PASSED_ON_PURPOSE = {
     "GUNICORN_BIND", "GUNICORN_WORKER_CLASS", "GUNICORN_WORKER_TMP_DIR", "GUNICORN_KEEPALIVE",
     "GUNICORN_PRELOAD", "GUNICORN_MAX_REQUESTS", "GUNICORN_MAX_REQUESTS_JITTER", "JWT_ALGORITHM",
     "RATELIMIT_STORAGE_URI", "RATELIMIT_STRATEGY", "SITE_SETTINGS_CACHE_SECONDS", "SANCTION_EMAIL_ASYNC",
-    "BUG_REPORT_UPLOAD_DIR",
+    "BUG_REPORT_UPLOAD_DIR", "SCOREBOARD_ICON_CACHE",
 }
 
 
@@ -61,7 +61,9 @@ def _frontend_reads() -> set[str]:
 def _compose_reads() -> set[str]:
     names: set[str] = set()
     for name in ("docker-compose.base.yml", "docker-compose.dev.yml", "docker-compose.dev-services.yml", "docker-compose.prod.yml", "docker-compose.yml"):
-        names |= set(re.findall(r"\$\{([A-Z0-9_]+)", (ROOT / name).read_text(encoding="utf-8")))
+        # Only real YAML: a comment that mentions `${VARS}` is not something compose reads.
+        text = "\n".join(line for line in (ROOT / name).read_text(encoding="utf-8").splitlines() if not line.lstrip().startswith("#"))
+        names |= set(re.findall(r"\$\{([A-Z0-9_]+)", text))
     return names
 
 

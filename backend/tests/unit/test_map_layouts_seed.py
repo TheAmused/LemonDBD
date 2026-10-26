@@ -98,6 +98,15 @@ def test_macmillan_variants_and_corrected_sizes() -> None:
     for name, tiles in expected.items():
         assert by_name[name]["size_sq_tiles"] == tiles, name
         assert by_name[name]["size_sq_meters"] == tiles * 64, name
+
+
+@pytest.mark.unit
+@pytest.mark.skipif(
+    not (STATIC / "maps").is_dir(),
+    reason="map images are gitignored (generated/downloaded), so a clean checkout such as CI has none",
+)
+def test_macmillan_variant_callout_images_exist() -> None:
+    by_name = {m["name"]: m for m in _maps()}
     for name in ("Coal Tower II", "Groaning Storehouse II", "Ironworks Of Misery II", "Shelter Woods II", "Suffocation Pit II"):
         assert (STATIC / by_name[name]["callout_image_local_path"]).is_file(), name
 

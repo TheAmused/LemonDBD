@@ -136,13 +136,19 @@ if [ "$SKIP_UP_FLOW" = false ]; then
 
   # 1.1 Backend Unit Tests
   echo -e "\n${YELLOW}> [1/2] Running Backend Unit Tests (pytest)...${NC}"
-  PYTHON_CMD="python3"
-  if ! command -v python3 &> /dev/null; then
-    if command -v py &> /dev/null; then
-      PYTHON_CMD="py"
-    else
-      PYTHON_CMD="python"
-    fi
+  # Same order as up.ps1 and run_tests.py: the project venv first, so pytest is the pinned one.
+  if [ -x ".venv/bin/python" ]; then
+    PYTHON_CMD=".venv/bin/python"
+  elif [ -x ".venv/Scripts/python.exe" ]; then
+    PYTHON_CMD=".venv/Scripts/python.exe"
+  elif [ -x "backend/.venv/bin/python" ]; then
+    PYTHON_CMD="backend/.venv/bin/python"
+  elif command -v python3 &> /dev/null; then
+    PYTHON_CMD="python3"
+  elif command -v py &> /dev/null; then
+    PYTHON_CMD="py"
+  else
+    PYTHON_CMD="python"
   fi
 
   if ! $PYTHON_CMD -m pytest backend/tests/unit -v --tb=short; then
@@ -176,33 +182,41 @@ if [ "$SKIP_UP_FLOW" = false ]; then
   echo -e "${CYAN} [Gate 2] Building and Starting Docker Stack             ${NC}"
   echo -e "${CYAN}========================================================${NC}"
 
+  # `set -e` would end the script on a failed docker command before any message, so each one is
+  # tested explicitly.
   if [ "$STRICT" = true ]; then
     echo -e "${YELLOW}> Strict Mode: Building all containers with --no-cache...${NC}"
-    docker compose build --no-cache
-    docker compose up -d --wait
+    if ! docker compose build --no-cache; then
+      echo -e "\n${RED}[FAIL] Docker image build failed!${NC}"
+      echo -e "${RED}       (the frontend image build runs the lint, the type-check and the built-output check: see the log above)${NC}"
+      exit 1
+    fi
+    if ! docker compose up -d --wait; then
+      echo -e "\n${RED}[FAIL] Docker Compose failed to start healthy containers!${NC}"
+      exit 1
+    fi
   else
     echo -e "${YELLOW}> Standard Mode: Building with layer cache...${NC}"
-    docker compose up -d --build --wait
-  fi
-
-  if [ $? -ne 0 ]; then
-    echo -e "\n${RED}[FAIL] Docker Compose failed to start healthy containers!${NC}"
-    exit 1
+    if ! docker compose up -d --build --wait; then
+      echo -e "\n${RED}[FAIL] Docker Compose failed to build or start healthy containers!${NC}"
+      exit 1
+    fi
   fi
   echo -e "${GREEN}[PASS] All containers are UP and HEALTHY.${NC}"
 
-  # [Gate 2b] Initial DBD data scrape readiness check
-  # Wait for the initial character scrape to finish seeding the DB whenever
-  # containers were freshly started and we need live or perf testing.
+  # [Gate 2b] Seed readiness check
+  # Wait for the first boot to finish seeding the DB whenever containers were freshly started
+  # and we need live or perf testing.
   if [ "$STRICT" = true ] || [ "$PERF" = true ]; then
-    echo -e "\n${YELLOW}> Waiting for the initial character scrape to finish seeding the DB...${NC}"
+    echo -e "\n${YELLOW}> Waiting for the initial seed to finish filling the DB...${NC}"
     # NOTE: this queries Postgres directly through docker compose exec instead
-    # of hitting the backend over the published host port.
+    # of hitting the backend over the published host port. Characters live in two
+    # tables (survivors, killers) since the role split; there is no `characters` table.
     PG_USER="${POSTGRES_USER:-postgres}"
     PG_DB="${POSTGRES_DB:-dbd_db}"
     SCRAPE_READY=false
     for i in $(seq 1 60); do
-      CHAR_COUNT=$(docker compose exec -T db psql -U "$PG_USER" -d "$PG_DB" -tAc "SELECT COUNT(*) FROM characters;" 2>/dev/null | tr -d '[:space:]')
+      CHAR_COUNT=$(docker compose exec -T db psql -U "$PG_USER" -d "$PG_DB" -tAc "SELECT (SELECT COUNT(*) FROM survivors) + (SELECT COUNT(*) FROM killers);" 2>/dev/null | tr -d '[:space:]' || true)
       if ! [[ "$CHAR_COUNT" =~ ^[0-9]+$ ]]; then
         CHAR_COUNT=0
       fi
@@ -216,7 +230,7 @@ if [ "$SKIP_UP_FLOW" = false ]; then
       sleep 3
     done
     if [ "$SCRAPE_READY" != true ]; then
-      echo -e "${RED}[WARN] Character data still not seeded after 3 minutes -- continuing anyway, but tests may fail. Check 'docker compose logs backend' for scrape errors.${NC}"
+      echo -e "${RED}[WARN] Character data still not seeded after 3 minutes -- continuing anyway, but tests may fail. Check 'docker compose logs backend' for seed errors.${NC}"
     fi
   fi
 

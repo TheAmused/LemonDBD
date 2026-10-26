@@ -8,8 +8,8 @@ as well as K6 performance test suites.
 Usage:
   py run_tests.py                 # Runs all test suites (Backend + Frontend)
   py run_tests.py --unit          # Runs isolated unit & mock test suites
-  py run_tests.py --live          # Runs live database & API integration suites (workflows included)
-  py run_tests.py --workflows     # Runs only the end-to-end multi-step workflow suites
+  py run_tests.py --live          # Backend live suite on a Postgres copy (workflows included) + frontend browser journeys
+  py run_tests.py --workflows     # Runs only the backend multi-step workflow suites
   py run_tests.py --backend       # Runs backend suites only
   py run_tests.py --frontend      # Runs frontend suites only
   py run_tests.py --perf          # Runs all K6 performance test suites
@@ -50,7 +50,7 @@ TIMEOUTS = {
     "backend_unit": 1200,
     "frontend_unit": 600,
     "backend_live": 900,
-    "frontend_live": 600,
+    "frontend_e2e": 600,
     "perf": 1800,
 }
 
@@ -199,15 +199,16 @@ def main():
             "output": res["stdout"] or res["stderr"],
         })
 
-    # 5. Frontend Live Tests
-    if run_frontend and (run_live or run_workflows):
-        print(f"[{YELLOW}RUNNING{RESET}] Frontend Live API & Multi-Step Workflows...", flush=True)
-        res = run_command("npm run test:live", cwd=FRONTEND_DIR, env={"NODE_TLS_REJECT_UNAUTHORIZED": "0"}, timeout=TIMEOUTS["frontend_live"])
+    # 5. Frontend browser journeys (frontend/e2e, Playwright) against the running stack. The API
+    #    itself is covered by the backend live suite above, so the frontend has no API-only tests.
+    if run_frontend and run_live:
+        print(f"[{YELLOW}RUNNING{RESET}] Frontend E2E Browser Journeys...", flush=True)
+        res = run_command("npm run test:e2e", cwd=FRONTEND_DIR, env={"NODE_TLS_REJECT_UNAUTHORIZED": "0"}, timeout=TIMEOUTS["frontend_e2e"])
         status = "PASSED" if res["exit_code"] == 0 else "FAILED"
         color = GREEN if status == "PASSED" else RED
-        print(f"[{color}{status}{RESET}] Frontend Live Workflows in {res['duration']}s", flush=True)
+        print(f"[{color}{status}{RESET}] Frontend E2E in {res['duration']}s", flush=True)
         results.append({
-            "name": "Frontend Live & Workflows",
+            "name": "Frontend E2E Journeys",
             "tier": "Live Stack",
             "status": status,
             "duration": res["duration"],

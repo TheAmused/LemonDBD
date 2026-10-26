@@ -240,21 +240,21 @@ if (-not $skipUpFlow) {
         }
         Write-Host "[PASS] Backend live tests passed." -ForegroundColor Green
 
-        # 3.2 Frontend Live Tests
+        # 3.2 Frontend browser journeys (frontend/e2e): sign-in/up, randomizer, smash or pass, ...
         Write-Host ""
-        Write-Host "> [2/3] Running Frontend Live Tests (Next.js)..." -ForegroundColor Yellow
+        Write-Host "> [2/3] Running Frontend E2E Journeys (Playwright, needs chromium)..." -ForegroundColor Yellow
         Push-Location "$PSScriptRoot\frontend"
         try {
-            npm run test:live
+            npm run test:e2e
             if ($LASTEXITCODE -ne 0) {
                 Write-Host ""
-                Write-Host "[FAIL] Frontend Live Tests Failed!" -ForegroundColor Red
+                Write-Host "[FAIL] Frontend E2E journeys failed! (first time: npx playwright install chromium)" -ForegroundColor Red
                 exit 1
             }
         } finally {
             Pop-Location
         }
-        Write-Host "[PASS] Frontend live tests passed." -ForegroundColor Green
+        Write-Host "[PASS] Frontend E2E journeys passed." -ForegroundColor Green
 
         # 3.3 Rendered checks: real touch-target sizes + text contrast in all three themes
         Write-Host ""

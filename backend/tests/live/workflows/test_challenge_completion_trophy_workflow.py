@@ -83,7 +83,7 @@ class TestChallengeCompletionTrophyWorkflow:
             f"Expected 'chaos' in active_runs after starting a chaos run; got: {active_runs3}"
         )
         assert isinstance(active_runs3["chaos"], list)
-        assert len(active_runs3["chaos"]) > 0
+        assert "easy" in active_runs3["chaos"]
 
         # ── 4. History run creates an active_run entry ───────────────────────────
         history_run_res = client.get(
@@ -183,11 +183,9 @@ class TestChallengeCompletionTrophyWorkflow:
             f"Expected a non-empty roster list; got: {roster_body}"
         )
 
-        first_entry = roster_entries[0]
-        assert isinstance(first_entry, dict)
-        assert "killer" in first_entry
-        assert "status" in first_entry
-        assert "ever_completed" in first_entry
+        for entry in roster_entries:
+            assert {"killer", "status", "ever_completed"} <= set(entry)
+            assert entry["ever_completed"] is False, f"new user, {entry['killer']} already completed"
 
         # User has not beaten any killer → page_streak must not appear in completions.
         final_status_res = client.get(

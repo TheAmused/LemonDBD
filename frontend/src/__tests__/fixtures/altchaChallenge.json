@@ -1,0 +1,5 @@
+{
+  "_source": "AltchaService.create_challenge; `accepted` passed AltchaService.verify_solution. Re-record with backend/scripts/record_frontend_fixtures.py.",
+  "challenge": {"algorithm": "SHA-256", "challenge": "e856abd7f8d42ffd05347b9fe44f05e9129e025a49110eb7fc314f8a3a10eb6f", "salt": "fc25979ae184db5979787e45", "maxnumber": 5000, "signature": "e9da0ae1b4ab3c23e258db7c30a73cab5b190a4d00cb89890f376865a1b0781a", "expires": 2108388326},
+  "accepted": {"algorithm": "SHA-256", "challenge": "e856abd7f8d42ffd05347b9fe44f05e9129e025a49110eb7fc314f8a3a10eb6f", "salt": "fc25979ae184db5979787e45", "maxnumber": 5000, "signature": "e9da0ae1b4ab3c23e258db7c30a73cab5b190a4d00cb89890f376865a1b0781a", "expires": 2108388326, "number": 2896}
+}

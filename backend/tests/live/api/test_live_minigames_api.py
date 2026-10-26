@@ -1,55 +1,67 @@
 # backend/tests/live/api/test_live_minigames_api.py
+"""Smash or Pass and minigame endpoints on PostgreSQL: rosters, feed, voting, leaderboard, session
+reset, and the minigame catalogue and daily challenge.
+
+(The draft-pool and quest endpoints this file used to probe were removed from the API; the old test
+accepted a 404 for them, so it passed whether or not they existed.)"""
+from collections.abc import Callable
+from typing import Any
+
 import pytest
 from flask.testing import FlaskClient
+
+SESSION = "live-test-session"
 
 
 @pytest.mark.live
 class TestLiveMinigamesAPI:
-    """Tests for Smash or Pass voting, feeds, leaderboards, drafts, and quests on live database."""
-
-    def test_live_smash_or_pass_rosters_and_voting(self, live_client: FlaskClient) -> None:
+    def test_live_smash_or_pass_rosters_and_voting(
+        self,
+        live_client: FlaskClient,
+        db_count: Callable[..., int],
+        auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
+    ) -> None:
         res = live_client.get("/api/v1/smash-or-pass/rosters")
         assert res.status_code == 200
         rosters = res.get_json()["data"]
-        assert len(rosters) > 0
-        roster_slug = rosters[0]["slug"]
+        # Every roster, active or not, except NSFW ones, which need the explicit opt-in.
+        assert len(rosters) == db_count("SELECT count(*) FROM rosters WHERE NOT is_nsfw")
+        with_nsfw = live_client.get("/api/v1/smash-or-pass/rosters?include_nsfw=true").get_json()["data"]
+        assert len(with_nsfw) == db_count("SELECT count(*) FROM rosters")
+        slug = next(r["slug"] for r in rosters if r["is_active"])
 
-        res_feed = live_client.get(f"/api/v1/smash-or-pass/rosters/{roster_slug}/feed")
-        assert res_feed.status_code == 200
-        feed_data = res_feed.get_json()["data"]
-        entities = feed_data.get("entities", [])
-        if len(entities) > 0:
-            target_entity = entities[0]
-            res_vote = live_client.post(
-                "/api/v1/smash-or-pass/vote",
-                json={
-                    "entity_id": target_entity["id"],
-                    "vote": "smash",
-                    "vote_type": "smash",
-                    "roster_slug": roster_slug,
-                    "session_id": "live-test-session",
-                },
-            )
-            assert res_vote.status_code == 200
-            live_client.post("/api/v1/smash-or-pass/session/reset", json={"session_id": "live-test-session"})
+        feed = live_client.get(f"/api/v1/smash-or-pass/rosters/{slug}/feed", headers={"X-Session-ID": SESSION}).get_json()["data"]
+        entity = feed["entities"][0]
 
-        res_lead = live_client.get(f"/api/v1/smash-or-pass/rosters/{roster_slug}/leaderboard")
-        assert res_lead.status_code == 200
+        def tally() -> tuple[int, int]:
+            """(total votes, smashes) on the leaderboard; an entity nobody has voted on is not listed yet."""
+            board = live_client.get(f"/api/v1/smash-or-pass/rosters/{slug}/leaderboard").get_json()["data"]
+            row = next((e for e in board if e["id"] == entity["id"]), {"total_votes": 0, "smash_count": 0})
+            return row["total_votes"], row["smash_count"]
 
-    def test_live_draft_and_quests_endpoints(self, live_client: FlaskClient) -> None:
-        res_draft = live_client.get("/api/v1/others/draft/pool")
-        assert res_draft.status_code in (200, 404, 501) or "pool" in res_draft.get_json()
+        before = tally()
+        # A guest's vote is stored for their session, but the public tally counts signed-in votes only
+        # (so nobody can stuff it with fresh sessions).
+        vote = {"entity_id": entity["id"], "vote_type": "smash", "roster_slug": slug}
+        assert live_client.post("/api/v1/smash-or-pass/vote", json={**vote, "session_id": SESSION}).status_code == 200
+        assert tally() == before
 
-        res_quests = live_client.get("/api/v1/others/quests")
-        assert res_quests.status_code in (200, 404) or "quests" in res_quests.get_json()
+        client, headers, _ = auth_client_factory("smash_voter", "smash_voter@example.com", "pass123")
+        assert client.post("/api/v1/smash-or-pass/vote", json=vote, headers=headers).status_code == 200
+        assert tally() == (before[0] + 1, before[1] + 1)
 
-    def test_live_minigames_catalog_and_daily_endpoints(self, live_client: FlaskClient) -> None:
+        res_reset = live_client.post("/api/v1/smash-or-pass/session/reset", json={"session_id": SESSION, "roster_slug": slug})
+        assert res_reset.status_code == 200
+        assert res_reset.get_json()["data"]["reset_count"] == 1
+
+    def test_live_minigames_catalog_and_daily_endpoints(self, live_client: FlaskClient, db_count: Callable[..., int]) -> None:
         res_catalog = live_client.get("/api/v1/minigames/catalog")
         assert res_catalog.status_code == 200
         catalog = res_catalog.get_json()
-        assert "characters" in catalog or "killers" in catalog
+        assert len(catalog["killers"]) == db_count("SELECT count(*) FROM killers")
+        assert len(catalog["survivors"]) == db_count("SELECT count(*) FROM survivors")
+        assert len(catalog["characters"]) == len(catalog["killers"]) + len(catalog["survivors"])
 
         res_daily = live_client.get("/api/v1/minigames/daily")
         assert res_daily.status_code == 200
-        daily = res_daily.get_json()
-        assert "rounds" in daily
+        assert len(res_daily.get_json()["rounds"]) >= 1

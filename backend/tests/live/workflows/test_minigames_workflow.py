@@ -102,4 +102,4 @@ class TestMinigamesWorkflow:
         assert live_client.get("/api/v1/minigames/daily?date=invalid-date").status_code == 400
         assert live_client.get("/api/v1/minigames/shared/nonexistent_code_xyz").status_code == 404
         # The self-reported stats endpoint was removed.
-        assert live_client.get("/api/v1/minigames/stats").status_code in (404, 405)
+        assert live_client.get("/api/v1/minigames/stats").status_code == 404

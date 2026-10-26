@@ -48,7 +48,7 @@ class TestUserProfileLifecycleWorkflow:
                 "password": "InitialPass123!",
             },
         )
-        assert old_login.status_code in (400, 401)
+        assert old_login.status_code == 401
 
         new_login = live_client.post(
             "/api/v1/auth/login",

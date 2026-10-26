@@ -53,17 +53,19 @@ class TestAdminGovernanceLifecycleWorkflow:
                 "password": "PlayerPass123!",
             },
         )
-        assert banned_login.status_code in (400, 401, 403)
+        # Deactivating is a permanent ban: the sign-in says so instead of "wrong password".
+        assert banned_login.status_code == 403
+        assert banned_login.get_json()["code"] == "account_banned"
 
         stats_res = admin_client.get("/api/v1/admin/stats")
         assert stats_res.status_code == 200
         stats = stats_res.get_json()
-        assert "active_users" in stats or "perks_count" in stats or isinstance(stats, dict)
+        assert stats["users"]["banned"] >= 1, "the deactivated account counts as banned"
+        assert stats["users"]["active"] == stats["users"]["total"] - stats["users"]["suspended"] - stats["users"]["banned"]
 
         export_res = admin_client.post("/api/v1/admin/database/export", json={"targets": ["perks", "survivors", "killers"]})
         assert export_res.status_code == 200
-        export_data = export_res.get_json()
-        assert isinstance(export_data, dict)
+        assert set(export_res.get_json()["counts"]) == {"perks", "survivors", "killers"}
 
         del_res = admin_client.delete(f"/api/v1/users/{target_id}")
         assert del_res.status_code == 200

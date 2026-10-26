@@ -45,7 +45,8 @@ class TestStreaksAndChallengeGovernanceWorkflow:
             json={"run_id": g_run_id, "result": "win", "role": "killer"},
             headers=headers,
         )
-        assert g_win_res.status_code in (200, 400)
+        assert g_win_res.status_code == 200
+        assert g_win_res.get_json()["run"]["completed_characters"] == [g_run["current_character_id"]]
 
         hist_res = client.get("/api/v1/history-streak/run?mode=medium", headers=headers)
         assert hist_res.status_code == 200

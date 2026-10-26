@@ -29,7 +29,7 @@ from dotenv import dotenv_values
 from flask import Flask
 from flask.testing import FlaskClient
 from psycopg import sql
-from sqlalchemy import select
+from sqlalchemy import select, text
 
 logger = logging.getLogger(__name__)
 
@@ -193,6 +193,23 @@ def live_app(live_database_url: str) -> Flask:
     app.config["TESTING"] = True
     app.config["SQLALCHEMY_DATABASE_URI"] = live_database_url
     return app
+
+
+@pytest.fixture
+def db_count(live_app: Flask) -> Callable[..., int]:
+    """`db_count("SELECT count(*) FROM killers")`: a number straight from the live copy.
+
+    The live tests compare what the API returns with the database it reads, so they can assert
+    exact values ("every killer", "all six toolboxes") instead of "more than 30" -- and stay right
+    when the seed grows.
+    """
+    from app.core.extensions import db
+
+    def count(query: str, **params: Any) -> int:
+        with live_app.app_context():
+            return int(db.session.execute(text(query), params).scalar_one())
+
+    return count
 
 
 @pytest.fixture

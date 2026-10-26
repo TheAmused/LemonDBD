@@ -29,6 +29,7 @@ export function parseArgs(argv = process.argv.slice(2)) {
     update: false,
     page: null,
     category: null,
+    auth: null,
     modalsOnly: false,
     pagesOnly: false,
     viewports: null,
@@ -47,6 +48,8 @@ export function parseArgs(argv = process.argv.slice(2)) {
     else if (a === '--quick') options.viewports = ['desktop', 'mobile'];
     else if (a === '--no-headless' || a === '--headless=false') options.headless = false;
     else if (a === '--headless' || a === '--headless=true') options.headless = true;
+    else if (a.startsWith('--auth=')) options.auth = a.slice(7).trim();
+    else if (a === '--auth' && i + 1 < argv.length) options.auth = argv[++i].trim();
     else if (a.startsWith('--page=')) options.page = a.slice(7).trim();
     else if (a === '--page' && i + 1 < argv.length) options.page = argv[++i].trim();
     else if (a.startsWith('--category=')) options.category = a.slice(11).trim();
@@ -72,6 +75,7 @@ Options:
   --page=<id|route>    Filter to a single page route or id (e.g. --page=landing)
   --category=<id>      Filter to items matching category
                        (${CATEGORIES.map((c) => c.id).join(', ')})
+  --auth=<status>      Filter by authentication status (guest, user, admin)
   --pages-only         Capture only full-page routes (skip modals)
   --modals-only        Capture only interactive modal dialogs (skip pages)
   --viewports=<list>   Comma-separated viewport list (desktop,laptop,tablet,mobile)
@@ -95,8 +99,7 @@ export async function solveAltchaChallenge(request, baseUrl) {
     const ch = await res.json();
     const max = ch.maxnumber || 50000;
     for (let n = 0; n <= max; n++) {
-      const hash = crypto.createHash('sha256').update(`${ch.salt}${n}`).digest('hex');
-      if (hash === ch.challenge) {
+      if (crypto.createHash('sha256').update(`${ch.salt}${n}`).digest('hex') === ch.challenge) {
         return {
           algorithm: ch.algorithm,
           challenge: ch.challenge,
@@ -147,11 +150,17 @@ export async function setDismissSmashPromptPreState(page) {
 }
 
 export function matchesFilter(item, config = {}, isModal = Boolean(item?.modalSelector)) {
+  if (config.auth) {
+    const itemAuth = (item.auth || item.requiresAuth || 'guest').toLowerCase();
+    if (config.auth !== 'all' && itemAuth !== config.auth.toLowerCase()) return false;
+  }
+
   if (config.category) {
     const catQ = config.category.toLowerCase();
     if (isModal) {
       const matchModal =
         catQ === 'modals' ||
+        Boolean(item.category && item.category.toLowerCase() === catQ) ||
         Boolean(item.folder && item.folder.toLowerCase().includes(catQ)) ||
         Boolean(item.route && item.route.toLowerCase().includes(catQ));
       if (!matchModal) return false;
@@ -193,6 +202,8 @@ function recordItem(itemsMap, target, vp, type, relPath, stat) {
     route: target.route,
     type,
     category: target.category || 'other',
+    auth: target.auth || target.requiresAuth || 'guest',
+    requiresAuth: target.requiresAuth || null,
     device: vp.id,
     viewport: vp.id,
     width: vp.width,
@@ -205,21 +216,15 @@ function recordItem(itemsMap, target, vp, type, relPath, stat) {
 
 export function printSummaryTable(summary) {
   const line = '='.repeat(82);
-  console.log(`\n${line}`);
-  console.log('                        LemonDBD Site Tour Runner Summary');
-  console.log(line);
+  console.log(`\n${line}\n                        LemonDBD Site Tour Runner Summary\n${line}`);
   console.log(`Target Base URL   : ${summary.baseUrl}`);
   console.log(`Viewports         : ${summary.viewports.join(', ')}`);
   console.log(`Pages Processed   : ${summary.pageCount}`);
   console.log(`Modals Processed  : ${summary.modalCount}`);
   console.log(`Total Screenshots : ${summary.totalScreenshots}`);
-  console.log(`  -> Captured     : ${summary.capturedCount}`);
-  console.log(`  -> Cached       : ${summary.cachedCount}`);
-  console.log(`  -> Failed       : ${summary.failedCount}`);
+  console.log(`  -> Captured     : ${summary.capturedCount}\n  -> Cached       : ${summary.cachedCount}\n  -> Failed       : ${summary.failedCount}`);
   console.log(`Elapsed Time      : ${(summary.elapsedMs / 1000).toFixed(2)}s`);
-  console.log(`Manifest Location : ${summary.manifestPath}`);
-  console.log(`Visual Explorer   : ${summary.galleryPath}`);
-  console.log(`${line}\n`);
+  console.log(`Manifest Location : ${summary.manifestPath}\nVisual Explorer   : ${summary.galleryPath}\n${line}\n`);
 }
 
 export async function runTour(options = {}) {
@@ -411,18 +416,12 @@ export async function runTour(options = {}) {
         } else if (target.setup === 'enableMapsVoiceMode') {
           await page.evaluate(() => { try { localStorage.setItem('lemondbd_maps_search_mode', 'voice'); } catch (_e) {} }).catch(() => {});
           await page.reload({ waitUntil: 'domcontentloaded', timeout: config.timeout });
-        } else if (target.id === 'admin-user-edit') {
-          await page.evaluate(() => { try { localStorage.setItem('lemondbd_admin_tab', 'users'); } catch (_e) {} }).catch(() => {});
-          const usersTab = page.locator('button[role="tab"]:has-text("Users"), button[role="tab"]:has-text("Użytkownicy"), [data-tab="users"]').first();
-          if (await usersTab.isVisible().catch(() => false)) {
-            await usersTab.click().catch(() => {});
-            await page.waitForTimeout(300);
-          }
-        } else if (target.id === 'streaks-scoreboard') {
-          await page.evaluate(() => { try { localStorage.setItem('lemondbd_admin_tab', 'tools'); } catch (_e) {} }).catch(() => {});
-          const toolsTab = page.locator('button[role="tab"]:has-text("Tools"), button[role="tab"]:has-text("Narzędzia"), [data-tab="tools"]').first();
-          if (await toolsTab.isVisible().catch(() => false)) {
-            await toolsTab.click().catch(() => {});
+        } else if (target.id === 'admin-user-edit' || target.id === 'streaks-scoreboard') {
+          const tab = target.id === 'admin-user-edit' ? 'users' : 'tools';
+          await page.evaluate((t) => { try { localStorage.setItem('lemondbd_admin_tab', t); } catch (_e) {} }, tab).catch(() => {});
+          const tabBtn = page.locator(`button[role="tab"]:has-text("${tab === 'users' ? 'Users' : 'Tools'}"), [data-tab="${tab}"]`).first();
+          if (await tabBtn.isVisible().catch(() => false)) {
+            await tabBtn.click().catch(() => {});
             await page.waitForTimeout(300);
           }
         }
@@ -466,14 +465,6 @@ export async function runTour(options = {}) {
             const ellipsisBtn = page.locator('button:has(svg.lucide-ellipsis), button[aria-label*="toolbar" i], button[aria-label*="pasek" i]').first();
             if (await ellipsisBtn.isVisible().catch(() => false)) {
               await ellipsisBtn.click({ force: true }).catch(() => {});
-              await page.waitForTimeout(300);
-            }
-          }
-
-          if (target.id === 'admin-user-edit') {
-            const usersTab = page.locator('button[role="tab"]:has-text("Users"), button[role="tab"]:has-text("Użytkownicy"), [data-tab="users"]').first();
-            if (await usersTab.isVisible().catch(() => false)) {
-              await usersTab.click().catch(() => {});
               await page.waitForTimeout(300);
             }
           }

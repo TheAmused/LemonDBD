@@ -274,21 +274,41 @@ export const PAGE_ROUTES = [
   },
   {
     id: 'user-profile',
-    title: 'User Profile & Showcase',
+    title: 'User Profile & Sanctum (Signed In)',
     route: '/en/user',
     category: 'account',
     folder: '14-user-profile',
+    auth: 'user',
     requiresAuth: 'user',
     waitForSelector: 'main',
   },
   {
+    id: 'user-profile-guest',
+    title: 'User Profile - Sign-in Required (Guest)',
+    route: '/en/user',
+    category: 'account',
+    folder: '14-user-profile-guest',
+    auth: 'guest',
+    waitForSelector: 'main, h1, [role="main"]',
+  },
+  {
     id: 'admin',
-    title: 'Admin Control Panel',
+    title: 'Admin Control Panel (Admin)',
     route: '/en/admin',
     category: 'account',
     folder: '14-admin',
+    auth: 'admin',
     requiresAuth: 'admin',
     waitForSelector: 'main',
+  },
+  {
+    id: 'admin-guest',
+    title: 'Admin Control Panel - Forbidden (Guest)',
+    route: '/en/admin',
+    category: 'account',
+    folder: '14-admin-guest',
+    auth: 'guest',
+    waitForSelector: 'main, h1, [role="main"]',
   },
 ];
 
@@ -299,7 +319,8 @@ export const MODAL_TARGETS = [
   {
     id: 'auth-login',
     title: 'Sign In Dialog',
-    category: 'modals',
+    category: 'account',
+    auth: 'guest',
     route: '/en',
     folder: 'sidebar-auth-login',
     triggerSelector: 'button:has-text("Sign In"), button:has-text("Zaloguj"), [data-testid="sidebar-login-button"], button[aria-label*="Sign in" i]',
@@ -308,7 +329,8 @@ export const MODAL_TARGETS = [
   {
     id: 'auth-register',
     title: 'Sign Up / Register Dialog',
-    category: 'modals',
+    category: 'account',
+    auth: 'guest',
     route: '/en',
     folder: 'sidebar-auth-register',
     triggerSelector: 'button:has-text("Sign Up"), button:has-text("Rejestracja"), [data-testid="auth-register-tab"]',
@@ -317,7 +339,8 @@ export const MODAL_TARGETS = [
   {
     id: 'bug-report',
     title: 'Report Bug Dialog',
-    category: 'modals',
+    category: 'about-legal',
+    auth: 'guest',
     route: '/en',
     folder: 'sidebar-bug-report',
     triggerSelector: 'button[aria-label*="report" i], button:has-text("Report Bug"), button:has-text("Zgłoś błąd")',
@@ -326,7 +349,8 @@ export const MODAL_TARGETS = [
   {
     id: 'buy-coffee',
     title: 'Buy Me a Coffee Dialog',
-    category: 'modals',
+    category: 'about-legal',
+    auth: 'guest',
     route: '/en',
     folder: 'sidebar-buy-coffee',
     triggerSelector: 'button[aria-label*="coffee" i], button:has-text("Buy Coffee"), button:has-text("Postaw kawę")',
@@ -335,7 +359,8 @@ export const MODAL_TARGETS = [
   {
     id: 'whats-new',
     title: "What's New Drawer & Changelog",
-    category: 'modals',
+    category: 'about-legal',
+    auth: 'guest',
     route: '/en',
     folder: 'sidebar-changelog',
     triggerSelector: 'button[aria-label*="What\'s new" i], button[aria-label*="Co nowego" i]',
@@ -344,7 +369,8 @@ export const MODAL_TARGETS = [
   {
     id: 'perk-detail',
     title: 'Perk Detail Modal',
-    category: 'modals',
+    category: 'perks',
+    auth: 'guest',
     route: '/en/perks',
     folder: 'perks-perk-detail',
     triggerSelector: 'section[aria-label] .grid button, .grid button:has(img), [data-testid="perk-card"]',
@@ -353,7 +379,8 @@ export const MODAL_TARGETS = [
   {
     id: 'perks-mobile-filters',
     title: 'Perks Mobile Filter Drawer',
-    category: 'modals',
+    category: 'perks',
+    auth: 'guest',
     route: '/en/perks',
     folder: 'perks-mobile-filters',
     triggerSelector: 'button[aria-label*="filter" i], button:has-text("Filters")',
@@ -363,7 +390,8 @@ export const MODAL_TARGETS = [
   {
     id: 'randomizer-wheel',
     title: 'Chaos Wheel Modal',
-    category: 'modals',
+    category: 'randomizer',
+    auth: 'guest',
     route: '/en/randomizer',
     folder: 'randomizer-wheel',
     triggerSelector:
@@ -373,7 +401,8 @@ export const MODAL_TARGETS = [
   {
     id: 'streaks-rules',
     title: 'Streak Rules & Guidance Modal',
-    category: 'modals',
+    category: 'streaks',
+    auth: 'user',
     route: '/en/streaks/killer/chaos-streak',
     folder: 'streaks-rules',
     requiresAuth: 'user',
@@ -383,7 +412,8 @@ export const MODAL_TARGETS = [
   {
     id: 'streaks-abandon',
     title: 'Streak Abandon Confirmation Dialog',
-    category: 'modals',
+    category: 'streaks',
+    auth: 'user',
     route: '/en/streaks/killer/chaos-streak',
     folder: 'streaks-abandon',
     requiresAuth: 'user',
@@ -393,7 +423,8 @@ export const MODAL_TARGETS = [
   {
     id: 'streaks-scoreboard',
     title: 'Scoreboard OCR Scan Modal',
-    category: 'modals',
+    category: 'streaks',
+    auth: 'admin',
     route: '/en/admin?tab=tools',
     folder: 'streaks-scoreboard',
     requiresAuth: 'admin',
@@ -403,7 +434,8 @@ export const MODAL_TARGETS = [
   {
     id: 'smash-how-to-play',
     title: 'Smash or Pass How to Play Modal',
-    category: 'modals',
+    category: 'smash-or-pass',
+    auth: 'guest',
     route: '/en/smash-or-pass',
     folder: 'smash-how-to-play',
     triggerSelector:
@@ -413,7 +445,8 @@ export const MODAL_TARGETS = [
   {
     id: 'maps-voice-info',
     title: 'Voice Engine Info Modal',
-    category: 'modals',
+    category: 'maps',
+    auth: 'guest',
     route: '/en/maps',
     folder: 'maps-voice-info',
     setup: 'enableMapsVoiceMode',
@@ -423,7 +456,8 @@ export const MODAL_TARGETS = [
   {
     id: 'characters-killer-power',
     title: 'Killer Power Detail Modal',
-    category: 'modals',
+    category: 'characters',
+    auth: 'guest',
     route: '/en/characters/the-trapper',
     folder: 'characters-killer-power',
     triggerSelector:
@@ -433,7 +467,8 @@ export const MODAL_TARGETS = [
   {
     id: 'characters-lore',
     title: 'Character Lore & Bio Modal',
-    category: 'modals',
+    category: 'characters',
+    auth: 'guest',
     route: '/en/characters/the-trapper',
     folder: 'characters-lore',
     triggerSelector: 'button:has-text("Lore"), button:has-text("Biography"), button:has-text("Historia")',
@@ -442,7 +477,8 @@ export const MODAL_TARGETS = [
   {
     id: 'tier-lists-edit-item',
     title: 'Tier Item Edit Modal',
-    category: 'modals',
+    category: 'tier-lists',
+    auth: 'guest',
     route: '/en/tier-lists/survivors',
     folder: 'tier-lists-edit-item',
     action: 'dblclick',
@@ -452,7 +488,8 @@ export const MODAL_TARGETS = [
   {
     id: 'tier-lists-export',
     title: 'Tier List Export Modal',
-    category: 'modals',
+    category: 'tier-lists',
+    auth: 'guest',
     route: '/en/tier-lists/survivors',
     folder: 'tier-lists-export',
     triggerSelector: 'button[aria-label*="export" i], [role="menuitem"]:has-text("Export"), [role="menuitem"]:has-text("Eksport"), button:has-text("Export")',
@@ -461,7 +498,8 @@ export const MODAL_TARGETS = [
   {
     id: 'smash-preferences-prompt',
     title: 'Smash or Pass Preferences Prompt',
-    category: 'modals',
+    category: 'smash-or-pass',
+    auth: 'guest',
     route: '/en/smash-or-pass',
     folder: 'smash-preferences-prompt',
     setup: 'clearPreferencesDismissed',
@@ -470,7 +508,8 @@ export const MODAL_TARGETS = [
   {
     id: 'smash-roster-select',
     title: 'Smash or Pass Roster Select Modal',
-    category: 'modals',
+    category: 'smash-or-pass',
+    auth: 'guest',
     route: '/en/smash-or-pass',
     folder: 'smash-roster-select',
     triggerSelector:
@@ -480,7 +519,8 @@ export const MODAL_TARGETS = [
   {
     id: 'smash-leaderboard',
     title: 'Smash or Pass Leaderboard Modal',
-    category: 'modals',
+    category: 'smash-or-pass',
+    auth: 'guest',
     route: '/en/smash-or-pass',
     folder: 'smash-leaderboard',
     triggerSelector: 'button:has-text("Leaderboard"), button:has-text("Ranking"), button[aria-label*="leaderboard" i]',
@@ -489,7 +529,8 @@ export const MODAL_TARGETS = [
   {
     id: 'user-2fa-setup',
     title: 'Two-Factor Authentication Setup Modal',
-    category: 'modals',
+    category: 'account',
+    auth: 'user',
     route: '/en/user',
     folder: 'user-2fa-setup',
     requiresAuth: 'user',
@@ -499,7 +540,8 @@ export const MODAL_TARGETS = [
   {
     id: 'admin-user-edit',
     title: 'Admin User Edit Modal',
-    category: 'modals',
+    category: 'account',
+    auth: 'admin',
     route: '/en/admin?tab=users',
     folder: 'admin-user-edit',
     requiresAuth: 'admin',

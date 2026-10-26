@@ -128,3 +128,12 @@ export function roleOnlyConflict(
   }
   return null;
 }
+
+/** The active types the given role has perks of: what stays on when the role is switched by hand. */
+export function typesForRole(
+  types: readonly PerkType[],
+  role: RoleCategory,
+  typesByRole: Readonly<Record<RoleCategory, ReadonlySet<PerkType>>>
+): PerkType[] {
+  return types.filter((type) => typesByRole[role].has(type));
+}

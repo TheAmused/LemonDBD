@@ -1,0 +1,40 @@
+// frontend/src/__tests__/unit/admin/adminOnlyPages.test.ts
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import { adminOnlyPageFromPathname, adminPanelLocaleFromPathname, ADMIN_ONLY_SEGMENTS } from '@/utils/adminOnlyPages';
+
+const LOCALES = ['en', 'pl', 'de', 'es', 'ja'] as const;
+
+describe('adminOnlyPageFromPathname', () => {
+  it('matches the page and everything beneath it', () => {
+    assert.deepEqual(adminOnlyPageFromPathname('/en/minigames', LOCALES), { locale: 'en', segment: 'minigames' });
+    assert.deepEqual(adminOnlyPageFromPathname('/pl/minigames/guesser/', LOCALES), { locale: 'pl', segment: 'minigames' });
+  });
+
+  it('cannot be dodged with encoding or doubled slashes', () => {
+    assert.equal(adminOnlyPageFromPathname('/en/%6Dinigames', LOCALES)?.segment, 'minigames');
+    assert.equal(adminOnlyPageFromPathname('//en//minigames', LOCALES)?.segment, 'minigames');
+  });
+
+  it('leaves every other page and the error pages alone', () => {
+    for (const path of ['/en', '/en/perks', '/en/blocked', '/en/forbidden', '/xx/minigames', '/en/%E0%A4%A']) {
+      assert.equal(adminOnlyPageFromPathname(path, LOCALES), null, path);
+    }
+  });
+
+  it('recognises the admin panel separately (it gets Forbidden, not Blocked)', () => {
+    assert.equal(adminPanelLocaleFromPathname('/en/admin', LOCALES), 'en');
+    assert.equal(adminPanelLocaleFromPathname('/pl/admin/', LOCALES), 'pl');
+    assert.equal(adminPanelLocaleFromPathname('/en/%61dmin', LOCALES), 'en');
+    for (const path of ['/en', '/en/administration', '/xx/admin', '/en/user']) {
+      assert.equal(adminPanelLocaleFromPathname(path, LOCALES), null, path);
+    }
+    assert.equal(adminOnlyPageFromPathname('/en/admin', LOCALES), null);
+  });
+
+  it('lists minigames and achievements (trophies) as admin-only', () => {
+    assert.ok(ADMIN_ONLY_SEGMENTS.includes('minigames'));
+    assert.ok(ADMIN_ONLY_SEGMENTS.includes('achievements'));
+    assert.deepEqual(adminOnlyPageFromPathname('/en/achievements', LOCALES), { locale: 'en', segment: 'achievements' });
+  });
+});

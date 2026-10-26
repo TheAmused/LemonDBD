@@ -126,15 +126,15 @@ if (-not $skipUpFlow) {
     Write-Host "[PASS] Backend Unit Tests Passed." -ForegroundColor Green
 
 
-    # 1.2 Frontend unit tests (npm run test:unit). This one run is also the static check: the
-    # hardcoded-string, global-style and typography scans are unit tests, and so are the
-    # architecture / i18n / quality / lint-suppression guard suites. `npm run check` is a subset
-    # of it, so it is not run again.
+    # 1.2 Frontend tests (npm test = test:unit + test:guards). The unit tests are behaviour tests
+    # (src/__tests__/unit/<area>); the guards (src/__tests__/guards) are the static checks: the
+    # hardcoded-string, global-style and typography scans and the architecture / i18n / quality /
+    # lint-suppression rules.
     Write-Host ""
-    Write-Host "> [2/2] Running Frontend Unit Tests + static guards (npm run test:unit)..." -ForegroundColor Yellow
+    Write-Host "> [2/2] Running Frontend Unit Tests + static guards (npm test)..." -ForegroundColor Yellow
     Push-Location "$PSScriptRoot\frontend"
     try {
-        npm run test:unit
+        npm test
         if ($LASTEXITCODE -ne 0) {
             Write-Host ""
             Write-Host "[FAIL] Frontend unit tests did not pass!" -ForegroundColor Red

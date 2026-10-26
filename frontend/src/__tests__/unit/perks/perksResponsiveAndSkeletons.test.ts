@@ -1,0 +1,68 @@
+// frontend/src/__tests__/unit/perks/perksResponsiveAndSkeletons.test.ts
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import React from 'react';
+import { PerksGridSkeleton } from '@/components/PerksSkeleton';
+import { computeHasActiveFilters } from '@/components/PerkFilters';
+import enDict from '@/locales/en';
+import deDict from '@/locales/de';
+import esDict from '@/locales/es';
+import jaDict from '@/locales/ja';
+import plDict from '@/locales/pl';
+import { renderWithDictionary } from '../../helpers/renderWithDictionary';
+
+describe('Perks: Skeletons & DBD Framer Motion Spinner Integrity', () => {
+  it('PerksGridSkeleton renders with role="status", aria-busy="true", and DBD Skill Check Spinner', () => {
+    const html = renderWithDictionary(
+      React.createElement(PerksGridSkeleton, {
+      })
+    );
+
+    assert.ok(html.includes('<output'), 'Skeleton should declare a status region (<output>)');
+    assert.ok(html.includes('aria-busy="true"'), 'Skeleton should declare aria-busy="true"');
+    assert.ok(html.includes('viewBox="0 0 160 160"'), 'Perk vault skeleton must render DBD Skill Check SVG');
+  });
+});
+
+describe('Perks: Filter State & Active Filter Computation', () => {
+  it('computeHasActiveFilters accurately reflects whether any non-default filter is applied', () => {
+    const defaultState = {
+      search: '',
+      scope: 'all' as const,
+      ownershipFilter: 'all' as const,
+      sortBy: 'name' as const,
+      order: 'asc' as const,
+    };
+
+    assert.equal(computeHasActiveFilters(defaultState), false);
+
+    assert.equal(
+      computeHasActiveFilters({ ...defaultState, search: 'Sprint' }),
+      true
+    );
+
+    assert.equal(
+      computeHasActiveFilters({ ...defaultState, scope: 'general' }),
+      true
+    );
+
+    assert.equal(
+      computeHasActiveFilters({ ...defaultState, ownershipFilter: 'owned' }),
+      true
+    );
+
+    assert.equal(
+      computeHasActiveFilters({ ...defaultState, sortBy: 'character' }),
+      true
+    );
+
+    assert.equal(
+      computeHasActiveFilters({ ...defaultState, order: 'desc' }),
+      true
+    );
+  });
+});
+
+
+
+

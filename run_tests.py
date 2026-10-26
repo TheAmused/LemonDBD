@@ -165,7 +165,8 @@ def main():
     # 2. Frontend Unit Tests
     if run_frontend and run_unit:
         print(f"[{YELLOW}RUNNING{RESET}] Frontend Unit Tests...", flush=True)
-        res = run_command("npm run test:unit", cwd=FRONTEND_DIR, timeout=TIMEOUTS["frontend_unit"])
+        # npm test = test:unit (behaviour) + test:guards (static rules over the whole tree).
+        res = run_command("npm test", cwd=FRONTEND_DIR, timeout=TIMEOUTS["frontend_unit"])
         status = "PASSED" if res["exit_code"] == 0 else "FAILED"
         color = GREEN if status == "PASSED" else RED
         print(f"[{color}{status}{RESET}] Frontend Unit in {res['duration']}s", flush=True)

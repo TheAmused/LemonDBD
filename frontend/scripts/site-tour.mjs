@@ -152,7 +152,7 @@ export function matchesFilter(item, config = {}, isModal = Boolean(item?.modalSe
     const itemAuth = (item.auth || item.requiresAuth || 'guest').toLowerCase();
     if (config.auth !== 'all' && itemAuth !== config.auth.toLowerCase()) return false;
   }
-  if (config.category) {
+  if (config.category && config.category.toLowerCase() !== 'all') {
     const catQ = config.category.toLowerCase();
     if (isModal) {
       const matchModal = catQ === 'modals' || Boolean(item.category && item.category.toLowerCase() === catQ) ||
@@ -160,7 +160,7 @@ export function matchesFilter(item, config = {}, isModal = Boolean(item?.modalSe
       if (!matchModal) return false;
     } else if (!item.category || item.category.toLowerCase() !== catQ) return false;
   }
-  if (config.subcategory && (item.subcategory || '').toLowerCase() !== config.subcategory.toLowerCase()) return false;
+  if (config.subcategory && config.subcategory.toLowerCase() !== 'all' && (item.subcategory || '').toLowerCase() !== config.subcategory.toLowerCase()) return false;
   if (config.page) {
     const normQ = config.page.toLowerCase().replace(/^\/en\/?/, '').replace(/^\//, '');
     const itemId = (item.id || '').toLowerCase(), itemRoute = (item.route || '').toLowerCase().replace(/^\/en\/?/, ''), itemFolder = (item.folder || '').toLowerCase();

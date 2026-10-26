@@ -111,7 +111,11 @@ if (-not $skipUpFlow) {
     Write-Host ""
     Write-Host "> [1/2] Running Backend Unit Tests (pytest)..." -ForegroundColor Yellow
     $env:PYTHONPATH = "$PSScriptRoot\backend"
-    & $pythonCmd -m pytest backend/tests/unit -v --tb=short
+    # Across all cores when pytest-xdist is installed (requirements-dev.txt); serial otherwise.
+    $xdist = @()
+    & $pythonCmd -c "import xdist" 2>$null
+    if ($LASTEXITCODE -eq 0) { $xdist = @("-n", "auto") }
+    & $pythonCmd -m pytest backend/tests/unit @xdist -v --tb=short
 
     if ($LASTEXITCODE -ne 0) {
         Write-Host ""

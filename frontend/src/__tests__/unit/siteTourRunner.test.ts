@@ -19,8 +19,10 @@ interface CliOptions {
   update: boolean;
   page: string | null;
   category: string | null;
+  subcategory: string | null;
   auth: string | null;
   noFullPage: boolean;
+  noFoldLine: boolean;
   modalsOnly: boolean;
   pagesOnly: boolean;
   viewports: string[] | null;
@@ -49,8 +51,10 @@ describe('Site Tour Runner - CLI Argument Parser', () => {
     assert.strictEqual(opts.update, false);
     assert.strictEqual(opts.page, null);
     assert.strictEqual(opts.category, null);
+    assert.strictEqual(opts.subcategory, null);
     assert.strictEqual(opts.modalsOnly, false);
     assert.strictEqual(opts.pagesOnly, false);
+    assert.strictEqual(opts.noFoldLine, false);
     assert.strictEqual(opts.viewports, null);
     assert.strictEqual(opts.headless, true);
     assert.strictEqual(opts.help, false);
@@ -108,6 +112,18 @@ describe('Site Tour Runner - CLI Argument Parser', () => {
     assert.strictEqual(parse(['--no-full-page']).noFullPage, true);
     assert.strictEqual(parse(['--full-page=false']).noFullPage, true);
     assert.strictEqual(parse(['--full-page=true']).noFullPage, false);
+  });
+
+  it('parses --no-fold-line and --fold-line=false flags', () => {
+    assert.strictEqual(parse([]).noFoldLine, false);
+    assert.strictEqual(parse(['--no-fold-line']).noFoldLine, true);
+    assert.strictEqual(parse(['--fold-line=false']).noFoldLine, true);
+    assert.strictEqual(parse(['--fold-line=true']).noFoldLine, false);
+  });
+
+  it('parses --subcategory flag correctly', () => {
+    assert.strictEqual(parse(['--subcategory=creator']).subcategory, 'creator');
+    assert.strictEqual(parse(['--subcategory', 'DRAWER']).subcategory, 'drawer');
   });
 
   it('parses --base-url and strips trailing slashes', () => {
@@ -260,6 +276,15 @@ describe('Site Tour Runner - matchesFilter', () => {
     assert.strictEqual(matchesFilter(streakRulesModal, { category: 'perks' }, true), false);
     assert.strictEqual(matchesFilter(streakRulesModal, { category: 'modals' }, true), true);
   });
+
+  it('filters by subcategory strictly', () => {
+    const creatorPage = { id: 'tier-lists-creator', subcategory: 'creator', route: '/en/tier-lists/new' };
+    const hubPage = { id: 'tier-lists-hub', subcategory: 'hub', route: '/en/tier-lists' };
+
+    assert.strictEqual(matchesFilter(creatorPage, { subcategory: 'creator' }, false), true);
+    assert.strictEqual(matchesFilter(hubPage, { subcategory: 'creator' }, false), false);
+    assert.strictEqual(matchesFilter(creatorPage, { subcategory: 'hub' }, false), false);
+  });
 });
 
 describe('Site Tour Runner - getScreenshotFileName', () => {
@@ -365,6 +390,24 @@ describe('Site Tour Catalog - Subcategory Schema & Target Integrity', () => {
       assert.ok(target, `Missing randomizer mode target: ${id}`);
       assert.strictEqual(target.category, 'randomizer');
     }
+  });
+
+  it('configures tier-lists-creator-guest with guest auth in page routes', () => {
+    const guestCreator = PAGE_ROUTES.find((r) => r.id === 'tier-lists-creator-guest');
+    assert.ok(guestCreator);
+    assert.strictEqual(guestCreator.category, 'tier-lists');
+    assert.strictEqual(guestCreator.subcategory, 'creator');
+    assert.strictEqual(guestCreator.auth, 'guest');
+    assert.strictEqual(guestCreator.requiresAuth, undefined);
+  });
+
+  it('configures streaks-stats-drawer with streaks category, drawers subcategory, and user auth', () => {
+    const statsDrawer = MODAL_TARGETS.find((m) => m.id === 'streaks-stats-drawer');
+    assert.ok(statsDrawer);
+    assert.strictEqual(statsDrawer.category, 'streaks');
+    assert.strictEqual(statsDrawer.subcategory, 'drawers');
+    assert.strictEqual(statsDrawer.requiresAuth, 'user');
+    assert.strictEqual(statsDrawer.auth, 'user');
   });
 });
 

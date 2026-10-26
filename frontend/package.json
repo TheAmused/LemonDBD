@@ -12,6 +12,7 @@
     "prebuild": "npm run lint",
     "test": "npm run test:unit && npm run test:live",
     "test:unit": "tsx --test src/__tests__/unit/*.test.ts src/__tests__/unit/*.test.tsx",
+    "test:changed": "tsx scripts/test-affected.ts",
     "test:live": "tsx scripts/run-live-tests.ts --test-concurrency=1 src/__tests__/live/*.test.ts",
 
     "test:minigames:live": "tsx scripts/run-live-tests.ts src/__tests__/live/minigamesWorkflowLive.test.ts",

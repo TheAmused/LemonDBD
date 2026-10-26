@@ -6,6 +6,11 @@ import pytest
 
 os.environ.setdefault("TESTING", "True")
 os.environ.setdefault("DATABASE_URL", "sqlite:///:memory:")
+# pytest-testmon (`python -m pytest --testmon`) picks the tests a change can affect from per-test
+# coverage. On Python 3.12+ coverage defaults to the sys.monitoring core, which cannot record per-test
+# contexts, so testmon would miss changes to app code. The C tracer records them. This conftest is
+# loaded before plugins configure themselves, so the setting reaches testmon's Coverage object.
+os.environ.setdefault("COVERAGE_CORE", "ctrace")
 
 TESTS_DIR = Path(__file__).resolve().parent
 

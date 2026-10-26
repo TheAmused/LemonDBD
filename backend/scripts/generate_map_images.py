@@ -3,7 +3,6 @@
 import argparse
 import json
 import math
-import os
 import re
 import unicodedata
 from pathlib import Path

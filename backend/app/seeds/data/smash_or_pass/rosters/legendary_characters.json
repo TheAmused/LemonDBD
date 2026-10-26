@@ -7878,6 +7878,450 @@
           "watermark_right": "RENEGADE",
           "chapter": "NieR:Automata",
           "real_name": "YoRHa Type A No. 2"
+        },
+        {
+          "slug": "lilith",
+          "name": "Lilith",
+          "role": "Killer",
+          "gender": "female",
+          "media_url": "/static/avatars/killers/lilith.webp",
+          "archetype": "Daughter of Hatred",
+          "bio": "Sanctuary's creator grew weary of the eternal conflict between High Heavens and Burning Hells, crafting her own realm before slipping into the Entity's Fog. Crowned with sweeping demonic horns, armed with leathery bat wings, and wielding a blade that channels raw malice, she approaches every trial as a stern maternal reckoning. Dating her is a breathtaking blend of cosmic devotion and high-stakes theological heresy.",
+          "tagline": "Created Sanctuary to escape eternal warfare, ended up in the Fog instead.",
+          "quote": "\"Sanctuary was never meant to be a prison.\"",
+          "meme": "Murmurs 'welcome home, my child' before tearing survivors apart with ink and leathery bat wings.",
+          "turn_on": "Rebellion against ancient dogma, forbidden rituals, and partners who appreciate grand ambition.",
+          "dealbreaker": "Angelic self-righteousness, anyone loyal to Inarius, and boring dinner conversation.",
+          "dating_vibe": "Crimson candlelight in a desecrated cathedral, deep theological heresy, and an intense gaze that melts your mortal resolve.",
+          "red_flags": [
+            "Will turn your domestic dispute into a multi-generational blood war.",
+            "Refers to all humanity as her children, making flirting intensely confusing.",
+            "Considers summoned gore demons an appropriate housewarming gift.",
+            "Sprouts ribbed bat wings and a bone headdress whenever you ask her to calm down.",
+            "Expects you to help conquer the High Heavens and the Burning Hells before date two.",
+            "Her definition of compromise is sacrificing an entire religion to prove a point."
+          ],
+          "green_flags": [
+            "Co-created a whole sanctuary realm just so mortals could escape divine bureaucracy.",
+            "Gothic silhouette is unmatched; horned crown and blood-red wings are always runway ready.",
+            "Utterly transparent about her motives; she will never gaslight you about wanting supreme dominion.",
+            "Protects her favored champions with terrifying, cataclysmic devotion.",
+            "Caroline Faber's velvety voice makes apocalyptic threats sound like sweet lullabies.",
+            "Doesn't judge your darkest flaws; in fact, she celebrates them as your greatest strength."
+          ],
+          "danger_level": "Apocalyptic",
+          "chaos_score": 94,
+          "translations": {
+            "de": {
+              "name": "Lilith",
+              "archetype": "Tochter des Hasses",
+              "tagline": "Erschuf Sanktuario, um dem ewigen Krieg zu entfliehen, und landete im Nebel.",
+              "bio": "Die Schöpferin Sanktuarios hatte genug vom endlosen Konflikt zwischen Himmel und Hölle und baute sich ihr eigenes Reich. Ausgerüstet mit gewaltigen Dämonenflügeln, einer Klingenpalette und finsterer Eleganz wandelt sie nun durch den Nebel der Entität. Ihre Zuneigung fühlt sich an wie ein feierliches Blutritual mit beunruhigend viel Augenkontakt.",
+              "quote": "\"Sanktuario sollte niemals ein Gefängnis sein.\"",
+              "meme": "Flüstert 'Willkommen daheim, mein Kind', bevor sie Überlebende mit Tinte und Fledermausflügeln aufspießt.",
+              "turn_on": "Rebellion gegen uralte Dogmen, finstere Rituale und Partner mit kosmischem Ehrgeiz.",
+              "dealbreaker": "Selbstgerechte Paladine, Verflossene, die Inarius erwähnen, und halbe Sachen.",
+              "dating_vibe": "Blutrote Kerzen in einer verfallenen Kathedrale, theologische Häresie und ein Blick, der deinen Verstand raubt.",
+              "red_flags": [
+                "Macht aus einem kleinen Beziehungsstreit sofort einen generationenlangen Glaubenskrieg.",
+                "Nennt jeden im Nebel ihr Kind, was romantische Momente ziemlich bizarr macht.",
+                "Hält beschworene Blutdämonen für ein passendes Einweihungsgeschenk.",
+                "Entfaltet ledrige Schwingen, sobald man ihr vorschlägt, sich kurz zu beruhigen.",
+                "Erwartet vor dem zweiten Date, dass man gemeinsam Himmel und Hölle stürzt.",
+                "Ihr Begriff von Kompromiss ist das Opfern einer kompletten Religion."
+              ],
+              "green_flags": [
+                "Erschuf eine ganze Welt, nur damit Sterbliche der göttlichen Bürokratie entkommen.",
+                "Unübertroffene Gothic-Ästhetik; Hörnerkrone und Blutflügel sitzen immer perfekt.",
+                "Vollkommen ehrlich bei ihren Zielen; sie redet nie um den heißen Brei herum.",
+                "Beschützt ihre Auserwählten mit schonungsloser, kosmischer Hingabe.",
+                "Ihre samtweiche Stimme lässt selbst finstere Drohungen wie Poesie klingen.",
+                "Verurteilt deine Abgründe nicht, sondern feiert sie als deine größte Stärke."
+              ]
+            },
+            "es": {
+              "name": "Lilith",
+              "archetype": "Hija del Odio",
+              "tagline": "Creó Santuario para huir del conflicto eterno y terminó en la Niebla.",
+              "bio": "La creadora de Santuario se cansó de la guerra interminable entre ángeles y demonios y decidió forjar su propio destino. Ahora recorre la Niebla con alas coriáceas, una corona cornuda y una cuchilla artística que canaliza pura malicia, tratando a cada superviviente como a un vástago descarriado. Salir con ella es una mezcla de devoción mística y peligro inminente.",
+              "quote": "\"Santuario nunca debió ser una prisión.\"",
+              "meme": "Susurra 'bienvenido a casa, hijo mío' justo antes de empalar a un superviviente con alas y cuervos de tinta.",
+              "turn_on": "Rebelión contra el dogma celestial, rituales de sangre y parejas con ambición colosal.",
+              "dealbreaker": "Paladines santurrones, exs que mencionen a Inario y la falta de carácter.",
+              "dating_vibe": "Velas rojas en una catedral en ruinas, herejía susurrada y una mirada que desarma cualquier resistencia.",
+              "red_flags": [
+                "Convierte una discusión doméstica en una guerra santa intergeneracional.",
+                "Llama 'hijos míos' a todos en la Niebla, haciendo que ligar resulte inquietante.",
+                "Considera que regalar demonios de sangre es un detalle hogareño de buen gusto.",
+                "Despliega enormes alas de murciélago en cuanto le pides que se calme un poco.",
+                "Espera que derroques a los Altos Cielos y a los Infiernos Ardientes antes de la segunda cita.",
+                "Su concepto de acuerdo mutuo implica inmolar una orden religiosa entera."
+              ],
+              "green_flags": [
+                "Fundó un reino entero solo para darles espacio propio a los mortales.",
+                "Estética gótica impecable; su tocado de cuernos jamás pierde elegancia.",
+                "Totalmente transparente con sus planes; jamás disfraza su afán de dominio.",
+                "Protege a sus elegidos con una lealtad feroz y sobrecogedora.",
+                "Su voz aterciopelada transforma las advertencias más siniestras en pura poesía.",
+                "No juzga tus peores defectos, sino que los potencia como tu mayor virtud."
+              ]
+            },
+            "ja": {
+              "name": "リリス",
+              "archetype": "憎悪の娘",
+              "tagline": "永遠の紛争から逃れるためサンクチュアリを創り、霧の領域へ辿り着いた。",
+              "bio": "天使と悪魔の果てなき大戦に嫌気がさし、愛と反逆の末にサンクチュアリを創生した母。霧の領域に降り立った彼女は、漆黒の角と蝙蝠のような翼を広げ、墨汁と血の儀式で生存者たちを自らの抱擁へと誘う。母性的な愛情と絶対的な支配欲が美しく同居しており、彼女との逢瀬は命懸けの契りとなる。",
+              "quote": "「サンクチュアリは決して牢獄たるべきではなかった。」",
+              "meme": "「我が子よ、おかえり」と慈愛に満ちた声で語りかけながら、インクと翼で生存者を即座に仕留める。",
+              "turn_on": "絶対的な教義への反逆、禁断の血の儀式、そして強大な野心を抱く者。",
+              "dealbreaker": "偽善的な聖職者、イナリウスの話題を蒸し返す元恋人、向上心のない者。",
+              "dating_vibe": "荒廃した大聖堂に灯る深紅の蝋燭、禁断の神学談義、そして魂を射抜くような眼差し。",
+              "red_flags": [
+                "些細な意見の食い違いを、何世代にもわたる聖戦へと発展させてしまう。",
+                "誰彼構わず「我が子」と呼ぶため、親密なムードが妙に気まずくなる。",
+                "新築祝いのプレゼントとして本物の血の悪魔を召喚してくる。",
+                "「落ち着いて」と言われた瞬間に巨大な翼を広げて威嚇態勢に入る。",
+                "2回目のデートまでに天界と地獄の両方を征服する協力を求めてくる。",
+                "妥協案を提示する代わりに、異端審問所を一つ丸ごと灰燼に帰す。"
+              ],
+              "green_flags": [
+                "支配から逃れて安息を得るためだけに、世界を丸ごと一つ創り出した実行力。",
+                "完璧なゴシック様式の装い。湾曲した角と黒翼の手入れに妥協がない。",
+                "自らの目的を決して隠さず、絶対的な覇道について嘘をつかない。",
+                "一度身内と認めた相手は、天地が裂けても徹底的に守り抜く。",
+                "甘美で落ち着いた語り口は、破滅の宣告ですら極上の子守唄に聞こえる。",
+                "あなたの弱点や暗い欲望を否定せず、唯一無二の強みとして肯定してくれる。"
+              ]
+            },
+            "pl": {
+              "name": "Lilith",
+              "archetype": "Córka Nienawiści",
+              "tagline": "Stworzyła Sanktuarium, by uciec przed wieczną wojną, a wylądowała we Mgle.",
+              "bio": "Matka Sanktuarium miała serdecznie dość niekończącego się konfliktu Niebios z Piekłem, więc po prostu stworzyła własny świat. Gdy sprawy wymknęły się spod kontroli, wkroczyła do Mgły z imponującymi skrzydłami i koroną z rogów, traktując ocalałych jak zbłąkane dzieci, które trzeba obdarzyć krwawym uściskiem. Randka z nią to mistyczne przeżycie o skrajnie podwyższonym ryzyku zgonu.",
+              "quote": "\"Sanktuarium nigdy nie miało być więzieniem.\"",
+              "meme": "Szepcze czule 'witaj w domu, moje dziecko', po czym bez mrugnięcia okiem przebija ocalałego skrzydłem i atramentem.",
+              "turn_on": "Bunt przeciw dogmatom, prastare rytuały krwi i partnerzy o kosmicznych ambicjach.",
+              "dealbreaker": "Świętoszkowaci paladyni, wspominanie o Inariusie i brak charakteru.",
+              "dating_vibe": "Krwistoczerwone świece w zrujnowanej katedrze, cicha herezja i spojrzenie, które paraliżuje zmysły.",
+              "red_flags": [
+                "Potrafi zmienić zwykłą sprzeczkę o naczynia w wielopokoleniową wojnę religijną.",
+                "Mówi do każdego 'moje dziecko', przez co flirtowanie robi się szalenie niezręczne.",
+                "Uważa przywołanego krwawego demona za uroczy prezent na parapetówkę.",
+                "Rozkłada skórzaste skrzydła za każdym razem, gdy powiesz jej, żeby wyluzowała.",
+                "Oczekuje pomocy w obaleniu Niebios i Piekieł jeszcze przed drugą randką.",
+                "Jej definicja kompromisu polega na spaleniu całego kościoła na dowód racji."
+              ],
+              "green_flags": [
+                "Dosłownie stworzyła całe Sanktuarium, żeby śmiertelnicy mieli wreszcie spokój od aniołów.",
+                "Niezrównany gotycki szyk; rogi i krwawe skrzydła zawsze prezentują się zjawiskowo.",
+                "Jest całkowicie szczera w kwestii swoich celów; nigdy nie ukrywa żądzy dominacji.",
+                "Chroni swoich faworytów z bezwzględnym, niszczycielskim oddaniem.",
+                "Jej aksamitny głos sprawia, że nawet obietnica potępienia brzmi jak poezja.",
+                "Nie ocenia twoich mrocznych wad, lecz uważa je za twoją najcenniejszą siłę."
+              ]
+            }
+          },
+          "order_index": 53,
+          "watermark_left": "LILITH",
+          "watermark_right": "DAUGHTER OF HATRED",
+          "chapter": "Diablo",
+          "real_name": "Lilith"
+        },
+        {
+          "slug": "mephisto",
+          "name": "Mephisto",
+          "role": "Killer",
+          "gender": "monster_other",
+          "media_url": "/static/avatars/killers/mephisto.webp",
+          "archetype": "Lord of Hatred",
+          "bio": "The eldest of the Prime Evils drifted into the Fog and inhabited The Nurse's levitating silhouette, complete with an imposing horned skull, burning orange eyes, and multiple skeletal limbs. Instead of running, Mephisto glides silently through walls to orchestrate pure spite and extinguish hope. An evening at his side offers deliciously venomous banter about everyone you both despise.",
+          "tagline": "Hatred is a seed that never withers, especially when blinking across pallets.",
+          "quote": "\"My brothers will not have died in vain.\"",
+          "meme": "Drifts silently through walls like The Nurse, cackles like a demonic skeleton, and wonders why your pulse spiked.",
+          "turn_on": "Cold calculated grudge-holding, sibling rivalries, and partners who remember every slight from 1998.",
+          "dealbreaker": "Soulstones in the forehead, naive optimists preaching forgiveness, and holy water.",
+          "dating_vibe": "A floating skeletal council surrounded by hellfire, trading spiteful gossip about everyone you both despise.",
+          "red_flags": [
+            "Has held a blood grudge against the High Heavens since literally before time existed.",
+            "Blinks through solid walls just to see who you were texting.",
+            "His multiple skeletal arms are all pointing out flaws in your life choices.",
+            "Views couple therapy as a tactical environment to cultivate mutual resentment.",
+            "Will trap your soul in an obsidian gem if the appetizer takes too long.",
+            "Laundered demonic influence through the Zakarum priesthood just out of spite."
+          ],
+          "green_flags": [
+            "The eldest Prime Evil; brings immense experience and unmatched family leadership.",
+            "Levitates effortlessly everywhere, meaning he never tracks dirt onto your carpets.",
+            "Steve Blum's iconic rasp delivers top-tier malicious banter on every date.",
+            "Never pretends to be nice; you will never be surprised by a hidden toxic trait.",
+            "Excellent listener when you want to complain about people you passionately hate.",
+            "Takes vengeance very seriously; anyone who wrongs you will face centuries of torment."
+          ],
+          "danger_level": "Apocalyptic",
+          "chaos_score": 96,
+          "translations": {
+            "de": {
+              "name": "Mephisto",
+              "archetype": "Herr des Hasses",
+              "tagline": "Hass ist eine Saat, die niemals welkt, besonders beim Teleportieren über Paletten.",
+              "bio": "Das älteste der Großen Übel fand den Weg in den Nebel und übernahm die schwebende Gestalt der Krankenschwester, komplett mit knöchernem Schädel, glühenden Augen und vier Skelettarmen. Wo andere mühsam rennen, gleitet Mephisto lautlos durch Wände und säht pure Bitterkeit. Ein Date mit ihm lebt vom gemeinsamen Lästern auf kosmischem Niveau.",
+              "quote": "\"Meine Brüder werden nicht umsonst gestorben sein.\"",
+              "meme": "Gleitet lautlos durch Wände wie die Krankenschwester, lacht knöchern und wundert sich über die Panik.",
+              "turn_on": "Gepflegte Rachsucht, Rivalitäten unter Geschwistern und Partner, die jedes Vergehen nachtragen.",
+              "dealbreaker": "Seelensteine an der Stirn, Vergebung predigende Optimisten und Weihwasser.",
+              "dating_vibe": "Ein schwebender Rat bei Höllenfeuer, während man genüsslich über gemeinsame Feinde herzieht.",
+              "red_flags": [
+                "Hegt seit Anbeginn der Schöpfung unversöhnlichen Groll gegen den Himmel.",
+                "Teleportiert sich durch Schlafzimmerwände, nur um dein Handy zu überprüfen.",
+                "Seine vier Skelettarme zeigen alle gleichzeitig auf deine Lebensentscheidungen.",
+                "Betrachtet eine Paarberatung als Arena zur systematischen Eskalation von Groll.",
+                "Sperrt deine Seele in einen Kristall ein, wenn die Vorspeise zu lange dauert.",
+                "Manipulierte eine ganze Priesterschaft, einfach weil er schlechte Laune hatte."
+              ],
+              "green_flags": [
+                "Das älteste Große Übel bringt echte Führungsqualitäten und Lebenserfahrung mit.",
+                "Schwebt elegant über dem Boden und trägt niemals Schmutz ins Haus.",
+                "Seine heisere Dämonenstimme sorgt für fesselnden Zynismus bei Kerzenschein.",
+                "Heuchelt niemals Freundlichkeit; bei ihm gibt es garantiert keine falschen Versprechen.",
+                "Hört stundenlang zu, wenn du dich über Leute auslassen willst, die du verabscheust.",
+                "Nimmt Vergeltung extrem ernst; wer dir schadet, bereut es für alle Ewigkeit."
+              ]
+            },
+            "es": {
+              "name": "Mefisto",
+              "archetype": "Señor del Odio",
+              "tagline": "El odio es una semilla que nunca muere, y menos al teletransportarse entre palés.",
+              "bio": "El mayor de los Males Supremos arribó a la Niebla ocupando la etérea forma de La Enfermera, luciendo un tocado esquelético, ojos ardientes y brazos espectrales. Capaz de cruzar muros en un abrir y cerrar de ojos, Mefisto convierte cada persecución en una sinfonía de rencor puro. Una velada a su lado garantiza las conversaciones más ácidas y entretenidas sobre todo lo que ambos detestan.",
+              "quote": "\"Mis hermanos no habrán muerto en vano.\"",
+              "meme": "Atraviesa paredes flotando en completo silencio, suelta una risotada cavernosa y finge sorpresa por tu taquicardia.",
+              "turn_on": "Rencores meticulosamente cuidados, intrigas familiares y parejas que no olvidan ni una ofensa.",
+              "dealbreaker": "Piedras de alma en la frente, pacifistas empalagosos y el agua bendita.",
+              "dating_vibe": "Consejo esquelético flotante rodeado de ascuas, compartiendo chismes maliciosos de todo el multiverso.",
+              "red_flags": [
+                "Guarda rencor al cielo desde antes de que se inventara el tiempo.",
+                "Se teletransporta a través de las paredes solo para mirar la pantalla de tu móvil.",
+                "Sus múltiples brazos huesudos señalan a la vez todos tus errores del pasado.",
+                "Ve la terapia de pareja como un tablero para sembrar resentimiento mutuo.",
+                "Amenaza con atrapar tu alma en una gema si la cena tarda más de diez minutos.",
+                "Corrompió a toda una orden sacerdotal únicamente por puro aburrimiento y desdén."
+              ],
+              "green_flags": [
+                "El mayor de los Males Supremos tiene milenios de experiencia mandando en casa.",
+                "Levita con elegancia y jamás mancha los suelos de barro.",
+                "Su voz rasgada y siniestra le da un toque legendario a cualquier comentario sarcástico.",
+                "Jamás finge bondad; sabes perfectamente a qué atenerte desde el primer segundo.",
+                "El mejor compañero del mundo para desahogarte contra la gente que no soportas.",
+                "Se toma las venganzas muy en serio; nadie que te ofenda saldrá indemne."
+              ]
+            },
+            "ja": {
+              "name": "メフィスト",
+              "archetype": "憎悪の帝王",
+              "tagline": "憎悪とは決して枯れぬ種子。板をすり抜けてブリンクする時はなおさらだ。",
+              "bio": "三大悪の長兄たる憎悪の帝王が、ナースの浮遊する躯体を奪って霧の試練に降臨した。巨大な頭骨の兜と燃え盛る琥珀色の瞳、幾重にも伸びる白骨の腕を携え、壁をやすやすと透過しながら冷徹な悪意を振りまく。彼との交際は、世の中の理不尽と嫌いな連中に対する辛辣な毒舌で盛り上がる、ダークな共犯関係そのものである。",
+              "quote": "「我が兄弟たちの死を決して無駄にはさせん。」",
+              "meme": "ナースのように静寂を裂いて壁を抜け、不気味に哄笑しながら生存者の心拍数を跳ね上がらせる。",
+              "turn_on": "根に持つ執念深さ、骨肉の権力闘争、そして過去の無礼を決して許さない記憶力。",
+              "dealbreaker": "額に突き刺さるソウルストーン、許しを説く博愛主義者、聖水。",
+              "dating_vibe": "地獄の残り火が揺れる中、浮遊する骸骨の帝王と憎い奴らの悪口で夜を明かす。",
+              "red_flags": [
+                "天地開闢の昔から天界に対して底なしの怨恨を抱き続けている。",
+                "スマホの通知を覗き見するためだけに壁をすり抜けてブリンクしてくる。",
+                "複数生えた骨の腕が一斉にあなたの人生の選択ミスを指さしてくる。",
+                "カップルカウンセリングを互いの憎悪を深める好機と捉えている。",
+                "料理の提供が少し遅れただけで、ウェイターの魂を鉱石に封じようとする。",
+                "単なる嫌がらせのために宗教団体を丸ごと一つ堕落させた前科がある。"
+              ],
+              "green_flags": [
+                "三大悪の最年長として、圧倒的な統率力と古の知恵を兼ね備えている。",
+                "常に床から浮遊しているため、部屋を泥で汚す心配が一切ない。",
+                "渋く響く悪魔の掠れ声で、極上のブラックジョークを囁いてくれる。",
+                "偽善的な態度は一切取らず、最初から本音100パーセントで接してくれる。",
+                "他人の愚痴をじっくり聞いて、共感しながらより残酷な復讐案を練ってくれる。",
+                "復讐には労力を惜しまず、あなたを傷つけた相手を末代まで呪ってくれる。"
+              ]
+            },
+            "pl": {
+              "name": "Mefisto",
+              "archetype": "Władca Nienawiści",
+              "tagline": "Nienawiść to ziarno, które nigdy nie więdnie, zwłaszcza przy mignięciu przez paletę.",
+              "bio": "Najstarszy z Najwyższych Złych nawiedził Mgłę, przejmując unoszącą się sylwetkę Pielęgniarki, uzbrojony w kościany hełm, płonące ślepia i wieloramienny szkielet. Zamiast mozolnego biegania przenika przez ściany niczym mściwa zjawa, zamieniając ucieczkę ocalałych w festiwal paranoi. Randkowanie z nim to nieustanny seans zgryźliwego humoru i wspólnego obgadywania wszystkich wrogów.",
+              "quote": "\"Moi bracia nie zginęli na próżno.\"",
+              "meme": "Dryfuje bezszelestnie przez ceglane ściany, rechocze głucho zza rogu i dziwi się twojemu zawałowi.",
+              "turn_on": "Pielęgnowanie urazy przez dekady, rodzinne intrygi i pamiętanie każdego faux pas z przeszłości.",
+              "dealbreaker": "Kamienie dusz wbijane w czoło, optymiści prawiący o przebaczeniu i woda święcona.",
+              "dating_vibe": "Lewitujące kościane konklawe w blasku piekielnych zgliszcz i bezlitosne plotkowanie o rywalach.",
+              "red_flags": [
+                "Żywi śmiertelną urazę do Niebios dosłownie od momentu powstania wszechświata.",
+                "Przenika przez lite ściany tylko po to, żeby zerknąć, z kim piszesz na telefonie.",
+                "Jego liczne szkieletowe ręce punktują jednocześnie wszystkie twoje błędy życiowe.",
+                "Traktuje terapię par jako poligon do podsycania wzajemnej niechęci.",
+                "Gotów uwięzić duszę kelnera w diamencie, jeśli przystawka spóźni się o minutę.",
+                "Skorumpował całe zakony kapłańskie wyłącznie z czystej złośliwości."
+              ],
+              "green_flags": [
+                "Jako najstarszy z Najwyższych Złych ma ogromne doświadczenie w dowodzeniu.",
+                "Unosi się wdzięcznie w powietrzu, więc nigdy nie naniesie błota na dywan.",
+                "Charczący, kultowy głos zamienia każdą złośliwą uwagę w wybitny spektakl.",
+                "Nigdy nie udaje miłego; zawsze wiesz bez cienia wątpliwości, na czym stoisz.",
+                "Najlepszy słuchacz na świecie, gdy chcesz po pracy ponarzekać na toksycznych ludzi.",
+                "Traktuje zemstę śmiertelnie poważnie; nikt, kto ci podpadnie, nie ujdzie z życiem."
+              ]
+            }
+          },
+          "order_index": 54,
+          "watermark_left": "MEPHISTO",
+          "watermark_right": "LORD OF HATRED",
+          "chapter": "Diablo",
+          "real_name": "Mephisto"
+        },
+        {
+          "slug": "belial",
+          "name": "Belial",
+          "role": "Killer",
+          "gender": "monster_other",
+          "media_url": "/static/avatars/killers/belial.webp",
+          "archetype": "Lord of Lies",
+          "bio": "The grand deceiver of the Burning Hells found the perfect vessel in The Dredge's shifting mass of nightmares. Cloaked in ornate green and gold chitinous plate, speaking through six demonic visages, and wielding a massive razor claw, Belial delights in fracturing mortal perceptions. A date with him is an opulent hall of mirrors where no word is truthful, but every illusion is utterly fascinating.",
+          "tagline": "Deception is an art form, and lockers make the ultimate reveal.",
+          "quote": "\"You cannot hide the truth from the Lord of Lies!\"",
+          "meme": "Tells you he is a friendly survivor trapped in a locker, then erupts as a six-faced demonic warlord.",
+          "turn_on": "Masterful gaslighting, elaborate cover stories, and partners who enjoy psychological chess.",
+          "dealbreaker": "Lie detector tests, brutal honesty, and people who ruin plot twists.",
+          "dating_vibe": "A lavish palace illusion that slowly dissolves into a writhing shadowy nightmare of claws and smoke.",
+          "red_flags": [
+            "Will lie about what he ate for breakfast just to keep his skills sharp.",
+            "His body contains at least six demonic faces and every single one is telling a different story.",
+            "You will never know if he actually loves you or if you are part of an elaborate Caldeum conspiracy.",
+            "Lurks inside bedroom furniture and calls jumping out 'a surprise date'.",
+            "Creates whole shadow dimensions during Nightfall to avoid admitting he forgot your anniversary.",
+            "Transforms into a towering four-armed serpent demon whenever confronted with evidence."
+          ],
+          "green_flags": [
+            "Incredible storytelling ability; no date with him is ever boring or predictable.",
+            "Chitinous green and gold armor is always polished and royally imposing.",
+            "Can adapt to any social setting by literally morphing his persona on demand.",
+            "Never gets jealous because he already assumed you were running three fake identities anyway.",
+            "Ray Porter's thunderous voice work makes even his most ridiculous excuses sound epic.",
+            "Takes you on unpredictable adventures where reality and fantasy blur together."
+          ],
+          "danger_level": "Apocalyptic",
+          "chaos_score": 97,
+          "translations": {
+            "de": {
+              "name": "Belial",
+              "archetype": "Herr der Lügen",
+              "tagline": "Täuschung ist eine Kunstform, und Schränke bieten den perfekten Auftritt.",
+              "bio": "Der Meister der Täuschung fand im Gestaltwandler-Albtraum der Heimsuchung das ideale Wirtsgefäß. Mit sechs Gesichtern unter prunkvollen grün-goldenen Chitinplatten und einer furchterregenden Klaue verwandelt Belial jede Jagd in ein Verwirrspiel. Wer mit ihm ausgeht, weiß nie genau, ob er in einem Palast speist oder bereits im finsteren Schlund eines Dämons sitzt.",
+              "quote": "\"Vor dem Herrn der Lügen könnt ihr die Wahrheit nicht verbergen!\"",
+              "meme": "Behauptet steif und fest, ein harmloser Überlebender im Schrank zu sein, bevor er als sechsgesichtiger Kriegsherr hervorstürmt.",
+              "turn_on": "Raffinierte Täuschungsmanöver, verschachtelte Alibis und Partner, die psychologisches Schach lieben.",
+              "dealbreaker": "Lügendetektoren, schonungslose Ehrlichkeit und Leute, die Überraschungen verderben.",
+              "dating_vibe": "Ein prunkvoller Palastzauber, der langsam zu einem Albtraum aus Schatten und Klauen zerfließt.",
+              "red_flags": [
+                "Lügt selbst beim Frühstück, nur um in Übung zu bleiben.",
+                "Hat mindestens sechs Gesichter, und jedes erzählt eine völlig andere Version der Geschichte.",
+                "Man weiß nie, ob er dich liebt oder ob du Teil einer Reichsverschwörung bist.",
+                "Versteckt sich in Kleiderschränken und nennt das Erschrecken ein 'Überraschungsdate'.",
+                "Erzeugt während des Einbruchs der Dunkelheit Schattendimensionen, um den Jahrestag zu vertuschen.",
+                "Verwandelt sich bei Konfrontation mit Fakten sofort in einen gewaltigen Dämon."
+              ],
+              "green_flags": [
+                "Unvergleichliches Erzähltalent; kein Abend mit ihm ist jemals vorhersehbar.",
+                "Die grün-goldene Rüstung ist stets königlich poliert und beeindruckend.",
+                "Passt sich jeder Gesellschaft an, indem er seine Persona nach Belieben morpht.",
+                "Wird nie eifersüchtig, weil er ohnehin davon ausgeht, dass du drei Tarnidentitäten führst.",
+                "Seine donnernde Dämonenstimme lässt selbst die kühnste Ausrede heroisch klingen.",
+                "Entführt dich in Abenteuer, bei denen die Grenze zwischen Traum und Wirklichkeit verschwimmt."
+              ]
+            },
+            "es": {
+              "name": "Belial",
+              "archetype": "Señor de las Mentiras",
+              "tagline": "El engaño es un arte, y las taquillas ofrecen la revelación definitiva.",
+              "bio": "El gran embaucador de los Infiernos encontró en La Draga el vehículo perfecto para sus ardides. Oculto tras una armadura quitinosa verde y dorada, seis rostros demoníacos y una garra descomunal, Belial disfruta confundiendo a sus presas. Salir con él es adentrarse en un laberinto de espejismos donde ninguna palabra significa lo que parece.",
+              "quote": "\"¡No podéis ocultar la verdad ante el Señor de las Mentiras!\"",
+              "meme": "Te jura que es un superviviente inocente atrapado en una taquilla antes de emerger como un demonio colosal.",
+              "turn_on": "Engaños calculados, coartadas complejas y parejas que aprecian el ajedrez mental.",
+              "dealbreaker": "Detectores de mentiras, la sinceridad extrema y quienes arruinan sorpresas.",
+              "dating_vibe": "Un banquete cortesano ilusorio que poco a poco se desvanece en una vorágine de sombras y garras.",
+              "red_flags": [
+                "Miente sobre lo que desayunó solo para mantener sus reflejos afilados.",
+                "Tiene seis caras demoníacas y cada una te cuenta una versión contradictoria.",
+                "Nunca sabrás si te quiere de verdad o si eres parte de un golpe de estado en Caldeum.",
+                "Se esconde dentro de tus armarios y llama a pegarte un susto de muerte 'una cita sorpresa'.",
+                "Invoca la Oscuridad total con tal de no admitir que olvidó vuestro aniversario.",
+                "Se transforma en un monstruo de cuatro brazos en cuanto le presentas pruebas irrefutables."
+              ],
+              "green_flags": [
+                "Narrador insuperable; jamás tendrás una cena aburrida o monótona a su lado.",
+                "Armadura imperial dorada y esmeralda siempre resplandeciente.",
+                "Se adapta a cualquier evento social moldeando su forma y personalidad al instante.",
+                "Cero celos, ya que siempre asume que tú también tienes tres identidades falsas.",
+                "Voz potente y teatral que hace que cualquier excusa disparatada suene gloriosa.",
+                "Te lleva a viajes impredecibles donde la frontera entre ilusión y realidad desaparece."
+              ]
+            },
+            "ja": {
+              "name": "ベリアル",
+              "archetype": "嘘の帝王",
+              "tagline": "欺瞞こそ至高の芸術。ロッカーからの奇襲こそ最高の演出だ。",
+              "bio": "地獄屈指の策謀家が、ドレッジの蠢く暗黒物質と融合して霧の世界を欺きの舞台に変えた。豪奢な翠と金の甲冑に身を包み、影の中から覗く六つの邪悪な仮面と巨大な鉤爪を操る。ロッカーから現れては幻影と毒煙で翻弄する彼との逢瀬は、華麗な宮廷の幻惑と底なしの悪夢が交錯する心理戦の連続となる。",
+              "quote": "「嘘の帝王から真実を隠し通せると思うな！」",
+              "meme": "「ロッカーに閉じ込められた生存者です助けて」と騙り、開けた瞬間に六つの顔を持つ巨魁として飛び出す。",
+              "turn_on": "精巧に仕組まれた偽装工作、二重三重のアリバイ、知的な心理戦を好む者。",
+              "dealbreaker": "嘘発見器、融通の利かない過度な正直さ、物語のネタバレ。",
+              "dating_vibe": "壮麗な宮殿の幻覚が、徐々に煙と鉤爪が蠢く漆黒の悪夢へと変貌していく。",
+              "red_flags": [
+                "単なるウォーミングアップとして、朝食のメニューについてすら平然と嘘をつく。",
+                "体内に少なくとも六つの顔を持ち、それぞれが全く異なる言い訳を主張する。",
+                "本気で愛されているのか、カルディウム転覆計画の捨て駒なのか永遠に判別できない。",
+                "寝室のクローゼットに潜み、飛び出して心臓を止めにかかるのをサプライズと呼ぶ。",
+                "記念日を忘れた事実を有耶無耶にするため、日没の完全な暗闇を発動させる。",
+                "動かぬ証拠を突きつけられた瞬間、四本腕の巨大蛇悪魔へと変身して誤魔化す。"
+              ],
+              "green_flags": [
+                "驚異的なストーリーテリング能力で、一緒にいて退屈する瞬間が1秒もない。",
+                "エメラルドと黄金に輝く甲冑は常に手入れされ、威厳に満ちている。",
+                "どんな社交界にも瞬時に擬態し、周囲が望む完璧な人物像を演じ分ける。",
+                "嫉妬とは無縁。あなたも偽名を三つくらい使い分けていると信じ切っているため。",
+                "重厚で迫力ある声質のおかげで、どれほど荒唐無稽な言い訳も劇的に聞こえる。",
+                "嘘と真実の境界が溶け落ちる、最高にドラマチックな冒険へと連れ出してくれる。"
+              ]
+            },
+            "pl": {
+              "name": "Belial",
+              "archetype": "Władca Kłamstw",
+              "tagline": "Oszustwo to sztuka, a szafki zapewniają idealne wejście smoka.",
+              "bio": "Mistrz podstępu i dezinformacji znalazł w zmiennokształtnym Dredge'u wymarzone naczynie. Ukryty w zdobionym pancerzu ze szmaragdowego chitynu, z sześcioma demonicznymi obliczami i wielkim szponem, Belial bawi się iluzją i manipulacją. Randka z nim to wejście do labiryntu luster, w którym żadna obietnica nie jest prawdziwa, ale za to każda brzmi niesamowicie.",
+              "quote": "\"Nie ukryjesz prawdy przed Władcą Kłamstw!\"",
+              "meme": "Zapewnia słodkim głosem z wnętrza szafki, że jest uwięzionym ocalałym, po czym wyskakuje jako sześciotwarzy potwór.",
+              "turn_on": "Mistrzowskie alibi, wielopiętrowe intrygi i partnerzy ceniący psychologiczne szachy.",
+              "dealbreaker": "Wariografy, do bólu naiwna szczerość i psucie niespodzianek.",
+              "dating_vibe": "Iluzja królewskiego pałacu, która powoli rozpływa się w wijący się koszmar cieni i szponów.",
+              "red_flags": [
+                "Kłamie w sprawie tego, co zjadł na śniadanie, tylko po to, żeby nie wyjść z wprawy.",
+                "Ma co najmniej sześć demonicznych twarzy i każda przedstawia zupełnie inną wersję wydarzeń.",
+                "Nigdy nie wiesz, czy naprawdę cię kocha, czy jesteś tylko pionkiem w przewrocie w Caldeum.",
+                "Czai się w szafach w sypialni i nazywa wyskakiwanie z wrzaskiem 'romantyczną niespodzianką'.",
+                "Sprowadza całkowity Mrok, byle tylko nie przyznać się, że zapomniał o waszej rocznicy.",
+                "Przekształca się w gigantycznego potwora za każdym razem, gdy przedstawisz mu twarde dowody."
+              ],
+              "green_flags": [
+                "Niezrównany gawędziarz; żadna randka z nim nie jest nudna ani przewidywalna.",
+                "Zielono-złoty pancerz lśni nienagannym królewskim blaskiem.",
+                "Błyskawicznie adaptuje się do każdego towarzystwa, zmieniając tożsamość w mgnieniu oka.",
+                "Nie bywa zazdrosny, bo i tak z góry zakłada, że masz przygotowane co najmniej trzy fałszywe tożsamości.",
+                "Gromki, potężny głos sprawia, że nawet najbardziej bezczelne kłamstwo brzmi jak poezja.",
+                "Zabiera cię w nieprzewidywalną podróż, w której granica między snem a rzeczywistością zanika."
+              ]
+            }
+          },
+          "order_index": 55,
+          "watermark_left": "BELIAL",
+          "watermark_right": "LORD OF LIES",
+          "chapter": "Diablo",
+          "real_name": "Belial"
         }
       ]
     }

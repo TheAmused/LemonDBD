@@ -18,6 +18,7 @@ interface CliOptions {
   update: boolean;
   page: string | null;
   category: string | null;
+  auth: string | null;
   modalsOnly: boolean;
   pagesOnly: boolean;
   viewports: string[] | null;
@@ -80,6 +81,14 @@ describe('Site Tour Runner - CLI Argument Parser', () => {
     const spaceOpts = parse(['--page', 'randomizer', '--category', 'modals']);
     assert.strictEqual(spaceOpts.page, 'randomizer');
     assert.strictEqual(spaceOpts.category, 'modals');
+  });
+
+  it('parses --auth flag correctly', () => {
+    const opts = parse(['--auth=guest']);
+    assert.strictEqual(opts.auth, 'guest');
+
+    const userOpts = parse(['--auth', 'user']);
+    assert.strictEqual(userOpts.auth, 'user');
   });
 
   it('parses --pages-only and --modals-only flags', () => {
@@ -222,6 +231,25 @@ describe('Site Tour Runner - matchesFilter', () => {
     assert.strictEqual(matchesFilter(perksPage, { page: '/en/perks' }, false), true);
     assert.strictEqual(matchesFilter(perkModal, { page: 'perks' }, true), true);
     assert.strictEqual(matchesFilter(landingPage, { page: 'perks' }, false), false);
+  });
+
+  it('filters by auth status (guest, user, admin)', () => {
+    const guestPage = { id: 'user-profile-guest', category: 'account', auth: 'guest', route: '/en/user' };
+    const userPage = { id: 'user-profile', category: 'account', auth: 'user', requiresAuth: 'user', route: '/en/user' };
+    const adminPage = { id: 'admin', category: 'account', auth: 'admin', requiresAuth: 'admin', route: '/en/admin' };
+
+    assert.strictEqual(matchesFilter(guestPage, { auth: 'guest' }, false), true);
+    assert.strictEqual(matchesFilter(userPage, { auth: 'guest' }, false), false);
+    assert.strictEqual(matchesFilter(userPage, { auth: 'user' }, false), true);
+    assert.strictEqual(matchesFilter(adminPage, { auth: 'admin' }, false), true);
+    assert.strictEqual(matchesFilter(adminPage, { auth: 'all' }, false), true);
+  });
+
+  it('matches modals by their accurate functional category', () => {
+    const streakRulesModal = { id: 'streaks-rules', category: 'streaks', auth: 'user', route: '/en/streaks/killer/chaos-streak' };
+    assert.strictEqual(matchesFilter(streakRulesModal, { category: 'streaks' }, true), true);
+    assert.strictEqual(matchesFilter(streakRulesModal, { category: 'perks' }, true), false);
+    assert.strictEqual(matchesFilter(streakRulesModal, { category: 'modals' }, true), true);
   });
 });
 

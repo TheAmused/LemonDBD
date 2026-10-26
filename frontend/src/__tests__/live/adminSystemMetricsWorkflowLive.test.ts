@@ -19,8 +19,11 @@ test("Live Frontend Workflow: Admin System Metrics & Export", async () => {
   const statsRes = await fetch(`${API_BASE}/api/v1/admin/stats`, { headers: adminHeaders });
   assert.strictEqual(statsRes.status, 200);
 
-  const exportRes = await fetch(`${API_BASE}/api/v1/admin/database/export?targets=perks`, {
+  // The export is a POST with the targets in the body (it was a GET with a query string).
+  const exportRes = await fetch(`${API_BASE}/api/v1/admin/database/export`, {
+    method: "POST",
     headers: adminHeaders,
+    body: JSON.stringify({ targets: ["perks"] }),
   });
   assert.strictEqual(exportRes.status, 200);
 });

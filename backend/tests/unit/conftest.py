@@ -8,6 +8,10 @@ from sqlalchemy.orm import Session
 
 os.environ["TESTING"] = "True"
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
+# Flask-Mail reads its sender when the app is created, and the config falls back to the developer's
+# .env.dev for it. Pinning it here, before the app module is imported, makes the mail tests behave
+# the same on every machine and in CI (TESTING already keeps Flask-Mail from really sending).
+os.environ["MAIL_DEFAULT_SENDER"] = "noreply@lemondbd.test"
 
 from sqlalchemy import select
 

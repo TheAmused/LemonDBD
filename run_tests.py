@@ -8,8 +8,8 @@ as well as K6 performance test suites.
 Usage:
   py run_tests.py                 # Runs all test suites (Backend + Frontend)
   py run_tests.py --unit          # Runs isolated unit & mock test suites
-  py run_tests.py --live          # Runs live database & API integration suites
-  py run_tests.py --workflows     # Runs end-to-end multi-step workflow suites
+  py run_tests.py --live          # Runs live database & API integration suites (workflows included)
+  py run_tests.py --workflows     # Runs only the end-to-end multi-step workflow suites
   py run_tests.py --backend       # Runs backend suites only
   py run_tests.py --frontend      # Runs frontend suites only
   py run_tests.py --perf          # Runs all K6 performance test suites
@@ -41,6 +41,18 @@ if hasattr(sys.stderr, "reconfigure"):
 ROOT_DIR = Path(__file__).resolve().parent
 BACKEND_DIR = ROOT_DIR / "backend"
 FRONTEND_DIR = ROOT_DIR / "frontend"
+
+#: Per-suite wall-clock limits in seconds. They are there to stop a hung run, not to police speed,
+#: so each is several times what the suite takes today (backend unit: ~2,300 tests, about 3-5 min
+#: on a 2-core machine; the k6 soak suite alone ramps for 6.5 min). A suite that hits its limit is
+#: reported as FAILED with exit code 124.
+TIMEOUTS = {
+    "backend_unit": 1200,
+    "frontend_unit": 600,
+    "backend_live": 900,
+    "frontend_live": 600,
+    "perf": 1800,
+}
 
 
 def get_python_cmd() -> str:
@@ -132,7 +144,7 @@ def main():
     # 1. Backend Unit Tests
     if run_backend and run_unit:
         print(f"[{YELLOW}RUNNING{RESET}] Backend Unit Tests...", flush=True)
-        res = run_command(f"{py_bin} -m pytest tests/unit", cwd=BACKEND_DIR)
+        res = run_command(f"{py_bin} -m pytest tests/unit", cwd=BACKEND_DIR, timeout=TIMEOUTS["backend_unit"])
         status = "PASSED" if res["exit_code"] == 0 else "FAILED"
         color = GREEN if status == "PASSED" else RED
         print(f"[{color}{status}{RESET}] Backend Unit in {res['duration']}s", flush=True)
@@ -147,7 +159,7 @@ def main():
     # 2. Frontend Unit Tests
     if run_frontend and run_unit:
         print(f"[{YELLOW}RUNNING{RESET}] Frontend Unit Tests...", flush=True)
-        res = run_command("npm run test:unit", cwd=FRONTEND_DIR)
+        res = run_command("npm run test:unit", cwd=FRONTEND_DIR, timeout=TIMEOUTS["frontend_unit"])
         status = "PASSED" if res["exit_code"] == 0 else "FAILED"
         color = GREEN if status == "PASSED" else RED
         print(f"[{color}{status}{RESET}] Frontend Unit in {res['duration']}s", flush=True)
@@ -159,30 +171,21 @@ def main():
             "output": res["stdout"] or res["stderr"],
         })
 
-    # 3. Backend Live Tests
-    if run_backend and run_live:
-        print(f"[{YELLOW}RUNNING{RESET}] Backend Live Integration Tests...", flush=True)
-        res = run_command(f"{py_bin} -m pytest tests/live", cwd=BACKEND_DIR)
+    # 3. Backend Live Tests. tests/live/workflows sits inside tests/live, so --live already includes
+    # the workflows and they are not run a second time; --workflows alone runs just that folder.
+    # Either way it is one pytest run, so the database is cloned once.
+    if run_backend and (run_live or run_workflows):
+        if run_live:
+            target, name = "tests/live", "Backend Live + Workflows"
+        else:
+            target, name = "tests/live/workflows", "Backend Multi-Step Workflows"
+        print(f"[{YELLOW}RUNNING{RESET}] {name}...", flush=True)
+        res = run_command(f"{py_bin} -m pytest {target}", cwd=BACKEND_DIR, timeout=TIMEOUTS["backend_live"])
         status = "PASSED" if res["exit_code"] == 0 else "FAILED"
         color = GREEN if status == "PASSED" else RED
-        print(f"[{color}{status}{RESET}] Backend Live in {res['duration']}s", flush=True)
+        print(f"[{color}{status}{RESET}] {name} in {res['duration']}s", flush=True)
         results.append({
-            "name": "Backend Live Integration",
-            "tier": "Live Stack",
-            "status": status,
-            "duration": res["duration"],
-            "output": res["stdout"] or res["stderr"],
-        })
-
-    # 4. Backend Workflow Tests
-    if run_backend and run_workflows:
-        print(f"[{YELLOW}RUNNING{RESET}] Backend Workflow Tests...", flush=True)
-        res = run_command(f"{py_bin} -m pytest tests/live/workflows", cwd=BACKEND_DIR)
-        status = "PASSED" if res["exit_code"] == 0 else "FAILED"
-        color = GREEN if status == "PASSED" else RED
-        print(f"[{color}{status}{RESET}] Backend Workflows in {res['duration']}s", flush=True)
-        results.append({
-            "name": "Backend Multi-Step Workflows",
+            "name": name,
             "tier": "Live Stack",
             "status": status,
             "duration": res["duration"],
@@ -192,7 +195,7 @@ def main():
     # 5. Frontend Live Tests
     if run_frontend and (run_live or run_workflows):
         print(f"[{YELLOW}RUNNING{RESET}] Frontend Live API & Multi-Step Workflows...", flush=True)
-        res = run_command("npm run test:live", cwd=FRONTEND_DIR, env={"NODE_TLS_REJECT_UNAUTHORIZED": "0"}, timeout=240)
+        res = run_command("npm run test:live", cwd=FRONTEND_DIR, env={"NODE_TLS_REJECT_UNAUTHORIZED": "0"}, timeout=TIMEOUTS["frontend_live"])
         status = "PASSED" if res["exit_code"] == 0 else "FAILED"
         color = GREEN if status == "PASSED" else RED
         print(f"[{color}{status}{RESET}] Frontend Live Workflows in {res['duration']}s", flush=True)
@@ -256,7 +259,7 @@ def main():
                 res = run_command(
                     f'"{k6_bin}" run {env_flags} "k6/suites/{suite}.js"',
                     cwd=ROOT_DIR,
-                    timeout=600,
+                    timeout=TIMEOUTS["perf"],
                 )
                 status = "PASSED" if res["exit_code"] == 0 else "FAILED"
                 color = GREEN if status == "PASSED" else RED

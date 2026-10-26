@@ -47,7 +47,8 @@ test("Live Frontend Workflow: Admin Governance & User Management", async () => {
   const promoteRes = await fetch(`${API_BASE}/api/v1/users/${targetId}`, {
     method: "PUT",
     headers: adminHeaders,
-    body: JSON.stringify({ role: "admin", is_active: true }),
+    // Granting or taking the admin role needs the acting admin's own password.
+    body: JSON.stringify({ role: "admin", is_active: true, current_password: "lemon" }),
   });
   assert.strictEqual(promoteRes.status, 200);
   assert.strictEqual((await promoteRes.json()).user.role, "admin");
@@ -56,7 +57,7 @@ test("Live Frontend Workflow: Admin Governance & User Management", async () => {
   const deactRes = await fetch(`${API_BASE}/api/v1/users/${targetId}`, {
     method: "PUT",
     headers: adminHeaders,
-    body: JSON.stringify({ role: "user", is_active: false }),
+    body: JSON.stringify({ role: "user", is_active: false, current_password: "lemon" }),
   });
   assert.strictEqual(deactRes.status, 200);
   assert.strictEqual((await deactRes.json()).user.is_active, false);

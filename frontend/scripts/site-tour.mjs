@@ -141,6 +141,7 @@ export async function setDismissSmashPromptPreState(page) {
     try {
       localStorage.setItem('lemondbd_preferences_configured_v2', 'true');
       localStorage.setItem('lemondbd_smash_entry_acknowledged_v1', 'true');
+      localStorage.setItem('lemondbd_drawer_account', 'true');
     } catch (_e) {}
   }).catch(() => {});
 }
@@ -304,6 +305,7 @@ export async function runTour(options = {}) {
           localStorage.setItem('lemondbd_preferences_configured_v2', 'true');
           localStorage.setItem('lemondbd_smash_entry_acknowledged_v1', 'true');
         }
+        localStorage.setItem('lemondbd_drawer_account', 'true');
       } catch (_e) {}
 
       const injectStyle = () => {
@@ -445,37 +447,55 @@ export async function runTour(options = {}) {
           }
 
           if (target.id === 'smash-how-to-play') {
-            const hasVisible = (await page.locator(effectiveTrigger).locator('visible=true').count().catch(() => 0)) > 0;
-            if (!hasVisible) {
-              const moreActionsBtn = page.locator('header[data-hub-header] button[aria-label*="more" i], header[data-hub-header] button[aria-label*="więcej" i]').first();
-              if (await moreActionsBtn.isVisible().catch(() => false)) {
-                await moreActionsBtn.click().catch(() => {});
-                await page.waitForTimeout(300);
-              }
+            const moreActionsBtn = page.locator('header[data-hub-header] button[aria-label*="more" i], header[data-hub-header] button[aria-label*="więcej" i]').first();
+            if (await moreActionsBtn.isVisible().catch(() => false)) {
+              await moreActionsBtn.click().catch(() => {});
+              await page.waitForTimeout(300);
+            }
+          }
+
+          if (target.folder.startsWith('streaks-') && (vp.id === 'mobile' || vp.id === 'tablet')) {
+            const streakMoreBtn = page.locator('button[aria-label*="More action" i], button[aria-label*="Więcej akcj" i]').first();
+            if (await streakMoreBtn.isVisible().catch(() => false)) {
+              await streakMoreBtn.click({ force: true }).catch(() => {});
+              await page.waitForTimeout(350);
+            }
+          }
+
+          if (target.id === 'tier-lists-export' && (vp.id === 'mobile' || vp.id === 'tablet')) {
+            const ellipsisBtn = page.locator('button:has(svg.lucide-ellipsis), button[aria-label*="toolbar" i], button[aria-label*="pasek" i]').first();
+            if (await ellipsisBtn.isVisible().catch(() => false)) {
+              await ellipsisBtn.click({ force: true }).catch(() => {});
+              await page.waitForTimeout(300);
             }
           }
 
           if (target.id === 'admin-user-edit') {
-            const hasVisible = (await page.locator(target.triggerSelector).locator('visible=true').count().catch(() => 0)) > 0;
-            if (!hasVisible) {
-              const actionMenuBtn = page.locator('table button[aria-label*="actions" i], [role="table"] button[aria-label*="actions" i], button[aria-label*="akcj" i]').first();
-              if (await actionMenuBtn.isVisible().catch(() => false)) {
-                await actionMenuBtn.click().catch(() => {});
-                await page.waitForTimeout(350);
-              }
+            const usersTab = page.locator('button[role="tab"]:has-text("Users"), button[role="tab"]:has-text("Użytkownicy"), [data-tab="users"]').first();
+            if (await usersTab.isVisible().catch(() => false)) {
+              await usersTab.click().catch(() => {});
+              await page.waitForTimeout(300);
             }
           }
 
-          let triggerLocator = page.locator(effectiveTrigger).locator('visible=true').first();
-          if ((await triggerLocator.count().catch(() => 0)) === 0) {
-            triggerLocator = page.locator(effectiveTrigger).first();
-          }
-
-          await triggerLocator.waitFor({ state: 'visible', timeout: 5000 });
-          if (target.action === 'dblclick') {
-            await triggerLocator.dblclick({ timeout: 5000 });
+          if (target.id === 'user-2fa-setup') {
+            await page.waitForTimeout(500);
+            await page.evaluate(() => {
+              const sw = document.querySelector('button[role="switch"]');
+              if (sw) {
+                sw.scrollIntoView({ block: 'center' });
+                sw.click();
+              }
+            }).catch(() => {});
           } else {
-            await triggerLocator.click({ timeout: 5000 });
+            const triggerLocator = page.locator(effectiveTrigger).first();
+            await triggerLocator.waitFor({ state: 'visible', timeout: 5000 });
+            await triggerLocator.scrollIntoViewIfNeeded().catch(() => {});
+            if (target.action === 'dblclick') {
+              await triggerLocator.dblclick({ timeout: 5000, force: true });
+            } else {
+              await triggerLocator.click({ timeout: 5000, force: true });
+            }
           }
 
           if (isAuthRegister) {

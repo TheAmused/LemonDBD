@@ -43,6 +43,8 @@ ${galleryComponentCss}
 ${galleryMarkup}
   <script>
     window.__EMBEDDED_MANIFEST__ = ${embeddedData};
+    window.__CATALOG_CATEGORIES__ = ${categoriesData};
+    window.__CATALOG_VIEWPORTS__ = ${viewportsData};
     window.__EMBEDDED_CATEGORIES__ = ${categoriesData};
     window.__EMBEDDED_VIEWPORTS__ = ${viewportsData};
 ${galleryClientCore}

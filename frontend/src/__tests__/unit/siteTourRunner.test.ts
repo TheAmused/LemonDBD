@@ -13,6 +13,7 @@ import {
   matchesFilter,
   getScreenshotFileName,
 } from '../../../scripts/site-tour.mjs';
+import { PAGE_ROUTES } from '../../../scripts/site-tour-catalog.mjs';
 
 interface CliOptions {
   update: boolean;
@@ -271,6 +272,37 @@ describe('Site Tour Runner - getScreenshotFileName', () => {
       getScreenshotFileName({ id: 'mobile', width: 390, height: 844 }),
       'mobile-390x844.png'
     );
+  });
+});
+
+describe('Site Tour Catalog - Streak Challenge Routes', () => {
+  it('contains complete signed-in streak routes with user auth requirements', () => {
+    const signedInStreakIds = [
+      'streaks-hub',
+      'streaks-survivor',
+      'streaks-chaos',
+      'streaks-gauntlet',
+      'streaks-history',
+      'streaks-page',
+    ];
+    for (const id of signedInStreakIds) {
+      const route = PAGE_ROUTES.find((r) => r.id === id);
+      assert.ok(route, `Missing signed-in streak route: ${id}`);
+      assert.strictEqual(route.category, 'streaks');
+      assert.strictEqual(route.auth, 'user');
+      assert.strictEqual(route.requiresAuth, 'user');
+    }
+  });
+
+  it('contains dedicated guest streak routes with guest auth metadata', () => {
+    const guestStreakIds = ['streaks-hub-guest', 'streaks-chaos-guest'];
+    for (const id of guestStreakIds) {
+      const route = PAGE_ROUTES.find((r) => r.id === id);
+      assert.ok(route, `Missing guest streak route: ${id}`);
+      assert.strictEqual(route.category, 'streaks');
+      assert.strictEqual(route.auth, 'guest');
+      assert.strictEqual(route.requiresAuth, undefined);
+    }
   });
 });
 

@@ -48,12 +48,8 @@ class TestChallengeCompletionTrophyWorkflow:
         assert "full_roster" in status_data
 
         completions = status_data["completions"]
-        # For a brand-new user, completions should be empty or not contain mode keys.
-        assert completions == {} or (
-            "chaos" not in completions
-            and "gauntlet" not in completions
-            and "history" not in completions
-        )
+        # A brand-new user has completed nothing.
+        assert completions == {}
 
         # ── 2. Gauntlet run creates an active_run entry ──────────────────────────
         gauntlet_run_res = client.get(
@@ -83,7 +79,7 @@ class TestChallengeCompletionTrophyWorkflow:
             f"Expected 'chaos' in active_runs after starting a chaos run; got: {active_runs3}"
         )
         assert isinstance(active_runs3["chaos"], list)
-        assert len(active_runs3["chaos"]) > 0
+        assert "easy" in active_runs3["chaos"]
 
         # ── 4. History run creates an active_run entry ───────────────────────────
         history_run_res = client.get(
@@ -177,17 +173,12 @@ class TestChallengeCompletionTrophyWorkflow:
         assert roster_res.status_code == 200
         roster_body = roster_res.get_json()
 
-        # Roster payload may be under "data" key (matching other workflows) or at root list.
-        roster_entries = roster_body.get("data") or roster_body.get("roster") or roster_body
-        assert isinstance(roster_entries, list) and len(roster_entries) > 0, (
-            f"Expected a non-empty roster list; got: {roster_body}"
-        )
+        roster_entries = roster_body["data"]
+        assert len(roster_entries) == roster_body["count"] > 0
 
-        first_entry = roster_entries[0]
-        assert isinstance(first_entry, dict)
-        assert "killer" in first_entry
-        assert "status" in first_entry
-        assert "ever_completed" in first_entry
+        for entry in roster_entries:
+            assert {"killer", "status", "ever_completed"} <= set(entry)
+            assert entry["ever_completed"] is False, f"new user, {entry['killer']} already completed"
 
         # User has not beaten any killer → page_streak must not appear in completions.
         final_status_res = client.get(

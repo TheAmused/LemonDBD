@@ -37,7 +37,9 @@ class TestUserProfileLifecycleWorkflow:
         assert update_res.status_code == 200
         updated_user = update_res.get_json()["user"]
         assert updated_user["email"] == "prof_updated@example.com"
-        assert updated_user["avatar_url"] == "custom_avatar_icon"
+        # A profile update cannot point the avatar at an arbitrary string: avatars change only
+        # through the upload / delete endpoints, so the field is ignored here.
+        assert updated_user["avatar_url"] == "default_avatar"
 
         old_login = live_client.post(
             "/api/v1/auth/login",
@@ -46,7 +48,7 @@ class TestUserProfileLifecycleWorkflow:
                 "password": "InitialPass123!",
             },
         )
-        assert old_login.status_code in (400, 401)
+        assert old_login.status_code == 401
 
         new_login = live_client.post(
             "/api/v1/auth/login",

@@ -1,10 +1,12 @@
 // frontend/scripts/check-hardcoded-strings.ts
 import { Project, SyntaxKind, Node } from "ts-morph";
+import { addScanFiles } from "./lib/fileArgs";
 
 const isStrict = process.argv.includes("--strict");
 
 const project = new Project();
-project.addSourceFilesAtPaths("src/**/*.{tsx,jsx}");
+// `--files a.tsx,b.tsx` limits the scan to those files (the Stop hook passes what changed).
+addScanFiles(project, "src/**/*.{tsx,jsx}", [".tsx", ".jsx"]);
 
 // Attributes whose values represent user-facing text displayed directly to the end-user
 const USER_FACING_ATTRIBUTES = new Set([

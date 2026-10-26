@@ -1,6 +1,9 @@
 // .claude/hooks/frontend-check.mjs
-// Stop hook: when frontend code changed, run `npm run check` (hardcoded strings, global styles, duplication and
-// structure guards) and hand any failure back to Claude instead of letting the turn end on red.
+// Stop hook: when frontend code changed, run the fast checks on the CHANGED files only -- oxlint, the
+// hardcoded-string scan and the global-style scan -- and hand any failure back to Claude instead of
+// letting the turn end on red. Seconds, not minutes: the whole-tree guard suites (duplication,
+// structure, file length, architecture...) are not run here; they run in `npm run test:guards`, the
+// production build and CI. Tests are not run here either: that is `npm run test:changed`.
 // Exit 2 = block the stop and show stderr to Claude. Silent when nothing changed or the same state already passed.
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
@@ -25,17 +28,22 @@ const blocks = `${stamp}.blocks`;
 const readBlocks = () => (input.stop_hook_active ? Number(fs.readFileSync(blocks, 'utf8')) || 0 : 0);
 
 const git = (args) => spawnSync('git', args, { cwd: root, encoding: 'utf8' }).stdout ?? '';
-const changed = git(['status', '--porcelain', '--untracked-files=all', '--', 'frontend/src', 'frontend/scripts', 'frontend/package.json']).trim();
+const changed = git(['status', '--porcelain', '--untracked-files=all', '--', 'frontend/src', 'frontend/scripts']).trim();
 if (!changed) process.exit(0);
+
+// Changed paths that still exist (a deletion has nothing left to lint).
+const paths = changed
+  .split('\n')
+  .map((line) => line.slice(3).replace(/^"|"$/g, '').split(' -> ').pop())
+  .filter((p) => fs.existsSync(path.join(root, p)));
 
 // Fingerprint = the status plus the content of every changed file, so an edit after a pass re-runs the check.
 const hash = createHash('sha1').update(changed);
-for (const line of changed.split('\n')) {
-  const file = path.join(root, line.slice(3).replace(/^"|"$/g, '').split(' -> ').pop());
+for (const p of paths) {
   try {
-    hash.update(fs.readFileSync(file));
+    hash.update(fs.readFileSync(path.join(root, p)));
   } catch {
-    // Deleted or a directory: the status line already covers it.
+    // A directory: the status line already covers it.
   }
 }
 const fingerprint = hash.digest('hex');
@@ -45,8 +53,24 @@ try {
   // First run.
 }
 
-const run = spawnSync('npm', ['run', 'check'], { cwd: frontend, encoding: 'utf8', shell: true, timeout: 280_000 });
-if (run.status === 0) {
+const inFrontend = paths.map((p) => p.replace(/^frontend\//, ''));
+const code = inFrontend.filter((p) => /\.(ts|tsx|mjs|js|jsx)$/.test(p));
+const components = inFrontend.filter((p) => p.startsWith('src/') && /\.(tsx|jsx)$/.test(p));
+
+const runs = [];
+const run = (label, cmd, args) => {
+  const r = spawnSync(cmd, args, { cwd: frontend, encoding: 'utf8', shell: process.platform === 'win32', timeout: 120_000 });
+  runs.push({ label, ok: r.status === 0, out: `${r.stdout ?? ''}\n${r.stderr ?? ''}`.trim() });
+};
+const bin = (name) => path.join(frontend, 'node_modules', '.bin', process.platform === 'win32' ? `${name}.cmd` : name);
+if (code.length) run('oxlint', bin('oxlint'), ['--format=stylish', ...code]);
+if (components.length) {
+  run('hardcoded strings', bin('tsx'), ['scripts/check-hardcoded-strings.ts', '--files', components.join(',')]);
+  run('global styles', bin('tsx'), ['scripts/check-global-styles.ts', '--files', components.join(',')]);
+}
+
+const failed = runs.filter((r) => !r.ok);
+if (failed.length === 0) {
   fs.writeFileSync(stamp, fingerprint);
   fs.rmSync(blocks, { force: true });
   process.exit(0);
@@ -59,10 +83,12 @@ try {
 }
 if (previous >= MAX_BLOCKS) {
   fs.rmSync(blocks, { force: true });
-  process.stderr.write(`npm run check is still failing after ${MAX_BLOCKS} attempts; stopping anyway. Run it in frontend/ to see why.\n`);
+  process.stderr.write(`Frontend checks still failing after ${MAX_BLOCKS} attempts (${failed.map((f) => f.label).join(', ')}); stopping anyway.\n`);
   process.exit(0);
 }
 fs.writeFileSync(blocks, String(previous + 1));
-const tail = `${run.stdout ?? ''}\n${run.stderr ?? ''}`.trim().split('\n').slice(-80).join('\n');
-process.stderr.write(`npm run check failed in frontend/. Fix what it reports (do not raise a baseline or silence a guard):\n\n${tail}\n`);
+const report = failed
+  .map((f) => `--- ${f.label} ---\n${f.out.split('\n').slice(-60).join('\n')}`)
+  .join('\n\n');
+process.stderr.write(`Frontend checks failed on the changed files. Fix what they report (do not raise a baseline or silence a rule):\n\n${report}\n`);
 process.exit(2);

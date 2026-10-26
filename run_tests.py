@@ -65,6 +65,12 @@ def get_python_cmd() -> str:
     return f'"{sys.executable}"'
 
 
+def xdist_flag(py_bin: str) -> str:
+    """` -n auto` when pytest-xdist is installed (requirements-dev.txt), so the unit suite uses every core."""
+    probe = subprocess.run(f"{py_bin} -c \"import xdist\"", shell=True, capture_output=True)
+    return " -n auto" if probe.returncode == 0 else ""
+
+
 def run_command(cmd_str: str, cwd: Path, env: Optional[Dict[str, str]] = None, timeout: int = 180) -> Dict[str, Any]:
     merged_env = {**os.environ, **(env or {})}
     start_time = time.time()
@@ -144,7 +150,7 @@ def main():
     # 1. Backend Unit Tests
     if run_backend and run_unit:
         print(f"[{YELLOW}RUNNING{RESET}] Backend Unit Tests...", flush=True)
-        res = run_command(f"{py_bin} -m pytest tests/unit", cwd=BACKEND_DIR, timeout=TIMEOUTS["backend_unit"])
+        res = run_command(f"{py_bin} -m pytest tests/unit{xdist_flag(py_bin)}", cwd=BACKEND_DIR, timeout=TIMEOUTS["backend_unit"])
         status = "PASSED" if res["exit_code"] == 0 else "FAILED"
         color = GREEN if status == "PASSED" else RED
         print(f"[{color}{status}{RESET}] Backend Unit in {res['duration']}s", flush=True)

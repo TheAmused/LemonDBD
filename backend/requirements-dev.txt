@@ -3,4 +3,8 @@
 #   pip install --require-hashes -r requirements.lock
 #   pip install -r requirements-dev.txt
 pytest==9.1.1
+# -n auto: the unit suite across all cores (each worker has its own in-memory database).
+pytest-xdist==3.8.0
+# --testmon: run only the tests whose code a change touched (see .testmondata, local only).
+pytest-testmon==2.2.0
 ruff==0.16.9

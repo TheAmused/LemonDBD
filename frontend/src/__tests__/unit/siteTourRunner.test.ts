@@ -13,7 +13,7 @@ import {
   matchesFilter,
   getScreenshotFileName,
 } from '../../../scripts/site-tour.mjs';
-import { PAGE_ROUTES } from '../../../scripts/site-tour-catalog.mjs';
+import { PAGE_ROUTES, MODAL_TARGETS } from '../../../scripts/site-tour-catalog.mjs';
 
 interface CliOptions {
   update: boolean;
@@ -290,7 +290,7 @@ describe('Site Tour Catalog - Streak Challenge Routes', () => {
       'streaks-survivor',
       'streaks-chaos',
       'streaks-gauntlet',
-      'streaks-history',
+      'streaks-history-streak',
       'streaks-page',
     ];
     for (const id of signedInStreakIds) {
@@ -300,6 +300,9 @@ describe('Site Tour Catalog - Streak Challenge Routes', () => {
       assert.strictEqual(route.auth, 'user');
       assert.strictEqual(route.requiresAuth, 'user');
     }
+
+    const gauntlet = PAGE_ROUTES.find((r) => r.id === 'streaks-gauntlet');
+    assert.strictEqual(gauntlet?.route, '/en/streaks/killer/gauntlet-streak');
   });
 
   it('contains dedicated guest streak routes with guest auth metadata', () => {
@@ -310,6 +313,57 @@ describe('Site Tour Catalog - Streak Challenge Routes', () => {
       assert.strictEqual(route.category, 'streaks');
       assert.strictEqual(route.auth, 'guest');
       assert.strictEqual(route.requiresAuth, undefined);
+    }
+  });
+
+  it('has no false page route for /en/streaks/history', () => {
+    const bogusHistoryRoute = PAGE_ROUTES.find((r) => r.route === '/en/streaks/history');
+    assert.strictEqual(bogusHistoryRoute, undefined, 'streaks/history is a drawer modal, not a page route');
+  });
+});
+
+describe('Site Tour Catalog - Subcategory Schema & Target Integrity', () => {
+  it('assigns a non-empty subcategory to every page route', () => {
+    for (const page of PAGE_ROUTES) {
+      assert.ok(page.subcategory, `Page ${page.id} missing subcategory`);
+      assert.strictEqual(typeof page.subcategory, 'string');
+    }
+  });
+
+  it('assigns a non-empty subcategory to every modal target', () => {
+    for (const modal of MODAL_TARGETS) {
+      assert.ok(modal.subcategory, `Modal ${modal.id} missing subcategory`);
+      assert.strictEqual(typeof modal.subcategory, 'string');
+    }
+  });
+
+  it('moves streaks-scoreboard to account category with admin-tools subcategory', () => {
+    const scoreboard = MODAL_TARGETS.find((m) => m.id === 'streaks-scoreboard');
+    assert.ok(scoreboard);
+    assert.strictEqual(scoreboard.category, 'account');
+    assert.strictEqual(scoreboard.subcategory, 'admin-tools');
+  });
+
+  it('routes tier-lists-creator to /en/tier-lists/new with user auth requirement', () => {
+    const creator = PAGE_ROUTES.find((r) => r.id === 'tier-lists-creator');
+    assert.ok(creator);
+    assert.strictEqual(creator.route, '/en/tier-lists/new');
+    assert.strictEqual(creator.auth, 'user');
+    assert.strictEqual(creator.requiresAuth, 'user');
+  });
+
+  it('contains all 5 interactive modes for perk randomizer', () => {
+    const modeIds = [
+      'randomizer-instant',
+      'randomizer-wheel-stage',
+      'randomizer-slot',
+      'randomizer-tarot',
+      'randomizer-crate',
+    ];
+    for (const id of modeIds) {
+      const target = PAGE_ROUTES.find((r) => r.id === id);
+      assert.ok(target, `Missing randomizer mode target: ${id}`);
+      assert.strictEqual(target.category, 'randomizer');
     }
   });
 });

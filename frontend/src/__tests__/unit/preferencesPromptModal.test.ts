@@ -36,7 +36,11 @@ describe('PreferencesPromptModal & Hub Cleanup', () => {
 
   it('tracks smash entry acknowledgment in localStorage independently', () => {
     const store = new Map<string, string>();
+    const originalWindow = (globalThis as Record<string, unknown>).window;
     const originalLocalStorage = (globalThis as Record<string, unknown>).localStorage;
+    (globalThis as Record<string, unknown>).window = {
+      dispatchEvent: () => true,
+    };
     (globalThis as Record<string, unknown>).localStorage = {
       getItem: (k: string) => store.get(k) ?? null,
       setItem: (k: string, v: string) => void store.set(k, v),
@@ -48,6 +52,11 @@ describe('PreferencesPromptModal & Hub Cleanup', () => {
       assert.equal(store.get(SMASH_ENTRY_ACK_KEY), 'true');
       assert.equal(isSmashEntryAcknowledged(), true);
     } finally {
+      if (originalWindow) {
+        (globalThis as Record<string, unknown>).window = originalWindow;
+      } else {
+        delete (globalThis as Record<string, unknown>).window;
+      }
       if (originalLocalStorage) {
         (globalThis as Record<string, unknown>).localStorage = originalLocalStorage;
       } else {

@@ -20,6 +20,7 @@ interface CliOptions {
   page: string | null;
   category: string | null;
   auth: string | null;
+  noFullPage: boolean;
   modalsOnly: boolean;
   pagesOnly: boolean;
   viewports: string[] | null;
@@ -100,6 +101,13 @@ describe('Site Tour Runner - CLI Argument Parser', () => {
     const modalsOpts = parse(['--modals-only']);
     assert.strictEqual(modalsOpts.modalsOnly, true);
     assert.strictEqual(modalsOpts.pagesOnly, false);
+  });
+
+  it('parses --no-full-page and --full-page=false flags', () => {
+    assert.strictEqual(parse([]).noFullPage, false);
+    assert.strictEqual(parse(['--no-full-page']).noFullPage, true);
+    assert.strictEqual(parse(['--full-page=false']).noFullPage, true);
+    assert.strictEqual(parse(['--full-page=true']).noFullPage, false);
   });
 
   it('parses --base-url and strips trailing slashes', () => {

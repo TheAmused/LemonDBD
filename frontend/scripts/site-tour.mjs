@@ -30,6 +30,7 @@ export function parseArgs(argv = process.argv.slice(2)) {
     page: null,
     category: null,
     auth: null,
+    noFullPage: false,
     modalsOnly: false,
     pagesOnly: false,
     viewports: null,
@@ -48,6 +49,8 @@ export function parseArgs(argv = process.argv.slice(2)) {
     else if (a === '--quick') options.viewports = ['desktop', 'mobile'];
     else if (a === '--no-headless' || a === '--headless=false') options.headless = false;
     else if (a === '--headless' || a === '--headless=true') options.headless = true;
+    else if (a === '--no-full-page' || a === '--full-page=false') options.noFullPage = true;
+    else if (a === '--full-page' || a === '--full-page=true') options.noFullPage = false;
     else if (a.startsWith('--auth=')) options.auth = a.slice(7).trim();
     else if (a === '--auth' && i + 1 < argv.length) options.auth = argv[++i].trim();
     else if (a.startsWith('--page=')) options.page = a.slice(7).trim();
@@ -76,6 +79,7 @@ Options:
   --category=<id>      Filter to items matching category
                        (${CATEGORIES.map((c) => c.id).join(', ')})
   --auth=<status>      Filter by authentication status (guest, user, admin)
+  --no-full-page       Capture only viewport fold for pages (default: full page)
   --pages-only         Capture only full-page routes (skip modals)
   --modals-only        Capture only interactive modal dialogs (skip pages)
   --viewports=<list>   Comma-separated viewport list (desktop,laptop,tablet,mobile)
@@ -190,7 +194,13 @@ export function matchesFilter(item, config = {}, isModal = Boolean(item?.modalSe
 
 async function stabilize(page, ms = 500) {
   await page.waitForTimeout(ms);
-  await page.evaluate(() => window.scrollTo(0, 0)).catch(() => {});
+  await page.evaluate(() => {
+    try {
+      window.scrollTo(0, 0);
+      const m = document.querySelector('main');
+      if (m) m.scrollTop = 0;
+    } catch (_e) {}
+  }).catch(() => {});
 }
 
 function recordItem(itemsMap, target, vp, type, relPath, stat) {
@@ -361,7 +371,7 @@ export async function runTour(options = {}) {
           await page.waitForSelector(route.waitForSelector, { timeout: 8000 }).catch(() => {});
         }
         await stabilize(page, 500);
-        await page.screenshot({ path: filePath, fullPage: false });
+        await page.screenshot({ path: filePath, fullPage: !config.noFullPage });
 
         recordItem(itemsMap, route, vp, 'page', relPath, fs.statSync(filePath));
         capturedCount++;

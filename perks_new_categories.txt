@@ -1,0 +1,324 @@
+=== Survivor (176) ===
+A Place For Us | healing, obsession, stealth
+Ace in the Hole | items
+Adrenaline | endgame, exhaustion, healing
+Aftercare | tracking, hooks, healing
+Alert | tracking
+Any Means Necessary | tracking
+Apocalyptic Ingenuity | items, tracking
+Appraisal | items
+Autodidact | healing, sacrifice
+Babysitter | hooks, stealth, tracking
+Background Player | exhaustion
+Bada Bada Boom | generator, chase
+Balanced Landing | exhaustion, chase
+Bardic Inspiration | generator
+Better than New | healing
+Better Together | generator, tracking
+Bite the Bullet | healing, stealth
+Blast Mine | generator
+Blood Pact | obsession, tracking, healing
+Blood Rush | hooks, exhaustion
+Boil Over | downed
+Bond | tracking
+Boon: Circle of Healing | totem, healing
+Boon: Dark Theory | totem, chase
+Boon: Exponential | totem, downed
+Boon: Illumination | totem, tracking
+Boon: Shadow Step | totem, stealth
+Boon: Steadfast | totem, generator
+Borrowed Time | hooks
+Botany Knowledge | healing
+Breakdown | hooks, tracking
+Breakout | downed, chase
+Buckle Up | healing, downed, tracking
+Built to Last | items
+Calm Spirit | stealth
+Camaraderie | hooks
+Champion of Light | chase
+Change of Plan | items, healing
+Chemical Trap | generator, chase
+Clairvoyance | tracking, totem
+Clean Break | healing, sacrifice
+Come and Get Me! | sacrifice, hooks, stealth
+Conviction | downed
+Corrective Action | generator
+Counterforce | tracking, totem
+Cross-Examination | stealth
+Cut Loose | chase, stealth
+Dance With Me | chase, stealth
+Dark Sense | generator, tracking
+Dead Hard | exhaustion, chase, hooks
+Deadline | generator
+Deception | stealth
+Decisive Strike | downed, hooks, obsession
+Deliverance | hooks
+Desperate Measures | healing, hooks
+Detective's Hunch | tracking
+Distortion | stealth
+Diversion | stealth
+Do No Harm | healing
+Dramaturgy | exhaustion, chase, sacrifice
+Duty of Care | chase
+Déjà Vu | generator, tracking
+Empathic Connection | healing, tracking
+Empathy | tracking
+Extrasensory Perception | tracking, stealth
+Exultation | chase, items
+Eyes of Belmont | tracking
+Fast Track | generator, hooks
+Finesse | chase
+Five Moves Ahead | tracking, chase
+Fixated | stealth
+Flashbang | generator, items
+Flip-Flop | downed
+Flow State | generator, healing, hooks
+Fogwise | tracking, generator
+For the People | sacrifice, healing, obsession
+Friendly Competition | generator
+Fruits of Your Labor | generator, healing
+Ghost Notes | stealth, exhaustion
+Hardened | tracking
+Head On | exhaustion
+Hope | endgame, chase
+Hyperfocus | generator
+Inner Focus | tracking
+Inner Strength | healing, totem
+Invocation: Treacherous Crows | sacrifice, tracking
+Invocation: Weaving Spiders | sacrifice, generator
+Iron Will | stealth
+Kindred | tracking, hooks
+Last Stand | chase
+Leader | healing, generator, hooks
+Left Behind | endgame, tracking
+Lend a Hand | healing, totem
+Light-Footed | stealth
+Lightweight | stealth
+Lithe | exhaustion, chase
+Low Profile | stealth
+Lucky Break | healing, stealth, chase
+Lucky Star | tracking, stealth
+Made for This | healing, chase
+Mettle of Man | chase, obsession
+Mirrored Illusion | stealth, generator
+Moment of Glory | healing, sacrifice, chase
+No Mither | sacrifice, downed, stealth
+No One Left Behind | endgame, healing, hooks
+Object of Obsession | obsession, tracking
+Off the Record | hooks, stealth
+One-Two-Three-Four! | generator, healing
+Open-Handed | tracking
+Overcome | exhaustion, chase
+Overzealous | generator, totem
+Parental Guidance | stealth
+Pharmacy | items, healing
+Plot Twist | healing, downed, sacrifice
+Plunderer's Instinct | items, tracking
+Poised | tracking, stealth
+Potential Energy | generator
+Power Struggle | downed
+Premonition | tracking
+Prove Thyself | generator
+Quick & Quiet | chase, stealth
+Quick Gambit | chase, tracking, generator
+Rapid Response | exhaustion, tracking
+Reactive Healing | healing
+Reassurance | hooks
+Red Herring | generator, tracking, stealth
+Repressed Alliance | entity, generator
+Residual Manifest | items
+Resilience | generator, healing, hooks
+Resurgence | healing, hooks
+Road Life | healing, generator
+Rookie Spirit | tracking, generator
+Saboteur | hooks, tracking
+Salvation's Cry | tracking, chase
+Scavenger | generator, items
+Scene Partner | sacrifice, tracking
+Second Wind | healing, sacrifice, hooks
+Self-Care | healing
+Self-Preservation | stealth, hooks
+Shoulder the Burden | sacrifice, hooks
+Slippery Meat | hooks
+Small Game | tracking, totem
+Smash Hit | exhaustion, chase
+Sole Survivor | endgame, obsession, stealth
+Solidarity | healing
+Soul Guard | downed
+Specialist | generator
+Spine Chill | tracking, chase
+Sprint Burst | exhaustion, chase
+Stake Out | generator
+Still Sight | tracking
+Streetwise | items, tracking
+Strength in Shadows | healing, tracking
+Teamwork: Collective Stealth | healing, stealth
+Teamwork: Full Circuit | generator
+Teamwork: Power of Two | healing, chase
+Teamwork: Soft-Spoken | generator, stealth
+Teamwork: Throw Down | chase
+Teamwork: Toughen Up | chase, stealth
+Technician | generator, stealth
+Tenacity | downed
+This Is Not Happening | generator
+Troubleshooter | tracking, chase
+Unbreakable | downed
+Up the Ante | hooks
+Urban Evasion | stealth
+Vigil | exhaustion
+Visionary | tracking
+Wake Up! | endgame, tracking
+We See You | tracking
+We'll Make It | healing, hooks
+We're Gonna Live Forever | healing, downed
+Wicked | hooks, tracking
+Wide Open Throttle | entity, chase, tracking
+Windows of Opportunity | tracking, chase
+Wiretap | generator, tracking
+
+=== Killer (145) ===
+A Nurse's Calling | tracking
+Agitation | downed
+Alien Instinct | hooks, tracking
+All-Shaking Thunder | chase
+Awakened Awareness | downed, tracking
+Bamboozle | entity, chase
+Barbecue & Chilli | hooks, tracking
+Batteries Included | chase
+Beast of Prey | stealth, chase
+Bitter Murmur | tracking
+Blood Echo | hooks, healing
+Blood Warden | endgame, entity, tracking
+Bloodhound | tracking
+Brutal Strength | chase, generator
+Call of Brine | generator, tracking
+Celestial Witness | tracking, obsession
+Corrupt Intervention | entity
+Coulrophobia | healing
+Coup de Grâce | chase
+Cruel Limits | entity
+Dark Arrogance | chase
+Dark Devotion | obsession, stealth, chase
+Darkness Revealed | tracking
+Dead Man's Switch | entity, hooks
+Deadlock | entity
+Deathbound | healing, tracking, stealth
+Deerstalker | tracking
+Discordance | tracking, generator
+Dissolution | chase
+Distressing | generator
+Dominance | entity, totem
+Dragon's Grip | generator, chase
+Dying Light | obsession, generator, healing
+Enduring | chase
+Eruption | generator
+Fire Up | chase, downed, generator
+Forced Hesitation | downed, chase
+Forced Penance | healing, chase
+Forever Entwined | hooks, downed
+Franklin's Demise | chase, tracking
+Friends 'til the End | hooks, obsession, tracking
+Furtive Chase | hooks, obsession, stealth
+Game Afoot | chase, obsession
+Gearhead | tracking, generator
+Genetic Limits | chase
+Grim Embrace | entity, hooks, obsession
+Haywire | endgame
+Help Wanted | generator, chase
+Hex: Blood Favour | entity, totem, chase
+Hex: Crowd Control | entity, totem, chase
+Hex: Devour Hope | totem, hooks
+Hex: Face the Darkness | totem, tracking
+Hex: Haunted Ground | totem, chase
+Hex: Hive Mind | totem, generator, tracking
+Hex: Huntress Lullaby | totem, generator, hooks
+Hex: No One Escapes Death | totem, endgame, chase
+Hex: Nothing but Misery | totem, chase
+Hex: Overture of Doom | totem, stealth, generator
+Hex: Pentimento | totem, generator, healing
+Hex: Plaything | totem, entity, stealth
+Hex: Retribution | totem, tracking
+Hex: Ruin | totem, generator
+Hex: Scared to Death | totem, chase
+Hex: The Third Seal | totem, chase
+Hex: Thrill of the Hunt | entity, totem
+Hex: Two Can Play | totem, chase
+Hex: Under Your Thumb | totem, chase
+Hex: Undying | totem, tracking
+Hex: Wretched Fate | totem, obsession, generator
+Hoarder | tracking
+Hubris | chase
+Human Greed | tracking
+Hysteria | stealth, chase
+I'm All Ears | tracking
+Infectious Fright | downed, tracking
+Insidious | stealth
+Iron Grasp | downed
+Iron Maiden | tracking, chase
+Knock Out | chase
+Languid Touch | chase
+Lay Waste | generator
+Lethal Pursuer | tracking
+Leverage | hooks, healing
+Lightborn | chase
+Machine Learning | generator, chase, stealth
+Mad Grit | downed
+Make Your Choice | hooks
+Merciless Storm | entity, generator
+Mindbreaker | generator
+Monitor & Abuse | stealth, chase
+Nemesis | obsession, chase, tracking
+No Quarter | healing
+No Way Out | endgame, entity
+None Are Free | endgame, entity
+Nowhere to Hide | tracking, generator
+Oppression | generator
+Overcharge | generator
+Overwhelming Presence | tracking
+Phantom Fear | tracking
+Play with Your Food | chase, obsession
+Pop Goes the Weasel | hooks, generator
+Predator | tracking, chase
+Rampage | chase
+Rancor | endgame, obsession, chase
+Rapid Brutality | chase
+Ravenous | hooks, chase
+Remember Me | endgame, obsession
+Save the Best for Last | chase, obsession
+Scourge Hook: Floods of Rage | hooks, tracking
+Scourge Hook: Gift of Pain | hooks, healing, generator
+Scourge Hook: Hangman's Trick | hooks, tracking
+Scourge Hook: Jagged Compass | hooks, tracking
+Scourge Hook: Monstrous Shrine | hooks, generator
+Scourge Hook: Pain Resonance | hooks, generator
+Secret Project | entity, stealth, totem
+Septic Touch | healing
+Shadowborn | chase
+Shattered Hope | entity, totem, tracking
+Silent Shadow | stealth, hooks, endgame
+Sloppy Butcher | healing
+Spies from the Shadows | tracking
+Spirit Fury | chase
+Starstruck | downed, chase
+Stridor | tracking
+Superior Anatomy | chase
+Surge | generator
+Surveillance | tracking, generator
+Terminus | endgame, healing
+Territorial Imperative | tracking
+Thanatophobia | generator, healing
+Thrilling Tremors | entity, downed
+THWACK! | tracking, chase
+Tinkerer | tracking, generator, stealth
+Trail of Torment | stealth, generator
+Turn Back the Clock | hooks, generator
+Ultimate Weapon | tracking
+Unbound | chase
+Undone | generator, entity, hooks
+Unforeseen | stealth, generator
+Unnerving Presence | generator
+Unrelenting | chase
+Wandering Eye | tracking, chase
+Weave Attunement | tracking
+Whispers | tracking
+Zanshin Tactics | tracking, chase

@@ -48,12 +48,8 @@ class TestChallengeCompletionTrophyWorkflow:
         assert "full_roster" in status_data
 
         completions = status_data["completions"]
-        # For a brand-new user, completions should be empty or not contain mode keys.
-        assert completions == {} or (
-            "chaos" not in completions
-            and "gauntlet" not in completions
-            and "history" not in completions
-        )
+        # A brand-new user has completed nothing.
+        assert completions == {}
 
         # ── 2. Gauntlet run creates an active_run entry ──────────────────────────
         gauntlet_run_res = client.get(
@@ -177,11 +173,8 @@ class TestChallengeCompletionTrophyWorkflow:
         assert roster_res.status_code == 200
         roster_body = roster_res.get_json()
 
-        # Roster payload may be under "data" key (matching other workflows) or at root list.
-        roster_entries = roster_body.get("data") or roster_body.get("roster") or roster_body
-        assert isinstance(roster_entries, list) and len(roster_entries) > 0, (
-            f"Expected a non-empty roster list; got: {roster_body}"
-        )
+        roster_entries = roster_body["data"]
+        assert len(roster_entries) == roster_body["count"] > 0
 
         for entry in roster_entries:
             assert {"killer", "status", "ever_completed"} <= set(entry)

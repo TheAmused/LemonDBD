@@ -54,6 +54,7 @@ class TestSmashOrPassTournamentWorkflow:
         assert res_lead.status_code == 200
         leaders = res_lead.get_json()["data"]
         assert len(leaders) > 0
+        assert all(isinstance(e["smash_rate"], (int, float)) and isinstance(e["total_votes"], int) for e in leaders)
 
         res_reset = live_client.post(
             "/api/v1/smash-or-pass/session/reset",

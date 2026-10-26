@@ -1,14 +1,11 @@
 // frontend/src/__tests__/unit/perks/perkSearchUi.test.ts
 //
 // Server-rendered smoke checks for the perk-type search UI: SearchInput's token
-// variant, CustomDropdown's multi-select variant, the Perks filter bar using
-// both, and the perk type badges -- in English and Polish.
+// variant, CustomDropdown's multi-select variant and the perk type badges
+// (the Perks header itself is covered by perkFiltersBar.test.ts).
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
-import pl from '@/locales/pl';
-import type { Dictionary } from '@/locales/types';
-import { PerkFilters } from '@/components/PerkFilters';
 import { PerkTypeBadges } from '@/components/perks/PerkTypeBadges';
 import { SearchInput } from '@/components/common/Field';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
@@ -16,24 +13,6 @@ import type { Perk } from '@/types/perks';
 import { renderWithDictionary } from '../../helpers/renderWithDictionary';
 
 const noop = () => {};
-
-const filters = (overrides: Partial<React.ComponentProps<typeof PerkFilters>> = {}) =>
-  React.createElement(PerkFilters, {
-    search: '',
-    setSearch: noop,
-    role: 'Survivor',
-    setRole: noop,
-    scope: 'all',
-    setScope: noop,
-    ownershipFilter: 'all',
-    setOwnershipFilter: noop,
-    sortBy: 'name',
-    setSortBy: noop,
-    order: 'asc',
-    setOrder: noop,
-    onReset: noop,
-    ...overrides,
-  });
 
 const DEJA_VU: Perk = {
   name: 'Déjà Vu',
@@ -82,23 +61,6 @@ describe('perk type search UI', () => {
     assert.match(html, />Types</);
     assert.match(html, />2</);
     assert.match(html, /aria-haspopup="true"/);
-  });
-
-  it('the filter bar shows the new placeholder, the Types dropdown, and one chip per active type inside the field', () => {
-    const empty = renderWithDictionary(filters());
-    assert.match(empty, /placeholder="Search perks, characters or types\.\.\."/);
-    assert.match(empty, /aria-label="Filter by perk type"/);
-    assert.ok(!empty.includes('Remove '));
-    const html = renderWithDictionary(filters({ activeTypes: ['healing', 'chase'] }));
-    assert.match(html, /aria-label="Remove Healing filter"/);
-    assert.match(html, /aria-label="Remove Chase filter"/);
-    assert.equal((html.match(/aria-pressed="true"/g) || []).length, 2);
-  });
-
-  it('labels are localized', () => {
-    const html = renderWithDictionary(filters({ role: 'Killer', activeTypes: ['hex'] }), { dict: pl as Dictionary, locale: 'pl' });
-    assert.ok(html.includes('Usuń filtr Klątwa'));
-    assert.ok(html.includes('>Typy<'));
   });
 
   it('the perk modal lists the perk\'s types, primary first, as buttons only when they can filter', () => {

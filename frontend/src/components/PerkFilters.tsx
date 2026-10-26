@@ -1,12 +1,11 @@
 'use client';
 // frontend/src/components/PerkFilters.tsx
+//
+// The Perks page header: title, role switch, plain search, a "Filters" popover (types, ownership,
+// general only) and a results strip with the active filters and the sort menu.
 
-import React from 'react';
-import {
-  SlidersHorizontal,
-  ArrowUpAZ,
-  ArrowDownZA,
-} from 'lucide-react';
+import React, { useMemo } from 'react';
+import { SlidersHorizontal } from 'lucide-react';
 import type { SegmentedControlOption } from '@/components/common/SegmentedControl';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
@@ -19,12 +18,14 @@ import type {
   Perk,
 } from '@/types/perks';
 import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
-import { Checkbox } from '@/components/common/Checkbox';
-import { useDictionary } from "@/context/DictionaryContext";
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { Surface } from '@/components/common/Surface';
 import { Badge } from '@/components/common/Badge';
+import { IconTile } from '@/components/common/IconTile';
 import { PerkSearchBox } from '@/components/perks/PerkSearchBox';
-import type { PerkType } from '@/utils/perkTypes';
+import { PerkFilterPanel, type PerkTypeCounts } from '@/components/perks/PerkFilterPanel';
+import { PerkResultsStrip } from '@/components/perks/PerkResultsStrip';
+import { PERK_TYPES, getKnownPerkTypes, type PerkType } from '@/utils/perkTypes';
 
 const NO_PERKS: readonly Perk[] = [];
 const NO_TYPES: readonly PerkType[] = [];
@@ -65,15 +66,16 @@ interface PerkFiltersProps {
   setSortBy: (val: SortField) => void;
   order: SortOrder;
   setOrder: (val: SortOrder) => void;
-  onReset: () => void;
-  /** The current role's perks: type counts and search suggestions come from them. */
+  /** The current role's perks: the types offered and the search suggestions come from them. */
   rolePerks?: readonly Perk[];
   activeTypes?: readonly PerkType[];
   onTypesChange?: (types: PerkType[]) => void;
+  /** Per type, how many perks would match with it added to the current filters (default: its size in the role). */
+  typeCounts?: PerkTypeCounts;
+  /** How many perks match the current filters. */
+  totalResults?: number;
   survivorCount?: number;
   killerCount?: number;
-  allCount?: number;
-  ownedCount?: number;
   isLoggedIn?: boolean;
 }
 
@@ -93,13 +95,24 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       rolePerks = NO_PERKS,
       activeTypes = NO_TYPES,
       onTypesChange = () => {},
+      typeCounts,
+      totalResults = rolePerks.length,
       survivorCount,
       killerCount,
-      allCount,
-      ownedCount,
-      isLoggedIn,
+      isLoggedIn = false,
     }) => {
   const dict = useDictionary();
+  const locale = useLocale();
+
+  // Only the types this role's perks actually have are offered (no "Hex 0" on the Survivor side).
+  const roleTypeCounts = useMemo(() => {
+    const counts: PerkTypeCounts = {};
+    for (const perk of rolePerks) for (const type of getKnownPerkTypes(perk)) counts[type] = (counts[type] ?? 0) + 1;
+    return counts;
+  }, [rolePerks]);
+  const roleTypes = useMemo(() => PERK_TYPES.filter((type) => (roleTypeCounts[type] ?? 0) > 0), [roleTypeCounts]);
+
+  const panelFilterCount = activeTypes.length + (ownershipFilter !== 'all' ? 1 : 0) + (scope !== 'all' ? 1 : 0);
 
   const roleOptions: readonly [SegmentedControlOption<RoleCategory>, SegmentedControlOption<RoleCategory>] = [
     {
@@ -134,142 +147,30 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     },
   ];
 
-  const ownershipOptions: readonly [SegmentedControlOption<OwnershipFilter>, SegmentedControlOption<OwnershipFilter>] = [
-    {
-      value: 'all',
-      activeClassName: 'bg-accent-red text-text-inverted',
-      label: (
-        <span className="inline-flex items-center gap-1.5">
-          {dict.filters.allPerks && <span>{dict.filters.allPerks}</span>}
-          {typeof allCount === 'number' && (
-            <Badge tone="onAccent" size="xs" plain className={COUNT_BADGE}>
-              {allCount}
-            </Badge>
-          )}
-        </span>
-      ),
-    },
-    {
-      value: 'owned',
-      disabled: !isLoggedIn,
-      activeClassName: 'bg-accent-red text-text-inverted',
-      label: (
-        <span className="inline-flex items-center gap-1.5">
-          {dict.filters.ownedOnly && <span>{dict.filters.ownedOnly}</span>}
-          {typeof ownedCount === 'number' && (
-            <Badge tone="onAccent" size="xs" plain className={COUNT_BADGE}>
-              {ownedCount}
-            </Badge>
-          )}
-        </span>
-      ),
-    },
-  ];
-
-  const sortFieldOptions: readonly [SegmentedControlOption<SortField>, SegmentedControlOption<SortField>] = [
-    {
-      value: 'name',
-      label: dict.filters.sortByName,
-      activeClassName: 'bg-accent-red text-text-inverted',
-    },
-    {
-      value: 'character',
-      label: dict.filters.sortByCharacter,
-      activeClassName: 'bg-accent-red text-text-inverted',
-    },
-  ];
-
-  const sortOrderOptions: readonly [SegmentedControlOption<SortOrder>, SegmentedControlOption<SortOrder>] = [
-    {
-      value: 'asc',
-      icon: <ArrowUpAZ className={FILTER_ICON} />,
-      label: dict.filters.orderAsc,
-      activeClassName: 'bg-accent-red text-text-inverted',
-    },
-    {
-      value: 'desc',
-      icon: <ArrowDownZA className={FILTER_ICON} />,
-      label: dict.filters.orderDesc,
-      activeClassName: 'bg-accent-red text-text-inverted',
-    },
-  ];
-
-  // Shared between the desktop inline row and the mobile Settings panel --
-  // same controls, same state, just two separate SegmentedControl elements
-  // (safe: no ids, no per-instance state) rendered in whichever one is
-  // actually visible at the current width.
-  const generalOnlyLabel = (
-    <Checkbox
-      checked={scope === 'general'}
-      onChange={(checked) => setScope(checked ? 'general' : 'all')}
-      ariaLabel={dict.filters.generalOnly}
-      className="w-full shrink-0 gap-1.5 whitespace-nowrap rounded-control border border-border-color bg-bg-elevated/60 px-3 py-2 text-mini font-extrabold text-text-secondary shadow-inner sm:w-auto sm:gap-2 sm:px-3.5 sm:text-xs lg:py-2.5 wide:gap-2.5 wide:px-5 wide:py-3 wide:text-sm"
-      boxClassName="h-3.5 w-3.5 wide:h-4 wide:w-4"
-    >
-      {dict.filters.generalOnly && <span>{dict.filters.generalOnly}</span>}
-    </Checkbox>
-  );
+  const roleCount = role === 'Survivor' ? survivorCount : killerCount;
 
   return (
     <Surface
       aria-label={dict.filters.filtersTitle}
-      as="section" padding="none" className="relative z-30 flex w-full flex-col gap-2 bg-bg-surface/90 p-2 shadow-xs sm:flex-row sm:flex-wrap sm:items-center sm:gap-3 sm:p-4 wide:gap-4 wide:p-6 wide-2k:p-7 backdrop-blur-xl transition-colors"
+      as="section"
+      padding="none"
+      className="relative z-30 flex w-full flex-col bg-bg-surface/90 shadow-xs backdrop-blur-xl transition-colors"
     >
-      {/* Below sm (640px) there simply isn't room to show five controls
-          plus search without either hiding some behind a scrollbar or
-          shrinking everything into illegibility -- both were tried and
-          both still read as broken. Below sm, every toggle instead lives
-          inside one "Filters" dropdown, stacked vertically and always
-          fully legible; only that trigger and the search bar sit in the
-          page itself. At sm+ this whole block is hidden and the original
-          inline row (below) takes over, unchanged. */}
-      <div className="w-full sm:hidden">
-        <CustomDropdown
-          className="w-full"
-          ariaLabel={dict.filters.filtersTitle}
-          label={dict.filters.filtersTitle}
-          icon={<SlidersHorizontal className="h-3.5 w-3.5" />}
-          buttonClassName="w-full justify-between border-border-color bg-bg-surface px-3 py-2.5 text-xs"
-          menuClassName="w-full"
-          minWidthClass=""
-        >
-          <div className="flex flex-col gap-2 p-1">
-            <SegmentedControl
-              className="w-full"
-              ariaLabel={dict.filters.sortByRole}
-              value={role}
-              onChange={setRole}
-              options={roleOptions}
-            />
-            <SegmentedControl
-              className="w-full"
-              ariaLabel={dict.filters.ownershipFilter}
-              value={ownershipFilter}
-              onChange={setOwnershipFilter}
-              options={ownershipOptions}
-            />
-            {generalOnlyLabel}
-            <SegmentedControl
-              className="w-full"
-              ariaLabel={dict.filters.sortFields}
-              value={sortBy}
-              onChange={setSortBy}
-              options={sortFieldOptions}
-              size="sm"
-            />
-            <SegmentedControl
-              className="w-full"
-              ariaLabel={dict.filters.sortOrderLabel}
-              value={order}
-              onChange={setOrder}
-              options={sortOrderOptions}
-              size="sm"
-            />
-          </div>
-        </CustomDropdown>
+      <div className="flex items-center gap-3 px-3 pt-3 sm:px-4 sm:pt-4">
+        <IconTile size="sm" tone={role === 'Survivor' ? 'green' : 'red'}>
+          {role === 'Survivor' ? <SurvivorIcon className="h-5 w-5" /> : <KillerIcon className="h-5 w-5" />}
+        </IconTile>
+        <div className="min-w-0">
+          <h1 className="type-page-title text-text-primary">{dict.filters.perks}</h1>
+          {typeof roleCount === 'number' && (
+            <p className="type-caption text-text-muted">
+              {roleCount.toLocaleString(locale)} {dict.pagination.results}
+            </p>
+          )}
+        </div>
       </div>
 
-      <div className="hidden sm:contents">
+      <div className="flex flex-wrap items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4">
         <SegmentedControl
           ariaLabel={dict.filters.sortByRole}
           value={role}
@@ -277,41 +178,69 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           options={roleOptions}
         />
 
-        <SegmentedControl
-          ariaLabel={dict.filters.ownershipFilter}
-          value={ownershipFilter}
-          onChange={setOwnershipFilter}
-          options={ownershipOptions}
+        {/* Takes whatever the row has left (wrapping below the role switch when that is under 18rem). */}
+        <PerkSearchBox
+          rolePerks={rolePerks}
+          search={search}
+          setSearch={setSearch}
+          activeTypes={activeTypes}
+          onTypesChange={onTypesChange}
+          suggestPerks
+          typesInField={false}
+          className="relative z-40 min-w-56 flex-1"
         />
 
-        {generalOnlyLabel}
-
-        <SegmentedControl
-          ariaLabel={dict.filters.sortFields}
-          value={sortBy}
-          onChange={setSortBy}
-          options={sortFieldOptions}
-          size="sm"
-        />
-
-        <SegmentedControl
-          ariaLabel={dict.filters.sortOrderLabel}
-          value={order}
-          onChange={setOrder}
-          options={sortOrderOptions}
-          size="sm"
-        />
+        <CustomDropdown
+          ariaLabel={dict.filters.filtersTitle}
+          label={
+            <span className="inline-flex items-center gap-2">
+              {dict.filters.filtersTitle}
+              {panelFilterCount > 0 && (
+                <Badge tone="red" size="xs" plain>
+                  {panelFilterCount}
+                </Badge>
+              )}
+            </span>
+          }
+          icon={<SlidersHorizontal className="h-3.5 w-3.5" />}
+          accent="primary"
+          align="right"
+          minWidthClass=""
+          menuClassName="w-72 sm:w-96"
+          buttonClassName="rounded-full py-2.5"
+        >
+          <PerkFilterPanel
+            roleTypes={roleTypes}
+            activeTypes={activeTypes}
+            typeCounts={typeCounts ?? roleTypeCounts}
+            onTypesChange={onTypesChange}
+            ownershipFilter={ownershipFilter}
+            setOwnershipFilter={setOwnershipFilter}
+            isLoggedIn={isLoggedIn}
+            scope={scope}
+            setScope={setScope}
+            hasFilters={panelFilterCount > 0}
+            onClear={() => {
+              onTypesChange([]);
+              setOwnershipFilter('all');
+              setScope('all');
+            }}
+          />
+        </CustomDropdown>
       </div>
 
-      {/* Takes whatever the row has left (wrapping below the toggles when that is under 18rem). */}
-      <PerkSearchBox
-        rolePerks={rolePerks}
-        search={search}
-        setSearch={setSearch}
+      <PerkResultsStrip
+        totalResults={totalResults}
         activeTypes={activeTypes}
         onTypesChange={onTypesChange}
-        suggestPerks
-        className="relative z-40 sm:min-w-72 sm:flex-1"
+        ownershipFilter={ownershipFilter}
+        setOwnershipFilter={setOwnershipFilter}
+        scope={scope}
+        setScope={setScope}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        order={order}
+        setOrder={setOrder}
       />
     </Surface>
   );

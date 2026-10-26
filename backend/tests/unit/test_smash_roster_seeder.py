@@ -179,6 +179,9 @@ EXPECTED_LEGENDARY_WATERMARKS = {
     "xenomorph_king": ("KING", "XENOMORPH"),
     "2b": ("2B", "YORHA"),
     "a2": ("A2", "RENEGADE"),
+    "lilith": ("LILITH", "DAUGHTER OF HATRED"),
+    "mephisto": ("MEPHISTO", "LORD OF HATRED"),
+    "belial": ("BELIAL", "LORD OF LIES"),
 }
 
 
@@ -208,8 +211,8 @@ class TestLegendaryRosterIntegrity:
             assert translations[locale].get("name"), f"legendary roster missing translated name for '{locale}'"
             assert translations[locale].get("description"), f"legendary roster missing translated description for '{locale}'"
 
-    def test_exactly_fifty_three_characters(self, legendary_entities: list[dict]) -> None:
-        assert len(legendary_entities) == 53, f"expected exactly 53 characters, got {len(legendary_entities)}"
+    def test_exactly_fifty_six_characters(self, legendary_entities: list[dict]) -> None:
+        assert len(legendary_entities) == 56, f"expected exactly 56 characters, got {len(legendary_entities)}"
 
     def test_expected_slugs_and_watermarks(self, legendary_entities: list[dict]) -> None:
         by_slug = {e["slug"]: e for e in legendary_entities}

@@ -161,12 +161,12 @@ if [ "$SKIP_UP_FLOW" = false ]; then
   fi
   echo -e "${GREEN}[PASS] Backend Unit Tests Passed.${NC}"
 
-  # 1.2 Frontend unit tests (npm run test:unit). This one run is also the static check: the
-  # hardcoded-string, global-style and typography scans are unit tests, and so are the
-  # architecture / i18n / quality / lint-suppression guard suites. `npm run check` is a subset of
-  # it, so it is not run again.
-  echo -e "\n${YELLOW}> [2/2] Running Frontend Unit Tests + static guards (npm run test:unit)...${NC}"
-  if ! (cd frontend && npm run test:unit); then
+  # 1.2 Frontend tests (npm test = test:unit + test:guards). The unit tests are behaviour tests
+  # (src/__tests__/unit/<area>); the guards (src/__tests__/guards) are the static checks: the
+  # hardcoded-string, global-style and typography scans and the architecture / i18n / quality /
+  # lint-suppression rules.
+  echo -e "\n${YELLOW}> [2/2] Running Frontend Unit Tests + static guards (npm test)...${NC}"
+  if ! (cd frontend && npm test); then
     echo -e "\n${RED}[FAIL] Frontend unit tests did not pass!${NC}"
     echo -e "${RED}[STOP] Docker build and startup has been ABORTED.${NC}"
     exit 1

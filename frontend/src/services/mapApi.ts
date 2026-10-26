@@ -2,6 +2,9 @@
 import type { MapRealm, Realm } from '@/types/map';
 import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
 
+/** The map source every page loads (`map_sources.code`): LemonDBD's own drawn maps. */
+export const MAP_SOURCE = 'lemondbd';
+
 /*
  * Map data is static between patches, and the explorer re-requested all of it
  * every time the page mounted. Routing these reads through the shared cache

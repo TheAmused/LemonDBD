@@ -5,9 +5,9 @@
 // logged-in user's alias (or login) and reads everything else from the image.
 import { ApiError, apiUrl, authFetch } from '@/utils/api';
 
-export type ScoreboardStatus = 'escaped' | 'dead' | 'in_trial' | 'killer' | 'unknown';
+export type ScoreboardStatus = 'escaped' | 'dead' | 'surrendered' | 'in_trial' | 'killer' | 'unknown';
 export type ScoreboardVerdict = 'survivor_win' | 'draw' | 'killer_win' | 'incomplete';
-export type ScoreboardOutcome = 'escaped' | 'died' | 'killer' | 'in_trial' | 'unknown';
+export type ScoreboardOutcome = 'escaped' | 'died' | 'surrendered' | 'killer' | 'in_trial' | 'unknown';
 export type ScoreboardResult = 'won' | 'lost' | 'draw';
 
 /** One loadout slot. `name` is null when the slot is empty or the icon was not recognised. */

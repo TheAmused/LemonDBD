@@ -1,6 +1,7 @@
 'use client';
 // frontend/src/components/smash-or-pass/SmashOrPassHub.tsx
 import React, { Suspense, useCallback, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from '@/context/DictionaryContext';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
@@ -18,7 +19,13 @@ import { useCardExit } from './hub/useCardExit';
 import { useHubHotkeys } from './hub/useHubHotkeys';
 import { CalmVoteMark } from './hub/CalmVoteMark';
 import { useHubOverlays } from './hub/useHubOverlays';
-import { EffectsPreferenceModal } from './prefs/EffectsPreferenceModal';
+import {
+  PreferencesPromptModal,
+  isSmashEntryAcknowledged,
+  markSmashEntryAcknowledged,
+} from '@/components/common/PreferencesPromptModal';
+import { usePreferences } from '@/hooks/usePreferences';
+import { useOnceInBrowser } from '@/hooks/useOnceInBrowser';
 import { useSmashPrefs } from './prefs/useSmashPrefs';
 import { useSmashDeck } from './hub/useSmashDeck';
 import { useSmashRosters } from './hub/useSmashRosters';
@@ -32,15 +39,23 @@ interface SmashOrPassHubProps {
 }
 
 export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' }) => {
+  const router = useRouter();
   const dict = useDictionary();
   const { isAuthenticated } = useAuth();
+  const { isConfigured } = usePreferences();
+  const [smashAck, setSmashAck] = useState<boolean>(true);
+  const [promptDismissed, setPromptDismissed] = useState<boolean>(false);
+
+  useOnceInBrowser(() => {
+    setSmashAck(isSmashEntryAcknowledged());
+  });
 
   // Order matters: the votes' initial state reads the roster the rosters hook just restored.
   const rosters = useSmashRosters(locale);
   const { activeRoster, selectedRosterSlug } = rosters;
-  const prefs = useSmashPrefs();
-  const { effectsEnabled } = prefs;
-  const overlays = useHubOverlays(prefs.isOpen);
+  const { effectsEnabled } = useSmashPrefs();
+  const isPromptOpen = (!smashAck || !isConfigured) && !promptDismissed;
+  const overlays = useHubOverlays(isPromptOpen);
   const exit = useCardExit();
   useSmashSound();
 
@@ -190,7 +205,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
             effectsEnabled={effectsEnabled}
             onOpenRosters={() => overlays.setIsRosterModalOpen(true)}
             onToggleFilters={() => overlays.setIsFilterDrawerOpen((prev) => !prev)}
-            onOpenEffects={prefs.openSettings}
+            onOpenEffects={() => router.push(`/${locale}/settings`)}
             onOpenPersona={() => overlays.setIsPersonaOpen(true)}
             onOpenLeaderboard={() => overlays.setIsLeaderboardOpen(true)}
             onShuffle={deck.shuffleDeck}
@@ -272,12 +287,14 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
 
       <RosterModals locale={locale} overlays={overlays} rosters={rosters} />
 
-      <EffectsPreferenceModal
-        isOpen={prefs.isOpen}
-        mandatory={prefs.prefs === null}
-        values={prefs.shown}
-        onChange={prefs.update}
-        onClose={prefs.close}
+      <PreferencesPromptModal
+        isOpen={isPromptOpen}
+        mode="smash"
+        onClose={() => {
+          markSmashEntryAcknowledged();
+          setSmashAck(true);
+          setPromptDismissed(true);
+        }}
       />
 
       <HubModals

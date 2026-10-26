@@ -29,6 +29,8 @@ import errorPages from './errorPages';
 import scoreboardCheck from './scoreboardCheck';
 import validation from './validation';
 import moderation from './moderation';
+import perkTypes from './perkTypes';
+import settings from './settings';
 import type { Dictionary } from '../types';
 
 const pl = {
@@ -62,6 +64,8 @@ const pl = {
   scoreboardCheck,
   validation,
   moderation,
+  perkTypes,
+  settings,
 } satisfies Dictionary;
 
 export default pl;

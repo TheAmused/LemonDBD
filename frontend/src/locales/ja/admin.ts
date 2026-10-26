@@ -68,6 +68,8 @@ export default {
   targetItemsDesc: "サバイバーのアイテムと道具",
   targetMapsLabel: "マップ＆コールアウト",
   targetMapsDesc: "マップの領域、タイル、目標の目印",
+  targetMapLayoutsLabel: "マップレイアウト",
+  targetMapLayoutsDesc: "描画マップ用ベクターレイアウトフットプリント",
   targetUsersLabel: "ユーザーアカウント",
   targetUsersDesc: "登録済みユーザープロフィールと役割",
   targetOwnershipsLabel: "ユーザー所有記録",
@@ -445,4 +447,9 @@ export default {
   neverRun: "まだ実行されていません",
   lastRunScheduled: "前回の定期実行：{date}",
   lastRunManual: "前回の管理者による実行：{date}",
+  vectorMapTest: "ベクターマップエンジン",
+  vectorMapTestDesc: "インタラクティブなSVGベクターレイアウト、多層フロア、ランドマーク凡例を検査します。",
+  vectorMapSelect: "マップを選択",
+  vectorMapNoLayout: "このマップのベクターレイアウトが見つかりませんでした。",
+  vectorMapLoading: "レイアウトを読み込み中...",
 } as const;

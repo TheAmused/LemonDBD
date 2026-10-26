@@ -1,8 +1,11 @@
-# backend/app/routes/maps.py
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, abort, jsonify, request
+from sqlalchemy import select
 
 from app.core.cache_params import norm_int, norm_lower
+from app.core.extensions import db
 from app.core.http_cache import cache_catalog
+from app.models.map_layout import MapLayout
+from app.schemas.map import MapLayoutDetailResponse
 from app.services.map_service import MapService
 from app.utils.lang import extract_lang
 from app.utils.pagination import paginate_args
@@ -64,3 +67,18 @@ def get_map_thumb(rel: str):
     and decoding dozens of full-size bitmaps is what made that page lag.
     """
     return serve_thumb("maps", rel, THUMB_WIDTH)
+
+
+@maps_bp.route("/<int:map_id>/layout", methods=["GET"])
+def get_map_layout(map_id: int):
+    """Fetch vector layout footprint for a single map on demand."""
+    layout = db.session.scalar(select(MapLayout).where(MapLayout.map_id == map_id))
+    if not layout:
+        abort(404, description="Map layout not found")
+    response_dto = MapLayoutDetailResponse(
+        map_id=layout.map_id,
+        version=layout.version,
+        layout=layout.layout_data,
+    )
+    return jsonify(response_dto.model_dump()), 200
+

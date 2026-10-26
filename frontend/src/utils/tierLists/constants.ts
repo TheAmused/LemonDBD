@@ -62,8 +62,8 @@ export const HEX_COLOR_PATTERN = /^#[0-9a-fA-F]{6}$/;
 export const ITEM_ID_PATTERN = /^[A-Za-z0-9_:.-]+$/;
 
 
-/** The map source the explorer loads, so both pages share one cached request. */
-export const TIER_LIST_MAP_SOURCE = 'hens333';
+/** The map source the explorer loads (`MAP_SOURCE` in services/mapApi), so both pages share one cached request. */
+export const TIER_LIST_MAP_SOURCE = 'lemondbd';
 
 // Shared with the other portable-JSON codec; re-exported so callers keep one import site.
 export { DATA_IMAGE_PATTERN, SHARE_HASH_PARAM } from '@/utils/shareCodec';

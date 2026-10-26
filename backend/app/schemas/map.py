@@ -8,8 +8,8 @@ DEFAULT_PALLET_DENSITY = "Medium"
 DEFAULT_JUNGLE_GYMS = 3
 DEFAULT_IS_SHACK = True
 DEFAULT_IS_MAIN_BUILDING = False
-DEFAULT_SOURCE_CODE = "hens333"
-DEFAULT_SOURCE_LABEL = "Hens333 12-Clock Callouts"
+DEFAULT_SOURCE_CODE = "lemondbd"
+DEFAULT_SOURCE_LABEL = "LemonDBD 12-Clock Callouts"
 
 
 class RealmBase(BaseModel):
@@ -90,3 +90,13 @@ class MapRealmResponse(BaseModel):
     description: str | None = None
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class MapLayoutDetailResponse(BaseModel):
+    """Vector layout footprint for a single map served on demand."""
+
+    map_id: int
+    version: int
+    layout: dict[str, Any]
+
+    model_config = ConfigDict(from_attributes=True)

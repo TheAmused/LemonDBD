@@ -69,6 +69,7 @@ const scoreboardCheck = {
   "status": {
     "escaped": "脱出",
     "dead": "死亡",
+    "surrendered": "降伏",
     "in_trial": "儀式中",
     "killer": "キラー",
     "unknown": "不明"
@@ -82,6 +83,7 @@ const scoreboardCheck = {
   "outcomes": {
     "escaped": "脱出",
     "died": "死亡",
+    "surrendered": "降伏",
     "killer": "キラー",
     "in_trial": "儀式中",
     "unknown": "不明"

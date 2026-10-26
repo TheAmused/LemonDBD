@@ -21,7 +21,12 @@ export function hasSeenNsfwOnboarding(): boolean {
   const storage = getLocalStorage();
   if (!storage) return true;
   try {
-    return storage.getItem(GLOBAL_NSFW_ONBOARDED_KEY) === 'true' || storage.getItem(GLOBAL_NSFW_KEY) !== null;
+    return (
+      storage.getItem(GLOBAL_NSFW_ONBOARDED_KEY) === 'true' ||
+      storage.getItem('lemondbd_preferences_configured_v2') === 'true' ||
+      storage.getItem(GLOBAL_NSFW_KEY) !== null ||
+      storage.getItem('lemondbd_preferences_v2') !== null
+    );
   } catch {
     return true;
   }
@@ -33,6 +38,7 @@ export function markNsfwOnboardingComplete(): void {
   if (!storage) return;
   try {
     storage.setItem(GLOBAL_NSFW_ONBOARDED_KEY, 'true');
+    storage.setItem('lemondbd_preferences_configured_v2', 'true');
   } catch {
     // Storage unavailable
   }
@@ -43,7 +49,16 @@ export function getGlobalNsfwPreference(): boolean {
   const storage = getLocalStorage();
   if (!storage) return false;
   try {
-    return storage.getItem(GLOBAL_NSFW_KEY) === 'true';
+    const raw = storage.getItem(GLOBAL_NSFW_KEY);
+    if (raw !== null) {
+      return raw === 'true';
+    }
+    const v2Raw = storage.getItem('lemondbd_preferences_v2');
+    if (v2Raw) {
+      const v2 = JSON.parse(v2Raw);
+      return !!v2?.nsfw;
+    }
+    return false;
   } catch {
     return false;
   }
@@ -56,6 +71,20 @@ export function setGlobalNsfwPreference(enabled: boolean): void {
     try {
       storage.setItem(GLOBAL_NSFW_KEY, String(enabled));
       storage.setItem(GLOBAL_NSFW_ONBOARDED_KEY, 'true');
+      storage.setItem('lemondbd_nsfw_enabled_v1', String(enabled));
+      storage.setItem('lemondbd_preferences_configured_v2', 'true');
+
+      const v2Raw = storage.getItem('lemondbd_preferences_v2');
+      const existing = v2Raw ? JSON.parse(v2Raw) : {};
+      const updated = {
+        effects: typeof existing.effects === 'boolean' ? existing.effects : true,
+        sounds: typeof existing.sounds === 'boolean' ? existing.sounds : true,
+        music: typeof existing.music === 'boolean' ? existing.music : true,
+        nsfw: enabled,
+        backgroundAnimation: existing.backgroundAnimation || 'on',
+        chosenAt: Date.now(),
+      };
+      storage.setItem('lemondbd_preferences_v2', JSON.stringify(updated));
     } catch {
       // Storage unavailable (private browsing, quota, etc.)
     }

@@ -27,13 +27,10 @@ import { Badge } from '@/components/common/Badge';
 import { AccordionSection } from '@/components/common/AccordionSection';
 import { Tooltip } from '@/components/common/Tooltip';
 import { ThunderPulseIcon } from '@/components/icons/DbdIcons';
-import { useGlobalNsfwPreference, hasSeenNsfwOnboarding } from '@/utils/nsfwAck';
-import { useOnceInBrowser } from '@/hooks/useOnceInBrowser';
+import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
+import { PreferencesPromptModal } from '@/components/common/PreferencesPromptModal';
+import { usePreferences } from '@/hooks/usePreferences';
 
-const NsfwOnboardingModal = dynamic(
-  () => import('@/components/common/NsfwOnboardingModal').then((m) => m.NsfwOnboardingModal),
-  { ssr: false }
-);
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
 interface TierListHubProps {
@@ -60,11 +57,8 @@ export function TierListHub({ locale }: TierListHubProps) {
   const [isOfficialOpen, toggleOfficial] = usePersistentDrawer('lemondbd_drawer_tier_lists_official', true);
   const [isCustomOpen, toggleCustom] = usePersistentDrawer('lemondbd_drawer_tier_lists_custom', true);
   const [showNsfw, setShowNsfw] = useGlobalNsfwPreference();
-  const [onboardingOpen, setOnboardingOpen] = useState<boolean>(false);
-
-  useOnceInBrowser(() => {
-    if (!hasSeenNsfwOnboarding()) setOnboardingOpen(true);
-  });
+  const { isConfigured } = usePreferences();
+  const [promptDismissed, setPromptDismissed] = useState<boolean>(false);
 
   // A share link lands here as `/tier-lists#import=...`. Read it once, then
   // strip it from the address bar so a reload does not re-open the dialog.
@@ -160,7 +154,7 @@ export function TierListHub({ locale }: TierListHubProps) {
               variant="secondary"
               size="sm"
               icon
-              onClick={() => setOnboardingOpen(true)}
+              onClick={() => router.push(`/${locale}/settings`)}
               aria-label={dict.smashOrPass.effectsPrefs.button}
               className="h-9 w-9 min-h-9 min-w-9"
             >
@@ -285,9 +279,9 @@ export function TierListHub({ locale }: TierListHubProps) {
         />
       )}
 
-      <NsfwOnboardingModal
-        isOpen={onboardingOpen}
-        onClose={() => setOnboardingOpen(false)}
+      <PreferencesPromptModal
+        isOpen={!isConfigured && !promptDismissed}
+        onClose={() => setPromptDismissed(true)}
       />
     </div>
   );

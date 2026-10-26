@@ -68,6 +68,8 @@ export default {
   targetItemsDesc: "Survivor items and tools",
   targetMapsLabel: "Maps & Callouts",
   targetMapsDesc: "Map realms, tiles, and objective landmarks",
+  targetMapLayoutsLabel: "Map Layouts",
+  targetMapLayoutsDesc: "Vector layout footprints for drawn maps",
   targetUsersLabel: "User Accounts",
   targetUsersDesc: "Registered user profiles and roles",
   targetOwnershipsLabel: "User Ownership Records",
@@ -445,4 +447,9 @@ export default {
   neverRun: "Has not run yet",
   lastRunScheduled: "Last ran on schedule {date}",
   lastRunManual: "Last run by an admin {date}",
+  vectorMapTest: "Vector Map Engine",
+  vectorMapTestDesc: "Inspect interactive SVG vector layouts, multi-floor plans, and landmark legends.",
+  vectorMapSelect: "Select a map",
+  vectorMapNoLayout: "No vector layout footprint found for this map.",
+  vectorMapLoading: "Loading layout...",
 } as const;

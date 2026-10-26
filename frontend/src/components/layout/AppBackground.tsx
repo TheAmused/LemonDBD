@@ -15,19 +15,32 @@ import { usePathname } from 'next/navigation';
 import { i18n } from '@/i18n/config';
 import { backgroundEffectForSegments, type BackgroundEffect } from '@/components/layout/backgroundEffects';
 
+import { usePreferences } from '@/hooks/usePreferences';
+
 const CampfireParticles = dynamic(
   () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),
   { ssr: false }
 );
 
+export type BackgroundMode = 'on' | 'eco' | 'off';
+
+export interface AppBackgroundProps {
+  mode?: BackgroundMode;
+}
+
 /** Every effect component fills the host (absolute inset-0) and ignores pointer events. */
-const BACKGROUND_EFFECT_COMPONENTS: Record<BackgroundEffect, React.ComponentType<{ className?: string }>> = {
+const BACKGROUND_EFFECT_COMPONENTS: Record<
+  BackgroundEffect,
+  React.ComponentType<{ className?: string; mode?: BackgroundMode }>
+> = {
   campfire: CampfireParticles,
 };
 
 const EFFECT_CLASS = 'absolute inset-0 h-full w-full opacity-90 transition-opacity duration-700';
 
-export function AppBackground() {
+export const AppBackground: React.FC<AppBackgroundProps> = ({ mode: explicitMode }) => {
+  const { preferences } = usePreferences();
+  const mode = explicitMode ?? preferences?.backgroundAnimation ?? 'on';
   const pathname = usePathname() || '/';
   const effect = useMemo(() => {
     const segments = pathname.split('/').filter(Boolean);
@@ -36,9 +49,13 @@ export function AppBackground() {
   }, [pathname]);
   const Effect = BACKGROUND_EFFECT_COMPONENTS[effect];
 
+  if (mode === 'off') {
+    return <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true" />;
+  }
+
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
-      <Effect className={EFFECT_CLASS} />
+      <Effect className={EFFECT_CLASS} mode={mode} />
     </div>
   );
 }

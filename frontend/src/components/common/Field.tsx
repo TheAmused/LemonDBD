@@ -2,8 +2,9 @@
 // Text inputs, textareas, selects and search boxes with ONE focus / error /
 // disabled style. Checkbox lives in Checkbox.tsx, switches in Switch.tsx.
 import React from 'react';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { cn } from '@/utils/cn';
+import { ToggleChip } from '@/components/common/ToggleChip';
 
 export type FieldSize = 'xs' | 'sm' | 'md' | 'lg';
 
@@ -22,6 +23,9 @@ const FIELD_SIZES: Record<FieldSize, string> = {
 /** The one corner radius of a field. `pill` is the only alternative (search boxes in tight toolbars). */
 const FIELD_RADIUS = 'rounded-control';
 const FIELD_RADIUS_PILL = 'rounded-full';
+/** SearchInput's token-variant frame: the field look, lit while anything inside it has focus. Chips scroll sideways rather than wrap. */
+const TOKEN_FIELD_FRAME =
+  'flex w-full min-w-0 cursor-text items-center gap-2 border border-border-color bg-bg-elevated text-text-primary transition-colors focus-within:border-accent-red focus-within:ring-1 focus-within:ring-accent-red/50';
 
 interface CommonFieldProps {
   fieldSize?: FieldSize;
@@ -95,8 +99,107 @@ export const IconInput = React.forwardRef<HTMLInputElement, IconInputProps>(func
   );
 });
 
-export type SearchInputProps = Omit<IconInputProps, 'icon' | 'type'>;
-export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(function SearchInput(props, ref) {
+interface SearchToken {
+  key: string;
+  label: string;
+  /** Accessible name of the token's remove button ("Remove Healing filter"). */
+  removeLabel: string;
+}
+
+export interface SearchInputProps extends Omit<IconInputProps, 'icon' | 'type'> {
+  /**
+   * The token variant: active filters shown as removable chips inside the
+   * field, before the text, so adding one never changes the layout around it.
+   * Backspace in an empty box removes the last chip. Needs `onRemoveToken`.
+   */
+  tokens?: readonly SearchToken[];
+  onRemoveToken?: (key: string) => void;
+  /** Token variant: a clear button shown while there is text. */
+  onClear?: () => void;
+  clearLabel?: string;
+  /** Token variant: the frame element (anchor for a suggestions popover). */
+  frameRef?: React.Ref<HTMLLabelElement>;
+}
+
+/** The token variant's body. The frame is a <label>, so a click anywhere in it focuses the text. */
+const TokenSearchFrame = React.forwardRef<
+  HTMLInputElement,
+  Omit<SearchInputProps, 'tokens' | 'onRemoveToken'> & { tokens: readonly SearchToken[]; onRemoveToken: (key: string) => void }
+>(function TokenSearchFrame(
+  { tokens, onRemoveToken, onClear, clearLabel, wrapperClassName, frameRef, fieldSize = 'md', pill = false, invalid, className, onKeyDown, value, ...rest },
+  ref
+) {
+  const hasText = typeof value === 'string' ? value.length > 0 : Boolean(value);
+  return (
+    <label
+      ref={frameRef}
+      className={cn(TOKEN_FIELD_FRAME, FIELD_SIZES[fieldSize], pill ? FIELD_RADIUS_PILL : FIELD_RADIUS, wrapperClassName)}
+    >
+      <Search aria-hidden="true" className="h-4 w-4 shrink-0 text-text-muted" />
+      <span className="flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto [scrollbar-width:none]">
+        {tokens.map((token) => (
+          // Slimmer than a standalone chip so the field keeps its height on touch screens too.
+          <ToggleChip
+            key={token.key}
+            size="xs"
+            pill
+            pressed
+            aria-label={token.removeLabel}
+            onClick={() => onRemoveToken(token.key)}
+            className="px-2 py-0.5 leading-tight pointer-coarse:min-h-0"
+          >
+            {token.label}
+            <X aria-hidden="true" className="h-3 w-3" />
+          </ToggleChip>
+        ))}
+        <input
+          ref={ref}
+          type="search"
+          value={value}
+          aria-invalid={invalid || undefined}
+          onKeyDown={(e) => {
+            if (e.key === 'Backspace' && !hasText && tokens.length > 0) onRemoveToken(tokens[tokens.length - 1].key);
+            onKeyDown?.(e);
+          }}
+          // The field draws its own clear button, so the browser's built-in one (Chrome, Safari) is hidden.
+          className={cn(
+            'min-w-16 flex-1 border-0 bg-transparent p-0 text-inherit placeholder:text-text-muted focus:outline-none [&::-webkit-search-cancel-button]:appearance-none',
+            className
+          )}
+          {...rest}
+        />
+      </span>
+      {hasText && onClear && (
+        <button
+          type="button"
+          aria-label={clearLabel}
+          onClick={onClear}
+          className="relative flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-bg-surface hover:text-text-primary after:absolute after:-inset-3"
+        >
+          <X aria-hidden="true" className="h-3 w-3" />
+        </button>
+      )}
+    </label>
+  );
+});
+
+export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(function SearchInput(
+  { tokens, onRemoveToken, onClear, clearLabel, frameRef, ...props },
+  ref
+) {
+  if (tokens && onRemoveToken) {
+    return (
+      <TokenSearchFrame
+        ref={ref}
+        tokens={tokens}
+        onRemoveToken={onRemoveToken}
+        onClear={onClear}
+        clearLabel={clearLabel}
+        frameRef={frameRef}
+        {...props}
+      />
+    );
+  }
   return <IconInput ref={ref} icon={Search} type="search" {...props} />;
 });
 

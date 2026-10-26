@@ -68,6 +68,8 @@ export default {
   targetItemsDesc: "Gegenstände und Werkzeuge der Überlebenden",
   targetMapsLabel: "Karten & Orientierungspunkte",
   targetMapsDesc: "Kartenreiche, Kacheln und Ziel-Orientierungspunkte",
+  targetMapLayoutsLabel: "Kartenlayouts",
+  targetMapLayoutsDesc: "Vektor-Layout-Grundrisse für gezeichnete Karten",
   targetUsersLabel: "Benutzerkonten",
   targetUsersDesc: "Registrierte Benutzerprofile und Rollen",
   targetOwnershipsLabel: "Benutzer-Besitzdaten",
@@ -445,4 +447,9 @@ export default {
   neverRun: "Noch nie ausgeführt",
   lastRunScheduled: "Zuletzt planmäßig ausgeführt: {date}",
   lastRunManual: "Zuletzt von einem Admin ausgeführt: {date}",
+  vectorMapTest: "Vektorkarten-Engine",
+  vectorMapTestDesc: "Interaktive SVG-Vektorlayouts, Mehrebenenpläne und Legenden prüfen.",
+  vectorMapSelect: "Karte auswählen",
+  vectorMapNoLayout: "Kein Vektor-Grundriss für diese Karte gefunden.",
+  vectorMapLoading: "Layout wird geladen...",
 } as const;

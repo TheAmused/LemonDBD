@@ -12,13 +12,10 @@ import { useAuth } from '@/context/AuthContext';
 import { useSignInThen } from '@/hooks/useSignInThen';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import { Gamepad2, Flame, Plus, Upload, AlertCircle, X } from 'lucide-react';
-import { useGlobalNsfwPreference, hasSeenNsfwOnboarding } from '@/utils/nsfwAck';
+import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
 import { ThunderPulseIcon } from '@/components/icons/DbdIcons';
-
-const NsfwOnboardingModal = dynamic(
-  () => import('@/components/common/NsfwOnboardingModal').then((m) => m.NsfwOnboardingModal),
-  { ssr: false }
-);
+import { PreferencesPromptModal } from '@/components/common/PreferencesPromptModal';
+import { usePreferences } from '@/hooks/usePreferences';
 import type { ChallengeDefinition } from '@/types/minigame';
 import { saveCustomChallenge, getDailyStreak, wonDailyOn, type DailyStreakData } from '@/utils/minigames/storage';
 import { useCustomChallenges } from '@/hooks/useCustomChallenges';
@@ -54,17 +51,17 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
   const { trials: customTrials, reload: reloadCustomTrials, pendingDeleteId, requestDelete, cancelDelete, confirmDelete } =
     useCustomChallenges();
   const [showNsfw, setShowNsfw] = useGlobalNsfwPreference();
-  const [onboardingOpen, setOnboardingOpen] = useState<boolean>(false);
+  const { isConfigured } = usePreferences();
+  const [promptDismissed, setPromptDismissed] = useState<boolean>(false);
   const [importError, setImportError] = useState<string | null>(null);
   const [streakData, setStreakData] = useState<DailyStreakData>({ currentStreak: 0, maxStreak: 0, lastCompletedDate: null });
   const [copiedId, setCopiedId] = useState<string | number | null>(null);
   const [shareLoadingId, setShareLoadingId] = useState<string | number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Streaks and the onboarding check come from this browser's storage.
+  // Streaks come from this browser's storage.
   useOnceInBrowser(() => {
     setStreakData(getDailyStreak());
-    if (!hasSeenNsfwOnboarding()) setOnboardingOpen(true);
   });
 
   const [todayStr] = useState(() => new Date().toISOString().slice(0, 10));
@@ -232,7 +229,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
               variant="secondary"
               size="sm"
               icon
-              onClick={() => setOnboardingOpen(true)}
+              onClick={() => router.push(`/${locale}/settings`)}
               {...tip(dict.smashOrPass.effectsPrefs.button, dict.smashOrPass.effectsPrefs.buttonDesc, 'action')}
               aria-label={dict.smashOrPass.effectsPrefs.button}
               className="h-9 w-9 min-h-9 min-w-9"
@@ -309,7 +306,10 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
       />
 
       {signIn.isAuthModalOpen && <AuthModal isOpen onClose={signIn.closeAuthModal} />}
-      <NsfwOnboardingModal isOpen={onboardingOpen} onClose={() => setOnboardingOpen(false)} />
+      <PreferencesPromptModal
+        isOpen={!isConfigured && !promptDismissed}
+        onClose={() => setPromptDismissed(true)}
+      />
     </div>
   );
 };

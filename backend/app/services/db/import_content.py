@@ -12,6 +12,7 @@ from app.models.chapter import Chapter
 from app.models.character import Killer, Survivor
 from app.models.equipment import Item, ItemAddon, ItemCategory, KillerAddon, Offering
 from app.models.map import MapRealm, MapSource, Realm
+from app.models.map_layout import MapLayout
 from app.models.perk import Perk
 from app.models.perk_types import DEFAULT_PERK_TYPES
 from app.schemas.perk import PerkTypeSpec
@@ -283,21 +284,25 @@ def _import_maps(
             # carries it, and the name it held is matched as a
             # fallback so such a backup still restores.
             row_id = mdata.get("id")
+            source_id = mdata.get("source_id") or 1
             map_obj = (
                 db.session.get(MapRealm, row_id) if isinstance(row_id, int) else None
             )
-            if map_obj is None:
+            if map_obj is None and not isinstance(row_id, int):
                 name = mdata.get("name") or mdata.get("map_id")
                 if not name:
                     continue
                 map_obj = db.session.scalar(
-                    select(MapRealm).where(MapRealm.name == name)
+                    select(MapRealm).where(
+                        MapRealm.name == name,
+                        MapRealm.source_id == source_id,
+                    )
                 )
             if not map_obj:
                 map_obj = MapRealm(
                     name=mdata.get("name") or mdata.get("map_id"),
                     realm_id=mdata.get("realm_id"),
-                    source_id=mdata.get("source_id"),
+                    source_id=source_id,
                 )
                 if isinstance(row_id, int):
                     map_obj.id = row_id
@@ -332,6 +337,37 @@ def _import_maps(
         summary["maps"] = {"created": created, "updated": updated}
 
 
+def _import_map_layouts(
+    data: dict[str, Any],
+    target_keys: set[str],
+    summary: dict[str, dict[str, int]],
+) -> None:
+    """Map vector layouts, keyed by map_id."""
+    if "map_layouts" in target_keys and "map_layouts" in data:
+        created = updated = 0
+        for ldata in data["map_layouts"]:
+            map_id = ldata.get("map_id")
+            if not isinstance(map_id, int):
+                continue
+            layout_obj = db.session.scalar(
+                select(MapLayout).where(MapLayout.map_id == map_id)
+            )
+            if not layout_obj:
+                layout_obj = MapLayout(
+                    map_id=map_id,
+                    version=ldata.get("version", 1),
+                    layout_data=ldata.get("layout_data", {}),
+                )
+                db.session.add(layout_obj)
+                created += 1
+            else:
+                layout_obj.version = ldata.get("version", 1)
+                layout_obj.layout_data = ldata.get("layout_data", {})
+                updated += 1
+        db.session.flush()
+        summary["map_layouts"] = {"created": created, "updated": updated}
+
+
 def import_content(
     data: dict[str, Any],
     target_keys: set[str],
@@ -352,4 +388,5 @@ def import_content(
     _import_characters(data, target_keys, summary, static_dir)
     _import_equipment(data, target_keys, summary, static_dir)
     _import_maps(data, target_keys, summary, static_dir)
+    _import_map_layouts(data, target_keys, summary)
     import_tier_lists(data, target_keys, summary)

@@ -148,7 +148,7 @@ test('VoiceCommandBanner renders active engine badge and fallback trigger', () =
   const html = renderWithDictionary(
     React.createElement(VoiceCommandBanner, {
       locale: 'en',
-      currentSource: 'hens333',
+      currentSource: 'lemondbd',
       onSourceChange: () => {},
       onSelectMap: () => {},
       onAction: () => {},
@@ -162,8 +162,9 @@ test('VoiceCommandBanner renders active engine badge and fallback trigger', () =
     html.includes('Web Speech API') ||
     html.includes('Voice Recognition Engine')
   );
-  assert.ok(html.includes('Hens333 (12-Clock)'));
+  // Banner renders source toggle with LemonDBD and Hens333 (12-Clock)
   assert.ok(html.includes('LemonDBD'));
+  assert.ok(html.includes('Hens333'));
   assert.ok(!html.includes('SamoelColt'));
 });
 

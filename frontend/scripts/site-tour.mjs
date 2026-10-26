@@ -461,7 +461,11 @@ export async function runTour(options = {}) {
 
   await browser.close().catch(() => {});
 
-  const finalItems = Array.from(itemsMap.values());
+  const knownTargetIds = new Set([...PAGE_ROUTES.map((p) => p.id), ...MODAL_TARGETS.map((m) => m.id)]);
+  const finalItems = Array.from(itemsMap.values()).filter((item) => {
+    const baseId = item.id.replace(new RegExp(`-(${VIEWPORTS.map((v) => v.id).join('|')})$`), '');
+    return knownTargetIds.has(baseId);
+  });
   const manifest = {
     generatedAt: new Date().toISOString(),
     summary: { totalPages: PAGE_ROUTES.length, totalModals: MODAL_TARGETS.length, viewports: VIEWPORTS.map((v) => v.id), totalScreenshots: finalItems.length },

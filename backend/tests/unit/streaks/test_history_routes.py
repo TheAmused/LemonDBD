@@ -1,0 +1,93 @@
+# backend/tests/unit/streaks/test_history_routes.py
+import pytest
+from flask.testing import FlaskClient
+from sqlalchemy.orm import Session
+from app.models import Killer, Perk
+from app.services.user import UserService
+from tests.unit.conftest import make_chapter
+
+
+def seed_killer(name: str, release_number: int, perk_count: int = 2) -> Killer:
+    """`release_number` is `== id` now, not a settable field, so it is passed
+    straight through as the killer's id to control release order."""
+    from app.core.extensions import db
+
+    character = Killer(
+        id=release_number, name=name, chapter_id=make_chapter(db.session).id, power_name=f"{name} Power"
+    )
+    db.session.add(character)
+    db.session.flush()
+    for i in range(1, perk_count + 1):
+        db.session.add(
+            Perk(
+                name=f"{name} Perk {i}",
+                killer_id=character.id,
+                is_teachable=True,
+                role="Killer",
+            )
+        )
+    db.session.commit()
+    return character
+
+
+@pytest.fixture
+def history_auth_setup(db_session: Session) -> tuple[int, str, dict[str, str]]:
+    seed_killer("The Trapper", release_number=1)
+    seed_killer("The Wraith", release_number=2)
+
+    user_service = UserService()
+    user, err = user_service.register_user("routeuser", "routeuser", "route@test.com", "password123")
+    assert err is None
+    token = user_service.authenticate("routeuser", "password123")[1]
+    headers = {"Authorization": f"Bearer {token}"}
+    return user.id, token, headers
+
+
+@pytest.mark.unit
+class TestHistoryRoutes:
+    """Tests for History mode API routes: chronological unlocks, rows, and resets."""
+
+    def test_get_run_auto_creates(
+        self, client: FlaskClient, history_auth_setup: tuple[int, str, dict[str, str]]
+    ) -> None:
+        _, _, headers = history_auth_setup
+        resp = client.get("/api/v1/history-streak/run?mode=hell", headers=headers)
+        assert resp.status_code == 200
+        run = resp.get_json()["run"]
+        assert run["mode"] == "hell"
+        assert run["current_row_killers"] == ["The Trapper", "The Wraith"]
+
+    def test_result_lifecycle(
+        self, client: FlaskClient, history_auth_setup: tuple[int, str, dict[str, str]]
+    ) -> None:
+        _, _, headers = history_auth_setup
+        run = client.get(
+            "/api/v1/history-streak/run?mode=hell", headers=headers
+        ).get_json()["run"]
+        resp = client.post(
+            "/api/v1/history-streak/result",
+            json={"run_id": run["id"], "result": "win", "killer_id": "The Trapper"},
+            headers=headers,
+        )
+        assert resp.status_code == 200
+        body = resp.get_json()["run"]
+        assert "The Trapper" in body["completed_killers"]
+        assert len(body["newly_unlocked_perks"]) > 0
+
+    def test_reset_endpoint(
+        self, client: FlaskClient, history_auth_setup: tuple[int, str, dict[str, str]]
+    ) -> None:
+        _, _, headers = history_auth_setup
+        run = client.get(
+            "/api/v1/history-streak/run?mode=hell", headers=headers
+        ).get_json()["run"]
+        client.post(
+            "/api/v1/history-streak/result",
+            json={"run_id": run["id"], "result": "win", "killer_id": "The Trapper"},
+            headers=headers,
+        )
+        resp = client.post(
+            "/api/v1/history-streak/run/abandon", json={"mode": "hell"}, headers=headers
+        )
+        assert resp.status_code == 200
+        assert resp.get_json()["run"]["total_killers_beaten"] == 0

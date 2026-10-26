@@ -154,7 +154,7 @@ if [ "$SKIP_UP_FLOW" = false ]; then
   # Across all cores when pytest-xdist is installed (requirements-dev.txt); serial otherwise.
   XDIST=""
   if $PYTHON_CMD -c "import xdist" &> /dev/null; then XDIST="-n auto"; fi
-  if ! $PYTHON_CMD -m pytest backend/tests/unit $XDIST -v --tb=short; then
+  if ! $PYTHON_CMD -m pytest backend/tests/unit backend/tests/guards $XDIST -v --tb=short; then
     echo -e "\n${RED}[FAIL] Backend unit tests did not pass!${NC}"
     echo -e "${RED}[STOP] Docker build and startup has been ABORTED.${NC}"
     exit 1

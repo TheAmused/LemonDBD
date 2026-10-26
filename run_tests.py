@@ -150,7 +150,7 @@ def main():
     # 1. Backend Unit Tests
     if run_backend and run_unit:
         print(f"[{YELLOW}RUNNING{RESET}] Backend Unit Tests...", flush=True)
-        res = run_command(f"{py_bin} -m pytest tests/unit{xdist_flag(py_bin)}", cwd=BACKEND_DIR, timeout=TIMEOUTS["backend_unit"])
+        res = run_command(f"{py_bin} -m pytest tests/unit tests/guards{xdist_flag(py_bin)}", cwd=BACKEND_DIR, timeout=TIMEOUTS["backend_unit"])
         status = "PASSED" if res["exit_code"] == 0 else "FAILED"
         color = GREEN if status == "PASSED" else RED
         print(f"[{color}{status}{RESET}] Backend Unit in {res['duration']}s", flush=True)

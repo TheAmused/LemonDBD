@@ -9,6 +9,7 @@
 //
 import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import type { ChaosMutator } from '@/types/chaos';
+import { PERK_TYPES, type PerkType } from '@/utils/perkTypes';
 
 const FALLBACK_PERK_TYPES: readonly string[] = ['entity'];
 
@@ -312,24 +313,10 @@ export function buildDrawnSlots(
 // Tarot Deck archetype resolution — the first entry of perk_types
 // ---------------------------------------------------------------------------
 
-export type TarotType =
-  | 'hex'
-  | 'boon'
-  | 'sacrifice'
-  | 'exhaustion'
-  | 'obsession'
-  | 'aura'
-  | 'generator'
-  | 'healing'
-  | 'chase'
-  | 'stealth'
-  | 'entity'
-  | 'hooks';
+/** Every perk type has a Tarot card. */
+export type TarotType = PerkType;
 
-const TAROT_TYPES: readonly string[] = [
-  'hex', 'boon', 'sacrifice', 'exhaustion', 'obsession',
-  'aura', 'generator', 'healing', 'chase', 'stealth', 'entity', 'hooks',
-];
+const TAROT_TYPES: readonly string[] = PERK_TYPES;
 
 /** The perk's types that have a Tarot card, in order (unknown strings dropped). */
 function getPerkTarotTypes(perk: Perk): TarotType[] {

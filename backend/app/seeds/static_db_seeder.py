@@ -65,6 +65,7 @@ _SEQUENCE_TABLES = (
     "realms",
     "map_realms",
     "map_sources",
+    "map_layouts",
     "item_categories",
     "tier_lists",
     "users",

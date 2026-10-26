@@ -1,5 +1,6 @@
 # backend/app/features/__init__.py
 """Vertical slice feature module registration."""
+
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -22,7 +23,7 @@ def register_feature_blueprints(app: "Flask") -> None:
         page_streak_bp,
     )
     from app.features.tier_lists import tier_lists_bp
-    from app.features.users import avatars_bp, privacy_bp, users_bp
+    from app.features.users import avatars_bp, privacy_bp, user_preferences_bp, users_bp
     from app.routes.content_moderation import content_moderation_bp
     from app.routes.site_config import site_config_bp
 
@@ -34,6 +35,7 @@ def register_feature_blueprints(app: "Flask") -> None:
         users_bp,
         avatars_bp,
         privacy_bp,
+        user_preferences_bp,
         # Core Catalogs
         perks_bp,
         synergy_bp,

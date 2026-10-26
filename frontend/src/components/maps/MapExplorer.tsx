@@ -31,6 +31,9 @@ import { Badge } from '@/components/common/Badge';
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
 
+import type { SegmentedControlOption } from '@/components/common/SegmentedControl';
+import { SegmentedControl } from '@/components/common/SegmentedControl';
+
 // Sentinel dropdown value for "no filter"; real attribute values never collide with it.
 // Also what "no filter" persists as in localStorage, since the filter fields
 // themselves are `string | null` and usePersistentString only stores strings.
@@ -65,6 +68,8 @@ export interface MapExplorerProps {
   onAvailableMapsLoaded?: (maps: MapRealm[]) => void;
   backendBase: string;
   locale?: string;
+  source?: 'lemondbd' | 'hens333';
+  onSourceChange?: (source: 'lemondbd' | 'hens333') => void;
   hideSearch?: boolean;
   /** Rendered in the same slot as the search header (e.g. a voice command
    * banner) when `hideSearch` is true. Overlaid in the same grid cell as
@@ -77,15 +82,17 @@ export interface MapExplorerProps {
 }
 
 export const MapExplorer: React.FC<MapExplorerProps> = ({
-      initialMapName = '',
-      selectedMap,
-      onAvailableMapsLoaded,
-      backendBase,
-      locale,
-      hideSearch = false,
-      voiceSlot,
-      modeSwitcherSlot,
-    }) => {
+  initialMapName = '',
+  selectedMap,
+  onAvailableMapsLoaded,
+  backendBase,
+  locale,
+  source = 'lemondbd',
+  onSourceChange,
+  hideSearch = false,
+  voiceSlot,
+  modeSwitcherSlot,
+}) => {
   const dict = useDictionary();
   const {
     maps,
@@ -103,6 +110,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     onAvailableMapsLoaded,
     onAutoOpen: (map, via) => trackEvent('map_open', mapOpenProps(map, via)),
     locale,
+    source,
   });
 
   // Persisted so a refresh reopens whichever realm you had expanded. Stored
@@ -167,6 +175,24 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     { value: 'az', label: mapsDict.sortAz },
     { value: 'za', label: mapsDict.sortZa },
   ];
+
+  const sourceOptions: readonly [
+    SegmentedControlOption<'lemondbd' | 'hens333'>,
+    SegmentedControlOption<'lemondbd' | 'hens333'>,
+  ] = useMemo(
+    () => [
+      {
+        value: 'lemondbd',
+        label: dict.maps.sourceLemonDbd,
+      },
+      {
+        value: 'hens333',
+        label: dict.maps.sourceHensClock,
+        shortLabel: dict.maps.sourceHens,
+      },
+    ],
+    [dict.maps.sourceLemonDbd, dict.maps.sourceHensClock, dict.maps.sourceHens]
+  );
 
   const isSearching = activeSearch.trim().length > 0;
   const isRealmExpanded = (realm: string) => isSearching || expandedRealm === realm;
@@ -310,15 +336,36 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
               hideSearch ? 'invisible pointer-events-none opacity-0' : 'visible opacity-100'
             }`}
           >
-            {modeSwitcherSlot && (
-              <div className="relative z-20 flex flex-col md:flex-row items-center justify-between gap-3 w-full mb-3">
-                <div className="hidden md:flex md:flex-1" />
+            <div className="relative z-20 flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3 w-full mb-3">
+              <div className="hidden md:flex md:flex-1" />
+              {modeSwitcherSlot && (
                 <div className="flex items-center justify-center shrink-0">
                   {modeSwitcherSlot}
                 </div>
-                <div className="hidden md:flex md:flex-1" />
+              )}
+              {/* Desktop source switcher */}
+              <div className="hidden md:flex md:flex-1 items-center justify-end gap-2">
+                <span className="type-label-xs text-text-muted">{dict.maps.sourceLabel}</span>
+                <SegmentedControl<'lemondbd' | 'hens333'>
+                  ariaLabel={dict.maps.providerAria}
+                  size="sm"
+                  value={source}
+                  onChange={(val) => onSourceChange?.(val)}
+                  options={sourceOptions}
+                />
               </div>
-            )}
+              {/* Mobile source switcher */}
+              <div className="flex md:hidden items-center justify-center gap-2 w-full pt-0.5">
+                <span className="type-label-2xs text-text-muted">{dict.maps.sourceLabel}</span>
+                <SegmentedControl<'lemondbd' | 'hens333'>
+                  ariaLabel={dict.maps.providerAria}
+                  size="sm"
+                  value={source}
+                  onChange={(val) => onSourceChange?.(val)}
+                  options={sourceOptions}
+                />
+              </div>
+            </div>
 
             <div className="flex-1 flex flex-col items-center justify-center space-y-4 py-1">
               <SearchInput

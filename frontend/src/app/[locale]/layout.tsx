@@ -7,6 +7,7 @@ import { getDictionary } from '@/i18n/get-dictionary';
 import { resolveLocale, siteJsonLd, siteUrl } from '@/i18n/metadata';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider } from '@/context/AuthContext';
+import { PreferencesProvider } from '@/context/PreferencesContext';
 import { LocaleDictionaryProvider } from '@/context/LocaleDictionaryProvider';
 import { ImagePreloadProvider } from '@/components/common/ImagePreloadProvider';
 import { TooltipProvider } from '@/components/common/Tooltip';
@@ -88,19 +89,21 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            <SiteConfigProvider>
-              <LocaleDictionaryProvider locale={locale}>
-                <ImagePreloadProvider>
-                  <AppBackground />
-                  <SiteBannerGate />
-                  <AppShell>{children}</AppShell>
-                </ImagePreloadProvider>
-                <TooltipProvider />
-                <FormValidationProvider />
-                <ContentRevocationSync />
-                <WarningModal />
-              </LocaleDictionaryProvider>
-            </SiteConfigProvider>
+            <PreferencesProvider>
+              <SiteConfigProvider>
+                <LocaleDictionaryProvider locale={locale}>
+                  <ImagePreloadProvider>
+                    <AppBackground />
+                    <SiteBannerGate />
+                    <AppShell>{children}</AppShell>
+                  </ImagePreloadProvider>
+                  <TooltipProvider />
+                  <FormValidationProvider />
+                  <ContentRevocationSync />
+                  <WarningModal />
+                </LocaleDictionaryProvider>
+              </SiteConfigProvider>
+            </PreferencesProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

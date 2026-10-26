@@ -47,10 +47,10 @@ describe('ScraperConfigModal export/import targets', () => {
     }
   });
 
-  it('ALL_TARGETS covers all 26 backend database targets (backend test_admin_backup_targets checks the names)', () => {
+  it('ALL_TARGETS covers all 27 backend database targets (backend test_admin_backup_targets checks the names)', () => {
     const targetsContent = fs.readFileSync(path.join(featureDir, 'scraperTargets.ts'), 'utf-8');
     const idMatches = targetsContent.match(/id:\s*'[a-z_]+'/g) || [];
-    assert.equal(idMatches.length, 26, 'ALL_TARGETS should contain exactly 26 target entries');
+    assert.equal(idMatches.length, 27, 'ALL_TARGETS should contain exactly 27 target entries');
   });
 
   it('a purge selection always includes the tables that point at what was chosen', async () => {

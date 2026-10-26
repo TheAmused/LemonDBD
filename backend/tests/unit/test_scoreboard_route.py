@@ -51,7 +51,20 @@ class TestSplitRowText:
         character, player, known, bot = split_row_text(["FENG MIN Feng Min_01", "[BOT]"], KNOWN)
         assert (character, player, known, bot) == ("Feng Min", "Feng Min_01", True, True)
         assert split_row_text(["FENG MIN Feng Min_01 [BOT]"], KNOWN)[1:] == ("Feng Min_01", True, True)
+        assert split_row_text(["FENG MIN Feng Min_01 BOT"], KNOWN)[1:] == ("Feng Min_01", True, True)
         assert split_row_text(["FENG MIN ROBOT"], KNOWN)[1:] == ("ROBOT", True, False)
+
+    def test_known_player_with_bot_suffix_splits(self) -> None:
+        from app.services.scoreboard_ocr.parse import _split_at_known_player
+
+        names = ["A2's Used Fleshlight"]
+        # Two boxes: name + BOT
+        res1 = _split_at_known_player(["A2A2's Used Fleshlight", "BOT"], names, [])
+        assert res1 == ("A2", "A2's Used Fleshlight", False)
+
+        # Single box: name with unbracketed BOT
+        res2 = _split_at_known_player(["A2 A2's Used Fleshlight BOT"], names, [])
+        assert res2 == ("A2", "A2's Used Fleshlight", False)
 
 
 class TestOutcome:
@@ -85,6 +98,36 @@ class TestOutcome:
     def test_spectate_button_keeps_the_match_open(self) -> None:
         match = outcome.summarize(["escaped", "dead", "escaped", "escaped"], has_spectate=True)
         assert match["ended"] is False and match["verdict"] == "survivor_win"
+
+    def test_surrendered_survivor_is_lost_and_settled(self) -> None:
+        match = outcome.summarize(["surrendered", "surrendered", "surrendered", "surrendered"], has_spectate=False)
+        assert match["ended"] is True
+        assert match["verdict"] == "killer_win" and match["verdict_final"] is True
+        assert match["kills"] == 4
+        assert match["escapes"] == 0
+        assert match["in_trial"] == 0
+        assert match["unknown"] == 0
+        assert match["rows_settled"] is True
+
+        own = outcome.pov_outcome("survivor", "surrendered", match)
+        assert own == {"outcome": "surrendered", "result": "lost", "survived": False, "final": True}
+
+    def test_surrendered_counts_towards_killer_kills(self) -> None:
+        match = outcome.summarize(["dead", "surrendered", "surrendered", "escaped"], has_spectate=False)
+        assert match["ended"] is True
+        assert match["kills"] == 3
+        assert match["escapes"] == 1
+        assert match["verdict"] == "killer_win" and match["verdict_final"] is True
+
+
+class TestStatusIcons:
+    def test_classes_include_surrendered(self) -> None:
+        from app.services.scoreboard_ocr.icons import CLASSES, load_prototypes
+
+        assert "surrendered" in CLASSES
+        protos = load_prototypes()
+        assert "surrendered" in protos
+        assert protos["surrendered"].shape == (28, 28)
 
 
 class _FakeProbes(Probes):
@@ -301,6 +344,15 @@ class TestMatchCertainty:
         # e.g. an event offering on its grainy hexagon: 0.77, runner-up 0.33
         v = self._verdict([0.77, 0.33, 0.30, 0.25])
         assert v["name"] == "Deja Vu" and v["uncertain"] is False
+
+    def test_offering_with_decisive_lead_over_similar_cakes_is_sure(self) -> None:
+        import numpy as np
+        from app.services.scoreboard_ocr.loadout import IconRef, _Index, _verdict
+
+        refs = [IconRef("offering", n, f"/x/{n}") for n in ("Toothy Torte", "Ghastly Gateau", "Screech Cobbler")]
+        # Toothy Torte 0.850, runner-up cake 0.695 (lead 0.155)
+        v = _verdict("offering", np.array([0.850, 0.695, 0.670], dtype=float), _Index(refs, np.zeros((3, 1))))
+        assert v["name"] == "Toothy Torte" and v["uncertain"] is False
 
 
 class TestRarity:

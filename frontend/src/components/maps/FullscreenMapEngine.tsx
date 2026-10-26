@@ -77,7 +77,8 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
     };
   }, []);
 
-  const isImageTarget = (target: EventTarget) => (target as HTMLElement).tagName === 'IMG';
+  // The picture being panned: the callout <img>.
+  const isImageTarget = (target: EventTarget) => (target as Element).closest?.('[data-pan-target]') != null;
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return;
@@ -257,6 +258,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
       >
         {imageSrc && !imageFailed ? (
           <Img
+            data-pan-target
             src={imageSrc}
             alt={activeMap?.name || ''}
             draggable={false}

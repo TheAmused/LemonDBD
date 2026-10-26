@@ -20,6 +20,7 @@ from app.models.equipment import Item, ItemAddon, ItemCategory, KillerAddon, Off
 from app.models.gauntlet import GauntletRun
 from app.models.history import HistoryRun
 from app.models.map import MapSource
+from app.models.map_layout import MapLayout
 from app.models.page_streak import PageStreakRun
 from app.models.perk import Perk
 from app.models.sanction import BannedEmailHash
@@ -166,6 +167,7 @@ TARGET_GROUPS: dict[str, list[str]] = {
         "item_addons",
         "offerings",
         "maps",
+        "map_layouts",
         "tier_lists",
     ],
     "users": [
@@ -267,5 +269,6 @@ SIMPLE_DELETE_TARGETS: list[tuple[str, type]] = [
     ("chaos_runs", ChaosRun),
     ("history_runs", HistoryRun),
     ("page_streak_runs", PageStreakRun),
+    ("map_layouts", MapLayout),
     ("tier_lists", TierList),
 ]

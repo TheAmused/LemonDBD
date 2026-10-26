@@ -14,6 +14,7 @@ from app.models.chaos import ChaosMatchLog, ChaosRun
 from app.models.gauntlet import GauntletMatchLog, GauntletRun
 from app.models.history import HistoryMatchLog, HistoryRun
 from app.models.map import MapRealm, Realm
+from app.models.map_layout import MapLayout
 from app.models.page_streak import PageStreakPageLog, PageStreakRun
 from app.models.smash_or_pass import Entity, Roster
 from app.models.user import User, UserCharacterOwnership, UserPerkOwnership, UserShowcase
@@ -158,6 +159,21 @@ def _export_maps(
     counts["maps"] = len(map_list)
 
 
+def _export_map_layouts(export_data: dict[str, Any], counts: dict[str, int]) -> None:
+    layouts = db.session.scalars(select(MapLayout).order_by(MapLayout.id)).all()
+    layout_list = [
+        {
+            "id": l.id,
+            "map_id": l.map_id,
+            "version": l.version,
+            "layout_data": l.layout_data,
+        }
+        for l in layouts
+    ]
+    export_data["map_layouts"] = layout_list
+    counts["map_layouts"] = len(layout_list)
+
+
 def _export_ownerships(export_data: dict[str, Any], counts: dict[str, int]) -> None:
     char_owns = db.session.scalars(select(UserCharacterOwnership)).all()
     perk_owns = db.session.scalars(select(UserPerkOwnership)).all()
@@ -200,6 +216,9 @@ def build_export(target_set: set[str], include_assets: bool, static_dir: Path) -
 
     if "maps" in target_set:
         _export_maps(export_data, counts, static_dir, include_assets)
+
+    if "map_layouts" in target_set:
+        _export_map_layouts(export_data, counts)
 
     if "maps" in target_set or "realms" in target_set:
         export_entity(export_data, counts, "realms", Realm, serialize_realm, ["image_local_path"], static_dir, include_assets)

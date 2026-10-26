@@ -6,6 +6,7 @@ import { ChevronDown, Check } from 'lucide-react';
 import { MENU_PANEL_CLASS, Popover, popoverTriggerProps } from '@/components/common/Popover';
 import { cn } from '@/utils/cn';
 import { MenuItem } from '@/components/common/MenuItem';
+import { Badge } from '@/components/common/Badge';
 
 export interface DropdownOption<T extends string = string> {
   value: T;
@@ -41,6 +42,15 @@ export interface CustomDropdownProps<T extends string = string> {
   onChange?: (value: T) => void;
   options?: DropdownOption<T>[];
   /**
+   * The multi-select variant: pass `values` + `onValuesChange` (with
+   * `options` and a static `label`) instead of value/onChange. Options toggle
+   * on click, the panel stays open, and the trigger shows how many are chosen.
+   */
+  values?: readonly T[];
+  onValuesChange?: (values: T[]) => void;
+  /** Multi-select: text of a last row that empties the selection (shown while something is chosen). */
+  clearLabel?: string;
+  /**
    * Static trigger text, for when the button isn't showing "the selected
    * option" (there may be no single value at all, e.g. a settings panel
    * with several independent controls inside). Falls back to the selected
@@ -69,6 +79,9 @@ export function CustomDropdown<T extends string = string>({
   value,
   onChange,
   options,
+  values,
+  onValuesChange,
+  clearLabel,
   label,
   children,
   icon,
@@ -84,7 +97,8 @@ export function CustomDropdown<T extends string = string>({
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const selectedOption = options?.find((o) => o.value === value) || options?.[0];
+  const multiple = values !== undefined && onValuesChange !== undefined;
+  const selectedOption = multiple ? undefined : options?.find((o) => o.value === value) || options?.[0];
   const triggerLabel = label ?? selectedOption?.label;
   const triggerIcon = icon || selectedOption?.icon;
 
@@ -97,10 +111,16 @@ export function CustomDropdown<T extends string = string>({
 
   const handleSelect = useCallback(
     (optValue: T) => {
+      if (values !== undefined && onValuesChange) {
+        // Toggle, keeping the options' order; the panel stays open for the next pick.
+        const next = values.includes(optValue) ? values.filter((v) => v !== optValue) : [...values, optValue];
+        onValuesChange((options ?? []).map((o) => o.value).filter((v) => next.includes(v)));
+        return;
+      }
       onChange?.(optValue);
       setIsOpen(false);
     },
-    [onChange]
+    [onChange, values, onValuesChange, options]
   );
 
   return (
@@ -108,7 +128,7 @@ export function CustomDropdown<T extends string = string>({
       <button
         type="button"
         onClick={handleToggle}
-        {...popoverTriggerProps(isOpen, children ? 'true' : false)}
+        {...popoverTriggerProps(isOpen, children || multiple ? 'true' : false)}
         aria-label={ariaLabel || (typeof triggerLabel === 'string' ? triggerLabel : undefined)}
         className={`flex items-center gap-2 px-3 py-2 pointer-coarse:min-h-11 rounded-control bg-bg-surface border border-border-color ${accentClasses.hover} hover:bg-bg-elevated text-xs font-bold text-text-primary transition-all cursor-pointer shadow-xs select-none ${
           isOpen ? `${accentClasses.open} shadow-xs` : ''
@@ -118,6 +138,11 @@ export function CustomDropdown<T extends string = string>({
           <span className="text-text-secondary shrink-0">{triggerIcon}</span>
         )}
         {triggerLabel != null && <span className="truncate">{triggerLabel}</span>}
+        {multiple && values.length > 0 && (
+          <Badge tone={accent === 'amber' ? 'amber' : 'red'} size="xs" plain>
+            {values.length}
+          </Badge>
+        )}
         <ChevronDown
           className={`h-3.5 w-3.5 text-text-secondary transition-transform duration-200 shrink-0 ${
             isOpen ? `rotate-180 ${accentClasses.chevron}` : ''
@@ -133,17 +158,19 @@ export function CustomDropdown<T extends string = string>({
         gap={6}
         maxHeight={typeof window !== 'undefined' ? window.innerHeight * 0.7 : undefined}
         role={children ? 'group' : undefined}
-        ariaLabel={children ? (ariaLabel || (typeof triggerLabel === 'string' ? triggerLabel : undefined)) : undefined}
+        as={multiple ? 'fieldset' : undefined}
+        ariaLabel={children || multiple ? (ariaLabel || (typeof triggerLabel === 'string' ? triggerLabel : undefined)) : undefined}
         className={cn(MENU_PANEL_CLASS, minWidthClass, 'custom-scrollbar', resolvedMenuClassName)}
       >
             {children
               ? children
               : (options ?? []).map((opt) => {
-                  const isSelected = opt.value === value;
+                  const isSelected = multiple ? values.includes(opt.value) : opt.value === value;
                   return (
                     <MenuItem selected={isSelected} tone={accent === 'amber' ? 'amber' : 'red'} className="justify-between"
                       key={opt.value}
                       onClick={() => handleSelect(opt.value)}
+                      {...(multiple ? { 'aria-pressed': isSelected, 'aria-current': undefined } : {})}
                     >
                       <div className="flex items-center gap-2 min-w-0">
                         {opt.icon && <span className="shrink-0">{opt.icon}</span>}
@@ -158,6 +185,11 @@ export function CustomDropdown<T extends string = string>({
                     </MenuItem>
                   );
                 })}
+            {!children && multiple && clearLabel && values.length > 0 && (
+              <MenuItem className="mt-1 justify-center border-t border-border-color text-text-muted" onClick={() => onValuesChange([])}>
+                {clearLabel}
+              </MenuItem>
+            )}
       </Popover>
     </div>
   );

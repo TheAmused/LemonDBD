@@ -19,10 +19,11 @@ from app.models.base import ColumnDictMixin, TranslatableModelMixin, utcnow
 
 if TYPE_CHECKING:
     from app.models.equipment import Offering
+    from app.models.map_layout import MapLayout
 
 #: The callout provider every map currently uses.
-DEFAULT_SOURCE_CODE = "hens333"
-DEFAULT_SOURCE_LABEL = "Hens333 12-Clock Callouts"
+DEFAULT_SOURCE_CODE = "lemondbd"
+DEFAULT_SOURCE_LABEL = "LemonDBD 12-Clock Callouts"
 
 #: Fallback layout figures if a map record has not defined specific values.
 DEFAULT_LAYOUT_TYPE = "Outdoor"
@@ -119,6 +120,9 @@ class MapRealm(Base, TranslatableModelMixin):
 
     realm: Mapped["Realm"] = relationship(back_populates="maps", lazy="joined")
     source: Mapped["MapSource"] = relationship(back_populates="maps", lazy="joined")
+    layout_record: Mapped["MapLayout | None"] = relationship(
+        "MapLayout", back_populates="map", uselist=False, cascade="all, delete-orphan"
+    )
 
     def to_dict(self, lang: str | None = None) -> dict[str, Any]:
         name = self.localized(lang, "name", self.name)

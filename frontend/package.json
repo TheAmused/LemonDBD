@@ -25,7 +25,10 @@
     "postbuild": "npm run check:built",
     "test:guards": "tsx --test src/__tests__/unit/backgroundEffects.test.ts src/__tests__/unit/i18nArchitecture.test.ts src/__tests__/unit/i18nHygiene.test.ts src/__tests__/unit/codeQualityGuards.test.ts src/__tests__/unit/structureGuards.test.ts src/__tests__/unit/uiGuards.test.ts src/__tests__/unit/duplicationGuards.test.ts src/__tests__/unit/fileLengthGuard.test.ts src/__tests__/unit/smashIconGuards.test.ts src/__tests__/unit/dockerGuards.test.ts src/__tests__/unit/lintGuards.test.ts",
     "check": "npm run check:i18n && npm run check:styles && npm run test:guards",
-    "check:typography": "tsx scripts/check-typography.ts"
+    "check:typography": "tsx scripts/check-typography.ts",
+    "screenshots": "node scripts/site-tour.mjs",
+    "screenshots:update": "node scripts/site-tour.mjs --update",
+    "screenshots:quick": "node scripts/site-tour.mjs --viewports=desktop,mobile"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

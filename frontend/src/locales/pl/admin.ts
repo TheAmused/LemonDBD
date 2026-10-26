@@ -68,6 +68,8 @@ export default {
   targetItemsDesc: "Przedmioty i narzędzia Ocalałych",
   targetMapsLabel: "Mapy i Oznaczenia",
   targetMapsDesc: "Krainy map, kafelki i punkty orientacyjne celów",
+  targetMapLayoutsLabel: "Układy Map",
+  targetMapLayoutsDesc: "Wektorowe plany i układy dla map",
   targetUsersLabel: "Konta Użytkowników",
   targetUsersDesc: "Zarejestrowane profile użytkowników i role",
   targetOwnershipsLabel: "Rekordy Własności Użytkowników",
@@ -445,4 +447,9 @@ export default {
   neverRun: "Jeszcze nie uruchomiono",
   lastRunScheduled: "Ostatnio według harmonogramu: {date}",
   lastRunManual: "Ostatnio uruchomione przez administratora: {date}",
+  vectorMapTest: "Silnik map wektorowych",
+  vectorMapTestDesc: "Przeglądaj interaktywne wektorowe układy SVG, plany pięter i legendy punktów orientacyjnych.",
+  vectorMapSelect: "Wybierz mapę",
+  vectorMapNoLayout: "Nie znaleziono wektorowego obrysu dla tej mapy.",
+  vectorMapLoading: "Wczytywanie układu...",
 } as const;

@@ -414,7 +414,10 @@ export async function runTour(options = {}) {
               if (sw) { sw.scrollIntoView({ block: 'center' }); sw.click(); }
             }).catch(() => {});
           } else {
-            const triggerLocator = page.locator(effectiveTrigger).first();
+            const hasVisibleTrigger = (await page.locator(effectiveTrigger).locator('visible=true').count().catch(() => 0)) > 0;
+            const triggerLocator = hasVisibleTrigger
+              ? page.locator(effectiveTrigger).locator('visible=true').first()
+              : page.locator(effectiveTrigger).first();
             await triggerLocator.waitFor({ state: 'visible', timeout: 5000 });
             await triggerLocator.scrollIntoViewIfNeeded().catch(() => {});
             if (target.action === 'dblclick') await triggerLocator.dblclick({ timeout: 5000, force: true });

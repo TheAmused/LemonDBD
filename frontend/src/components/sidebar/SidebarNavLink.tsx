@@ -5,12 +5,17 @@ import React from 'react';
 import Link from 'next/link';
 
 
+/** The look every sidebar row shares, links and group titles alike. */
+export const SIDEBAR_ROW = 'w-full px-3.5 py-2 type-strong';
+export const SIDEBAR_ROW_HOVER = 'hover:bg-bg-sidebar-hover hover:text-accent-red';
+
+const ICON_COLOR = 'text-accent-red';
+const ACTIVE_CLASSES = 'bg-accent-red/10 text-accent-red border border-accent-red/20';
+
 export interface SidebarNavLinkProps {
   id: string;
   label: string;
   icon: React.ElementType;
-  color: string;
-  activeBg: string;
   href?: string;
   isActive: boolean;
   badge?: string;
@@ -23,8 +28,6 @@ export interface SidebarNavLinkProps {
 const SidebarNavLinkBase: React.FC<SidebarNavLinkProps> = ({
   label,
   icon: Icon,
-  color,
-  activeBg,
   href,
   isActive,
   badge,
@@ -32,15 +35,15 @@ const SidebarNavLinkBase: React.FC<SidebarNavLinkProps> = ({
   hasPopup,
   onClick,
 }) => {
-  const commonClasses = `w-full flex items-center justify-between px-3.5 py-2 rounded-control type-strong transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red ${isActive
-      ? activeBg
-      : 'text-text-primary hover:bg-bg-sidebar-hover hover:text-accent-red'
+  const commonClasses = `${SIDEBAR_ROW} flex items-center justify-between rounded-control transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red ${isActive
+      ? ACTIVE_CLASSES
+      : `text-text-primary ${SIDEBAR_ROW_HOVER}`
     }`;
 
   const innerContent = (
     <>
       <div className="flex items-center gap-3 min-w-0">
-        <Icon className={`h-4 w-4 shrink-0 ${color}`} />
+        <Icon className={`h-4 w-4 shrink-0 ${ICON_COLOR}`} />
         <span className="truncate">{label}</span>
       </div>
       {badge && (

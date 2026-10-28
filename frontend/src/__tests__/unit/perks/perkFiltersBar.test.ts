@@ -65,8 +65,8 @@ describe('PerkFilters header', () => {
   it('the Filters button counts every filter that is on, Owned and General together once', () => {
     assert.ok(!renderFilters().includes('data-text='));
     assert.match(renderFilters({ activeTypes: ['healing', 'chase'] }), /data-text="2"/);
-    assert.match(renderFilters({ activeTypes: ['aura'], scope: 'general' }), /data-text="2"/);
-    assert.match(renderFilters({ activeTypes: ['aura'], ownershipFilter: 'owned', scope: 'general' }), /data-text="2"/);
+    assert.match(renderFilters({ activeTypes: ['tracking'], scope: 'general' }), /data-text="2"/);
+    assert.match(renderFilters({ activeTypes: ['tracking'], ownershipFilter: 'owned', scope: 'general' }), /data-text="2"/);
   });
 
   it('labels are localized', () => {
@@ -74,7 +74,7 @@ describe('PerkFilters header', () => {
       React.createElement(PerkFilters, {
         search: '', setSearch: () => {}, role: 'Killer', setRole: () => {}, scope: 'all', setScope: () => {},
         ownershipFilter: 'all', setOwnershipFilter: () => {}, sortBy: 'name', setSortBy: () => {}, order: 'asc', setOrder: () => {},
-        activeTypes: ['hex'],
+        activeTypes: ['totem'],
       }),
       { dict: pl as Dictionary, locale: 'pl' }
     );
@@ -86,11 +86,11 @@ describe('PerkFilters header', () => {
 describe('role switch keeps only the types the new role has', () => {
   const typesByRole = {
     Survivor: new Set(['healing', 'chase'] as const),
-    Killer: new Set(['hex', 'chase'] as const),
+    Killer: new Set(['totem', 'chase'] as const),
   };
 
   it('drops a Killer-only type when switching to Survivor and keeps shared ones', () => {
-    assert.deepEqual(typesForRole(['hex', 'chase'], 'Survivor', typesByRole), ['chase']);
+    assert.deepEqual(typesForRole(['totem', 'chase'], 'Survivor', typesByRole), ['chase']);
   });
 
   it('keeps everything when the new role has all of them', () => {

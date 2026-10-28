@@ -15,6 +15,8 @@ export interface SidebarNavLinkProps {
   isActive: boolean;
   badge?: string;
   badgeColor?: string;
+  /** For a button that opens a dialog instead of going to a page. */
+  hasPopup?: 'dialog';
   onClick?: () => void;
 }
 
@@ -27,6 +29,7 @@ const SidebarNavLinkBase: React.FC<SidebarNavLinkProps> = ({
   isActive,
   badge,
   badgeColor = 'bg-accent-amber/10 text-accent-amber border-accent-amber/20',
+  hasPopup,
   onClick,
 }) => {
   const commonClasses = `w-full flex items-center justify-between px-3.5 py-2 rounded-control type-strong transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red ${isActive
@@ -67,6 +70,7 @@ const SidebarNavLinkBase: React.FC<SidebarNavLinkProps> = ({
     <button
       type="button"
       aria-current={isActive ? 'page' : undefined}
+      aria-haspopup={hasPopup}
       onClick={onClick}
       className={commonClasses}
     >

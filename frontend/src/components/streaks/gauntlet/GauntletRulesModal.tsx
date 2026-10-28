@@ -46,37 +46,40 @@ const SURVIVOR_TIERS: TierDefinition[] = [
     nameKey: 'tierWarmUp',
     streakRange: '1 - 10',
     perkLimit: 4,
-    badgeColor: 'bg-accent-green/20 text-accent-green border-accent-green/30',
+    badgeColor: 'text-accent-green',
   },
   {
     level: 1,
     nameKey: 'tierThinning',
     streakRange: '11 - 20',
     perkLimit: 3,
-    badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
+    badgeColor: 'text-accent-amber',
   },
   {
     level: 2,
     nameKey: 'tierStruggle',
     streakRange: '21 - 30',
     perkLimit: 2,
-    badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
+    badgeColor: 'text-accent-amber',
   },
   {
     level: 3,
     nameKey: 'tierHardcore',
     streakRange: '31 - 40',
     perkLimit: 1,
-    badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
+    badgeColor: 'text-accent-amber',
   },
   {
     level: 4,
     nameKey: 'tierLegend',
     streakRange: '41 - 52',
     perkLimit: 0,
-    badgeColor: 'bg-accent-red/20 text-accent-red border-accent-red/30',
+    badgeColor: 'text-accent-red',
   },
 ];
+
+// The hardest tier shown is red, even where the roster stops before the perkless one.
+const LAST_TIER_COLOR = 'text-accent-red';
 
 // Duo and squad step a tier every 6 wins.
 const TEAM_STREAK_RANGES = ['1 - 6', '7 - 12', '13 - 18', '19 - 26'];
@@ -87,28 +90,28 @@ const KILLER_TIERS: TierDefinition[] = [
     nameKey: 'tierBloodbath',
     streakRange: '1 - 10',
     perkLimit: 3,
-    badgeColor: 'bg-accent-green/20 text-accent-green border-accent-green/30',
+    badgeColor: 'text-accent-green',
   },
   {
     level: 1,
     nameKey: 'tierObsession',
     streakRange: '11 - 20',
     perkLimit: 2,
-    badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
+    badgeColor: 'text-accent-amber',
   },
   {
     level: 2,
     nameKey: 'tierExecutioner',
     streakRange: '21 - 30',
     perkLimit: 1,
-    badgeColor: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
+    badgeColor: 'text-accent-amber',
   },
   {
     level: 3,
     nameKey: 'tierEntity',
     streakRange: '31 - 43',
     perkLimit: 0,
-    badgeColor: 'bg-accent-red/20 text-accent-red border-accent-red/30',
+    badgeColor: 'text-accent-red',
   },
 ];
 
@@ -221,8 +224,8 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
           rawStreaks.lemonKillerTokenKeepRule,
         ]
       : []),
-    ...(isSolo ? [rawStreaks.soloHalfWinRule, rawStreaks.soloPickRule] : []),
-    ...(isDuo ? [rawStreaks.duoCharactersRule, rawStreaks.duoRematchRule, rawStreaks.duoHatchRule] : []),
+    ...(isSolo ? [rawStreaks.soloPickRule] : []),
+    ...(isDuo ? [rawStreaks.duoCharactersRule, rawStreaks.duoRematchRule] : []),
     ...(isSquad ? [rawStreaks.squadCharactersRule, rawStreaks.squadRematchRule, rawStreaks.squadUniquePerkRule] : []),
     perkRule,
     checkpointRule,
@@ -244,7 +247,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
 
       <RulesSection title={rawStreaks.progressiveTierRestrictions}>
         <ul className="grid grid-cols-1 gap-2.5">
-          {tiers.map((tier) => {
+          {tiers.map((tier, index) => {
             const tierName = rawStreaks[tier.nameKey];
             const streakRange = isTeam && role === 'survivor' ? TEAM_STREAK_RANGES[tier.level] : tier.streakRange;
             const perkLimitText =
@@ -260,7 +263,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
                   tone="elevated" padding="none" className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 gap-3 shadow-sm"
                 >
                   <div className="flex items-center gap-3">
-                    <span className={`px-2.5 py-1 rounded-chip text-xs font-bold border ${tier.badgeColor} whitespace-nowrap`}>
+                    <span className={`text-xs font-bold ${index === tiers.length - 1 ? LAST_TIER_COLOR : tier.badgeColor} whitespace-nowrap`}>
                       {rawStreaks.tierLabel || ''} {tier.level}{tierName ? `: ${tierName}` : ''}
                     </span>
                     <span className="text-xs font-medium text-text-muted">

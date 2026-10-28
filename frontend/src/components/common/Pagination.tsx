@@ -101,6 +101,23 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
     </button>
   );
 
+  const limitSelect = onLimitChange && (
+    <Select
+      id="limit-select"
+      aria-label={dict.pagination.perPage}
+      fieldSize="xs"
+      value={limit}
+      onChange={(e) => onLimitChange(Number(e.target.value))}
+      className="w-auto font-semibold"
+    >
+      {PAGE_SIZE_OPTIONS.map((size) => (
+        <option key={size} value={size}>{size}</option>
+      ))}
+    </Select>
+  );
+  // The numbered pager has no use for the range: the per-page picker takes its place on the left.
+  const picksLimitOnLeft = variant === 'numbered' && Boolean(limitSelect);
+
   return (
     <nav
       aria-label={dict.pagination.navAriaLabel}
@@ -110,38 +127,29 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
         className
       )}
     >
-      {/* Numbers only -- no "Showing"/"of"/"results" spelled out. Below
-          400px there isn't room for this next to the page controls without
-          crowding them, so it's visually hidden there too (sr-only keeps it
-          in the accessibility tree either way -- nothing is lost for
-          screen reader users, only sighted users on very small screens). */}
-      <div
-        className="sr-only phone:not-sr-only phone:text-mini phone:font-medium phone:text-text-muted sm:text-xs lg:text-sm wide:text-base"
-        aria-live="polite"
-        aria-label={showingAriaLabel || undefined}
-      >
-        <span className="font-bold text-text-primary">{startIdx}</span>
-        <span className="mx-0.5" aria-hidden="true">-</span>
-        <span className="font-bold text-text-primary">{endIdx}</span>
-        <span className="mx-1.5 text-text-muted/60" aria-hidden="true">/</span>
-        <span className="font-bold text-text-primary">{totalResults}</span>
-      </div>
+      {picksLimitOnLeft ? (
+        limitSelect
+      ) : (
+        /* Numbers only -- no "Showing"/"of"/"results" spelled out. Below
+           400px there isn't room for this next to the page controls without
+           crowding them, so it's visually hidden there too (sr-only keeps it
+           in the accessibility tree either way -- nothing is lost for
+           screen reader users, only sighted users on very small screens). */
+        <div
+          className="sr-only phone:not-sr-only phone:text-mini phone:font-medium phone:text-text-muted sm:text-xs lg:text-sm wide:text-base"
+          aria-live="polite"
+          aria-label={showingAriaLabel || undefined}
+        >
+          <span className="font-bold text-text-primary">{startIdx}</span>
+          <span className="mx-0.5" aria-hidden="true">-</span>
+          <span className="font-bold text-text-primary">{endIdx}</span>
+          <span className="mx-1.5 text-text-muted/60" aria-hidden="true">/</span>
+          <span className="font-bold text-text-primary">{totalResults}</span>
+        </div>
+      )}
 
       <div className="flex flex-wrap items-center gap-2 lg:gap-3">
-        {onLimitChange && (
-          <Select
-            id="limit-select"
-            aria-label={dict.pagination.perPage}
-            fieldSize="xs"
-            value={limit}
-            onChange={(e) => onLimitChange(Number(e.target.value))}
-            className="w-auto font-semibold"
-          >
-            {PAGE_SIZE_OPTIONS.map((size) => (
-              <option key={size} value={size}>{size}</option>
-            ))}
-          </Select>
-        )}
+        {!picksLimitOnLeft && limitSelect}
 
         {variant === 'numbered' ? (
           <div className="flex items-center gap-1 lg:gap-1.5">

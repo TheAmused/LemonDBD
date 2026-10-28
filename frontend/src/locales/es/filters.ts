@@ -34,4 +34,6 @@ export default {
   sortFields: "Campo de orden",
   sortOrderLabel: "Orden de clasificación",
   loadError: "No se pudieron cargar las habilidades.",
+  scopeTitle: "Mostrar",
+  generalShort: "Generales",
 } as const;

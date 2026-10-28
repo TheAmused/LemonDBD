@@ -34,4 +34,6 @@ export default {
   sortFields: "Pole sortowania",
   sortOrderLabel: "Kolejność sortowania",
   loadError: "Nie udało się wczytać umiejętności.",
+  scopeTitle: "Pokaż",
+  generalShort: "Ogólne",
 } as const;

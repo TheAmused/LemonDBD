@@ -67,9 +67,10 @@ class TestAuthOwnershipWorkflow:
             "David King",
         }
 
-        for c in chars:
-            if c["name"] in free_names:
-                assert c["is_owned"] is True, f"Expected {c['name']} to be owned by default"
+        # Sign-up through the route seeds the free characters as owned (the factory fixture does not).
+        by_name = {c["name"]: c for c in chars}
+        assert free_names <= set(by_name)
+        assert [n for n in sorted(free_names) if by_name[n]["is_owned"] is not True] == []
 
         trapper = next(c for c in chars if c["name"] == "The Trapper")
         lock_res = live_client.post(
@@ -86,9 +87,8 @@ class TestAuthOwnershipWorkflow:
             perks_res = live_client.get(f"/api/v1/users/{user_id}/perks", headers=headers)
             assert perks_res.status_code == 200
             user_perks = {p["id"]: p for p in perks_res.get_json()["data"]}
-            for pid in trapper_perks:
-                if pid in user_perks:
-                    assert user_perks[pid]["is_unlocked"] is False
+            assert len(trapper_perks) == 3
+            assert [user_perks[pid]["is_unlocked"] for pid in trapper_perks] == [False, False, False]
 
         unlock_res = live_client.post(
             f"/api/v1/users/{user_id}/characters",
@@ -99,6 +99,4 @@ class TestAuthOwnershipWorkflow:
 
         perks_res2 = live_client.get(f"/api/v1/users/{user_id}/perks", headers=headers)
         user_perks2 = {p["id"]: p for p in perks_res2.get_json()["data"]}
-        for pid in trapper_perks:
-            if pid in user_perks2:
-                assert user_perks2[pid]["is_unlocked"] is True
+        assert [user_perks2[pid]["is_unlocked"] for pid in trapper_perks] == [True, True, True]

@@ -8,6 +8,26 @@ from sqlalchemy.orm import Session
 
 os.environ["TESTING"] = "True"
 os.environ["DATABASE_URL"] = "sqlite:///:memory:"
+# Flask-Mail reads its sender when the app is created, and the config falls back to the developer's
+# .env.dev for it. Pinning it here, before the app module is imported, makes the mail tests behave
+# the same on every machine and in CI (TESTING already keeps Flask-Mail from really sending).
+os.environ["MAIL_DEFAULT_SENDER"] = "noreply@lemondbd.test"
+
+# Password and recovery-code hashing: werkzeug's default (scrypt) costs ~50 ms a call on purpose,
+# and the suite registers thousands of users and hashes ten recovery codes per 2FA test. A one-
+# iteration PBKDF2 keeps every hash real (check_password_hash still verifies it) at a fraction of
+# the cost. It is patched on werkzeug before the app is imported, because the app imports the
+# function by name. Production code is untouched; nothing in the unit suite depends on the method.
+import werkzeug.security as _werkzeug_security  # noqa: E402
+
+_real_generate_password_hash = _werkzeug_security.generate_password_hash
+
+
+def _fast_generate_password_hash(password: str, method: str = "pbkdf2:sha256:1", salt_length: int = 16) -> str:
+    return _real_generate_password_hash(password, method=method, salt_length=salt_length)
+
+
+_werkzeug_security.generate_password_hash = _fast_generate_password_hash
 
 from sqlalchemy import select
 
@@ -38,24 +58,50 @@ def app() -> Generator[Flask, None, None]:
         yield flask_app
 
 
+def _empty_all_tables() -> None:
+    """Delete every row, children before parents, and reset SQLite's AUTOINCREMENT counters.
+
+    Emptying the tables is what makes ids start from 1 again: SQLite hands out
+    max(rowid) + 1 for an INTEGER PRIMARY KEY, so tests that expect a first row
+    to be id 1 behave exactly as they did when the schema was rebuilt per test.
+    """
+    with db.engine.begin() as conn:
+        conn.exec_driver_sql("PRAGMA foreign_keys=OFF")
+        for table in reversed(db.metadata.sorted_tables):
+            conn.execute(table.delete())
+        has_sequence = conn.exec_driver_sql(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='sqlite_sequence'"
+        ).first()
+        if has_sequence:
+            conn.exec_driver_sql("DELETE FROM sqlite_sequence")
+        conn.exec_driver_sql("PRAGMA foreign_keys=ON")
+
+
 @pytest.fixture(autouse=True)
 def test_db(app: Flask) -> Generator[object, None, None]:
-    """Provide clean database schema per test with automatic rollback and teardown.
+    """Give every test an empty database with the full schema.
+
+    The schema is built once per session (or per xdist worker) and only the
+    rows are deleted between tests: rebuilding all tables for each of ~2,300
+    tests was 60% of the suite's run time. `create_all()` still runs before
+    each test, as a cheap existence check, because a few fixtures call
+    `drop_all()` themselves and would otherwise leave the next test with no
+    tables.
 
     `@cache_catalog` routes (maps/realms, and any other catalog endpoint) cache
     across requests with no key tied to the database's contents -- entirely
     correct for a running server, where the seed only changes on a deploy, but fatal for a
-    test session that recreates the schema fresh every function: without an
+    test session that resets the data every function: without an
     explicit bust here, the first test to hit a cached endpoint pins its
-    response (or its `None`) for every later test that hits the same key,
-    real database reset or not.
+    response (or its `None`) for every later test that hits the same key.
     """
     with app.app_context():
         redis_cache.bump_catalog_version()
         db.create_all()
         yield db
         db.session.remove()
-        db.drop_all()
+        db.create_all()
+        _empty_all_tables()
         redis_cache.bump_catalog_version()
 
 

@@ -6,33 +6,21 @@ from flask.testing import FlaskClient
 @pytest.mark.live
 @pytest.mark.workflow
 class TestPerkDetailAndTeachablesWorkflow:
-    """Workflow asserting accurate assignment of 3 teachable perks per character profile."""
+    """A character's detail page lists exactly its three teachable perks."""
 
+    @pytest.mark.parametrize(
+        ("slug", "name", "teachables"),
+        [
+            ("Meg_Thomas", "Meg Thomas", {"Adrenaline", "Quick & Quiet", "Sprint Burst"}),
+            ("The_Trapper", "The Trapper", {"Agitation", "Brutal Strength", "Unnerving Presence"}),
+        ],
+    )
     def test_perk_detail_and_teachables_association_workflow(
-        self, live_client: FlaskClient
+        self, live_client: FlaskClient, slug: str, name: str, teachables: set[str]
     ) -> None:
-        meg_res = live_client.get("/api/v1/characters/Meg_Thomas/detail")
-        if meg_res.status_code == 404:
-            meg_res = live_client.get("/api/v1/characters/Meg%20Thomas/detail")
-        assert meg_res.status_code == 200
-        meg_data = meg_res.get_json()["data"]
-        assert meg_data["character"]["name"] == "Meg Thomas"
-        meg_perk_names = [p["name"] for p in meg_data["perks"]]
-        assert len(meg_perk_names) == 3
-        assert (
-            any("Sprint Burst" in name for name in meg_perk_names)
-            or any("Adrenaline" in name for name in meg_perk_names)
-            or any("Quick & Quiet" in name for name in meg_perk_names)
-        )
-
-        trapper_res = live_client.get("/api/v1/characters/The_Trapper/detail")
-        if trapper_res.status_code == 404:
-            trapper_res = live_client.get("/api/v1/characters/The%20Trapper/detail")
-        assert trapper_res.status_code == 200
-        trapper_data = trapper_res.get_json()["data"]
-        trapper_perk_names = [p["name"] for p in trapper_data["perks"]]
-        assert len(trapper_perk_names) == 3
-        assert any(
-            "Agitation" in name or "Brutal Strength" in name or "Unnerving Presence" in name
-            for name in trapper_perk_names
-        )
+        res = live_client.get(f"/api/v1/characters/{slug}/detail")
+        assert res.status_code == 200
+        data = res.get_json()["data"]
+        assert data["character"]["name"] == name
+        assert {p["name"] for p in data["perks"]} == teachables
+        assert all(p["character"] == name and p["is_teachable"] for p in data["perks"])

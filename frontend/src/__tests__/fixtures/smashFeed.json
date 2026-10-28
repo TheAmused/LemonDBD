@@ -1,0 +1,11 @@
+{
+  "_source": "GET /api/v1/smash-or-pass/rosters/canon/feed?limit=6 (data.entities), trimmed to the fields the persona calculation reads. Re-record with backend/scripts/record_frontend_fixtures.py.",
+  "entities": [
+    {"id": "ec849c1f-9608-4aa8-bf76-fca39c40b4e3", "slug": "ada_wong", "name": "Ada Wong", "role": "Survivor", "gender": "female"},
+    {"id": "bb58cf9f-3494-4480-b90c-ea538cc0fcbe", "slug": "sable_ward", "name": "Sable Ward", "role": "Survivor", "gender": "female"},
+    {"id": "04ba2a69-af28-4ff3-bd58-b712f94d4b11", "slug": "feng_min", "name": "Feng Min", "role": "Survivor", "gender": "female"},
+    {"id": "456419c6-8138-4e79-8fc8-abf4215e8cb8", "slug": "kate_denson", "name": "Kate Denson", "role": "Survivor", "gender": "female"},
+    {"id": "5b811e9a-726d-4519-9c7a-79de2e441d16", "slug": "mikaela_reid", "name": "Mikaela Reid", "role": "Survivor", "gender": "female"},
+    {"id": "368f12d8-0b44-42dc-a21a-880af8d2d9c1", "slug": "jill_valentine", "name": "Jill Valentine", "role": "Survivor", "gender": "female"}
+  ]
+}

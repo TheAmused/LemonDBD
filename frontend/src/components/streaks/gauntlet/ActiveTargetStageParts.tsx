@@ -13,6 +13,7 @@ import { DiamondSlot } from '@/components/ui/DiamondSlot';
 import { useDictionary } from '@/context/DictionaryContext';
 import { baseSlots } from '@/utils/perkSlots';
 import { Img } from '@/components/common/Img';
+import { Tooltip } from '@/components/common/Tooltip';
 
 const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[] = []) => {
   if (!name) return null;
@@ -128,25 +129,40 @@ const TEACHABLE_ACCENT = {
   red: 'bg-accent-red/10 border-accent-red/40 text-accent-red',
 };
 
+/** Hover body of the teachable slot: the character's own perks to pick from. */
+const TeachablePerkList: React.FC<{ perks: Perk[] }> = ({ perks }) => (
+  <ul className="flex items-center justify-center">
+    {perks.map((perk) => (
+      <li key={perk.id ?? perk.name} className="flex h-20 w-20 shrink-0 items-center justify-center">
+        <PerkArt perk={perk} size="h-20 w-20" />
+      </li>
+    ))}
+  </ul>
+);
+
 /** The "own unique perk goes here" slot, always paired with its badge.
- * `accent` lets squad color each player's slot differently. */
-const TeachableSlot: React.FC<{ size: SlotSize; accent?: 'amber' | 'red'; }> = ({ size, accent = 'amber' }) => {
+ * `accent` lets squad color each player's slot differently; hovering it lists the character's own perks. */
+const TeachableSlot: React.FC<{ size: SlotSize; perks: Perk[]; accent?: 'amber' | 'red'; }> = ({ size, perks, accent = 'amber' }) => {
   const dict = useDictionary();
   return (
-  <SlotChip
-    size={size}
-    iconClassName={TEACHABLE_ACCENT[accent]}
-    badge={dict.streaks.teachableBadge}
-    badgeColor={accent}
-  >
-    <Star className={SLOT_ICON_SIZE[size]} />
-  </SlotChip>
-);
+    <Tooltip variant="item" content={<TeachablePerkList perks={perks} />} disabled={perks.length === 0}>
+      <SlotChip
+        size={size}
+        iconClassName={TEACHABLE_ACCENT[accent]}
+        badge={dict.streaks.teachableBadge}
+        badgeColor={accent}
+      >
+        <Star className={SLOT_ICON_SIZE[size]} />
+      </SlotChip>
+    </Tooltip>
+  );
 };
 
 interface PerkSlotsRowProps {
   tierInfo: TierInfo;
   randomPerks: Perk[];
+  /** The character's own perks, listed when hovering the teachable slot. */
+  characterPerks: Perk[];
   displayName: string;
   size?: SlotSize;
   teachableAccent?: 'amber' | 'red';
@@ -155,7 +171,7 @@ interface PerkSlotsRowProps {
 }
 
 /** A single horizontal row of labelled slot chips. */
-const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, displayName, size = 'small', teachableAccent, bonusSlots = 0 }) => {
+const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, characterPerks, displayName, size = 'small', teachableAccent, bonusSlots = 0 }) => {
   const dict = useDictionary();
   const perkLimit = tierInfo.perk_limit;
   const charactersPerksOnly = tierInfo.character_perks_only;
@@ -222,7 +238,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, disp
             // Every filled slot is one of the killer's own teachables, and which ones is the player's pick,
             // so it is drawn as the generic teachable slot rather than a specific perk that would look assigned.
             return <li key={`char-slot-${idx}`}>
-              <TeachableSlot size={size} accent={teachableAccent} />
+              <TeachableSlot size={size} perks={characterPerks} accent={teachableAccent} />
             </li>;
           }
 
@@ -230,7 +246,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, disp
             // One of several choices, not a specific assigned perk -- a symbol
             // for "your character's own unique perk goes here", not a preview.
             return <li key="character-slot">
-              <TeachableSlot size={size} accent={teachableAccent} />
+              <TeachableSlot size={size} perks={characterPerks} accent={teachableAccent} />
             </li>;
           }
 
@@ -299,6 +315,7 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
           <PerkSlotsRow
             tierInfo={tierInfo}
             randomPerks={player.random_perks ?? []}
+            characterPerks={player.character_perks}
             displayName={displayName}
             size="large"
             bonusSlots={bonusSlots}
@@ -325,6 +342,7 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
             <PerkSlotsRow
               tierInfo={tierInfo}
               randomPerks={player.random_perks ?? []}
+              characterPerks={player.character_perks}
               displayName={displayName}
               size={shared ? 'compact' : 'small'}
               teachableAccent={shared ? (n === 0 ? 'amber' : 'red') : undefined}

@@ -1,65 +1,166 @@
 # backend/tests/live/conftest.py
+"""Live suite: the real app against a throwaway PostgreSQL copy of the seeded `dbd_db`.
+
+Once per session the source database is copied to `dbd_db_test_live`, the tests run against the copy
+through Flask's test client, and the copy is dropped at the end. Nothing a test writes reaches the
+real database.
+
+The copy is made one of two ways:
+  1. `CREATE DATABASE ... TEMPLATE dbd_db` over a plain connection. Fast and exact, and needs no
+     Docker, but Postgres only allows it while nobody else is connected to the source -- true in CI
+     and with the backend stopped, not while the dev stack is up.
+  2. Otherwise `pg_dump | pg_restore` inside the compose `db` service (`docker compose exec`, run
+     from the repository root, so the container name does not matter).
+Either way the copy is checked against the source (Alembic revision and character/perk row counts)
+before any test runs, so a broken restore fails loudly here instead of as 60 confusing test failures.
+
+Connection settings come from the environment, falling back to the repository's env file
+(`ENV_FILE`, default `.env.dev`) -- the same file the stack itself reads.
+"""
 import logging
 import os
 import subprocess
+from pathlib import Path
 from typing import Any, Callable, Generator
+
+import psycopg
 import pytest
+from dotenv import dotenv_values
 from flask import Flask
 from flask.testing import FlaskClient
-from sqlalchemy import select
+from psycopg import sql
+from sqlalchemy import select, text
 
 logger = logging.getLogger(__name__)
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+
+
+def _setting(name: str, default: str) -> str:
+    """The process environment first, then the stack's env file, then the default."""
+    if os.getenv(name):
+        return os.environ[name]
+    env_file = REPO_ROOT / os.getenv("ENV_FILE", ".env.dev")
+    if env_file.is_file():
+        value = dotenv_values(env_file).get(name)
+        if value:
+            return value
+    return default
+
+
 TEST_DB_NAME = "dbd_db_test_live"
-SRC_DB_NAME = "dbd_db"
-POSTGRES_USER = os.getenv("POSTGRES_USER", "postgres")
-POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "postgres")
+SRC_DB_NAME = _setting("POSTGRES_DB", "dbd_db")
+POSTGRES_USER = _setting("POSTGRES_USER", "postgres")
+POSTGRES_PASSWORD = _setting("POSTGRES_PASSWORD", "postgres")
+# The tests run on the host, so the compose service name (`db`) in the env file is not reachable:
+# only an explicit environment value overrides the published localhost port.
 POSTGRES_HOST = os.getenv("POSTGRES_HOST", "127.0.0.1")
 POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
 
 LIVE_TEST_DB_URL = f"postgresql+psycopg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{TEST_DB_NAME}"
 
-pytestmark = [pytest.mark.live]
+#: Tables whose row counts must match between the source and the copy.
+VERIFIED_TABLES = ("survivors", "killers", "perks")
+
+
+def _connect(dbname: str) -> psycopg.Connection:
+    return psycopg.connect(
+        host=POSTGRES_HOST, port=POSTGRES_PORT, user=POSTGRES_USER, password=POSTGRES_PASSWORD,
+        dbname=dbname, autocommit=True, connect_timeout=10,
+    )
+
+
+def _drop_test_database() -> None:
+    with _connect("postgres") as conn:
+        conn.execute(sql.SQL("DROP DATABASE IF EXISTS {} WITH (FORCE)").format(sql.Identifier(TEST_DB_NAME)))
+
+
+def _clone_with_template() -> bool:
+    """Copy by template. False when the source has other connections (the dev stack is running)."""
+    try:
+        with _connect("postgres") as conn:
+            conn.execute(
+                sql.SQL("CREATE DATABASE {} TEMPLATE {}").format(
+                    sql.Identifier(TEST_DB_NAME), sql.Identifier(SRC_DB_NAME)
+                )
+            )
+        return True
+    except psycopg.errors.ObjectInUse:
+        return False
+
+
+def _clone_with_dump() -> str:
+    """Copy with pg_dump/pg_restore inside the compose `db` service. Returns pg_restore's output."""
+    dump = f"/tmp/{TEST_DB_NAME}.dump"
+    script = (
+        f"pg_dump -U {POSTGRES_USER} -F c -b {SRC_DB_NAME} -f {dump} && "
+        f"createdb -U {POSTGRES_USER} {TEST_DB_NAME} && "
+        f"pg_restore -U {POSTGRES_USER} --no-owner --no-privileges -d {TEST_DB_NAME} {dump}; "
+        f"status=$?; rm -f {dump}; exit $status"
+    )
+    result = subprocess.run(
+        ["docker", "compose", "exec", "-T", "db", "sh", "-c", script],
+        cwd=REPO_ROOT, capture_output=True, text=True, stdin=subprocess.DEVNULL, timeout=180,
+    )
+    output = f"{result.stdout}\n{result.stderr}".strip()
+    if result.returncode != 0:
+        # pg_restore exits 1 on ignorable warnings too, so the exit code alone does not decide:
+        # the verification below does. The output is kept so a real failure can show it.
+        logger.warning("pg_restore reported problems (exit %s):\n%s", result.returncode, output)
+    return output
+
+
+def _snapshot(dbname: str) -> dict[str, Any]:
+    with _connect(dbname) as conn:
+        counts = {
+            table: conn.execute(sql.SQL("SELECT COUNT(*) FROM {}").format(sql.Identifier(table))).fetchone()[0]
+            for table in VERIFIED_TABLES
+        }
+        revision = conn.execute("SELECT version_num FROM alembic_version").fetchone()
+    return {"alembic_revision": revision[0] if revision else None, **counts}
 
 
 def _setup_test_database_clone() -> None:
-    """Create dbd_db_test_live as a pristine copy of dbd_db."""
-    cmd = [
-        "docker",
-        "exec",
-        "dbd_db",
-        "sh",
-        "-c",
-        f"psql -U {POSTGRES_USER} -d postgres -c 'DROP DATABASE IF EXISTS {TEST_DB_NAME} WITH (FORCE);' && "
-        f"pg_dump -U {POSTGRES_USER} -F c -b {SRC_DB_NAME} -f /tmp/{TEST_DB_NAME}.dump && "
-        f"createdb -U {POSTGRES_USER} {TEST_DB_NAME} && "
-        f"(pg_restore -U {POSTGRES_USER} --no-owner --no-privileges -d {TEST_DB_NAME} /tmp/{TEST_DB_NAME}.dump || true) && "
-        f"rm -f /tmp/{TEST_DB_NAME}.dump",
-    ]
-    result = subprocess.run(
-        cmd, capture_output=True, text=True, stdin=subprocess.DEVNULL, timeout=30
-    )
-    if result.returncode != 0:
+    """Create dbd_db_test_live as a verified copy of dbd_db."""
+    try:
+        source = _snapshot(SRC_DB_NAME)
+    except psycopg.OperationalError as exc:
         raise RuntimeError(
-            f"Failed to clone live test database: {result.stderr or result.stdout}"
+            f"Cannot reach PostgreSQL at {POSTGRES_HOST}:{POSTGRES_PORT} as {POSTGRES_USER}. "
+            "Start the stack (./up.ps1) or point POSTGRES_HOST/POSTGRES_PORT/POSTGRES_PASSWORD at a "
+            f"database that has been migrated and seeded.\n{exc}"
+        ) from exc
+    if source["survivors"] + source["killers"] == 0:
+        raise RuntimeError(f"{SRC_DB_NAME} has no characters yet: wait for the first boot to finish seeding.")
+
+    _drop_test_database()
+    restore_output = ""
+    if _clone_with_template():
+        method = "template"
+    else:
+        method = "pg_dump/pg_restore"
+        restore_output = _clone_with_dump()
+
+    try:
+        copy = _snapshot(TEST_DB_NAME)
+    except psycopg.Error as exc:
+        raise RuntimeError(
+            f"The live test database could not be created ({method}): {exc}\n{restore_output}"
+        ) from exc
+    if copy != source:
+        raise RuntimeError(
+            f"The live test database ({method}) does not match {SRC_DB_NAME}: "
+            f"source {source}, copy {copy}.\n{restore_output}"
         )
+    logger.info("Live test database ready (%s): %s", method, copy)
 
 
 def _teardown_test_database_clone() -> None:
     """Drop dbd_db_test_live completely, leaving zero test residue."""
-    cmd = [
-        "docker",
-        "exec",
-        "dbd_db",
-        "psql",
-        "-U",
-        POSTGRES_USER,
-        "-d",
-        "postgres",
-        "-c",
-        f"DROP DATABASE IF EXISTS {TEST_DB_NAME} WITH (FORCE);",
-    ]
-    subprocess.run(cmd, capture_output=True, stdin=subprocess.DEVNULL, timeout=15)
+    try:
+        _drop_test_database()
+    except psycopg.Error:
+        logger.warning("Could not drop %s; the next run drops it first", TEST_DB_NAME, exc_info=True)
 
 
 @pytest.fixture(scope="session")
@@ -92,6 +193,23 @@ def live_app(live_database_url: str) -> Flask:
     app.config["TESTING"] = True
     app.config["SQLALCHEMY_DATABASE_URI"] = live_database_url
     return app
+
+
+@pytest.fixture
+def db_count(live_app: Flask) -> Callable[..., int]:
+    """`db_count("SELECT count(*) FROM killers")`: a number straight from the live copy.
+
+    The live tests compare what the API returns with the database it reads, so they can assert
+    exact values ("every killer", "all six toolboxes") instead of "more than 30" -- and stay right
+    when the seed grows.
+    """
+    from app.core.extensions import db
+
+    def count(query: str, **params: Any) -> int:
+        with live_app.app_context():
+            return int(db.session.execute(text(query), params).scalar_one())
+
+    return count
 
 
 @pytest.fixture

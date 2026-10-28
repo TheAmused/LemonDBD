@@ -111,7 +111,11 @@ if (-not $skipUpFlow) {
     Write-Host ""
     Write-Host "> [1/2] Running Backend Unit Tests (pytest)..." -ForegroundColor Yellow
     $env:PYTHONPATH = "$PSScriptRoot\backend"
-    & $pythonCmd -m pytest backend/tests/unit -v --tb=short
+    # Across all cores when pytest-xdist is installed (requirements-dev.txt); serial otherwise.
+    $xdist = @()
+    & $pythonCmd -c "import xdist" 2>$null
+    if ($LASTEXITCODE -eq 0) { $xdist = @("-n", "auto") }
+    & $pythonCmd -m pytest backend/tests/unit backend/tests/guards @xdist -v --tb=short
 
     if ($LASTEXITCODE -ne 0) {
         Write-Host ""
@@ -122,15 +126,15 @@ if (-not $skipUpFlow) {
     Write-Host "[PASS] Backend Unit Tests Passed." -ForegroundColor Green
 
 
-    # 1.2 Frontend unit tests (npm run test:unit). This one run is also the static check: the
-    # hardcoded-string, global-style and typography scans are unit tests, and so are the
-    # architecture / i18n / quality / lint-suppression guard suites. `npm run check` is a subset
-    # of it, so it is not run again.
+    # 1.2 Frontend tests (npm test = test:unit + test:guards). The unit tests are behaviour tests
+    # (src/__tests__/unit/<area>); the guards (src/__tests__/guards) are the static checks: the
+    # hardcoded-string, global-style and typography scans and the architecture / i18n / quality /
+    # lint-suppression rules.
     Write-Host ""
-    Write-Host "> [2/2] Running Frontend Unit Tests + static guards (npm run test:unit)..." -ForegroundColor Yellow
+    Write-Host "> [2/2] Running Frontend Unit Tests + static guards (npm test)..." -ForegroundColor Yellow
     Push-Location "$PSScriptRoot\frontend"
     try {
-        npm run test:unit
+        npm test
         if ($LASTEXITCODE -ne 0) {
             Write-Host ""
             Write-Host "[FAIL] Frontend unit tests did not pass!" -ForegroundColor Red
@@ -236,21 +240,21 @@ if (-not $skipUpFlow) {
         }
         Write-Host "[PASS] Backend live tests passed." -ForegroundColor Green
 
-        # 3.2 Frontend Live Tests
+        # 3.2 Frontend browser journeys (frontend/e2e): sign-in/up, randomizer, smash or pass, ...
         Write-Host ""
-        Write-Host "> [2/3] Running Frontend Live Tests (Next.js)..." -ForegroundColor Yellow
+        Write-Host "> [2/3] Running Frontend E2E Journeys (Playwright, needs chromium)..." -ForegroundColor Yellow
         Push-Location "$PSScriptRoot\frontend"
         try {
-            npm run test:live
+            npm run test:e2e
             if ($LASTEXITCODE -ne 0) {
                 Write-Host ""
-                Write-Host "[FAIL] Frontend Live Tests Failed!" -ForegroundColor Red
+                Write-Host "[FAIL] Frontend E2E journeys failed! (first time: npx playwright install chromium)" -ForegroundColor Red
                 exit 1
             }
         } finally {
             Pop-Location
         }
-        Write-Host "[PASS] Frontend live tests passed." -ForegroundColor Green
+        Write-Host "[PASS] Frontend E2E journeys passed." -ForegroundColor Green
 
         # 3.3 Rendered checks: real touch-target sizes + text contrast in all three themes
         Write-Host ""

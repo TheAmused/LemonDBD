@@ -1,5 +1,7 @@
 # backend/tests/live/workflows/test_page_streak_multipage_progression_workflow.py
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
+
 import pytest
 from flask.testing import FlaskClient
 
@@ -7,46 +9,40 @@ from flask.testing import FlaskClient
 @pytest.mark.live
 @pytest.mark.workflow
 class TestPageStreakMultipageProgressionWorkflow:
-    """Workflow asserting multi-page streak progressions across consecutive 15-perk pages."""
+    """A page streak run: start on page 1, a win on the current page moves to the next, and only the
+    current page can be reported."""
 
     def test_page_streak_multipage_progression_workflow(
         self,
-        live_client: FlaskClient,
+        db_count: Callable[..., int],
         auth_client_factory: Callable[..., tuple[FlaskClient, dict[str, str], dict[str, Any]]],
     ) -> None:
-        client, headers, user = auth_client_factory(
-            "page_streak_runner", "pstreak@example.com", "pass123"
-        )
+        client, headers, _ = auth_client_factory("page_streak_runner", "pstreak@example.com", "pass123")
 
-        roster_res = client.get("/api/v1/page-streak/roster", headers=headers)
-        assert roster_res.status_code == 200
-        roster = roster_res.get_json()["data"]
-        assert len(roster) > 0
-        killer_name = roster[0]["killer"]
+        roster = client.get("/api/v1/page-streak/roster", headers=headers).get_json()["data"]
+        assert len(roster) == db_count("SELECT count(*) FROM killers")
+        killer = roster[0]["killer"]
 
-        pool_res = client.get("/api/v1/page-streak/pool", headers=headers)
-        assert pool_res.status_code == 200
-        assert pool_res.get_json()["pool_size"] > 0
+        start_res = client.post("/api/v1/page-streak/run/start", json={"killer": killer}, headers=headers)
+        assert start_res.status_code == 201
+        run = start_res.get_json()["run"]
+        assert (run["killer"], run["status"], run["current_page"], run["best_page"]) == (killer, "in_progress", 1, 0)
+        assert len(run["pages"]) == run["page_count"]
 
-        start_res = client.post(
-            "/api/v1/page-streak/run/start", json={"killer": killer_name}, headers=headers
-        )
-        assert start_res.status_code in (200, 201)
+        reread = client.get(f"/api/v1/page-streak/run?killer={killer}", headers=headers).get_json()["run"]
+        assert (reread["id"], reread["current_page"]) == (run["id"], 1)
 
-        run_res = client.get(f"/api/v1/page-streak/run?killer={killer_name}", headers=headers)
-        assert run_res.status_code == 200
-        run_data = run_res.get_json()["run"]
-        assert run_data is not None
-        assert run_data["killer"] == killer_name
+        def report(page: int):
+            return client.post(
+                "/api/v1/page-streak/run/result",
+                json={"killer": killer, "page": page, "perks": run["pages"][0][:4], "result": "win"},
+                headers=headers,
+            )
 
-        result_res = client.post(
-            "/api/v1/page-streak/run/result",
-            json={
-                "killer": killer_name,
-                "page": 0,
-                "perks": ["Agitation", "Brutal Strength"],
-                "result": "win",
-            },
-            headers=headers,
-        )
-        assert result_res.status_code in (200, 400)
+        wrong_page = report(0)
+        assert wrong_page.status_code == 400
+        assert wrong_page.get_json()["error"] == "Page 0 is not the current page (1)"
+
+        won = report(1)
+        assert won.status_code == 200
+        assert (won.get_json()["run"]["current_page"], won.get_json()["run"]["best_page"]) == (2, 1)

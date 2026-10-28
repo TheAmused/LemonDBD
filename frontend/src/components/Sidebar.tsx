@@ -27,7 +27,7 @@ import { SidebarBottomControls } from './sidebar/SidebarBottomControls';
 import { i18n } from '@/i18n/config';
 import { WhatsNewLauncher } from '@/components/changelog/WhatsNewLauncher';
 import { useChangelogFeed } from '@/components/changelog/useChangelogFeed';
-import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, AdeptBadgeIcon } from '@/components/icons/DbdIcons';
+import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, AdeptBadgeIcon, QuillEditIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
@@ -42,6 +42,11 @@ const BugReportModal = dynamic(
 );
 const BuyCoffeeModal = dynamic(
   () => import('./sidebar/BuyCoffeeModal').then((m) => m.BuyCoffeeModal),
+  { ssr: false }
+);
+
+const BardInsultsModal = dynamic(
+  () => import('./sidebar/BardInsultsModal').then((m) => m.BardInsultsModal),
   { ssr: false }
 );
 
@@ -64,6 +69,7 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
   const [authModalIntent, setAuthModalIntent] = useState<'login' | 'verify'>('login');
   const [bugModalOpen, setBugModalOpen] = useState(false);
   const [coffeeModalOpen, setCoffeeModalOpen] = useState(false);
+  const [insultsModalOpen, setInsultsModalOpen] = useState(false);
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);
 
@@ -220,6 +226,21 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
               onClick={closeMobile}
             />
           ))}
+
+          {/* Opens a dialog, so it is a button rather than a page link. */}
+          <SidebarNavLink
+            id="bard-insults"
+            label={dict.sidebar.insultsButton}
+            icon={QuillEditIcon}
+            color="text-accent-red"
+            activeBg=""
+            isActive={false}
+            hasPopup="dialog"
+            onClick={() => {
+              setInsultsModalOpen(true);
+              setMobileOpen(false);
+            }}
+          />
         </nav>
 
         <SidebarUserSection
@@ -357,6 +378,12 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
         <BuyCoffeeModal
           isOpen={coffeeModalOpen}
           onClose={() => setCoffeeModalOpen(false)}
+        />
+      )}
+      {insultsModalOpen && (
+        <BardInsultsModal
+          isOpen={insultsModalOpen}
+          onClose={() => setInsultsModalOpen(false)}
         />
       )}
     </>

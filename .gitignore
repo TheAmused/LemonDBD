@@ -48,6 +48,7 @@ docker-compose.override.yml
 
 # Test & Coverage Reports
 .pytest_cache/
+.testmondata*
 .coverage
 coverage/
 htmlcov/

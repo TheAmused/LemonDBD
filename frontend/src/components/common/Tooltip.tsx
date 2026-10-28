@@ -269,8 +269,10 @@ export const TooltipBubble: React.FC<TooltipBubbleProps> = ({
 };
 
 export interface TooltipProps {
-  title: string;
+  title?: string;
   description?: string;
+  /** Custom bubble body; replaces title/description. */
+  content?: React.ReactNode;
   children: React.ReactNode;
   placement?: 'top' | 'bottom';
   variant?: TooltipVariant;
@@ -282,6 +284,7 @@ export interface TooltipProps {
 export const Tooltip: React.FC<TooltipProps> = ({
   title,
   description,
+  content,
   children,
   placement = 'top',
   variant,
@@ -293,7 +296,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
   const show = (e: React.SyntheticEvent<HTMLSpanElement>) => setAnchor(e.currentTarget);
   const hide = () => setAnchor(null);
 
-  if (disabled) return <>{children}</>;
+  if (disabled || (!title && !content)) return <>{children}</>;
 
   return (
     <span
@@ -314,7 +317,9 @@ export const Tooltip: React.FC<TooltipProps> = ({
           placement={placement}
           variant={variant}
           className={className}
-        />
+        >
+          {content}
+        </TooltipBubble>
       )}
     </span>
   );

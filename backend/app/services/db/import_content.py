@@ -14,7 +14,7 @@ from app.models.equipment import Item, ItemAddon, ItemCategory, KillerAddon, Off
 from app.models.map import MapRealm, MapSource, Realm
 from app.models.map_layout import MapLayout
 from app.models.perk import Perk
-from app.models.perk_types import DEFAULT_PERK_TYPES
+from app.models.perk_types import DEFAULT_PERK_TYPES, upgrade_legacy_perk_types
 from app.schemas.perk import PerkTypeSpec
 from app.services.db._common import parse_datetime
 from app.services.db.asset_bundling import write_asset_base64
@@ -33,7 +33,9 @@ def _perk_types_from_row(row: dict[str, Any]) -> list[str] | None:
 
     A payload written before the list existed carries the single `perk_type`
     string instead; it becomes a one-entry list (empty or null meaning the
-    catch-all), the same way `category` is still read as `role` below.
+    default), the same way `category` is still read as `role` below. Types the
+    category redesign renamed (`aura`, `hex`, `boon`) are read as their new
+    names, so a backup taken before it still imports.
     """
     if "perk_types" in row:
         raw: Any = row["perk_types"]
@@ -43,7 +45,7 @@ def _perk_types_from_row(row: dict[str, Any]) -> list[str] | None:
         return None
     role = row.get("role") or row.get("category") or "Survivor"
     try:
-        return PerkTypeSpec(role=role, perk_types=raw).perk_types
+        return PerkTypeSpec(role=role, perk_types=upgrade_legacy_perk_types(raw)).perk_types
     except ValidationError as err:
         problems = "; ".join(str(e["msg"]) for e in err.errors())
         raise ValueError(f"perks: invalid perk_types for {row.get('name')!r} (id {row.get('id')}): {problems}") from err

@@ -16,7 +16,7 @@ const noop = () => {};
 
 const DEJA_VU: Perk = {
   name: 'Déjà Vu',
-  perk_types: ['generator', 'aura'],
+  perk_types: ['generator', 'tracking'],
   character: 'General',
   category: 'Survivor',
   description: 'See generators.',
@@ -65,10 +65,10 @@ describe('perk type search UI', () => {
 
   it('the perk modal lists the perk\'s types, primary first, as buttons only when they can filter', () => {
     const plain = renderWithDictionary(React.createElement(PerkTypeBadges, { perk: DEJA_VU }));
-    assert.ok(plain.indexOf('Generator') < plain.indexOf('Aura'));
+    assert.ok(plain.indexOf('Generator') < plain.indexOf('Tracking'));
     assert.ok(!plain.includes('aria-pressed'));
     const clickable = renderWithDictionary(
-      React.createElement(PerkTypeBadges, { perk: DEJA_VU, onSelectType: noop, activeTypes: ['aura'] })
+      React.createElement(PerkTypeBadges, { perk: DEJA_VU, onSelectType: noop, activeTypes: ['tracking'] })
     );
     assert.equal((clickable.match(/aria-pressed="true"/g) || []).length, 1);
     assert.equal((clickable.match(/aria-pressed="false"/g) || []).length, 1);

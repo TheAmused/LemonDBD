@@ -72,10 +72,9 @@ class Perk(Base, TranslatableModelMixin):
     )
     #: What the perk is for -- the single source of truth for Chaos Mutator
     #: weighting, the Tarot Deck card assignment and the Classic Perk Guesser.
-    #: An ordered list of 1-3 of: hex, boon, sacrifice, exhaustion, obsession,
-    #: aura, generator, healing, chase, stealth, entity, hooks. The first entry
-    #: is the primary type (the Tarot card); `entity` is the catch-all and only
-    #: appears alone. The rules are the pydantic ones in `app.models.perk_types`.
+    #: An ordered list of 1-3 of the `PERK_TYPES` in `app.models.perk_types`.
+    #: The first entry is the primary type (the Tarot card). The rules are the
+    #: pydantic ones in that module.
     #: A JSON array cannot carry a portable CHECK on its elements (SQLite and
     #: Postgres spell the JSON functions differently), so they are enforced on
     #: assignment below and by `app.schemas.perk.PerkBase` on the way in.

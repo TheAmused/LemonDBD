@@ -33,24 +33,24 @@ def survivor(app):
 @pytest.mark.unit
 def test_to_dict_exposes_the_ordered_list_and_not_the_retired_key(app, survivor) -> None:
     with app.app_context():
-        perk = Perk(name="Serialization Perk", role="Survivor", perk_types=["generator", "aura"], survivor_id=survivor)
+        perk = Perk(name="Serialization Perk", role="Survivor", perk_types=["generator", "tracking"], survivor_id=survivor)
         db.session.add(perk)
         db.session.commit()
 
         d = perk.to_dict()
-        assert d["perk_types"] == ["generator", "aura"]
+        assert d["perk_types"] == ["generator", "tracking"]
         assert "perk_type" not in d
 
 
 @pytest.mark.unit
 def test_to_dict_returns_a_copy_so_callers_cannot_mutate_the_row(app, survivor) -> None:
     with app.app_context():
-        perk = Perk(name="Copy Perk", role="Survivor", perk_types=["hex"], survivor_id=survivor)
+        perk = Perk(name="Copy Perk", role="Survivor", perk_types=["totem"], survivor_id=survivor)
         db.session.add(perk)
         db.session.commit()
 
-        perk.to_dict()["perk_types"].append("aura")
-        assert perk.perk_types == ["hex"]
+        perk.to_dict()["perk_types"].append("tracking")
+        assert perk.perk_types == ["totem"]
 
 
 @pytest.mark.unit
@@ -78,15 +78,16 @@ def test_perk_response_round_trips_the_list(app, survivor) -> None:
 
 
 @pytest.mark.unit
-def test_perk_base_defaults_to_the_catch_all() -> None:
+def test_perk_base_defaults_to_the_unclassified_entity_type() -> None:
     assert PerkBase(name="Base Perk").perk_types == ["entity"]
 
 
 @pytest.mark.unit
 def test_perk_base_accepts_one_to_three_distinct_types_in_order() -> None:
-    assert PerkBase(name="P", role="Survivor", perk_types=["boon"]).perk_types == ["boon"]
-    assert PerkBase(name="P", role="Survivor", perk_types=["aura", "generator"]).perk_types == ["aura", "generator"]
-    assert PerkBase(name="P", role="Killer", perk_types=["hex", "aura", "chase"]).perk_types == ["hex", "aura", "chase"]
+    assert PerkBase(name="P", role="Survivor", perk_types=["totem"]).perk_types == ["totem"]
+    assert PerkBase(name="P", role="Survivor", perk_types=["tracking", "generator"]).perk_types == ["tracking", "generator"]
+    assert PerkBase(name="P", role="Killer", perk_types=["totem", "tracking", "chase"]).perk_types == ["totem", "tracking", "chase"]
+    assert PerkBase(name="P", role="Killer", perk_types=["entity", "chase"]).perk_types == ["entity", "chase"]
 
 
 @pytest.mark.unit
@@ -95,12 +96,11 @@ def test_perk_base_accepts_one_to_three_distinct_types_in_order() -> None:
     [
         ([], "at least 1"),
         (["warp"], "Input should be"),
-        (["aura", "aura"], "repeat"),
-        (["entity", "aura"], "catch-all"),
-        (["aura", "entity"], "catch-all"),
-        (["aura", "chase", "hex", "stealth"], "at most 3"),
+        (["tracking", "tracking"], "repeat"),
+        (["tracking", "chase", "totem", "stealth"], "at most 3"),
+        (["aura"], "Input should be"),
         (None, "valid list"),
-        ("aura", "valid list"),
+        ("tracking", "valid list"),
     ],
 )
 def test_perk_base_rejects_malformed_lists(perk_types, message) -> None:
@@ -113,13 +113,18 @@ def test_perk_base_rejects_malformed_lists(perk_types, message) -> None:
     ("role", "perk_types", "allowed"),
     [
         ("Killer", ["exhaustion"], False),
-        ("Killer", ["aura", "boon"], False),
-        ("Survivor", ["hooks"], False),
-        ("Survivor", ["chase", "hooks"], False),
+        ("Killer", ["tracking", "sacrifice"], False),
+        ("Killer", ["items"], False),
+        ("Killer", ["chase", "items"], False),
+        ("Survivor", ["items"], True),
+        ("Survivor", ["items", "downed", "endgame"], True),
+        ("Killer", ["downed", "endgame"], True),
         ("Survivor", ["exhaustion"], True),
-        ("Survivor", ["aura", "boon"], True),
+        ("Survivor", ["tracking", "totem"], True),
+        ("Survivor", ["sacrifice"], True),
+        ("Survivor", ["hooks"], True),
         ("Killer", ["hooks"], True),
-        ("Killer", ["hex", "hooks"], True),
+        ("Killer", ["totem", "hooks"], True),
     ],
 )
 def test_role_only_types_must_match_the_perks_role(role, perk_types, allowed) -> None:
@@ -133,4 +138,4 @@ def test_role_only_types_must_match_the_perks_role(role, perk_types, allowed) ->
 @pytest.mark.unit
 def test_the_retired_perk_type_key_is_rejected_not_silently_ignored() -> None:
     with pytest.raises(ValidationError, match="replaced by `perk_types`"):
-        PerkBase.model_validate({"name": "Old Client Perk", "role": "Survivor", "perk_type": "boon"})
+        PerkBase.model_validate({"name": "Old Client Perk", "role": "Survivor", "perk_type": "totem"})

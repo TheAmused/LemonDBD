@@ -4,6 +4,7 @@
 // The line above the perk grid: which perks of the matching ones this page shows ("Showing 1 to 15 of 176 perks").
 import React from 'react';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { pageRange } from '@/constants/pagination';
 
 interface PerkResultsCountProps {
   page: number;
@@ -17,8 +18,7 @@ export const PerkResultsCount: React.FC<PerkResultsCountProps> = ({ page, limit,
   const dict = useDictionary();
   const locale = useLocale();
   const format = (n: number) => n.toLocaleString(locale);
-  const first = totalResults === 0 ? 0 : (page - 1) * limit + 1;
-  const last = Math.min(page * limit, totalResults);
+  const [first, last] = pageRange(page, limit, totalResults);
 
   return (
     <p className="type-body-fluid tabular-nums text-text-muted" aria-live="polite">

@@ -34,4 +34,6 @@ export default {
   sortFields: "並べ替え項目",
   sortOrderLabel: "並べ替え順",
   loadError: "パークの読み込みに失敗しました。",
+  scopeTitle: "表示",
+  generalShort: "共通",
 } as const;

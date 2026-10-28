@@ -11,6 +11,8 @@ import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 import { PerkFilters } from '@/components/PerkFilters';
 import { PerkCard } from '@/components/PerkCard';
+import type { PerkTypeCounts } from '@/components/perks/PerkFilterPanel';
+import { PerkResultsCount } from '@/components/perks/PerkResultsCount';
 import { PerksGridSkeleton } from '@/components/PerksSkeleton';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Pagination } from '@/components/common/Pagination';
@@ -31,9 +33,9 @@ import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useCatalogPerks } from '@/hooks/useCatalogPerks';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
 import { usePerkTypeVocabulary } from '@/hooks/usePerkTypeVocabulary';
-import { isPerkType, perkTypesByRole, type PerkType } from '@/utils/perkTypes';
+import { PERK_TYPES, isPerkType, perkTypesByRole, type PerkType } from '@/utils/perkTypes';
 import { parsePerkQuery } from '@/utils/perkSearch/parse';
-import { isGeneralPerk, roleOnlyConflict, searchPerks } from '@/utils/perkSearch/match';
+import { isGeneralPerk, roleOnlyConflict, searchPerks, typesForRole } from '@/utils/perkSearch/match';
 import { sortPerks } from '@/utils/perkSearch/sort';
 import { formatMessage } from '@/utils/i18nFormat';
 import { roleLabel, roleOnlyMessage } from '@/components/perks/roleOnlyMessage';
@@ -102,29 +104,26 @@ function PerksContent() {
   const { perks: allPerksList, loading, error, refresh } = useCatalogPerks(locale);
   const [retrying, setRetrying] = useState(false);
 
-  // The full catalog feeds the role counts.
-  const survivorCount = useMemo(() => allPerksList.filter((p) => p.category === 'Survivor').length, [allPerksList]);
-  const killerCount = useMemo(() => allPerksList.filter((p) => p.category === 'Killer').length, [allPerksList]);
-  const survivorOwnedCount = useMemo(
-    () => allPerksList.filter((p) => p.category === 'Survivor' && p.is_owned !== false).length,
-    [allPerksList]
-  );
-  const killerOwnedCount = useMemo(
-    () => allPerksList.filter((p) => p.category === 'Killer' && p.is_owned !== false).length,
-    [allPerksList]
-  );
-
   const rolePerks = useMemo(() => allPerksList.filter((p) => p.category === role), [allPerksList, role]);
   const query = useMemo(() => parsePerkQuery(deferredSearch, vocab), [deferredSearch, vocab]);
   const ownedOnly = ownershipFilter === 'owned' && Boolean(user);
 
+  const scopedPerks = useMemo(
+    () => rolePerks.filter((p) => (scope !== 'general' || isGeneralPerk(p)) && (!ownedOnly || p.is_owned !== false)),
+    [rolePerks, scope, ownedOnly]
+  );
   const sortedPerks = useMemo(() => {
-    const scoped = rolePerks.filter(
-      (p) => (scope !== 'general' || isGeneralPerk(p)) && (!ownedOnly || p.is_owned !== false)
-    );
-    const matched = searchPerks(scoped, query, types).map((hit) => hit.perk);
+    const matched = searchPerks(scopedPerks, query, types).map((hit) => hit.perk);
     return sortPerks(matched, sortBy, order, locale);
-  }, [rolePerks, scope, ownedOnly, query, types, sortBy, order, locale]);
+  }, [scopedPerks, query, types, sortBy, order, locale]);
+  // Per type: how many perks stay if it is added to the current search and filters (types combine with AND).
+  const typeCounts = useMemo(() => {
+    const counts: PerkTypeCounts = {};
+    for (const type of PERK_TYPES) {
+      counts[type] = searchPerks(scopedPerks, query, types.includes(type) ? types : [...types, type]).length;
+    }
+    return counts;
+  }, [scopedPerks, query, types]);
 
   const totalResults = sortedPerks.length;
   const totalPages = Math.max(1, Math.ceil(totalResults / limit));
@@ -140,15 +139,16 @@ function PerksContent() {
   const [rowHeightPx, setRowHeightPx] = useState<number | null>(null);
   const gridResizeObserverRef = useRef<ResizeObserver | null>(null);
   const gridNodeRef = useRef<HTMLDivElement | null>(null);
-  const perksCountRef = useRef<number>(0);
+  // Rows are sized for a full page, so a short page (a search, the last page) keeps the same tiles and sits at the top.
+  const pageSizeRef = useRef<number>(DEFAULT_PERKS_PER_PAGE);
   const GRID_ROW_GAP_PX = 12;
-  const MIN_ROW_HEIGHT_PX = 90;
+  const MIN_ROW_HEIGHT_PX = 120;
   const MAX_ROW_ASPECT = 2.2;
 
   const computeGridMetrics = useCallback((node: HTMLDivElement) => {
     const cs = getComputedStyle(node);
     const colCount = Math.max(1, cs.gridTemplateColumns.split(' ').filter(Boolean).length);
-    const count = Math.max(1, perksCountRef.current);
+    const count = Math.max(1, pageSizeRef.current);
     const rows = Math.max(1, Math.ceil(count / colCount));
 
     const colWidthPx = (node.clientWidth - GRID_ROW_GAP_PX * (colCount - 1)) / colCount;
@@ -177,11 +177,11 @@ function PerksContent() {
   }, [computeGridMetrics]);
 
   useEffect(() => {
-    perksCountRef.current = perks.length;
+    pageSizeRef.current = limit;
     if (gridNodeRef.current) {
       computeGridMetrics(gridNodeRef.current);
     }
-  }, [perks.length, computeGridMetrics]);
+  }, [limit, computeGridMetrics]);
 
   useEffect(() => {
     return () => {
@@ -218,8 +218,10 @@ function PerksContent() {
     setPage(1);
   };
 
+  // A manual role switch drops the active types the new role has none of (a link with ?role=&type= keeps them: the empty state explains).
   const handleRoleChange = (newRole: RoleCategory) => {
     setRole(newRole);
+    setTypes(typesForRole(types, newRole, typesByRole));
     setPage(1);
   };
 
@@ -236,6 +238,10 @@ function PerksContent() {
           }}
           role={role}
           setRole={handleRoleChange}
+          sortBy={sortBy}
+          setSortBy={(s) => setSortBy(s)}
+          order={order}
+          setOrder={(o) => setOrder(o)}
           scope={scope}
           setScope={(s) => {
             setScope(s);
@@ -246,21 +252,17 @@ function PerksContent() {
             setOwnershipFilter(o);
             setPage(1);
           }}
-          sortBy={sortBy}
-          setSortBy={(s) => setSortBy(s)}
-          order={order}
-          setOrder={(o) => setOrder(o)}
-          onReset={handleResetFilters}
           rolePerks={rolePerks}
           activeTypes={types}
           onTypesChange={setTypes}
-          survivorCount={survivorCount}
-          killerCount={killerCount}
-          allCount={role === 'Survivor' ? survivorCount : killerCount}
-          ownedCount={role === 'Survivor' ? survivorOwnedCount : killerOwnedCount}
+          typeCounts={typeCounts}
           isLoggedIn={Boolean(user)}
         />
       </div>
+
+      {!loading && !retrying && perks.length > 0 && (
+        <PerkResultsCount page={currentPage} limit={limit} totalResults={totalResults} />
+      )}
 
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
         {fetchError ? (
@@ -311,6 +313,7 @@ function PerksContent() {
                   key={`${perk.name}-${idx}`}
                   perk={perk}
                   size="fill"
+                  showName
                   onSelect={setSelectedPerk}
                 />
               ))}
@@ -322,6 +325,7 @@ function PerksContent() {
       {!loading && perks.length > 0 && (
         <div className="shrink-0 w-full">
           <Pagination
+            variant="numbered"
             page={currentPage}
             totalPages={totalPages}
             totalResults={totalResults}

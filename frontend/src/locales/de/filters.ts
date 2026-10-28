@@ -34,4 +34,6 @@ export default {
   sortFields: "Sortierfeld",
   sortOrderLabel: "Sortierreihenfolge",
   loadError: "Talente konnten nicht geladen werden.",
+  scopeTitle: "Anzeigen",
+  generalShort: "Allgemein",
 } as const;

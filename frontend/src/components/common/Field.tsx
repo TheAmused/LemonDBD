@@ -119,6 +119,8 @@ export interface SearchInputProps extends Omit<IconInputProps, 'icon' | 'type'> 
   clearLabel?: string;
   /** Token variant: the frame element (anchor for a suggestions popover). */
   frameRef?: React.Ref<HTMLLabelElement>;
+  /** Token variant: static content at the right edge of the frame, ruled off from the text (a result count). */
+  trailing?: React.ReactNode;
 }
 
 /** The token variant's body. The frame is a <label>, so a click anywhere in it focuses the text. */
@@ -126,7 +128,7 @@ const TokenSearchFrame = React.forwardRef<
   HTMLInputElement,
   Omit<SearchInputProps, 'tokens' | 'onRemoveToken'> & { tokens: readonly SearchToken[]; onRemoveToken: (key: string) => void }
 >(function TokenSearchFrame(
-  { tokens, onRemoveToken, onClear, clearLabel, wrapperClassName, frameRef, fieldSize = 'md', pill = false, invalid, className, onKeyDown, value, ...rest },
+  { tokens, onRemoveToken, onClear, clearLabel, wrapperClassName, frameRef, trailing, fieldSize = 'md', pill = false, invalid, className, onKeyDown, value, ...rest },
   ref
 ) {
   const hasText = typeof value === 'string' ? value.length > 0 : Boolean(value);
@@ -179,12 +181,13 @@ const TokenSearchFrame = React.forwardRef<
           <X aria-hidden="true" className="h-3 w-3" />
         </button>
       )}
+      {trailing && <span className="shrink-0 border-l border-border-color pl-2.5">{trailing}</span>}
     </label>
   );
 });
 
 export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(function SearchInput(
-  { tokens, onRemoveToken, onClear, clearLabel, frameRef, ...props },
+  { tokens, onRemoveToken, onClear, clearLabel, frameRef, trailing, ...props },
   ref
 ) {
   if (tokens && onRemoveToken) {
@@ -196,6 +199,7 @@ export const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
         onClear={onClear}
         clearLabel={clearLabel}
         frameRef={frameRef}
+        trailing={trailing}
         {...props}
       />
     );

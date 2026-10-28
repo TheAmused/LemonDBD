@@ -12,7 +12,7 @@ import {
   computePlayablePool,
   filterPerksByMutator,
   isExhaustionPerk,
-  isHexOrBoonPerk,
+  isTotemPerk,
   pickRandomLoadout,
 } from '@/components/generator/lib/perkPicker';
 import type { Perk } from '@/types/perks';
@@ -81,7 +81,7 @@ describe('perk picker on the recorded catalogue', () => {
     const hexes = filterPerksByMutator(killerPool, mutator('hex_boon_only'));
     assert.ok(hexes.some((p) => p.name === 'Hex: Ruin'), 'Hex: Ruin is in the pool');
     assert.ok(hexes.length >= 10, `hex perks: ${hexes.length}`);
-    assert.ok(hexes.every(isHexOrBoonPerk));
+    assert.ok(hexes.every(isTotemPerk));
   });
 
   it('buildDrawnSlots places picks on 15-perk pages of the alphabetical pool', () => {

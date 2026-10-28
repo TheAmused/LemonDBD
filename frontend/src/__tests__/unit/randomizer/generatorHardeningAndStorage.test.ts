@@ -87,7 +87,7 @@ const mockPerks: Perk[] = [
     description: 'Bless a dull or hex totem to create a Boon.',
     icon_url: '/icons/boon.png',
     icon_local_path: '/icons/boon.png',
-    perk_types: ['boon'],
+    perk_types: ['totem'],
     is_owned: true,
   },
   {
@@ -98,7 +98,7 @@ const mockPerks: Perk[] = [
     description: 'All generators automatically regress when not being repaired.',
     icon_url: '/icons/hex_ruin.png',
     icon_local_path: '/icons/hex_ruin.png',
-    perk_types: ['hex'],
+    perk_types: ['totem'],
     is_owned: true,
   },
   {

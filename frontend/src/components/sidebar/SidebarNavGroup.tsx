@@ -4,8 +4,10 @@
 import React, { useEffect, useRef } from 'react';
 import { Collapsible } from '@/components/common/Collapsible';
 import { DisclosureButton } from '@/components/common/DisclosureButton';
+import { useIsClient } from '@/hooks/useIsClient';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { cn } from '@/utils/cn';
+import { NAV_GROUP_BODY_CLASS, NAV_GROUP_STORAGE_PREFIX, releaseNavGroupBoot } from './navGroupBoot';
 import { SIDEBAR_ROW, SIDEBAR_ROW_HOVER } from './SidebarNavLink';
 
 export interface SidebarNavGroupProps {
@@ -23,15 +25,21 @@ export interface SidebarNavGroupProps {
  * Navigating into the group unfolds it so the active link is not hidden.
  */
 export const SidebarNavGroup: React.FC<SidebarNavGroupProps> = ({ id, label, icon: Icon, hasActive, children }) => {
-  const [open, toggle, setOpen] = usePersistentDrawer(`lemon-sidebar-group-${id}`, hasActive);
+  const [open, toggle, setOpen] = usePersistentDrawer(`${NAV_GROUP_STORAGE_PREFIX}${id}`, hasActive);
   // Only a change into the group counts: on load a stored "folded" choice must survive.
   const wasActive = useRef(hasActive);
   useEffect(() => {
     if (hasActive && !wasActive.current) setOpen(true);
     wasActive.current = hasActive;
   }, [hasActive, setOpen]);
+  // From the first client render on, React reads the stored state too, so the pre-paint style
+  // (navGroupBoot) has done its job. Releasing is idempotent, so every group may call it.
+  const isClient = useIsClient();
+  useEffect(() => {
+    if (isClient) releaseNavGroupBoot();
+  }, [isClient]);
   return (
-    <div>
+    <div data-nav-group={id}>
       <DisclosureButton
         open={open}
         onClick={toggle}
@@ -45,7 +53,7 @@ export const SidebarNavGroup: React.FC<SidebarNavGroupProps> = ({ id, label, ico
           <span className="truncate">{label}</span>
         </span>
       </DisclosureButton>
-      <Collapsible open={open} contentClassName="ml-5 mt-1 space-y-1 border-l border-border-color pl-2">
+      <Collapsible open={open} className={NAV_GROUP_BODY_CLASS} contentClassName="ml-5 mt-1 space-y-1 border-l border-border-color pl-2">
         {children}
       </Collapsible>
     </div>

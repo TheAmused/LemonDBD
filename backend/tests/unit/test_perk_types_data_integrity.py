@@ -6,12 +6,11 @@ Four independent guarantees, none of which is a one-off spot check:
 1. Every perk seeded from `app/seeds/data/content/perks.json` ends up with a
    valid `perk_types` list after a full seed (not just "the JSON file looks
    right" -- the seeded *database rows* are what the app actually serves).
-2. No perk carries a role-scoped type (exhaustion, boon, hooks) on the other
+2. No perk carries a role-scoped type (exhaustion, sacrifice, items) on the other
    side -- the exact bug class Sloppy Butcher (a Killer perk classified as a
    Survivor-only healing type) was caught and fixed for. It is computed
    generically from `ROLE_ONLY_PERK_TYPES`, not hardcoded per perk.
-3. The pydantic rules -- vocabulary, 1-3 entries, no repeats, `entity` only
-   alone -- are enforced when the list is assigned to the model.
+3. The pydantic rules -- vocabulary, 1-3 entries, no repeats -- are enforced when the list is assigned to the model.
 4. Each seed row also passes the write schema (`PerkBase`), so the file cannot
    drift out of what the API itself would accept.
 """
@@ -24,15 +23,16 @@ from sqlalchemy import func, select
 
 from app.core.extensions import db
 from app.models.perk import Perk
-from app.models.perk_types import MAX_PERK_TYPES, PERK_TYPES, ROLE_ONLY_PERK_TYPES
+from app.models.perk_types import LEGACY_PERK_TYPE_RENAMES, MAX_PERK_TYPES, PERK_TYPES, ROLE_ONLY_PERK_TYPES
 from app.schemas.perk import PerkBase
 from app.seeds.static_db_seeder import seed_from_static_json
 
 PERKS_JSON = Path(__file__).resolve().parents[2] / "app" / "seeds" / "data" / "content" / "perks.json"
 
 ALLOWED_PERK_TYPES = {
-    "hex", "boon", "sacrifice", "exhaustion", "obsession",
-    "aura", "generator", "healing", "chase", "stealth", "entity", "hooks",
+    "generator", "healing", "chase", "stealth", "tracking", "exhaustion",
+    "sacrifice", "obsession", "totem", "hooks", "downed", "items", "endgame",
+    "entity",
 }
 
 
@@ -75,8 +75,6 @@ def test_every_seeded_perk_has_a_valid_perk_types_list(seeded_perks) -> None:
             problems.append((perk.name, "repeated type", types))
         if any(t not in ALLOWED_PERK_TYPES for t in types):
             problems.append((perk.name, "unknown type", types))
-        if "entity" in types and len(types) > 1:
-            problems.append((perk.name, "entity combined with another type", types))
 
     assert problems == [], f"perks with an invalid perk_types list: {problems}"
 
@@ -109,10 +107,10 @@ def test_every_seed_row_passes_the_write_schema() -> None:
 
 
 @pytest.mark.unit
-def test_deja_vu_is_both_a_generator_and_an_aura_perk_with_generator_first(seeded_perks) -> None:
+def test_deja_vu_is_both_a_generator_and_a_tracking_perk_with_generator_first(seeded_perks) -> None:
     deja_vu = db.session.scalar(select(Perk).where(Perk.name == "Déjà Vu"))
     assert deja_vu is not None
-    assert deja_vu.perk_types == ["generator", "aura"]
+    assert deja_vu.perk_types == ["generator", "tracking"]
     assert deja_vu.primary_perk_type == "generator"
 
 
@@ -123,12 +121,12 @@ def test_deja_vu_is_both_a_generator_and_an_aura_perk_with_generator_first(seede
         ["not_a_real_category"],
         [],
         None,
-        "aura",
-        ["aura", "aura"],
-        ["entity", "aura"],
-        ["aura", "entity"],
-        ["aura", "chase", "hex", "stealth"],
-        ["Aura"],
+        "tracking",
+        ["tracking", "tracking"],
+        ["tracking", "chase", "totem", "stealth"],
+        ["aura"],
+        ["hex"],
+        ["Tracking"],
         [1],
     ],
 )
@@ -148,11 +146,26 @@ def test_every_allowed_type_and_the_maximum_length_persist_in_order(app) -> None
         for i, value in enumerate(sorted(ALLOWED_PERK_TYPES)):
             role = ROLE_ONLY_PERK_TYPES.get(value, "Survivor")
             db.session.add(Perk(name=f"Allowed Probe {i}", role=role, perk_types=[value]))
-        db.session.add(Perk(name="Three Types Probe", role="Survivor", perk_types=["chase", "aura", "stealth"]))
+        db.session.add(Perk(name="Three Types Probe", role="Survivor", perk_types=["chase", "tracking", "stealth"]))
         db.session.commit()
 
         assert db.session.scalar(select(func.count(Perk.id))) == 1 + len(ALLOWED_PERK_TYPES) + 1
         assert db.session.scalar(select(Perk).where(Perk.name == "Defaulted Probe")).perk_types == ["entity"]
         assert db.session.scalar(select(Perk).where(Perk.name == "Three Types Probe")).perk_types == [
-            "chase", "aura", "stealth",
+            "chase", "tracking", "stealth",
         ]
+
+
+@pytest.mark.unit
+def test_entity_combines_with_other_types_like_any_other_type() -> None:
+    perk = Perk(name="Blocking Probe Perk", role="Killer")
+    perk.perk_types = ["entity", "chase"]
+    perk.perk_types = ["tracking", "entity"]
+    assert perk.perk_types == ["tracking", "entity"]
+
+
+@pytest.mark.unit
+def test_no_seed_row_still_uses_a_renamed_type() -> None:
+    legacy = set(LEGACY_PERK_TYPE_RENAMES)
+    leftovers = [(row["name"], row["perk_types"]) for row in _seed_rows() if legacy & set(row["perk_types"])]
+    assert leftovers == [], f"seed rows still carrying a pre-redesign type: {leftovers}"

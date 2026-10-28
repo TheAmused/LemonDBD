@@ -37,12 +37,12 @@ const perk = (name: string, perk_types: string[], extra: Partial<Perk> = {}): Pe
 
 const SPRINT_BURST = perk('Sprint Burst', ['exhaustion', 'chase'], { alternate_name: 'SB', character: 'Meg Thomas' });
 const SELF_CARE = perk('Self-Care', ['healing'], { character: 'Claudette Morel' });
-const CIRCLE = perk('Boon: Circle of Healing', ['boon', 'healing'], { character: 'Mikaela Reid' });
+const CIRCLE = perk('Boon: Circle of Healing', ['totem', 'healing'], { character: 'Mikaela Reid' });
 const BOTANY = perk('Botany Knowledge', ['healing'], { character: 'Claudette Morel' });
-const DEJA_VU = perk('Deja Vu', ['generator', 'aura']);
-const KINDRED = perk('Kindred', ['aura']);
+const DEJA_VU = perk('Deja Vu', ['generator', 'tracking']);
+const KINDRED = perk('Kindred', ['tracking']);
 const SPINE_CHILL = perk('Spine Chill', ['stealth']);
-const RUIN = perk('Hex: Ruin', ['hex', 'generator'], { category: 'Killer', character: 'The Hag', character_real_name: 'Lisa Sherwood' });
+const RUIN = perk('Hex: Ruin', ['totem', 'generator'], { category: 'Killer', character: 'The Hag', character_real_name: 'Lisa Sherwood' });
 const PAIN_RES = perk('Scourge Hook: Pain Resonance', ['hooks', 'generator'], { category: 'Killer', character: 'The Artist' });
 const FRANKLIN = perk("Franklin's Demise", ['entity'], { category: 'Killer' });
 const SURVIVORS = [SPRINT_BURST, SELF_CARE, CIRCLE, BOTANY, DEJA_VU, KINDRED, SPINE_CHILL];
@@ -64,10 +64,10 @@ describe('perk types vocabulary', () => {
 
   it('reads missing or unknown types as entity and collects the types each role really has', () => {
     assert.deepEqual(getKnownPerkTypes({ perk_types: undefined }), ['entity']);
-    assert.deepEqual(getKnownPerkTypes({ perk_types: ['bogus', 'aura'] }), ['aura']);
+    assert.deepEqual(getKnownPerkTypes({ perk_types: ['bogus', 'tracking'] }), ['tracking']);
     const byRole = perkTypesByRole([...SURVIVORS, ...KILLERS]);
     assert.ok(byRole.Survivor.has('exhaustion') && !byRole.Killer.has('exhaustion'));
-    assert.ok(byRole.Killer.has('hex') && !byRole.Survivor.has('hex'));
+    assert.ok(byRole.Killer.has('totem') && byRole.Survivor.has('totem'));
     assert.ok(byRole.Killer.has('hooks') && !byRole.Survivor.has('hooks'));
   });
 
@@ -95,12 +95,13 @@ describe('folding and parsing', () => {
 
   it('finds type words, phrases, typos and the general scope', () => {
     const q = parsePerkQuery('gen aura', vocabEn);
-    assert.deepEqual(q.typeGroups, [['generator'], ['aura']]);
+    assert.deepEqual(q.typeGroups, [['generator'], ['tracking']]);
     assert.deepEqual(q.restWords, []);
     assert.deepEqual(parsePerkQuery('scourge hook pain', vocabEn).typeGroups, [['hooks']]);
     assert.deepEqual(parsePerkQuery('scourge hook pain', vocabEn).restWords, ['pain']);
     assert.deepEqual(parsePerkQuery('exaustion', vocabEn).typeGroups, [['exhaustion']]);
-    assert.deepEqual(parsePerkQuery('totem', vocabEn).typeGroups, [['hex', 'boon']]);
+    assert.deepEqual(parsePerkQuery('totem', vocabEn).typeGroups, [['totem']]);
+    assert.deepEqual(parsePerkQuery('hex', vocabEn).typeGroups, [['totem']]);
     assert.ok(parsePerkQuery('ogólne', vocabPl).general);
   });
 
@@ -145,7 +146,7 @@ describe('matching', () => {
   });
 
   it('applies type chips and `type:` strictly', () => {
-    assert.deepEqual(names(SURVIVORS, '', vocabEn, ['aura']), ['Deja Vu', 'Kindred']);
+    assert.deepEqual(names(SURVIVORS, '', vocabEn, ['tracking']), ['Deja Vu', 'Kindred']);
     assert.deepEqual(names(SURVIVORS, 'kindred', vocabEn, ['healing']), []);
     assert.deepEqual(names(SURVIVORS, 'type:aura'), ['Deja Vu', 'Kindred']);
   });
@@ -170,7 +171,7 @@ describe('matching', () => {
     const byRole = perkTypesByRole([...SURVIVORS, ...KILLERS, CIRCLE]);
     assert.deepEqual(roleOnlyConflict(parsePerkQuery('exhaustion', vocabEn), [], 'Killer', byRole), { type: 'exhaustion', role: 'Survivor' });
     assert.deepEqual(roleOnlyConflict(EMPTY_QUERY, ['hooks'], 'Survivor', byRole), { type: 'hooks', role: 'Killer' });
-    assert.deepEqual(roleOnlyConflict(EMPTY_QUERY, ['hex'], 'Survivor', byRole), { type: 'hex', role: 'Killer' });
+    assert.equal(roleOnlyConflict(EMPTY_QUERY, ['totem'], 'Survivor', byRole), null);
     assert.equal(roleOnlyConflict(parsePerkQuery('totem', vocabEn), [], 'Killer', byRole), null);
     assert.equal(roleOnlyConflict(parsePerkQuery('generator', vocabEn), [], 'Killer', byRole), null);
   });
@@ -181,7 +182,7 @@ describe('suggestions and sorting', () => {
     const all = [...PERK_TYPES];
     assert.deepEqual(suggestPerkTypes('hea', vocabEn, all), [{ type: 'healing', remainingSearch: '' }]);
     assert.deepEqual(suggestPerkTypes('claudette hea', vocabEn, all), [{ type: 'healing', remainingSearch: 'claudette' }]);
-    assert.deepEqual(suggestPerkTypes('hea', vocabEn, ['aura']), []);
+    assert.deepEqual(suggestPerkTypes('hea', vocabEn, ['tracking']), []);
     assert.deepEqual(suggestPerkTypes('h', vocabEn, all), []);
     assert.equal(suggestPerkTypes('lecz', vocabPl, all)[0]?.type, 'healing');
     assert.equal(suggestPerkTypes('治', vocabJa, all)[0]?.type, 'healing');

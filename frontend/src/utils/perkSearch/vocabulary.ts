@@ -15,18 +15,20 @@ export type PerkFacet = PerkType | 'general';
 
 /** Search vocabulary, not UI text: these terms are matched, never displayed. */
 const COMMUNITY_KEYWORDS: Readonly<Record<PerkType, readonly string[]>> = {
-  hex: ['totem', 'totems'],
-  boon: ['totem', 'totems'],
-  sacrifice: [],
-  exhaustion: ['exh', 'exhaust'],
-  obsession: ['obsess'],
-  aura: ['wallhack', 'wallhacks', 'reveal', 'reveals'],
   generator: ['gen', 'gens', 'regress', 'regression', 'kick', 'kicks'],
   healing: ['medkit', 'med'],
   chase: ['loop', 'loops', 'looping'],
   stealth: ['sneak', 'sneaky'],
-  entity: ['utility'],
+  tracking: ['wallhack', 'wallhacks', 'reveal', 'reveals'],
+  exhaustion: ['exh', 'exhaust'],
+  sacrifice: [],
+  obsession: ['obsess'],
+  totem: ['totems'],
   hooks: ['scourge', 'scourge hook'],
+  downed: ['down', 'carry', 'carried', 'crawl', 'crawling'],
+  items: ['item', 'toolbox', 'toolboxes'],
+  endgame: ['egc', 'end game', 'exit gates'],
+  entity: ['block', 'blocks', 'blocked', 'blocking'],
 };
 const COMMUNITY_GENERAL = ['general'];
 

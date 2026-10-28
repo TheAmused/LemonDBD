@@ -34,7 +34,8 @@
       },
       "perk_types": [
         "healing",
-        "obsession"
+        "obsession",
+        "stealth"
       ]
     },
     {
@@ -66,7 +67,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "items"
       ]
     },
     {
@@ -98,8 +99,9 @@
         }
       },
       "perk_types": [
+        "endgame",
         "exhaustion",
-        "chase"
+        "healing"
       ]
     },
     {
@@ -131,7 +133,9 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking",
+        "hooks",
+        "healing"
       ]
     },
     {
@@ -163,7 +167,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -195,8 +199,7 @@
         }
       },
       "perk_types": [
-        "aura",
-        "chase"
+        "tracking"
       ]
     },
     {
@@ -228,8 +231,8 @@
         }
       },
       "perk_types": [
-        "aura",
-        "chase"
+        "items",
+        "tracking"
       ]
     },
     {
@@ -261,7 +264,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "items"
       ]
     },
     {
@@ -293,7 +296,8 @@
         }
       },
       "perk_types": [
-        "healing"
+        "healing",
+        "sacrifice"
       ]
     },
     {
@@ -324,9 +328,9 @@
         }
       },
       "perk_types": [
-        "healing",
-        "chase",
-        "stealth"
+        "hooks",
+        "stealth",
+        "tracking"
       ]
     },
     {
@@ -358,8 +362,7 @@
         }
       },
       "perk_types": [
-        "exhaustion",
-        "chase"
+        "exhaustion"
       ]
     },
     {
@@ -489,7 +492,8 @@
         }
       },
       "perk_types": [
-        "aura"
+        "generator",
+        "tracking"
       ]
     },
     {
@@ -589,8 +593,7 @@
         }
       },
       "perk_types": [
-        "generator",
-        "chase"
+        "generator"
       ]
     },
     {
@@ -622,8 +625,9 @@
         }
       },
       "perk_types": [
-        "aura",
-        "obsession"
+        "obsession",
+        "tracking",
+        "healing"
       ]
     },
     {
@@ -655,7 +659,8 @@
         }
       },
       "perk_types": [
-        "chase"
+        "hooks",
+        "exhaustion"
       ]
     },
     {
@@ -687,7 +692,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "downed"
       ]
     },
     {
@@ -719,7 +724,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -751,7 +756,7 @@
         }
       },
       "perk_types": [
-        "boon",
+        "totem",
         "healing"
       ]
     },
@@ -784,7 +789,7 @@
         }
       },
       "perk_types": [
-        "boon",
+        "totem",
         "chase"
       ]
     },
@@ -817,8 +822,8 @@
         }
       },
       "perk_types": [
-        "boon",
-        "healing"
+        "totem",
+        "downed"
       ]
     },
     {
@@ -850,8 +855,8 @@
         }
       },
       "perk_types": [
-        "boon",
-        "aura"
+        "totem",
+        "tracking"
       ]
     },
     {
@@ -883,7 +888,7 @@
         }
       },
       "perk_types": [
-        "boon",
+        "totem",
         "stealth"
       ]
     },
@@ -916,9 +921,8 @@
         }
       },
       "perk_types": [
-        "boon",
-        "generator",
-        "aura"
+        "totem",
+        "generator"
       ]
     },
     {
@@ -950,8 +954,7 @@
         }
       },
       "perk_types": [
-        "healing",
-        "chase"
+        "hooks"
       ]
     },
     {
@@ -1015,7 +1018,8 @@
         }
       },
       "perk_types": [
-        "entity"
+        "hooks",
+        "tracking"
       ]
     },
     {
@@ -1047,7 +1051,7 @@
         }
       },
       "perk_types": [
-        "healing",
+        "downed",
         "chase"
       ]
     },
@@ -1081,8 +1085,8 @@
       },
       "perk_types": [
         "healing",
-        "aura",
-        "chase"
+        "downed",
+        "tracking"
       ]
     },
     {
@@ -1114,7 +1118,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "items"
       ]
     },
     {
@@ -1181,7 +1185,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "hooks"
       ]
     },
     {
@@ -1245,6 +1249,7 @@
         }
       },
       "perk_types": [
+        "items",
         "healing"
       ]
     },
@@ -1310,7 +1315,8 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking",
+        "totem"
       ]
     },
     {
@@ -1376,6 +1382,7 @@
       },
       "perk_types": [
         "sacrifice",
+        "hooks",
         "stealth"
       ]
     },
@@ -1408,7 +1415,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "downed"
       ]
     },
     {
@@ -1472,7 +1479,8 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking",
+        "totem"
       ]
     },
     {
@@ -1601,7 +1609,8 @@
         }
       },
       "perk_types": [
-        "aura"
+        "generator",
+        "tracking"
       ]
     },
     {
@@ -1634,7 +1643,8 @@
       },
       "perk_types": [
         "exhaustion",
-        "chase"
+        "chase",
+        "hooks"
       ]
     },
     {
@@ -1665,7 +1675,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "generator"
       ]
     },
     {
@@ -1730,8 +1740,9 @@
         }
       },
       "perk_types": [
-        "obsession",
-        "chase"
+        "downed",
+        "hooks",
+        "obsession"
       ]
     },
     {
@@ -1766,7 +1777,7 @@
       },
       "perk_types": [
         "generator",
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -1798,7 +1809,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "hooks"
       ]
     },
     {
@@ -1830,7 +1841,8 @@
         }
       },
       "perk_types": [
-        "healing"
+        "healing",
+        "hooks"
       ]
     },
     {
@@ -1862,7 +1874,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -1991,7 +2003,8 @@
       },
       "perk_types": [
         "exhaustion",
-        "chase"
+        "chase",
+        "sacrifice"
       ]
     },
     {
@@ -2023,7 +2036,6 @@
         }
       },
       "perk_types": [
-        "healing",
         "chase"
       ]
     },
@@ -2057,7 +2069,7 @@
       },
       "perk_types": [
         "healing",
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -2089,7 +2101,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -2121,7 +2133,7 @@
         }
       },
       "perk_types": [
-        "aura",
+        "tracking",
         "stealth"
       ]
     },
@@ -2154,7 +2166,8 @@
         }
       },
       "perk_types": [
-        "chase"
+        "chase",
+        "items"
       ]
     },
     {
@@ -2186,7 +2199,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -2218,7 +2231,8 @@
         }
       },
       "perk_types": [
-        "generator"
+        "generator",
+        "hooks"
       ]
     },
     {
@@ -2282,7 +2296,7 @@
         }
       },
       "perk_types": [
-        "aura",
+        "tracking",
         "chase"
       ]
     },
@@ -2348,7 +2362,7 @@
       },
       "perk_types": [
         "generator",
-        "chase"
+        "items"
       ]
     },
     {
@@ -2379,7 +2393,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "downed"
       ]
     },
     {
@@ -2411,7 +2425,9 @@
         }
       },
       "perk_types": [
-        "healing"
+        "generator",
+        "healing",
+        "hooks"
       ]
     },
     {
@@ -2443,7 +2459,8 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking",
+        "generator"
       ]
     },
     {
@@ -2542,7 +2559,6 @@
       },
       "perk_types": [
         "generator",
-        "chase",
         "healing"
       ]
     },
@@ -2575,7 +2591,8 @@
         }
       },
       "perk_types": [
-        "stealth"
+        "stealth",
+        "exhaustion"
       ]
     },
     {
@@ -2607,7 +2624,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -2639,8 +2656,7 @@
         }
       },
       "perk_types": [
-        "exhaustion",
-        "chase"
+        "exhaustion"
       ]
     },
     {
@@ -2671,6 +2687,7 @@
         }
       },
       "perk_types": [
+        "endgame",
         "chase"
       ]
     },
@@ -2703,8 +2720,7 @@
         }
       },
       "perk_types": [
-        "generator",
-        "healing"
+        "generator"
       ]
     },
     {
@@ -2736,7 +2752,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -2768,7 +2784,8 @@
         }
       },
       "perk_types": [
-        "healing"
+        "healing",
+        "totem"
       ]
     },
     {
@@ -2801,7 +2818,7 @@
       },
       "perk_types": [
         "sacrifice",
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -2897,7 +2914,8 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking",
+        "hooks"
       ]
     },
     {
@@ -2961,7 +2979,9 @@
         }
       },
       "perk_types": [
-        "entity"
+        "healing",
+        "generator",
+        "hooks"
       ]
     },
     {
@@ -2993,7 +3013,8 @@
         }
       },
       "perk_types": [
-        "aura"
+        "endgame",
+        "tracking"
       ]
     },
     {
@@ -3025,7 +3046,8 @@
         }
       },
       "perk_types": [
-        "healing"
+        "healing",
+        "totem"
       ]
     },
     {
@@ -3189,7 +3211,8 @@
       },
       "perk_types": [
         "healing",
-        "stealth"
+        "stealth",
+        "chase"
       ]
     },
     {
@@ -3221,7 +3244,7 @@
         }
       },
       "perk_types": [
-        "aura",
+        "tracking",
         "stealth"
       ]
     },
@@ -3287,7 +3310,7 @@
         }
       },
       "perk_types": [
-        "healing",
+        "chase",
         "obsession"
       ]
     },
@@ -3320,6 +3343,7 @@
         }
       },
       "perk_types": [
+        "stealth",
         "generator"
       ]
     },
@@ -3353,7 +3377,8 @@
       },
       "perk_types": [
         "healing",
-        "sacrifice"
+        "sacrifice",
+        "chase"
       ]
     },
     {
@@ -3386,8 +3411,8 @@
       },
       "perk_types": [
         "sacrifice",
-        "stealth",
-        "healing"
+        "downed",
+        "stealth"
       ]
     },
     {
@@ -3418,9 +3443,9 @@
         }
       },
       "perk_types": [
+        "endgame",
         "healing",
-        "chase",
-        "aura"
+        "hooks"
       ]
     },
     {
@@ -3453,8 +3478,8 @@
         }
       },
       "perk_types": [
-        "aura",
-        "obsession"
+        "obsession",
+        "tracking"
       ]
     },
     {
@@ -3486,7 +3511,8 @@
         }
       },
       "perk_types": [
-        "entity"
+        "hooks",
+        "stealth"
       ]
     },
     {
@@ -3554,7 +3580,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -3619,7 +3645,8 @@
         }
       },
       "perk_types": [
-        "generator"
+        "generator",
+        "totem"
       ]
     },
     {
@@ -3683,6 +3710,7 @@
         }
       },
       "perk_types": [
+        "items",
         "healing"
       ]
     },
@@ -3715,9 +3743,9 @@
         }
       },
       "perk_types": [
-        "sacrifice",
-        "stealth",
-        "healing"
+        "healing",
+        "downed",
+        "sacrifice"
       ]
     },
     {
@@ -3748,7 +3776,8 @@
         }
       },
       "perk_types": [
-        "aura"
+        "items",
+        "tracking"
       ]
     },
     {
@@ -3780,7 +3809,7 @@
         }
       },
       "perk_types": [
-        "aura",
+        "tracking",
         "stealth"
       ]
     },
@@ -3845,7 +3874,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "downed"
       ]
     },
     {
@@ -3876,7 +3905,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "tracking"
       ]
     },
     {
@@ -3974,7 +4003,7 @@
       },
       "perk_types": [
         "chase",
-        "aura",
+        "tracking",
         "generator"
       ]
     },
@@ -4008,7 +4037,7 @@
       },
       "perk_types": [
         "exhaustion",
-        "chase"
+        "tracking"
       ]
     },
     {
@@ -4072,7 +4101,7 @@
         }
       },
       "perk_types": [
-        "healing"
+        "hooks"
       ]
     },
     {
@@ -4104,7 +4133,9 @@
         }
       },
       "perk_types": [
-        "entity"
+        "generator",
+        "tracking",
+        "stealth"
       ]
     },
     {
@@ -4139,6 +4170,7 @@
         }
       },
       "perk_types": [
+        "entity",
         "generator"
       ]
     },
@@ -4171,7 +4203,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "items"
       ]
     },
     {
@@ -4202,7 +4234,9 @@
         }
       },
       "perk_types": [
-        "entity"
+        "generator",
+        "healing",
+        "hooks"
       ]
     },
     {
@@ -4234,7 +4268,8 @@
         }
       },
       "perk_types": [
-        "healing"
+        "healing",
+        "hooks"
       ]
     },
     {
@@ -4299,7 +4334,7 @@
         }
       },
       "perk_types": [
-        "aura",
+        "tracking",
         "generator"
       ]
     },
@@ -4331,7 +4366,8 @@
         }
       },
       "perk_types": [
-        "aura"
+        "hooks",
+        "tracking"
       ]
     },
     {
@@ -4363,7 +4399,8 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking",
+        "chase"
       ]
     },
     {
@@ -4395,7 +4432,8 @@
         }
       },
       "perk_types": [
-        "generator"
+        "generator",
+        "items"
       ]
     },
     {
@@ -4428,7 +4466,7 @@
       },
       "perk_types": [
         "sacrifice",
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -4461,7 +4499,8 @@
       },
       "perk_types": [
         "healing",
-        "sacrifice"
+        "sacrifice",
+        "hooks"
       ]
     },
     {
@@ -4525,7 +4564,8 @@
         }
       },
       "perk_types": [
-        "stealth"
+        "stealth",
+        "hooks"
       ]
     },
     {
@@ -4558,7 +4598,7 @@
       },
       "perk_types": [
         "sacrifice",
-        "healing"
+        "hooks"
       ]
     },
     {
@@ -4589,7 +4629,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "hooks"
       ]
     },
     {
@@ -4620,7 +4660,8 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking",
+        "totem"
       ]
     },
     {
@@ -4686,6 +4727,7 @@
         }
       },
       "perk_types": [
+        "endgame",
         "obsession",
         "stealth"
       ]
@@ -4751,7 +4793,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "downed"
       ]
     },
     {
@@ -4814,6 +4856,7 @@
         }
       },
       "perk_types": [
+        "tracking",
         "chase"
       ]
     },
@@ -4879,8 +4922,7 @@
         }
       },
       "perk_types": [
-        "generator",
-        "stealth"
+        "generator"
       ]
     },
     {
@@ -4912,7 +4954,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -4944,7 +4986,8 @@
         }
       },
       "perk_types": [
-        "entity"
+        "items",
+        "tracking"
       ]
     },
     {
@@ -4977,7 +5020,7 @@
       },
       "perk_types": [
         "healing",
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -5009,8 +5052,8 @@
         }
       },
       "perk_types": [
-        "stealth",
-        "healing"
+        "healing",
+        "stealth"
       ]
     },
     {
@@ -5140,9 +5183,7 @@
         }
       },
       "perk_types": [
-        "healing",
-        "chase",
-        "aura"
+        "chase"
       ]
     },
     {
@@ -5174,6 +5215,7 @@
         }
       },
       "perk_types": [
+        "chase",
         "stealth"
       ]
     },
@@ -5239,9 +5281,7 @@
         }
       },
       "perk_types": [
-        "chase",
-        "healing",
-        "stealth"
+        "downed"
       ]
     },
     {
@@ -5304,7 +5344,7 @@
         }
       },
       "perk_types": [
-        "aura",
+        "tracking",
         "chase"
       ]
     },
@@ -5337,7 +5377,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "downed"
       ]
     },
     {
@@ -5369,7 +5409,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "hooks"
       ]
     },
     {
@@ -5401,8 +5441,7 @@
         }
       },
       "perk_types": [
-        "stealth",
-        "chase"
+        "stealth"
       ]
     },
     {
@@ -5434,7 +5473,7 @@
         }
       },
       "perk_types": [
-        "chase"
+        "exhaustion"
       ]
     },
     {
@@ -5466,7 +5505,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -5498,7 +5537,8 @@
         }
       },
       "perk_types": [
-        "entity"
+        "endgame",
+        "tracking"
       ]
     },
     {
@@ -5530,7 +5570,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -5564,7 +5604,8 @@
         }
       },
       "perk_types": [
-        "healing"
+        "healing",
+        "hooks"
       ]
     },
     {
@@ -5597,7 +5638,7 @@
       },
       "perk_types": [
         "healing",
-        "chase"
+        "downed"
       ]
     },
     {
@@ -5629,7 +5670,8 @@
         }
       },
       "perk_types": [
-        "entity"
+        "hooks",
+        "tracking"
       ]
     },
     {
@@ -5661,8 +5703,9 @@
         }
       },
       "perk_types": [
+        "entity",
         "chase",
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -5693,7 +5736,7 @@
         }
       },
       "perk_types": [
-        "aura",
+        "tracking",
         "chase"
       ]
     },
@@ -5727,7 +5770,7 @@
       },
       "perk_types": [
         "generator",
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -5759,7 +5802,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -5791,7 +5834,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "downed"
       ]
     },
     {
@@ -5823,7 +5866,8 @@
         }
       },
       "perk_types": [
-        "aura"
+        "hooks",
+        "tracking"
       ]
     },
     {
@@ -5887,7 +5931,8 @@
         }
       },
       "perk_types": [
-        "aura"
+        "downed",
+        "tracking"
       ]
     },
     {
@@ -5919,6 +5964,7 @@
         }
       },
       "perk_types": [
+        "entity",
         "chase"
       ]
     },
@@ -5954,7 +6000,8 @@
         }
       },
       "perk_types": [
-        "aura"
+        "hooks",
+        "tracking"
       ]
     },
     {
@@ -6018,8 +6065,8 @@
         }
       },
       "perk_types": [
-        "chase",
-        "stealth"
+        "stealth",
+        "chase"
       ]
     },
     {
@@ -6050,7 +6097,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -6082,7 +6129,8 @@
         }
       },
       "perk_types": [
-        "entity"
+        "hooks",
+        "healing"
       ]
     },
     {
@@ -6114,7 +6162,9 @@
         }
       },
       "perk_types": [
-        "entity"
+        "endgame",
+        "entity",
+        "tracking"
       ]
     },
     {
@@ -6146,7 +6196,7 @@
         }
       },
       "perk_types": [
-        "chase"
+        "tracking"
       ]
     },
     {
@@ -6211,7 +6261,8 @@
         }
       },
       "perk_types": [
-        "generator"
+        "generator",
+        "tracking"
       ]
     },
     {
@@ -6243,7 +6294,7 @@
         }
       },
       "perk_types": [
-        "aura",
+        "tracking",
         "obsession"
       ]
     },
@@ -6276,7 +6327,7 @@
         }
       },
       "perk_types": [
-        "generator"
+        "entity"
       ]
     },
     {
@@ -6436,9 +6487,9 @@
         }
       },
       "perk_types": [
-        "chase",
         "obsession",
-        "stealth"
+        "stealth",
+        "chase"
       ]
     },
     {
@@ -6470,7 +6521,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -6505,7 +6556,8 @@
         }
       },
       "perk_types": [
-        "generator"
+        "entity",
+        "hooks"
       ]
     },
     {
@@ -6538,7 +6590,7 @@
         }
       },
       "perk_types": [
-        "generator"
+        "entity"
       ]
     },
     {
@@ -6571,7 +6623,8 @@
       },
       "perk_types": [
         "healing",
-        "aura"
+        "tracking",
+        "stealth"
       ]
     },
     {
@@ -6602,7 +6655,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -6634,7 +6687,7 @@
         }
       },
       "perk_types": [
-        "aura",
+        "tracking",
         "generator"
       ]
     },
@@ -6698,7 +6751,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "generator"
       ]
     },
     {
@@ -6730,7 +6783,8 @@
         }
       },
       "perk_types": [
-        "entity"
+        "entity",
+        "totem"
       ]
     },
     {
@@ -6799,9 +6853,9 @@
         }
       },
       "perk_types": [
+        "obsession",
         "generator",
-        "healing",
-        "obsession"
+        "healing"
       ]
     },
     {
@@ -6865,8 +6919,7 @@
         }
       },
       "perk_types": [
-        "generator",
-        "aura"
+        "generator"
       ]
     },
     {
@@ -6898,7 +6951,9 @@
         }
       },
       "perk_types": [
-        "entity"
+        "chase",
+        "downed",
+        "generator"
       ]
     },
     {
@@ -6930,6 +6985,7 @@
         }
       },
       "perk_types": [
+        "downed",
         "chase"
       ]
     },
@@ -6962,7 +7018,8 @@
         }
       },
       "perk_types": [
-        "entity"
+        "healing",
+        "chase"
       ]
     },
     {
@@ -6994,7 +7051,8 @@
         }
       },
       "perk_types": [
-        "entity"
+        "hooks",
+        "downed"
       ]
     },
     {
@@ -7026,7 +7084,8 @@
         }
       },
       "perk_types": [
-        "entity"
+        "chase",
+        "tracking"
       ]
     },
     {
@@ -7061,8 +7120,9 @@
         }
       },
       "perk_types": [
-        "aura",
-        "obsession"
+        "hooks",
+        "obsession",
+        "tracking"
       ]
     },
     {
@@ -7094,7 +7154,7 @@
         }
       },
       "perk_types": [
-        "chase",
+        "hooks",
         "obsession",
         "stealth"
       ]
@@ -7161,7 +7221,7 @@
         }
       },
       "perk_types": [
-        "aura",
+        "tracking",
         "generator"
       ]
     },
@@ -7226,7 +7286,8 @@
         }
       },
       "perk_types": [
-        "generator",
+        "entity",
+        "hooks",
         "obsession"
       ]
     },
@@ -7259,7 +7320,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "endgame"
       ]
     },
     {
@@ -7327,7 +7388,8 @@
         }
       },
       "perk_types": [
-        "hex",
+        "entity",
+        "totem",
         "chase"
       ]
     },
@@ -7360,9 +7422,9 @@
         }
       },
       "perk_types": [
-        "hex",
-        "chase",
-        "aura"
+        "entity",
+        "totem",
+        "chase"
       ]
     },
     {
@@ -7394,8 +7456,8 @@
         }
       },
       "perk_types": [
-        "hex",
-        "chase"
+        "totem",
+        "hooks"
       ]
     },
     {
@@ -7427,8 +7489,8 @@
         }
       },
       "perk_types": [
-        "hex",
-        "aura"
+        "totem",
+        "tracking"
       ]
     },
     {
@@ -7460,7 +7522,7 @@
         }
       },
       "perk_types": [
-        "hex",
+        "totem",
         "chase"
       ]
     },
@@ -7493,9 +7555,9 @@
         }
       },
       "perk_types": [
-        "hex",
+        "totem",
         "generator",
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -7527,8 +7589,9 @@
         }
       },
       "perk_types": [
-        "hex",
-        "generator"
+        "totem",
+        "generator",
+        "hooks"
       ]
     },
     {
@@ -7559,7 +7622,8 @@
         }
       },
       "perk_types": [
-        "hex",
+        "totem",
+        "endgame",
         "chase"
       ]
     },
@@ -7595,7 +7659,7 @@
         }
       },
       "perk_types": [
-        "hex",
+        "totem",
         "chase"
       ]
     },
@@ -7628,9 +7692,9 @@
         }
       },
       "perk_types": [
-        "hex",
-        "generator",
-        "stealth"
+        "totem",
+        "stealth",
+        "generator"
       ]
     },
     {
@@ -7662,9 +7726,9 @@
         }
       },
       "perk_types": [
-        "hex",
-        "aura",
-        "generator"
+        "totem",
+        "generator",
+        "healing"
       ]
     },
     {
@@ -7697,8 +7761,9 @@
         }
       },
       "perk_types": [
-        "hex",
-        "aura"
+        "totem",
+        "entity",
+        "stealth"
       ]
     },
     {
@@ -7730,8 +7795,8 @@
         }
       },
       "perk_types": [
-        "hex",
-        "aura"
+        "totem",
+        "tracking"
       ]
     },
     {
@@ -7763,7 +7828,7 @@
         }
       },
       "perk_types": [
-        "hex",
+        "totem",
         "generator"
       ]
     },
@@ -7796,7 +7861,7 @@
         }
       },
       "perk_types": [
-        "hex",
+        "totem",
         "chase"
       ]
     },
@@ -7829,7 +7894,8 @@
         }
       },
       "perk_types": [
-        "hex"
+        "totem",
+        "chase"
       ]
     },
     {
@@ -7860,7 +7926,8 @@
         }
       },
       "perk_types": [
-        "hex"
+        "entity",
+        "totem"
       ]
     },
     {
@@ -7892,7 +7959,8 @@
         }
       },
       "perk_types": [
-        "hex"
+        "totem",
+        "chase"
       ]
     },
     {
@@ -7924,7 +7992,7 @@
         }
       },
       "perk_types": [
-        "hex",
+        "totem",
         "chase"
       ]
     },
@@ -7957,8 +8025,8 @@
         }
       },
       "perk_types": [
-        "hex",
-        "aura"
+        "totem",
+        "tracking"
       ]
     },
     {
@@ -7990,7 +8058,7 @@
         }
       },
       "perk_types": [
-        "hex",
+        "totem",
         "obsession",
         "generator"
       ]
@@ -8024,7 +8092,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "tracking"
       ]
     },
     {
@@ -8088,7 +8156,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -8120,7 +8188,8 @@
         }
       },
       "perk_types": [
-        "entity"
+        "stealth",
+        "chase"
       ]
     },
     {
@@ -8152,7 +8221,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -8184,7 +8253,8 @@
         }
       },
       "perk_types": [
-        "aura"
+        "downed",
+        "tracking"
       ]
     },
     {
@@ -8246,7 +8316,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "downed"
       ]
     },
     {
@@ -8277,7 +8347,8 @@
         }
       },
       "perk_types": [
-        "entity"
+        "tracking",
+        "chase"
       ]
     },
     {
@@ -8405,7 +8476,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -8437,6 +8508,7 @@
         }
       },
       "perk_types": [
+        "hooks",
         "healing"
       ]
     },
@@ -8469,7 +8541,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "chase"
       ]
     },
     {
@@ -8535,7 +8607,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "downed"
       ]
     },
     {
@@ -8570,7 +8642,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "hooks"
       ]
     },
     {
@@ -8602,6 +8674,7 @@
         }
       },
       "perk_types": [
+        "entity",
         "generator"
       ]
     },
@@ -8634,7 +8707,6 @@
         }
       },
       "perk_types": [
-        "chase",
         "generator"
       ]
     },
@@ -8699,9 +8771,9 @@
         }
       },
       "perk_types": [
-        "chase",
         "obsession",
-        "aura"
+        "chase",
+        "tracking"
       ]
     },
     {
@@ -8765,6 +8837,7 @@
         }
       },
       "perk_types": [
+        "endgame",
         "entity"
       ]
     },
@@ -8797,6 +8870,7 @@
         }
       },
       "perk_types": [
+        "endgame",
         "entity"
       ]
     },
@@ -8829,7 +8903,7 @@
         }
       },
       "perk_types": [
-        "aura",
+        "tracking",
         "generator"
       ]
     },
@@ -8926,7 +9000,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -8958,7 +9032,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -9026,6 +9100,7 @@
         }
       },
       "perk_types": [
+        "hooks",
         "generator"
       ]
     },
@@ -9058,7 +9133,8 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking",
+        "chase"
       ]
     },
     {
@@ -9122,8 +9198,9 @@
         }
       },
       "perk_types": [
-        "chase",
-        "obsession"
+        "endgame",
+        "obsession",
+        "chase"
       ]
     },
     {
@@ -9187,6 +9264,7 @@
         }
       },
       "perk_types": [
+        "hooks",
         "chase"
       ]
     },
@@ -9219,6 +9297,7 @@
         }
       },
       "perk_types": [
+        "endgame",
         "obsession"
       ]
     },
@@ -9289,7 +9368,7 @@
       },
       "perk_types": [
         "hooks",
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -9357,7 +9436,7 @@
       },
       "perk_types": [
         "hooks",
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -9390,7 +9469,7 @@
       },
       "perk_types": [
         "hooks",
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -9487,8 +9566,9 @@
         }
       },
       "perk_types": [
+        "entity",
         "stealth",
-        "generator"
+        "totem"
       ]
     },
     {
@@ -9583,7 +9663,9 @@
         }
       },
       "perk_types": [
-        "aura"
+        "entity",
+        "totem",
+        "tracking"
       ]
     },
     {
@@ -9615,7 +9697,9 @@
         }
       },
       "perk_types": [
-        "stealth"
+        "stealth",
+        "hooks",
+        "endgame"
       ]
     },
     {
@@ -9677,7 +9761,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -9741,6 +9825,7 @@
         }
       },
       "perk_types": [
+        "downed",
         "chase"
       ]
     },
@@ -9772,7 +9857,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "tracking"
       ]
     },
     {
@@ -9868,7 +9953,7 @@
         }
       },
       "perk_types": [
-        "aura",
+        "tracking",
         "generator"
       ]
     },
@@ -9901,7 +9986,8 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking",
+        "chase"
       ]
     },
     {
@@ -9933,6 +10019,7 @@
         }
       },
       "perk_types": [
+        "endgame",
         "healing"
       ]
     },
@@ -9965,7 +10052,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -9997,7 +10084,8 @@
         }
       },
       "perk_types": [
-        "generator"
+        "generator",
+        "healing"
       ]
     },
     {
@@ -10029,7 +10117,8 @@
         }
       },
       "perk_types": [
-        "generator"
+        "entity",
+        "downed"
       ]
     },
     {
@@ -10061,8 +10150,9 @@
         }
       },
       "perk_types": [
-        "aura",
-        "generator"
+        "tracking",
+        "generator",
+        "stealth"
       ]
     },
     {
@@ -10130,6 +10220,7 @@
         }
       },
       "perk_types": [
+        "hooks",
         "generator"
       ]
     },
@@ -10162,7 +10253,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -10226,7 +10317,9 @@
         }
       },
       "perk_types": [
-        "generator"
+        "generator",
+        "entity",
+        "hooks"
       ]
     },
     {
@@ -10354,7 +10447,7 @@
         }
       },
       "perk_types": [
-        "aura",
+        "tracking",
         "chase"
       ]
     },
@@ -10387,7 +10480,7 @@
         }
       },
       "perk_types": [
-        "aura"
+        "tracking"
       ]
     },
     {
@@ -10418,7 +10511,7 @@
         }
       },
       "perk_types": [
-        "entity"
+        "tracking"
       ]
     },
     {
@@ -10450,7 +10543,7 @@
         }
       },
       "perk_types": [
-        "aura",
+        "tracking",
         "chase"
       ]
     }

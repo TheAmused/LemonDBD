@@ -1,9 +1,9 @@
 'use client';
 // frontend/src/components/PerkFilters.tsx
 //
-// The Perks page header, one row of controls of one height: role switch on the left, the plain search in the
-// middle, the "Filters" popover (All / Owned / General, perk types) and the sort menu on the right. The Filters
-// button carries the number of filters that are on. Below lg the row wraps instead of centring the search.
+// The Perks page header, one row of controls of one height: the role switch on the left, and on the right one
+// group of the plain search, the "Filters" popover (All / Owned / General, perk types) and the sort menu. The
+// Filters button carries the number of filters that are on. Below lg the row wraps.
 
 import React, { useMemo } from 'react';
 import { SlidersHorizontal } from 'lucide-react';
@@ -115,31 +115,29 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     >
       <h1 className="sr-only">{dict.filters.perks}</h1>
 
-      <div className="flex flex-wrap items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 lg:flex-nowrap">
-        {/* The two outer cells share the row equally, which keeps the search in the middle. */}
-        <div className="flex lg:flex-1 lg:basis-0">
-          <SegmentedControl
-            ariaLabel={dict.filters.sortByRole}
-            value={role}
-            onChange={setRole}
-            options={roleOptions}
-            size="fill"
-            className={CONTROL_H}
-          />
-        </div>
-
-        <PerkSearchBox
-          rolePerks={rolePerks}
-          search={search}
-          setSearch={setSearch}
-          activeTypes={activeTypes}
-          onTypesChange={onTypesChange}
-          suggestPerks
-          typesInField={false}
-          className="relative z-40 min-w-56 flex-1 lg:w-full lg:max-w-sm lg:flex-none"
+      <div className="flex flex-wrap items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 lg:flex-nowrap lg:justify-between">
+        <SegmentedControl
+          ariaLabel={dict.filters.sortByRole}
+          value={role}
+          onChange={setRole}
+          options={roleOptions}
+          size="fill"
+          className={CONTROL_H}
         />
 
-        <div className="ml-auto flex items-center gap-2 lg:ml-0 lg:flex-1 lg:basis-0 lg:justify-end">
+        {/* Search, Filters and Sort are one group: the search sits right next to the filters it works with. */}
+        <div className="flex w-full flex-wrap items-center gap-2 sm:gap-3 lg:w-auto lg:flex-nowrap">
+          <PerkSearchBox
+            rolePerks={rolePerks}
+            search={search}
+            setSearch={setSearch}
+            activeTypes={activeTypes}
+            onTypesChange={onTypesChange}
+            suggestPerks
+            typesInField={false}
+            className="relative z-40 min-w-56 flex-1 lg:w-96 lg:flex-none"
+          />
+
           <CustomDropdown
             ariaLabel={dict.filters.filtersTitle}
             label={

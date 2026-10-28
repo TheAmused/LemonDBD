@@ -122,11 +122,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
               perk={perk}
               src={iconSrc}
               className="h-full w-full"
-              imageClassName={`h-full w-full object-contain filter drop-shadow-xl ${
-                size === 'tarot' || size === 'compact'
-                  ? 'group-hover:drop-shadow-glow-red-sm'
-                  : 'group-hover:drop-shadow-glow-red-sm'
-              } transition-all duration-200 pointer-events-none`}
+              imageClassName="h-full w-full object-contain filter drop-shadow-xl group-hover:drop-shadow-glow-red-sm transition-all duration-200 pointer-events-none"
             />
 
             {avatarSrc && !avatarError && !isGeneral && (

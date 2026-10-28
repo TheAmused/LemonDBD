@@ -15,6 +15,11 @@ export function lastPage(total: number, perPage: number): number {
   return Math.max(1, Math.ceil(total / Math.max(1, perPage)));
 }
 
+/** The first and last result number (1-based) a page shows; 0 and 0 when there are no results. */
+export function pageRange(page: number, limit: number, totalResults: number): [first: number, last: number] {
+  return [totalResults === 0 ? 0 : (page - 1) * limit + 1, Math.min(page * limit, totalResults)];
+}
+
 /** The page buttons of a numbered pager: first, last and the current page with a neighbour on each side; 'gap' stands for the pages left out. */
 export function pageWindow(page: number, totalPages: number): (number | 'gap')[] {
   const shown = [1, page - 1, page, page + 1, totalPages].filter((n) => n >= 1 && n <= totalPages);

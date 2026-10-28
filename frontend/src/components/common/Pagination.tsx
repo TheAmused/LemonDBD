@@ -7,7 +7,7 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-r
 import { useDictionary } from "@/context/DictionaryContext";
 import { cn } from '@/utils/cn';
 import { Input, Select } from '@/components/common/Field';
-import { PAGE_SIZE_OPTIONS, pageWindow } from '@/constants/pagination';
+import { PAGE_SIZE_OPTIONS, pageRange, pageWindow } from '@/constants/pagination';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface PaginationProps {
@@ -38,8 +38,7 @@ const PAGE_BUTTON_CURRENT = 'border-accent-red bg-accent-red text-text-inverted 
 
 export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalResults, limit, onPageChange, onLimitChange, variant = 'page', className }) => {
   const dict = useDictionary();
-  const startIdx = totalResults === 0 ? 0 : (page - 1) * limit + 1;
-  const endIdx = Math.min(page * limit, totalResults);
+  const [startIdx, endIdx] = pageRange(page, limit, totalResults);
   const safeTotalPages = Math.max(1, totalPages || 1);
 
   // The page number that used to sit as plain text between the < and >

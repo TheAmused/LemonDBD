@@ -25,8 +25,9 @@ import { cn } from '@/utils/cn';
 
 const MAX_PERK_SUGGESTIONS = 8;
 
-/** Field and Types button share one height so the pair reads as one control. */
-const CONTROL_HEIGHT = 'py-2 sm:py-2.5 lg:py-3 lg:text-sm wide:py-3.5';
+/** Field and Types button share one height so the pair reads as one control (the Perks header uses it for its other controls too). */
+export const CONTROL_H = 'h-11 wide:h-12';
+export const CONTROL_HEIGHT = `${CONTROL_H} py-0 lg:text-sm`;
 
 interface PerkSearchBoxProps {
   /** The current role's perks: the types offered, their counts and the perk suggestions come from them. */

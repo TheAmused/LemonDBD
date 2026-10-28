@@ -12,7 +12,7 @@ import { useSearchParams } from 'next/navigation';
 import { PerkFilters } from '@/components/PerkFilters';
 import { PerkCard } from '@/components/PerkCard';
 import type { PerkTypeCounts } from '@/components/perks/PerkFilterPanel';
-import { PerksGridSkeleton } from '@/components/PerksSkeleton';
+import { PerkResultsCount } from '@/components/perks/PerkResultsCount';import { PerksGridSkeleton } from '@/components/PerksSkeleton';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Pagination } from '@/components/common/Pagination';
 import { Button } from '@/components/common/Button';
@@ -103,10 +103,6 @@ function PerksContent() {
   const { perks: allPerksList, loading, error, refresh } = useCatalogPerks(locale);
   const [retrying, setRetrying] = useState(false);
 
-  // The full catalog feeds the role counts.
-  const survivorCount = useMemo(() => allPerksList.filter((p) => p.category === 'Survivor').length, [allPerksList]);
-  const killerCount = useMemo(() => allPerksList.filter((p) => p.category === 'Killer').length, [allPerksList]);
-
   const rolePerks = useMemo(() => allPerksList.filter((p) => p.category === role), [allPerksList, role]);
   const query = useMemo(() => parsePerkQuery(deferredSearch, vocab), [deferredSearch, vocab]);
   const ownedOnly = ownershipFilter === 'owned' && Boolean(user);
@@ -142,7 +138,8 @@ function PerksContent() {
   const [rowHeightPx, setRowHeightPx] = useState<number | null>(null);
   const gridResizeObserverRef = useRef<ResizeObserver | null>(null);
   const gridNodeRef = useRef<HTMLDivElement | null>(null);
-  const perksCountRef = useRef<number>(0);
+  // Rows are sized for a full page, so a short page (a search, the last page) keeps the same tiles and sits at the top.
+  const pageSizeRef = useRef<number>(DEFAULT_PERKS_PER_PAGE);
   const GRID_ROW_GAP_PX = 12;
   const MIN_ROW_HEIGHT_PX = 120;
   const MAX_ROW_ASPECT = 2.2;
@@ -150,7 +147,7 @@ function PerksContent() {
   const computeGridMetrics = useCallback((node: HTMLDivElement) => {
     const cs = getComputedStyle(node);
     const colCount = Math.max(1, cs.gridTemplateColumns.split(' ').filter(Boolean).length);
-    const count = Math.max(1, perksCountRef.current);
+    const count = Math.max(1, pageSizeRef.current);
     const rows = Math.max(1, Math.ceil(count / colCount));
 
     const colWidthPx = (node.clientWidth - GRID_ROW_GAP_PX * (colCount - 1)) / colCount;
@@ -179,11 +176,11 @@ function PerksContent() {
   }, [computeGridMetrics]);
 
   useEffect(() => {
-    perksCountRef.current = perks.length;
+    pageSizeRef.current = limit;
     if (gridNodeRef.current) {
       computeGridMetrics(gridNodeRef.current);
     }
-  }, [perks.length, computeGridMetrics]);
+  }, [limit, computeGridMetrics]);
 
   useEffect(() => {
     return () => {
@@ -240,6 +237,10 @@ function PerksContent() {
           }}
           role={role}
           setRole={handleRoleChange}
+          sortBy={sortBy}
+          setSortBy={(s) => setSortBy(s)}
+          order={order}
+          setOrder={(o) => setOrder(o)}
           scope={scope}
           setScope={(s) => {
             setScope(s);
@@ -250,20 +251,17 @@ function PerksContent() {
             setOwnershipFilter(o);
             setPage(1);
           }}
-          sortBy={sortBy}
-          setSortBy={(s) => setSortBy(s)}
-          order={order}
-          setOrder={(o) => setOrder(o)}
           rolePerks={rolePerks}
           activeTypes={types}
           onTypesChange={setTypes}
           typeCounts={typeCounts}
-          totalResults={totalResults}
-          survivorCount={survivorCount}
-          killerCount={killerCount}
           isLoggedIn={Boolean(user)}
         />
       </div>
+
+      {!loading && !retrying && perks.length > 0 && (
+        <PerkResultsCount page={currentPage} limit={limit} totalResults={totalResults} />
+      )}
 
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
         {fetchError ? (

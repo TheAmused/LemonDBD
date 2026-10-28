@@ -1,14 +1,15 @@
 // frontend/src/__tests__/unit/perks/perkFiltersBar.test.ts
 //
-// The Perks header: title, role switch, plain search, a "Filters" popover (closed on first render),
-// and the results strip with removable chips and the sort menu. Also covers the CustomDropdown
-// children mode the popover is built on, and the numbered pager the grid uses.
+// The Perks header, one row: role switch on the left, the plain search in the middle, a "Filters" popover
+// (closed on first render) and the sort menu on the right. The result count sits above the grid. Also covers
+// the CustomDropdown children mode the popover is built on, and the numbered pager the grid uses.
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
 import pl from '@/locales/pl';
 import type { Dictionary } from '@/locales/types';
 import { PerkFilters } from '@/components/PerkFilters';
+import { PerkResultsCount } from '@/components/perks/PerkResultsCount';
 import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
 import { Pagination } from '@/components/common/Pagination';
 import { pageWindow } from '@/constants/pagination';
@@ -48,19 +49,24 @@ describe('PerkFilters header', () => {
     assert.ok(!html.includes('aria-label="Filter by perk type"'));
   });
 
-  it('the strip shows the result count, one removable chip per active type, and the sort menu', () => {
-    const html = renderFilters({ activeTypes: ['healing', 'chase'], totalResults: 7 });
-    assert.match(html, /<output[^>]*>7 perks<\/output>/);
-    assert.match(html, /aria-label="Remove Healing filter"/);
-    assert.match(html, /aria-label="Remove Chase filter"/);
-    assert.equal((html.match(/aria-pressed="true"/g) || []).length, 2);
-    assert.match(html, /Sort By: Name A-Z/);
+  it('the header holds no count, and its sort menu shows just the current order', () => {
+    const html = renderFilters();
+    assert.ok(!html.includes('<output'), 'the result count lives above the grid, not in the search');
+    assert.match(html, />Name A-Z</);
+    assert.ok(!html.includes('Sort By: '));
+    assert.ok(!html.includes('aria-pressed="true"'), 'no chips for the active filters: the Filters button counts them');
   });
 
-  it('ownership and general-only filters get chips too, and the Filters button counts all three kinds', () => {
-    const html = renderFilters({ activeTypes: ['aura'], ownershipFilter: 'owned', scope: 'general' });
-    assert.match(html, /aria-label="Remove Owned filter"/);
-    assert.match(html, /aria-label="Remove General Only filter"/);
+  it('the line above the grid shows the page range', () => {
+    const count = renderWithDictionary(React.createElement(PerkResultsCount, { page: 2, limit: 15, totalResults: 176 }));
+    assert.match(count.replace(/<[^>]+>/g, ''), /Showing 16 to 30 of 176 perks/);
+  });
+
+  it('the Filters button counts every filter that is on, Owned and General together once', () => {
+    assert.ok(!renderFilters().includes('data-text='));
+    assert.match(renderFilters({ activeTypes: ['healing', 'chase'] }), /data-text="2"/);
+    assert.match(renderFilters({ activeTypes: ['aura'], scope: 'general' }), /data-text="2"/);
+    assert.match(renderFilters({ activeTypes: ['aura'], ownershipFilter: 'owned', scope: 'general' }), /data-text="2"/);
   });
 
   it('labels are localized', () => {
@@ -72,8 +78,8 @@ describe('PerkFilters header', () => {
       }),
       { dict: pl as Dictionary, locale: 'pl' }
     );
-    assert.ok(html.includes('Usuń filtr Klątwa'));
     assert.ok(html.includes('Filtry'));
+    assert.match(html, /data-text="1"/);
   });
 });
 

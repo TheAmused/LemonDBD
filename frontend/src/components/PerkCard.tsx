@@ -176,8 +176,8 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
 
         {named && (
           <span
-            className={`type-strong-xs line-clamp-2 w-full text-balance text-center leading-tight ${
-              perk.is_disabled || !isOwned ? 'text-text-muted' : 'text-text-secondary group-hover:text-text-primary'
+            className={`type-card-title line-clamp-2 w-full text-balance text-center ${
+              perk.is_disabled || !isOwned ? 'text-text-muted' : 'text-text-primary'
             }`}
           >
             {perk.name}

@@ -35,8 +35,8 @@ const MUTATOR_TARGET_TYPE: Record<string, string> = {
   solo_queue: 'altruism_healing',
   chase_only: 'chase',
   meme_loadout: 'meme',
-  hex_boon_only: 'hex',
-  hex_roulette: 'hex',
+  hex_boon_only: 'totem',
+  hex_roulette: 'totem',
   negative_only: 'handicap',
 };
 

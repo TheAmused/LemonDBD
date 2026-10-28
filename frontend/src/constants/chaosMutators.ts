@@ -19,7 +19,7 @@ const SURVIVOR_CHAOS_MUTATORS: readonly ChaosMutator[] = [
     id: 'blindness',
     name: 'Curse of Blindness',
     description:
-      'Perk icons are obscured and aura-reading drop chances are reduced by 50%!',
+      'Perk icons are obscured and tracking (aura, sound and alert) drop chances are reduced by 50%!',
     type: 'curse',
     icon: '👁️',
     badgeBg: 'bg-accent-purple-deep/90',
@@ -43,7 +43,7 @@ const SURVIVOR_CHAOS_MUTATORS: readonly ChaosMutator[] = [
     id: 'meme_loadout',
     name: 'Curse of the Clown',
     description:
-      'Off-meta and gimmick perks have their drop chance increased by 50% for maximum trial chaos!',
+      'Perks that block things have their drop chance increased by 50% for maximum trial chaos!',
     type: 'curse',
     icon: '🤡',
     badgeBg: 'bg-accent-amber-deep/90',
@@ -94,7 +94,7 @@ const KILLER_CHAOS_MUTATORS: readonly ChaosMutator[] = [
     id: 'blindness',
     name: 'Curse of Blindness',
     description:
-      'Perk icons are obscured and aura-reading drop chances are reduced by 50%!',
+      'Perk icons are obscured and tracking (aura, sound and alert) drop chances are reduced by 50%!',
     type: 'curse',
     icon: '👁️',
     badgeBg: 'bg-accent-purple-deep/90',
@@ -130,7 +130,7 @@ const KILLER_CHAOS_MUTATORS: readonly ChaosMutator[] = [
     id: 'meme_loadout',
     name: 'Curse of the Clown',
     description:
-      'Off-meta and gimmick perks have their drop chance increased by 50% for maximum trial chaos!',
+      'Perks that block things have their drop chance increased by 50% for maximum trial chaos!',
     type: 'curse',
     icon: '🎪',
     badgeBg: 'bg-accent-amber-deep/90',

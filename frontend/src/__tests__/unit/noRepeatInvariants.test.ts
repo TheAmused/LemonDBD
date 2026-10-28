@@ -67,8 +67,8 @@ test('No-Repeat + a reduction curse (no_exhaustion): still never repeats, even t
   assert.strictEqual(new Set(drawnNames).size, drawnNames.length);
 });
 
-test('No-Repeat + a boost curse (hex_boon_only): still never repeats, even though hex perks are drawn disproportionately often', () => {
-  const pool = buildEligiblePool(30, 'hex', 6);
+test('No-Repeat + a boost curse (hex_boon_only): still never repeats, even though totem perks are drawn disproportionately often', () => {
+  const pool = buildEligiblePool(30, 'totem', 6);
   const mutator = makeMutator('hex_boon_only');
   const { everRepeated, drawnNames } = longDrawSequence(pool, mutator, 25);
   assert.strictEqual(everRepeated, false);

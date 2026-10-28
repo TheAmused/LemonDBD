@@ -57,8 +57,8 @@ def perk_seeded_app(app):
 
         db.session.add_all([
             Perk(name="Roundtrip Exhaustion Perk", role="Survivor", perk_types=["exhaustion"], survivor_id=surv.id),
-            Perk(name="Roundtrip Two Types Perk", role="Survivor", perk_types=["generator", "aura"], survivor_id=surv.id),
-            Perk(name="Roundtrip Reversed Perk", role="Survivor", perk_types=["aura", "generator"], survivor_id=surv.id),
+            Perk(name="Roundtrip Two Types Perk", role="Survivor", perk_types=["generator", "tracking"], survivor_id=surv.id),
+            Perk(name="Roundtrip Reversed Perk", role="Survivor", perk_types=["tracking", "generator"], survivor_id=surv.id),
             Perk(name="Roundtrip Default Perk", role="Survivor", survivor_id=surv.id),
         ])
         db.session.commit()
@@ -70,8 +70,8 @@ def perk_seeded_app(app):
 @pytest.mark.unit
 def test_export_then_import_preserves_perk_types_and_their_order(perk_seeded_app) -> None:
     before = _types_by_name()
-    assert before["Roundtrip Two Types Perk"] == ["generator", "aura"]
-    assert before["Roundtrip Reversed Perk"] == ["aura", "generator"]
+    assert before["Roundtrip Two Types Perk"] == ["generator", "tracking"]
+    assert before["Roundtrip Reversed Perk"] == ["tracking", "generator"]
     assert before["Roundtrip Default Perk"] == ["entity"]
 
     exported = DatabaseExportImportService.export_database(targets=["perks"], include_assets=False)
@@ -126,14 +126,36 @@ def test_import_of_a_pre_list_export_turns_the_single_perk_type_into_a_one_entry
 
 
 @pytest.mark.unit
+def test_import_of_a_pre_redesign_export_reads_the_renamed_types_under_their_new_names(perk_seeded_app) -> None:
+    """A backup taken before aura/hex/boon were renamed must still import."""
+    exported = DatabaseExportImportService.export_database(targets=["perks"], include_assets=False)
+    legacy_types = {
+        "Roundtrip Exhaustion Perk": ["exhaustion"],
+        "Roundtrip Two Types Perk": ["generator", "aura"],
+        "Roundtrip Reversed Perk": ["hex", "boon"],
+        "Roundtrip Default Perk": ["boon", "aura", "hex"],
+    }
+    for row in _perks_rows(exported):
+        row["perk_types"] = legacy_types[row["name"]]
+
+    _wipe_perks()
+    DatabaseExportImportService.import_database(exported, targets=["perks"])
+
+    assert _types_by_name() == {
+        "Roundtrip Exhaustion Perk": ["exhaustion"],
+        "Roundtrip Two Types Perk": ["generator", "tracking"],
+        "Roundtrip Reversed Perk": ["totem"],
+        "Roundtrip Default Perk": ["totem", "tracking"],
+    }
+
+
+@pytest.mark.unit
 @pytest.mark.parametrize(
     ("perk_types", "message"),
     [
-        (["aura", "aura"], "repeat"),
-        (["entity", "aura"], "catch-all"),
+        (["tracking", "tracking"], "repeat"),
         (["not_a_type"], "Input should be"),
         ([], "at least 1"),
-        (["hooks"], "only exists on Killer"),
     ],
 )
 def test_import_refuses_an_invalid_list_and_names_the_perk(perk_seeded_app, perk_types, message) -> None:

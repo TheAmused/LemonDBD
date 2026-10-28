@@ -94,8 +94,8 @@ const CURSE_CASES: CurseCase[] = [
   { mutatorId: 'meme_loadout', targetType: 'meme', weight: 1.50 },
   { mutatorId: 'chase_only', targetType: 'chase', weight: 1.50 },
   { mutatorId: 'negative_only', targetType: 'handicap', weight: 1.50 },
-  { mutatorId: 'hex_boon_only', targetType: 'hex', weight: 1.50 }, // hex_boon_only boosts BOTH hex and boon
-  { mutatorId: 'hex_roulette', targetType: 'hex', weight: 1.50 },
+  { mutatorId: 'hex_boon_only', targetType: 'totem', weight: 1.50 }, // hex_boon_only boosts every totem perk
+  { mutatorId: 'hex_roulette', targetType: 'totem', weight: 1.50 },
 ];
 
 for (const { mutatorId, targetType, weight } of CURSE_CASES) {
@@ -121,7 +121,7 @@ for (const { mutatorId, targetType, weight } of CURSE_CASES) {
   });
 }
 
-test('hex_boon_only also boosts boon-category perks (both halves of the combined bucket), independently of hex', () => {
+test('hex_boon_only also boosts a perk still carrying the legacy boon spelling (stale cached data), like a totem perk', () => {
   const pool = buildPool('boon', 20, 80);
   const mutator = makeMutator('hex_boon_only');
   const expected = expectedTargetRate(20, 80, 1.50);
@@ -129,7 +129,7 @@ test('hex_boon_only also boosts boon-category perks (both halves of the combined
   assert.ok(Math.abs(observed - expected) <= TOLERANCE_PP, `expected ~${expected.toFixed(1)}%, observed ${observed.toFixed(1)}%`);
 });
 
-test('getPerkWeight treats hex_roulette identically to hex_boon_only for weighting purposes (both share the isHexOrBoonPerk branch, including boosting a boon-typed perk) -- documented explicitly so a future narrowing of hex_roulette to hex-only is a deliberate change, not a silent one', () => {
+test('getPerkWeight treats hex_roulette identically to hex_boon_only for weighting purposes (both share the isTotemPerk branch, including boosting a legacy boon-typed perk) -- documented explicitly so a future narrowing of hex_roulette to hex-only is a deliberate change, not a silent one', () => {
   const pool = buildPool('boon', 20, 80, 'general', 'Killer');
   const mutator = makeMutator('hex_roulette');
   const expected = expectedTargetRate(20, 80, 1.50);

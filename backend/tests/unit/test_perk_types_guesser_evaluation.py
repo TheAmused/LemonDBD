@@ -18,13 +18,13 @@ from app.services.minigames.evaluation import (
 @pytest.mark.parametrize(
     ("target", "guess", "expected"),
     [
-        (["aura"], ["aura"], "correct"),
-        (["generator", "aura"], ["aura", "generator"], "correct"),
-        (["generator", "aura"], ["aura"], "partial"),
-        (["generator"], ["generator", "aura"], "partial"),
-        (["generator", "aura"], ["aura", "chase"], "partial"),
+        (["tracking"], ["tracking"], "correct"),
+        (["generator", "tracking"], ["tracking", "generator"], "correct"),
+        (["generator", "tracking"], ["tracking"], "partial"),
+        (["generator"], ["generator", "tracking"], "partial"),
+        (["generator", "tracking"], ["tracking", "chase"], "partial"),
         (["generator"], ["chase"], "incorrect"),
-        (["entity"], ["aura", "chase"], "incorrect"),
+        (["entity"], ["tracking", "chase"], "incorrect"),
     ],
 )
 def test_compare_perk_types(target, guess, expected) -> None:
@@ -37,8 +37,8 @@ def two_perks(app):
         db.drop_all()
         db.create_all()
         db.session.add_all([
-            Perk(id=1, name="Target Perk", role="Survivor", perk_types=["generator", "aura"]),
-            Perk(id=2, name="Guess Perk", role="Survivor", perk_types=["aura", "chase"]),
+            Perk(id=1, name="Target Perk", role="Survivor", perk_types=["generator", "tracking"]),
+            Perk(id=2, name="Guess Perk", role="Survivor", perk_types=["tracking", "chase"]),
         ])
         db.session.commit()
         yield
@@ -52,6 +52,6 @@ def test_evaluate_classic_perk_reports_partial_and_the_guess_list(app, two_perks
         result = _evaluate_classic_perk(target_id=1, guess_id=2, attempt_number=1)
 
         assert result["attributes"]["perk_types"] == {"status": "partial"}
-        assert result["guess"]["perk_types"] == ["aura", "chase"]
+        assert result["guess"]["perk_types"] == ["tracking", "chase"]
         assert "perk_type" not in result["guess"]
         assert "perk_type" not in result["attributes"]

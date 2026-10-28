@@ -8,7 +8,7 @@ import {
   pickRandomLoadout,
   buildDrawnSlots,
   isExhaustionPerk,
-  isHexOrBoonPerk,
+  isTotemPerk,
 } from "@/components/generator/lib/perkPicker";
 
 import { Perk } from "@/types/perks";
@@ -126,7 +126,7 @@ test("Live Frontend Workflow: Client-Decoupled Perk Randomizer Lifecycle", async
     const killerHexes = filterPerksByMutator(killerPerks, hexBoonMutator);
     assert.ok(killerHexes.length > 0, "Must find real DBD Hex perks");
     for (const perk of killerHexes) {
-      assert.ok(isHexOrBoonPerk(perk), `Perk '${perk.name}' must be a hex or boon perk`);
+      assert.ok(isTotemPerk(perk), `Perk '${perk.name}' must be a totem perk`);
     }
   });
 

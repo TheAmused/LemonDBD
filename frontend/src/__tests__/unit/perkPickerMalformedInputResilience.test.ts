@@ -11,7 +11,7 @@ import test from 'node:test';
 import assert from 'node:assert';
 import {
   isExhaustionPerk,
-  isHexOrBoonPerk,
+  isTotemPerk,
   getPerkTarotType,
   pickPerkTarotType,
   getPerkWeight,
@@ -38,7 +38,7 @@ function makeMutator(id: string): ChaosMutator {
 test('a perk object with perk_types entirely absent (not even null -- old/incomplete data) is treated as the entity catch-all, never matches a specific category', () => {
   const perk = makePerk('Old Data Perk'); // perk_types key not present at all
   assert.strictEqual(isExhaustionPerk(perk), false);
-  assert.strictEqual(isHexOrBoonPerk(perk), false);
+  assert.strictEqual(isTotemPerk(perk), false);
   assert.strictEqual(getPerkWeight(perk, makeMutator('no_exhaustion')), 1.0);
 });
 
@@ -51,7 +51,7 @@ test('a perk with perk_types explicitly null behaves identically to one with it 
 test('a perk with an unknown/garbage perk type never matches any real category and never crashes any picker function', () => {
   const perk = makePerk('Garbage Perk', 'totally_not_a_real_category_xyz');
   assert.strictEqual(isExhaustionPerk(perk), false);
-  assert.strictEqual(isHexOrBoonPerk(perk), false);
+  assert.strictEqual(isTotemPerk(perk), false);
   assert.doesNotThrow(() => getPerkWeight(perk, makeMutator('hex_boon_only')));
   assert.strictEqual(getPerkWeight(perk, makeMutator('hex_boon_only')), 1.0);
 });
@@ -114,7 +114,7 @@ test('perk_types in a shape the API never sends (empty list, a bare string, a nu
 
     assert.doesNotThrow(() => {
       isExhaustionPerk(perk);
-      isHexOrBoonPerk(perk);
+      isTotemPerk(perk);
       getPerkWeight(perk, makeMutator('meme_loadout'));
       getPerkWeight(perk, makeMutator('blindness'));
       getPerkTarotType(perk);

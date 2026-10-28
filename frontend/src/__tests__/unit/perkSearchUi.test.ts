@@ -37,7 +37,7 @@ const filters = (overrides: Partial<React.ComponentProps<typeof PerkFilters>> = 
 
 const DEJA_VU: Perk = {
   name: 'Déjà Vu',
-  perk_types: ['generator', 'aura'],
+  perk_types: ['generator', 'tracking'],
   character: 'General',
   category: 'Survivor',
   description: 'See generators.',
@@ -96,17 +96,17 @@ describe('perk type search UI', () => {
   });
 
   it('labels are localized', () => {
-    const html = renderWithDictionary(filters({ role: 'Killer', activeTypes: ['hex'] }), { dict: pl as Dictionary, locale: 'pl' });
-    assert.ok(html.includes('Usuń filtr Klątwa'));
+    const html = renderWithDictionary(filters({ role: 'Killer', activeTypes: ['totem'] }), { dict: pl as Dictionary, locale: 'pl' });
+    assert.ok(html.includes('Usuń filtr Totem'));
     assert.ok(html.includes('>Typy<'));
   });
 
   it('the perk modal lists the perk\'s types, primary first, as buttons only when they can filter', () => {
     const plain = renderWithDictionary(React.createElement(PerkTypeBadges, { perk: DEJA_VU }));
-    assert.ok(plain.indexOf('Generator') < plain.indexOf('Aura'));
+    assert.ok(plain.indexOf('Generator') < plain.indexOf('Tracking'));
     assert.ok(!plain.includes('aria-pressed'));
     const clickable = renderWithDictionary(
-      React.createElement(PerkTypeBadges, { perk: DEJA_VU, onSelectType: noop, activeTypes: ['aura'] })
+      React.createElement(PerkTypeBadges, { perk: DEJA_VU, onSelectType: noop, activeTypes: ['tracking'] })
     );
     assert.equal((clickable.match(/aria-pressed="true"/g) || []).length, 1);
     assert.equal((clickable.match(/aria-pressed="false"/g) || []).length, 1);

@@ -40,8 +40,8 @@ class PerkTypeSpec(BaseModel):
     """
 
     role: str = Field("Survivor", pattern=ROLE_PATTERN)
-    #: Ordered, 1-3 entries, no repeats, `entity` only alone; `[0]` is the
-    #: primary type (the Tarot card). Omitted means the catch-all `['entity']`.
+    #: Ordered, 1-3 entries, no repeats; `[0]` is the primary type (the Tarot
+    #: card). Omitted means the unclassified default `['entity']`.
     perk_types: PerkTypes = Field(default_factory=lambda: list(DEFAULT_PERK_TYPES))
 
     @model_validator(mode="before")

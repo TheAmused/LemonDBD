@@ -122,7 +122,7 @@ class TestAuthLiveComprehensiveWorkflow:
         assert reg_data["user"]["login"] == unique_login
         assert reg_data["user"]["username"] == unique_username
         assert reg_data["user"]["email"] == unique_email
-        assert reg_data["user"]["role"] in ("user", "player")
+        assert reg_data["user"]["role"] == "user"
 
         # 3. Duplicate registration checks
         ch_res_dup = live_client.get("/api/v1/auth/altcha-challenge")
@@ -137,9 +137,22 @@ class TestAuthLiveComprehensiveWorkflow:
                 "altcha": dup_altcha,
             },
         )
-        assert dup_res.status_code in (400, 409)
-        dup_err = dup_res.get_json().get("error", "").lower()
-        assert "already" in dup_err or "exists" in dup_err or "taken" in dup_err
+        assert dup_res.status_code == 400
+        assert dup_res.get_json()["error"] == "Login is already taken."
+
+        ch_res_email = live_client.get("/api/v1/auth/altcha-challenge")
+        dup_email = live_client.post(
+            "/api/v1/auth/register",
+            json={
+                "login": f"other_login_{ts}",
+                "username": f"Other_{ts}",
+                "email": unique_email,
+                "password": password,
+                "altcha": solve_altcha_pow(ch_res_email.get_json()),
+            },
+        )
+        assert dup_email.status_code == 400
+        assert dup_email.get_json()["error"] == "Email address is already registered."
 
         # 4. Login via login/username
         login_by_username = live_client.post(
@@ -196,8 +209,17 @@ class TestAuthLiveComprehensiveWorkflow:
             },
         )
         assert forgot_res.status_code == 200
-        forgot_json = forgot_res.get_json()
-        assert forgot_json.get("status") == "success" or forgot_json.get("success") is True
+        # The same answer whether or not the address has an account, so it cannot be used to probe for one.
+        assert forgot_res.get_json() == {
+            "status": "success",
+            "message": "If that email is registered, a password reset link has been sent.",
+        }
+        unknown = live_client.post(
+            "/api/v1/auth/forgot-password",
+            json={"email": "nobody-here@example.com", "altcha": solve_altcha_pow(live_client.get("/api/v1/auth/altcha-challenge").get_json())},
+        )
+        assert unknown.status_code == 200
+        assert unknown.get_json() == forgot_res.get_json()
 
         # Test logout endpoint
         logout_res = live_client.post("/api/v1/auth/logout")

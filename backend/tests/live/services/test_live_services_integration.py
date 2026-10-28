@@ -1,7 +1,10 @@
 # backend/tests/live/services/test_live_services_integration.py
+from collections.abc import Callable
+
 import pytest
 from flask import Flask
 
+from app.core.security import decode_token
 from app.services.smash_or_pass_service import SmashOrPassService
 from app.services.perks import PerkService
 from app.services.user import UserService
@@ -11,15 +14,15 @@ from app.services.user import UserService
 class TestLiveServicesIntegration:
     """Live PostgreSQL service layer queries, entity counts, user creation, and mini-game rosters."""
 
-    def test_live_perk_service_queries(self, live_app: Flask) -> None:
+    def test_live_perk_service_queries(self, live_app: Flask, db_count: Callable[..., int]) -> None:
         with live_app.app_context():
             service = PerkService()
             perks = service.get_perks(limit=100)
             assert len(perks["data"]) == 100
-            assert perks["pagination"]["total"] > 200
+            assert perks["pagination"]["total"] == db_count("SELECT count(*) FROM perks")
 
             chars = service.get_characters()
-            assert len(chars) >= 50
+            assert len(chars) == db_count("SELECT (SELECT count(*) FROM survivors) + (SELECT count(*) FROM killers)")
 
     def test_live_user_service_registration_and_token(self, live_app: Flask) -> None:
         with live_app.app_context():
@@ -29,11 +32,10 @@ class TestLiveServicesIntegration:
             assert user.id is not None
 
             token = user_service.generate_auth_token(user)
-            assert token is not None
-            assert len(token) > 20
+            assert str(decode_token(token)["sub"]) == str(user.id)
 
-    def test_live_smash_or_pass_service_stats(self, live_app: Flask) -> None:
+    def test_live_smash_or_pass_service_stats(self, live_app: Flask, db_count: Callable[..., int]) -> None:
         with live_app.app_context():
             service = SmashOrPassService()
             rosters = service.get_rosters(active_only=True)
-            assert len(rosters) > 0
+            assert len(rosters) == db_count("SELECT count(*) FROM rosters WHERE is_active AND NOT is_nsfw")

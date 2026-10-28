@@ -1,4 +1,6 @@
 # backend/tests/live/workflows/test_character_catalog_and_filtering_workflow.py
+from collections.abc import Callable
+
 import pytest
 from flask.testing import FlaskClient
 
@@ -6,19 +8,14 @@ from flask.testing import FlaskClient
 @pytest.mark.live
 @pytest.mark.workflow
 class TestCharacterCatalogAndFilteringWorkflow:
-    """Workflow asserting complete character catalog queries, role separation, and release metadata."""
+    """The full killer and survivor catalogues, each with only its own role and release metadata."""
 
-    def test_character_catalog_and_filtering_workflow(self, live_client: FlaskClient) -> None:
-        killers_res = live_client.get("/api/v1/killers")
-        assert killers_res.status_code == 200
-        killers = killers_res.get_json()["data"]
-        assert len(killers) >= 30
-        assert all(k["role"] == "Killer" for k in killers)
-
-        surv_res = live_client.get("/api/v1/survivors")
-        assert surv_res.status_code == 200
-        survivors = surv_res.get_json()["data"]
-        assert len(survivors) >= 30
-        assert all(s["role"] == "Survivor" for s in survivors)
-
-        assert any("release_number" in k for k in killers)
+    def test_character_catalog_and_filtering_workflow(self, live_client: FlaskClient, db_count: Callable[..., int]) -> None:
+        for path, role, table in (("/api/v1/killers", "Killer", "killers"), ("/api/v1/survivors", "Survivor", "survivors")):
+            res = live_client.get(path)
+            assert res.status_code == 200
+            body = res.get_json()
+            characters = body["data"]
+            assert body["count"] == len(characters) == db_count(f"SELECT count(*) FROM {table}")
+            assert {c["role"] for c in characters} == {role}
+            assert all(c["release_number"] is not None for c in characters), path

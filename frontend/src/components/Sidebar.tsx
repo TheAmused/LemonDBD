@@ -135,16 +135,6 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
           page('tier-lists', dict.sidebar.tierLists, LayoutList, 'tier-lists'),
           page('smash-or-pass', dict.sidebar.smashOrPass, Heart, 'smash-or-pass'),
           page('minigames', dict.sidebar.minigames, Gamepad2, 'minigames'),
-          // Opens a dialog, so it is a button rather than a page link.
-          {
-            id: 'bard-insults',
-            label: dict.sidebar.insultsButton,
-            icon: QuillEditIcon,
-            onSelect: () => {
-              setInsultsModalOpen(true);
-              setMobileOpen(false);
-            },
-          },
         ],
       },
       page('trophies', dict.sidebar.trophies, AdeptBadgeIcon, 'achievements'),

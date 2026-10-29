@@ -137,6 +137,7 @@ function PerksContent() {
   const conflict = totalResults === 0 ? roleOnlyConflict(query, types, role, typesByRole) : null;
 
   const [rowHeightPx, setRowHeightPx] = useState<number | null>(null);
+  const [needsScroll, setNeedsScroll] = useState<boolean>(false);
   const gridResizeObserverRef = useRef<ResizeObserver | null>(null);
   const gridNodeRef = useRef<HTMLDivElement | null>(null);
   // Rows are sized for a full page, so a short page (a search, the last page) keeps the same tiles and sits at the top.
@@ -155,12 +156,14 @@ function PerksContent() {
     const maxRowFromWidth = colWidthPx > 0 ? colWidthPx * MAX_ROW_ASPECT : null;
 
     const h = node.clientHeight;
-    const heightBasedRow = h > 0 ? Math.max(0, (h - GRID_ROW_GAP_PX * (rows - 1)) / rows) : null;
+    const availableH = Math.max(0, h - 4);
+    const heightBasedRow = availableH > 0 ? Math.max(0, (availableH - GRID_ROW_GAP_PX * (rows - 1)) / rows) : null;
 
     const upperBound = maxRowFromWidth ?? Infinity;
     const base = heightBasedRow ?? upperBound;
     const clamped = Math.min(Math.max(base, MIN_ROW_HEIGHT_PX), upperBound);
     setRowHeightPx(Number.isFinite(clamped) && clamped > 0 ? clamped : null);
+    setNeedsScroll(heightBasedRow !== null && clamped > heightBasedRow);
   }, []);
 
   const measureGridArea = useCallback((node: HTMLDivElement | null) => {
@@ -264,7 +267,7 @@ function PerksContent() {
         <PerkResultsCount page={currentPage} limit={limit} totalResults={totalResults} />
       )}
 
-      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
+      <div className={`flex min-h-0 flex-1 flex-col overflow-x-hidden ${needsScroll ? "overflow-y-auto" : "overflow-y-hidden"}`}>
         {fetchError ? (
           <div className="flex flex-col items-center justify-center gap-4 p-12 text-center my-auto">
             <p className="text-text-secondary text-base">{dict.filters.loadError}</p>

@@ -98,6 +98,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
       }
     >
       <TileButton
+        press={false}
         onClick={() => onSelect(perk)}
         aria-label={ariaLabel}
         className={`relative flex items-center justify-center duration-200 ${

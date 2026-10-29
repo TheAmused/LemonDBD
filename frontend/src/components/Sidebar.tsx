@@ -28,7 +28,6 @@ import { WhatsNewLauncher } from '@/components/changelog/WhatsNewLauncher';
 import { useChangelogFeed } from '@/components/changelog/useChangelogFeed';
 import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, AdeptBadgeIcon, EntityHeartIcon } from '@/components/icons/DbdIcons';
 
-import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
 import { useDictionary, useLocale } from "@/context/DictionaryContext";
 import { IconTile } from '@/components/common/IconTile';
@@ -252,7 +251,6 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
         <TileButton
           onClick={toggleSidebar}
           data-testid="sidebar-toggle-button"
-          {...tip(dict.sidebar.toggleSidebar, undefined, 'action')}
           aria-label={dict.sidebar.toggleSidebar}
           aria-expanded={!isCollapsed}
           className="hit-area hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 h-16 w-6 items-center justify-center rounded-r-control border border-l-0 border-border-color bg-bg-sidebar text-text-primary shadow-md hover:bg-bg-sidebar-hover hover:w-7 hover:text-accent-red active:scale-95 transition-all duration-200 cursor-pointer z-50 group" press={false}

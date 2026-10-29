@@ -1,18 +1,18 @@
-# backend/migrations/versions/0034_id_please_lanes.py
+# backend/migrations/versions/0035_id_please_lanes.py
 """give every ID, Please run a lane (mixed, survivor or killer) and widen the unique key to (user, lane, difficulty)
 
-Databases that already ran 0033 before lanes existed have no `lane` column; fresh ones get it from 0033 and
+Databases that already ran 0034 before lanes existed have no `lane` column; fresh ones get it from 0034 and
 this revision changes nothing there. Every existing run is a mixed run.
 
-Revision ID: 0034_id_please_lanes
-Revises: 0033_id_please
+Revision ID: 0035_id_please_lanes
+Revises: 0034_id_please
 Create Date: 2026-10-28
 """
 import sqlalchemy as sa
 from alembic import op
 
-revision = "0034_id_please_lanes"
-down_revision = "0033_id_please"
+revision = "0035_id_please_lanes"
+down_revision = "0034_id_please"
 branch_labels = None
 depends_on = None
 

@@ -1,15 +1,15 @@
-# backend/migrations/versions/0035_id_please_perk_seed.py
+# backend/migrations/versions/0036_id_please_perk_seed.py
 """store the hidden perk shuffle of an ID, Please run (Hardcore+ shuffles the order of the player's perks at every opening)
 
-Revision ID: 0035_id_please_perk_seed
-Revises: 0034_id_please_lanes
+Revision ID: 0036_id_please_perk_seed
+Revises: 0035_id_please_lanes
 Create Date: 2026-10-28
 """
 import sqlalchemy as sa
 from alembic import op
 
-revision = "0035_id_please_perk_seed"
-down_revision = "0034_id_please_lanes"
+revision = "0036_id_please_perk_seed"
+down_revision = "0035_id_please_lanes"
 branch_labels = None
 depends_on = None
 

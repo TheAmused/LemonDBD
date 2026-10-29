@@ -1,16 +1,16 @@
-# backend/migrations/versions/0033_id_please.py
+# backend/migrations/versions/0034_id_please.py
 """create the ID, Please run and match log tables (a run belongs to a lane: mixed, survivor or killer)
 
-Revision ID: 0033_id_please
-Revises: 0032_user_preferences
+Revision ID: 0034_id_please
+Revises: 0033_perk_type_redesign
 Create Date: 2026-10-28
 """
 import sqlalchemy as sa
 from alembic import op
 from sqlalchemy.dialects import postgresql
 
-revision = "0033_id_please"
-down_revision = "0032_user_preferences"
+revision = "0034_id_please"
+down_revision = "0033_perk_type_redesign"
 branch_labels = None
 depends_on = None
 

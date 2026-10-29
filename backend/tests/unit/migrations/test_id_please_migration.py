@@ -1,5 +1,5 @@
 # backend/tests/unit/migrations/test_id_please_migration.py
-"""Migrations 0033 and 0034: the ID, Please tables match the models, and a database that ran 0033 before lanes gets its lane."""
+"""Migrations 0034 and 0035: the ID, Please tables match the models, and a database that ran 0034 before lanes gets its lane."""
 import importlib.util
 from pathlib import Path
 
@@ -11,7 +11,7 @@ from app.models import IdPleaseMatchLog, IdPleaseRun
 VERSIONS = Path(__file__).resolve().parents[3] / "migrations" / "versions"
 
 
-def _load(name: str = "0033_id_please"):
+def _load(name: str = "0034_id_please"):
     spec = importlib.util.spec_from_file_location(f"migration_{name}", VERSIONS / f"{name}.py")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -24,8 +24,8 @@ def _run(conn, fn) -> None:
 
 
 def test_upgrade_creates_the_model_columns_and_is_idempotent() -> None:
-    migration, recent = _load(), _load("0035_id_please_perk_seed")
-    assert migration.down_revision == "0032_user_preferences"
+    migration, recent = _load(), _load("0036_id_please_perk_seed")
+    assert migration.down_revision == "0033_perk_type_redesign"
     engine = sa.create_engine("sqlite://")
     with engine.begin() as conn:
         conn.execute(sa.text("CREATE TABLE users (id INTEGER PRIMARY KEY)"))
@@ -47,9 +47,9 @@ OLD_TABLE = (
 )
 
 
-def test_0034_adds_the_lane_to_a_table_made_before_lanes_existed() -> None:
-    migration = _load("0034_id_please_lanes")
-    assert migration.down_revision == "0033_id_please"
+def test_0035_adds_the_lane_to_a_table_made_before_lanes_existed() -> None:
+    migration = _load("0035_id_please_lanes")
+    assert migration.down_revision == "0034_id_please"
     engine = sa.create_engine("sqlite://")
     with engine.begin() as conn:
         conn.execute(sa.text("CREATE TABLE users (id INTEGER PRIMARY KEY)"))
@@ -64,8 +64,8 @@ def test_0034_adds_the_lane_to_a_table_made_before_lanes_existed() -> None:
         conn.execute(sa.text("INSERT INTO id_please_runs (user_id, difficulty, lane) VALUES (1, 'milestones', 'survivor')"))
 
 
-def test_0034_changes_nothing_on_a_fresh_database() -> None:
-    first, second = _load(), _load("0034_id_please_lanes")
+def test_0035_changes_nothing_on_a_fresh_database() -> None:
+    first, second = _load(), _load("0035_id_please_lanes")
     engine = sa.create_engine("sqlite://")
     with engine.begin() as conn:
         conn.execute(sa.text("CREATE TABLE users (id INTEGER PRIMARY KEY)"))
@@ -77,8 +77,8 @@ def test_0034_changes_nothing_on_a_fresh_database() -> None:
         assert {u["name"] for u in inspector.get_unique_constraints("id_please_runs")} == {"uq_id_please_run_user_lane_difficulty"}
 
 
-def test_0034_downgrade_restores_the_one_run_per_difficulty_key() -> None:
-    first, second = _load(), _load("0034_id_please_lanes")
+def test_0035_downgrade_restores_the_one_run_per_difficulty_key() -> None:
+    first, second = _load(), _load("0035_id_please_lanes")
     engine = sa.create_engine("sqlite://")
     with engine.begin() as conn:
         conn.execute(sa.text("CREATE TABLE users (id INTEGER PRIMARY KEY)"))
@@ -92,9 +92,9 @@ def test_0034_downgrade_restores_the_one_run_per_difficulty_key() -> None:
         assert conn.execute(sa.text("SELECT COUNT(*) FROM id_please_runs")).scalar() == 1
 
 
-def test_0035_adds_the_perk_seed_to_a_table_without_it() -> None:
-    migration = _load("0035_id_please_perk_seed")
-    assert migration.down_revision == "0034_id_please_lanes"
+def test_0036_adds_the_perk_seed_to_a_table_without_it() -> None:
+    migration = _load("0036_id_please_perk_seed")
+    assert migration.down_revision == "0035_id_please_lanes"
     engine = sa.create_engine("sqlite://")
     with engine.begin() as conn:
         conn.execute(sa.text("CREATE TABLE users (id INTEGER PRIMARY KEY)"))

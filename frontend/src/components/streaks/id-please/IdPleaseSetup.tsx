@@ -133,7 +133,7 @@ export const IdPleaseSetup: React.FC<IdPleaseSetupProps> = ({ lane, difficulty, 
         </div>
 
         {/* The Perks page's search box: perk types as chips, the Types menu, aliases and characters. */}
-        <PerkSearchBox rolePerks={rolePerks} search={search} setSearch={setSearch} activeTypes={types} onTypesChange={setTypes} className="mb-3" />
+        <PerkSearchBox rolePerks={rolePerks} search={search} setSearch={setSearch} activeTypes={types} onTypesChange={setTypes} suggestPerks className="mb-3" />
 
         {unplayable ? (
           <p className="py-6 text-center text-sm text-text-muted">{s.idPleaseSideEmpty}</p>

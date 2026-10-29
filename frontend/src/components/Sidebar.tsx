@@ -112,6 +112,7 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
     });
     return [
       page('streaks', dict.sidebar.challenges, RiftPortalIcon, 'streaks'),
+      page('maps', dict.sidebar.mapCallouts, RealmMapIcon, 'maps'),
       page('generator', dict.filters.generatorTab, BloodwebIcon, 'randomizer'),
       {
         id: 'database',
@@ -120,7 +121,6 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
         items: [
           page('perks', dict.filters.perks, PerkHexIcon, 'perks'),
           page('characters', dict.sidebar.characters, MaskIcon, 'characters'),
-          page('maps', dict.sidebar.mapExplorer, RealmMapIcon, 'maps'),
         ],
       },
       {

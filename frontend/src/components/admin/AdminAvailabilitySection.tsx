@@ -5,7 +5,7 @@
 // that toggles it in or out of new challenge pools. Switching something off asks for the reason
 // players will see; switching it back on does not.
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Ban, Sparkles } from 'lucide-react';
+import { Ban } from 'lucide-react';
 import { SearchInput } from '@/components/common/Field';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
 import { AccordionSection } from '@/components/common/AccordionSection';
@@ -14,7 +14,7 @@ import { TileButton } from '@/components/common/TileButton';
 import { ToggleChip } from '@/components/common/ToggleChip';
 import { EmptyState } from '@/components/common/EmptyState';
 import { tip } from '@/components/common/Tooltip';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+import { KillerIcon, SurvivorIcon, PerkHexIcon } from '@/components/icons/DbdIcons';
 import { AdminReasonModal } from '@/components/admin/AdminReasonModal';
 import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -192,7 +192,7 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
               onChange={setKind}
               options={[
                 { value: 'characters', label: t.characters, icon: <KillerIcon className="icon-sm" /> },
-                { value: 'perks', label: t.perks, icon: <Sparkles className="icon-sm" /> },
+                { value: 'perks', label: t.perks, icon: <PerkHexIcon className="icon-sm" /> },
               ]}
             />
             <SegmentedControl<Role>
@@ -256,7 +256,7 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
                         ) : isCharacter ? (
                           <KillerIcon className="h-8 w-8 text-text-muted" aria-hidden="true" />
                         ) : (
-                          <Sparkles className="h-6 w-6 text-text-muted" aria-hidden="true" />
+                          <PerkHexIcon className="h-6 w-6 text-text-muted" aria-hidden="true" />
                         )}
                         {item.is_disabled && (
                           <span className="absolute inset-x-0 bottom-0 bg-accent-red py-0.5 text-center type-micro font-bold text-text-inverted">

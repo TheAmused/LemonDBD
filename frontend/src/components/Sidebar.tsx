@@ -5,19 +5,15 @@ import { Modal } from '@/components/common/Modal';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  Menu,
+import {  Menu,
   X,
   ChevronLeft,
   ChevronRight,
-  Heart,
   Info,
   LayoutList,
   Gamepad2,
   Settings,
-  Library,
-  Sparkles,
-} from 'lucide-react';
+  Library,} from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { LemonIcon } from './LemonIcon';
 import { useAuth } from '@/context/AuthContext';
@@ -30,7 +26,7 @@ import { SidebarBottomControls } from './sidebar/SidebarBottomControls';
 import { i18n } from '@/i18n/config';
 import { WhatsNewLauncher } from '@/components/changelog/WhatsNewLauncher';
 import { useChangelogFeed } from '@/components/changelog/useChangelogFeed';
-import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, AdeptBadgeIcon } from '@/components/icons/DbdIcons';
+import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, AdeptBadgeIcon, EntityHeartIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
@@ -130,10 +126,10 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
       {
         id: 'extras',
         label: dict.sidebar.groupExtras,
-        icon: Sparkles,
+        icon: BloodwebIcon,
         items: [
           page('tier-lists', dict.sidebar.tierLists, LayoutList, 'tier-lists'),
-          page('smash-or-pass', dict.sidebar.smashOrPass, Heart, 'smash-or-pass'),
+          page('smash-or-pass', dict.sidebar.smashOrPass, EntityHeartIcon, 'smash-or-pass'),
           page('minigames', dict.sidebar.minigames, Gamepad2, 'minigames'),
         ],
       },

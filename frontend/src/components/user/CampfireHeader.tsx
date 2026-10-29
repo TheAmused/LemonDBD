@@ -4,18 +4,15 @@
 import type { OwnershipSummary } from '@/context/AuthContext';
 import React from 'react';
 import Link from 'next/link';
-import {
-  ChevronRight,
-  Sparkles,
+import {  ChevronRight,
   Camera,
-  Calendar,
-} from 'lucide-react';
+  Calendar,} from 'lucide-react';
 import { UserAvatar } from '@/components/UserAvatar';
 import { VaultMasteryDials } from '@/components/user/VaultMasteryDials';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { PLAYER_TITLES, type UserShowcaseState } from '@/types/userShowcase';
 import type { StatusFeedback } from '@/types/userProfile';
-import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
+import { OverseerEyeIcon, BloodwebIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { Spinner } from '@/components/common/Spinner';
@@ -132,7 +129,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                   value: title,
                   label: `« ${title} »`,
                 }))}
-                icon={<Sparkles className="h-3.5 w-3.5 text-accent-amber" />}
+                icon={<BloodwebIcon className="h-3.5 w-3.5 text-accent-amber" />}
                 buttonClassName="border-accent-amber/35 bg-accent-amber/10 text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber text-xs font-bold tracking-wide"
                 menuClassName="bg-bg-surface border-border-color shadow-xl"
                 ariaLabel={dict.user.playerTitle}

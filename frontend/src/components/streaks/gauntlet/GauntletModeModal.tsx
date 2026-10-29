@@ -1,9 +1,10 @@
-// frontend/src/components/streaks/gauntlet/GauntletModeModal.tsx
 'use client';
+import { PerkHexIcon } from '@/components/icons/DbdIcons';
+// frontend/src/components/streaks/gauntlet/GauntletModeModal.tsx
 import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
-import { Swords, Sparkles, User, Users, UsersRound } from 'lucide-react';
+import { Swords, User, Users, UsersRound } from 'lucide-react';
 import type { ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { ChallengeModeModal, type ModeInfo } from '../ChallengeModeModal';
 import { GauntletRulesModal } from './GauntletRulesModal';
@@ -35,7 +36,7 @@ function lemonRootTile(role: 'killer' | 'survivor', dict: Dictionary): Challenge
     value: 'lemon',
     label: role === 'killer' ? dict.streaks.lemonMode : dict.streaks.lemonVersion,
     description: role === 'killer' ? dict.streaks.gauntletLemonDesc : dict.streaks.gauntletLemonPlayersDesc,
-    icon: Sparkles,
+    icon: PerkHexIcon,
     image: '/images/streaks/modes/gauntlet-lemon.webp',
   };
 }

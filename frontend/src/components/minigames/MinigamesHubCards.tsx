@@ -42,7 +42,7 @@ const TONE_CLASSES: Record<CardTone, { hover: string; icon: string; glow: string
 
 interface ModeCardProps {
   tone: CardTone;
-  icon: LucideIcon;
+  icon: React.ElementType;
   title: string;
   description: string;
   href: string;

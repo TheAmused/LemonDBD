@@ -1,10 +1,11 @@
 'use client';
+import { BloodwebIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/auth/AuthModalParts.tsx
 //
 // The presentational pieces of the sign-in / sign-up dialog. AuthModal keeps the state and the
 // requests; these only render what it hands them.
 import React from 'react';
-import { Mail, LogIn, UserPlus, ShieldAlert, Sparkles, MailWarning } from 'lucide-react';
+import { Mail, LogIn, UserPlus, ShieldAlert, MailWarning } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Checkbox } from '@/components/common/Checkbox';
 import { FieldLabel, Input } from '@/components/common/Field';
@@ -202,7 +203,7 @@ export const DemoAccountButtons: React.FC<{ onFill: (role: DemoAccount['role']) 
           <span>{dict.user.adminDemo}</span>
         </Button>
         <Button type="button" onClick={() => onFill('player')} variant="amberSoft" size="sm">
-          <Sparkles className="h-3 w-3 text-accent-amber" />
+          <BloodwebIcon className="h-3 w-3 text-accent-amber" />
           <span>{dict.user.userDemo}</span>
         </Button>
       </div>

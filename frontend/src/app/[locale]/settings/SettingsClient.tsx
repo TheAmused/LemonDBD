@@ -9,16 +9,12 @@ import {
   EntityHeartIcon,
   ChaosSwirlIcon,
   CautionVeilIcon,
-  SealCheckIcon,
-  WardCharmIcon,
 } from '@/components/icons/DbdIcons';
 import { Surface } from '@/components/common/Surface';
 import { Switch } from '@/components/common/Switch';
-import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
 import { usePreferences, type BackgroundAnimationMode } from '@/hooks/usePreferences';
 import { useDictionary } from '@/context/DictionaryContext';
-import { useAuth } from '@/context/AuthContext';
 
 interface SectionCardHeaderProps {
   icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' | 'false' }>;
@@ -43,7 +39,6 @@ function SectionCardHeader({ icon: Icon, title, description }: SectionCardHeader
 export function SettingsClient() {
   const dict = useDictionary();
   const { preferences, updatePreferences } = usePreferences();
-  const { isAuthenticated } = useAuth();
 
   const campfireModes: Array<{ mode: BackgroundAnimationMode; label: string }> = [
     { mode: 'on', label: dict.settings.campfireOn },
@@ -53,30 +48,6 @@ export function SettingsClient() {
 
   return (
     <div className="space-y-6 w-full pb-8">
-      {/* Page Header */}
-      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2">
-        <div className="space-y-1">
-          <h1 className="type-page-title text-text-primary">{dict.settings.title}</h1>
-          <p className="type-body-fluid text-text-secondary">{dict.settings.subtitle}</p>
-        </div>
-        <div className="flex items-center gap-2 self-start sm:self-auto shrink-0">
-          <span className="type-label-2xs text-text-muted">{dict.settings.syncStatus}:</span>
-          <Badge
-            tone={isAuthenticated ? 'green' : 'neutral'}
-            size="sm"
-            icon={
-              isAuthenticated ? (
-                <SealCheckIcon className="h-3.5 w-3.5" aria-hidden="true" />
-              ) : (
-                <WardCharmIcon className="h-3.5 w-3.5" aria-hidden="true" />
-              )
-            }
-          >
-            {isAuthenticated ? dict.settings.statusSynced : dict.settings.statusLocal}
-          </Badge>
-        </div>
-      </header>
-
       {/* 1. Global Site Preferences (Applies site-wide across all pages) */}
       <Surface tone="flat" padding="lg" className="space-y-5">
         <SectionCardHeader

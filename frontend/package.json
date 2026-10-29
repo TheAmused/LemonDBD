@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "tsx scripts/check-lucide-guard.ts && next build",
     "start": "next start",
     "typecheck": "tsc --noEmit -p .",
     "lint": "oxlint --format=stylish",
     "check:lint-suppressions": "tsx scripts/check-lint-suppressions.ts",
+    "check:lucide": "tsx scripts/check-lucide-guard.ts",
     "prebuild": "npm run lint",
     "test": "npm run test:unit && npm run test:guards",
     "test:unit": "tsx --test \"src/__tests__/unit/**/*.test.ts\" \"src/__tests__/unit/**/*.test.tsx\"",

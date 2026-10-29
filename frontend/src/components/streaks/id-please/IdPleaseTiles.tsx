@@ -2,9 +2,8 @@
 // frontend/src/components/streaks/id-please/IdPleaseTiles.tsx
 
 import React from 'react';
-import { Sparkles } from 'lucide-react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+import { KillerIcon, SurvivorIcon, PerkHexIcon } from '@/components/icons/DbdIcons';
 import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -58,7 +57,7 @@ export const IdPleasePerkTile: React.FC<{ perk: IdPleasePerk; coordinate: PerkCo
           src={perkIconUrl(perk)}
           alt=""
           imageClassName="h-full w-full object-cover"
-          fallbackIcon={<Sparkles className="h-6 w-6 text-text-muted" aria-hidden="true" />}
+          fallbackIcon={<PerkHexIcon className="h-6 w-6 text-text-muted" aria-hidden="true" />}
         />
       </div>
       <PerkCoordinateLabel coordinate={coordinate} className="py-1.5" />

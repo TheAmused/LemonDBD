@@ -1,6 +1,5 @@
 // frontend/src/locales/es/settings.ts
 export default {
-  title: 'Ajustes',
   pageTitle: 'Ajustes',
   subtitle: 'Ajusta las funciones globales del sitio, los paisajes sonoros y el rendimiento visual.',
   sectionGlobalTitle: 'Ajustes globales del sitio',
@@ -23,7 +22,4 @@ export default {
   content: 'Contenido y filtros',
   nsfw: 'Contenido NSFW / +18',
   nsfwDesc: 'Mostrar contenido para adultos, arte sugerente y cartas sin censura.',
-  syncStatus: 'Estado de sincronización',
-  statusSynced: 'Sincronizado con la cuenta',
-  statusLocal: 'Guardado localmente',
 } as const;

@@ -25,8 +25,9 @@ import { cn } from '@/utils/cn';
 
 const MAX_PERK_SUGGESTIONS = 8;
 
-/** Field and Types button share one height so the pair reads as one control. */
-const CONTROL_HEIGHT = 'py-2 sm:py-2.5 lg:py-3 lg:text-sm wide:py-3.5';
+/** Field and Types button share one height so the pair reads as one control (the Perks header uses it for its other controls too). */
+export const CONTROL_H = 'h-11 wide:h-12';
+export const CONTROL_HEIGHT = `${CONTROL_H} py-0 lg:text-sm`;
 
 interface PerkSearchBoxProps {
   /** The current role's perks: the types offered, their counts and the perk suggestions come from them. */
@@ -39,6 +40,8 @@ interface PerkSearchBoxProps {
   suggestPerks?: boolean;
   /** Mark the field as the control a dialog focuses when it opens (data-autofocus). */
   focusOnOpen?: boolean;
+  /** Types as chips inside the field plus the Types button (default). Off: a plain field, the caller shows the active types elsewhere. */
+  typesInField?: boolean;
   className?: string;
 }
 
@@ -50,6 +53,7 @@ export const PerkSearchBox: React.FC<PerkSearchBoxProps> = ({
   onTypesChange,
   suggestPerks = false,
   focusOnOpen = false,
+  typesInField = true,
   className,
 }) => {
   const dict = useDictionary();
@@ -88,7 +92,7 @@ export const PerkSearchBox: React.FC<PerkSearchBoxProps> = ({
     [roleTypes, dict, typeCounts, locale]
   );
   // Chips for types the role does not have stay visible (and removable): the empty state explains them.
-  const tokens = activeTypes.map((type) => ({
+  const tokens = (typesInField ? activeTypes : []).map((type) => ({
     key: type,
     label: dict.perkTypes.labels[type],
     removeLabel: formatMessage(dict.perkTypes.removeType, { type: dict.perkTypes.labels[type] }, locale),
@@ -125,11 +129,12 @@ export const PerkSearchBox: React.FC<PerkSearchBoxProps> = ({
           setOpen(false);
         }}
         clearLabel={dict.filters.clearSearch}
-        placeholder={activeTypes.length > 0 ? '' : dict.perkTypes.searchPlaceholder}
+        placeholder={typesInField && activeTypes.length > 0 ? '' : dict.perkTypes.searchPlaceholder}
         aria-label={dict.perkTypes.searchPlaceholder}
         data-autofocus={focusOnOpen || undefined}
       />
 
+      {typesInField && (
       <CustomDropdown<PerkType>
         options={typeOptions}
         values={activeTypes.filter((t) => roleTypes.includes(t))}
@@ -142,6 +147,7 @@ export const PerkSearchBox: React.FC<PerkSearchBoxProps> = ({
         className="shrink-0"
         buttonClassName={`rounded-full bg-bg-elevated/60 ${CONTROL_HEIGHT}`}
       />
+      )}
 
       <Popover
         open={showDropdown}

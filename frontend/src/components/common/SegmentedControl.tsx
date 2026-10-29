@@ -34,7 +34,8 @@ export interface SegmentedControlProps<T extends string> {
   options: readonly SegmentedControlOption<T>[];
   onChange: (value: T) => void;
   ariaLabel: string;
-  size?: 'sm' | 'md';
+  /** fill: the options take their height from the control (set it with `className`), for a row of controls of one height. */
+  size?: 'sm' | 'md' | 'fill';
   variant?: 'pill' | 'underline';
   /** Backwards compatibility alias for variant="underline" */
   bare?: boolean;
@@ -77,10 +78,11 @@ export function SegmentedControl<T extends string>({
   // pushes the search box onto its own line again -- so real horizontal
   // growth waits until `wide` (1800px), where there's plainly enough spare
   // width for everything, search included, to grow together.
-  const padY =
-    size === 'sm'
-      ? 'py-1 sm:py-1.5 lg:py-2 xl:py-2.5 wide:py-3'
-      : 'py-1.5 sm:py-2 lg:py-2.5 xl:py-3 wide:py-3.5';
+  const padY = {
+    sm: 'py-1 sm:py-1.5 lg:py-2 xl:py-2.5 wide:py-3',
+    md: 'py-1.5 sm:py-2 lg:py-2.5 xl:py-3 wide:py-3.5',
+    fill: 'py-0',
+  }[size];
   const textSize =
     size === 'sm'
       ? 'type-strong-wide-sm'
@@ -144,6 +146,7 @@ export function SegmentedControl<T extends string>({
               'relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1 sm:gap-1.5 wide:gap-2 whitespace-nowrap pointer-coarse:min-h-11 rounded-control px-2 sm:px-3 wide:px-4 wide-2k:px-5 transition-colors duration-200',
               padY,
               textSize,
+              size === 'fill' && 'px-4 sm:px-5 wide:px-6',
               isActive ? activeTextClass : opt.disabled ? 'cursor-not-allowed text-text-muted opacity-60' : 'text-text-primary hover:text-accent-red'
             );
 

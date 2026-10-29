@@ -15,12 +15,15 @@ import {
   LayoutList,
   Gamepad2,
   Settings,
+  Library,
+  Sparkles,
 } from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { LemonIcon } from './LemonIcon';
 import { useAuth } from '@/context/AuthContext';
 import dynamic from 'next/dynamic';
 import { SidebarNavLink } from './sidebar/SidebarNavLink';
+import { SidebarNavGroup } from './sidebar/SidebarNavGroup';
 import { adminOnlyPageFromPathname } from '@/utils/adminOnlyPages';
 import { SidebarUserSection } from './sidebar/SidebarUserSection';
 import { SidebarBottomControls } from './sidebar/SidebarBottomControls';
@@ -49,6 +52,25 @@ const BardInsultsModal = dynamic(
   () => import('./sidebar/BardInsultsModal').then((m) => m.BardInsultsModal),
   { ssr: false }
 );
+
+/** A page link (`href`) or a button that opens a dialog (`onSelect`). */
+interface NavItem {
+  id: string;
+  label: string;
+  icon: React.ElementType;
+  href?: string;
+  onSelect?: () => void;
+}
+
+/** A foldable run of items under one title. */
+interface NavGroup {
+  id: string;
+  label: string;
+  icon: React.ElementType;
+  items: NavItem[];
+}
+
+type NavEntry = NavItem | NavGroup;
 
 interface SidebarProps {
   currentLocale?: string;
@@ -88,98 +110,69 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
     !!pathname && pathname.startsWith(itemHref)
   ), [pathname]);
 
-  const mainNavItems = useMemo(() => [
-    {
-      id: 'perks',
-      label: dict.filters.perks,
-      icon: PerkHexIcon,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/perks`,
-    },
-    {
-      id: 'generator',
-      label: dict.filters.generatorTab,
-      icon: BloodwebIcon,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/randomizer`,
-    },
-    {
-      id: 'streaks',
-      label: dict.sidebar.challenges,
-      icon: RiftPortalIcon,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/streaks`,
-    },
-    {
-      id: 'minigames',
-      label: dict.sidebar.minigames,
-      icon: Gamepad2,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/minigames`,
-    },
-    {
-      id: 'maps',
-      label: dict.sidebar.mapExplorer,
-      icon: RealmMapIcon,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/maps`,
-    },
-    {
-      id: 'characters',
-      label: dict.sidebar.characters,
-      icon: MaskIcon,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/characters`,
-    },
-    {
-      id: 'tier-lists',
-      label: dict.sidebar.tierLists,
-      icon: LayoutList,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/tier-lists`,
-    },
-    {
-      id: 'smash-or-pass',
-      label: dict.sidebar.smashOrPass,
-      icon: Heart,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/smash-or-pass`,
-    },
-    {
-      id: 'trophies',
-      label: dict.sidebar.trophies,
-      icon: AdeptBadgeIcon,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/achievements`,
-    },
-    {
-      id: 'about',
-      label: dict.sidebar.about,
-      icon: Info,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/about`,
-    },
-    {
-      id: 'settings',
-      label: dict.sidebar.settings,
-      icon: Settings,
-      color: 'text-accent-red',
-      activeBg: 'bg-accent-red/10 text-accent-red border border-accent-red/20',
-      href: `/${currentLocale}/settings`,
-    },
-  ], [dict, currentLocale]);
+  const navEntries = useMemo((): NavEntry[] => {
+    const page = (id: string, label: string, icon: React.ElementType, segment: string): NavItem => ({
+      id, label, icon, href: `/${currentLocale}/${segment}`,
+    });
+    return [
+      page('streaks', dict.sidebar.challenges, RiftPortalIcon, 'streaks'),
+      page('generator', dict.filters.generatorTab, BloodwebIcon, 'randomizer'),
+      {
+        id: 'database',
+        label: dict.sidebar.groupDatabase,
+        icon: Library,
+        items: [
+          page('perks', dict.filters.perks, PerkHexIcon, 'perks'),
+          page('characters', dict.sidebar.characters, MaskIcon, 'characters'),
+          page('maps', dict.sidebar.mapExplorer, RealmMapIcon, 'maps'),
+        ],
+      },
+      {
+        id: 'extras',
+        label: dict.sidebar.groupExtras,
+        icon: Sparkles,
+        items: [
+          page('tier-lists', dict.sidebar.tierLists, LayoutList, 'tier-lists'),
+          page('smash-or-pass', dict.sidebar.smashOrPass, Heart, 'smash-or-pass'),
+          page('minigames', dict.sidebar.minigames, Gamepad2, 'minigames'),
+          // Opens a dialog, so it is a button rather than a page link.
+          {
+            id: 'bard-insults',
+            label: dict.sidebar.insultsButton,
+            icon: QuillEditIcon,
+            onSelect: () => {
+              setInsultsModalOpen(true);
+              setMobileOpen(false);
+            },
+          },
+        ],
+      },
+      page('trophies', dict.sidebar.trophies, AdeptBadgeIcon, 'achievements'),
+      page('settings', dict.sidebar.settings, Settings, 'settings'),
+      page('about', dict.sidebar.about, Info, 'about'),
+    ];
+  }, [dict, currentLocale]);
 
+  // Admin-only pages are hidden from everyone else; a group left empty disappears with them.
+  const visibleNavEntries = useMemo(() => {
+    const visible = (item: NavItem) => isAdmin || !item.href || !adminOnlyPageFromPathname(item.href, i18n.locales);
+    return navEntries
+      .map((entry) => ('items' in entry ? { ...entry, items: entry.items.filter(visible) } : entry))
+      .filter((entry) => ('items' in entry ? entry.items.length > 0 : visible(entry)));
+  }, [navEntries, isAdmin]);
 
+  const renderNavItem = (item: NavItem) => (
+    <SidebarNavLink
+      key={item.id}
+      id={item.id}
+      label={item.label}
+      icon={item.icon}
+      href={item.href}
+      isActive={!!item.href && checkIsActive(item.href)}
+      hasPopup={item.onSelect ? 'dialog' : undefined}
+      onClick={item.onSelect ?? closeMobile}
+    />
+  );
 
   const renderSidebarContent = () => (
     <div className="flex h-full flex-col justify-between bg-bg-sidebar p-4 overflow-y-auto">
@@ -207,26 +200,19 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
         </div>
 
         <nav aria-label={dict.sidebar.navAria} className="mt-5 space-y-1">
-          <p className="px-3 type-label-2xs text-text-muted mb-2">
-            {dict.sidebar.navigation}
-          </p>
-
-          {mainNavItems
-            .filter((item) => isAdmin || !adminOnlyPageFromPathname(item.href, i18n.locales))
-            .map((item) => (
-            <SidebarNavLink
-              key={item.id}
-              id={item.id}
-              label={item.label}
-              icon={item.icon}
-              color={item.color}
-              activeBg={item.activeBg}
-              href={item.href}
-              isActive={checkIsActive(item.href)}
-              onClick={closeMobile}
-            />
+          {visibleNavEntries.map((entry) => (
+            'items' in entry ? (
+              <SidebarNavGroup
+                key={entry.id}
+                id={entry.id}
+                label={entry.label}
+                icon={entry.icon}
+                hasActive={entry.items.some((item) => !!item.href && checkIsActive(item.href))}
+              >
+                {entry.items.map(renderNavItem)}
+              </SidebarNavGroup>
+            ) : renderNavItem(entry)
           ))}
-
         </nav>
 
         <SidebarUserSection

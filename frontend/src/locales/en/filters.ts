@@ -34,4 +34,6 @@ export default {
   sortFields: "Sort field",
   sortOrderLabel: "Sort order",
   loadError: "Failed to load perks.",
+  scopeTitle: "Show",
+  generalShort: "General",
 } as const;

@@ -169,7 +169,9 @@ export const RulesModalFooterSections: React.FC<{
   clarifications: RuleListEntry[];
   /** Override for the "these void the match" intro line. */
   voidIntro?: string;
-}> = ({ copy, tone, exceptions, clarifications, voidIntro }) => {
+  /** False for a mode whose lists are live, where "your run freezes" would be untrue. */
+  showFreezeNotice?: boolean;
+}> = ({ copy, tone, exceptions, clarifications, voidIntro, showFreezeNotice = true }) => {
   const t = RULES_TONES[tone];
   // The admin setting (Settings > Retention), as the Privacy Policy quotes it; 90 until it has loaded.
   const privacy = usePrivacyInfo();
@@ -188,11 +190,7 @@ export const RulesModalFooterSections: React.FC<{
       <RulesModalNotices
         accentClassName={t.notices}
         notices={[
-          {
-            icon: Snowflake,
-            text:
-              copy.runFreezeNotice,
-          },
+          ...(showFreezeNotice ? [{ icon: Snowflake, text: copy.runFreezeNotice }] : []),
           {
             icon: Clock,
             text: formatMessage(copy.inactivityLossNotice, { days: inactivityDays }),

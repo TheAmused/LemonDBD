@@ -104,6 +104,8 @@ export default {
   targetHistoryRunsDesc: "In-progress and completed history streak history",
   targetPageStreakRunsLabel: "Page Streak Runs",
   targetPageStreakRunsDesc: "In-progress and completed page streak history",
+  targetIdPleaseRunsLabel: "ID, Please Runs",
+  targetIdPleaseRunsDesc: "In-progress ID, Please runs and their match history",
   targetRostersLabel: "Smash or Pass Rosters",
   targetRostersDesc: "Rosters, entities, stats and votes",
   reasonPlaceholder: "e.g. power is bugged, temporarily disabled while we fix it",
@@ -452,4 +454,7 @@ export default {
   vectorMapSelect: "Select a map",
   vectorMapNoLayout: "No vector layout footprint found for this map.",
   vectorMapLoading: "Loading layout...",
+  challengeModeIdPlease: "ID, Please",
+  challengeModeIdPleaseSurvivor: "ID, Please (Survivor)",
+  challengeModeIdPleaseKiller: "ID, Please (Killer)",
 } as const;

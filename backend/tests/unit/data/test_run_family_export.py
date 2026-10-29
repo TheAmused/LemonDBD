@@ -9,6 +9,7 @@ from app.models.user import User
 from app.models.chaos import ChaosMatchLog, ChaosRun
 from app.models.gauntlet import GauntletRun, GauntletMatchLog
 from app.models.history import HistoryMatchLog, HistoryRun
+from app.models.id_please import IdPleaseMatchLog, IdPleaseRun
 from app.models.page_streak import PageStreakPageLog, PageStreakRun
 from app.services.db.run_family_export import export_run_family, import_run_family
 
@@ -85,10 +86,11 @@ RUN_FAMILIES = [
     ("gauntlet_runs", GauntletRun, GauntletMatchLog, "match_logs", ["role", "game_mode"]),
     ("chaos_runs", ChaosRun, ChaosMatchLog, "match_logs", ["difficulty"]),
     ("history_runs", HistoryRun, HistoryMatchLog, "match_logs", ["mode"]),
+    ("id_please_runs", IdPleaseRun, IdPleaseMatchLog, "match_logs", ["difficulty"]),
     ("page_streak_runs", PageStreakRun, PageStreakPageLog, "page_logs", ["killer"]),
 ]
 _KEY_COLUMNS = {"id", "user_id", "run_id"}
-_OBJECT_COLUMNS = {"current_loadout"}
+_OBJECT_COLUMNS = {"current_loadout", "before_loadout", "used_character_ids", "checkpoint_loadout"}
 _FIXED_TIME = datetime(2026, 1, 2, 3, 4, 5)
 
 

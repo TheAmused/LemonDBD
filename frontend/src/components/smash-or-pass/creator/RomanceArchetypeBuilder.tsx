@@ -1,20 +1,17 @@
-// frontend/src/components/smash-or-pass/creator/RomanceArchetypeBuilder.tsx
 'use client';
+import { BloodwebIcon, ThornHeartIcon } from '@/components/icons/DbdIcons';
+// frontend/src/components/smash-or-pass/creator/RomanceArchetypeBuilder.tsx
 
 import React, { useState } from 'react';
-import {
-  Sparkles,
-  Plus,
+import {  Plus,
   Trash2,
   ChevronDown,
   Flame,
   Skull,
-  Heart,
   Zap,
   Shield,
   Compass,
-  Link as LinkIcon,
-} from 'lucide-react';
+  Link as LinkIcon,} from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { formatMessage } from '@/utils/i18nFormat';
 import type { ArchetypeRule, CustomRomanceArchetype } from '@/types/smashOrPass';
@@ -30,8 +27,8 @@ import { Surface } from '@/components/common/Surface';
 import { Img } from '@/components/common/Img';
 
 const ICON_PRESETS: Array<{ name: string; icon: React.ComponentType<{ className?: string }> }> = [
-  { name: 'sparkles', icon: Sparkles },
-  { name: 'heart', icon: Heart },
+  { name: 'sparkles', icon: BloodwebIcon },
+  { name: 'heart', icon: ThornHeartIcon },
   { name: 'flame', icon: Flame },
   { name: 'skull', icon: Skull },
   { name: 'zap', icon: Zap },
@@ -165,7 +162,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                       {arch.icon_url ? (
                         <Img src={arch.icon_url} alt="" className="h-full w-full object-cover" />
                       ) : (
-                        <Heart className="h-4 w-4 text-accent-red" />
+                        <ThornHeartIcon className="h-4 w-4 text-accent-red" />
                       )}
                     </div>
                     <div className="min-w-0">

@@ -11,6 +11,7 @@ from app.models.changelog import ChangelogPost
 from app.models.chapter import Chapter
 from app.models.character import Killer, Survivor
 from app.models.chaos import ChaosMatchLog, ChaosRun
+from app.models.id_please import IdPleaseMatchLog, IdPleaseRun
 from app.models.challenge_completion import ChallengeCompletionRecord
 from app.models.history import HistoryMatchLog, HistoryRun
 from app.models.community import BugReport
@@ -62,6 +63,8 @@ __all__ = [
     "Chapter",
     "ChaosRun",
     "ChaosMatchLog",
+    "IdPleaseRun",
+    "IdPleaseMatchLog",
     "ChallengeCompletionRecord",
     "HistoryRun",
     "HistoryMatchLog",

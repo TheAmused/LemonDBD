@@ -1,4 +1,5 @@
 'use client';
+import { PadlockHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/auth/ResetPasswordClient.tsx
 
 import React, { Suspense, useState } from 'react';
@@ -6,7 +7,7 @@ import { FieldLabel, IconInput } from '@/components/common/Field';
 import { Button, buttonClassName } from '@/components/common/Button';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { CheckCircle2, Lock, AlertCircle } from 'lucide-react';
+import { CheckCircle2, AlertCircle } from 'lucide-react';
 import { LemonIcon } from '@/components/LemonIcon';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
@@ -99,14 +100,14 @@ function ResetPasswordContent() {
             <FieldLabel>
               {dict.user.newPassword}
             </FieldLabel>
-            <IconInput icon={Lock} type="password" className="pl-10" required value={password} onChange={(e) => setPassword(e.target.value)} />
+            <IconInput icon={PadlockHeartIcon} type="password" className="pl-10" required value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
 
           <div>
             <FieldLabel>
               {dict.user.confirmPassword}
             </FieldLabel>
-            <IconInput icon={Lock} type="password" className="pl-10" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+            <IconInput icon={PadlockHeartIcon} type="password" className="pl-10" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
           </div>
 
           <Button type="submit" variant="primary" loading={loading} className="w-full mt-2">

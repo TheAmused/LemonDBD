@@ -1,9 +1,10 @@
 'use client';
+import { PerkHexIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/streaks/chaos/ChaosPerkPoolModal.tsx
 
 import { Tabs, TabPanel } from '@/components/common/Tabs';
 import React, { useId, useMemo, useState } from 'react';
-import { CheckCircle2, Circle, Sparkles } from 'lucide-react';
+import { CheckCircle2, Circle } from 'lucide-react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import type { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
@@ -20,7 +21,7 @@ const PerkTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, display
           src={perkIconFor(perk)}
           alt={displayName}
           imageClassName="w-full h-full object-cover"
-          fallbackIcon={<Sparkles className="w-6 h-6 text-text-muted" aria-hidden="true" />}
+          fallbackIcon={<PerkHexIcon className="w-6 h-6 text-text-muted" aria-hidden="true" />}
         />
       </div>
       <span className="text-mini leading-tight font-medium text-center text-text-secondary line-clamp-2 min-h-two-lines w-full px-1.5 py-2">

@@ -104,6 +104,8 @@ export default {
   targetHistoryRunsDesc: "進行中および完了したヒストリーストリークの履歴",
   targetPageStreakRunsLabel: "ページストリーク履歴",
   targetPageStreakRunsDesc: "進行中および完了したページストリークの履歴",
+  targetIdPleaseRunsLabel: "ID, Please の履歴",
+  targetIdPleaseRunsDesc: "進行中の ID, Please と試合履歴",
   targetRostersLabel: "Smash or Passロースター",
   targetRostersDesc: "ロースター、エンティティ、統計、投票",
   reasonPlaceholder: "例: 能力にバグが発生しているため、修正完了まで一時的に無効化",
@@ -452,4 +454,7 @@ export default {
   vectorMapSelect: "マップを選択",
   vectorMapNoLayout: "このマップのベクターレイアウトが見つかりませんでした。",
   vectorMapLoading: "レイアウトを読み込み中...",
+  challengeModeIdPlease: "ID, Please",
+  challengeModeIdPleaseSurvivor: "ID, Please（サバイバー）",
+  challengeModeIdPleaseKiller: "ID, Please（キラー）",
 } as const;

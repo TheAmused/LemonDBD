@@ -5,19 +5,15 @@ import { Modal } from '@/components/common/Modal';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  Menu,
+import {  Menu,
   X,
   ChevronLeft,
   ChevronRight,
-  Heart,
   Info,
   LayoutList,
   Gamepad2,
   Settings,
-  Library,
-  Sparkles,
-} from 'lucide-react';
+  Library,} from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { LemonIcon } from './LemonIcon';
 import { useAuth } from '@/context/AuthContext';
@@ -30,9 +26,8 @@ import { SidebarBottomControls } from './sidebar/SidebarBottomControls';
 import { i18n } from '@/i18n/config';
 import { WhatsNewLauncher } from '@/components/changelog/WhatsNewLauncher';
 import { useChangelogFeed } from '@/components/changelog/useChangelogFeed';
-import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, AdeptBadgeIcon, QuillEditIcon } from '@/components/icons/DbdIcons';
+import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, AdeptBadgeIcon, EntityHeartIcon } from '@/components/icons/DbdIcons';
 
-import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
 import { useDictionary, useLocale } from "@/context/DictionaryContext";
 import { IconTile } from '@/components/common/IconTile';
@@ -116,6 +111,7 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
     });
     return [
       page('streaks', dict.sidebar.challenges, RiftPortalIcon, 'streaks'),
+      page('maps', dict.sidebar.mapCallouts, RealmMapIcon, 'maps'),
       page('generator', dict.filters.generatorTab, BloodwebIcon, 'randomizer'),
       {
         id: 'database',
@@ -124,27 +120,16 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
         items: [
           page('perks', dict.filters.perks, PerkHexIcon, 'perks'),
           page('characters', dict.sidebar.characters, MaskIcon, 'characters'),
-          page('maps', dict.sidebar.mapExplorer, RealmMapIcon, 'maps'),
         ],
       },
       {
         id: 'extras',
         label: dict.sidebar.groupExtras,
-        icon: Sparkles,
+        icon: BloodwebIcon,
         items: [
           page('tier-lists', dict.sidebar.tierLists, LayoutList, 'tier-lists'),
-          page('smash-or-pass', dict.sidebar.smashOrPass, Heart, 'smash-or-pass'),
+          page('smash-or-pass', dict.sidebar.smashOrPass, EntityHeartIcon, 'smash-or-pass'),
           page('minigames', dict.sidebar.minigames, Gamepad2, 'minigames'),
-          // Opens a dialog, so it is a button rather than a page link.
-          {
-            id: 'bard-insults',
-            label: dict.sidebar.insultsButton,
-            icon: QuillEditIcon,
-            onSelect: () => {
-              setInsultsModalOpen(true);
-              setMobileOpen(false);
-            },
-          },
         ],
       },
       page('trophies', dict.sidebar.trophies, AdeptBadgeIcon, 'achievements'),
@@ -229,6 +214,10 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
             setAuthModalOpen(true);
           }}
           onLogout={logout}
+          onOpenInsults={() => {
+            setInsultsModalOpen(true);
+            setMobileOpen(false);
+          }}
           onNavigateMobile={() => setMobileOpen(false)}
         />
       </div>
@@ -262,7 +251,6 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
         <TileButton
           onClick={toggleSidebar}
           data-testid="sidebar-toggle-button"
-          {...tip(dict.sidebar.toggleSidebar, undefined, 'action')}
           aria-label={dict.sidebar.toggleSidebar}
           aria-expanded={!isCollapsed}
           className="hit-area hidden lg:flex absolute top-1/2 -right-6 -translate-y-1/2 h-16 w-6 items-center justify-center rounded-r-control border border-l-0 border-border-color bg-bg-sidebar text-text-primary shadow-md hover:bg-bg-sidebar-hover hover:w-7 hover:text-accent-red active:scale-95 transition-all duration-200 cursor-pointer z-50 group" press={false}

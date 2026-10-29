@@ -7,7 +7,7 @@ import { fetchChallengeModeStatus } from '@/services/challengeModesApi';
 import { useDictionary } from '@/context/DictionaryContext';
 
 interface ChallengeModeGateProps {
-  /** Backend `ChallengeModeSetting.mode` key (gauntlet/chaos/history/page_streak). */
+  /** Backend `ChallengeModeSetting.mode` key (gauntlet/chaos/history/page_streak/id_please). */
   mode: string;
   children: React.ReactNode;
 }

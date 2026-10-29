@@ -250,7 +250,9 @@ class TestAvailabilityLists:
     def test_challenge_modes_are_created_once_even_if_rows_appear_meanwhile(self, client: FlaskClient, admin: User) -> None:
         first = client.get("/api/v1/admin/challenge-modes", headers=_headers(admin)).get_json()["modes"]
         second = client.get("/api/v1/admin/challenge-modes", headers=_headers(admin)).get_json()["modes"]
-        assert [m["mode"] for m in first] == [m["mode"] for m in second] == ["gauntlet", "chaos", "history", "page_streak"]
+        assert [m["mode"] for m in first] == [m["mode"] for m in second] == [
+        "gauntlet", "chaos", "history", "page_streak", "id_please", "id_please_survivor", "id_please_killer"
+    ]
 
 
 @pytest.mark.unit

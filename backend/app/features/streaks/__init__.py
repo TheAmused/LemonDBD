@@ -4,6 +4,9 @@ from app.features.streaks.routes import (
     chaos_streak_bp,
     gauntlet_streak_bp,
     history_streak_bp,
+    id_please_killer_streak_bp,
+    id_please_streak_bp,
+    id_please_survivor_streak_bp,
     page_streak_bp,
 )
 
@@ -13,4 +16,7 @@ __all__ = [
     "gauntlet_streak_bp",
     "chaos_streak_bp",
     "history_streak_bp",
+    "id_please_streak_bp",
+    "id_please_survivor_streak_bp",
+    "id_please_killer_streak_bp",
 ]

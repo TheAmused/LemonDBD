@@ -1,9 +1,9 @@
-// frontend/src/components/generator/modes/LootCrateStage.tsx
 'use client';
+import { PadlockHeartIcon } from '@/components/icons/DbdIcons';
+// frontend/src/components/generator/modes/LootCrateStage.tsx
 
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { Lock } from 'lucide-react';
 import { DbdButton } from '@/components/common/Button';
 import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import type { ChaosMutator } from '@/types/chaos';
@@ -298,7 +298,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                       <PerkSlot perk={locked.perk} role={role} page={locked.page} slot={locked.slot} size="compact" />
                     </div>
                     <div className="absolute -top-1.5 -right-1.5 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
-                      <Lock className="h-3 w-3" />
+                      <PadlockHeartIcon className="h-3 w-3" />
                     </div>
                   </div>
                 ) : (
@@ -356,7 +356,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                     <PerkSlot perk={item.perk} role={role} page={item.page} slot={item.slot} />
                   </div>
                   <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
-                    <Lock className="h-3.5 w-3.5" />
+                    <PadlockHeartIcon className="h-3.5 w-3.5" />
                   </div>
                 </div>
               </motion.div>

@@ -1,20 +1,18 @@
 'use client';
+import { BloodwebIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/maps/VoiceEngineInfoModal.tsx
 
 import { Button } from '@/components/common/Button';
 import React from 'react';
-import {
-  Cpu,
+import {  Cpu,
   Globe,
   ShieldCheck,
   CheckCircle2,
-  Sparkles,
   RefreshCw,
   Info,
   Laptop,
   DownloadCloud,
-  Gauge,
-} from 'lucide-react';
+  Gauge,} from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import type {
   VoiceEngineType,
@@ -70,7 +68,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
       </div>
 
       <div className="flex items-center justify-between pt-1">
-        <IconLabel as="span" icon={Sparkles} variant="heading">{dict.maps.activeRecognitionEngine}</IconLabel>
+        <IconLabel as="span" icon={BloodwebIcon} variant="heading">{dict.maps.activeRecognitionEngine}</IconLabel>
         <Badge
           tone="red" size="md" plain
         >

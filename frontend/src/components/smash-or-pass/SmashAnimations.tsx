@@ -1,8 +1,9 @@
 'use client';
+import { ThornHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/smash-or-pass/SmashAnimations.tsx
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Heart, Flame, Skull, Zap } from 'lucide-react';
+import { Flame, Skull, Zap } from 'lucide-react';
 import { createBurst, renderBurstFrame, type BurstKind } from './smashBurst';
 import { useDictionary } from "@/context/DictionaryContext";
 
@@ -96,7 +97,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({ triggerType, t
           <div className={FILL_CENTER}>
             <div className="flex flex-col items-center gap-2 animate-in zoom-in-75 fade-in duration-200">
               <div className="relative flex items-center justify-center">
-                <Heart className="h-16 w-16 sm:h-20 sm:w-20 text-accent-red fill-accent-red drop-shadow-glow-red-lg animate-pulse" />
+                <ThornHeartIcon className="h-16 w-16 sm:h-20 sm:w-20 text-accent-red fill-accent-red drop-shadow-glow-red-lg animate-pulse" />
                 <Skull className="absolute h-8 w-8 sm:h-10 sm:w-10 text-bg-primary/80 drop-shadow" />
               </div>
               <span className="text-xl sm:text-2xl font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-accent-red-hover via-accent-red to-accent-red-hover drop-shadow-glow-red-md">

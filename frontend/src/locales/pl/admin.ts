@@ -104,6 +104,8 @@ export default {
   targetHistoryRunsDesc: "Historia rozpoczętych i ukończonych serii History",
   targetPageStreakRunsLabel: "Przebiegi Serii Page Streak",
   targetPageStreakRunsDesc: "Historia rozpoczętych i ukończonych serii Page Streak",
+  targetIdPleaseRunsLabel: "Przebiegi ID, Please",
+  targetIdPleaseRunsDesc: "Trwające przebiegi ID, Please i historia ich meczów",
   targetRostersLabel: "Rostery Smash or Pass",
   targetRostersDesc: "Rostery, encje, statystyki i głosy",
   reasonPlaceholder: "np. moc jest zbugowana, tymczasowo wyłączona na czas naprawy",
@@ -452,4 +454,7 @@ export default {
   vectorMapSelect: "Wybierz mapę",
   vectorMapNoLayout: "Nie znaleziono wektorowego obrysu dla tej mapy.",
   vectorMapLoading: "Wczytywanie układu...",
+  challengeModeIdPlease: "ID, Please",
+  challengeModeIdPleaseSurvivor: "ID, Please (Ocalały)",
+  challengeModeIdPleaseKiller: "ID, Please (Zabójca)",
 } as const;

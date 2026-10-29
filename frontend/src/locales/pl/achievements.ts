@@ -18,4 +18,7 @@ export default {
   difficultyWord: "trudności",
   ownedCharactersSuffix: "używając tylko posiadanych postaci.",
   allCharactersSuffix: "używając wszystkich postaci dostępnych w grze.",
+  idPleaseShelf: "ID, Please",
+  idPleaseHover: "Osiągnij serię {streak} wygranych na poziomie {difficulty}.",
+  idPleaseEveryCharacterHover: "Wygraj każdą postacią ({side}) na poziomie {difficulty}.",
 };

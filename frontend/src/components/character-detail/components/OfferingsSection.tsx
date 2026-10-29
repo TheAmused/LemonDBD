@@ -2,14 +2,11 @@
 // frontend/src/components/character-detail/components/OfferingsSection.tsx
 import { Tabs } from '@/components/common/Tabs';
 import React, { useMemo } from 'react';
-import {
-  Coins,
+import {  Coins,
   Map as MapIcon,
   EyeOff,
-  Sparkles,
   Layers,
-  Box,
-} from 'lucide-react';
+  Box,} from 'lucide-react';
 import type {
   OfferingItem,
   CharacterDetailDictionary} from '../types';
@@ -19,7 +16,7 @@ import {
   getRarityRank
 } from '../types';
 import { CategoryPicker } from './CategoryPicker';
-import { MoriCharmIcon, WardCharmIcon } from '@/components/icons/DbdIcons';
+import { MoriCharmIcon, WardCharmIcon, BloodwebIcon } from '@/components/icons/DbdIcons';
 import { usePersistentString } from '@/hooks/usePersistentString';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
@@ -64,7 +61,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         {
           key: 'special',
           label: t.categorySpecial,
-          icon: Sparkles,
+          icon: BloodwebIcon,
           desc: t.categorySpecialDesc,
         },
         {
@@ -103,7 +100,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
       {
         key: 'special',
         label: t.categorySpecial,
-        icon: Sparkles,
+        icon: BloodwebIcon,
         desc: t.categorySpecialDesc,
       },
       {
@@ -115,7 +112,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
       {
         key: 'luck',
         label: t.categoryLuck,
-        icon: Sparkles,
+        icon: BloodwebIcon,
         desc: t.categoryLuckDesc,
       },
       {

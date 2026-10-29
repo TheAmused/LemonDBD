@@ -9,7 +9,7 @@ export interface ChallengeModeStatus {
 export type ChallengeModeStatusMap = Record<string, ChallengeModeStatus>;
 
 /** Public (unauthenticated) read of each challenge mode's admin kill-switch
- * state, keyed by backend mode name (gauntlet/chaos/history/page_streak).
+ * state, keyed by backend mode name (gauntlet/chaos/history/page_streak/id_please).
  * Never rejects -- a network hiccup resolves to {} (treated as "enabled" by
  * every caller) rather than leaving a gate/panel stuck on a rejected promise. */
 export async function fetchChallengeModeStatus(): Promise<ChallengeModeStatusMap> {

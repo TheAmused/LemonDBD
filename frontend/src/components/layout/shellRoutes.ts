@@ -92,7 +92,7 @@ export const ROUTE_SHELLS: ReadonlyArray<ShellRoute> = [
   { prefix: ['randomizer'], shell: { padding: 'flush', mainClassName: 'min-h-screen overflow-y-auto flex flex-col relative' } },
   { prefix: ['reset-password'], shell: false },  // a bare, centred form: no sidebar
   { prefix: ['rules'], shell: LEGAL },
-  { prefix: ['settings'], shell: { padding: 'spacious', mainClassName: 'relative overflow-y-auto max-w-4xl mx-auto w-full space-y-6' } },
+  { prefix: ['settings'], shell: { padding: 'spacious', mainClassName: 'flex flex-col items-center justify-center min-h-screen-nav lg:min-h-screen overflow-y-auto relative' } },
   { prefix: ['smash-or-pass'], shell: { mainClassName: 'overflow-y-auto theme-smash' } },  // hub
   { prefix: ['smash-or-pass', 'create'], shell: TIER_LIST_WORKSPACE },
   {

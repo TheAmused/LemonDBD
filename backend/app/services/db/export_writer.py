@@ -11,6 +11,7 @@ from sqlalchemy.orm import selectinload
 from app.core.extensions import db
 from app.models.base import column_dict
 from app.models.chaos import ChaosMatchLog, ChaosRun
+from app.models.id_please import IdPleaseMatchLog, IdPleaseRun
 from app.models.gauntlet import GauntletMatchLog, GauntletRun
 from app.models.history import HistoryMatchLog, HistoryRun
 from app.models.map import MapRealm, Realm
@@ -237,6 +238,8 @@ def build_export(target_set: set[str], include_assets: bool, static_dir: Path) -
         export_run_family(export_data, counts, "chaos_runs", ChaosRun, ChaosMatchLog, "match_logs")
     if "history_runs" in target_set:
         export_run_family(export_data, counts, "history_runs", HistoryRun, HistoryMatchLog, "match_logs")
+    if "id_please_runs" in target_set:
+        export_run_family(export_data, counts, "id_please_runs", IdPleaseRun, IdPleaseMatchLog, "match_logs")
     if "page_streak_runs" in target_set:
         export_run_family(export_data, counts, "page_streak_runs", PageStreakRun, PageStreakPageLog, "page_logs")
 

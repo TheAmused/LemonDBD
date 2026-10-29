@@ -1,6 +1,5 @@
 // frontend/src/locales/ja/settings.ts
 export default {
-  title: '設定',
   pageTitle: '設定',
   subtitle: 'サイト全体の機能、マッチの音響、視覚パフォーマンスを細かく調整します。',
   sectionGlobalTitle: 'サイト全体の基本設定',
@@ -23,7 +22,4 @@ export default {
   content: 'コンテンツ＆フィルター',
   nsfw: 'NSFW / 18+ コンテンツ',
   nsfwDesc: '成人向けコンテンツ、際どいイラスト、規制解除カードを表示します。',
-  syncStatus: '同期ステータス',
-  statusSynced: 'アカウントと同期済み',
-  statusLocal: 'ローカルに保存済み',
 } as const;

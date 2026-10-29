@@ -1,7 +1,8 @@
 'use client';
+import { ThornHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/smash-or-pass/hub/CalmVoteMark.tsx
 import { useEffect, useState } from 'react';
-import { Heart, Skull } from 'lucide-react';
+import { Skull } from 'lucide-react';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface CalmVoteMarkProps {
@@ -38,7 +39,7 @@ export function CalmVoteMark({ triggerType, triggerKey }: CalmVoteMarkProps) {
     <div className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center" aria-hidden="true">
       <div className={`transition-opacity duration-300 ease-in-out ${visible ? 'opacity-90' : 'opacity-0'}`}>
         {shown === 'smash' ? (
-          <Heart className="h-20 w-20 sm:h-24 sm:w-24 fill-accent-red text-accent-red" />
+          <ThornHeartIcon className="h-20 w-20 sm:h-24 sm:w-24 fill-accent-red text-accent-red" />
         ) : (
           <Skull className="h-20 w-20 sm:h-24 sm:w-24 text-text-muted" />
         )}

@@ -1,9 +1,9 @@
 'use client';
+import { PerkHexIcon, PadlockHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/streaks/history/HistoryPerkModal.tsx
 import type { Dictionary } from '@/locales/types';
 
 import React, { useEffect, useState } from 'react';
-import { Sparkles, Lock } from 'lucide-react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { Modal } from '@/components/common/Modal';
 import type { Perk } from '@/types/gauntletStreak';
@@ -50,7 +50,7 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
           src={src}
           alt={displayName}
           imageClassName="w-full h-full object-contain"
-          fallbackIcon={<Sparkles className="w-5 h-5 text-text-muted" />}
+          fallbackIcon={<PerkHexIcon className="w-5 h-5 text-text-muted" />}
         />
       </div>
       <span className="type-strong-2xs text-text-secondary truncate w-full text-center">
@@ -69,7 +69,7 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
             }`}
             style={animationDelay}
           >
-            <Lock className="w-3.5 h-3.5 text-text-secondary" />
+            <PadlockHeartIcon className="w-3.5 h-3.5 text-text-secondary" />
           </div>
         </div>
       )}

@@ -2,8 +2,7 @@
 'use client';
 
 import React from 'react';
-import { Sparkles } from 'lucide-react';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+import { KillerIcon, SurvivorIcon, BloodwebIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from "@/context/DictionaryContext";
 
 interface MetricItem {
@@ -160,7 +159,7 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({ ownership,
       {!hideTitle && (
         <div className="flex items-center justify-center text-center">
           <h2 className="text-xs sm:text-sm font-black uppercase tracking-widest text-text-primary flex items-center justify-center gap-2">
-            <Sparkles className="h-4 w-4 text-accent-amber" />
+            <BloodwebIcon className="h-4 w-4 text-accent-amber" />
             <span>{dict.user.vaultMastery}</span>
           </h2>
         </div>
@@ -199,7 +198,7 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({ ownership,
           percentage={perkPercent}
           strokeClass="stroke-accent-amber"
           accentClass="bg-accent-amber/15 text-accent-amber"
-          icon={<Sparkles className={compact ? 'h-3 w-3' : 'h-3.5 w-3.5'} />}
+          icon={<BloodwebIcon className={compact ? 'h-3 w-3' : 'h-3.5 w-3.5'} />}
           compact={compact}
         />
       </div>

@@ -1,10 +1,11 @@
 'use client';
+import { PadlockHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/PerkCard.tsx
 
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { PerkIcon } from '@/components/ui/PerkIcon';
-import { Lock, HelpCircle } from 'lucide-react';
+import { HelpCircle } from 'lucide-react';
 import type { Perk } from '@/types/perks';
 import { getPerkIconUrl, getCharacterAvatarUrl } from '@/utils/perkUtils';
 import { DisabledBadge } from '@/components/DisabledBadge';
@@ -165,7 +166,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
               className="absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-bg-primary/90 shadow-xs border border-border-color"
               {...tip(dict.modal.unownedPerk, undefined, 'status')}
             >
-              <Lock className="h-3.5 w-3.5 text-text-muted" />
+              <PadlockHeartIcon className="h-3.5 w-3.5 text-text-muted" />
             </div>
           )}
         </div>

@@ -1,4 +1,5 @@
 'use client';
+import { PerkHexIcon } from '@/components/icons/DbdIcons';
 
 import { getErrorMessage } from "@/utils/api";
 
@@ -8,17 +9,14 @@ import { Input, Textarea } from '@/components/common/Field';
 import { Button } from '@/components/common/Button';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  Plus,
+import {  Plus,
   Save,
   Play,
   Download,
   Share2,
   ShieldCheck,
   Check,
-  AlertCircle,
-  Sparkles,
-} from 'lucide-react';
+  AlertCircle,} from 'lucide-react';
 import type {
   ChallengeDefinition,
   RoundConfig,
@@ -426,7 +424,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
               disabled={isPublishingOfficial}
               variant="amber" size="md" className="w-full sm:w-auto"
             >
-              <Sparkles className="w-4 h-4" />
+              <PerkHexIcon className="w-4 h-4" />
               <span>{isPublishingOfficial ? c.publishing : c.confirmPublish}</span>
             </Button>
           </div>

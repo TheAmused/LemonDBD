@@ -1,14 +1,14 @@
 'use client';
 
 import React from 'react';
-import { Heart, ThumbsDown } from 'lucide-react';
+import { ThumbsDown } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { LeaderboardItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { tip } from '@/components/common/Tooltip';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import { SmashSounds } from '@/components/smash-or-pass/SmashSoundEffects';
-import { KillerIcon, SurvivorIcon,RankFirstIcon,RankPlacedIcon } from '@/components/icons/DbdIcons';
+import { KillerIcon, SurvivorIcon,RankFirstIcon,RankPlacedIcon, ThornHeartIcon } from '@/components/icons/DbdIcons';
 
 import { formatNumber } from '@/utils/format';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
@@ -170,7 +170,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
               {...tip(rawSmashDict?.youSmashedThis || '', undefined, 'status')}
               aria-label={rawSmashDict?.youSmashedThis || ''}
             >
-              <Heart className="h-2.5 w-2.5 fill-text-inverted text-text-inverted" />
+              <ThornHeartIcon className="h-2.5 w-2.5 fill-text-inverted text-text-inverted" />
             </div>
           )}
         </Surface>
@@ -227,7 +227,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
         <div className="flex flex-col gap-1 w-28 sm:w-32 shrink-0">
           <div className="flex items-center justify-between type-caption">
             <span className={`font-bold flex items-center gap-1 ${hasVotes ? 'text-accent-red' : 'text-text-muted'}`}>
-              <Heart className={`h-3 w-3 ${hasVotes ? 'fill-accent-red text-accent-red' : 'text-text-muted'}`} />
+              <ThornHeartIcon className={`h-3 w-3 ${hasVotes ? 'fill-accent-red text-accent-red' : 'text-text-muted'}`} />
               {hasVotes ? `${smashRate}${percentSign}` : '—'}
             </span>
             <span className="text-text-muted">
@@ -260,7 +260,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
         {/* Smashes / Passes Numeric Counts */}
         <div className="text-right text-xs shrink-0 min-w-16.25">
           <div className="flex items-center gap-1.5 justify-end text-accent-red font-black">
-            <Heart className="h-3.5 w-3.5 fill-accent-red" />
+            <ThornHeartIcon className="h-3.5 w-3.5 fill-accent-red" />
             <span>{smashCount}</span>
           </div>
           <div className="flex items-center gap-1.5 justify-end text-text-muted type-strong-xs mt-0.5">

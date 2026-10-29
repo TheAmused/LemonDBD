@@ -1,8 +1,8 @@
 'use client';
+import { PadlockHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/streaks/gauntlet/GauntletRulesModal.tsx
 
 import React from 'react';
-import { Lock } from 'lucide-react';
 import { BOOST_ICONS } from './boostIcons';
 import type { GauntletGameMode, Role } from '@/types/gauntletStreak';
 import { RulesModalShell } from '../RulesModalShell';
@@ -273,7 +273,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
   
                   <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
                     <div className="flex items-center gap-1.5 type-strong text-text-secondary whitespace-nowrap">
-                      <Lock className="w-3.5 h-3.5" aria-hidden="true" />
+                      <PadlockHeartIcon className="w-3.5 h-3.5" aria-hidden="true" />
                       <span>{perkLimitText}</span>
                     </div>
                   </div>

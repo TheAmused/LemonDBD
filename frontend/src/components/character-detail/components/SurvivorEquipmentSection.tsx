@@ -1,18 +1,15 @@
 'use client';
+import { EntityHeartIcon, BloodwebIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/character-detail/components/SurvivorEquipmentSection.tsx
 import { Tabs } from '@/components/common/Tabs';
 import React, { useMemo } from 'react';
-import {
-  ShieldAlert,
-  Heart,
+import {  ShieldAlert,
   Wrench,
   Flashlight,
   Key,
   Map as MapIcon,
-  Sparkles,
   Cloud,
-  type LucideIcon,
-} from 'lucide-react';
+} from 'lucide-react';
 import type {
   AddonItem,
   EquipmentItem,
@@ -107,14 +104,14 @@ function getSurvivorAddonCategory(it: AddonItem): SurvivorCategoryKey {
   return 'trial_exclusive';
 }
 
-const CATEGORY_ICONS: Record<SurvivorCategoryKey, LucideIcon> = {
-  medkit: Heart,
+const CATEGORY_ICONS: Record<SurvivorCategoryKey, React.ComponentType<{ className?: string }>> = {
+  medkit: EntityHeartIcon,
   toolbox: Wrench,
   flashlight: Flashlight,
   key: Key,
   map: MapIcon,
   fog_vial: Cloud,
-  event: Sparkles,
+  event: BloodwebIcon,
   trial_exclusive: ShieldAlert,
 };
 

@@ -1,4 +1,5 @@
 'use client';
+import { BloodwebIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/landing/HomePage.tsx
 
 import React, { useEffect, Suspense } from 'react';
@@ -6,7 +7,7 @@ import Link from 'next/link';
 import { } from 'next/navigation';
 import { LemonIcon } from '@/components/LemonIcon';
 
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
 import { useImagePrefetch } from '@/components/common/ImagePreloadProvider';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
@@ -59,7 +60,7 @@ function LandingContent() {
             href={`/${locale}/perks`}
             className={buttonClassName('primary', 'lg')}
           >
-            <Sparkles className="h-4 w-4" />
+            <BloodwebIcon className="h-4 w-4" />
             <span>{dict.landing.enterButton}</span>
             <ArrowRight className="h-4 w-4" />
           </Link>

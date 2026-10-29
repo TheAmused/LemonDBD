@@ -16,7 +16,14 @@ import type { GauntletGameMode } from '@/types/gauntletStreak';
 import { fetchChallengeModeStatus, type ChallengeModeStatusMap } from '@/services/challengeModesApi';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useChallengeCompletionStatus } from './useChallengeCompletionStatus';
-import { isHardestTierCompleted, CHAOS_DIFFICULTY_ORDER, HISTORY_MODE_ORDER } from '@/utils/challengeTierCompletion';
+import {
+  isHardestTierCompleted,
+  CHAOS_DIFFICULTY_ORDER,
+  HISTORY_MODE_ORDER,
+  ID_PLEASE_DIFFICULTY_ORDER,
+} from '@/utils/challengeTierCompletion';
+import { ID_PLEASE_MODE_BY_LANE, idPleaseLaneForRole, type IdPleaseDifficulty } from '@/types/idPleaseStreak';
+import { useIdPleaseEligibility } from './id-please/useIdPleaseEligibility';
 
 const GauntletModeModal = dynamic(
   () => import('./gauntlet/GauntletModeModal').then((m) => m.GauntletModeModal),
@@ -30,6 +37,10 @@ const HistoryModeModal = dynamic(
   () => import('./history/HistoryModeModal').then((m) => m.HistoryModeModal),
   { ssr: false }
 );
+const IdPleaseModeModal = dynamic(
+  () => import('./id-please/IdPleaseModeModal').then((m) => m.IdPleaseModeModal),
+  { ssr: false }
+);
 const PageStreakModeModal = dynamic(
   () => import('./page-streak/PageStreakModeModal').then((m) => m.PageStreakModeModal),
   { ssr: false }
@@ -41,6 +52,8 @@ import {
   saveHistoryMode,
   getSavedGauntletMode,
   saveGauntletMode,
+  getSavedIdPleaseDifficulty,
+  saveIdPleaseDifficulty,
   hasSeenPageStreakIntro,
   markPageStreakIntroSeen,
 } from '@/utils/streakDifficultyPrefs';
@@ -72,6 +85,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
   const [isChaosModeModalOpen, setIsChaosModeModalOpen] = useState(false);
   const [isHistoryModeModalOpen, setIsHistoryModeModalOpen] = useState(false);
   const [isPageStreakModeModalOpen, setIsPageStreakModeModalOpen] = useState(false);
+  const [isIdPleaseModalOpen, setIsIdPleaseModalOpen] = useState(false);
   const [modeStatus, setModeStatus] = useState<ChallengeModeStatusMap>({});
   const completionStatus = useChallengeCompletionStatus();
   const gauntletCompletedVariants = completionStatus.completions.gauntlet ?? [];
@@ -101,6 +115,14 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
   const gauntletCardFullCount = gauntletFullRoster[gauntletVariant] ?? null;
   const chaosCardFullCount = chaosFullRoster[chaosHardestVariant] ?? null;
   const historyCardFullCount = historyFullRoster[historyHardestVariant] ?? null;
+  // ID, Please is endless: its badges are independent, the card's trophy stands for the hardest one, with no count.
+  // Each tab plays its own lane: its own runs, badges and kill switch.
+  const idPleaseLane = idPleaseLaneForRole(role);
+  const idPleaseMode = ID_PLEASE_MODE_BY_LANE[idPleaseLane];
+  const idPleaseCompletedVariants = completionStatus.completions[idPleaseMode] ?? [];
+  const idPleaseCardCompleted = isHardestTierCompleted(ID_PLEASE_DIFFICULTY_ORDER, idPleaseCompletedVariants);
+  const idPleaseEligibility = useIdPleaseEligibility(idPleaseLane, isIdPleaseModalOpen);
+  const idPleaseHref = (difficulty: IdPleaseDifficulty) => `/${locale}/streaks/${role}/id-please?difficulty=${difficulty}`;
   const pageStreakCompletedVariants = completionStatus.completions.page_streak ?? [];
   const pageStreakCardCompleted = pageStreakCompletedVariants.includes('roster_complete');
   const pageStreakCardCount = pageStreakCounts['roster_complete'] ?? null;
@@ -125,7 +147,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
           );
         }
 
-        const modeKey = PANEL_ID_TO_MODE[panel.id];
+        const modeKey = panel.id === 'id-please' ? idPleaseMode : PANEL_ID_TO_MODE[panel.id];
         const mode = modeKey ? modeStatus[modeKey] : undefined;
         const isDisabled = mode ? !mode.is_enabled : false;
 
@@ -211,6 +233,24 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
           );
         }
 
+        if (panel.id === 'id-please') {
+          return (
+            <StreakPanel
+              key={panel.id}
+              title={panel.title}
+              image={panel.image}
+              creator={panel.creator}
+              completed={idPleaseCardCompleted}
+              prefetchHrefs={[`/${locale}/streaks/${role}/id-please`]}
+              onClick={() => {
+                const saved = getSavedIdPleaseDifficulty(idPleaseLane);
+                if (saved) router.push(idPleaseHref(saved));
+                else setIsIdPleaseModalOpen(true);
+              }}
+            />
+          );
+        }
+
         if (panel.id === 'page-streak') {
           return (
             <StreakPanel
@@ -282,6 +322,18 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
         completedFullCounts={historyFullRoster}
       />
 
+      <IdPleaseModeModal
+        isOpen={isIdPleaseModalOpen}
+        onClose={() => setIsIdPleaseModalOpen(false)}
+        onSelectDifficulty={(difficulty) => {
+          saveIdPleaseDifficulty(idPleaseLane, difficulty);
+          router.push(idPleaseHref(difficulty));
+        }}
+        lane={idPleaseLane}
+        eligibility={idPleaseEligibility}
+        completedVariants={idPleaseCompletedVariants}
+      />
+
       <PageStreakModeModal
         isOpen={isPageStreakModeModalOpen}
         onClose={() => setIsPageStreakModeModalOpen(false)}
@@ -292,4 +344,4 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
       />
     </div>
   );
-};
+};

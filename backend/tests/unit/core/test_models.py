@@ -6,12 +6,14 @@ import pytest
 from app.models.admin import AdminAuditLog, ChallengeModeSetting
 from app.models.character import Killer, Survivor
 from app.models.chaos import ChaosMatchLog, ChaosRun
+from app.models.id_please import IdPleaseMatchLog, IdPleaseRun
 from app.models.equipment import Item, ItemAddon, ItemCategory, Offering
 from app.models.gauntlet import GauntletMatchLog, GauntletRun
 from app.models.history import HistoryMatchLog, HistoryRun
 from app.models.page_streak import PageStreakPageLog, PageStreakRun
 from app.models.challenge_completion import ChallengeCompletionRecord
 from app.schemas.chaos import ChaosMatchLogDict, ChaosRunDict
+from app.schemas.id_please import IdPleaseMatchLogDict, IdPleaseRunDict
 from app.schemas.gauntlet import GauntletMatchLogDict, GauntletRunDict
 from app.schemas.history import HistoryMatchLogDict, HistoryRunDict
 from app.schemas.page_streak import PageStreakPageLogDict
@@ -245,6 +247,8 @@ class TestModelToDictTransformations:
         (GauntletMatchLog, GauntletMatchLogDict),
         (HistoryRun, HistoryRunDict),
         (HistoryMatchLog, HistoryMatchLogDict),
+        (IdPleaseRun, IdPleaseRunDict),
+        (IdPleaseMatchLog, IdPleaseMatchLogDict),
         (PageStreakPageLog, PageStreakPageLogDict),
         (ChallengeCompletionRecord, ChallengeCompletionDict),
     ],
@@ -256,7 +260,7 @@ def test_streak_to_dict_matches_its_typed_shape(model: type, shape: type) -> Non
 @pytest.mark.unit
 @pytest.mark.parametrize(
     "model",
-    [ChaosRun, ChaosMatchLog, GauntletRun, GauntletMatchLog, HistoryRun, HistoryMatchLog, PageStreakRun, PageStreakPageLog],
+    [ChaosRun, ChaosMatchLog, GauntletRun, GauntletMatchLog, HistoryRun, HistoryMatchLog, IdPleaseRun, IdPleaseMatchLog, PageStreakRun, PageStreakPageLog],
 )
 def test_streak_tables_store_json_natively(model: type) -> None:
     text_json_columns = [c.name for c in model.__table__.columns if c.name.endswith("_json")]

@@ -1,10 +1,10 @@
 'use client';
 // frontend/src/components/characters/hub/CharactersToolbar.tsx
 import React from 'react';
-import { Lock, Search, X } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
 import { IconInput } from '@/components/common/Field';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+import { KillerIcon, SurvivorIcon, PadlockHeartIcon } from '@/components/icons/DbdIcons';
 import type { RoleCategory } from '@/types/perks';
 
 import { Button } from '@/components/common/Button';
@@ -63,7 +63,7 @@ export function CharactersToolbar({
           disabled={ownershipLoading || ownershipSaving}
           className="min-h-11"
         >
-          {ownershipMode ? <X className="h-3.5 w-3.5" /> : <Lock className="h-3.5 w-3.5" />}
+          {ownershipMode ? <X className="h-3.5 w-3.5" /> : <PadlockHeartIcon className="h-3.5 w-3.5" />}
           <span>
             {ownershipLoading
               ? dict.app.loading

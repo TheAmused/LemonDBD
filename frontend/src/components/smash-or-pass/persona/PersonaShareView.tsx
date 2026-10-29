@@ -1,9 +1,9 @@
 'use client';
 // frontend/src/components/smash-or-pass/persona/PersonaShareView.tsx
-import { ArrowLeft, Check, Copy, Heart, Share2 } from 'lucide-react';
+import { ArrowLeft, Check, Copy, Share2 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+import { KillerIcon, SurvivorIcon, ThornHeartIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
 import type { RomancePersonaResult } from '@/utils/smashPersona';
 import type { SocialLink } from './socialLinks';
@@ -57,7 +57,7 @@ export function PersonaShareView({
             )}
           </div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-card bg-bg-primary/40 border border-border-color backdrop-blur-md shrink-0">
-            <Heart className="h-3.5 w-3.5 fill-accent-red text-accent-red" />
+            <ThornHeartIcon className="h-3.5 w-3.5 fill-accent-red text-accent-red" />
             <span className="type-strong text-text-inverted">
               {persona.smashRate}%
             </span>

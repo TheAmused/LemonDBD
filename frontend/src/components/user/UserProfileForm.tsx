@@ -1,8 +1,9 @@
 'use client';
+import { PadlockHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/user/UserProfileForm.tsx
 
 import React, { useState } from 'react';
-import { Lock, Mail, Eye, EyeOff, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Mail, Eye, EyeOff, CheckCircle2, AlertCircle } from 'lucide-react';
 import type { StatusFeedback } from '@/types/userProfile';
 import { updateUserProfile, ApiError, type UpdateProfilePayload } from '@/services/userProfileApi';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
@@ -298,7 +299,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
           {!hasPassword && (
             <div className="space-y-3 pt-3 border-t border-border-color">
               <span className="type-label-sm text-text-primary flex items-center gap-2">
-                <Lock className="h-3.5 w-3.5 text-accent-amber" />
+                <PadlockHeartIcon className="h-3.5 w-3.5 text-accent-amber" />
                 <span>{t.setPasswordTitle}</span>
               </span>
               <p className="type-caption text-text-secondary">{t.setPasswordDesc}</p>
@@ -320,7 +321,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
           <div className="space-y-3 pt-3 border-t border-border-color">
             <div className="flex items-center justify-between">
               <span className="type-label-sm text-text-primary flex items-center gap-2">
-                <Lock className="h-3.5 w-3.5 text-accent-amber" />
+                <PadlockHeartIcon className="h-3.5 w-3.5 text-accent-amber" />
                 <span>{dict.user.passwordLabel}</span>
               </span>
               <span className="type-caption text-text-muted">

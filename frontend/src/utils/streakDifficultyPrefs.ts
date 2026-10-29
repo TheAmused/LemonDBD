@@ -3,11 +3,14 @@ import type { Difficulty } from '@/types/chaosStreak';
 import type { HistoryMode } from '@/types/historyStreak';
 import type { GauntletGameMode } from '@/types/gauntletStreak';
 import { GAUNTLET_GAME_MODES } from '@/types/gauntletStreak';
+import type { IdPleaseDifficulty, IdPleaseLane } from '@/types/idPleaseStreak';
+import { ID_PLEASE_DIFFICULTIES } from '@/types/idPleaseStreak';
 import { safeGetItem, safeSetItem } from '@/utils/safeStorage';
 
 const CHAOS_DIFFICULTY_KEY = 'lemon_dbd_chaos_streak_difficulty_v1';
 const HISTORY_MODE_KEY = 'lemon_dbd_history_streak_mode_v1';
 const GAUNTLET_MODE_KEY_PREFIX = 'lemon_dbd_gauntlet_streak_mode_v1';
+const ID_PLEASE_DIFFICULTY_KEY_PREFIX = 'lemon_dbd_id_please_difficulty_v2';
 const PAGE_STREAK_SEEN_KEY = 'lemon_dbd_page_streak_seen_v1';
 const CHALLENGE_ANIMATIONS_KEY = 'lemon_dbd_challenge_animations_v1';
 
@@ -27,6 +30,16 @@ export function getSavedHistoryMode(): HistoryMode | null {
 
 export function saveHistoryMode(mode: HistoryMode) {
   safeSetItem(HISTORY_MODE_KEY, mode);
+}
+
+/** Each lane remembers its own difficulty. */
+export function getSavedIdPleaseDifficulty(lane: IdPleaseLane): IdPleaseDifficulty | null {
+  const value = safeGetItem(`${ID_PLEASE_DIFFICULTY_KEY_PREFIX}_${lane}`);
+  return ID_PLEASE_DIFFICULTIES.find((d) => d === value) ?? null;
+}
+
+export function saveIdPleaseDifficulty(lane: IdPleaseLane, difficulty: IdPleaseDifficulty) {
+  safeSetItem(`${ID_PLEASE_DIFFICULTY_KEY_PREFIX}_${lane}`, difficulty);
 }
 
 export type GauntletMode = GauntletGameMode;

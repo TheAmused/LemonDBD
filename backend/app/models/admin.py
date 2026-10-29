@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.core.extensions import Base
 from app.models.base import ColumnDictMixin, utcnow
 
-CHALLENGE_MODES = ("gauntlet", "chaos", "history", "page_streak")
+CHALLENGE_MODES = ("gauntlet", "chaos", "history", "page_streak", "id_please", "id_please_survivor", "id_please_killer")
 
 
 class ChallengeModeSetting(Base, ColumnDictMixin):

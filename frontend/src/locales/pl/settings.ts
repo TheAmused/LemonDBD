@@ -1,6 +1,5 @@
 // frontend/src/locales/pl/settings.ts
 export default {
-  title: 'Ustawienia',
   pageTitle: 'Ustawienia',
   subtitle: 'Dostosuj globalne funkcje strony, oprawę dźwiękową prób i wydajność grafiki.',
   sectionGlobalTitle: 'Globalne ustawienia strony',
@@ -23,7 +22,4 @@ export default {
   content: 'Treść i filtry',
   nsfw: 'Treści 18+ / NSFW',
   nsfwDesc: 'Wyświetlaj treści dla dorosłych, sugestywne grafiki i nieocenzurowane karty.',
-  syncStatus: 'Status synchronizacji',
-  statusSynced: 'Zsynchronizowano z kontem',
-  statusLocal: 'Zapisano lokalnie',
 } as const;

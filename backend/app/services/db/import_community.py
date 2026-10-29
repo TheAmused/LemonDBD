@@ -10,6 +10,7 @@ from app.models.admin import AdminAuditLog, ChallengeModeSetting
 from app.models.base import utcnow
 from app.models.changelog import ChangelogPost
 from app.models.chaos import ChaosMatchLog, ChaosRun
+from app.models.id_please import IdPleaseMatchLog, IdPleaseRun
 from app.models.community import BugReport
 from app.models.gauntlet import GauntletMatchLog, GauntletRun
 from app.models.history import HistoryMatchLog, HistoryRun
@@ -214,6 +215,10 @@ def import_community(
     import_run_family(
         data, target_keys, summary, "history_runs", HistoryRun, HistoryMatchLog, "match_logs",
         run_natural_keys=["mode"], user_map=user_map,
+    )
+    import_run_family(
+        data, target_keys, summary, "id_please_runs", IdPleaseRun, IdPleaseMatchLog, "match_logs",
+        run_natural_keys=["difficulty"], user_map=user_map,
     )
     import_run_family(
         data, target_keys, summary, "page_streak_runs", PageStreakRun, PageStreakPageLog, "page_logs",

@@ -1,9 +1,10 @@
-// frontend/src/components/minigames/guessers/PixelAvatarGuesser.tsx
 'use client';
+import { PerkHexIcon } from '@/components/icons/DbdIcons';
+// frontend/src/components/minigames/guessers/PixelAvatarGuesser.tsx
 
 import React, { useMemo } from 'react';
 import Image from 'next/image';
-import { Sparkles, Check, X, ShieldAlert } from 'lucide-react';
+import { Check, X, ShieldAlert } from 'lucide-react';
 import type { GuessRecord, RoundConfig, CatalogCharacter } from '@/types/minigame';
 import { staticUrl } from '@/utils/api';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -70,7 +71,7 @@ export const PixelAvatarGuesser: React.FC<PixelAvatarGuesserProps> = ({ roundCon
         )}
 
         <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-bg-surface/80 backdrop-blur-md border border-border-subtle type-strong-xs text-text-secondary flex items-center gap-1 shadow-md">
-          <Sparkles className="w-3 h-3 text-accent-red" />
+          <PerkHexIcon className="w-3 h-3 text-accent-red" />
           <span>{blurAmount.toFixed(1)}</span>
         </div>
 

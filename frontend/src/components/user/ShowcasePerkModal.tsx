@@ -1,9 +1,10 @@
-// frontend/src/components/user/ShowcasePerkModal.tsx
 'use client';
+import { PerkHexIcon } from '@/components/icons/DbdIcons';
+// frontend/src/components/user/ShowcasePerkModal.tsx
 
 import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
-import { Sparkles, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 import type { RoleCategory, Perk } from '@/types/perks';
 import { getKnownPerkTypes, perkTypesByRole, type PerkType } from '@/utils/perkTypes';
 import { usePerkTypeVocabulary } from '@/hooks/usePerkTypeVocabulary';
@@ -52,7 +53,7 @@ const PerkGridItem = React.memo<{
           perk={perk}
           size={84}
           alt={perk.name}
-          fallbackIcon={<Sparkles className="h-8 w-8 text-accent-red" />}
+          fallbackIcon={<PerkHexIcon className="h-8 w-8 text-accent-red" />}
           className="object-contain"
         />
       </div>

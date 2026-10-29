@@ -7,18 +7,19 @@ from sqlalchemy import select, text
 
 from app.core.extensions import db
 from app.core.transaction import end_transaction
-from app.models import ChaosRun, GauntletRun, HistoryRun, PageStreakRun
+from app.models import ChaosRun, GauntletRun, HistoryRun, IdPleaseRun, PageStreakRun
 from app.models.base import utcnow
 from app.services.chaos_service import ChaosService
 from app.services.gauntlet_service import GauntletService
 from app.services.history_service import HistoryService
+from app.services.id_please_service import IdPleaseService
 from app.services.page_streak.runs import apply_inactivity_loss as apply_page_streak_inactivity_loss
 
 logger = logging.getLogger(__name__)
 
 _ADVISORY_LOCK_KEY = 851193001
 
-type _RunModel = type[GauntletRun] | type[ChaosRun] | type[HistoryRun] | type[PageStreakRun]
+type _RunModel = type[GauntletRun] | type[ChaosRun] | type[HistoryRun] | type[IdPleaseRun] | type[PageStreakRun]
 
 
 def _sweep(model: _RunModel, apply_loss: Callable[[int, datetime], bool], cutoff: datetime) -> int:
@@ -61,6 +62,7 @@ def apply_inactivity_losses(inactive_after_days: int = 90) -> dict[str, int]:
             "gauntlet_runs": _sweep(GauntletRun, GauntletService().apply_inactivity_loss, cutoff),
             "chaos_runs": _sweep(ChaosRun, ChaosService().apply_inactivity_loss, cutoff),
             "history_runs": _sweep(HistoryRun, HistoryService().apply_inactivity_loss, cutoff),
+            "id_please_runs": _sweep(IdPleaseRun, IdPleaseService().apply_inactivity_loss, cutoff),
             "page_streak_runs": _sweep(PageStreakRun, apply_page_streak_inactivity_loss, cutoff),
         }
 

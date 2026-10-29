@@ -23,6 +23,20 @@ describe('Streaks: Panel Definitions & Role Configurations', () => {
     assert.ok(ids.includes('page-streak'), 'Killer streaks must include page streak');
   });
 
+  it('ID, Please sits in the killer, survivor and combined tabs with its own artwork per side', () => {
+    const killer = getKillerStreakPanels(enDict).find((p) => p.id === 'id-please');
+    const survivor = getSurvivorStreakPanels(enDict).find((p) => p.id === 'id-please');
+    const combined = getChallengeStreakPanels(enDict).find((p) => p.id === 'id-please');
+    for (const panel of [killer, survivor, combined]) {
+      assert.ok(panel, 'every streak tab must list ID, Please');
+      assert.equal(panel.creator, 'TheAmused');
+      assert.equal(panel.comingSoon, undefined);
+    }
+    assert.equal(killer?.image, '/images/streaks/id-please/k0.webp');
+    assert.equal(survivor?.image, '/images/streaks/id-please/s0.webp');
+    assert.equal(combined?.image, '/images/streaks/id-please/s0.webp');
+  });
+
   it('survivor streak panels provide gauntlet streak', () => {
     const panels = getSurvivorStreakPanels(enDict);
     const ids = panels.map((p) => p.id);

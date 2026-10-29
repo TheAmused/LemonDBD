@@ -1,7 +1,8 @@
 'use client';
+import { PadlockHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/generator/modes/slot-machine/SlotReelRowMobile.tsx
 import React from 'react';
-import { Ban, Check, Lock, Plus } from 'lucide-react';
+import { Ban, Check, Plus } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
 import { Tooltip } from '@/components/common/Tooltip';
 import { cn } from '@/utils/cn';
@@ -160,7 +161,7 @@ export function SlotReelRowMobile({
             : `#${reel.id + 1}`}
         </span>
         {reel.locked ? (
-          <Lock className="h-4 w-4 text-accent-amber mt-0.5" />
+          <PadlockHeartIcon className="h-4 w-4 text-accent-amber mt-0.5" />
         ) : landedBroken ? (
           <Ban className="h-4 w-4 text-accent-red mt-0.5" />
         ) : null}
@@ -197,7 +198,7 @@ export function SlotReelRowMobile({
           </TileButton>
         ) : reel.locked ? (
           <div className="h-10 w-10 rounded-card bg-accent-amber/20 border border-accent-amber/40 flex items-center justify-center text-accent-amber">
-            <Lock className="h-5 w-5" />
+            <PadlockHeartIcon className="h-5 w-5" />
           </div>
         ) : (
           <div className="h-10 w-10" />

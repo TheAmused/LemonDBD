@@ -1,16 +1,14 @@
-// frontend/src/components/minigames/creator/RoundEditorCard.tsx
 'use client';
+import { PerkHexIcon } from '@/components/icons/DbdIcons';
+// frontend/src/components/minigames/creator/RoundEditorCard.tsx
 
 import { lookup } from '@/utils/lookup';
 import { Button } from '@/components/common/Button';
 import { Input, Select, Textarea } from '@/components/common/Field';
 import React, { useMemo } from 'react';
-import {
-  ChevronUp,
+import {  ChevronUp,
   ChevronDown,
-  Trash2,
-  Sparkles,
-} from 'lucide-react';
+  Trash2,} from 'lucide-react';
 import type {
   RoundConfig,
   MinigameMode,
@@ -242,7 +240,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({ round, index, 
         {selectedTargetItem ? (
           <Surface padding="sm" className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Thumb src={targetImgSrc} alt={selectedTargetItem.name} size="lg" fallback={<Sparkles className="h-4 w-4 text-text-muted" />} />
+              <Thumb src={targetImgSrc} alt={selectedTargetItem.name} size="lg" fallback={<PerkHexIcon className="h-4 w-4 text-text-muted" />} />
               <div>
                 <div className="type-card-title text-text-primary">{selectedTargetItem.name}</div>
                 <div className="text-xs text-text-muted capitalize">{targetType}</div>

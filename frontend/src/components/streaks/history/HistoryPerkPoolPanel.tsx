@@ -1,8 +1,9 @@
 'use client';
+import { PerkHexIcon, PadlockHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/streaks/history/HistoryPerkPoolPanel.tsx
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { CheckCircle2, Lock, Sparkles, X } from 'lucide-react';
+import { CheckCircle2, X } from 'lucide-react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import type { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
@@ -30,7 +31,7 @@ const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: bo
           perk={perk}
           src={src}
           alt={displayName}
-          fallbackIcon={<Sparkles className="w-6 h-6 text-text-muted" />}
+          fallbackIcon={<PerkHexIcon className="w-6 h-6 text-text-muted" />}
         />
       </div>
       <span className="text-mini font-medium text-center text-text-secondary leading-tight line-clamp-2">
@@ -49,7 +50,7 @@ const LockedTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displ
           perk={perk}
           src={src}
           alt={displayName}
-          fallbackIcon={<Sparkles className="w-6 h-6 text-text-muted" />}
+          fallbackIcon={<PerkHexIcon className="w-6 h-6 text-text-muted" />}
         />
       </div>
       <span className="text-mini font-medium text-center text-text-muted leading-tight line-clamp-2 opacity-60">
@@ -57,7 +58,7 @@ const LockedTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displ
       </span>
       <div className="absolute inset-0 flex items-center justify-center bg-bg-primary/50">
         <div className="flex h-7 w-7 items-center justify-center rounded-full bg-bg-elevated border border-border-color">
-          <Lock className="w-3.5 h-3.5 text-text-muted" />
+          <PadlockHeartIcon className="w-3.5 h-3.5 text-text-muted" />
         </div>
       </div>
     </div>
@@ -155,7 +156,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
       )}
 
       <div className="mb-2 flex items-center gap-1.5 type-strong text-text-muted">
-        <Lock className="w-3.5 h-3.5" />
+        <PadlockHeartIcon className="w-3.5 h-3.5" />
         {dict.streaks.lockedLabel}
       </div>
       {locked.length === 0 ? (

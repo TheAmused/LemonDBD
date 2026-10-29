@@ -209,6 +209,16 @@ class TestActiveRunVariants:
         assert active["history"] == ["hell"]
         assert active["gauntlet"] == ["killer_original"]
 
+    def test_an_id_please_run_is_active_once_its_opening_is_chosen(self, db_session: Session, sample_user: User) -> None:
+        from app.models import IdPleaseRun
+
+        db_session.add_all([
+            IdPleaseRun(user_id=sample_user.id, difficulty="milestones", current_match=0),
+            IdPleaseRun(user_id=sample_user.id, difficulty="hardcore", current_match=7),
+        ])
+        db_session.commit()
+        assert fetch_active_run_variants_by_mode(sample_user.id) == {"id_please": ["hardcore"]}
+
     def test_no_active_runs_omits_the_mode_key(
         self, db_session: Session, sample_user: User
     ) -> None:

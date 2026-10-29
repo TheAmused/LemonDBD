@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 import type { GauntletPlayerLoadout, Perk, Role, TierInfo } from '@/types/gauntletStreak';
 import type { OwnedCharacterItem } from '@/components/streaks/useOwnedRoster';
 import type { DrawPhase } from '@/components/streaks/gauntlet/useTargetDraw';
-import { User, Sparkles, Star, Lock, HelpCircle } from 'lucide-react';
+import { User, Star, HelpCircle } from 'lucide-react';
 import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
-import { KillerIcon } from '@/components/icons/DbdIcons';
+import { KillerIcon, PerkHexIcon, PadlockHeartIcon } from '@/components/icons/DbdIcons';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { DiamondSlot } from '@/components/ui/DiamondSlot';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -69,7 +69,7 @@ const PerkArt: React.FC<{ perk: Perk; size: string }> = ({ perk, size }) => {
       imageClassName={`${size} max-w-none object-contain`}
       fallbackIcon={
         <div className={`${size} flex items-center justify-center text-text-muted`}>
-          <Sparkles className="w-1/2 h-1/2" aria-hidden="true" />
+          <PerkHexIcon className="w-1/2 h-1/2" aria-hidden="true" />
         </div>
       }
     />
@@ -228,7 +228,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, char
                   size={size}
                   iconClassName="bg-bg-elevated/60 border-dashed border-border-color opacity-60 text-text-muted"
                 >
-                  <Lock className={iconSize} />
+                  <PadlockHeartIcon className={iconSize} />
                 </SlotChip>
               </li>
             );

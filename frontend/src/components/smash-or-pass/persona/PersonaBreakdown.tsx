@@ -1,11 +1,11 @@
 'use client';
 // frontend/src/components/smash-or-pass/persona/PersonaBreakdown.tsx
-import { Compass, Gamepad2, Heart, RotateCcw, Share2 } from 'lucide-react';
+import { Compass, Gamepad2, RotateCcw, Share2 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
 import { tip } from '@/components/common/Tooltip';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
+import { KillerIcon, SurvivorIcon, ThornHeartIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
 import { isSurvivor } from '@/utils/characterUtils';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -108,7 +108,7 @@ export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onRe
         <Surface padding="none" className="p-3.5 border-border-color/60 flex flex-col justify-between gap-1 shadow-xs">
           <span className="text-text-muted type-caption">{text.statsDetail.smashRate}</span>
           <span className="text-lg font-black text-accent-red flex items-center gap-1">
-            <Heart className="h-4 w-4 fill-accent-red" />
+            <ThornHeartIcon className="h-4 w-4 fill-accent-red" />
             {persona.smashRate}{text.percentSign}
           </span>
         </Surface>

@@ -18,4 +18,7 @@ export default {
   difficultyWord: "Schwierigkeit ab",
   ownedCharactersSuffix: "nur mit deinen freigeschalteten Charakteren.",
   allCharactersSuffix: "mit jedem Charakter im Spiel.",
+  idPleaseShelf: "ID, Please",
+  idPleaseHover: "Erreiche eine Siegesserie von {streak} auf {difficulty}.",
+  idPleaseEveryCharacterHover: "Gewinne mit jedem Charakter ({side}) auf {difficulty}.",
 };

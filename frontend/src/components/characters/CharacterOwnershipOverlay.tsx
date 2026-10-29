@@ -1,6 +1,7 @@
+import { PadlockHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/characters/CharacterOwnershipOverlay.tsx
 import React from 'react';
-import { Lock, Check } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 import { tip } from '@/components/common/Tooltip';
 import { Img } from '@/components/common/Img';
@@ -82,7 +83,7 @@ export const CharacterOwnershipOverlay: React.FC<CharacterOwnershipOverlayProps>
           className={`absolute ${badgeClasses} z-10 flex items-center justify-center rounded-full bg-bg-surface/90 border border-accent-amber text-accent-amber shadow-xs backdrop-blur-md`}
           {...tip(lockedTitle, undefined, 'status')}
         >
-          <Lock className={iconClasses} />
+          <PadlockHeartIcon className={iconClasses} />
         </div>
       )}
       {isOwned && (

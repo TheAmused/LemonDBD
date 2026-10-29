@@ -2,18 +2,15 @@
 // frontend/src/components/smash-or-pass/CharacterStatsModal.tsx
 
 import React, { useMemo } from 'react';
-import {
-  Heart,
-  Flame,
+import {  Flame,
   Quote,
-  ThumbsDown,
-} from 'lucide-react';
+  ThumbsDown,} from 'lucide-react';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import type { EntityItem, EntityStatItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { Modal } from '@/components/common/Modal';
-import { EldritchVoidIcon, FriendzoneIcon, RankFirstIcon } from '@/components/icons/DbdIcons';
+import { EldritchVoidIcon, FriendzoneIcon, RankFirstIcon, ThornHeartIcon } from '@/components/icons/DbdIcons';
 import { Surface } from '@/components/common/Surface';
 import { formatNumber } from '@/utils/format';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
@@ -196,7 +193,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
           <div className="text-right">
             <span className="type-micro text-text-muted block">{smashRateLabel}</span>
             <span className="text-xl font-black text-accent-red flex items-center gap-1 justify-end">
-              <Heart className="h-4 w-4 fill-accent-red" /> {smashRate}{percentSign}
+              <ThornHeartIcon className="h-4 w-4 fill-accent-red" /> {smashRate}{percentSign}
             </span>
           </div>
         </div>
@@ -205,7 +202,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
         <Surface tone="elevated" padding="none" className="space-y-1.5 p-3.5">
           <div className="flex justify-between type-strong">
             <span className="flex items-center gap-1 text-accent-red">
-              <Heart className="h-3.5 w-3.5 fill-accent-red" /> {formatNumber(smashCount)} {smashesLabel} ({smashPct}{percentSign})
+              <ThornHeartIcon className="h-3.5 w-3.5 fill-accent-red" /> {formatNumber(smashCount)} {smashesLabel} ({smashPct}{percentSign})
             </span>
             <span className="flex items-center gap-1 text-text-muted">
               <ThumbsDown className="h-3.5 w-3.5" /> {formatNumber(passCount)} {passesLabel} ({passPct}{percentSign})

@@ -1,10 +1,11 @@
 'use client';
+import { PadlockHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/PerkCard.tsx
 
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import { PerkIcon } from '@/components/ui/PerkIcon';
-import { Lock, HelpCircle } from 'lucide-react';
+import { HelpCircle } from 'lucide-react';
 import type { Perk } from '@/types/perks';
 import { getPerkIconUrl, getCharacterAvatarUrl } from '@/utils/perkUtils';
 import { DisabledBadge } from '@/components/DisabledBadge';
@@ -97,12 +98,16 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
       }
     >
       <TileButton
+        press={false}
         onClick={() => onSelect(perk)}
-        {...tip(perk.name, undefined, 'item')}
         aria-label={ariaLabel}
         className={`relative flex items-center justify-center duration-200 ${
-          size === 'tarot' || size === 'compact' ? 'group-hover:scale-102' : 'group-hover:scale-105'
-        } touch-manipulation rounded-control ${named ? 'h-full w-full flex-col gap-1' : GRID_SIZE_CLASSES[size]}`}
+          named
+            ? 'h-full w-full flex-col gap-1'
+            : size === 'tarot' || size === 'compact'
+              ? `group-hover:scale-102 ${GRID_SIZE_CLASSES[size]}`
+              : `group-hover:scale-105 ${GRID_SIZE_CLASSES[size]}`
+        } touch-manipulation rounded-control`}
       >
         {coordinateLabel && (
           <Badge
@@ -112,7 +117,9 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
           </Badge>
         )}
 
-        <div className={`relative flex items-center justify-center ${named ? NAMED_ICON_CLASS : 'h-full w-full'}`}>
+        <div className={`relative flex items-center justify-center transition-transform duration-200 ${
+          named ? `${NAMED_ICON_CLASS} group-hover:scale-105` : 'h-full w-full'
+        }`}>
           <div
             className={`relative flex h-full w-full items-center justify-center ${
               perk.is_disabled ? 'opacity-50 grayscale' : !isOwned ? 'opacity-40 grayscale' : ''
@@ -165,7 +172,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
               className="absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-bg-primary/90 shadow-xs border border-border-color"
               {...tip(dict.modal.unownedPerk, undefined, 'status')}
             >
-              <Lock className="h-3.5 w-3.5 text-text-muted" />
+              <PadlockHeartIcon className="h-3.5 w-3.5 text-text-muted" />
             </div>
           )}
         </div>

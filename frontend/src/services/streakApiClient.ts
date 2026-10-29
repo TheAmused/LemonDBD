@@ -2,10 +2,25 @@
 import { backendBase } from '@/utils/staticUrl';
 import { authHeaders } from '@/utils/api';
 
+/** A failed streak request. Carries the HTTP status, the server's machine-readable `code` and the whole
+ *  error body, for the few modes whose conflicts (409) hold data the board needs to recover. */
+export class StreakApiError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+    readonly code: string | undefined,
+    readonly body: Record<string, unknown>
+  ) {
+    super(message);
+    this.name = 'StreakApiError';
+  }
+}
+
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+    const errorData: Record<string, unknown> = await response.json().catch(() => ({}));
+    const message = typeof errorData.error === 'string' && errorData.error ? errorData.error : `HTTP error! status: ${response.status}`;
+    throw new StreakApiError(message, response.status, typeof errorData.code === 'string' ? errorData.code : undefined, errorData);
   }
   return response.json();
 }

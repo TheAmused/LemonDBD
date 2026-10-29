@@ -47,7 +47,7 @@ export function SettingsClient() {
   ];
 
   return (
-    <div className="space-y-6 w-full pb-8">
+    <div className="relative z-10 mx-auto my-auto flex w-full max-w-4xl flex-col gap-6 py-6 sm:py-8">
       {/* 1. Global Site Preferences (Applies site-wide across all pages) */}
       <Surface tone="flat" padding="lg" className="space-y-5">
         <SectionCardHeader

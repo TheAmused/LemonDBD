@@ -51,6 +51,9 @@ export function AdminUserChallengesModal({ user, notify, onClose }: AdminUserCha
     chaos: t.challengeModeChaos,
     history: t.challengeModeHistory,
     page_streak: t.challengeModePageStreak,
+    id_please: t.challengeModeIdPlease,
+    id_please_survivor: t.challengeModeIdPleaseSurvivor,
+    id_please_killer: t.challengeModeIdPleaseKiller,
   };
   const nameOf = (c: UserChallengeProgress) => `${modeLabel[c.mode]}: ${variantLabel(c.variant)}`;
 

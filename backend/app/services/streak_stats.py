@@ -11,6 +11,8 @@ from app.models import (
     GauntletRun,
     HistoryMatchLog,
     HistoryRun,
+    IdPleaseMatchLog,
+    IdPleaseRun,
     PageStreakPageLog,
     PageStreakRun,
 )
@@ -21,8 +23,8 @@ from app.schemas.streak import StreakStats
 RECENT_LOGS_LIMIT = 200
 
 
-type StreakLog = ChaosMatchLog | GauntletMatchLog | HistoryMatchLog | PageStreakPageLog
-type StreakRun = ChaosRun | GauntletRun | HistoryRun | PageStreakRun
+type StreakLog = ChaosMatchLog | GauntletMatchLog | HistoryMatchLog | IdPleaseMatchLog | PageStreakPageLog
+type StreakRun = ChaosRun | GauntletRun | HistoryRun | IdPleaseRun | PageStreakRun
 
 
 def fetch_streak_stats[LogModel: StreakLog, LogT](

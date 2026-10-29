@@ -86,6 +86,8 @@ export default {
   insultsColumnPlain: "You type",
   insultsColumnBard: "The Bard says",
   insultsClose: "Close",
+  insultsCopyHint: "Click an insult to copy it, then paste it into the post-game chat.",
+  insultsCopied: "Copied to clipboard",
   insultsSideAria: "Choose a side",
   insultsSideSurvivor: "Survivor",
   insultsSideKiller: "Killer",

@@ -86,6 +86,8 @@ export default {
   insultsColumnPlain: "Escribes",
   insultsColumnBard: "El Bardo dice",
   insultsClose: "Cerrar",
+  insultsCopyHint: "Haz clic en un insulto para copiarlo y pégalo en el chat posterior a la partida.",
+  insultsCopied: "Copiado al portapapeles",
   insultsSideAria: "Elige un bando",
   insultsSideSurvivor: "Superviviente",
   insultsSideKiller: "Asesino",

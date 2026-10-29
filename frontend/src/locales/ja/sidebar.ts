@@ -86,6 +86,8 @@ export default {
   insultsColumnPlain: "入力する言葉",
   insultsColumnBard: "詩人はこう言う",
   insultsClose: "閉じる",
+  insultsCopyHint: "侮辱をクリックするとコピーされるので、試合後のチャットに貼り付けましょう。",
+  insultsCopied: "クリップボードにコピーしました",
   insultsSideAria: "陣営を選ぶ",
   insultsSideSurvivor: "サバイバー",
   insultsSideKiller: "キラー",

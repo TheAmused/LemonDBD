@@ -1,5 +1,6 @@
 // frontend/src/components/streaks/panels.ts
 import type { Dictionary } from '@/locales/types';
+import { idPleaseCardImage } from './id-please/idPleaseAssets';
 
 export interface StreakPanelDef {
   id: string;
@@ -42,6 +43,12 @@ export function getKillerStreakPanels(dict: Dictionary): StreakPanelDef[] {
       creator: 'Otzdarva',
     },
     {
+      id: 'id-please',
+      title: t.idPleaseTitle,
+      image: idPleaseCardImage('killer'),
+      creator: 'TheAmused',
+    },
+    {
       id: 'nice-guy-streak',
       title: t.niceGuyStreakTitle,
       comingSoon: true,
@@ -71,6 +78,12 @@ export function getSurvivorStreakPanels(dict: Dictionary): StreakPanelDef[] {
       creator: 'Zerbs',
     },
     {
+      id: 'id-please',
+      title: t.idPleaseTitle,
+      image: idPleaseCardImage('survivor'),
+      creator: 'TheAmused',
+    },
+    {
       id: 'copycat-streak',
       title: t.copycatStreakTitle,
       comingSoon: true,
@@ -86,6 +99,12 @@ export function getSurvivorStreakPanels(dict: Dictionary): StreakPanelDef[] {
 export function getChallengeStreakPanels(dict: Dictionary): StreakPanelDef[] {
   const t = dict.streaks;
   return [
+    {
+      id: 'id-please',
+      title: t.idPleaseTitle,
+      image: idPleaseCardImage('challenge'),
+      creator: 'TheAmused',
+    },
     {
       id: 'copycat-streak',
       title: t.copycatStreakTitle,

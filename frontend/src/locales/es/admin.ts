@@ -104,6 +104,8 @@ export default {
   targetHistoryRunsDesc: "Historial de rachas History en progreso y completadas",
   targetPageStreakRunsLabel: "Partidas de Racha Page Streak",
   targetPageStreakRunsDesc: "Historial de rachas Page Streak en progreso y completadas",
+  targetIdPleaseRunsLabel: "Partidas de ID, Please",
+  targetIdPleaseRunsDesc: "Partidas de ID, Please en curso y su historial de partidas",
   targetRostersLabel: "Listas de Smash or Pass",
   targetRostersDesc: "Listas, entidades, estadísticas y votos",
   reasonPlaceholder: "ej. el poder está bugeado, desactivado temporalmente mientras se repara",
@@ -452,4 +454,7 @@ export default {
   vectorMapSelect: "Seleccionar mapa",
   vectorMapNoLayout: "No se encontró ningún plano vectorial para este mapa.",
   vectorMapLoading: "Cargando diseño...",
+  challengeModeIdPlease: "ID, Please",
+  challengeModeIdPleaseSurvivor: "ID, Please (Superviviente)",
+  challengeModeIdPleaseKiller: "ID, Please (Asesino)",
 } as const;

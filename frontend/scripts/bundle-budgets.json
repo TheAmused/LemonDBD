@@ -25,6 +25,7 @@
   "/[locale]/streaks": 128,
   "/[locale]/streaks/[role]": 128,
   "/[locale]/streaks/[role]/gauntlet-streak": 147,
+  "/[locale]/streaks/[role]/id-please": 147,
   "/[locale]/streaks/killer/chaos-streak": 141,
   "/[locale]/streaks/killer/history-streak": 140,
   "/[locale]/streaks/killer/page-streak": 131,

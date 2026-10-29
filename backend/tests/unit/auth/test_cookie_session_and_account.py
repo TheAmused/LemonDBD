@@ -237,9 +237,25 @@ class TestExportOwnData:
         assert "verification_code" not in body["account"]
         assert [r["title"] for r in body["bug_reports"]] == ["t"]
         assert body["streak_runs"]["chaos"] == {"runs": [], "match_log": []}
+        assert body["streak_runs"]["id_please"] == {"runs": [], "match_log": []}
         assert body["requested_by"] == "self"
         assert "lemondbd-my-data.json" in res.headers["Content-Disposition"]
         assert res.headers["Cache-Control"] == "no-store"
+
+    def test_includes_id_please_runs_and_their_matches(self, client: FlaskClient) -> None:
+        from app.models import IdPleaseMatchLog, IdPleaseRun
+
+        user_id = _register(client, "ipexporter").get_json()["user"]["id"]
+        run = IdPleaseRun(user_id=user_id, difficulty="hardcore", current_streak=4, best_streak=9)
+        run.match_logs.append(IdPleaseMatchLog(
+            attempt=1, result="win", streak_before=3, streak_after=4, match_number=4, side="killer", character_id=7, perk_ids=[1, 2, 3, 4]
+        ))
+        db.session.add(run)
+        db.session.commit()
+
+        body = client.get("/api/v1/auth/account/export").get_json()["streak_runs"]["id_please"]
+        assert [(r["difficulty"], r["current_streak"], r["best_streak"]) for r in body["runs"]] == [("hardcore", 4, 9)]
+        assert [(m["match_number"], m["character_id"], m["perk_ids"]) for m in body["match_log"]] == [(4, 7, [1, 2, 3, 4])]
 
 
 class TestAdminExportUserData:

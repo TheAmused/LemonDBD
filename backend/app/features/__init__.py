@@ -20,6 +20,9 @@ def register_feature_blueprints(app: "Flask") -> None:
         chaos_streak_bp,
         gauntlet_streak_bp,
         history_streak_bp,
+        id_please_killer_streak_bp,
+        id_please_streak_bp,
+        id_please_survivor_streak_bp,
         page_streak_bp,
     )
     from app.features.tier_lists import tier_lists_bp
@@ -46,6 +49,9 @@ def register_feature_blueprints(app: "Flask") -> None:
         gauntlet_streak_bp,
         chaos_streak_bp,
         history_streak_bp,
+        id_please_streak_bp,
+        id_please_survivor_streak_bp,
+        id_please_killer_streak_bp,
         # Community & Minigames
         smash_or_pass_bp,
         smash_preferences_bp,

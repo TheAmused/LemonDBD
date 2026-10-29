@@ -18,4 +18,7 @@ export default {
   difficultyWord: "でこのチャレンジをクリア:",
   ownedCharactersSuffix: "所持しているキャラクターのみを使用。",
   allCharactersSuffix: "ゲーム内の全キャラクターを使用。",
+  idPleaseShelf: "ID, Please",
+  idPleaseHover: "{difficulty}で{streak}連勝を達成する。",
+  idPleaseEveryCharacterHover: "{difficulty}で全キャラ（{side}）に勝利する。",
 };

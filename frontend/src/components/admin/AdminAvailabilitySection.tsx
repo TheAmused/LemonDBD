@@ -74,6 +74,9 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
     chaos: dict.streaks.chaosStreak,
     history: dict.streaks.historyStreak,
     page_streak: dict.streaks.pageStreak,
+    id_please: dict.streaks.idPleaseTitle,
+    id_please_survivor: dict.streaks.idPleaseSurvivorTitle,
+    id_please_killer: dict.streaks.idPleaseKillerTitle,
   };
 
   const fail = useCallback((err: unknown) => notify({ type: 'error', text: getErrorMessage(err, t.networkError) }), [notify, t.networkError]);

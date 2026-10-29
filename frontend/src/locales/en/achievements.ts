@@ -18,4 +18,7 @@ export default {
   difficultyWord: "difficulty",
   ownedCharactersSuffix: "using only your unlocked characters.",
   allCharactersSuffix: "using every character in the game.",
+  idPleaseShelf: "ID, Please",
+  idPleaseHover: "Reach a win streak of {streak} in {difficulty}.",
+  idPleaseEveryCharacterHover: "Win with every {side} in {difficulty}.",
 };

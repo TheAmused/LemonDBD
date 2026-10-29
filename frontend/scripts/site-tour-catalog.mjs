@@ -67,6 +67,7 @@ export const PAGE_ROUTES = [
   { id: 'streaks-chaos', title: 'Chaos Streak Active Board (Signed In)', route: '/en/streaks/killer/chaos-streak', category: 'streaks', subcategory: 'chaos', folder: '04-streaks-chaos', auth: 'user', requiresAuth: 'user', waitForSelector: 'main' },
   { id: 'streaks-gauntlet', title: 'Win Streak & Gauntlet (Signed In)', route: '/en/streaks/killer/gauntlet-streak', category: 'streaks', subcategory: 'gauntlet', folder: '04-streaks-gauntlet', auth: 'user', requiresAuth: 'user', waitForSelector: 'main' },
   { id: 'streaks-history-streak', title: 'Streak Match History (Signed In)', route: '/en/streaks/killer/history-streak', category: 'streaks', subcategory: 'history', folder: '04-streaks-history-streak', auth: 'user', requiresAuth: 'user', waitForSelector: 'main' },
+  { id: 'streaks-id-please', title: 'ID, Please Board (Signed In)', route: '/en/streaks/killer/id-please', category: 'streaks', subcategory: 'id-please', folder: '04-streaks-id-please', auth: 'user', requiresAuth: 'user', waitForSelector: 'main' },
   { id: 'streaks-page', title: 'Page Streak Board (Signed In)', route: '/en/streaks/killer/page-streak', category: 'streaks', subcategory: 'page-streak', folder: '04-streaks-page', auth: 'user', requiresAuth: 'user', waitForSelector: 'main' },
 
   // Streaks - Guest

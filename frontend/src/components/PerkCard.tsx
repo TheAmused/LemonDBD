@@ -101,8 +101,12 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
         onClick={() => onSelect(perk)}
         aria-label={ariaLabel}
         className={`relative flex items-center justify-center duration-200 ${
-          size === 'tarot' || size === 'compact' ? 'group-hover:scale-102' : 'group-hover:scale-105'
-        } touch-manipulation rounded-control ${named ? 'h-full w-full flex-col gap-1' : GRID_SIZE_CLASSES[size]}`}
+          named
+            ? 'h-full w-full flex-col gap-1'
+            : size === 'tarot' || size === 'compact'
+              ? `group-hover:scale-102 ${GRID_SIZE_CLASSES[size]}`
+              : `group-hover:scale-105 ${GRID_SIZE_CLASSES[size]}`
+        } touch-manipulation rounded-control`}
       >
         {coordinateLabel && (
           <Badge
@@ -112,7 +116,9 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
           </Badge>
         )}
 
-        <div className={`relative flex items-center justify-center ${named ? NAMED_ICON_CLASS : 'h-full w-full'}`}>
+        <div className={`relative flex items-center justify-center transition-transform duration-200 ${
+          named ? `${NAMED_ICON_CLASS} group-hover:scale-105` : 'h-full w-full'
+        }`}>
           <div
             className={`relative flex h-full w-full items-center justify-center ${
               perk.is_disabled ? 'opacity-50 grayscale' : !isOwned ? 'opacity-40 grayscale' : ''

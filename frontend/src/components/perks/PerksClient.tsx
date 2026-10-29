@@ -264,7 +264,7 @@ function PerksContent() {
         <PerkResultsCount page={currentPage} limit={limit} totalResults={totalResults} />
       )}
 
-      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+      <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overflow-x-hidden">
         {fetchError ? (
           <div className="flex flex-col items-center justify-center gap-4 p-12 text-center my-auto">
             <p className="text-text-secondary text-base">{dict.filters.loadError}</p>

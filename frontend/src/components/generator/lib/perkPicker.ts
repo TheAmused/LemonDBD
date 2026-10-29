@@ -3,30 +3,29 @@
 // perk.perk_types is an ordered list of what the perk is for, and its first
 // entry IS the Tarot archetype. One source of truth.
 // No keyword scanning needed — the backend seed data classifies every perk
-// with 1-3 of: hex | boon | sacrifice | exhaustion | obsession |
-// aura | generator | healing | chase | stealth | entity | hooks
-// (`entity` is the catch-all and only ever appears alone).
+// with 1-3 of the PERK_TYPES in `@/utils/perkTypes`.
 //
 import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import type { ChaosMutator } from '@/types/chaos';
-import { PERK_TYPES, type PerkType } from '@/utils/perkTypes';
+import { PERK_TYPES, upgradeLegacyPerkTypes, type PerkType } from '@/utils/perkTypes';
 
 const FALLBACK_PERK_TYPES: readonly string[] = ['entity'];
 
 /**
- * Every type a perk has, primary first. A perk with no list at all (stale
- * cached data, an old API response) or an empty one is treated as ['entity'].
+ * Every type a perk has, primary first, with renamed types (aura, hex, boon)
+ * under their current names. A perk with no list at all (stale cached data, an
+ * old API response) or an empty one reads as the unclassified default ['entity'].
  */
 export function getPerkTypes(perk: Perk): readonly string[] {
   const types = perk.perk_types;
-  return Array.isArray(types) && types.length > 0 ? types : FALLBACK_PERK_TYPES;
+  return Array.isArray(types) && types.length > 0 ? upgradeLegacyPerkTypes(types) : FALLBACK_PERK_TYPES;
 }
 
 /**
  * All classification below reads directly from `perk.perk_types` (set by the
  * backend seed, using Tarot archetype values). A perk matches a category if
  * the category is ANYWHERE in its list, so a perk that is both a generator and
- * an aura perk is hit by a curse aimed at either. No description-keyword
+ * a tracking perk is hit by a curse aimed at either. No description-keyword
  * matching, no hardcoded name lists -- the backend is the single source of
  * truth.
  */
@@ -60,12 +59,12 @@ function perkTypeStrength(perk: Perk, types: readonly string[]): number {
 
 // Each curse category with the legacy spellings older cached data may carry.
 const EXHAUSTION_TYPES = ['exhaustion'] as const;
-const HEX_OR_BOON_TYPES = ['hex', 'boon'] as const;
+const TOTEM_TYPES = ['totem'] as const;
 const MEME_TYPES = ['entity', 'meme'] as const;
 const GENERATOR_TYPES = ['generator', 'gen_slowdown'] as const;
 const HEALING_TYPES = ['healing', 'altruism_healing'] as const;
 const NEGATIVE_TYPES = ['sacrifice', 'handicap'] as const;
-const AURA_TYPES = ['aura', 'aura_reading'] as const;
+const TRACKING_TYPES = ['tracking', 'aura_reading'] as const;
 const CHASE_TYPES = ['chase'] as const;
 
 function matchesAny(perk: Perk, types: readonly string[]): boolean {
@@ -80,16 +79,8 @@ export function isExhaustionPerk(perk: Perk): boolean {
   return matchesAny(perk, EXHAUSTION_TYPES);
 }
 
-export function isHexPerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'hex');
-}
-
-export function isBoonPerk(perk: Perk): boolean {
-  return hasPerkType(perk, 'boon');
-}
-
-export function isHexOrBoonPerk(perk: Perk): boolean {
-  return matchesAny(perk, HEX_OR_BOON_TYPES);
+export function isTotemPerk(perk: Perk): boolean {
+  return matchesAny(perk, TOTEM_TYPES);
 }
 
 export function isMemePerk(perk: Perk): boolean {
@@ -108,8 +99,8 @@ export function isNegativePerk(perk: Perk): boolean {
   return matchesAny(perk, NEGATIVE_TYPES);
 }
 
-export function isAuraPerk(perk: Perk): boolean {
-  return matchesAny(perk, AURA_TYPES);
+export function isTrackingPerk(perk: Perk): boolean {
+  return matchesAny(perk, TRACKING_TYPES);
 }
 
 export function isChasePerk(perk: Perk): boolean {
@@ -147,18 +138,18 @@ export function isPerkBlockedByMutator(
  * PRIMARY type matches. Decreased probability is x0.50, increased x1.50.
  */
 const CURSE_WEIGHT_RULES: Readonly<Record<string, { types: readonly string[]; weight: number }>> = {
-  // Curse of Blindness: aura perks drop chance reduced by 50%
-  blindness: { types: AURA_TYPES, weight: 0.5 },
+  // Curse of Blindness: tracking (aura-reading) perks drop chance reduced by 50%
+  blindness: { types: TRACKING_TYPES, weight: 0.5 },
   // No Exhaustion: exhaustion perks drop chance reduced by 50%
   no_exhaustion: { types: EXHAUSTION_TYPES, weight: 0.5 },
   // No Gen Slowdown: generator perks drop chance reduced by 50%
   no_slowdown: { types: GENERATOR_TYPES, weight: 0.5 },
   // Curse of Solitude: healing perks drop chance reduced by 50%
   solo_queue: { types: HEALING_TYPES, weight: 0.5 },
-  // Totem madness: hex and boon perks boosted by 50%
-  hex_boon_only: { types: HEX_OR_BOON_TYPES, weight: 1.5 },
-  hex_roulette: { types: HEX_OR_BOON_TYPES, weight: 1.5 },
-  // Curse of the Clown: entity (chaotic wildcard) perks boosted by 50%
+  // Totem madness: totem (hex and boon) perks boosted by 50%
+  hex_boon_only: { types: TOTEM_TYPES, weight: 1.5 },
+  hex_roulette: { types: TOTEM_TYPES, weight: 1.5 },
+  // Curse of the Clown: entity perks boosted by 50%
   meme_loadout: { types: MEME_TYPES, weight: 1.5 },
   // Pure Bloodlust: chase perks boosted by 50%
   chase_only: { types: CHASE_TYPES, weight: 1.5 },
@@ -198,7 +189,7 @@ export function filterPerksByMutator(
 
   let included: Perk[];
   if (mutator.id === 'hex_boon_only' || mutator.id === 'hex_roulette') {
-    included = perks.filter(isHexOrBoonPerk);
+    included = perks.filter(isTotemPerk);
   } else if (mutator.id === 'meme_loadout') {
     included = perks.filter(isMemePerk);
   } else if (mutator.id === 'negative_only') {

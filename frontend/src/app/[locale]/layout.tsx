@@ -20,6 +20,7 @@ import { SiteBannerGate } from '@/components/layout/SiteBannerGate';
 import { SiteConfigProvider } from '@/context/SiteConfigContext';
 import { Playfair_Display } from 'next/font/google';
 import '@/app/globals.css';
+import { NAV_GROUP_BOOT_SCRIPT } from '@/components/sidebar/navGroupBoot';
 
 // Self-hosted at build time by next/font (no request to Google from visitors' browsers).
 const playfair = Playfair_Display({ subsets: ['latin', 'latin-ext'], variable: '--font-playfair', display: 'swap' });
@@ -48,7 +49,7 @@ export async function generateStaticParams() {
 }
 
 /**
- * Restores the sidebar's collapsed state before the first paint.
+ * Restores the sidebar's collapsed state, and its groups' folded state, before the first paint.
  *
  * `useSidebarState` reads localStorage in an effect, which cannot run until
  * after the first render -- so a user with a collapsed sidebar saw the expanded
@@ -56,7 +57,7 @@ export async function generateStaticParams() {
  * Setting the attribute here, in a blocking script, means frame one is already
  * correct. `<html>` carries `suppressHydrationWarning` for exactly this.
  */
-const SIDEBAR_INIT_SCRIPT = `try{if(localStorage.getItem('lemon_dbd_sidebar_collapsed')==='true'){document.documentElement.setAttribute('data-sidebar','collapsed')}}catch(e){}`;
+const SIDEBAR_INIT_SCRIPT = `try{if(localStorage.getItem('lemon_dbd_sidebar_collapsed')==='true'){document.documentElement.setAttribute('data-sidebar','collapsed')}}catch(e){}${NAV_GROUP_BOOT_SCRIPT}`;
 
 export default async function RootLayout({
   children,

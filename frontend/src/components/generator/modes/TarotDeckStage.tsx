@@ -9,6 +9,7 @@ import type { ChaosMutator } from '@/types/chaos';
 
 import type { TarotType } from '../lib/perkPicker';
 import { pickRandomLoadout, buildDrawnSlots, pickPerkTarotType } from '../lib/perkPicker';
+import { DEFAULT_TYPE_NAMES, tarotCard, tarotImageUrl, type TarotSide } from '../lib/tarotCards';
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { useJackpotCelebration } from '../shared/useJackpotCelebration';
@@ -38,72 +39,24 @@ interface TarotCard {
   flipped: boolean;
 }
 
-const DEFAULT_TYPE_NAMES: Record<TarotType, string> = {
-  hex: 'The Hex',
-  boon: 'The Boon',
-  sacrifice: 'The Sacrifice',
-  exhaustion: 'The Exhaustion',
-  obsession: 'The Obsession',
-  aura: 'The Watcher',
-  generator: 'The Machinist',
-  healing: 'The Caregiver',
-  chase: 'The Chase',
-  stealth: 'The Shadow',
-  entity: 'The Entity',
-  hooks: 'The Hanged Man',
-};
-
-/** The on-disk card-back filenames (public/images/tarot/the-*.webp) follow
- * each type's *display* name, not its internal TarotType key -- most line
- * up (hex/boon/sacrifice/exhaustion/obsession/chase/entity), but five
- * don't: 'aura' ships as the-watcher.webp, 'generator' as the-machinist.webp,
- * 'healing' as the-caregiver.webp, 'stealth' as the-shadow.webp, and 'hooks'
- * as the-hanged-man.webp. Using the raw type key directly 404'd those five
- * and silently fell back to the solid-gradient placeholder. */
-const TAROT_IMAGE_SLUG: Record<TarotType, string> = {
-  hex: 'hex',
-  boon: 'boon',
-  sacrifice: 'sacrifice',
-  exhaustion: 'exhaustion',
-  obsession: 'obsession',
-  aura: 'watcher',
-  generator: 'machinist',
-  healing: 'caregiver',
-  chase: 'chase',
-  stealth: 'shadow',
-  entity: 'entity',
-  hooks: 'hanged-man',
-};
-
-/** Static card art lives under /images/ so the browser caches it
- * cache-first and next.config.ts serves it with long-lived headers. Faces are
- * produced by scripts/generate_tarot_card_faces.py from the art above. */
-const TAROT_IMAGE_BASE = '/images/tarot';
-const TAROT_FACE_DIR = 'faces';
-
-type TarotSide = 'back' | 'face';
-
-const tarotImageUrl = (type: TarotType, side: TarotSide): string =>
-  `${TAROT_IMAGE_BASE}/${side === 'face' ? `${TAROT_FACE_DIR}/` : ''}the-${TAROT_IMAGE_SLUG[type]}.webp`;
-
 /** Warm the browser/SW cache so a card flips onto an already-loaded face. */
-const preloadTarotFace = (type: TarotType): void => {
+const preloadTarotFace = (slug: string): void => {
   if (typeof Image === 'undefined') return;
-  new Image().src = tarotImageUrl(type, 'face');
+  new Image().src = tarotImageUrl(slug, 'face');
 };
 
 /**
  * Card art for a given type and side, with a graceful fallback if the file is
  * ever missing (never renders a broken <img>; the face keeps its solid colour).
  */
-const CardImage: React.FC<{ type: TarotType; side: TarotSide }> = ({ type, side }) => {
+const CardImage: React.FC<{ slug: string; side: TarotSide }> = ({ slug, side }) => {
   const [errored, setErrored] = useState(false);
 
   if (errored) return null;
 
   return (
     <Img
-      src={tarotImageUrl(type, side)}
+      src={tarotImageUrl(slug, side)}
       alt=""
       aria-hidden="true"
       draggable={false}
@@ -145,7 +98,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
       slot,
       flipped: false,
     }));
-    next.forEach((card) => preloadTarotFace(card.type));
+    next.forEach((card) => preloadTarotFace(tarotCard(card.type, role).slug));
     setCards(next);
   };
 
@@ -172,6 +125,8 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
       {cards ? (
         <div ref={resultsRef} className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 lg:grid-cols-4 max-w-full justify-items-center lg:gap-4 xl:gap-6 2xl:gap-8 wide:gap-10 wide-2k:gap-12 wide-4k:gap-16">
           {cards.map((card, idx) => {
+            const { name, slug } = tarotCard(card.type, role);
+            const cardName = typeNames[name] || DEFAULT_TYPE_NAMES[name];
             const { isObscured, onClick } = getSlotInteraction(
               idx,
               card.slot.perk,
@@ -200,11 +155,11 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                     type="button"
                     onClick={() => handleFlip(idx)}
                     disabled={card.flipped}
-                    aria-label={typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
+                    aria-label={cardName}
                     className="group absolute inset-0 overflow-hidden rounded-control bg-gradient-to-br from-bg-elevated to-bg-primary cursor-pointer disabled:cursor-default border-2 border-transparent transition-all duration-300 hover:scale-[1.04] hover:border-accent-amber/70 hover:shadow-lg hover:shadow-accent-amber/40 active:scale-[0.97]"
                     style={{ backfaceVisibility: 'hidden', pointerEvents: card.flipped ? 'none' : 'auto' }}
                   >
-                    <CardImage type={card.type} side="back" />
+                    <CardImage slug={slug} side="back" />
                   </button>
 
                   {/* Front face: the same card stock as the back art (generated
@@ -218,12 +173,12 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
                       pointerEvents: card.flipped ? 'auto' : 'none',
                     }}
                   >
-                    <CardImage type={card.type} side="face" />
+                    <CardImage slug={slug} side="face" />
                     {card.flipped && (
                       <>
                         <div className="relative z-10 pt-1 text-center">
                           <span className="text-micro sm:text-tiny md:text-mini xl:text-xs 2xl:text-sm wide:text-base font-black uppercase tracking-spaced text-tarot-ink drop-shadow-xs">
-                            {typeNames[card.type] || DEFAULT_TYPE_NAMES[card.type]}
+                            {cardName}
                           </span>
                         </div>
                         <div className="relative z-10 flex flex-1 items-center justify-center">

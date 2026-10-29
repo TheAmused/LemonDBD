@@ -28,15 +28,20 @@ const GRID_SIZE_CLASSES: Record<'default' | 'large' | 'fill' | 'tarot' | 'compac
   wheelFlank: 'h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36 xl:h-36 xl:w-36 2xl:h-44 2xl:w-44 wide:h-52! wide:w-52! wide-2k:h-60! wide-2k:w-60! wide-4k:h-72! wide-4k:w-72!',
 };
 
+/** The icon of a named fill card: leaves the lower part of the cell for the name. */
+const NAMED_ICON_CLASS = 'h-[min(64cqh,88cqw)] w-[min(64cqh,88cqw)] max-h-40 max-w-40 shrink-0';
+
 interface PerkCardProps {
   perk: Perk;
   onSelect: (perk: Perk) => void;
   coordinate?: { page: number; slot: number };
   size?: 'default' | 'large' | 'fill' | 'tarot' | 'compact' | 'wheelFlank';
   isBlind?: boolean;
+  /** Print the perk name under the icon (size="fill" only). The name sits on the page, no frame or background. */
+  showName?: boolean;
 }
 
-export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, size = 'default', isBlind = false }) => {
+export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, size = 'default', isBlind = false, showName = false }) => {
   const dict = useDictionary();
   const [avatarError, setAvatarError] = useState(false);
   const [showDisabledModal, setShowDisabledModal] = useState(false);
@@ -53,6 +58,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
     Boolean(perk.is_generic_counterpart);
   const isOwned = perk.is_owned !== false;
 
+  const named = showName && size === 'fill';
   const generalLabel = dict.modal.generalPerk;
   const ariaLabel = `${perk.name}${isGeneral ? (generalLabel ? ` - ${generalLabel}` : '') : (perk.character ? ` - ${perk.character}` : '')}`;
 
@@ -96,7 +102,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
         aria-label={ariaLabel}
         className={`relative flex items-center justify-center duration-200 ${
           size === 'tarot' || size === 'compact' ? 'group-hover:scale-102' : 'group-hover:scale-105'
-        } touch-manipulation rounded-control ${GRID_SIZE_CLASSES[size]}`}
+        } touch-manipulation rounded-control ${named ? 'h-full w-full flex-col gap-1' : GRID_SIZE_CLASSES[size]}`}
       >
         {coordinateLabel && (
           <Badge
@@ -106,62 +112,72 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
           </Badge>
         )}
 
-        <div
-          className={`relative flex h-full w-full items-center justify-center ${
-            perk.is_disabled ? 'opacity-50 grayscale' : !isOwned ? 'opacity-40 grayscale' : ''
-          }`}
-        >
-          <PerkIcon
-            perk={perk}
-            src={iconSrc}
-            className="h-full w-full"
-            imageClassName={`h-full w-full object-contain filter drop-shadow-xl ${
-              size === 'tarot' || size === 'compact'
-                ? 'group-hover:drop-shadow-glow-red-sm'
-                : 'group-hover:drop-shadow-glow-red-sm'
-            } transition-all duration-200 pointer-events-none`}
-          />
+        <div className={`relative flex items-center justify-center ${named ? NAMED_ICON_CLASS : 'h-full w-full'}`}>
+          <div
+            className={`relative flex h-full w-full items-center justify-center ${
+              perk.is_disabled ? 'opacity-50 grayscale' : !isOwned ? 'opacity-40 grayscale' : ''
+            }`}
+          >
+            <PerkIcon
+              perk={perk}
+              src={iconSrc}
+              className="h-full w-full"
+              imageClassName="h-full w-full object-contain filter drop-shadow-xl group-hover:drop-shadow-glow-red-sm transition-all duration-200 pointer-events-none"
+            />
 
-          {avatarSrc && !avatarError && !isGeneral && (
+            {avatarSrc && !avatarError && !isGeneral && (
+              <div
+                className={`absolute bottom-0 right-0 overflow-hidden rounded-full pointer-events-none bg-bg-primary shadow-lg border border-border-color ${
+                  size === 'compact'
+                    ? 'h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7'
+                    : size === 'tarot'
+                      ? 'h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-8 lg:w-8 xl:h-10 xl:w-10 2xl:h-12 2xl:w-12 wide:h-14 wide:w-14'
+                      : size === 'fill'
+                        /* The perk icon itself scales with the grid cell via
+                           container query units (h-[min(88cqh,88cqw)] on the
+                           button above). A fixed-pixel avatar badge doesn't
+                           shrink with it, so on a small cell (many perks per
+                           page, a narrow column) the badge ends up as big as
+                           or bigger than the diamond and hides it entirely.
+                           Sizing the badge off the same cq units keeps it a
+                           constant, small fraction of the perk icon -- which
+                           always stays the dominant, legible element. */
+                        ? named
+                          ? 'h-[min(20cqh,20cqw)] w-[min(20cqh,20cqw)] max-h-11 max-w-11'
+                          : 'h-[min(30cqh,30cqw)] w-[min(30cqh,30cqw)] max-h-14 max-w-14'
+                        : 'h-9 w-9 sm:h-11 sm:w-11 md:h-12 md:w-12 lg:h-13 lg:w-13'
+                }`}
+              >
+                <Img
+                  src={avatarSrc}
+                  alt={perk.character}
+                  onError={() => setAvatarError(true)}
+                  className="h-full w-full object-cover object-top"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            )}
+          </div>
+
+          {!perk.is_disabled && !isOwned && (
             <div
-              className={`absolute bottom-0 right-0 overflow-hidden rounded-full pointer-events-none bg-bg-primary shadow-lg border border-border-color ${
-                size === 'compact'
-                  ? 'h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7'
-                  : size === 'tarot'
-                    ? 'h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-8 lg:w-8 xl:h-10 xl:w-10 2xl:h-12 2xl:w-12 wide:h-14 wide:w-14'
-                    : size === 'fill'
-                      /* The perk icon itself scales with the grid cell via
-                         container query units (h-[min(88cqh,88cqw)] on the
-                         button above). A fixed-pixel avatar badge doesn't
-                         shrink with it, so on a small cell (many perks per
-                         page, a narrow column) the badge ends up as big as
-                         or bigger than the diamond and hides it entirely.
-                         Sizing the badge off the same cq units keeps it a
-                         constant, small fraction of the perk icon -- which
-                         always stays the dominant, legible element. */
-                      ? 'h-[min(30cqh,30cqw)] w-[min(30cqh,30cqw)] max-h-14 max-w-14'
-                      : 'h-9 w-9 sm:h-11 sm:w-11 md:h-12 md:w-12 lg:h-13 lg:w-13'
-              }`}
+              className="absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-bg-primary/90 shadow-xs border border-border-color"
+              {...tip(dict.modal.unownedPerk, undefined, 'status')}
             >
-              <Img
-                src={avatarSrc}
-                alt={perk.character}
-                onError={() => setAvatarError(true)}
-                className="h-full w-full object-cover object-top"
-                loading="lazy"
-                decoding="async"
-              />
+              <Lock className="h-3.5 w-3.5 text-text-muted" />
             </div>
           )}
         </div>
 
-        {!perk.is_disabled && !isOwned && (
-          <div
-            className="absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-bg-primary/90 shadow-xs border border-border-color"
-            {...tip(dict.modal.unownedPerk, undefined, 'status')}
+        {named && (
+          <span
+            className={`type-card-title line-clamp-2 w-full text-balance text-center ${
+              perk.is_disabled || !isOwned ? 'text-text-muted' : 'text-text-primary'
+            }`}
           >
-            <Lock className="h-3.5 w-3.5 text-text-muted" />
-          </div>
+            {perk.name}
+          </span>
         )}
       </TileButton>
 

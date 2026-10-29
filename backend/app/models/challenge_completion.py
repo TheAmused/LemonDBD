@@ -18,7 +18,12 @@ class ChallengeCompletionRecord(Base, ColumnDictMixin["ChallengeCompletionDict"]
     Page Streak does NOT write here for its mode-wide badge -- unlike these
     three, it has no bounded run to freeze a pool against (the roster keeps
     growing), so that badge is computed live instead; see
-    app.services.page_streak.roster.get_live_roster_badge."""
+    app.services.page_streak.roster.get_live_roster_badge.
+
+    ID, Please writes here too, but its runs never complete: a record is its
+    one-time badge for a difficulty (variant milestones / hardcore /
+    hardcore_plus), written when the streak first reaches that difficulty's
+    threshold while the run carries on."""
 
     __tablename__ = "challenge_completion_records"
     _api_exclude = frozenset({"user_id"})

@@ -86,6 +86,8 @@ export default {
   insultsColumnPlain: "Du schreibst",
   insultsColumnBard: "Der Barde spricht",
   insultsClose: "Schließen",
+  insultsCopyHint: "Klicke auf eine Beleidigung, um sie zu kopieren, und füge sie in den Chat nach dem Spiel ein.",
+  insultsCopied: "In die Zwischenablage kopiert",
   insultsSideAria: "Wähle eine Seite",
   insultsSideSurvivor: "Überlebender",
   insultsSideKiller: "Killer",

@@ -1,7 +1,7 @@
 // frontend/src/__tests__/unit/shared/bardInsultsModal.test.tsx
 //
 // The sidebar's Shakespearean-insults dialog: what a player sees and how it closes.
-import { render, screen, within, fireEvent, withNextApp } from '../../helpers/dom';
+import { render, screen, within, fireEvent, waitFor, withNextApp } from '../../helpers/dom';
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
@@ -41,6 +41,25 @@ describe('BardInsultsModal', () => {
     assert.deepEqual(firstRow(), ['GG', 'A fine battle, indeed']);
     fireEvent.click(within(dialog).getByRole('radio', { name: en.sidebar.insultsSideKiller }));
     assert.deepEqual(firstRow(), ['GG', 'A fine battle, indeed']);
+  });
+
+  it('clicking an insult copies the Shakespearean text and confirms it', async () => {
+    const copied: string[] = [];
+    const original = Object.getOwnPropertyDescriptor(globalThis.navigator, 'clipboard');
+    Object.defineProperty(globalThis.navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText: async (text: string) => { copied.push(text); } },
+    });
+    try {
+      render(<BardInsultsModal isOpen onClose={() => {}} />, { wrapper: withNextApp().wrapper });
+      const dialog = screen.getByRole('dialog');
+      fireEvent.click(within(dialog).getByRole('button', { name: 'A fine battle, indeed' }));
+      await waitFor(() => assert.equal(within(dialog).getByRole('status').textContent, en.sidebar.insultsCopied));
+      assert.deepEqual(copied, ['A fine battle, indeed']);
+    } finally {
+      if (original) Object.defineProperty(globalThis.navigator, 'clipboard', original);
+      else delete (globalThis.navigator as unknown as Record<string, unknown>).clipboard;
+    }
   });
 
   it('the header X calls onClose', () => {

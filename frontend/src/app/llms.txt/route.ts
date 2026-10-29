@@ -25,7 +25,7 @@ export async function GET(): Promise<Response> {
     `- [Characters](${link('/characters')}): survivors and killers with their teachable perks`,
     `- [Maps](${link('/maps')}): realm maps with callouts`,
     `- [Perk randomizer](${link('/randomizer')}): random builds from the perks you own`,
-    `- [Challenges](${link('/streaks')}): streak challenge modes (gauntlet, chaos, history, page streak)`,
+    `- [Challenges](${link('/streaks')}): streak challenge modes (gauntlet, chaos, history, page streak, ID, Please)`,
     `- [Minigames](${link('/minigames')}): daily and practice guessing games`,
     `- [Tier lists](${link('/tier-lists')}): official and community tier lists`,
     `- [Smash or Pass](${link('/smash-or-pass')}): community character voting`,

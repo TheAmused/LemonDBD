@@ -2,8 +2,9 @@
 from sqlalchemy import delete, select
 
 from app.core.extensions import db
-from app.models import ChallengeCompletionRecord, ChaosRun, GauntletRun, HistoryRun
+from app.models import ChallengeCompletionRecord, ChaosRun, GauntletRun, HistoryRun, IdPleaseRun
 from app.schemas.streak import ChallengeCompletionDict
+from app.services.id_please.constants import MODE_BY_LANE
 
 
 def record_challenge_completion(
@@ -155,6 +156,12 @@ def fetch_active_run_variants_by_mode(user_id: int) -> dict[str, list[str]]:
     ).all()
     if history_rows:
         result["history"] = list(history_rows)
+
+    # Endless: a run is "active" once the opening is chosen; one still in setup has nothing to resume.
+    for lane, difficulty in db.session.execute(
+        select(IdPleaseRun.lane, IdPleaseRun.difficulty).where(IdPleaseRun.user_id == user_id, IdPleaseRun.current_match > 0)
+    ):
+        result.setdefault(MODE_BY_LANE[lane], []).append(difficulty)
 
     return result
 

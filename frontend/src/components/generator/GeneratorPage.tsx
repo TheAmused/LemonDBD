@@ -14,7 +14,7 @@ import type {
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAudioEnabled, setAudioEnabled } from '@/utils/perkAudio';
-import { computeEligiblePool, computePlayablePool } from './lib/perkPicker';
+import { computeEligiblePool, computePlayablePool, PERKS_PER_PAGE } from './lib/perkPicker';
 import type {
   GeneratorStoredState} from './lib/generatorStorage';
 import {
@@ -51,7 +51,6 @@ interface GeneratorPageProps {
   onSelectPerk: (perk: Perk) => void;
 }
 
-const PERKS_PER_PAGE = 15;
 const KNOWN_MODES: GeneratorMode[] = ['wheel', 'instant', 'slot', 'tarot', 'crate'];
 const FULL_LOADOUT_SIZE = 4;
 

@@ -15,7 +15,7 @@ from app.utils.site_urls import site_page_url
 
 logger = logging.getLogger(__name__)
 
-_MODES_LATIN = {"gauntlet": "Gauntlet", "chaos": "Chaos Streak", "history": "History Streak", "page_streak": "Page Streak"}
+_MODES_LATIN = {"gauntlet": "Gauntlet", "chaos": "Chaos Streak", "history": "History Streak", "id_please": "ID, Please", "id_please_survivor": "ID, Please (Survivor)", "id_please_killer": "ID, Please (Killer)", "page_streak": "Page Streak"}
 
 _TEXTS: dict[str, dict] = {
     "en": {
@@ -51,7 +51,7 @@ _TEXTS: dict[str, dict] = {
         "why_link": "Tus acciones incumplieron la sección «Juego limpio» de nuestras Normas: {url}",
     },
     "ja": {
-        "modes": {"gauntlet": "ガントレット", "chaos": "カオスストリーク", "history": "ヒストリーストリーク", "page_streak": "ページストリーク"},
+        "modes": {"gauntlet": "ガントレット", "chaos": "カオスストリーク", "history": "ヒストリーストリーク", "id_please": "ID, Please", "id_please_survivor": "ID, Please (サバイバー)", "id_please_killer": "ID, Please (キラー)", "page_streak": "ページストリーク"},
         "subject": "チャレンジの進行状況がリセットされました",
         "title": "{challenge} の進行状況がリセットされました",
         "what": "LemonDBDチームによる確認の結果、このチャレンジの進行状況、対戦履歴、クリア記録を削除しました。最初からやり直せます。アカウントやほかのチャレンジには影響ありません。",

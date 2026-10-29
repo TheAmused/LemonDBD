@@ -47,6 +47,7 @@ export const ROUTE_BACKGROUND_EFFECTS: ReadonlyArray<{ prefix: readonly string[]
   { prefix: ['smash-or-pass', 'create'], effect: 'campfire' },
   { prefix: ['streaks'], effect: 'campfire' },  // hub
   { prefix: ['streaks', 'gauntlet-streak'], effect: 'campfire' },
+  { prefix: ['streaks', 'id-please'], effect: 'campfire' },
   { prefix: ['streaks', 'killer', 'chaos-streak'], effect: 'campfire' },
   { prefix: ['streaks', 'killer', 'history-streak'], effect: 'campfire' },
   { prefix: ['streaks', 'killer', 'page-streak'], effect: 'campfire' },  // picker + [killer] run

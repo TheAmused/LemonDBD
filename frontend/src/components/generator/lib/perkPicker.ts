@@ -219,6 +219,14 @@ export function filterPerksByMutator(
 /**
  * Eligibility is role + ownership only.
  */
+/** Perks on one page of the in-game inventory; a perk's [P/S] tag is its place in the alphabetical list of the ones you own. */
+export const PERKS_PER_PAGE = 15;
+
+/** Page and slot (both from 1) of the perk at `index` in the list `computeEligiblePool` returns. */
+export function perkCoordinate(index: number): { page: number; slot: number } {
+  return { page: Math.floor(index / PERKS_PER_PAGE) + 1, slot: (index % PERKS_PER_PAGE) + 1 };
+}
+
 export function computeEligiblePool(
   allPerks: Perk[],
   role: RoleCategory,

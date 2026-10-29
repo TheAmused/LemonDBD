@@ -10,6 +10,8 @@ from app.models import (
     GauntletRun,
     HistoryMatchLog,
     HistoryRun,
+    IdPleaseMatchLog,
+    IdPleaseRun,
     PageStreakPageLog,
     PageStreakRun,
     utcnow,
@@ -65,7 +67,7 @@ class TestStreakCleanupService:
         assert affected["gauntlet_runs"] == 0
         assert db_session.query(GauntletMatchLog).count() == 0
 
-    def test_applies_across_all_four_run_tables(self, db_session: Session) -> None:
+    def test_applies_across_all_five_run_tables(self, db_session: Session) -> None:
         self._stale_gauntlet_run(db_session, days_old=91)
 
         chaos = ChaosRun(user_id=1, difficulty="hell", status="in_progress")
@@ -78,6 +80,19 @@ class TestStreakCleanupService:
         db_session.add(history)
         db_session.commit()
         history.updated_at = utcnow() - timedelta(days=91)
+        db_session.commit()
+
+        id_please = IdPleaseRun(
+            user_id=1,
+            difficulty="hardcore",
+            status="in_progress",
+            current_streak=2,
+            current_match=3,
+            current_loadout={"number": 3, "side": "survivor", "character_id": 1, "perk_ids": [1, 2, 3, 4]},
+        )
+        db_session.add(id_please)
+        db_session.commit()
+        id_please.updated_at = utcnow() - timedelta(days=91)
         db_session.commit()
 
         page = PageStreakRun(
@@ -99,6 +114,7 @@ class TestStreakCleanupService:
             "gauntlet_runs": 1,
             "chaos_runs": 1,
             "history_runs": 1,
+            "id_please_runs": 1,
             "page_streak_runs": 1,
         }
         assert (
@@ -110,6 +126,9 @@ class TestStreakCleanupService:
         assert (
             db_session.query(PageStreakPageLog).filter_by(triggered_by="inactivity").count() == 1
         )
+        assert db_session.query(IdPleaseMatchLog).filter_by(triggered_by="inactivity", result="loss", streak_before=2, streak_after=0).count() == 1
+        db_session.refresh(id_please)
+        assert (id_please.current_match, id_please.current_streak) == (0, 0)
 
     def test_dedicated_lock_connection_plumbing_is_a_noop_on_sqlite(
         self, db_session: Session

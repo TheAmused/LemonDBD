@@ -27,6 +27,8 @@ def _account(login: str, verified: bool) -> dict[str, str]:
         ("get", "/api/v1/gauntlet-streak/run?role=killer"),
         ("post", "/api/v1/gauntlet-streak/result"),
         ("post", "/api/v1/chaos-streak/result"),
+        ("post", "/api/v1/id-please-streak/result"),
+        ("get", "/api/v1/id-please-streak/eligibility"),
         ("post", "/api/v1/page-streak/run/start"),
     ],
 )

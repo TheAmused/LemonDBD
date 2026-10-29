@@ -104,6 +104,8 @@ export default {
   targetHistoryRunsDesc: "Laufender und abgeschlossener History-Serienverlauf",
   targetPageStreakRunsLabel: "Page-Streak-Serienläufe",
   targetPageStreakRunsDesc: "Laufender und abgeschlossener Page-Streak-Serienverlauf",
+  targetIdPleaseRunsLabel: "ID, Please Serienläufe",
+  targetIdPleaseRunsDesc: "Laufende ID, Please Serienläufe und ihr Matchverlauf",
   targetRostersLabel: "Smash-or-Pass-Listen",
   targetRostersDesc: "Listen, Entitäten, Statistiken und Stimmen",
   reasonPlaceholder: "z. B. Stärke verbuggt, temporär deaktiviert während Behebung",
@@ -452,4 +454,7 @@ export default {
   vectorMapSelect: "Karte auswählen",
   vectorMapNoLayout: "Kein Vektor-Grundriss für diese Karte gefunden.",
   vectorMapLoading: "Layout wird geladen...",
+  challengeModeIdPlease: "ID, Please",
+  challengeModeIdPleaseSurvivor: "ID, Please (Überlebender)",
+  challengeModeIdPleaseKiller: "ID, Please (Killer)",
 } as const;

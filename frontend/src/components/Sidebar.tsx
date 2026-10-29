@@ -27,7 +27,7 @@ import { SidebarBottomControls } from './sidebar/SidebarBottomControls';
 import { i18n } from '@/i18n/config';
 import { WhatsNewLauncher } from '@/components/changelog/WhatsNewLauncher';
 import { useChangelogFeed } from '@/components/changelog/useChangelogFeed';
-import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, AdeptBadgeIcon, QuillEditIcon } from '@/components/icons/DbdIcons';
+import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
@@ -227,20 +227,6 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
             />
           ))}
 
-          {/* Opens a dialog, so it is a button rather than a page link. */}
-          <SidebarNavLink
-            id="bard-insults"
-            label={dict.sidebar.insultsButton}
-            icon={QuillEditIcon}
-            color="text-accent-red"
-            activeBg=""
-            isActive={false}
-            hasPopup="dialog"
-            onClick={() => {
-              setInsultsModalOpen(true);
-              setMobileOpen(false);
-            }}
-          />
         </nav>
 
         <SidebarUserSection
@@ -257,6 +243,10 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
             setAuthModalOpen(true);
           }}
           onLogout={logout}
+          onOpenInsults={() => {
+            setInsultsModalOpen(true);
+            setMobileOpen(false);
+          }}
           onNavigateMobile={() => setMobileOpen(false)}
         />
       </div>

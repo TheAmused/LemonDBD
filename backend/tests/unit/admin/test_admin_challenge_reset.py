@@ -14,6 +14,8 @@ from app.models import (
     ChaosRun,
     GauntletRun,
     HistoryRun,
+    IdPleaseMatchLog,
+    IdPleaseRun,
     PageStreakRun,
     User,
 )
@@ -255,3 +257,104 @@ class TestAdminChallengeReset:
         assert client.get(f"/api/v1/users/{cheater.id}/challenges", headers=headers).status_code == 403
         res = client.post(f"/api/v1/users/{cheater.id}/challenges/reset", json={"mode": "chaos", "variant": "easy"}, headers=headers)
         assert res.status_code == 403
+
+
+@pytest.mark.unit
+class TestAdminIdPleaseReset:
+    """ID, Please is endless: the progress bar is the way to its badge, and a reset takes the badge with the run."""
+
+    @pytest.fixture
+    def admin(self, db_session: Session) -> User:
+        return _user(db_session, "ip_admin", "admin")
+
+    @pytest.fixture
+    def player(self, db_session: Session) -> User:
+        user = _user(db_session, "ip_player")
+        run = IdPleaseRun(user_id=user.id, difficulty="hardcore", current_streak=12, current_match=13)
+        run.match_logs.append(IdPleaseMatchLog(
+            attempt=1, result="win", streak_before=11, streak_after=12, match_number=12, side="killer", character_id=1, perk_ids=[1, 2, 3, 4]
+        ))
+        db_session.add_all([run, IdPleaseRun(user_id=user.id, difficulty="milestones", current_streak=80)])
+        _complete(user, "id_please", "hardcore")
+        _complete(user, "id_please", "milestones")
+        db_session.commit()
+        return user
+
+    def test_progress_runs_towards_the_badge_and_stops_there(self, app: Flask, client: FlaskClient, admin: User, player: User) -> None:
+        res = client.get(f"/api/v1/users/{player.id}/challenges", headers=_headers(app, admin))
+        rows = {(c["mode"], c["variant"]): (c["completed"], c["current"], c["total"]) for c in res.get_json()["challenges"]}
+        assert rows == {
+            ("id_please", "hardcore"): (True, 12, 30),
+            ("id_please", "milestones"): (True, 50, 50),
+        }
+
+    def test_reset_deletes_the_run_its_logs_and_the_badge(
+        self, app: Flask, client: FlaskClient, db_session: Session, admin: User, player: User
+    ) -> None:
+        res = client.post(
+            f"/api/v1/users/{player.id}/challenges/reset", json={"mode": "id_please", "variant": "hardcore"}, headers=_headers(app, admin)
+        )
+        assert res.status_code == 200
+        assert (res.get_json()["runs_deleted"], res.get_json()["completions_deleted"]) == (1, 1)
+        assert db_session.query(IdPleaseMatchLog).count() == 0
+        assert [r.difficulty for r in db_session.query(IdPleaseRun).all()] == ["milestones"]
+        assert [(c.mode, c.variant) for c in db_session.query(ChallengeCompletionRecord).all()] == [("id_please", "milestones")]
+
+    def test_the_player_is_emailed_with_the_challenge_name(
+        self, app: Flask, client: FlaskClient, admin: User, player: User
+    ) -> None:
+        with mail.record_messages() as outbox:
+            client.post(
+                f"/api/v1/users/{player.id}/challenges/reset", json={"mode": "id_please", "variant": "hardcore"}, headers=_headers(app, admin)
+            )
+        assert "ID, Please: Hardcore" in outbox[0].body
+
+
+class TestAdminIdPleaseLaneReset:
+    """The survivor and killer lanes are their own challenges: a reset of one leaves the others alone."""
+
+    @pytest.fixture
+    def admin(self, db_session: Session) -> User:
+        return _user(db_session, "lane_admin", "admin")
+
+    @pytest.fixture
+    def player(self, db_session: Session) -> User:
+        user = _user(db_session, "lane_player")
+        db_session.add_all([
+            IdPleaseRun(user_id=user.id, lane="mixed", difficulty="hardcore", current_streak=4, current_match=5),
+            IdPleaseRun(user_id=user.id, lane="survivor", difficulty="hardcore", current_streak=7, current_match=8),
+            IdPleaseRun(user_id=user.id, lane="killer", difficulty="hardcore", current_streak=2, current_match=3),
+        ])
+        _complete(user, "id_please", "hardcore")
+        _complete(user, "id_please_survivor", "hardcore")
+        db_session.commit()
+        return user
+
+    def test_each_lane_is_listed_as_its_own_challenge(self, app: Flask, client: FlaskClient, admin: User, player: User) -> None:
+        res = client.get(f"/api/v1/users/{player.id}/challenges", headers=_headers(app, admin))
+        rows = {(c["mode"], c["variant"]): (c["completed"], c["current"]) for c in res.get_json()["challenges"]}
+        assert rows == {
+            ("id_please", "hardcore"): (True, 4),
+            ("id_please_survivor", "hardcore"): (True, 7),
+            ("id_please_killer", "hardcore"): (False, 2),
+        }
+
+    def test_resetting_one_lane_leaves_the_others(self, app: Flask, client: FlaskClient, db_session: Session, admin: User, player: User) -> None:
+        res = client.post(
+            f"/api/v1/users/{player.id}/challenges/reset",
+            json={"mode": "id_please_survivor", "variant": "hardcore"},
+            headers=_headers(app, admin),
+        )
+        assert res.status_code == 200
+        assert (res.get_json()["runs_deleted"], res.get_json()["completions_deleted"]) == (1, 1)
+        assert sorted(r.lane for r in db_session.query(IdPleaseRun).all()) == ["killer", "mixed"]
+        assert [(c.mode, c.variant) for c in db_session.query(ChallengeCompletionRecord).all()] == [("id_please", "hardcore")]
+
+    def test_the_email_names_the_lane(self, app: Flask, client: FlaskClient, admin: User, player: User) -> None:
+        with mail.record_messages() as outbox:
+            client.post(
+                f"/api/v1/users/{player.id}/challenges/reset",
+                json={"mode": "id_please_killer", "variant": "hardcore"},
+                headers=_headers(app, admin),
+            )
+        assert "ID, Please (Killer): Hardcore" in outbox[0].body

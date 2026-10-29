@@ -121,7 +121,7 @@ export interface AdminPerkRow {
   disabled_reason?: string | null;
 }
 
-export type ChallengeMode = 'gauntlet' | 'chaos' | 'history' | 'page_streak';
+export type ChallengeMode = 'gauntlet' | 'chaos' | 'history' | 'page_streak' | 'id_please' | 'id_please_survivor' | 'id_please_killer';
 
 export interface ChallengeModeSetting {
   id: number;

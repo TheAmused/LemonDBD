@@ -13,6 +13,7 @@ from app.models.admin import AdminAuditLog, ChallengeModeSetting
 from app.models.base import column_dict
 from app.models.changelog import ChangelogPost
 from app.models.chaos import ChaosRun
+from app.models.id_please import IdPleaseRun
 from app.models.chapter import Chapter
 from app.models.character import Killer, Survivor
 from app.models.community import BugReport
@@ -182,6 +183,7 @@ TARGET_GROUPS: dict[str, list[str]] = {
         "gauntlet_runs",
         "chaos_runs",
         "history_runs",
+        "id_please_runs",
         "page_streak_runs",
         "rosters",
     ],
@@ -268,6 +270,7 @@ SIMPLE_DELETE_TARGETS: list[tuple[str, type]] = [
     ("gauntlet_runs", GauntletRun),
     ("chaos_runs", ChaosRun),
     ("history_runs", HistoryRun),
+    ("id_please_runs", IdPleaseRun),
     ("page_streak_runs", PageStreakRun),
     ("map_layouts", MapLayout),
     ("tier_lists", TierList),

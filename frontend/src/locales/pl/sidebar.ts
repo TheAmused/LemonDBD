@@ -86,6 +86,8 @@ export default {
   insultsColumnPlain: "Piszesz",
   insultsColumnBard: "Bard mówi",
   insultsClose: "Zamknij",
+  insultsCopyHint: "Kliknij obelgę, aby ją skopiować, i wklej ją na czacie po grze.",
+  insultsCopied: "Skopiowano do schowka",
   insultsSideAria: "Wybierz stronę",
   insultsSideSurvivor: "Ocalały",
   insultsSideKiller: "Zabójca",

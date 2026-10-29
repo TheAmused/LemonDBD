@@ -4,6 +4,8 @@
  *  for the card-level trophy -- never hardcode a difficulty name elsewhere. */
 export const CHAOS_DIFFICULTY_ORDER = ['easy', 'medium', 'hell'] as const;
 export const HISTORY_MODE_ORDER = ['medium', 'hell'] as const;
+/** ID, Please badges are independent: this order only says which one the card's trophy stands for (the last). */
+export const ID_PLEASE_DIFFICULTY_ORDER = ['milestones', 'hardcore', 'hardcore_plus'] as const;
 
 /**
  * Beating a harder difficulty implies the easier ones too -- so clearing the

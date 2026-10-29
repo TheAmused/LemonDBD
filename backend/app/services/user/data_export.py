@@ -31,6 +31,8 @@ from app.models import (
     GauntletRun,
     HistoryMatchLog,
     HistoryRun,
+    IdPleaseMatchLog,
+    IdPleaseRun,
     MinigameUserStat,
     PageStreakPageLog,
     PageStreakRun,
@@ -61,6 +63,7 @@ _RUNS_WITH_LOGS = (
     ("chaos", ChaosRun, ChaosMatchLog),
     ("gauntlet", GauntletRun, GauntletMatchLog),
     ("history", HistoryRun, HistoryMatchLog),
+    ("id_please", IdPleaseRun, IdPleaseMatchLog),
     ("page_streak", PageStreakRun, PageStreakPageLog),
 )
 

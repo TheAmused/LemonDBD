@@ -7,7 +7,7 @@ import { Button } from '@/components/common/Button';
 import Link from 'next/link';
 import { LogIn, LogOut } from 'lucide-react';
 import { UserAvatar } from '@/components/UserAvatar';
-import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
+import { OverseerEyeIcon, QuillEditIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -15,6 +15,7 @@ import { useSiteConfig } from '@/context/SiteConfigContext';
 import { mustConfirmEmail } from '@/utils/emailVerification';
 import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
+import { SidebarNavLink } from './SidebarNavLink';
 
 export interface SidebarUserSectionProps {
   currentLocale: string;
@@ -24,6 +25,7 @@ export interface SidebarUserSectionProps {
   onOpenAuthModal: () => void;
   onOpenVerifyModal: () => void;
   onLogout: () => void;
+  onOpenInsults: () => void;
   onNavigateMobile?: () => void;
 }
 
@@ -35,12 +37,24 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
       onOpenAuthModal,
       onOpenVerifyModal,
       onLogout,
+      onOpenInsults,
       onNavigateMobile,
     }) => {
   const dict = useDictionary();
   const verificationRequired = useSiteConfig().features.emailVerificationRequired;
   return (
-    <div className="mt-4 pt-3 border-t border-border-color">
+    <div className="mt-4 pt-3 border-t border-border-color space-y-3">
+      {/* Opens a dialog, so it is a button rather than a page link. */}
+      <SidebarNavLink
+        id="bard-insults"
+        label={dict.sidebar.insultsButton}
+        icon={QuillEditIcon}
+        color="text-accent-red"
+        activeBg=""
+        isActive={false}
+        hasPopup="dialog"
+        onClick={onOpenInsults}
+      />
       {!isAuthenticated || !user ? (
         <Button
           variant="soft"

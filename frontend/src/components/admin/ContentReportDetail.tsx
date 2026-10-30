@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/admin/ContentReportDetail.tsx
 import React, { useState } from 'react';
-import { Ban, CheckCircle, ShieldAlert, UserSearch, UserX } from 'lucide-react';
+import { Ban, ShieldAlert, UserSearch, UserX, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
 import { FieldLabel, Textarea } from '@/components/common/Field';
@@ -95,7 +95,7 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
                 aria-label={dict.admin.showInUsers}
                 {...tip(dict.admin.showInUsers, undefined, 'action')}
               >
-                <UserSearch className="icon-sm" aria-hidden="true" />
+                <UserSearch aria-hidden="true" />
               </Button>
             )}
           </dd>
@@ -223,7 +223,7 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
               {dict.admin.contentReportBanAction}
             </Button>
             <Button size="sm" disabled={resolving} onClick={() => { void onResolve('dismiss', null, notes); }}>
-              <CheckCircle className="icon-md" />
+              <CheckCircle2 className="icon-md" />
               {dict.admin.contentReportDismissAction}
             </Button>
           </div>

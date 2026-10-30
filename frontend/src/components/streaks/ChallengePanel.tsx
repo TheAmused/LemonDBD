@@ -2,7 +2,8 @@
 // frontend/src/components/streaks/ChallengePanel.tsx
 
 import React, { useState } from 'react';
-import { BarChart2, BookOpen, ChevronDown, History, RotateCcw, Clapperboard } from 'lucide-react';
+import { BarChart2, ChevronDown, History, RotateCcw, ScrollText } from 'lucide-react';
+import { ClapperboardIcon } from '@/components/icons/DbdIcons';
 import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge } from './CelebrationBadge';
 import { useDictionary } from "@/context/DictionaryContext";
 import { useChallengeAnimations } from './useChallengeAnimations';
@@ -63,7 +64,7 @@ export const ModeSelectButton: React.FC<ModeSelectButtonProps> = ({ label, tone,
     <>
       <span className={`h-2.5 w-2.5 rounded-full ${MODE_DOT_TONES[tone]}`} aria-hidden="true" />
       <span className="type-label-sm max-w-36 truncate text-text-primary">{label}</span>
-      {onClick && <ChevronDown className="h-4 w-4 text-text-muted" aria-hidden="true" />}
+      {onClick && <ChevronDown className="icon-md text-text-muted" aria-hidden="true" />}
     </>
   );
 
@@ -153,7 +154,7 @@ const DrawAnimationButton: React.FC = () => {
       title={dict.streaks.drawAnimations}
       icon={
         <span className="relative flex">
-          <Clapperboard className={`h-5 w-5 ${enabled ? '' : 'opacity-50'}`} aria-hidden="true" />
+          <ClapperboardIcon className={`icon-lg ${enabled ? '' : 'opacity-50'}`} aria-hidden="true" />
           {!enabled && (
             <span
               className="absolute left-1/2 top-1/2 h-0.5 w-6 -translate-x-1/2 -translate-y-1/2 -rotate-45 rounded-full bg-accent-red"
@@ -196,23 +197,23 @@ export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ on
     <HeaderButton
       onClick={onOpenRules}
       title={dict.streaks.rules}
-      icon={<BookOpen className="h-5 w-5" aria-hidden="true" />}
+      icon={<ScrollText className="icon-lg" aria-hidden="true" />}
     />
     <HeaderButton
       onClick={onOpenStats}
       title={dict.streaks.stats}
-      icon={<BarChart2 className="h-5 w-5" aria-hidden="true" />}
+      icon={<BarChart2 className="icon-lg" aria-hidden="true" />}
     />
     <HeaderButton
       onClick={onOpenHistory}
       title={dict.streaks.pastWins}
-      icon={<History className="h-5 w-5" aria-hidden="true" />}
+      icon={<History className="icon-lg" aria-hidden="true" />}
     />
     <HeaderButton
       danger
       onClick={onOpenAbandon}
       title={dict.streaks.abandonRun}
-      icon={<RotateCcw className="h-5 w-5" aria-hidden="true" />}
+      icon={<RotateCcw className="icon-lg" aria-hidden="true" />}
     />
     </Collapsible>
     <Button
@@ -223,7 +224,7 @@ export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ on
       aria-label={dict.streaks.moreActions}
       className="relative col-span-full h-5 w-full p-0 before:absolute before:-inset-y-3 before:inset-x-0 before:content-[''] sm:hidden"
     >
-      <ChevronDown className={`h-5 w-5 transition-transform duration-300 ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
+      <ChevronDown className={`icon-lg transition-transform duration-300 ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
     </Button>
   </>
 );

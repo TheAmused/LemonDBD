@@ -108,7 +108,7 @@ function DescriptionPeek({ text }: { text: string }) {
         onBlur={() => setOpen(false)}
         variant="overlay" size="sm" icon className="absolute bottom-3 left-3 z-30"
       >
-        <Info className="h-4 w-4" aria-hidden="true" />
+        <Info aria-hidden="true" />
       </Button>
     </>
   );
@@ -225,7 +225,7 @@ export function OfficialTierListCard({ list, rankedCount, locale, showNsfw = tru
         )}
         <span className="sm:ml-auto inline-flex items-center gap-0.5 text-accent-red">
           {rankedCount > 0 ? t.continueRanking : t.startRanking}
-          <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+          <ChevronRight className="icon-md transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
         </span>
       </div>
     </Link>
@@ -323,7 +323,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled, showNsfw 
             aria-label={`${t.deleteList} ${customTitle}`}
             variant="overlay" size="sm" icon className="absolute top-3 right-3 z-30 transition-[opacity,color,background-color] hover:bg-accent-red/20 hover:text-accent-red group-has-[[aria-expanded=true]]/banner:opacity-0"
           >
-            <Trash2 className="h-4 w-4" aria-hidden="true" />
+            <Trash2 aria-hidden="true" />
           </Button>
         )}
       </div>
@@ -382,7 +382,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled, showNsfw 
           <span className="text-text-muted type-caption">{date ? formatMessage(t.updatedOn, { date }) : ''}</span>
           <span className="inline-flex items-center gap-0.5 text-accent-red">
             {t.openList}
-            <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+            <ChevronRight className="icon-md transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
           </span>
         </div>
       </div>

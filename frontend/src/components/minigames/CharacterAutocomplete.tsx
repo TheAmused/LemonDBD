@@ -216,7 +216,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
     <div ref={containerRef} className="relative w-full max-w-xl mx-auto z-40">
       <div className="relative flex items-center">
         <div className="absolute left-3.5 text-text-muted pointer-events-none">
-          <Search className="w-5 h-5" />
+          <Search className="icon-lg" />
         </div>
         <Input
           ref={inputRef}
@@ -253,7 +253,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
           aria-label={dict.minigames.toggleSuggestions}
         >
           <ChevronDown
-            className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+            className={`icon-md transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
           />
         </Button>
       </div>
@@ -292,7 +292,7 @@ export const CharacterAutocomplete: React.FC<CharacterAutocompleteProps> = ({
                   isHighlighted ? 'bg-accent-red/20 text-text-primary font-bold' : 'text-text-secondary hover:bg-bg-elevated'
                 }`}
               >
-                <Thumb src={imgSrc} alt={item.name} size="lg" fallback={<PerkHexIcon className="h-5 w-5 text-text-muted" />} />
+                <Thumb src={imgSrc} alt={item.name} size="lg" fallback={<PerkHexIcon className="icon-lg text-text-muted" />} />
 
                 <div className="flex-1 min-w-0">
                   <div className="type-card-title truncate text-text-primary">{item.name}</div>

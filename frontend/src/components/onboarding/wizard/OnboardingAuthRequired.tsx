@@ -31,7 +31,7 @@ export function OnboardingAuthRequired({ locale }: { locale: string }) {
           <Button
             variant="primary"
             onClick={() => setIsAuthModalOpen(true)}
-            leftIcon={<UserIcon className="h-4 w-4" />}
+            leftIcon={<UserIcon className="icon-md" />}
             className="w-full"
           >
             <span>{dict.user.signIn}</span>

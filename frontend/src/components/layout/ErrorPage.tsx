@@ -77,7 +77,7 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ variant, onRetry, referenc
 
       <div className={ERROR_PAGE_ACTIONS}>
         {onRetry ? (
-          <Button variant="secondary" size="lg" onClick={onRetry} leftIcon={<RotateCcw className="h-4 w-4" aria-hidden="true" />}>
+          <Button variant="secondary" size="lg" onClick={onRetry} leftIcon={<RotateCcw className="icon-md" aria-hidden="true" />}>
             <span>{copy.error.retry}</span>
           </Button>
         ) : null}
@@ -85,7 +85,7 @@ export const ErrorPage: React.FC<ErrorPageProps> = ({ variant, onRetry, referenc
           href={`/${locale}`}
           className={buttonClassName('primary', 'lg')}
         >
-          <Home className="h-4 w-4" aria-hidden="true" />
+          <Home className="icon-md" aria-hidden="true" />
           <span>{copy.backHome}</span>
         </Link>
       </div>

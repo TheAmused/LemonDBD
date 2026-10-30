@@ -1,5 +1,5 @@
 'use client';
-import { ThornHeartIcon } from '@/components/icons/DbdIcons';
+import { HeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/smash-or-pass/hub/RosterModals.tsx
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
@@ -149,7 +149,7 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
         <div className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center animate-in fade-in duration-300">
           <div className="absolute inset-0 bg-accent-red/15 backdrop-blur-sm animate-pulse" />
           <div className="relative flex flex-col items-center gap-2 p-6 rounded-card bg-bg-primary/90 border-2 border-accent-red text-center animate-in zoom-in-75 duration-300">
-            <ThornHeartIcon className="h-14 w-14 text-accent-red fill-accent-red animate-bounce" />
+            <HeartIcon className="h-14 w-14 text-accent-red fill-accent-red animate-bounce" />
             <span className="text-xl font-black tracking-widest text-text-primary uppercase">
               {getRosterDisplayName({ slug: rosterSwitchEffect })}
             </span>

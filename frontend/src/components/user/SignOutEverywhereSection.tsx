@@ -43,7 +43,7 @@ export const SignOutEverywhereSection: React.FC<{ className?: string }> = ({ cla
         className={className}
         onClick={() => { void handleClick(); }}
         loading={busy}
-        leftIcon={<LogOut className="h-3.5 w-3.5" />}
+        leftIcon={<LogOut className="icon-sm" />}
         aria-label={t.signOutEverywhereTitle}
         {...tip(t.signOutEverywhereTitle, t.signOutEverywhereDesc, 'action')}
       />

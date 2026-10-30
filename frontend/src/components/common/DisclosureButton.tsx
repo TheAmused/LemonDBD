@@ -15,7 +15,7 @@ export function DisclosureButton({ open, chevron = 'end', className, children, .
   const icon = (
     <ChevronDown
       aria-hidden="true"
-      className={cn('h-4 w-4 shrink-0 text-text-muted transition-transform duration-300 group-hover:text-text-primary motion-reduce:transition-none', open && 'rotate-180')}
+      className={cn('icon-md shrink-0 text-text-muted transition-transform duration-300 group-hover:text-text-primary motion-reduce:transition-none', open && 'rotate-180')}
     />
   );
   return (

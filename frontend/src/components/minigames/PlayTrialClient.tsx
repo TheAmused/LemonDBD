@@ -157,7 +157,7 @@ function PlayTrialContent() {
                 onClick={() => setReportModalOpen(true)}
                 aria-label={dict.tierLists.reportButtonAria}
               >
-                <Flag className="h-4 w-4 text-accent-red" aria-hidden="true" />
+                <Flag className="icon-md text-accent-red" aria-hidden="true" />
                 <span className="type-label-sm text-text-muted">{dict.tierLists.reportButtonAria}</span>
               </Button>
             </div>

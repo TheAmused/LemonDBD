@@ -12,7 +12,7 @@ import { VaultMasteryDials } from '@/components/user/VaultMasteryDials';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { PLAYER_TITLES, type UserShowcaseState } from '@/types/userShowcase';
 import type { StatusFeedback } from '@/types/userProfile';
-import { OverseerEyeIcon, BloodwebIcon } from '@/components/icons/DbdIcons';
+import { CrownIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { Spinner } from '@/components/common/Spinner';
@@ -83,7 +83,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                   borderClassName="border-0"
                 />
                 <span className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-bg-primary/80 text-text-inverted opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity rounded-card">
-                  <Camera className="h-5 w-5 sm:h-6 sm:w-6 mb-1 text-accent-red" />
+                  <Camera className="icon-lg sm:icon-xl mb-1 text-accent-red" />
                   <span className="text-micro sm:text-tiny font-bold uppercase tracking-wider">
                     {dict.user.changeAvatar}
                   </span>
@@ -129,7 +129,6 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                   value: title,
                   label: `« ${title} »`,
                 }))}
-                icon={<BloodwebIcon className="h-3.5 w-3.5 text-accent-amber" />}
                 buttonClassName="border-accent-amber/35 bg-accent-amber/10 text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber text-xs font-bold tracking-wide"
                 menuClassName="bg-bg-surface border-border-color shadow-xl"
                 ariaLabel={dict.user.playerTitle}
@@ -140,7 +139,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1.5 pt-0.5 text-xs text-text-secondary">
               {user.created_at && (
                 <span className="flex items-center gap-1.5">
-                  <Calendar className="h-3.5 w-3.5 text-text-muted shrink-0" />
+                  <Calendar className="icon-sm text-text-muted shrink-0" />
                   <span>
                     {dict.user.memberSince}{' '}
                     <strong className="text-text-primary font-normal">
@@ -154,9 +153,9 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                   href={`/${currentLocale}/admin`}
                   className={buttonClassName('soft', 'xs')}
                 >
-                  <OverseerEyeIcon className="h-3 w-3" />
+                  <CrownIcon className="icon-xs" />
                   <span>{dict.sidebar.adminPanel}</span>
-                  <ChevronRight className="h-2.5 w-2.5" />
+                  <ChevronRight className="icon-2xs" />
                 </Link>
               )}
             </div>

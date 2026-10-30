@@ -514,6 +514,7 @@ export default {
     badgeGradientColor: 'Gradiente / color de insignia',
     markAsFallback: 'Marcar como arquetipo predeterminado de respaldo (usado si ninguna condición coincide)',
     rulesTitle: 'Reglas de evaluación y activadores',
+    removeRule: 'Eliminar regla',
     addCondition: 'Añadir condición',
   },
   sharing: {

@@ -35,7 +35,7 @@ export const UserBugReportsDrawer: React.FC<UserBugReportsDrawerProps> = ({ repo
       onToggle={toggleExpanded}
       banner="/images/banners/banner_bugs.webp"
       titleAddon={unreadCount > 0 ? <UnreadDot className="absolute -right-4 top-0" label={dict.user.newFeedback} /> : null}
-      headerAction={<Button variant="primary" size="sm" onClick={onOpenReportModal} leftIcon={<Plus className="h-3.5 w-3.5" />} className="h-7 py-0 text-xs"><span>{dict.user.reportNewBug}</span></Button>}
+      headerAction={<Button variant="primary" size="sm" onClick={onOpenReportModal} leftIcon={<Plus className="icon-sm" />} className="h-7 py-0 text-xs"><span>{dict.user.reportNewBug}</span></Button>}
       bodyClassName="p-3 sm:p-4"
     >
       <UserBugReportsList

@@ -6,7 +6,6 @@ import type { HistoryMode } from '@/types/historyStreak';
 import { ChallengeModeModal, buildCompletionTiles } from '../ChallengeModeModal';
 import { HistoryRulesModal } from './HistoryRulesModal';
 import { HISTORY_MODE_ORDER } from '@/utils/challengeTierCompletion';
-import { TierMediumIcon, TierHellIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from "@/context/DictionaryContext";
 
 export interface HistoryModeModalProps {
@@ -40,14 +39,12 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
         value: 'medium',
         label: s.historyMediumLabel,
         description: s.historyMediumDesc,
-        icon: TierMediumIcon,
         image: '/images/streaks/modes/history-default.webp',
       },
       {
         value: 'hell',
         label: s.historyHellLabel,
         description: s.historyHellDesc,
-        icon: TierHellIcon,
         image: '/images/streaks/modes/history-hell.webp',
       },
     ],

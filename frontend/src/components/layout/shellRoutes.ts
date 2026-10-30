@@ -93,7 +93,7 @@ export const ROUTE_SHELLS: ReadonlyArray<ShellRoute> = [
   { prefix: ['reset-password'], shell: false },  // a bare, centred form: no sidebar
   { prefix: ['rules'], shell: LEGAL },
   { prefix: ['settings'], shell: { padding: 'spacious', mainClassName: 'flex flex-col items-center justify-center min-h-screen-nav lg:min-h-screen overflow-y-auto relative' } },
-  { prefix: ['smash-or-pass'], shell: { mainClassName: 'overflow-y-auto theme-smash' } },  // hub
+  { prefix: ['smash-or-pass'], shell: { mainClassName: 'overflow-y-auto' } },  // hub
   { prefix: ['smash-or-pass', 'create'], shell: TIER_LIST_WORKSPACE },
   {
     prefix: ['streaks'],  // hub, [role], and every challenge run

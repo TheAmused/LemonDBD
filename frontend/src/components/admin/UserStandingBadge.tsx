@@ -4,7 +4,7 @@
 // Whether an account is in good standing, suspended (until when) or banned.
 
 import React from 'react';
-import { CheckCircle, Clock, XCircle } from 'lucide-react';
+import { Clock, XCircle, CheckCircle2 } from 'lucide-react';
 import { Badge } from '@/components/common/Badge';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { formatDateTime } from '@/utils/format';
@@ -31,7 +31,7 @@ export function UserStandingBadge({ user }: { user: Pick<UserRow, 'is_active' | 
     );
   }
   return (
-    <Badge tone="green" size="sm" plain icon={<CheckCircle className="icon-sm" aria-hidden="true" />}>
+    <Badge tone="green" size="sm" plain icon={<CheckCircle2 className="icon-sm" aria-hidden="true" />}>
       {dict.stats.active}
     </Badge>
   );

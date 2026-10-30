@@ -98,7 +98,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
             onChange={(id) => onPreset(id as LadderPresetId)}
             options={LADDER_PRESETS.map((preset) => ({ value: preset.id, label: c.presets[preset.id], icon: <PresetSwatch colors={preset.colors} /> }))}
             label={activePreset ? undefined : '—'}
-            icon={activePreset ? undefined : <ListOrdered className="h-4 w-4" aria-hidden="true" />}
+            icon={activePreset ? undefined : <ListOrdered className="icon-md" aria-hidden="true" />}
             ariaLabel={c.presetsLabel}
             buttonClassName="min-h-10"
             minWidthClass="min-w-55"
@@ -139,7 +139,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                   aria-label={formatMessage(t.tierAria, { label: tier.label })}
                   className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex w-9 sm:w-10 shrink-0 items-center justify-center border-r border-border-color/80 text-text-muted hover:text-text-primary hover:bg-bg-elevated cursor-grab active:cursor-grabbing touch-none select-none transition-colors" press={false}
                 >
-                  <GripVertical className="h-4 w-4" aria-hidden="true" />
+                  <GripVertical className="icon-md" aria-hidden="true" />
                 </TileButton>
 
                 {/* Tier Color & Label Badge Button */}
@@ -176,7 +176,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                     aria-label={formatMessage(c.removeTierAria, { label: tier.label })}
                     className="pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-full w-9 sm:w-10 items-center justify-center text-text-muted hover:text-accent-red hover:bg-accent-red/10 disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
                   >
-                    <X className="h-4 w-4" aria-hidden="true" />
+                    <X className="icon-md" aria-hidden="true" />
                   </button>
                 </div>
               </div>
@@ -223,7 +223,7 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
           variant="secondary"
           onClick={add}
           disabled={tiers.length >= TIER_LIST_LIMITS.maxTiers}
-          leftIcon={<Plus className="h-4 w-4" aria-hidden="true" />}
+          leftIcon={<Plus className="icon-md" aria-hidden="true" />}
           className="min-h-10 px-6"
         >
           {t.addTier}

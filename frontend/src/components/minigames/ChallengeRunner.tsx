@@ -6,11 +6,11 @@ import { lookup } from '@/utils/lookup';
 import { Button } from '@/components/common/Button';
 import React, { useCallback, useMemo, useState } from 'react';
 import {
-  Trophy,
   ArrowRight,
   CheckCircle2,
   XCircle,
-  Flame,
+  Flag,
+  RotateCcw,
 } from 'lucide-react';
 import type {
   ChallengeDefinition,
@@ -439,9 +439,9 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
               }`} press={false}
             >
               {isWon ? (
-                <CheckCircle2 className="w-3.5 h-3.5 text-accent-green" />
+                <CheckCircle2 className="icon-sm text-accent-green" />
               ) : isLost ? (
-                <XCircle className="w-3.5 h-3.5 text-accent-red" />
+                <XCircle className="icon-sm text-accent-red" />
               ) : (
                 <span>R{idx + 1}</span>
               )}
@@ -468,7 +468,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
 
       {/* Attempts Remaining Counter */}
       <div className="mb-4 type-strong text-text-secondary flex items-center gap-1.5">
-        <Flame className="w-4 h-4 text-accent-red" />
+        <RotateCcw className="icon-md text-accent-red" />
         <span>
           {attemptsRemaining > 0
             ? formatMessage(t.attemptsRemaining, { count: attemptsRemaining }, locale)
@@ -514,7 +514,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
                   onClick={handleNextRound}
                 >
                   <span>{t.nextRound}</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight />
                 </Button>
               ) : (
                 <Button
@@ -522,7 +522,7 @@ export const ChallengeRunner: React.FC<ChallengeRunnerProps> = ({ challenge, cat
                   size="lg"
                   onClick={() => setIsFinished(true)}
                 >
-                  <Trophy className="w-4 h-4" />
+                  <Flag />
                   <span>{t.finishTrial}</span>
                 </Button>
               )}

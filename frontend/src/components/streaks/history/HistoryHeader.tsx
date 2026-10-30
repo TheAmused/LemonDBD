@@ -7,9 +7,9 @@ import type { HistoryMode } from '@/types/historyStreak';
 import { Flame } from 'lucide-react';
 import { FreezeBadge } from '../FreezeBadge';
 import { ChallengeHeaderLayout, ModeSelectButton, StandardHeaderActions } from '../ChallengePanel';
-import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { StreakStatTiles } from '../StreakStatTiles';
 import { useDictionary } from "@/context/DictionaryContext";
+import { TrophyIcon } from '@/components/icons/DbdIcons';
 
 const MODE_TONE = { medium: 'amber', hell: 'red' } as const;
 
@@ -51,8 +51,8 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
             best={bestKillersBeaten}
             currentLabel={dict.streaks.current}
             bestLabel={dict.streaks.best}
-            currentIcon={<Flame className="h-5 w-5" />}
-            bestIcon={<AdeptBadgeIcon className="h-5 w-5" />}
+            currentIcon={<Flame className="icon-lg" />}
+            bestIcon={<TrophyIcon className="icon-lg" />}
           />
           <FreezeBadge frozen={poolFrozen} />
         </>

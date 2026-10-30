@@ -76,7 +76,7 @@ export const DeleteAccountSection: React.FC<{ iconOnly?: boolean }> = ({ iconOnl
         size="sm"
         icon={iconOnly}
         onClick={() => setOpen(true)}
-        leftIcon={<Trash2 className="h-3.5 w-3.5" />}
+        leftIcon={<Trash2 className="icon-sm" />}
         aria-label={t.deleteAccountTitle}
         {...tip(t.deleteAccountTitle, t.deleteAccountDesc, 'action')}
       >

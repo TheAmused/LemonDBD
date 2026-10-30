@@ -514,6 +514,7 @@ export default {
     badgeGradientColor: 'Abzeichen-Verlauf / Farbe',
     markAsFallback: 'Als Standard-Fallback-Archetyp markieren (verwendet, wenn keine Bedingungen erfüllt sind)',
     rulesTitle: 'Bewertungsregeln & Auslöser',
+    removeRule: 'Regel entfernen',
     addCondition: 'Bedingung hinzufügen',
   },
   sharing: {

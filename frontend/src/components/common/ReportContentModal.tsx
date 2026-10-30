@@ -2,7 +2,7 @@
 // frontend/src/components/common/ReportContentModal.tsx
 
 import React, { useState, useCallback } from 'react';
-import { AlertCircle, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { CheckCircle2, ShieldAlert, CircleAlert, TriangleAlert } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -148,7 +148,7 @@ export function ReportContentModalBody({
     return (
       <div className="flex flex-col items-center gap-4 py-4 text-center">
         <IconTile tone="green" size="md">
-          <CheckCircle2 className="h-6 w-6" aria-hidden="true" />
+          <CheckCircle2 className="icon-xl" aria-hidden="true" />
         </IconTile>
         <div className="flex flex-col gap-1 max-w-sm">
           <p className="type-body-lg text-text-secondary">{t.reportSuccess}</p>
@@ -164,7 +164,7 @@ export function ReportContentModalBody({
     return (
       <div className="flex flex-col items-center gap-4 py-4 text-center">
         <IconTile tone="amber" size="md">
-          <AlertCircle className="h-6 w-6" aria-hidden="true" />
+          <TriangleAlert className="icon-xl" aria-hidden="true" />
         </IconTile>
         <div className="flex flex-col gap-1 max-w-sm">
           <p className="type-body-lg text-text-secondary">{t.reportPaused}</p>
@@ -180,7 +180,7 @@ export function ReportContentModalBody({
     return (
       <div className="flex flex-col items-center gap-4 py-4 text-center">
         <IconTile tone="amber" size="md">
-          <AlertCircle className="h-6 w-6" aria-hidden="true" />
+          <TriangleAlert className="icon-xl" aria-hidden="true" />
         </IconTile>
         <div className="flex flex-col gap-1 max-w-sm">
           <p className="type-body-lg text-text-secondary">{t.reportAlreadyBanned}</p>
@@ -196,7 +196,7 @@ export function ReportContentModalBody({
     <form onSubmit={(e) => { void handleSubmit(e); }} className="flex flex-col gap-4 py-1">
       {!manifest && (
         <div className="flex items-start gap-3 rounded-card border border-border-color bg-bg-elevated/40 p-3 text-xs text-text-secondary">
-          <ShieldAlert className="h-4 w-4 shrink-0 text-accent-amber mt-0.5" aria-hidden="true" />
+          <ShieldAlert className="icon-md shrink-0 text-accent-amber mt-0.5" aria-hidden="true" />
           <span>{t.reportNoManifest}</span>
         </div>
       )}
@@ -206,7 +206,7 @@ export function ReportContentModalBody({
           role="alert"
           className="flex items-start gap-3 rounded-card border border-accent-red/30 bg-accent-red/10 p-3 text-xs text-accent-red"
         >
-          <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" aria-hidden="true" />
+          <CircleAlert className="icon-md shrink-0 mt-0.5" aria-hidden="true" />
           <span>{t.reportError}</span>
         </div>
       )}

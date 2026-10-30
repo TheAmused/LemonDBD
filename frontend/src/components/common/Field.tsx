@@ -93,7 +93,7 @@ export const IconInput = React.forwardRef<HTMLInputElement, IconInputProps>(func
 ) {
   return (
     <div className={cn('relative', wrapperClassName)}>
-      <Icon aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-muted" />
+      <Icon aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 icon-md -translate-y-1/2 text-text-muted" />
       <Input ref={ref} fieldSize={fieldSize} className={cn('pl-9', className)} {...rest} />
     </div>
   );
@@ -137,7 +137,7 @@ const TokenSearchFrame = React.forwardRef<
       ref={frameRef}
       className={cn(TOKEN_FIELD_FRAME, FIELD_SIZES[fieldSize], pill ? FIELD_RADIUS_PILL : FIELD_RADIUS, wrapperClassName)}
     >
-      <Search aria-hidden="true" className="h-4 w-4 shrink-0 text-text-muted" />
+      <Search aria-hidden="true" className="icon-md shrink-0 text-text-muted" />
       <span className="flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto [scrollbar-width:none]">
         {tokens.map((token) => (
           // Slimmer than a standalone chip so the field keeps its height on touch screens too.
@@ -151,7 +151,7 @@ const TokenSearchFrame = React.forwardRef<
             className="px-2 py-0.5 leading-tight pointer-coarse:min-h-0"
           >
             {token.label}
-            <X aria-hidden="true" className="h-3 w-3" />
+            <X aria-hidden="true" className="icon-xs" />
           </ToggleChip>
         ))}
         <input
@@ -178,7 +178,7 @@ const TokenSearchFrame = React.forwardRef<
           onClick={onClear}
           className="relative flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-bg-surface hover:text-text-primary after:absolute after:-inset-3"
         >
-          <X aria-hidden="true" className="h-3 w-3" />
+          <X aria-hidden="true" className="icon-xs" />
         </button>
       )}
       {trailing && <span className="shrink-0 border-l border-border-color pl-2.5">{trailing}</span>}

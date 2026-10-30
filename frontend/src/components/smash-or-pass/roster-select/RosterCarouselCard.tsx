@@ -2,10 +2,10 @@
 // frontend/src/components/smash-or-pass/roster-select/RosterCarouselCard.tsx
 import {
   CardStackIcon,
-  CautionVeilIcon,
-  PadlockHeartIcon,
-  SealCheckIcon,
-  ThornHeartIcon,
+  HeartIcon,
+  LockIcon,
+  MatureIcon,
+  CheckIcon,
 } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
 import type { RosterItem } from '@/types/smashOrPass';
@@ -155,7 +155,7 @@ export function RosterCarouselCard({
         <div
           className="absolute top-4 left-4 sm:top-5 sm:left-5 flex items-center gap-1.5 px-3 py-1.5 rounded-card bg-bg-primary/80 backdrop-blur-md border border-border-color text-text-inverted type-strong-fluid shadow-md pointer-events-none"
         >
-          <CardStackIcon className="h-4 w-4 text-accent-red" aria-hidden="true" />
+          <CardStackIcon className="icon-md text-accent-red" aria-hidden="true" />
           <span>{count}</span>
         </div>
       )}
@@ -165,7 +165,7 @@ export function RosterCarouselCard({
           data-testid="roster-nsfw-badge"
           className="absolute top-4 left-1/2 -translate-x-1/2 sm:top-5 flex items-center gap-1 px-2.5 py-1 rounded-card bg-accent-red text-text-inverted text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
         >
-          <CautionVeilIcon className="h-3.5 w-3.5" aria-hidden="true" />
+          <MatureIcon className="icon-sm" aria-hidden="true" />
           <span>{dict.smashOrPass.nsfw.badge}</span>
         </div>
       )}
@@ -183,7 +183,7 @@ export function RosterCarouselCard({
         <div
           className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1 px-3 py-1.5 rounded-card bg-accent-red text-text-inverted type-strong pointer-events-none"
         >
-          <SealCheckIcon className="h-4 w-4" aria-hidden="true" />
+          <CheckIcon className="icon-md" aria-hidden="true" />
           <span>{dict.smashOrPass.active}</span>
         </div>
       )}
@@ -200,11 +200,11 @@ export function RosterCarouselCard({
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
           {isRosterEnabled ? (
             <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-accent-red/20 border-2 border-accent-red/50 backdrop-blur-sm animate-pulse">
-              <ThornHeartIcon className="h-8 w-8 sm:h-10 sm:w-10 text-accent-red" />
+              <HeartIcon className="h-8 w-8 sm:h-10 sm:w-10 text-accent-red" />
             </div>
           ) : (
             <div className="flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-bg-elevated border-2 border-border-color shadow-2xl backdrop-blur-sm">
-              <PadlockHeartIcon className="h-8 w-8 sm:h-9 sm:w-9 text-text-muted" />
+              <LockIcon className="h-8 w-8 sm:h-9 sm:w-9 text-text-muted" />
             </div>
           )}
         </div>

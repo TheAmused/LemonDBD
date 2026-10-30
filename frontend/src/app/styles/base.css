@@ -11,11 +11,11 @@
     font-family: var(--font-mono);
   }
 
-  /* Smash or Pass: same body font as the rest of the site, a more elegant display face on headings and key controls. */
-  .theme-smash :is(h1, h2, h3, h4, [role="tab"], .font-display) {
-    font-family: var(--font-display);
-    letter-spacing: 0.01em;
-  }
+  /* Icons inside a Button take the button's icon size (set by Button). In the base layer on purpose:
+   * an icon with its own size utility keeps it, because utilities outrank base. */
+  .button-icons-sm > svg { width: 0.875rem; height: 0.875rem; flex-shrink: 0; }
+  .button-icons-md > svg { width: 1rem; height: 1rem; flex-shrink: 0; }
+  .button-icons-lg > svg { width: 1.25rem; height: 1.25rem; flex-shrink: 0; }
 
   :root,
   .light {

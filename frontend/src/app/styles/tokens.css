@@ -213,11 +213,9 @@
 
   /* ONE font system for the whole site. No component picks a font family:
    *   --font-sans    everything (the Challenges page look); system stack, nothing to download
-   *   --font-display Smash or Pass headings only, via the .theme-smash scope below
    *   --font-mono    real code only (<code>, <pre>, <kbd>, <samp>)
    */
   --font-sans: ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-  --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
 
   /* Corner radii: ONE scale of four roles, the same on every screen width. Tailwind's stock
    * scale (rounded-lg, -xl, ...) is switched off, so these are the only radii that exist:
@@ -391,12 +389,14 @@
 /* ---------------------------------------------------------------------------
  * Sizes that have no theme namespace: named so a component never types the number.
  * --------------------------------------------------------------------------- */
-/* Icon boxes. Put the size on the icon: <Icon className="icon-sm" />. */
+/* Icon boxes, the one way to size an icon: <Icon className="icon-sm" />. An icon straight inside a
+ * Button or ToggleChip needs no size at all (`.button-icons-*` in base.css). Bigger artwork is not an icon. */
 @utility icon-2xs { width: 0.625rem; height: 0.625rem; }
 @utility icon-xs { width: 0.75rem; height: 0.75rem; }
 @utility icon-sm { width: 0.875rem; height: 0.875rem; }
 @utility icon-md { width: 1rem; height: 1rem; }
-@utility icon-lg { width: 1.5rem; height: 1.5rem; }
+@utility icon-lg { width: 1.25rem; height: 1.25rem; }
+@utility icon-xl { width: 1.5rem; height: 1.5rem; }
 
 /* Heights of scrolling lists and of skeletons that stand in for a loaded section. */
 @utility max-h-list { max-height: 36rem; }

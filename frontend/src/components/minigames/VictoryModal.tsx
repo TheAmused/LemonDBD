@@ -97,12 +97,12 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
             >
               {copied ? (
                 <>
-                  <Check className="w-4 h-4" />
+                  <Check />
                   <span>{t.copiedToClipboard}</span>
                 </>
               ) : (
                 <>
-                  <Share2 className="w-4 h-4" />
+                  <Share2 />
                   <span>{t.copyResults}</span>
                 </>
               )}
@@ -114,7 +114,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
                 size="lg"
                 onClick={onPlayAgain}
               >
-                <RotateCcw className="w-4 h-4" />
+                <RotateCcw />
                 <span>{t.playAgain}</span>
               </Button>
             )}
@@ -123,7 +123,7 @@ export const VictoryModal: React.FC<VictoryModalProps> = ({ challenge, roundGues
               href={`/${locale}/minigames`}
               className={buttonClassName('secondary', 'md', 'w-full')}
             >
-              <Home className="w-4 h-4" />
+              <Home className="icon-md" />
               <span>{t.backToMinigames}</span>
             </Link>
         </div>

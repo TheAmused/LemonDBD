@@ -234,7 +234,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
         <Surface tone="elevated" padding="sm" className="flex items-center justify-between bg-bg-elevated/60 text-xs">
           <div className="flex items-center gap-2.5 text-text-secondary">
             <div className="flex h-7 w-7 items-center justify-center rounded-chip bg-bg-elevated border border-border-color text-text-secondary" aria-hidden="true">
-              <LemonIcon className="h-4 w-4" />
+              <LemonIcon className="icon-md" />
             </div>
             <div>
               <p className="font-bold text-text-primary">
@@ -246,7 +246,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
             </div>
           </div>
           <Badge tone="green" size="xs" plain square>
-            <UserCheck className="h-3 w-3" aria-hidden="true" />
+            <UserCheck className="icon-xs" aria-hidden="true" />
             {t.verified || ''}
           </Badge>
         </Surface>
@@ -256,7 +256,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
           htmlFor="bug-report-email"
          
           required
-          icon={<Mail className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />}
+          icon={<Mail className="icon-sm text-text-muted" aria-hidden="true" />}
         >
           <Input
             id="bug-report-email"
@@ -324,7 +324,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
                 aria-label={`${t.bugRemoveScreenshot} ${idx + 1}`}
                 className="absolute inset-0 bg-accent-red/80 opacity-0 group-hover:opacity-100 flex items-center justify-center text-text-inverted transition-opacity focus:opacity-100"
               >
-                <Trash2 className="h-4 w-4" aria-hidden="true" />
+                <Trash2 className="icon-md" aria-hidden="true" />
               </button>
             </Surface>
           ))}
@@ -335,7 +335,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
               onClick={() => fileInputRef.current?.click()}
               variant="secondary" size="sm" dashed className="h-16 w-28 flex-col gap-0.5"
             >
-              <Upload className="h-4 w-4 mb-0.5" aria-hidden="true" />
+              <Upload className="icon-md mb-0.5" aria-hidden="true" />
               <span>{t.bugUploadImage || ''}</span>
             </Button>
           )}

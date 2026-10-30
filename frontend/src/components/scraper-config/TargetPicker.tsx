@@ -67,7 +67,7 @@ export function TargetPicker({
             <div key={group.key} className="rounded-card border border-border-color bg-bg-primary/40 p-3 space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <GroupIcon className="h-3.5 w-3.5 text-accent-red" />
+                  <GroupIcon className="icon-sm text-accent-red" />
                   <span className="type-label-xs text-text-primary">{groupLabel}</span>
                   <InfoChip>
                     {selectedInGroup.length}/{groupTargets.length}
@@ -99,9 +99,9 @@ export function TargetPicker({
                     >
                       <span className="pt-0.5" aria-hidden="true">
                         {isSelected ? (
-                          <SelectedIcon className="h-4 w-4 text-accent-red" />
+                          <SelectedIcon className="icon-md text-accent-red" />
                         ) : (
-                          <UnselectedIcon className="h-4 w-4 text-text-muted" />
+                          <UnselectedIcon className="icon-md text-text-muted" />
                         )}
                       </span>
                       <span>

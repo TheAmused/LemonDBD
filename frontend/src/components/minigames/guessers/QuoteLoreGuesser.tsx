@@ -59,7 +59,7 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({ roundConfig,
       <Surface padding="none" className="w-full max-w-xl p-8 shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
         {/* Atmospheric Quote Icon Header */}
         <div className="flex items-center gap-2 mb-4 px-3 py-1 rounded-full bg-accent-red/10 border border-accent-red/30 text-accent-red type-label-sm">
-          {isPerkQuote ? <Quote className="w-3.5 h-3.5" /> : <BookOpen className="w-3.5 h-3.5" />}
+          {isPerkQuote ? <Quote className="icon-sm" /> : <BookOpen className="icon-sm" />}
           <span>{dict.minigames.modes.quote_lore}</span>
         </div>
 
@@ -103,7 +103,7 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({ roundConfig,
                 />
               </div>
             )}
-            <Check className="w-4 h-4" />
+            <Check className="icon-md" />
             <span>{dict.minigames.attributeValues.correct}: {targetName}</span>
           </div>
         )}
@@ -135,7 +135,7 @@ export const QuoteLoreGuesser: React.FC<QuoteLoreGuesserProps> = ({ roundConfig,
                     </span>
                   )}
                 </div>
-                {isCorrect ? <Check className="w-4 h-4" /> : <X className="w-4 h-4 opacity-60" />}
+                {isCorrect ? <Check className="icon-md" /> : <X className="icon-md opacity-60" />}
               </div>
             );
           })}

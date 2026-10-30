@@ -13,10 +13,10 @@
 // Forms need no changes: keep using `required`, `type`, `minLength`...
 
 import React, { useEffect, useRef, useState } from 'react';
-import { AlertCircle } from 'lucide-react';
 import { TooltipBubble } from '@/components/common/Tooltip';
 import { useDictionary } from '@/context/DictionaryContext';
 import { getValidationMessage } from '@/utils/formValidation';
+import { CircleAlert } from 'lucide-react';
 
 type FormControl = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 
@@ -124,7 +124,7 @@ export const FormValidationProvider: React.FC = () => {
     <>
       <TooltipBubble anchor={active.el} placement="bottom" variant="error">
         <span className="flex items-center gap-2 type-strong text-text-primary">
-          <AlertCircle aria-hidden="true" className="h-4 w-4 shrink-0 text-accent-red" />
+          <CircleAlert aria-hidden="true" className="icon-md shrink-0 text-accent-red" />
           <span>{active.message}</span>
         </span>
       </TooltipBubble>

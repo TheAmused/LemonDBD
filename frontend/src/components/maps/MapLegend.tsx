@@ -77,7 +77,7 @@ export const MapLegend: React.FC<MapLegendProps> = ({
           onClick={onClose}
           aria-label={dict.modal.close}
         >
-          <X className="w-3.5 h-3.5" aria-hidden="true" />
+          <X aria-hidden="true" />
         </Button>
       </div>
 
@@ -87,13 +87,13 @@ export const MapLegend: React.FC<MapLegendProps> = ({
         <div className="space-y-2">
           <div className="flex items-center gap-2.5">
             <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-control bg-accent-red/15 text-accent-red border border-accent-red/30">
-              <Building2 className="w-3.5 h-3.5" aria-hidden="true" />
+              <Building2 className="icon-sm" aria-hidden="true" />
             </span>
             <span className="text-text-primary font-medium">{dict.maps.mainBuildingYes}</span>
           </div>
           <div className="flex items-center gap-2.5">
             <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-control bg-bg-surface border border-border-color text-text-primary">
-              <Home className="w-3.5 h-3.5" aria-hidden="true" />
+              <Home className="icon-sm" aria-hidden="true" />
             </span>
             <span className="text-text-primary font-medium">{dict.maps.shackYes}</span>
           </div>
@@ -102,7 +102,7 @@ export const MapLegend: React.FC<MapLegendProps> = ({
         {/* Clock callouts */}
         <div className="border-t border-border-color/60 pt-3 space-y-1">
           <div className="flex items-center gap-1.5 text-text-primary font-semibold">
-            <Compass className="w-3.5 h-3.5 text-accent-amber shrink-0" aria-hidden="true" />
+            <Compass className="icon-sm text-accent-amber shrink-0" aria-hidden="true" />
             <span>{dict.maps.legendClockTitle}</span>
           </div>
           <p className="type-micro text-text-secondary leading-relaxed pl-5">

@@ -24,7 +24,7 @@ export function StreakMatchRow<TLog extends StreakMatchLogBase>({ log, renderLab
       <div className="pl-1">
         {log.triggered_by === 'inactivity' ? (
           <div className="flex items-center gap-1 type-card-title text-text-secondary">
-            <Clock className="w-3.5 h-3.5" />
+            <Clock className="icon-sm" />
             {dict.streaks.autoLossInactive}
           </div>
         ) : (

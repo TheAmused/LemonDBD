@@ -1,5 +1,5 @@
 'use client';
-import { EntityHeartIcon, BloodwebIcon } from '@/components/icons/DbdIcons';
+import { SparkleIcon, MedkitIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/character-detail/components/SurvivorEquipmentSection.tsx
 import { Tabs } from '@/components/common/Tabs';
 import React, { useMemo } from 'react';
@@ -105,13 +105,13 @@ function getSurvivorAddonCategory(it: AddonItem): SurvivorCategoryKey {
 }
 
 const CATEGORY_ICONS: Record<SurvivorCategoryKey, React.ComponentType<{ className?: string }>> = {
-  medkit: EntityHeartIcon,
+  medkit: MedkitIcon,
   toolbox: Wrench,
   flashlight: Flashlight,
   key: Key,
   map: MapIcon,
   fog_vial: Cloud,
-  event: BloodwebIcon,
+  event: SparkleIcon,
   trial_exclusive: ShieldAlert,
 };
 
@@ -193,7 +193,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
             const Icon = cat.icon;
             return {
               value: cat.key as SurvivorCategoryKey,
-              icon: <Icon className="h-5 w-5 sm:h-6 sm:w-6" aria-hidden="true" />,
+              icon: <Icon className="icon-lg sm:icon-xl" aria-hidden="true" />,
               label: (
                 <span className="mt-0.5 block max-w-14 truncate text-micro font-bold">{cat.label.split(' ')[0]}</span>
               ),
@@ -260,7 +260,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
             {selectedCategory === 'trial_exclusive' ? (
               <div className="flex-1 flex flex-col items-center justify-center p-6 rounded-card bg-accent-amber/10 border border-accent-amber/30 text-center text-xs space-y-3">
                 <div className="flex items-center justify-center gap-2 text-accent-amber type-card-title">
-                  <ShieldAlert className="h-5 w-5 shrink-0" aria-hidden="true" />
+                  <ShieldAlert className="icon-lg shrink-0" aria-hidden="true" />
                   <span>{t.inTrialArtifactsHeading}</span>
                 </div>
                 <p className="text-text-secondary leading-relaxed">

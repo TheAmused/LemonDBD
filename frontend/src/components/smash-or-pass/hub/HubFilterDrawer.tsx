@@ -2,7 +2,6 @@
 // frontend/src/components/smash-or-pass/hub/HubFilterDrawer.tsx
 import { useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
 import { isKiller as isKillerRole, isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
@@ -66,7 +65,6 @@ export function HubFilterDrawer({
                   return {
                     value: role,
                     label: isSurvivor ? filters.survivors : isKiller ? filters.killers : role,
-                    icon: isSurvivor ? <SurvivorIcon className="h-3.5 w-3.5" /> : isKiller ? <KillerIcon className="h-3.5 w-3.5" /> : undefined,
                     activeClassName: isSurvivor ? 'bg-accent-green text-text-inverted' : 'bg-accent-red text-text-inverted',
                   };
                 }),

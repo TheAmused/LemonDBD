@@ -2,11 +2,11 @@
 // frontend/src/components/streaks/CheckpointCelebrationModal.tsx
 
 import React, { useEffect, useState } from 'react';
-import { Trophy } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { useDictionary } from "@/context/DictionaryContext";
 import { useReducedMotion } from 'framer-motion';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
+import { Flag } from 'lucide-react';
 
 export interface CheckpointCelebrationModalProps {
   checkpoint: number | null;
@@ -99,7 +99,7 @@ export const CheckpointCelebrationModal: React.FC<CheckpointCelebrationModalProp
             />
           ))}
           <div className="ck-trophy-pop relative flex h-24 w-24 items-center justify-center rounded-full border-2 border-accent-amber bg-gradient-to-br from-accent-amber to-accent-amber-hover text-text-inverted shadow-glow-amber-lg">
-            <Trophy className="h-12 w-12" />
+            <Flag className="h-12 w-12" />
           </div>
         </div>
 

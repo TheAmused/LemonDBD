@@ -30,7 +30,7 @@ export function VoiceVariantPills({ variants, onSelect }: VoiceVariantPillsProps
             variant="secondary" size="xs"
           >
             <span>{variant}</span>
-            <ArrowRight className="h-3 w-3 text-accent-red" aria-hidden="true" />
+            <ArrowRight className="text-accent-red" aria-hidden="true" />
           </Button>
         ))}
       </div>

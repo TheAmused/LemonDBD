@@ -63,7 +63,7 @@ export const TwoFactorSection: React.FC<TwoFactorSectionProps> = ({
     <section className="mx-auto flex w-full max-w-2xl flex-col gap-3 border-t border-border-color pt-4 text-left">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="h-4 w-4 shrink-0 text-accent-amber" />
+          <ShieldCheck className="icon-md shrink-0 text-accent-amber" />
           <h3 className="type-label-sm text-text-primary">{t.sectionTitle}</h3>
         </div>
         {status?.available ? (

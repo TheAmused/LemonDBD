@@ -156,7 +156,7 @@ export function Notice({ tone, text }: { tone: NoticeTone; text: string }) {
   const Icon = tone === 'info' ? Info : CircleAlert;
   return (
     <p role={tone === 'error' ? 'alert' : undefined} className={`flex items-start gap-2 rounded-card border p-3 text-xs font-semibold ${classes}`}>
-      <Icon className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+      <Icon className="mt-0.5 icon-md shrink-0" aria-hidden="true" />
       {text}
     </p>
   );
@@ -236,7 +236,7 @@ export function ImportModal({
       footer={
         <div className={footerClassName ?? 'flex w-full flex-wrap items-center justify-center gap-2'}>
           <Button variant="primary" disabled={!canImport} onClick={onImport} className={importClassName ?? buttonClassName}>
-            <Upload className="h-4 w-4" aria-hidden="true" />
+            <Upload aria-hidden="true" />
             {labels.importAction}
           </Button>
         </div>
@@ -245,7 +245,7 @@ export function ImportModal({
       <div className="flex flex-col gap-4">
         {sharedLink && (
           <p className="flex items-start gap-2 rounded-card border border-accent-amber/40 bg-accent-amber/10 p-3 type-card-title text-accent-amber">
-            <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+            <Info className="mt-0.5 icon-md shrink-0" aria-hidden="true" />
             {labels.sharedLinkDetected}
           </p>
         )}
@@ -256,7 +256,7 @@ export function ImportModal({
               {labels.pasteLabel}
             </label>
             <Button variant="secondary" onClick={() => fileInput.current?.click()} className={buttonClassName}>
-              <Upload className="h-4 w-4" aria-hidden="true" />
+              <Upload aria-hidden="true" />
               {labels.uploadFile}
             </Button>
             <input

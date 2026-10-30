@@ -3,7 +3,7 @@
 
 import { Tabs } from '@/components/common/Tabs';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Check, ClipboardPaste, Gamepad2, ImagePlus, Plus, Upload } from 'lucide-react';
+import { Check, ClipboardPaste, ImagePlus, Library, Plus, Upload } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useTierListItems } from '@/hooks/useTierListItems';
 import type { TierListKind } from '@/types/tierList';
@@ -59,10 +59,10 @@ export function ItemSources({ onAdd, existingIds, locale }: ItemSourcesProps) {
   // tab at all, not just a disabled one) -- everyone else adds items by
   // picking from the game's own catalog or pasting a link.
   const options: readonly TabOption[] = [
-    { value: 'catalog', label: c.tabCatalog, icon: <Gamepad2 className="h-3.5 w-3.5" aria-hidden="true" /> },
-    { value: 'links', label: c.tabLinks, icon: <ClipboardPaste className="h-3.5 w-3.5" aria-hidden="true" /> },
+    { value: 'catalog', label: c.tabCatalog, icon: <Library className="icon-sm" aria-hidden="true" /> },
+    { value: 'links', label: c.tabLinks, icon: <ClipboardPaste className="icon-sm" aria-hidden="true" /> },
     ...(isAdmin
-      ? [{ value: 'upload' as const, label: c.tabUpload, icon: <Upload className="h-3.5 w-3.5" aria-hidden="true" /> }]
+      ? [{ value: 'upload' as const, label: c.tabUpload, icon: <Upload className="icon-sm" aria-hidden="true" /> }]
       : []),
   ];
 
@@ -161,7 +161,7 @@ function UploadSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
         )}
       >
         <span className="flex h-12 w-12 items-center justify-center rounded-chip border border-border-color bg-bg-surface text-text-muted">
-          <ImagePlus className="h-6 w-6" aria-hidden="true" />
+          <ImagePlus className="icon-xl" aria-hidden="true" />
         </span>
         <div>
           <p className="text-base font-black text-text-primary">{c.dropTitle}</p>
@@ -171,7 +171,7 @@ function UploadSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
           variant="primary"
           loading={processing}
           onClick={() => inputRef.current?.click()}
-          leftIcon={<Upload className="h-4 w-4" aria-hidden="true" />}
+          leftIcon={<Upload className="icon-md" aria-hidden="true" />}
           className={TOUCH_BTN}
         >
           {c.chooseFiles}
@@ -355,7 +355,7 @@ function LinksSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
           variant="primary"
           disabled={!itemName.trim() && !imageUrl.trim()}
           onClick={handleAdd}
-          leftIcon={<Plus className="h-4 w-4" aria-hidden="true" />}
+          leftIcon={<Plus className="icon-md" aria-hidden="true" />}
           className="min-h-10 px-6"
         >
           {t.addItemTitle}
@@ -527,7 +527,7 @@ function CatalogSource({ onAdd, existingIds, locale }: {
                   />
                   {(isSelected || added) && (
                     <span className="absolute right-1.5 top-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-accent-red text-text-inverted shadow-md">
-                      <Check className="h-3.5 w-3.5 stroke-[2.5]" aria-hidden="true" />
+                      <Check className="icon-sm stroke-[2.5]" aria-hidden="true" />
                     </span>
                   )}
                   {added && <span className="sr-only">{c.alreadyAdded}</span>}
@@ -544,7 +544,7 @@ function CatalogSource({ onAdd, existingIds, locale }: {
       </div>
 
       <div className="flex justify-center w-full">
-        <Button variant="primary" disabled={selected.size === 0} onClick={add} leftIcon={<Plus className="h-4 w-4" aria-hidden="true" />} className="min-h-10 px-6">
+        <Button variant="primary" disabled={selected.size === 0} onClick={add} leftIcon={<Plus className="icon-md" aria-hidden="true" />} className="min-h-10 px-6">
           {formatMessage(c.addSelected, { count: selected.size })}
         </Button>
       </div>

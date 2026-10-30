@@ -4,6 +4,7 @@
 import React from 'react';
 import { Repeat, Volume2, VolumeX, RotateCcw, EyeOff, Info } from 'lucide-react';
 import type { ChaosMutator } from '@/types/chaos';
+import { WheelIcon } from '@/components/icons/DbdIcons';
 
 import { IconToggleButton } from './shared/IconToggleButton';
 import { Tooltip } from '@/components/common/Tooltip';
@@ -57,7 +58,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           }
         >
           <IconToggleButton
-            icon={<Info className="h-5 w-5" />}
+            icon={<Info className="icon-lg" />}
             label={dict.generator.coordinateLegendTooltip}
           />
         </Tooltip>
@@ -71,7 +72,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           }
         >
           <IconToggleButton
-            icon={<Repeat className="h-5 w-5" />}
+            icon={<Repeat className="icon-lg" />}
             label={dict.generator.noRepeatTooltip}
             isActive={noRepeatPerks}
             badge={noRepeatPerks ? `${playableCount}/${ownedCount}` : undefined}
@@ -84,7 +85,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           description={dict.generator.blindModeTooltipDesc}
         >
           <IconToggleButton
-            icon={<EyeOff className="h-5 w-5" />}
+            icon={<EyeOff className="icon-lg" />}
             label={dict.generator.blindModeTooltip}
             isActive={blindMode}
             onClick={onToggleBlindMode}
@@ -102,7 +103,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           }
         >
           <IconToggleButton
-            icon={<span className="text-lg leading-none">{activeMutator ? activeMutator.icon : '🔮'}</span>}
+            icon={activeMutator
+              ? <span className="text-lg leading-none">{activeMutator.icon}</span>
+              : <WheelIcon className="icon-lg" />}
             label={activeMutator
               ? getLocalizedMutator(activeMutator, dict).name
               : (dict.generator.chaosMutatorTooltip)}
@@ -120,7 +123,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           }
         >
           <IconToggleButton
-            icon={audioEnabled ? <Volume2 className="h-5 w-5" /> : <VolumeX className="h-5 w-5" />}
+            icon={audioEnabled ? <Volume2 className="icon-lg" /> : <VolumeX className="icon-lg" />}
             label={
               audioEnabled
                 ? dict.generator.audioOnLabel
@@ -137,7 +140,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           description={dict.generator.resetAllTooltipDesc}
         >
           <IconToggleButton
-            icon={<RotateCcw className="h-5 w-5" />}
+            icon={<RotateCcw className="icon-lg" />}
             label={dict.generator.resetAllTooltip}
             onClick={onResetAll}
           />

@@ -61,7 +61,7 @@ export const PerkIconGuesser: React.FC<PerkIconGuesserProps> = ({ roundConfig, p
         )}
 
         <div className="absolute top-2.5 left-2.5 px-2.5 py-0.5 rounded-full bg-bg-surface/80 backdrop-blur-md border border-border-subtle type-strong-xs text-text-secondary flex items-center gap-1 shadow-md">
-          <Eye className="w-3 h-3 text-accent-red" />
+          <Eye className="icon-xs text-accent-red" />
           <span>{Math.round(zoom * 100)}%</span>
         </div>
 
@@ -89,7 +89,7 @@ export const PerkIconGuesser: React.FC<PerkIconGuesserProps> = ({ roundConfig, p
                   <span className="text-xs text-text-muted">#{idx + 1}</span>
                   <span>{g.guess.name}</span>
                 </div>
-                {isCorrect ? <Check className="w-4 h-4" /> : <X className="w-4 h-4 opacity-60" />}
+                {isCorrect ? <Check className="icon-md" /> : <X className="icon-md opacity-60" />}
               </div>
             );
           })}

@@ -72,7 +72,7 @@ export const ChangelogPostItem: React.FC<ChangelogPostItemProps> = ({
             {...handleProps}
             className={cn('cursor-grab active:cursor-grabbing', dragging && 'text-accent-amber')}
           >
-            <GripVertical className="h-4 w-4" />
+            <GripVertical />
           </Button>
         )}
 
@@ -85,7 +85,7 @@ export const ChangelogPostItem: React.FC<ChangelogPostItemProps> = ({
               <span className="type-label-2xs text-text-muted">{formatPostDate(postDate(post))}</span>
               {post.edited_at && <span className="text-micro italic text-text-muted/70">{t.edited}</span>}
               {isAdmin && post.discord_announced_at && (
-                <Badge tone="neutral" icon={<DiscordIcon className="h-3 w-3" />}>
+                <Badge tone="neutral" icon={<DiscordIcon className="icon-xs" />}>
                   {t.discordSent}
                 </Badge>
               )}
@@ -126,6 +126,6 @@ const IconButton: React.FC<{
   onClick: () => void;
 }> = ({ icon: Icon, label, onClick }) => (
   <Button variant="ghost" size="sm" icon {...tip(label, undefined, 'action')} aria-label={label} onClick={onClick}>
-    <Icon className="h-3.5 w-3.5" />
+    <Icon />
   </Button>
 );

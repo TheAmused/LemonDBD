@@ -55,7 +55,7 @@ export function PurgeTab({ tab, onClose }: PurgeTabProps) {
           onClick={handleExecutePurge}
           loading={isPurging}
           disabled={purgeTargets.length === 0}
-          leftIcon={<Trash2 className="h-3.5 w-3.5" />}
+          leftIcon={<Trash2 className="icon-sm" />}
         >
           <span>
             {isPurging

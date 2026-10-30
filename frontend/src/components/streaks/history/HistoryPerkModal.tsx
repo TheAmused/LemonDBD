@@ -1,5 +1,5 @@
 'use client';
-import { PerkHexIcon, PadlockHeartIcon } from '@/components/icons/DbdIcons';
+import { PerkHexIcon, LockIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/streaks/history/HistoryPerkModal.tsx
 import type { Dictionary } from '@/locales/types';
 
@@ -50,7 +50,7 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
           src={src}
           alt={displayName}
           imageClassName="w-full h-full object-contain"
-          fallbackIcon={<PerkHexIcon className="w-5 h-5 text-text-muted" />}
+          fallbackIcon={<PerkHexIcon className="icon-lg text-text-muted" />}
         />
       </div>
       <span className="type-strong-2xs text-text-secondary truncate w-full text-center">
@@ -69,7 +69,7 @@ const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ p
             }`}
             style={animationDelay}
           >
-            <PadlockHeartIcon className="w-3.5 h-3.5 text-text-secondary" />
+            <LockIcon className="icon-sm text-text-secondary" />
           </div>
         </div>
       )}

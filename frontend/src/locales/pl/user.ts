@@ -28,6 +28,8 @@ export default {
   currentPasswordHint: "Wymagane do zaktualizowania danych konta",
   currentPasswordRequired: "Musisz wpisać obecne hasło, aby zaktualizować dane konta.",
   currentPasswordIncorrect: "Obecne hasło jest nieprawidłowe.",
+  showPassword: "Pokaż hasło",
+  hidePassword: "Ukryj hasło",
   forgotSentNotice: "Jeśli podany e-mail jest zarejestrowany, wysłaliśmy link do zresetowania hasła.",
   signIn: "Zaloguj się",
   createAccount: "Utwórz Konto",

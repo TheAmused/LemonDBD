@@ -8,7 +8,7 @@ import type { RosterEntry } from '@/types/pageStreak';
 import { staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { PerkIcon } from '@/components/ui/PerkIcon';
-import { KillerIcon } from '@/components/icons/DbdIcons';
+import { PersonIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from "@/context/DictionaryContext";
 
 interface KillerRosterGridProps {
@@ -28,7 +28,7 @@ const KillerPortrait: React.FC<{ name: string; src?: string; done: boolean }> = 
         alt={name}
         imageClassName="h-full w-full object-cover"
         fallbackIcon={
-          <KillerIcon
+          <PersonIcon
             className={`h-7 w-7 ${done ? 'text-accent-green/80' : 'text-text-muted'}`}
             aria-hidden="true"
           />
@@ -72,7 +72,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({ locale, rost
                   className="absolute right-1.5 top-1.5 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-accent-green text-text-inverted shadow-sm"
                   aria-label={dict.streaks.completed}
                 >
-                  <Check className="h-3 w-3" strokeWidth={3} aria-hidden="true" />
+                  <Check className="icon-xs" strokeWidth={3} aria-hidden="true" />
                 </span>
               )}
               <KillerPortrait

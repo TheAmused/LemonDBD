@@ -171,7 +171,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
             {...tip(rawSmash.sharing.backToBreakdownTitle, undefined, 'action')}
             aria-label={rawSmash.sharing.backAriaLabel}
           >
-            <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 text-accent-red" />
+            <ArrowLeft className="icon-md sm:icon-lg text-accent-red" />
           </Button>
         ) : null
       }
@@ -203,7 +203,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
               className="mt-2"
             >
               <span>{rawSmash.startVoting}</span>
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight />
             </Button>
           </Surface>
         ) : isSharingView ? (

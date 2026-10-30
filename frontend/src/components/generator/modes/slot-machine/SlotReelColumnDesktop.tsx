@@ -1,5 +1,4 @@
 'use client';
-import { PadlockHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/generator/modes/slot-machine/SlotReelColumnDesktop.tsx
 import React from 'react';
 import { Ban } from 'lucide-react';
@@ -9,6 +8,7 @@ import { cn } from '@/utils/cn';
 import { getPerkIconUrl } from '@/utils/perkUtils';
 import type { MachinePhase, Reel } from './slotMachineTypes';
 import { Img } from '@/components/common/Img';
+import { LockIcon } from '@/components/icons/DbdIcons';
 
 export interface SlotReelProps {
   reel: Reel;
@@ -131,7 +131,7 @@ export function SlotReelColumnDesktop({
         )}
         {reel.locked && (
           <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
-            <PadlockHeartIcon className="h-3.5 w-3.5" />
+            <LockIcon className="icon-sm" />
           </div>
         )}
       </div>

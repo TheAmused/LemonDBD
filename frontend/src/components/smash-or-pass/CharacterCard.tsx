@@ -2,8 +2,8 @@
 // frontend/src/components/smash-or-pass/CharacterCard.tsx
 
 import React, { useMemo, useState } from 'react';
-import { X } from 'lucide-react';
-import { PortraitLoupeIcon, SnuffedCandleIcon, TarotTurnIcon, ThornHeartIcon } from '@/components/icons/DbdIcons';
+import { X, ZoomIn } from 'lucide-react';
+import { HeartIcon, PassIcon, CardFlipIcon } from '@/components/icons/DbdIcons';
 import { CardDisintegrationOverlay } from './CardDisintegrationOverlay';
 import { CardAvatarImage } from './card/CardAvatarImage';
 import { CardBackFace } from './card/CardBackFace';
@@ -34,7 +34,7 @@ const ZoomCloseButton: React.FC<{ label: string }> = ({ label }) => {
       pill
       className="absolute right-2 top-2 z-10 shadow-lg"
     >
-      <X className="h-5 w-5" aria-hidden="true" />
+      <X aria-hidden="true" />
     </Button>
   );
 };
@@ -178,7 +178,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             }}
             className="absolute top-6 left-6 z-40 border-4 border-accent-red bg-accent-red/20 p-3 sm:p-4 rounded-card backdrop-blur-md transition-all duration-75"
           >
-            <ThornHeartIcon className="h-8 w-8 sm:h-10 sm:w-10 text-accent-red animate-pulse" aria-hidden="true" />
+            <HeartIcon className="h-8 w-8 sm:h-10 sm:w-10 text-accent-red animate-pulse" aria-hidden="true" />
           </div>
         )}
 
@@ -191,7 +191,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             }}
             className="absolute top-6 right-6 z-40 border-4 border-border-subtle bg-bg-elevated/90 p-3 sm:p-4 rounded-card backdrop-blur-md transition-all duration-75"
           >
-            <SnuffedCandleIcon className="h-8 w-8 sm:h-10 sm:w-10 text-text-secondary" aria-hidden="true" />
+            <PassIcon className="h-8 w-8 sm:h-10 sm:w-10 text-text-secondary" aria-hidden="true" />
           </div>
         )}
 
@@ -260,7 +260,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 aria-label={rawSmashDict.flipToDatingProfile}
                 variant="soft" size="lg" icon className="shadow-2xl backdrop-blur-md hover:scale-110 active:scale-95 touch-manipulation"
               >
-                <TarotTurnIcon className="h-5 w-5" aria-hidden="true" />
+                <CardFlipIcon aria-hidden="true" />
               </Button>
 
               <Button
@@ -276,7 +276,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 aria-label={rawSmashDict.zoomFullPortrait}
                 variant="overlay" size="lg" icon className="shadow-2xl hover:scale-110 active:scale-95 touch-manipulation"
               >
-                <PortraitLoupeIcon className="h-5 w-5" aria-hidden="true" />
+                <ZoomIn aria-hidden="true" />
               </Button>
             </div>
 
@@ -294,7 +294,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 aria-label={rawSmashDict.pass}
                 variant="secondary" size="lg" icon className="h-13 w-13 shadow-2xl backdrop-blur-md hover:scale-110 active:scale-95 touch-manipulation sm:h-14 sm:w-14"
               >
-                <SnuffedCandleIcon className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
+                <PassIcon className="icon-xl sm:h-7 sm:w-7" aria-hidden="true" />
               </Button>
 
               <Button
@@ -310,7 +310,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 aria-label={rawSmashDict.smash}
                 variant="primary" size="lg" icon className="h-13 w-13 hover:scale-110 active:scale-95 touch-manipulation sm:h-14 sm:w-14"
               >
-                <ThornHeartIcon className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
+                <HeartIcon className="icon-xl sm:h-7 sm:w-7" aria-hidden="true" />
               </Button>
             </div>
           </div>

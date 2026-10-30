@@ -1,6 +1,6 @@
 // frontend/src/components/maps/voice/voiceStatusConfig.ts
 import type { LucideIcon } from 'lucide-react';
-import { AlertCircle, CheckCircle2, Mic, MicOff, RefreshCw, Volume2 } from 'lucide-react';
+import { CheckCircle2, Mic, MicOff, RefreshCw, Volume2, CircleAlert } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { VoiceStatusState } from './voiceTypes';
 
@@ -47,7 +47,7 @@ export function buildStatusConfig(rawVoiceDict: Dictionary['voice']): Record<Voi
     error: {
       badge: rawVoiceDict.micErrorCheckPermission || '',
       dotClass: 'bg-accent-red',
-      icon: AlertCircle,
+      icon: CircleAlert,
       buttonColor: 'bg-accent-red text-text-inverted ring-accent-red/40',
     },
   };

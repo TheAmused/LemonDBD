@@ -6,7 +6,6 @@ import type { Difficulty } from '@/types/chaosStreak';
 import { ChallengeModeModal, buildCompletionTiles } from '../ChallengeModeModal';
 import { ChaosRulesModal } from './ChaosRulesModal';
 import { CHAOS_DIFFICULTY_ORDER } from '@/utils/challengeTierCompletion';
-import { TierEasyIcon, TierMediumIcon, TierHellIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from "@/context/DictionaryContext";
 
 export interface ChaosModeModalProps {
@@ -40,21 +39,18 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
         value: 'easy',
         label: s.chaosEasyLabel,
         description: s.chaosEasyDesc,
-        icon: TierEasyIcon,
         image: '/images/streaks/modes/chaos-easy.webp',
       },
       {
         value: 'medium',
         label: s.chaosMediumLabel,
         description: s.chaosMediumDesc,
-        icon: TierMediumIcon,
         image: '/images/streaks/modes/chaos-medium.webp',
       },
       {
         value: 'hell',
         label: s.chaosHellLabel,
         description: s.chaosHellDesc,
-        icon: TierHellIcon,
         image: '/images/streaks/modes/chaos-hell.webp',
       },
     ],

@@ -197,7 +197,7 @@ export function TierListEditor(props: TierListEditorProps) {
           {...popoverTriggerProps(menuOpen, 'menu')}
           className="h-11 w-11"
         >
-          <Ellipsis className="h-4 w-4" aria-hidden="true" />
+          <Ellipsis className="icon-md" aria-hidden="true" />
         </Button>
         <Popover
           open={menuOpen}
@@ -211,37 +211,37 @@ export function TierListEditor(props: TierListEditorProps) {
           <TierListScaleControl scale={scale} onScaleChange={setScale} variant="menu" />
           {!finePointer && (
             <MenuItem role="menuitem" onClick={() => { setMenuOpen(false); setShowNamesPref(showNames ? 'off' : 'on'); }}>
-              {showNames ? <EyeOff className="h-4 w-4" aria-hidden="true" /> : <Eye className="h-4 w-4" aria-hidden="true" />}
+              {showNames ? <EyeOff className="icon-md" aria-hidden="true" /> : <Eye className="icon-md" aria-hidden="true" />}
               {showNames ? t.hideNames : t.showNames}
             </MenuItem>
           )}
           <MenuItem role="menuitem" onClick={() => { setMenuOpen(false); setDialog('import'); }}>
-            <Upload className="h-4 w-4" aria-hidden="true" />
+            <Upload className="icon-md" aria-hidden="true" />
             {t.import}
           </MenuItem>
           <MenuItem role="menuitem" onClick={() => { setMenuOpen(false); setDialog('export'); }}>
-            <Download className="h-4 w-4" aria-hidden="true" />
+            <Download className="icon-md" aria-hidden="true" />
             {t.export}
           </MenuItem>
           <MenuItem role="menuitem" onClick={() => { setMenuOpen(false); setDialog('reset'); }}>
-            <RotateCcw className="h-4 w-4" aria-hidden="true" />
+            <RotateCcw className="icon-md" aria-hidden="true" />
             {t.reset}
           </MenuItem>
           {editHref && (
             <Link href={editHref} role="menuitem" className={menuItemClassName()} onClick={() => setMenuOpen(false)}>
-              <Pencil className="h-4 w-4" aria-hidden="true" />
+              <Pencil className="icon-md" aria-hidden="true" />
               {t.editDetails}
             </Link>
           )}
           {onDelete && (
             <MenuItem role="menuitem" className="text-accent-red" onClick={() => { setMenuOpen(false); setDialog('delete'); }}>
-              <Trash2 className="h-4 w-4" aria-hidden="true" />
+              <Trash2 className="icon-md" aria-hidden="true" />
               {t.deleteList}
             </MenuItem>
           )}
           {onReport && (
             <MenuItem role="menuitem" onClick={() => { setMenuOpen(false); onReport(); }}>
-              <Flag className="h-4 w-4" aria-hidden="true" />
+              <Flag className="icon-md" aria-hidden="true" />
               {t.reportButton}
             </MenuItem>
           )}
@@ -276,25 +276,25 @@ export function TierListEditor(props: TierListEditorProps) {
                 {...tip(showNames ? t.hideNames : t.showNames, undefined, 'action')}
                 className={TOOLBAR_BTN}
               >
-                {showNames ? <EyeOff className="h-3.5 w-3.5" aria-hidden="true" /> : <Eye className="h-3.5 w-3.5" aria-hidden="true" />}
+                {showNames ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
                 <span className={secondaryLabelClass}>{showNames ? t.hideNames : t.showNames}</span>
               </Button>
             )}
             <Button variant="secondary" size="sm" onClick={() => setDialog('import')} aria-label={t.import} {...tip(t.import, undefined, 'action')} className={TOOLBAR_BTN}>
-              <Upload className="h-3.5 w-3.5" aria-hidden="true" />
+              <Upload aria-hidden="true" />
               <span className={secondaryLabelClass}>{t.import}</span>
             </Button>
             <Button variant="secondary" size="sm" onClick={() => setDialog('export')} aria-label={t.export} {...tip(t.export, undefined, 'action')} className={TOOLBAR_BTN}>
-              <Download className="h-3.5 w-3.5" aria-hidden="true" />
+              <Download aria-hidden="true" />
               <span className={secondaryLabelClass}>{t.export}</span>
             </Button>
             <Button variant="secondary" size="sm" onClick={() => setDialog('reset')} aria-label={t.reset} {...tip(t.reset, undefined, 'action')} className={TOOLBAR_BTN}>
-              <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+              <RotateCcw aria-hidden="true" />
               <span className={secondaryLabelClass}>{t.reset}</span>
             </Button>
             {onReport && (
               <Button variant="secondary" size="sm" onClick={onReport} aria-label={t.reportButtonAria} {...tip(t.reportButton, undefined, 'action')} className={TOOLBAR_BTN}>
-                <Flag className="h-3.5 w-3.5" aria-hidden="true" />
+                <Flag aria-hidden="true" />
                 <span className={secondaryLabelClass}>{t.reportButton}</span>
               </Button>
             )}
@@ -305,7 +305,7 @@ export function TierListEditor(props: TierListEditorProps) {
                 {...tip(t.editDetails, undefined, 'action')}
                 className={buttonClassName('secondary', 'sm', TOOLBAR_BTN)}
               >
-                <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
+                <Pencil className="icon-sm" aria-hidden="true" />
                 <span className="hidden xl:inline short:hidden!">{t.editDetails}</span>
               </Link>
             )}
@@ -318,7 +318,7 @@ export function TierListEditor(props: TierListEditorProps) {
                 {...tip(t.deleteList, undefined, 'action')}
                 className={TOOLBAR_BTN}
               >
-                <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+                <Trash2 aria-hidden="true" />
                 <span className="sr-only">{t.deleteList}</span>
               </Button>
             )}
@@ -344,7 +344,7 @@ export function TierListEditor(props: TierListEditorProps) {
           className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 lemon-modal-overlay-sidebar-aware"
         >
           <Surface padding="none" className="pointer-events-auto flex max-w-xl flex-wrap items-center justify-center gap-2 border-accent-amber/40 shadow-lg px-3 py-1.5 type-card-title text-accent-amber text-center">
-            <MousePointerClick className="h-4 w-4 shrink-0" aria-hidden="true" />
+            <MousePointerClick className="icon-md shrink-0" aria-hidden="true" />
             <span className="min-w-0">{formatMessage(t.selectedHint, { name: selectedItem.name })}</span>
             <Button variant="secondary" onClick={() => setSelectedKey(null)} className={TOUCH_BTN}>
               {t.cancelSelection}
@@ -374,7 +374,7 @@ export function TierListEditor(props: TierListEditorProps) {
         title={t.resetTitle}
         message={resetMessage}
         confirmLabel={t.reset}
-        confirmIcon={<RotateCcw className="h-4 w-4" aria-hidden="true" />}
+        confirmIcon={<RotateCcw className="icon-md" aria-hidden="true" />}
         cancelLabel={t.cancel}
         onCancel={() => setDialog(null)}
         onConfirm={() => {
@@ -390,7 +390,7 @@ export function TierListEditor(props: TierListEditorProps) {
           title={t.deleteListTitle}
           message={t.deleteListMessage}
           confirmLabel={t.deleteList}
-          confirmIcon={<Trash2 className="h-4 w-4" aria-hidden="true" />}
+          confirmIcon={<Trash2 className="icon-md" aria-hidden="true" />}
           cancelLabel={t.cancel}
           onCancel={() => setDialog(null)}
           onConfirm={() => {

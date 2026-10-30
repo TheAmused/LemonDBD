@@ -1,5 +1,4 @@
 'use client';
-import { PadlockHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/generator/modes/LootCrateStage.tsx
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -17,6 +16,7 @@ import { playReelThud, playCardFlip } from '@/utils/perkAudio';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Surface } from '@/components/common/Surface';
+import { LockIcon } from '@/components/icons/DbdIcons';
 
 export interface LootCrateStageProps {
   role: RoleCategory;
@@ -298,7 +298,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                       <PerkSlot perk={locked.perk} role={role} page={locked.page} slot={locked.slot} size="compact" />
                     </div>
                     <div className="absolute -top-1.5 -right-1.5 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
-                      <PadlockHeartIcon className="h-3 w-3" />
+                      <LockIcon className="icon-xs" />
                     </div>
                   </div>
                 ) : (
@@ -356,7 +356,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                     <PerkSlot perk={item.perk} role={role} page={item.page} slot={item.slot} />
                   </div>
                   <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
-                    <PadlockHeartIcon className="h-3.5 w-3.5" />
+                    <LockIcon className="icon-sm" />
                   </div>
                 </div>
               </motion.div>

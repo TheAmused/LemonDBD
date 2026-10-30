@@ -163,7 +163,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({ round, index, 
             {...tip(c.moveUp, undefined, 'action')}
             aria-label={c.moveUp}
           >
-            <ChevronUp className="w-4 h-4" />
+            <ChevronUp />
           </Button>
           <Button
             variant="secondary"
@@ -174,7 +174,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({ round, index, 
             {...tip(c.moveDown, undefined, 'action')}
             aria-label={c.moveDown}
           >
-            <ChevronDown className="w-4 h-4" />
+            <ChevronDown />
           </Button>
           <Button
             variant="danger"
@@ -185,7 +185,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({ round, index, 
             aria-label={c.removeRound}
             className="ml-1"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 />
           </Button>
         </div>
       </div>
@@ -240,7 +240,7 @@ export const RoundEditorCard: React.FC<RoundEditorCardProps> = ({ round, index, 
         {selectedTargetItem ? (
           <Surface padding="sm" className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Thumb src={targetImgSrc} alt={selectedTargetItem.name} size="lg" fallback={<PerkHexIcon className="h-4 w-4 text-text-muted" />} />
+              <Thumb src={targetImgSrc} alt={selectedTargetItem.name} size="lg" fallback={<PerkHexIcon className="icon-md text-text-muted" />} />
               <div>
                 <div className="type-card-title text-text-primary">{selectedTargetItem.name}</div>
                 <div className="text-xs text-text-muted capitalize">{targetType}</div>

@@ -5,7 +5,7 @@ import React from 'react';
 import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
 import { Plus } from 'lucide-react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
-import { KillerIcon } from '@/components/icons/DbdIcons';
+import { PersonIcon } from '@/components/icons/DbdIcons';
 import { tip } from '@/components/common/Tooltip';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -47,7 +47,7 @@ export const BuildPanel: React.FC<BuildPanelProps> = ({ selected, size, iconByPe
             src={avatarSrc}
             alt={killerName}
             imageClassName="h-full w-full select-none object-cover"
-            fallbackIcon={<KillerIcon className="h-8 w-8 text-text-muted" aria-hidden="true" />}
+            fallbackIcon={<PersonIcon className="h-8 w-8 text-text-muted" aria-hidden="true" />}
           />
         </div>
         <h3 className="max-w-32 truncate text-sm font-black tracking-wide text-text-primary">{killerName}</h3>
@@ -81,7 +81,7 @@ export const BuildPanel: React.FC<BuildPanelProps> = ({ selected, size, iconByPe
                     strokeDasharray="6 5"
                   />
                 </svg>
-                {!name && <Plus className="absolute left-1/2 top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 text-text-muted" aria-hidden="true" />}
+                {!name && <Plus className="absolute left-1/2 top-1/2 icon-lg -translate-x-1/2 -translate-y-1/2 text-text-muted" aria-hidden="true" />}
                 <AnimatePresence>
                   {name && icon && (
                     <motion.img

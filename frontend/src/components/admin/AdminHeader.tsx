@@ -15,7 +15,7 @@ export function AdminHeader({ onRefresh }: { onRefresh: () => void }) {
   return (
     <>
       <h1 className="sr-only">{dict.sidebar.adminControlCenter}</h1>
-      <Button size="sm" onClick={onRefresh} leftIcon={<RefreshCw className="icon-sm" aria-hidden="true" />} {...tip(t.refreshTitle, undefined, 'action')}>
+      <Button size="sm" onClick={onRefresh} leftIcon={<RefreshCw aria-hidden="true" />} {...tip(t.refreshTitle, undefined, 'action')}>
         {t.refresh}
       </Button>
     </>

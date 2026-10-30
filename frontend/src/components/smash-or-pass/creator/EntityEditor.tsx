@@ -85,10 +85,10 @@ export function CandidateFormInputs({
             variant="ghost" size="xs"
             onClick={onRemove}
             aria-label={formatMessage((c.removeCandidateAria), { name: entity.name || displayIndex })}
-            className=""
+           
             {...tip(c.removeCandidate, undefined, 'action')}
           >
-            <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
+            <Trash2 aria-hidden="true" />
             <span className="hidden sm:inline">{c.removeCandidate}</span>
           </Button>
         </div>
@@ -293,7 +293,7 @@ export function CandidateFormInputs({
               aria-expanded={profileOpen}
               className="uppercase tracking-wider"
             >
-              <ChevronDown className={cn('h-3.5 w-3.5 text-accent-red transition-transform', profileOpen && 'rotate-180')} aria-hidden="true" />
+              <ChevronDown className={cn('icon-sm text-accent-red transition-transform', profileOpen && 'rotate-180')} aria-hidden="true" />
               <span>{c.entityProfileToggle}</span>
             </Button>
           </div>

@@ -78,7 +78,7 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave }: TierItemEdi
             variant="primary"
             disabled={nameInvalid || urlInvalid}
             onClick={handleSave}
-            leftIcon={<Check className="h-4 w-4" aria-hidden="true" />}
+            leftIcon={<Check className="icon-md" aria-hidden="true" />}
             className={cn(TOUCH_BTN, 'min-h-hit px-6')}
           >
             {t.save}
@@ -125,7 +125,7 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave }: TierItemEdi
                 setImageUrl('');
                 if (error === t.invalidImage) setError(null);
               }}
-              leftIcon={<ImageOff className="h-3.5 w-3.5" aria-hidden="true" />}
+              leftIcon={<ImageOff className="icon-sm" aria-hidden="true" />}
               className="mt-2.5 min-h-8"
             >
               {c.removeImage}

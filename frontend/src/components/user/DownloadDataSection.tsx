@@ -58,7 +58,7 @@ export const DownloadDataSection: React.FC<DownloadDataSectionProps> = ({ userId
         className={className}
         onClick={() => { void handleDownload(); }}
         loading={busy}
-        leftIcon={<Download className="h-3.5 w-3.5" />}
+        leftIcon={<Download className="icon-sm" />}
         aria-label={title}
         {...tip(title, description, 'action')}
       >

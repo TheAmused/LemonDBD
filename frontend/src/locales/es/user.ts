@@ -28,6 +28,8 @@ export default {
   currentPasswordHint: "Necesaria para actualizar los datos de tu cuenta",
   currentPasswordRequired: "Debes introducir tu contraseña actual para actualizar los datos de tu cuenta.",
   currentPasswordIncorrect: "Tu contraseña actual no es correcta.",
+  showPassword: "Mostrar contraseña",
+  hidePassword: "Ocultar contraseña",
   forgotSentNotice: "Si ese correo está registrado, te hemos enviado un enlace para restablecer la contraseña.",
   signIn: "Iniciar Sesión",
   createAccount: "Crear Cuenta",

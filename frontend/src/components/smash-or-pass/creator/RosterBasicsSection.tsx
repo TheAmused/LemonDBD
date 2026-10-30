@@ -102,7 +102,7 @@ export function RosterBasicsSection({
             previewOverlay={
               isUserAdmin ? (
                 <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-text-inverted type-strong pointer-events-none">
-                  <Crop className="h-5 w-5 text-accent-red" />
+                  <Crop className="icon-lg text-accent-red" />
                   <span>{c.cropClickPrompt}</span>
                 </div>
               ) : undefined
@@ -122,7 +122,7 @@ export function RosterBasicsSection({
                   {...tip(c.cropCoverTitle, undefined, 'action')}
                   aria-label={c.cropCoverTitle}
                 >
-                  <Crop className="h-3.5 w-3.5" />
+                  <Crop />
                 </Button>
               ) : undefined
             }
@@ -137,7 +137,7 @@ export function RosterBasicsSection({
                   aria-label={c.cropCoverTitle}
                   className="shrink-0 px-3"
                 >
-                  <Crop className="h-4 w-4 text-accent-red" />
+                  <Crop className="icon-md text-accent-red" />
                   <span className="hidden sm:inline">{c.cropCoverBadge}</span>
                 </Button>
               ) : undefined

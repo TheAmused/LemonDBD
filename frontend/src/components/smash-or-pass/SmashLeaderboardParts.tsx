@@ -1,19 +1,19 @@
 'use client';
 
 import React from 'react';
-import { ThumbsDown } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import type { LeaderboardItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { tip } from '@/components/common/Tooltip';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import { SmashSounds } from '@/components/smash-or-pass/SmashSoundEffects';
-import { KillerIcon, SurvivorIcon,RankFirstIcon,RankPlacedIcon, ThornHeartIcon } from '@/components/icons/DbdIcons';
+import { RankFirstIcon, RankPlacedIcon, HeartIcon, PassIcon } from '@/components/icons/DbdIcons';
 
 import { formatNumber } from '@/utils/format';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 import { formatMessage } from '@/utils/i18nFormat';
 import { Surface } from '@/components/common/Surface';
+import { Badge } from '@/components/common/Badge';
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
 
@@ -36,8 +36,8 @@ interface CandidateRowProps {
   locale: string;
   backendBase: string;
   rawSmashDict: Dictionary['smashOrPass'];
-  survivorsLabel: string;
-  killersLabel: string;
+  survivorLabel: string;
+  killerLabel: string;
   unratedLabel: string;
   noVotesDesc: string;
   percentSign: string;
@@ -60,8 +60,8 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
   locale,
   backendBase,
   rawSmashDict,
-  survivorsLabel,
-  killersLabel,
+  survivorLabel,
+  killerLabel,
   unratedLabel,
   noVotesDesc,
   percentSign,
@@ -139,9 +139,9 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
         >
           {isTop3 ? (
             index === 0 ? (
-              <RankFirstIcon className="h-5 w-5 fill-current stroke-current" />
+              <RankFirstIcon className="icon-lg fill-current stroke-current" />
             ) : (
-              <RankPlacedIcon className="h-5 w-5" />
+              <RankPlacedIcon className="icon-lg" />
             )
           ) : (
             `#${index + 1}`
@@ -170,7 +170,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
               {...tip(rawSmashDict?.youSmashedThis || '', undefined, 'status')}
               aria-label={rawSmashDict?.youSmashedThis || ''}
             >
-              <ThornHeartIcon className="h-2.5 w-2.5 fill-text-inverted text-text-inverted" />
+              <HeartIcon className="icon-2xs fill-text-inverted text-text-inverted" />
             </div>
           )}
         </Surface>
@@ -182,18 +182,10 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
               {itemName}
             </span>
 
-            {/* Role Icon Badge (Accessible native tooltip) */}
-            <span
-              {...tip(isSurvivor ? survivorsLabel : killersLabel, undefined, 'action')}
-              aria-label={isSurvivor ? survivorsLabel : killersLabel}
-              className={`flex h-6 w-6 items-center justify-center rounded-chip border shrink-0 transition-transform hover:scale-110 ${
-                isSurvivor
-                  ? 'bg-accent-green/15 border-accent-green/40 text-accent-green'
-                  : 'bg-accent-red/15 border-accent-red/40 text-accent-red'
-              }`}
-            >
-              {isSurvivor ? <SurvivorIcon className="h-3.5 w-3.5" /> : <KillerIcon className="h-3.5 w-3.5" />}
-            </span>
+            {/* Role: text and colour, no icon */}
+            <Badge tone={isSurvivor ? 'green' : 'red'} size="xs" className="shrink-0">
+              {isSurvivor ? survivorLabel : killerLabel}
+            </Badge>
 
             {/* Tier Icon Badge or Unrated "?" Badge (Accessible native tooltip) */}
             {tier ? (
@@ -227,7 +219,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
         <div className="flex flex-col gap-1 w-28 sm:w-32 shrink-0">
           <div className="flex items-center justify-between type-caption">
             <span className={`font-bold flex items-center gap-1 ${hasVotes ? 'text-accent-red' : 'text-text-muted'}`}>
-              <ThornHeartIcon className={`h-3 w-3 ${hasVotes ? 'fill-accent-red text-accent-red' : 'text-text-muted'}`} />
+              <HeartIcon className={`icon-xs ${hasVotes ? 'fill-accent-red text-accent-red' : 'text-text-muted'}`} />
               {hasVotes ? `${smashRate}${percentSign}` : '—'}
             </span>
             <span className="text-text-muted">
@@ -260,11 +252,11 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
         {/* Smashes / Passes Numeric Counts */}
         <div className="text-right text-xs shrink-0 min-w-16.25">
           <div className="flex items-center gap-1.5 justify-end text-accent-red font-black">
-            <ThornHeartIcon className="h-3.5 w-3.5 fill-accent-red" />
+            <HeartIcon className="icon-sm fill-accent-red" />
             <span>{smashCount}</span>
           </div>
           <div className="flex items-center gap-1.5 justify-end text-text-muted type-strong-xs mt-0.5">
-            <ThumbsDown className="h-3 w-3 text-text-muted" />
+            <PassIcon className="icon-xs text-text-muted" />
             <span>{passCount}</span>
           </div>
         </div>

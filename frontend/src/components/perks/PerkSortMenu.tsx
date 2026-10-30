@@ -39,7 +39,7 @@ export const PerkSortMenu: React.FC<PerkSortMenuProps> = ({ sortBy, setSortBy, o
         setSortBy(field);
         setOrder(direction);
       }}
-      icon={<ArrowDownUp className="h-3.5 w-3.5" />}
+      icon={<ArrowDownUp className="icon-sm" />}
       label={sortLabel(current)}
       ariaLabel={dict.filters.sortBy}
       accent="primary"

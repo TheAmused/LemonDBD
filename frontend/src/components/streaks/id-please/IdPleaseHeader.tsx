@@ -4,12 +4,12 @@
 import React from 'react';
 import { Flame } from 'lucide-react';
 import type { IdPleaseDifficulty, IdPleaseSide } from '@/types/idPleaseStreak';
-import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { Img } from '@/components/common/Img';
 import { useDictionary } from '@/context/DictionaryContext';
 import { ChallengeHeaderLayout, ModeSelectButton, StandardHeaderActions } from '../ChallengePanel';
 import { StreakStatTiles } from '../StreakStatTiles';
 import { ID_PLEASE_DIFFICULTY_TONE, idPleaseDifficultyImage } from './idPleaseAssets';
+import { TrophyIcon } from '@/components/icons/DbdIcons';
 
 export interface IdPleaseHeaderProps {
   difficulty: IdPleaseDifficulty;
@@ -59,8 +59,8 @@ export const IdPleaseHeader: React.FC<IdPleaseHeaderProps> = ({
             best={best}
             currentLabel={s.current}
             bestLabel={s.best}
-            currentIcon={<Flame className="h-5 w-5" />}
-            bestIcon={<AdeptBadgeIcon className="h-5 w-5" />}
+            currentIcon={<Flame className="icon-lg" />}
+            bestIcon={<TrophyIcon className="icon-lg" />}
           />
         </>
       }

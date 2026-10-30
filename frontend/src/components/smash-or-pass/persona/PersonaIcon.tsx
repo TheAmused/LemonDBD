@@ -1,12 +1,12 @@
 // frontend/src/components/smash-or-pass/persona/PersonaIcon.tsx
 import {
   CampfireIcon,
-  EntityHeartIcon,
   EntityMarkIcon,
   FogDriftIcon,
-  RedStainIcon,
+  HeartbeatIcon,
   SkillCheckGaugeIcon,
   VeiledCompassIcon,
+  HeartIcon,
 } from '@/components/icons/DbdIcons';
 import type { RomancePersonaResult } from '@/utils/smashPersona';
 import { Img } from '@/components/common/Img';
@@ -18,19 +18,19 @@ export function PersonaIcon({ persona }: { persona: RomancePersonaResult }) {
   }
   switch (persona.iconName) {
     case 'compass':
-      return <VeiledCompassIcon className="h-6 w-6 text-text-inverted animate-spin-slow" />;
+      return <VeiledCompassIcon className="icon-xl text-text-inverted animate-spin-slow" />;
     case 'skull':
-      return <EntityMarkIcon className="h-6 w-6 text-text-inverted" />;
+      return <EntityMarkIcon className="icon-xl text-text-inverted" />;
     case 'flame':
-      return <RedStainIcon className="h-6 w-6 text-text-inverted" />;
+      return <HeartbeatIcon className="icon-xl text-text-inverted" />;
     case 'shield':
-      return <CampfireIcon className="h-6 w-6 text-text-inverted" />;
+      return <CampfireIcon className="icon-xl text-text-inverted" />;
     case 'heart':
-      return <EntityHeartIcon className="h-6 w-6 text-text-inverted fill-text-inverted" />;
+      return <HeartIcon className="icon-xl text-text-inverted fill-text-inverted" />;
     case 'zap':
-      return <SkillCheckGaugeIcon className="h-6 w-6 text-text-inverted" />;
+      return <SkillCheckGaugeIcon className="icon-xl text-text-inverted" />;
     case 'sparkles':
     default:
-      return <FogDriftIcon className="h-6 w-6 text-text-inverted" />;
+      return <FogDriftIcon className="icon-xl text-text-inverted" />;
   }
 }

@@ -2,8 +2,8 @@
 // frontend/src/components/streaks/ChallengeProgress.tsx
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Trophy } from 'lucide-react';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Flag } from 'lucide-react';
 
 const MAX_NODE_PX = 28;
 const MIN_NODE_PX = 14;
@@ -28,7 +28,7 @@ const fillColor = (ratio: number) =>
 /** Keeps a node's centre inside the track at both ends instead of hanging off the edge. */
 const nodeLeft = (percent: number, nodeSize: number) => `calc(${percent}% + ${(0.5 - percent / 100) * nodeSize}px)`;
 
-/** Trophy size from the typical spacing (the median, so a crowded finish does not shrink them all). */
+/** Flag size from the typical spacing (the median, so a crowded finish does not shrink them all). */
 const nodeSizeFor = (positions: number[], total: number, trackPx: number): number => {
   if (trackPx <= 0 || positions.length < 2) return MAX_NODE_PX;
   const gaps = positions.slice(1).map((pos, i) => ((pos - positions[i]) / total) * trackPx).sort((x, y) => x - y);
@@ -122,7 +122,7 @@ export const ChallengeProgress: React.FC<ChallengeProgressProps> = ({ current, t
                   }`}
                   style={{ width: nodeSize, height: nodeSize }}
                 >
-                  <Trophy style={{ width: nodeSize * 0.5, height: nodeSize * 0.5 }} aria-hidden="true" />
+                  <Flag style={{ width: nodeSize * 0.5, height: nodeSize * 0.5 }} aria-hidden="true" />
                 </div>
                 <span
                   className={`absolute left-1/2 top-full mt-1 -translate-x-1/2 text-mini font-bold max-sm:hidden ${

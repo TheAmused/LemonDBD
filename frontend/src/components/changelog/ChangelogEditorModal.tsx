@@ -121,7 +121,7 @@ export const ChangelogEditorModal: React.FC<ChangelogEditorModalProps> = ({ open
             size="xs"
             variant="secondary"
             pill
-            leftIcon={<Plus className="h-3 w-3" />}
+            leftIcon={<Plus className="icon-xs" />}
             onClick={() => editorRef.current?.appendSection(t.sections[section])}
           >
             {t.sections[section]}

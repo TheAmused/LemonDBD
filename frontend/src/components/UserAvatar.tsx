@@ -4,7 +4,7 @@
 import { logger } from '@/utils/logger';
 import React, { useState } from 'react';
 import { LemonIcon } from '@/components/LemonIcon';
-import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
+import { CrownIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { Img } from '@/components/common/Img';
@@ -143,7 +143,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
           {...tip(adminTitle, undefined, 'status')}
           aria-label={adminAriaLabel}
         >
-          <OverseerEyeIcon className={sizeConfig.badgeIcon} />
+          <CrownIcon className={sizeConfig.badgeIcon} />
         </span>
       )}
     </div>

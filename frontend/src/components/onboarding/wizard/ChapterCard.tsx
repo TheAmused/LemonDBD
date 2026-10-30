@@ -87,7 +87,7 @@ export function ChapterCard({
           imageSrc={bannerSrc}
         />
         <ChevronDown
-          className={`absolute top-1 right-1 sm:top-2 sm:right-2 h-3.5 w-3.5 sm:h-5 sm:w-5 text-text-inverted drop-shadow transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+          className={`absolute top-1 right-1 sm:top-2 sm:right-2 icon-sm sm:icon-lg text-text-inverted drop-shadow transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
         />
       </button>
       {/* The whole footer toggles ownership, not just the small

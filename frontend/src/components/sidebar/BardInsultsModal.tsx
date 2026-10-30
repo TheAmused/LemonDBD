@@ -10,7 +10,6 @@ import { Check } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
 import { Table, TableHead, TableBody, TableRow, Th, Td } from '@/components/common/Table';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
 import { copyTextWithFallback } from '@/utils/clipboard';
 
@@ -63,8 +62,8 @@ export const BardInsultsModal: React.FC<BardInsultsModalProps> = ({ isOpen, onCl
           value={side}
           onChange={setSide}
           options={[
-            { value: 'survivor', label: t.insultsSideSurvivor, icon: <SurvivorIcon className="icon-sm" />, activeClassName: 'bg-accent-green text-text-inverted' },
-            { value: 'killer', label: t.insultsSideKiller, icon: <KillerIcon className="icon-sm" /> },
+            { value: 'survivor', label: t.insultsSideSurvivor, activeClassName: 'bg-accent-green text-text-inverted' },
+            { value: 'killer', label: t.insultsSideKiller },
           ]}
         />
       </div>
@@ -87,7 +86,7 @@ export const BardInsultsModal: React.FC<BardInsultsModalProps> = ({ isOpen, onCl
                   className="flex w-full cursor-pointer items-center justify-center gap-2 px-3 py-2 italic transition-colors hover:text-accent-red focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
                 >
                   <span>{row.bard}</span>
-                  {copiedBard === row.bard && <Check aria-hidden="true" className="h-4 w-4 shrink-0 text-accent-green" />}
+                  {copiedBard === row.bard && <Check aria-hidden="true" className="icon-md shrink-0 text-accent-green" />}
                 </button>
               </Td>
             </TableRow>

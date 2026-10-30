@@ -1,5 +1,4 @@
 'use client';
-import { BloodwebIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/auth/AuthModalParts.tsx
 //
 // The presentational pieces of the sign-in / sign-up dialog. AuthModal keeps the state and the
@@ -80,7 +79,7 @@ export const ForgotSentNotice: React.FC<{ onClose: () => void }> = ({ onClose })
       className="block mb-4 space-y-3 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3.5 text-xs text-accent-amber animate-in fade-in duration-150 shadow-xs"
     >
       <div className="flex items-start gap-2.5">
-        <MailWarning className="h-4 w-4 shrink-0 mt-0.5" />
+        <MailWarning className="icon-md shrink-0 mt-0.5" />
         <span>{dict.user.forgotSentNotice}</span>
       </div>
       {dict.modal.close && (
@@ -168,9 +167,9 @@ export const LegalConsentField: React.FC<LegalConsentProps> = ({ accepted, onCha
 /** The submit button's icon and label for the current mode. */
 export const SubmitLabel: React.FC<{ mode: AuthMode }> = ({ mode }) => {
   const dict = useDictionary();
-  if (mode === 'login') return <><LogIn className="h-4 w-4" /><span>{dict.user.signIn}</span></>;
-  if (mode === 'register') return <><UserPlus className="h-4 w-4" /><span>{dict.user.createAccount}</span></>;
-  return <><Mail className="h-4 w-4" /><span>{dict.user.sendResetLink}</span></>;
+  if (mode === 'login') return <><LogIn className="icon-md" /><span>{dict.user.signIn}</span></>;
+  if (mode === 'register') return <><UserPlus className="icon-md" /><span>{dict.user.createAccount}</span></>;
+  return <><Mail className="icon-md" /><span>{dict.user.sendResetLink}</span></>;
 };
 
 /** "or" divider plus the Google button. */
@@ -199,11 +198,10 @@ export const DemoAccountButtons: React.FC<{ onFill: (role: DemoAccount['role']) 
         <p className="type-label-2xs text-text-muted mb-2 text-center">{dict.user.quickDemoAccounts}</p>
       )}
       <div className="grid grid-cols-2 gap-2">
-        <Button variant="soft" size="xs" onClick={() => onFill('admin')} leftIcon={<ShieldAlert className="h-3 w-3" />}>
+        <Button variant="soft" size="xs" onClick={() => onFill('admin')} leftIcon={<ShieldAlert className="icon-xs" />}>
           <span>{dict.user.adminDemo}</span>
         </Button>
         <Button type="button" onClick={() => onFill('player')} variant="amberSoft" size="sm">
-          <BloodwebIcon className="h-3 w-3 text-accent-amber" />
           <span>{dict.user.userDemo}</span>
         </Button>
       </div>

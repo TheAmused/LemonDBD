@@ -180,7 +180,7 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
         subtitle={t.systemSubtitle}
         action={
           <Button size="sm" icon onClick={() => void loadChecks()} aria-label={t.systemRecheck} loading={checking}>
-            <RefreshCw className="icon-md" aria-hidden="true" />
+            <RefreshCw aria-hidden="true" />
           </Button>
         }
       >
@@ -238,17 +238,17 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
         }
       >
         <ToolRow title={t.exportJson} description={t.exportBackupDesc}>
-          <Button size="sm" leftIcon={<Download className="icon-sm" aria-hidden="true" />} onClick={() => setBackupTab('export')}>
+          <Button size="sm" leftIcon={<Download aria-hidden="true" />} onClick={() => setBackupTab('export')}>
             {t.export}
           </Button>
         </ToolRow>
         <ToolRow title={t.importJson} description={t.importBackupDesc}>
-          <Button size="sm" leftIcon={<Upload className="icon-sm" aria-hidden="true" />} onClick={() => setBackupTab('import')}>
+          <Button size="sm" leftIcon={<Upload aria-hidden="true" />} onClick={() => setBackupTab('import')}>
             {t.import}
           </Button>
         </ToolRow>
         <ToolRow title={t.purgeReset} description={t.purgeDesc}>
-          <Button size="sm" variant="danger" leftIcon={<Trash2 className="icon-sm" aria-hidden="true" />} onClick={() => setBackupTab('purge')}>
+          <Button size="sm" variant="danger" leftIcon={<Trash2 aria-hidden="true" />} onClick={() => setBackupTab('purge')}>
             {t.purge}
           </Button>
         </ToolRow>
@@ -256,12 +256,12 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
 
       <ToolCard id="testing" title={t.testingTitle} subtitle={t.testingSubtitle}>
         <ToolRow title={t.vectorMapTest} description={t.vectorMapTestDesc}>
-          <Button size="sm" leftIcon={<MapPin className="icon-sm" aria-hidden="true" />} onClick={() => setVectorMapOpen(true)}>
+          <Button size="sm" leftIcon={<MapPin aria-hidden="true" />} onClick={() => setVectorMapOpen(true)}>
             {t.openTest}
           </Button>
         </ToolRow>
         <ToolRow title={t.ocrCheck} description={t.ocrCheckDesc}>
-          <Button size="sm" leftIcon={<ScanText className="icon-sm" aria-hidden="true" />} onClick={() => setOcrOpen(true)}>
+          <Button size="sm" leftIcon={<ScanText aria-hidden="true" />} onClick={() => setOcrOpen(true)}>
             {t.openTest}
           </Button>
         </ToolRow>
@@ -270,7 +270,7 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
             size="sm"
             loading={running === 'email'}
             disabled={running !== null}
-            leftIcon={<Mail className="icon-sm" aria-hidden="true" />}
+            leftIcon={<Mail aria-hidden="true" />}
             onClick={() => { void run('email', async () => formatMessage(t.testEmailSent, { email: (await sendTestEmail()).sent_to })); }}
           >
             {t.sendTest}
@@ -281,7 +281,7 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
             size="sm"
             loading={running === 'discord'}
             disabled={running !== null}
-            leftIcon={<MessageSquare className="icon-sm" aria-hidden="true" />}
+            leftIcon={<MessageSquare aria-hidden="true" />}
             onClick={() =>
               { void run('discord', async () => {
                 await sendTestDiscord();

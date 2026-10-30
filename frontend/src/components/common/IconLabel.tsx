@@ -21,7 +21,7 @@ const VARIANTS = {
 export function IconLabel({ icon: Icon, as: Tag = 'div', variant = 'fact', className, children }: IconLabelProps) {
   return (
     <Tag className={cn('flex items-center gap-1.5', VARIANTS[variant], className)}>
-      {Icon && <Icon className="h-3.5 w-3.5 shrink-0 text-text-muted" aria-hidden="true" />}
+      {Icon && <Icon className="icon-sm shrink-0 text-text-muted" aria-hidden="true" />}
       {children}
     </Tag>
   );

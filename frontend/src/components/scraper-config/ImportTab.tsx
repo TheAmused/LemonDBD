@@ -94,7 +94,7 @@ export function ImportTab({ tab }: { tab: ReturnType<typeof useImportTab> }) {
                 {...tip(dict.admin.removeFile, undefined, 'action')}
                 aria-label={dict.admin.removeFile}
               >
-                <X className="h-3.5 w-3.5" />
+                <X />
               </Button>
             </div>
             <p className="type-strong-xs text-accent-green">
@@ -135,7 +135,7 @@ export function ImportTab({ tab }: { tab: ReturnType<typeof useImportTab> }) {
               onChange={() => setImportMode('merge')}
               className="sr-only"
             />
-            <ShieldCheck className="h-4 w-4 text-accent-green mt-0.5 shrink-0" />
+            <ShieldCheck className="icon-md text-accent-green mt-0.5 shrink-0" />
             <span>
               <span className="block type-strong">{dict.admin.mergeUpdate}</span>
               <span className="block type-micro text-text-muted">{dict.admin.mergeUpdateDesc}</span>
@@ -157,7 +157,7 @@ export function ImportTab({ tab }: { tab: ReturnType<typeof useImportTab> }) {
               onChange={() => setImportMode('replace')}
               className="sr-only"
             />
-            <RotateCcw className="h-4 w-4 text-accent-amber mt-0.5 shrink-0" />
+            <RotateCcw className="icon-md text-accent-amber mt-0.5 shrink-0" />
             <span>
               <span className="block type-strong">{dict.admin.wipeReplace}</span>
               <span className="block type-micro text-text-muted">{dict.admin.wipeReplaceDesc}</span>
@@ -198,7 +198,7 @@ export function ImportTab({ tab }: { tab: ReturnType<typeof useImportTab> }) {
           onClick={handleExecuteImport}
           loading={isImporting}
           disabled={!importFile}
-          leftIcon={<Upload className="h-3.5 w-3.5" />}
+          leftIcon={<Upload className="icon-sm" />}
         >
           <span>
             {isImporting ? dict.admin.importingStatus : dict.admin.executeImport}

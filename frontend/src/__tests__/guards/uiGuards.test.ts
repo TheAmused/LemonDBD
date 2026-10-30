@@ -21,6 +21,20 @@ describe('ui: accessible names', () => {
     assert.deepEqual(bad, [], `Icon-only buttons with no accessible name:\n${bad.join('\n')}`);
   });
 
+  it('every icon-only <Button> / <ToggleChip> (the `icon` prop, or nothing but icons inside) has an aria-label, a title or a spread', () => {
+    const bad = scanAst((n) => {
+      const open = ts.isJsxElement(n) ? n.openingElement : ts.isJsxSelfClosingElement(n) ? n : null;
+      if (!open || !/^(Button|ToggleChip)$/.test(open.tagName.getText())) return false;
+      const attrs = attrNames(open);
+      if (attrs.some((a) => /^(aria-label|aria-labelledby|title|\.\.\.)$/.test(a))) return false;
+      if (attrs.includes('icon')) return true;
+      if (!ts.isJsxElement(n) || attrs.some((a) => /^(leftIcon|rightIcon)$/.test(a))) return false;
+      const kids = n.children.filter((c) => !(ts.isJsxText(c) && !c.text.trim()));
+      return kids.length > 0 && kids.every((c) => ts.isJsxSelfClosingElement(c) && /Icon$|^[A-Z]\w*$/.test(c.tagName.getText()) && !/^(FitText|Spinner|Img)$/.test(c.tagName.getText()));
+    });
+    assert.deepEqual(bad, [], `Icon-only buttons with no accessible name:\n${bad.join('\n')}`);
+  });
+
   it('aria-label / alt / placeholder / title attributes are never plain string literals', () => {
     // Plain literals are English-only; they must come from the dictionary. (scripts/check-hardcoded-strings.ts
     // covers the broader sweep; this keeps the accessibility attributes at zero.)
@@ -84,6 +98,38 @@ describe('ui: theming', () => {
   it('no fixed palette colours (white/black/slate/gray/zinc/neutral); use theme tokens so light, lemon and dark all work', () => {
     const bad = scanLines(/\b(text|bg|border|ring|fill|stroke|from|to|via)-(white|black|slate-\d+|gray-\d+|zinc-\d+|neutral-\d+|stone-\d+)\b/);
     assert.deepEqual(bad, [], `Theme-blind colour utilities:\n${bad.join('\n')}`);
+  });
+});
+
+describe('ui: icon sizes', () => {
+  it('an icon sized on the icon scale uses the icon-* utility (tokens.css), not a raw h-N w-N / size-N pair', () => {
+    // 10, 12, 14, 16, 20 and 24px are icon-2xs..icon-xl. Bigger artwork keeps raw sizes; flags are not square.
+    // An icon is a *Icon component or anything the file imports from lucide-react.
+    const lucideByFile = new Map<string, Set<string>>();
+    const lucideNames = (file: string, text: string) => {
+      let names = lucideByFile.get(file);
+      if (!names) {
+        names = new Set<string>();
+        for (const m of text.matchAll(/import\s*\{([^}]*)\}\s*from\s*['"]lucide-react['"]/g)) {
+          for (const part of m[1].split(',')) {
+            const local = part.trim().split(/\s+as\s+/).pop();
+            if (local) names.add(local);
+          }
+        }
+        lucideByFile.set(file, names);
+      }
+      return names;
+    };
+    const bad = scanAst((n, m) => {
+      const open = ts.isJsxOpeningElement(n) || ts.isJsxSelfClosingElement(n) ? n : null;
+      const tag = open?.tagName.getText() ?? '';
+      if (!open || /^(FlagIcon|PersonaIcon|PerkIcon)$/.test(tag)) return false;
+      if (!/(^|\.)\w*Icon$/.test(tag) && !lucideNames(m.file, m.text).has(tag)) return false;
+      const cls = open.attributes.properties.find((a) => ts.isJsxAttribute(a) && a.name.getText() === 'className') as ts.JsxAttribute | undefined;
+      const text = cls?.initializer ? cls.initializer.getText() : '';
+      return /(^|[\s"'`{])((?:[\w-]+:)*)(?:h-(2\.5|3|3\.5|4|5|6)\s+\2w-\3|w-(2\.5|3|3\.5|4|5|6)\s+\2h-\4|size-(2\.5|3|3\.5|4|5|6))(?=[\s"'`}])/.test(text);
+    });
+    expectNone(countBy(bad.map((b) => b.split(':')[0])), 'icons sized with raw h-N w-N instead of icon-*');
   });
 });
 

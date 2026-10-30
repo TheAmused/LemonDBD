@@ -1,6 +1,6 @@
 'use client';
 // frontend/src/components/smash-or-pass/card/CardBackFace.tsx
-import { SnuffedCandleIcon, TarotTurnIcon, ThornHeartIcon } from '@/components/icons/DbdIcons';
+import { HeartIcon, PassIcon, CardFlipIcon } from '@/components/icons/DbdIcons';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
 import { tip } from '@/components/common/Tooltip';
@@ -81,7 +81,7 @@ export function CardBackFace({
           aria-label={text.flipBack}
           variant="soft" size="md" icon
         >
-          <TarotTurnIcon className="h-5 w-5" aria-hidden="true" />
+          <CardFlipIcon aria-hidden="true" />
         </Button>
 
         <div className="flex items-center gap-1.5 px-2 min-w-0">
@@ -211,7 +211,7 @@ export function CardBackFace({
           }}
           className="flex-1"
         >
-          <SnuffedCandleIcon className="h-5 w-5" aria-hidden="true" />
+          <PassIcon className="icon-lg" aria-hidden="true" />
           <span>{text.pass}</span>
         </Button>
         <Button
@@ -225,7 +225,7 @@ export function CardBackFace({
           }}
           className="flex-1"
         >
-          <ThornHeartIcon className="h-5 w-5" aria-hidden="true" />
+          <HeartIcon className="icon-lg" aria-hidden="true" />
           <span>{text.smash}</span>
         </Button>
       </div>

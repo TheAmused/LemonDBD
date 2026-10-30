@@ -1,11 +1,11 @@
 'use client';
 // frontend/src/components/smash-or-pass/persona/PersonaBreakdown.tsx
-import { Compass, Gamepad2, RotateCcw, Share2 } from 'lucide-react';
+import { Compass, RotateCcw, Share2 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
 import { tip } from '@/components/common/Tooltip';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
-import { KillerIcon, SurvivorIcon, ThornHeartIcon } from '@/components/icons/DbdIcons';
+import { HeartIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
 import { isSurvivor } from '@/utils/characterUtils';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
@@ -108,7 +108,7 @@ export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onRe
         <Surface padding="none" className="p-3.5 border-border-color/60 flex flex-col justify-between gap-1 shadow-xs">
           <span className="text-text-muted type-caption">{text.statsDetail.smashRate}</span>
           <span className="text-lg font-black text-accent-red flex items-center gap-1">
-            <ThornHeartIcon className="h-4 w-4 fill-accent-red" />
+            <HeartIcon className="icon-md fill-accent-red" />
             {persona.smashRate}{text.percentSign}
           </span>
         </Surface>
@@ -134,7 +134,7 @@ export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onRe
       <Surface padding="none" className="p-4 border-border-color/60 space-y-2.5 shadow-xs">
         <div className="flex items-center justify-between pb-1 border-b border-border-color/40">
           <span className="type-label-xs text-text-secondary flex items-center gap-1.5">
-            <Compass className="h-3.5 w-3.5 text-accent-red" />
+            <Compass className="icon-sm text-accent-red" />
             {text.roleAffinity}
           </span>
           {persona.totalSmashes !== undefined && (
@@ -148,14 +148,12 @@ export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onRe
 
         <div className="flex justify-between items-center type-strong">
           <span className="flex items-center gap-1.5 text-accent-green">
-            <SurvivorIcon className="h-4 w-4" aria-hidden="true" />
             <span>
               {text.filters.survivors}
               {persona.smashedSurvivors !== undefined ? ` (${persona.smashedSurvivors})` : ''} ({persona.survivorAffinity}{text.percentSign})
             </span>
           </span>
           <span className="flex items-center gap-1.5 text-accent-red">
-            <KillerIcon className="h-4 w-4" aria-hidden="true" />
             <span>
               {text.filters.killers}
               {persona.smashedKillers !== undefined ? ` (${persona.smashedKillers})` : ''} ({persona.killerAffinity}{text.percentSign})
@@ -193,7 +191,6 @@ export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onRe
               onClick={onClose}
               className="flex-1"
             >
-              <Gamepad2 className="h-4 w-4" />
               <span>{text.playToDiscover}</span>
             </Button>
         ) : (
@@ -203,7 +200,7 @@ export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onRe
               onClick={onShare}
               className="flex-1"
             >
-              <Share2 className="h-4 w-4" />
+              <Share2 />
               <span>{text.shareArchetype}</span>
             </Button>
 
@@ -214,11 +211,11 @@ export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onRe
                   onClose();
                   onResetAll();
                 }}
-                className=""
+               
                 {...tip(text.tooltips.resetAllVotes, undefined, 'action')}
                 aria-label={text.tooltips.resetAllVotes}
               >
-                <RotateCcw className="h-4 w-4" aria-hidden="true" />
+                <RotateCcw aria-hidden="true" />
               </Button>
             )}
           </>

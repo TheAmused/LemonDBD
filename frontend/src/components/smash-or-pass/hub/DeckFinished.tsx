@@ -1,5 +1,4 @@
 'use client';
-import { ThornHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/smash-or-pass/hub/DeckFinished.tsx
 import React from 'react';
 import { RotateCcw } from 'lucide-react';
@@ -21,8 +20,6 @@ export function DeckFinished({ sessionSmashes, sessionPasses, onOpenPersona, onR
   return (
     <EmptyState
       variant="solid"
-      icon={ThornHeartIcon}
-      iconClassName="h-8 w-8 fill-accent-red animate-bounce mx-auto"
       title={dict.smashOrPass.empty.title}
       subtitle={dict.smashOrPass.empty.subtitle}
       headingClassName="text-xl font-black text-text-primary"
@@ -47,7 +44,7 @@ export function DeckFinished({ sessionSmashes, sessionPasses, onOpenPersona, onR
         </Button>
 
         <Button variant="secondary" size="md" onClick={onReset} className="flex-1">
-          <RotateCcw className="h-4 w-4 text-text-muted" />
+          <RotateCcw className="text-text-muted" />
           <span>{dict.smashOrPass.empty.resetAction}</span>
         </Button>
       </div>

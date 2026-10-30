@@ -17,7 +17,7 @@ export function ContentRemovedNotice({ count, onDismiss }: { count: number; onDi
         aria-live="polite"
         className="pointer-events-auto flex max-w-xl items-start gap-3 border-accent-amber/40 px-4 py-3 shadow-lg"
       >
-        <ShieldAlert className="mt-0.5 h-5 w-5 shrink-0 text-accent-amber" aria-hidden="true" />
+        <ShieldAlert className="mt-0.5 icon-lg shrink-0 text-accent-amber" aria-hidden="true" />
         <div className="min-w-0 flex-1">
           <p className="type-card-title text-text-primary">{t.title}</p>
           <p className="mt-1 text-sm text-text-secondary">{formatMessage(t.body, { count }, locale)}</p>
@@ -28,7 +28,7 @@ export function ContentRemovedNotice({ count, onDismiss }: { count: number; onDi
           aria-label={t.dismiss}
           className="shrink-0 rounded-control p-1 text-text-muted transition-colors hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber"
         >
-          <X className="h-4 w-4" aria-hidden="true" />
+          <X className="icon-md" aria-hidden="true" />
         </button>
       </Surface>
     </div>

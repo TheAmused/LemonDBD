@@ -63,13 +63,13 @@ function MapsClientInner() {
   ] = useMemo(() => [
     {
       value: 'text',
-      icon: <Search className="h-4 w-4" aria-hidden="true" />,
+      icon: <Search className="icon-md" aria-hidden="true" />,
       label: dict.maps.searchTextTab,
       activeClassName: 'bg-accent-red',
     },
     {
       value: 'voice',
-      icon: <Mic className="h-4 w-4" aria-hidden="true" />,
+      icon: <Mic className="icon-md" aria-hidden="true" />,
       label: dict.maps.searchVoiceTab,
       activeClassName: 'bg-accent-red',
     },

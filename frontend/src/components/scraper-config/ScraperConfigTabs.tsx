@@ -29,7 +29,7 @@ export function ScraperConfigTabs({ activeTab, onChange }: ScraperConfigTabsProp
       options={tabs.map(({ id, Icon, iconClass, label }) => ({
         value: id,
         label,
-        icon: <Icon className={`h-3.5 w-3.5 ${iconClass}`} />,
+        icon: <Icon className={`icon-sm ${iconClass}`} />,
         activeClassName: 'bg-bg-surface text-text-primary border border-border-color',
         activeTextColor: 'text-text-primary',
       }))}

@@ -1,5 +1,4 @@
 'use client';
-import { PadlockHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/auth/ResetPasswordClient.tsx
 
 import React, { Suspense, useState } from 'react';
@@ -7,7 +6,7 @@ import { FieldLabel, IconInput } from '@/components/common/Field';
 import { Button, buttonClassName } from '@/components/common/Button';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { CheckCircle2, AlertCircle } from 'lucide-react';
+import { CheckCircle2, CircleAlert } from 'lucide-react';
 import { LemonIcon } from '@/components/LemonIcon';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
@@ -15,6 +14,7 @@ import { useSiteConfig } from '@/context/SiteConfigContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import { Surface } from '@/components/common/Surface';
 import { CenteredScreen } from '@/components/layout/CenteredScreen';
+import { LockIcon } from '@/components/icons/DbdIcons';
 
 function ResetPasswordContent() {
   const searchParams = useSearchParams();
@@ -91,7 +91,7 @@ function ResetPasswordContent() {
               role="alert"
               className="flex items-center gap-2.5 rounded-card border border-accent-red/30 bg-accent-red/10 p-3 text-xs text-accent-red shadow-sm"
             >
-              <AlertCircle className="h-4 w-4 shrink-0" />
+              <CircleAlert className="icon-md shrink-0" />
               <span>{error}</span>
             </div>
           )}
@@ -100,14 +100,14 @@ function ResetPasswordContent() {
             <FieldLabel>
               {dict.user.newPassword}
             </FieldLabel>
-            <IconInput icon={PadlockHeartIcon} type="password" className="pl-10" required value={password} onChange={(e) => setPassword(e.target.value)} />
+            <IconInput icon={LockIcon} type="password" className="pl-10" required value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
 
           <div>
             <FieldLabel>
               {dict.user.confirmPassword}
             </FieldLabel>
-            <IconInput icon={PadlockHeartIcon} type="password" className="pl-10" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+            <IconInput icon={LockIcon} type="password" className="pl-10" required value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
           </div>
 
           <Button type="submit" variant="primary" loading={loading} className="w-full mt-2">

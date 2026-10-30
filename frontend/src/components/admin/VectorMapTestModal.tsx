@@ -2,7 +2,8 @@
 // frontend/src/components/admin/VectorMapTestModal.tsx
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Compass, Info, Layers } from 'lucide-react';
+import { Compass, Info } from 'lucide-react';
+import { MapIcon } from '@/components/icons/DbdIcons';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { FieldLabel, Select } from '@/components/common/Field';
@@ -143,7 +144,7 @@ export function VectorMapTestBody({
                 className={isLegendOpen ? 'text-accent-red bg-accent-red/10 hover:bg-accent-red/20' : undefined}
                 {...tip(mapsDict.legendTitle, undefined, 'action')}
               >
-                <Info className="icon-sm" aria-hidden="true" />
+                <Info aria-hidden="true" />
               </Button>
             )}
           </div>
@@ -154,7 +155,7 @@ export function VectorMapTestBody({
       <div className="relative min-h-80 sm:min-h-112 w-full rounded-card border border-border-color bg-bg-primary overflow-hidden flex items-center justify-center p-4">
         {loadingLayout ? (
           <div className="flex flex-col items-center gap-2 type-body text-text-muted">
-            <Layers className="icon-md animate-pulse text-accent-red" aria-hidden="true" />
+            <MapIcon className="icon-md animate-pulse text-accent-red" aria-hidden="true" />
             <span>{t.vectorMapLoading}</span>
           </div>
         ) : error ? (

@@ -9,7 +9,6 @@ import { useDemoAccounts, type DemoAccount } from '@/hooks/useDemoAccounts';
 import { useSiteConfig } from '@/context/SiteConfigContext';
 import { useGoogleClientId } from '@/hooks/useGoogleConfig';
 import { AltchaWidget } from '@/components/common/AltchaWidget';
-import { AlertCircle } from 'lucide-react';
 import { EmailVerificationForm } from '@/components/EmailVerificationForm';
 import { TwoFactorChallengeForm } from '@/components/auth/TwoFactorChallengeForm';
 import { Modal } from '@/components/common/Modal';
@@ -25,6 +24,7 @@ import {
   SecurityCheck, SubmitLabel, type AuthMode, type Notice,
 } from '@/components/auth/AuthModalParts';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
+import { CircleAlert } from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -230,7 +230,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
           role="alert"
           className="mb-4 flex items-center gap-2.5 rounded-card border border-accent-red/30 bg-accent-red/10 p-3 type-strong text-accent-red animate-in fade-in duration-150 shadow-xs"
         >
-          <AlertCircle className="h-4 w-4 shrink-0 text-accent-red" />
+          <CircleAlert className="icon-md shrink-0 text-accent-red" />
           <span>{error}</span>
         </div>
       )}

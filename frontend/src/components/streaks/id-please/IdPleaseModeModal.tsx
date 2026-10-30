@@ -2,7 +2,6 @@
 // frontend/src/components/streaks/id-please/IdPleaseModeModal.tsx
 
 import React from 'react';
-import { TierEasyIcon, TierHellIcon, TierMediumIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
 import type { IdPleaseDifficulty, IdPleaseEligibility, IdPleaseLane, IdPleaseSide } from '@/types/idPleaseStreak';
 import { ID_PLEASE_DIFFICULTIES, idPleaseLaneSide, parseIdPleaseDifficulty } from '@/types/idPleaseStreak';
@@ -11,8 +10,6 @@ import type { ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { idPleaseDifficultyImage } from './idPleaseAssets';
 import { idPleaseNeeds } from './idPleaseNeeds';
 import { IdPleaseRulesModal } from './IdPleaseRulesModal';
-
-const ICONS = { milestones: TierEasyIcon, hardcore: TierMediumIcon, hardcore_plus: TierHellIcon } as const;
 
 export interface IdPleaseModeModalProps {
   isOpen: boolean;
@@ -56,7 +53,6 @@ export const IdPleaseModeModal: React.FC<IdPleaseModeModalProps> = ({
       value,
       label: text[value].label,
       description: [text[value].description, ...needs].join(' '),
-      icon: ICONS[value],
       image: idPleaseDifficultyImage(artSide, value),
       disabled: locked,
       disabledBadge: locked ? s.idPleaseLockedBadge : undefined,

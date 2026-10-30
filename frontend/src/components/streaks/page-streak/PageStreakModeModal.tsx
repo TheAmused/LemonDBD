@@ -3,7 +3,6 @@
 
 
 import React from 'react';
-import { BookOpen } from 'lucide-react';
 import { type ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { ChallengeModeModal } from '../ChallengeModeModal';
 import { PageStreakRulesModal } from './PageStreakRulesModal';
@@ -21,7 +20,6 @@ export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen
     {
       value: 'normal',
       label: dict.streaks.normal,
-      icon: BookOpen,
       image: '/images/streaks/page-streak.webp',
     },
   ];

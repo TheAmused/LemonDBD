@@ -3,7 +3,7 @@
 
 import React from 'react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
-import { KillerIcon, SurvivorIcon, PerkHexIcon } from '@/components/icons/DbdIcons';
+import { PerkHexIcon, PersonIcon } from '@/components/icons/DbdIcons';
 import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -29,7 +29,6 @@ const label = 'min-h-two-lines line-clamp-2 w-full break-words px-1 pb-2 text-ce
 export const IdPleaseCharacterTile: React.FC<{ character: IdPleaseCharacter; side: IdPleaseSide; className?: string }> = ({ character, side, className }) => {
   const displayName = useCharacterDisplayName();
   const name = displayName(character.name);
-  const Fallback = side === 'killer' ? KillerIcon : SurvivorIcon;
   return (
     <div className={cn(frame, className)}>
       <div className={cn(artFrame, 'aspect-auto min-h-0 flex-1 basis-0')}>
@@ -38,7 +37,7 @@ export const IdPleaseCharacterTile: React.FC<{ character: IdPleaseCharacter; sid
           src={staticUrl(character.avatar_local_path) || avatarUrlForCharacter(character.name, avatarFolder(side))}
           alt=""
           imageClassName="h-full w-full object-cover"
-          fallbackIcon={<Fallback className="h-8 w-8 text-text-muted" aria-hidden="true" />}
+          fallbackIcon={<PersonIcon className="h-8 w-8 text-text-muted" aria-hidden="true" />}
         />
       </div>
       <span className={cn(label, 'pt-1.5')}>{name}</span>
@@ -57,7 +56,7 @@ export const IdPleasePerkTile: React.FC<{ perk: IdPleasePerk; coordinate: PerkCo
           src={perkIconUrl(perk)}
           alt=""
           imageClassName="h-full w-full object-cover"
-          fallbackIcon={<PerkHexIcon className="h-6 w-6 text-text-muted" aria-hidden="true" />}
+          fallbackIcon={<PerkHexIcon className="icon-xl text-text-muted" aria-hidden="true" />}
         />
       </div>
       <PerkCoordinateLabel coordinate={coordinate} className="py-1.5" />

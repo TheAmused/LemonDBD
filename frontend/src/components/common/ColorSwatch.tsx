@@ -36,7 +36,7 @@ export const ColorSwatch = React.forwardRef<HTMLButtonElement, ColorSwatchProps>
       )}
       {...rest}
     >
-      {selected && (mark ?? <Check className={size === 'sm' ? 'h-3.5 w-3.5' : 'h-4 w-4'} aria-hidden="true" />)}
+      {selected && (mark ?? <Check className={size === 'sm' ? 'icon-sm' : 'icon-md'} aria-hidden="true" />)}
       {children}
     </button>
   );

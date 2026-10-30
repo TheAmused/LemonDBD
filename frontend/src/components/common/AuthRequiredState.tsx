@@ -1,5 +1,4 @@
 'use client';
-import { PadlockHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/common/AuthRequiredState.tsx
 
 import React, { useState } from 'react';
@@ -7,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { useDictionary } from '@/context/DictionaryContext';
 import { Button } from '@/components/common/Button';
 import { IconTile } from '@/components/common/IconTile';
+import { LockIcon } from '@/components/icons/DbdIcons';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
@@ -43,7 +43,7 @@ export function AuthRequiredState({
   return (
     <div className={className || VARIANT_WRAPPER_CLASSNAME[variant]}>
       <IconTile tone="red" size="md">
-        <PadlockHeartIcon className="h-5 w-5 text-accent-red" />
+        <LockIcon className="icon-lg text-accent-red" />
       </IconTile>
       <h2 className="mt-4 text-sm font-extrabold tracking-wide text-text-primary">
         {title}

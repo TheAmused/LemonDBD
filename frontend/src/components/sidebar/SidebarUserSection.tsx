@@ -5,9 +5,9 @@ import type { UserProfile } from '@/context/AuthContext';
 import React from 'react';
 import { Button } from '@/components/common/Button';
 import Link from 'next/link';
-import { LogIn, LogOut } from 'lucide-react';
+import { LogIn, LogOut, Pencil } from 'lucide-react';
 import { UserAvatar } from '@/components/UserAvatar';
-import { OverseerEyeIcon, QuillEditIcon } from '@/components/icons/DbdIcons';
+import { CrownIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -48,7 +48,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
       <SidebarNavLink
         id="bard-insults"
         label={dict.sidebar.insultsButton}
-        icon={QuillEditIcon}
+        icon={Pencil}
         isActive={false}
         hasPopup="dialog"
         onClick={onOpenInsults}
@@ -57,7 +57,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
         <Button
           variant="soft"
           onClick={onOpenAuthModal}
-          leftIcon={<LogIn className="h-4 w-4" />}
+          leftIcon={<LogIn className="icon-md" />}
           className="w-full"
         >
           <span>{dict.sidebar.signIn}</span>
@@ -90,7 +90,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
                   onClick={onNavigateMobile}
                   className="p-1 rounded-control text-accent-red hover:bg-accent-red/10 transition-colors"
                 >
-                  <OverseerEyeIcon className="h-4 w-4" />
+                  <CrownIcon className="icon-md" />
                 </Link>
               )}
               <Button
@@ -100,7 +100,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
                 aria-label={dict.sidebar.signOut}
                 variant="ghost" size="xs" icon
               >
-                <LogOut className="h-3.5 w-3.5" />
+                <LogOut />
               </Button>
             </div>
           </div>

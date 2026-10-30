@@ -2,9 +2,9 @@
 // frontend/src/components/streaks/ChallengeModeGate.tsx
 
 import React, { useEffect, useState } from 'react';
-import { AlertTriangle } from 'lucide-react';
 import { fetchChallengeModeStatus } from '@/services/challengeModesApi';
 import { useDictionary } from '@/context/DictionaryContext';
+import { TriangleAlert } from 'lucide-react';
 
 interface ChallengeModeGateProps {
   /** Backend `ChallengeModeSetting.mode` key (gauntlet/chaos/history/page_streak/id_please). */
@@ -42,7 +42,7 @@ export const ChallengeModeGate: React.FC<ChallengeModeGateProps> = ({ mode, chil
   if (status === 'disabled') {
     return (
       <div className="flex flex-col items-center justify-center gap-4 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-12 text-center">
-        <AlertTriangle className="h-12 w-12 text-accent-amber" />
+        <TriangleAlert className="h-12 w-12 text-accent-amber" />
         <h1 className="text-lg font-extrabold text-text-primary">
           {dict.streaks.temporarilyDisabled}
         </h1>

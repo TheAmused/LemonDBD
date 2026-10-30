@@ -150,7 +150,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
                 )}
               </span>
             }
-            icon={<SlidersHorizontal className="h-3.5 w-3.5" />}
+            icon={<SlidersHorizontal className="icon-sm" />}
             accent="primary"
             align="right"
             minWidthClass=""

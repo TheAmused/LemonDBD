@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { TriangleAlert } from 'lucide-react';
+import { CircleAlert } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 import { type SmashRosterErrorCode } from '@/utils/smashOrPass/codec';
 import { defaultRosterThemeColor, SMASH_ROSTER_LIMITS, TRANSLATABLE_LOCALES } from '@/utils/smashOrPass/constants';
@@ -246,7 +246,7 @@ export function Feedback({ errors, saveError, submitError, publishError }: {
     <div role="alert" className="flex flex-col items-center justify-center gap-1.5 rounded-chip border border-accent-red/40 bg-accent-red/10 p-3 type-card-title text-accent-red text-center">
       {messages.map((m) => (
         <p key={m} className="flex items-center justify-center gap-2">
-          <TriangleAlert className="h-4 w-4 shrink-0" aria-hidden="true" />
+          <CircleAlert className="icon-md shrink-0" aria-hidden="true" />
           {m}
         </p>
       ))}

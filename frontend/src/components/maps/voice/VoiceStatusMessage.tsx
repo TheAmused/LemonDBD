@@ -2,7 +2,7 @@
 // frontend/src/components/maps/voice/VoiceStatusMessage.tsx
 
 import React from 'react';
-import { AlertCircle, CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, CircleAlert } from 'lucide-react';
 import { Spinner } from '@/components/common/Spinner';
 import { useDictionary } from '@/context/DictionaryContext';
 import type { VoiceEngineType } from '@/services/clientSpeechModel';
@@ -82,7 +82,7 @@ export function VoiceStatusMessage({
         {voiceStatus === 'matched' && matchedResult && (
           <div className={STATUS_COLUMN}>
             <div className="flex items-center justify-center gap-1.5 max-w-full">
-              <CheckCircle2 className="h-3.5 w-3.5 text-accent-green shrink-0" aria-hidden="true" />
+              <CheckCircle2 className="icon-sm text-accent-green shrink-0" aria-hidden="true" />
               <span className="type-strong-fluid text-accent-green truncate max-w-70 sm:max-w-xl">
                 {matchedResult.matchedMapName
                   ? `${rawVoiceDict.matchedPrefix || ''} ${matchedResult.matchedMapName}`
@@ -102,7 +102,7 @@ export function VoiceStatusMessage({
         {voiceStatus === 'nomatch' && (
           <div className={STATUS_COLUMN}>
             <div className="flex items-center justify-center gap-1.5 type-strong text-accent-amber max-w-full">
-              <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+              <CircleAlert className="icon-sm shrink-0" aria-hidden="true" />
               <span className="truncate max-w-70 sm:max-w-xl">
                 {liveTranscript
                   ? `${dict.maps.heardLabel} “${liveTranscript}” (${rawVoiceDict.noDbdMatch || ''})`
@@ -118,7 +118,7 @@ export function VoiceStatusMessage({
         {voiceStatus === 'error' && (
           <div className={STATUS_COLUMN}>
             <div className="flex items-center justify-center gap-1.5 type-strong text-accent-red max-w-full">
-              <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+              <CircleAlert className="icon-sm shrink-0" aria-hidden="true" />
               <span className="truncate max-w-70 sm:max-w-xl">{errorMessage || rawVoiceDict.micBlocked || ''}</span>
             </div>
             <span className="type-micro text-accent-red/80 truncate max-w-70 sm:max-w-xl">

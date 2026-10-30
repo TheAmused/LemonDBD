@@ -26,12 +26,12 @@ import { useAuth } from '@/context/AuthContext';
 import { saveChaosDifficulty } from '@/utils/streakDifficultyPrefs';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
-import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
 import { tip } from '@/components/common/Tooltip';
 
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
+import { TrophyIcon } from '@/components/icons/DbdIcons';
 const ChaosStatsDrawer = dynamic(
   () => import('./ChaosStatsDrawer').then((m) => m.ChaosStatsDrawer),
   { ssr: false }
@@ -250,7 +250,7 @@ export const ChaosBoard: React.FC = () => {
               {...tip(dict.streaks.devSkipWinTitle, undefined, 'action')} aria-label={dict.streaks.devSkipWinTitle}
               variant="amberSoft" size="sm"
             >
-              <AdeptBadgeIcon className="h-3.5 w-3.5" aria-hidden="true" />
+              <TrophyIcon aria-hidden="true" />
               <span>{dict.streaks.devSkipWinLabel}</span>
             </Button>
           </Surface>

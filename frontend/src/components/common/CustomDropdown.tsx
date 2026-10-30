@@ -144,7 +144,7 @@ export function CustomDropdown<T extends string = string>({
           </Badge>
         )}
         <ChevronDown
-          className={`h-3.5 w-3.5 text-text-secondary transition-transform duration-200 shrink-0 ${
+          className={`icon-sm text-text-secondary transition-transform duration-200 shrink-0 ${
             isOpen ? `rotate-180 ${accentClasses.chevron}` : ''
           }`}
         />
@@ -181,7 +181,7 @@ export function CustomDropdown<T extends string = string>({
                           </span>
                         )}
                       </div>
-                      {isSelected && <Check className="h-3.5 w-3.5 stroke-[3] ml-2 shrink-0" />}
+                      {isSelected && <Check className="icon-sm stroke-[3] ml-2 shrink-0" />}
                     </MenuItem>
                   );
                 })}

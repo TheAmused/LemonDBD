@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 import type { GauntletPlayerLoadout, Perk, Role, TierInfo } from '@/types/gauntletStreak';
 import type { OwnedCharacterItem } from '@/components/streaks/useOwnedRoster';
 import type { DrawPhase } from '@/components/streaks/gauntlet/useTargetDraw';
-import { User, Star, HelpCircle } from 'lucide-react';
+import { Star, HelpCircle } from 'lucide-react';
 import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
-import { KillerIcon, PerkHexIcon, PadlockHeartIcon } from '@/components/icons/DbdIcons';
+import { PerkHexIcon, LockIcon, PersonIcon } from '@/components/icons/DbdIcons';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { DiamondSlot } from '@/components/ui/DiamondSlot';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -41,7 +41,7 @@ export const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPh
       <div
         className={`w-full h-full bg-bg-elevated rounded-card flex items-center justify-center text-text-muted ${motion}`}
       >
-        {role === 'survivor' ? <User className="w-8 h-8" aria-hidden="true" /> : <KillerIcon className="w-8 h-8" aria-hidden="true" />}
+        <PersonIcon className="w-8 h-8" aria-hidden="true" />
       </div>
     );
   }
@@ -228,7 +228,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, char
                   size={size}
                   iconClassName="bg-bg-elevated/60 border-dashed border-border-color opacity-60 text-text-muted"
                 >
-                  <PadlockHeartIcon className={iconSize} />
+                  <LockIcon className={iconSize} />
                 </SlotChip>
               </li>
             );
@@ -298,7 +298,7 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
         />
       ) : (
         <div className="w-full h-full bg-bg-elevated flex items-center justify-center text-text-muted">
-          {role === 'survivor' ? <User className={iconClass} aria-hidden="true" /> : <KillerIcon className={iconClass} aria-hidden="true" />}
+          <PersonIcon className={iconClass} aria-hidden="true" />
         </div>
       )}
     </div>

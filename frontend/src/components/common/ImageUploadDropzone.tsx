@@ -220,7 +220,7 @@ export function ImageUploadDropzone({
               onClick={() => onChange('')}
               aria-label={resolvedRemoveLabel}
             >
-              <Trash2 className="h-3.5 w-3.5" />
+              <Trash2 />
             </Button>
           </div>
         </div>
@@ -248,7 +248,7 @@ export function ImageUploadDropzone({
           )}
         >
           <span className="flex h-10 w-10 items-center justify-center rounded-chip border border-border-color bg-bg-surface text-text-muted">
-            <ImagePlus className="h-5 w-5" aria-hidden="true" />
+            <ImagePlus className="icon-lg" aria-hidden="true" />
           </span>
 
           {allowFileUpload ? (
@@ -261,7 +261,7 @@ export function ImageUploadDropzone({
                 loading={processing}
                 onClick={() => fileInputRef.current?.click()}
               >
-                <Upload className="h-4 w-4" />
+                <Upload className="icon-md" />
                 <span>{resolvedBrowseLabel}</span>
               </Button>
               {emptyActions || actions}
@@ -315,7 +315,7 @@ export function ImageUploadDropzone({
               className="shrink-0"
               aria-label={dict.tierLists.save}
             >
-              <Check className="h-3.5 w-3.5" />
+              <Check />
             </Button>
           </div>
         </div>

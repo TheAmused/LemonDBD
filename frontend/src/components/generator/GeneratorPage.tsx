@@ -3,7 +3,7 @@
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { AlertTriangle, RotateCcw } from 'lucide-react';
+import { RotateCcw, TriangleAlert } from 'lucide-react';
 import type {
   Perk,
   DrawnSlot,
@@ -297,7 +297,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     <div className="flex w-full flex-1 min-h-0 flex-col gap-4">
       {ownedOrAvailableCount === 0 ? (
         <section aria-live="polite" className="flex flex-col items-center justify-center gap-3 p-12 text-center">
-          <AlertTriangle className="h-12 w-12 text-accent-amber animate-bounce" />
+          <TriangleAlert className="h-12 w-12 text-accent-amber animate-bounce" />
           <h2 className="text-lg font-black text-accent-amber">
             {dict.generator.noPerksTitle}
           </h2>
@@ -434,7 +434,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
               : formatMessage((dict.generator.lowPoolDescMany), { count: totalPlayableCount, size: FULL_LOADOUT_SIZE }, locale)
         }
         confirmLabel={dict.generator.lowPoolResetButton}
-        confirmIcon={<RotateCcw className="h-4 w-4" />}
+        confirmIcon={<RotateCcw className="icon-md" />}
         cancelLabel={dict.generator.lowPoolCloseButton}
         onConfirm={handleResetDrawnPerksOnly}
         onCancel={() => setShowLowPoolWarning(false)}

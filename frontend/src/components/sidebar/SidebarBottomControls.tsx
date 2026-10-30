@@ -111,10 +111,10 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
 
   // Short wordings for the narrow trigger button ("Light mode (Lemon)" -> "Lemon").
   const THEME_OPTIONS: { id: ThemeOptionId; label: string; short: string; icon: React.ReactNode }[] = [
-    { id: 'light', label: lightLabel, short: dict.sidebar.themeLightShort, icon: <Sun className="h-4 w-4" /> },
-    { id: 'light-lemon', label: lightLemonLabel, short: dict.sidebar.themeLightLemonShort, icon: <Citrus className="h-4 w-4" /> },
-    { id: 'dark', label: darkLabel, short: dict.sidebar.themeDarkShort, icon: <Moon className="h-4 w-4" /> },
-    { id: 'system', label: systemLabel, short: dict.sidebar.themeSystemShort, icon: <Laptop className="h-4 w-4" /> },
+    { id: 'light', label: lightLabel, short: dict.sidebar.themeLightShort, icon: <Sun className="icon-md" /> },
+    { id: 'light-lemon', label: lightLemonLabel, short: dict.sidebar.themeLightLemonShort, icon: <Citrus className="icon-md" /> },
+    { id: 'dark', label: darkLabel, short: dict.sidebar.themeDarkShort, icon: <Moon className="icon-md" /> },
+    { id: 'system', label: systemLabel, short: dict.sidebar.themeSystemShort, icon: <Laptop className="icon-md" /> },
   ];
   const currentThemeOption =
     THEME_OPTIONS.find((t) => t.id === theme) ?? THEME_OPTIONS.find((t) => t.id === 'system')!;
@@ -239,7 +239,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           aria-label={dict.sidebar.reportBug}
           
         >
-          <FogReportIcon className="h-3.5 w-3.5 shrink-0 text-accent-red" />
+          <FogReportIcon className="shrink-0 text-accent-red" />
           <FitText minScale={0.6} maxLines={2} className="min-w-0 text-center">{dict.sidebar.reportBug}</FitText>
         </Button>
 
@@ -249,7 +249,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
           aria-label={dict.sidebar.buyCoffee}
           
         >
-          <CampfireMugIcon className="h-3.5 w-3.5 shrink-0 text-accent-amber" />
+          <CampfireMugIcon className="shrink-0 text-accent-amber" />
           <FitText minScale={0.6} maxLines={2} className="min-w-0 text-center">{dict.sidebar.buyCoffee}</FitText>
         </Button>
       </div>

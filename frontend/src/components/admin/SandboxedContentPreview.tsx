@@ -71,7 +71,7 @@ export function SandboxedContentPreview({ evidence }: { evidence: string }) {
               {formatMessage(dict.admin.contentReportImageCount, { count: String(preview.images.length) })}
             </p>
             <Button size="xs" onClick={() => setShowImages((v) => !v)} aria-pressed={showImages}>
-              {showImages ? <EyeOff className="icon-sm" /> : <Eye className="icon-sm" />}
+              {showImages ? <EyeOff /> : <Eye />}
               {showImages ? dict.admin.contentReportHideImages : dict.admin.contentReportShowImages}
             </Button>
           </div>
@@ -103,7 +103,7 @@ export function SandboxedContentPreview({ evidence }: { evidence: string }) {
 
       <div className="space-y-2">
         <Button size="xs" onClick={() => setShowRaw((v) => !v)} aria-expanded={showRaw}>
-          <FileJson className="icon-sm" />
+          <FileJson />
           {showRaw ? dict.admin.contentReportHideRaw : dict.admin.contentReportShowRaw}
         </Button>
         {showRaw && (

@@ -7,9 +7,10 @@ import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { IconTile } from '@/components/common/IconTile';
 import {
-  ThunderPulseIcon,
-  ChaosSwirlIcon,
-  CautionVeilIcon,
+  ClapperboardIcon,
+  MatureIcon,
+  WarningIcon,
+  VolumeIcon,
 } from '@/components/icons/DbdIcons';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { usePreferences } from '@/hooks/usePreferences';
@@ -108,7 +109,7 @@ export function PreferencesPromptModal({
         {isSmash && (
           <div className="flex items-start gap-3 p-3.5 rounded-card border border-accent-amber/40 bg-accent-amber/10">
             <IconTile size="sm" tone="amber" className="shrink-0 mt-0.5">
-              <CautionVeilIcon className="h-5 w-5" aria-hidden="true" />
+              <WarningIcon className="icon-lg" aria-hidden="true" />
             </IconTile>
             <div className="space-y-1 min-w-0 flex-1">
               <span className="type-strong-fluid text-accent-amber block font-bold">
@@ -126,7 +127,7 @@ export function PreferencesPromptModal({
           {/* Row 1: Audio */}
           <div className="flex items-center gap-3 p-3 rounded-card border border-border-color bg-bg-surface">
             <IconTile size="sm" tone="red" className="shrink-0">
-              <ThunderPulseIcon className="h-5 w-5" aria-hidden="true" />
+              <VolumeIcon className="icon-lg" aria-hidden="true" />
             </IconTile>
             <div className="min-w-0 flex-1">
               <span className="type-strong-fluid text-text-primary block">
@@ -141,7 +142,7 @@ export function PreferencesPromptModal({
           {/* Row 2: Visuals */}
           <div className="flex items-center gap-3 p-3 rounded-card border border-border-color bg-bg-surface">
             <IconTile size="sm" tone="red" className="shrink-0">
-              <ChaosSwirlIcon className="h-5 w-5" aria-hidden="true" />
+              <ClapperboardIcon className="icon-lg" aria-hidden="true" />
             </IconTile>
             <div className="min-w-0 flex-1">
               <span className="type-strong-fluid text-text-primary block">
@@ -157,7 +158,7 @@ export function PreferencesPromptModal({
           <div className="flex items-center justify-between gap-3 p-3 rounded-card border border-border-color bg-bg-surface">
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <IconTile size="sm" tone="amber" className="shrink-0">
-                <CautionVeilIcon className="h-5 w-5" aria-hidden="true" />
+                <MatureIcon className="icon-lg" aria-hidden="true" />
               </IconTile>
               <div className="min-w-0 flex-1">
                 <span className="type-strong-fluid text-text-primary block">

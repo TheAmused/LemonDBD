@@ -52,7 +52,7 @@ export const CharacterTopBar: React.FC<CharacterTopBarProps> = ({
         href={`/${currentLocale}/characters?role=${roleParam}`}
         className={buttonClassName('secondary', 'sm', 'self-start sm:self-auto')}
       >
-        <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+        <ArrowLeft className="icon-sm" aria-hidden="true" />
         <span>{t.backToCharacters}</span>
       </Link>
 
@@ -63,7 +63,7 @@ export const CharacterTopBar: React.FC<CharacterTopBarProps> = ({
             className={buttonClassName('secondary', 'sm')}
             {...tip(`${t.prevCharacter}: ${prevChar.name}`, undefined, 'character')}
           >
-            <ArrowLeft className="h-3.5 w-3.5" />
+            <ArrowLeft className="icon-sm" />
             <span className="hidden md:inline truncate max-w-30">{prevChar.name}</span>
           </Link>
         )}
@@ -74,7 +74,7 @@ export const CharacterTopBar: React.FC<CharacterTopBarProps> = ({
             {...tip(`${t.nextCharacter}: ${nextChar.name}`, undefined, 'character')}
           >
             <span className="hidden md:inline truncate max-w-30">{nextChar.name}</span>
-            <ArrowRight className="h-3.5 w-3.5" />
+            <ArrowRight className="icon-sm" />
           </Link>
         )}
       </div>

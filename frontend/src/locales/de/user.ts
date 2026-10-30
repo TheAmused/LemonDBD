@@ -28,6 +28,8 @@ export default {
   currentPasswordHint: "Erforderlich, um deine Kontodaten zu aktualisieren",
   currentPasswordRequired: "Du musst dein aktuelles Passwort eingeben, um deine Kontodaten zu aktualisieren.",
   currentPasswordIncorrect: "Dein aktuelles Passwort ist falsch.",
+  showPassword: "Passwort anzeigen",
+  hidePassword: "Passwort verbergen",
   forgotSentNotice: "Falls diese E-Mail registriert ist, wurde ein Link zum Zurücksetzen versandt.",
   signIn: "Anmelden",
   createAccount: "Konto erstellen",

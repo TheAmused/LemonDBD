@@ -11,9 +11,8 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useSignInThen } from '@/hooks/useSignInThen';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
-import { Gamepad2, Flame, Plus, Upload, AlertCircle, X } from 'lucide-react';
+import { Gamepad2, Flame, Plus, Settings, Upload, X, CircleAlert } from 'lucide-react';
 import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
-import { ThunderPulseIcon } from '@/components/icons/DbdIcons';
 import { PreferencesPromptModal } from '@/components/common/PreferencesPromptModal';
 import { usePreferences } from '@/hooks/usePreferences';
 import type { ChallengeDefinition } from '@/types/minigame';
@@ -151,7 +150,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
       {/* Hero Header */}
       <div className="w-full text-center mb-8 relative">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent-red/10 border border-accent-red/30 text-accent-red type-label-sm mb-3">
-          <Gamepad2 className="w-4 h-4" />
+          <Gamepad2 className="icon-md" />
           <span>{t.hubBadge}</span>
         </div>
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-text-primary tracking-tight">
@@ -165,7 +164,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
         {/* Daily Streak Banner */}
         <Surface padding="none" className="mt-6 inline-flex items-center gap-4 px-5 py-2.5 shadow-xl backdrop-blur-md">
           <div className="flex items-center gap-2 text-accent-amber font-extrabold text-sm sm:text-base">
-            <Flame className="w-5 h-5 fill-current animate-pulse" />
+            <Flame className="icon-lg fill-current animate-pulse" />
             <span>
               {t.streak.current}: {streakData.currentStreak} {t.streak.days}
             </span>
@@ -187,7 +186,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
           role="alert"
           className="w-full mb-6 flex items-center gap-2.5 rounded-card border border-accent-red/30 bg-accent-red/10 p-3 type-strong text-accent-red animate-in fade-in duration-150 shadow-xs"
         >
-          <AlertCircle className="h-4 w-4 shrink-0" />
+          <CircleAlert className="icon-md shrink-0" />
           <span className="min-w-0 flex-1">{importError}</span>
           <Button
             type="button"
@@ -195,7 +194,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
             aria-label={dict.modal.close}
             variant="ghostDanger" size="xs" icon className="shrink-0"
           >
-            <X className="h-3.5 w-3.5" />
+            <X />
           </Button>
         </div>
       )}
@@ -234,7 +233,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
               aria-label={dict.smashOrPass.effectsPrefs.button}
               className="h-9 w-9 min-h-9 min-w-9"
             >
-              <ThunderPulseIcon className="w-4 h-4" aria-hidden="true" />
+              <Settings className="icon-md" aria-hidden="true" />
             </Button>
             <Button
               variant="secondary"
@@ -247,7 +246,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
                 fileInputRef.current?.click();
               }}
             >
-              <Upload className="w-3.5 h-3.5" />
+              <Upload className="icon-sm" />
               <span>{t.importJson}</span>
             </Button>
             <Link
@@ -260,7 +259,7 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
               }}
               className={buttonClassName('primary', 'sm')}
             >
-              <Plus className="w-3.5 h-3.5" />
+              <Plus className="icon-sm" />
               <span>{t.createChallenge}</span>
             </Link>
           </div>

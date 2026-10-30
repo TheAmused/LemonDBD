@@ -5,9 +5,9 @@ import React from 'react';
 import { Flame } from 'lucide-react';
 import { FreezeBadge } from '../FreezeBadge';
 import { ChallengeHeaderLayout, ModeSelectButton, StandardHeaderActions } from '../ChallengePanel';
-import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { StreakStatTiles } from '../StreakStatTiles';
 import { useDictionary } from "@/context/DictionaryContext";
+import { TrophyIcon } from '@/components/icons/DbdIcons';
 
 export interface GauntletHeaderProps {
   currentStreak: number;
@@ -44,8 +44,8 @@ export const GauntletHeader: React.FC<GauntletHeaderProps> = ({
               best={bestStreak}
               currentLabel={dict.streaks.current}
               bestLabel={dict.streaks.best}
-              currentIcon={<Flame className="h-5 w-5" />}
-              bestIcon={<AdeptBadgeIcon className="h-5 w-5" />}
+              currentIcon={<Flame className="icon-lg" />}
+              bestIcon={<TrophyIcon className="icon-lg" />}
             />
             <FreezeBadge frozen={poolFrozen} />
           </>

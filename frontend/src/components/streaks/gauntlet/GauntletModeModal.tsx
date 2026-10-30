@@ -1,10 +1,8 @@
 'use client';
-import { PerkHexIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/streaks/gauntlet/GauntletModeModal.tsx
 import type { Dictionary } from '@/locales/types';
 
 import React, { useState } from 'react';
-import { Swords, User, Users, UsersRound } from 'lucide-react';
 import type { ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { ChallengeModeModal, type ModeInfo } from '../ChallengeModeModal';
 import { GauntletRulesModal } from './GauntletRulesModal';
@@ -36,7 +34,6 @@ function lemonRootTile(role: 'killer' | 'survivor', dict: Dictionary): Challenge
     value: 'lemon',
     label: role === 'killer' ? dict.streaks.lemonMode : dict.streaks.lemonVersion,
     description: role === 'killer' ? dict.streaks.gauntletLemonDesc : dict.streaks.gauntletLemonPlayersDesc,
-    icon: PerkHexIcon,
     image: '/images/streaks/modes/gauntlet-lemon.webp',
   };
 }
@@ -47,21 +44,18 @@ function lemonPlayerTiles(dict: Dictionary): ChallengeIntroTile[] {
       value: 'lemon_solo',
       label: dict.streaks.lemonSolo,
       description: dict.streaks.lemonSoloDesc,
-      icon: User,
       image: '/images/streaks/modes/gauntlet-1-player.webp',
     },
     {
       value: 'lemon_duo',
       label: dict.streaks.lemonDuo,
       description: dict.streaks.lemonDuoDesc,
-      icon: Users,
       image: '/images/streaks/modes/gauntlet-2-players.webp',
     },
     {
       value: 'lemon_squad',
       label: dict.streaks.lemonSquad,
       description: dict.streaks.lemonSquadDesc,
-      icon: UsersRound,
       image: '/images/streaks/modes/gauntlet-4-players.webp',
     },
   ];
@@ -126,7 +120,6 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       label: dict.streaks.original,
       description:
         dict.streaks.gauntletOriginalDesc,
-      icon: Swords,
       image: '/images/streaks/modes/gauntlet-original.webp',
       completed: originalCompleted,
       completedCount: originalCompletedCount,

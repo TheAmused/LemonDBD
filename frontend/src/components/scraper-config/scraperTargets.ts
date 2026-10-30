@@ -5,7 +5,7 @@
 // backend test fails when the two lists drift apart: an id the backend does not know used to be
 // dropped without a word, so "Characters" exported nothing and purge reported success for tables it
 // never touched.
-import { Globe, Layers, Settings, Users } from 'lucide-react';
+import { Database, Globe, Settings, Users } from 'lucide-react';
 
 export type ScraperTab = 'export' | 'import' | 'purge';
 
@@ -105,7 +105,7 @@ export const TARGET_KEY_MAP: Record<string, string> = {
 };
 
 export const TARGET_GROUPS_CONFIG = [
-  { key: 'content' as const, labelKey: 'groupContent' as const, fallbackLabel: 'Game Content', icon: Layers },
+  { key: 'content' as const, labelKey: 'groupContent' as const, fallbackLabel: 'Game Content', icon: Database },
   { key: 'users' as const, labelKey: 'groupUsers' as const, fallbackLabel: 'Users & Accounts', icon: Users },
   { key: 'community' as const, labelKey: 'groupCommunity' as const, fallbackLabel: 'Community & Streaks', icon: Globe },
   { key: 'settings' as const, labelKey: 'groupSettings' as const, fallbackLabel: 'Configuration & System', icon: Settings },

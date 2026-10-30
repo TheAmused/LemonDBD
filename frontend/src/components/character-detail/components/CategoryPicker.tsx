@@ -77,10 +77,10 @@ export const CategoryPicker: React.FC<CategoryPickerProps> = ({
         className={cn('w-full justify-between', open && `${accentClasses.border} ${accentClasses.text}`)}
       >
         <span className="flex items-center gap-2 min-w-0">
-          <SelectedIcon className={`h-4 w-4 shrink-0 ${accentClasses.text}`} aria-hidden="true" />
+          <SelectedIcon className={`icon-md shrink-0 ${accentClasses.text}`} aria-hidden="true" />
           <span className="truncate">{selected.label}</span>
         </span>
-        <ChevronDown className={`h-4 w-4 shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
+        <ChevronDown className={`icon-md shrink-0 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
       </Button>
 
       <Popover
@@ -105,9 +105,9 @@ export const CategoryPicker: React.FC<CategoryPickerProps> = ({
                   setOpen(false);
                 }}
               >
-                <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                <Icon className="icon-md shrink-0" aria-hidden="true" />
                 <span className="flex-1 min-w-0 truncate">{cat.label}</span>
-                {isSelected && <Check className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />}
+                {isSelected && <Check className="icon-sm shrink-0" aria-hidden="true" />}
               </MenuItem>
             );
           })}

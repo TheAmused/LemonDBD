@@ -196,7 +196,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
       <h1 className="sr-only">{editId ? c.editTitle : c.title}</h1>
       {restored && (
         <Toast
-          icon={<History className="h-4 w-4 2xl:h-5 2xl:w-5" aria-hidden="true" />}
+          icon={<History className="icon-md 2xl:icon-lg" aria-hidden="true" />}
           message={c.draftRestored}
           actions={
             <Button variant="secondary" size="xs" onClick={startOver} className="whitespace-nowrap">
@@ -262,7 +262,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
               disabled={draft.entities.length >= SMASH_ROSTER_LIMITS.maxEntities}
               className="uppercase tracking-wider"
             >
-              <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+              <Plus aria-hidden="true" />
               <span>{c.addEntity}</span>
             </Button>
           }
@@ -275,7 +275,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
                 action={{
                   label: (
                     <>
-                      <Plus className="h-4 w-4" aria-hidden="true" />
+                      <Plus className="icon-md" aria-hidden="true" />
                       <span>{c.addEntity}</span>
                     </>
                   ),

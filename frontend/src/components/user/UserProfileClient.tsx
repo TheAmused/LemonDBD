@@ -168,7 +168,7 @@ export function UserProfileClient() {
             <Button
               variant="primary"
               onClick={() => setAuthModalOpen(true)}
-              leftIcon={<User className="h-4 w-4" />}
+              leftIcon={<User className="icon-md" />}
               className="w-full"
             >
               <span>{dict.user.signIn}</span>

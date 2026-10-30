@@ -189,7 +189,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
             <div className="min-w-0 flex-1 flex flex-wrap items-center justify-center sm:justify-start gap-1.5 text-xs">
               {activeMap.size_sq_tiles != null ? (
                 <Surface tone="elevated" padding="none" className="inline-flex items-center gap-1.5 px-2.5 py-1 border-accent-red/40 text-text-secondary shadow-sm shrink-0">
-                  <Maximize2 className="w-3.5 h-3.5 text-accent-red shrink-0" />
+                  <Maximize2 className="icon-sm text-accent-red shrink-0" />
                   <span className="text-text-muted">{dict.maps.surfaceArea}</span>
                   <span className="type-strong text-text-primary">{activeMap.size_sq_tiles}</span>
                   <span className="text-accent-red font-bold">{dict.maps.sqTilesUnit}</span>
@@ -207,17 +207,17 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
                     activeMap.layout_type
                   )}`}
                 >
-                  <Compass className="w-3.5 h-3.5 shrink-0" />
+                  <Compass className="icon-sm shrink-0" />
                   {getLayoutTypeLabel(activeMap.layout_type, dict.maps)}
                 </span>
               )}
 
               <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-control border text-xs font-semibold shrink-0 ${structureBadge(activeMap.is_shack)}`}>
-                <Home className="w-3.5 h-3.5 shrink-0" />
+                <Home className="icon-sm shrink-0" />
                 {activeMap.is_shack ? (dict.maps.shackYes) : (dict.maps.shackNo)}
               </span>
               <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-control border text-xs font-semibold shrink-0 ${structureBadge(activeMap.is_main_building)}`}>
-                <Building2 className="w-3.5 h-3.5 shrink-0" />
+                <Building2 className="icon-sm shrink-0" />
                 {activeMap.is_main_building
                   ? (dict.maps.mainBuildingYes)
                   : (dict.maps.mainBuildingNo)}
@@ -234,7 +234,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
               onClick={onClose}
               aria-label={dict.modal.close}
             >
-              <X className="h-5 w-5" aria-hidden="true" />
+              <X aria-hidden="true" />
             </Button>
           </div>
         </div>
@@ -295,7 +295,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
             {...tip(dict.maps.zoomOut, undefined, 'action')}
             aria-label={dict.maps.zoomOutAria}
           >
-            <ZoomOut className="w-4 h-4" />
+            <ZoomOut />
           </Button>
 
           <span className="type-strong text-text-primary px-2 min-w-hit-xl text-center">
@@ -310,7 +310,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
             {...tip(dict.maps.zoomIn, undefined, 'action')}
             aria-label={dict.maps.zoomInAria}
           >
-            <ZoomIn className="w-4 h-4" />
+            <ZoomIn />
           </Button>
 
           <div className="w-px h-4 bg-border-color my-auto" />
@@ -323,7 +323,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
             {...tip(dict.maps.resetPanZoom, undefined, 'action')}
             aria-label={dict.maps.resetPanAndZoomAria}
           >
-            <RotateCcw className="w-4 h-4" />
+            <RotateCcw />
           </Button>
         </Surface>
       </footer>

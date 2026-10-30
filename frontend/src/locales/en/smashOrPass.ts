@@ -514,6 +514,7 @@ export default {
     badgeGradientColor: 'Badge Gradient / Color',
     markAsFallback: 'Mark as Fallback Default Archetype (used when no specific rule conditions are met)',
     rulesTitle: 'Evaluation Rules & Triggers',
+    removeRule: 'Remove rule',
     addCondition: 'Add Condition',
   },
   sharing: {

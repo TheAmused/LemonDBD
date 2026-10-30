@@ -4,7 +4,7 @@ import React from 'react';
 import { Search, X } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
 import { IconInput } from '@/components/common/Field';
-import { KillerIcon, SurvivorIcon, PadlockHeartIcon } from '@/components/icons/DbdIcons';
+import { LockIcon } from '@/components/icons/DbdIcons';
 import type { RoleCategory } from '@/types/perks';
 
 import { Button } from '@/components/common/Button';
@@ -49,8 +49,8 @@ export function CharactersToolbar({
         onChange={onTabChange}
         className="order-2 sm:order-1 w-full sm:w-72"
         options={[
-          { value: 'Survivor', label: <>{dict.filters.survivor} ({survivorCount})</>, icon: <SurvivorIcon className="h-3.5 w-3.5" />, activeClassName: 'bg-accent-green text-text-inverted' },
-          { value: 'Killer', label: <>{dict.filters.killer} ({killerCount})</>, icon: <KillerIcon className="h-3.5 w-3.5" />, activeClassName: 'bg-accent-red text-text-inverted' },
+          { value: 'Survivor', label: <>{dict.filters.survivor} ({survivorCount})</>, activeClassName: 'bg-accent-green text-text-inverted' },
+          { value: 'Killer', label: <>{dict.filters.killer} ({killerCount})</>, activeClassName: 'bg-accent-red text-text-inverted' },
         ]}
       />
 
@@ -63,7 +63,7 @@ export function CharactersToolbar({
           disabled={ownershipLoading || ownershipSaving}
           className="min-h-11"
         >
-          {ownershipMode ? <X className="h-3.5 w-3.5" /> : <PadlockHeartIcon className="h-3.5 w-3.5" />}
+          {ownershipMode ? <X className="icon-sm" /> : <LockIcon className="icon-sm" />}
           <span>
             {ownershipLoading
               ? dict.app.loading
@@ -91,7 +91,7 @@ export function CharactersToolbar({
             aria-label={dict.filters.clearSearch}
             variant="ghost" size="sm" icon className="absolute right-1 top-1/2 -translate-y-1/2"
           >
-            <X className="h-4 w-4" />
+            <X />
           </Button>
         )}
       </div>

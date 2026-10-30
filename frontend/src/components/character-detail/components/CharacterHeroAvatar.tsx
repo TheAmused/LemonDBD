@@ -2,10 +2,10 @@
 // frontend/src/components/character-detail/components/CharacterHeroAvatar.tsx
 
 import React, { useState } from 'react';
-import { User, ZoomIn } from 'lucide-react';
+import { ZoomIn } from 'lucide-react';
+import { PersonIcon } from '@/components/icons/DbdIcons';
 import type { CharacterItem, CharacterDetailDictionary } from '../types';
 import { getAvatarUrl } from '../types';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { Badge } from '@/components/common/Badge';
@@ -55,14 +55,14 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
           />
         ) : (
           <div className="flex flex-col items-center justify-center p-6 text-center text-text-muted">
-            <User className="h-16 w-16 mb-2 opacity-50" />
+            <PersonIcon className="h-16 w-16 mb-2 opacity-50" />
             <span className="type-strong text-text-secondary">{character.name}</span>
           </div>
         )}
 
         <div className="absolute inset-0 bg-bg-primary/70 opacity-0 group-hover:opacity-100 backdrop-blur-sm flex flex-col items-center justify-center p-4 text-center transition-opacity duration-200">
           <div className="h-12 w-12 rounded-card bg-accent-red/20 border border-accent-red/40 flex items-center justify-center text-accent-red mb-2 shadow-lg group-hover:scale-110 transition-transform">
-            <ZoomIn className="h-6 w-6" />
+            <ZoomIn className="icon-xl" />
           </div>
           <span className="type-label-sm text-text-inverted">
             {t.view3DModel}
@@ -75,7 +75,6 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
           <Badge
             tone={isSurvivor ? 'green' : 'red'} size="md" plain className="backdrop-blur-md"
           >
-            {isSurvivor ? <SurvivorIcon className="h-3.5 w-3.5" /> : <KillerIcon className="h-3.5 w-3.5" />}
             {roleLabel}
           </Badge>
 

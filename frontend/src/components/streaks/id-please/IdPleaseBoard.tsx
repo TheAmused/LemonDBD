@@ -2,7 +2,7 @@
 // frontend/src/components/streaks/id-please/IdPleaseBoard.tsx
 
 import React, { useState } from 'react';
-import { CheckCircle2, Trophy } from 'lucide-react';
+import { CheckCircle2 } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import { Toast } from '@/components/common/Toast';
@@ -29,6 +29,7 @@ import { IdPleaseProgress } from './IdPleaseProgress';
 import { IdPleaseSetup } from './IdPleaseSetup';
 import { useIdPleaseEligibility } from './useIdPleaseEligibility';
 import { useIdPleaseRun } from './useIdPleaseRun';
+import { TrophyIcon } from '@/components/icons/DbdIcons';
 
 // Opened on demand, like the other challenge boards: none of them is needed to start playing.
 const IdPleaseStatsDrawer = dynamic(() => import('./IdPleaseStatsDrawer').then((m) => m.IdPleaseStatsDrawer), { ssr: false });
@@ -162,7 +163,7 @@ export const IdPleaseBoard: React.FC<IdPleaseBoardProps> = ({ role }) => {
               )}
               {run.badge_earned && (
                 <p className="flex items-center justify-center gap-1 type-strong text-accent-amber">
-                  <Trophy className="h-3.5 w-3.5" aria-hidden="true" />
+                  <TrophyIcon className="icon-sm" aria-hidden="true" />
                   {s.idPleaseBadgeEarned}
                 </p>
               )}

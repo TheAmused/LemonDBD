@@ -28,9 +28,9 @@ export function LinkPill({ href, icon, children, className, onClick }: PillBase 
       <span aria-hidden="true" className="shrink-0">{icon}</span>
       <span className="min-w-0">{children}</span>
       {external ? (
-        <ExternalLink className="h-3.5 w-3.5 shrink-0 text-text-muted" aria-hidden="true" />
+        <ExternalLink className="icon-sm shrink-0 text-text-muted" aria-hidden="true" />
       ) : (
-        <ArrowRight className="h-3.5 w-3.5 shrink-0 text-text-muted" aria-hidden="true" />
+        <ArrowRight className="icon-sm shrink-0 text-text-muted" aria-hidden="true" />
       )}
     </>
   );

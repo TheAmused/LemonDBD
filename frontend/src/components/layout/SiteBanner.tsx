@@ -50,7 +50,7 @@ export function SiteBannerView({
       <p className="min-w-0 flex-1 type-body text-text-primary">{text}</p>
       {onDismiss && (
         <Button variant="ghost" size="sm" icon onClick={onDismiss} aria-label={dismissLabel}>
-          <X className="h-4 w-4" aria-hidden="true" />
+          <X aria-hidden="true" />
         </Button>
       )}
     </div>

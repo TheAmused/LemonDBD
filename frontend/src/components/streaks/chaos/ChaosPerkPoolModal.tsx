@@ -21,7 +21,7 @@ const PerkTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, display
           src={perkIconFor(perk)}
           alt={displayName}
           imageClassName="w-full h-full object-cover"
-          fallbackIcon={<PerkHexIcon className="w-6 h-6 text-text-muted" aria-hidden="true" />}
+          fallbackIcon={<PerkHexIcon className="icon-xl text-text-muted" aria-hidden="true" />}
         />
       </div>
       <span className="text-mini leading-tight font-medium text-center text-text-secondary line-clamp-2 min-h-two-lines w-full px-1.5 py-2">
@@ -70,14 +70,14 @@ export const ChaosPerkPoolModal: React.FC<ChaosPerkPoolModalProps> = ({ isOpen, 
           {
             value: 'used',
             accent: 'green',
-            icon: <CheckCircle2 className="w-3.5 h-3.5" aria-hidden="true" />,
+            icon: <CheckCircle2 className="icon-sm" aria-hidden="true" />,
             label: dict.streaks.usedTab,
             count: used.length,
           },
           {
             value: 'remaining',
             accent: 'red',
-            icon: <Circle className="w-3.5 h-3.5" aria-hidden="true" />,
+            icon: <Circle className="icon-sm" aria-hidden="true" />,
             label: dict.streaks.remainingTab,
             count: remaining.length,
           },

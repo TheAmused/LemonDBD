@@ -47,7 +47,7 @@ export function TierListScaleControl({
           aria-label={t.scaleZoomOut}
           variant="ghost" size="sm" icon
         >
-          <Minus className="h-4 w-4" aria-hidden="true" />
+          <Minus aria-hidden="true" />
         </Button>
         <Button
           type="button"
@@ -64,7 +64,7 @@ export function TierListScaleControl({
           aria-label={t.scaleZoomIn}
           variant="ghost" size="sm" icon
         >
-          <Plus className="h-4 w-4" aria-hidden="true" />
+          <Plus aria-hidden="true" />
         </Button>
         <Button
         variant={scale === 'fit' ? 'amberSoft' : 'ghost'}
@@ -73,7 +73,7 @@ export function TierListScaleControl({
         aria-pressed={scale === 'fit'}
         aria-label={t.scaleFitHint}
       >
-        <Maximize2 className="h-3.5 w-3.5" aria-hidden="true" />
+        <Maximize2 aria-hidden="true" />
         <span>{t.scaleFit}</span>
       </Button>
       </div>
@@ -90,7 +90,7 @@ export function TierListScaleControl({
         {...tip(t.scaleZoomOut, undefined, 'action')}
         variant="ghost" size="sm" icon
       >
-        <Minus className="h-3.5 w-3.5" aria-hidden="true" />
+        <Minus aria-hidden="true" />
       </Button>
       <Button
         type="button"
@@ -109,7 +109,7 @@ export function TierListScaleControl({
         {...tip(t.scaleZoomIn, undefined, 'action')}
         variant="ghost" size="sm" icon
       >
-        <Plus className="h-3.5 w-3.5" aria-hidden="true" />
+        <Plus aria-hidden="true" />
       </Button>
       <div className="mx-0.5 h-4 w-px bg-border-color" aria-hidden="true" />
       <Button
@@ -120,7 +120,7 @@ export function TierListScaleControl({
         aria-label={t.scaleFitHint}
         {...tip(t.scaleFitHint, undefined, 'action')}
       >
-        <Maximize2 className="h-3 w-3" aria-hidden="true" />
+        <Maximize2 aria-hidden="true" />
         <span>{t.scaleFit}</span>
       </Button>
     </div>

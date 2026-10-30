@@ -28,6 +28,8 @@ export default {
   currentPasswordHint: "Required to update your account details",
   currentPasswordRequired: "You must enter your current password to update your account details.",
   currentPasswordIncorrect: "Your current password is incorrect.",
+  showPassword: "Show password",
+  hidePassword: "Hide password",
   forgotSentNotice: "If that email is registered, a password reset link is on its way.",
   signIn: "Sign In",
   createAccount: "Create Account",

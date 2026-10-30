@@ -45,7 +45,7 @@ export const AddonGuesser: React.FC<AddonGuesserProps> = ({ roundConfig, guesses
 
         {isSolved && (
           <div className="mt-6 px-4 py-1.5 rounded-chip bg-accent-green text-text-inverted type-card-title flex items-center gap-2 shadow-md">
-            <Check className="w-4 h-4" />
+            <Check className="icon-md" />
             <span>{t.solved}</span>
           </div>
         )}
@@ -72,7 +72,7 @@ export const AddonGuesser: React.FC<AddonGuesserProps> = ({ roundConfig, guesses
                   <span className="text-xs text-text-muted">#{idx + 1}</span>
                   <span>{g.guess.name}</span>
                 </div>
-                {isCorrect ? <Check className="w-4 h-4" /> : <X className="w-4 h-4 opacity-60" />}
+                {isCorrect ? <Check className="icon-md" /> : <X className="icon-md opacity-60" />}
               </div>
             );
           })}

@@ -8,10 +8,10 @@ import type { PageStreakRun } from '@/types/pageStreak';
 import { FreezeBadge } from '../FreezeBadge';
 import { StreakStatTiles } from '../StreakStatTiles';
 import { ChallengeHeaderLayout, StandardHeaderActions } from '../ChallengePanel';
-import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 
 import { useDictionary } from "@/context/DictionaryContext";
+import { TrophyIcon } from '@/components/icons/DbdIcons';
 
 interface RunHeaderProps {
   run: PageStreakRun;
@@ -34,8 +34,8 @@ export const RunHeader: React.FC<RunHeaderProps> = ({ run, onOpenAbandon, onOpen
             best={run.best_page}
             currentLabel={dict.stats.current}
             bestLabel={dict.stats.best}
-            currentIcon={<Flame className="h-5 w-5" aria-hidden="true" />}
-            bestIcon={<AdeptBadgeIcon className="h-5 w-5" aria-hidden="true" />}
+            currentIcon={<Flame className="icon-lg" aria-hidden="true" />}
+            bestIcon={<TrophyIcon className="icon-lg" aria-hidden="true" />}
           />
           <FreezeBadge frozen={run.pool_frozen} />
         </>

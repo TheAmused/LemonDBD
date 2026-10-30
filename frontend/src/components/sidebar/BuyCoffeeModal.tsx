@@ -3,7 +3,7 @@
 
 import React from 'react';
 import {  ExternalLink,} from 'lucide-react';
-import { CampfireMugIcon,AuricCellIcon, EntityHeartIcon, BloodwebIcon } from '@/components/icons/DbdIcons';
+import { BuyMeACoffeeIcon, KofiIcon, PatreonIcon } from '@/components/icons/DbdIcons';
 
 import { Modal } from '@/components/common/Modal';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -33,7 +33,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
       accentColor:
         'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
       buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-text-inverted',
-      icon: CampfireMugIcon,
+      icon: BuyMeACoffeeIcon,
     },
     {
       name: 'Ko-fi',
@@ -42,7 +42,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
       accentColor:
         'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
       buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-text-inverted',
-      icon: EntityHeartIcon,
+      icon: KofiIcon,
     },
     {
       name: 'Patreon Community',
@@ -51,7 +51,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
       accentColor:
         'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
       buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-text-inverted',
-      icon: AuricCellIcon,
+      icon: PatreonIcon,
     },
   ].flatMap(({ url, ...gateway }) => (url ? [{ ...gateway, url }] : []));
 
@@ -68,7 +68,6 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
     >
     <Surface tone="elevated" padding="none" className="p-4 type-body text-text-secondary space-y-1">
       <div className="flex items-center gap-1.5 font-bold text-accent-red mb-1">
-        <BloodwebIcon className="h-4 w-4" />
         <span>{t.coffeeFuelNotice}</span>
       </div>
       <p>{donationMessage}</p>
@@ -90,7 +89,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
           >
             <div className="flex items-center gap-3">
               <Surface tone="elevated" padding="none" className="flex h-10 w-10 shrink-0 items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
-                <Icon className="h-5 w-5" />
+                <Icon className="icon-lg" />
               </Surface>
               <div>
                 <h3 className="text-xs font-black tracking-wide text-text-primary">
@@ -107,9 +106,9 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
                 className={`hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-control text-mini font-black uppercase tracking-wider shadow-md group-hover:scale-105 transition-all ${gateway.buttonBg}`}
               >
                 <span>{t.coffeeVisit}</span>
-                <ExternalLink className="h-3 w-3" />
+                <ExternalLink className="icon-xs" />
               </span>
-              <ExternalLink className="sm:hidden h-4 w-4 text-text-muted group-hover:text-accent-red transition-colors" />
+              <ExternalLink className="sm:hidden icon-md text-text-muted group-hover:text-accent-red transition-colors" />
             </div>
           </a>
         );

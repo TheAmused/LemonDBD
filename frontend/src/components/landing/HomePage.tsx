@@ -1,5 +1,4 @@
 'use client';
-import { BloodwebIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/landing/HomePage.tsx
 
 import React, { useEffect, Suspense } from 'react';
@@ -60,9 +59,8 @@ function LandingContent() {
             href={`/${locale}/perks`}
             className={buttonClassName('primary', 'lg')}
           >
-            <BloodwebIcon className="h-4 w-4" />
             <span>{dict.landing.enterButton}</span>
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="icon-md" />
           </Link>
         </div>
       )}

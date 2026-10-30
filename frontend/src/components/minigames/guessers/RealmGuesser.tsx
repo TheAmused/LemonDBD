@@ -58,7 +58,7 @@ export const RealmGuesser: React.FC<RealmGuesserProps> = ({ roundConfig, realms,
 
         {/* Clue overlay tag */}
         <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-bg-elevated/80 backdrop-blur-md border border-border-color type-strong text-text-secondary flex items-center gap-1.5 shadow-md">
-          <Eye className="w-3.5 h-3.5 text-accent-red" />
+          <Eye className="icon-sm text-accent-red" />
           <span>{zoomLevel}%</span>
         </div>
 
@@ -83,10 +83,10 @@ export const RealmGuesser: React.FC<RealmGuesserProps> = ({ roundConfig, realms,
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 opacity-75" />
+                  <MapPin className="icon-md opacity-75" />
                   <span>{g.guess.name}</span>
                 </div>
-                {isCorrect ? <Check className="w-4 h-4" /> : <X className="w-4 h-4 opacity-60" />}
+                {isCorrect ? <Check className="icon-md" /> : <X className="icon-md opacity-60" />}
               </div>
             );
           })}

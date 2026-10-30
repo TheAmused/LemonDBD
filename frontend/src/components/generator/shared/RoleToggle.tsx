@@ -10,7 +10,6 @@ import React from 'react';
 import type { RoleCategory } from '@/types/perks';
 
 import { cn } from '@/utils/cn';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { isKiller as isKillerRole } from '@/utils/characterUtils';
 import { useDictionary } from "@/context/DictionaryContext";
 import { SegmentedControl } from '@/components/common/SegmentedControl';
@@ -32,8 +31,8 @@ export const RoleToggle: React.FC<RoleToggleProps> = ({ role, onChange, classNam
       onChange={onChange}
       className={cn('shrink-0', className)}
       options={[
-        { value: 'Survivor', label: dict.generator.survivor, icon: <SurvivorIcon className="h-4 w-4 shrink-0" />, activeClassName: 'bg-accent-green text-text-inverted' },
-        { value: 'Killer', label: dict.generator.killer, icon: <KillerIcon className="h-4 w-4 shrink-0" />, activeClassName: 'bg-accent-red text-text-inverted' },
+        { value: 'Survivor', label: dict.generator.survivor, activeClassName: 'bg-accent-green text-text-inverted' },
+        { value: 'Killer', label: dict.generator.killer, activeClassName: 'bg-accent-red text-text-inverted' },
       ]}
     />
   );

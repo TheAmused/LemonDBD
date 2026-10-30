@@ -5,20 +5,18 @@ import { Button } from '@/components/common/Button';
 import { SelectableCard } from '@/components/common/SelectableCard';
 
 import React from 'react';
-import { BookOpen, ChevronLeft } from 'lucide-react';
+import { ChevronLeft, ScrollText } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
-import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { Img } from '@/components/common/Img';
+import { TrophyIcon } from '@/components/icons/DbdIcons';
 
 export interface ChallengeIntroTile {
   value: string;
   label: string;
   description?: string;
-  /** Any icon component (lucide or a custom DbdIcons SVG). */
-  icon: React.ElementType;
-  image?: string;
+  image: string;
   disabled?: boolean;
   disabledBadge?: string;
   /** This tier has already been fully cleared -- shows a small trophy badge. */
@@ -98,7 +96,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
             onClick={onBack}
             aria-label={dict.streaks.back}
           >
-            <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+            <ChevronLeft aria-hidden="true" />
           </Button>
         ) : undefined
       }
@@ -119,7 +117,7 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
             </p>
           )}
           {onOpenRules && (
-            <Button variant="secondary" size="sm" onClick={onOpenRules} leftIcon={<BookOpen className="h-4 w-4" aria-hidden="true" />}>
+            <Button variant="secondary" size="sm" onClick={onOpenRules} leftIcon={<ScrollText className="icon-md" aria-hidden="true" />}>
               {rulesLabel}
             </Button>
           )}
@@ -128,7 +126,6 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
 
       <div className={`grid gap-3 sm:gap-4 ${tileGridClassName}`}>
         {tiles.map((tile) => {
-          const TileIcon = tile.icon;
           const isCurrent = tile.value === selectedValue;
           const isPending = tile.value === pendingValue;
           const labelClassName = tile.disabled
@@ -138,15 +135,11 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
 
           const content = (
             <>
-              {tile.image ? (
-                <Img
-                  src={tile.image}
-                  alt=""
-                  className="w-full max-w-22 sm:max-w-28 aspect-square rounded-card object-cover shadow-sm"
-                />
-              ) : (
-                <TileIcon className={`w-6 h-6 ${tile.disabled ? 'text-text-muted' : ''}`} />
-              )}
+              <Img
+                src={tile.image}
+                alt=""
+                className="w-full max-w-22 sm:max-w-28 aspect-square rounded-card object-cover shadow-sm"
+              />
               <span className={labelClassName}>{tile.label}</span>
               {isCurrent && <span className={`${badgeClassName} text-current`}>{currentLabel}</span>}
               {tile.disabledBadge && <span className={badgeClassName}>{tile.disabledBadge}</span>}
@@ -163,14 +156,14 @@ export const ChallengeIntroModalShell: React.FC<ChallengeIntroModalShellProps> =
             >
               {tile.completed && tile.completedFull ? (
                 <Badge tone="red" size="xs" plain className="absolute right-2 top-2">
-                  <AdeptBadgeIcon className="h-3 w-3" />
+                  <TrophyIcon className="icon-xs" />
                   {tile.completedFullCount != null && (
                     <span className="text-tiny font-black leading-none">{tile.completedFullCount}</span>
                   )}
                 </Badge>
               ) : tile.completed ? (
                 <Badge tone="amber" size="xs" plain className="absolute right-2 top-2">
-                  <AdeptBadgeIcon className="h-3 w-3" />
+                  <TrophyIcon className="icon-xs" />
                   {tile.completedCount != null && (
                     <span className="text-tiny font-black leading-none">{tile.completedCount}</span>
                   )}

@@ -1,5 +1,4 @@
 'use client';
-import { BloodwebIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/maps/VoiceEngineInfoModal.tsx
 
 import { Button } from '@/components/common/Button';
@@ -68,7 +67,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
       </div>
 
       <div className="flex items-center justify-between pt-1">
-        <IconLabel as="span" icon={BloodwebIcon} variant="heading">{dict.maps.activeRecognitionEngine}</IconLabel>
+        <IconLabel as="span" icon={Cpu} variant="heading">{dict.maps.activeRecognitionEngine}</IconLabel>
         <Badge
           tone="red" size="md" plain
         >
@@ -90,13 +89,13 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Globe className="h-4 w-4 text-text-secondary" aria-hidden="true" />
+            <Globe className="icon-md text-text-secondary" aria-hidden="true" />
             <h4 className="type-label-sm text-text-primary">
               {t.engineNative || ''}
             </h4>
           </div>
           {currentEngine === 'web-speech' && (
-            <CheckCircle2 className="h-4 w-4 text-accent-green" aria-hidden="true" />
+            <CheckCircle2 className="icon-md text-accent-green" aria-hidden="true" />
           )}
         </div>
 
@@ -118,13 +117,13 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Cpu className="h-4 w-4 text-text-secondary" aria-hidden="true" />
+            <Cpu className="icon-md text-text-secondary" aria-hidden="true" />
             <h4 className="type-label-sm text-text-primary">
               {t.engineClient || ''}
             </h4>
           </div>
           {currentEngine === 'client-model' && (
-            <CheckCircle2 className="h-4 w-4 text-accent-green" aria-hidden="true" />
+            <CheckCircle2 className="icon-md text-accent-green" aria-hidden="true" />
           )}
         </div>
 
@@ -133,7 +132,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
         </p>
 
         <div className="pt-1 flex items-center gap-1.5 type-strong-2xs text-text-secondary">
-          <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+          <ShieldCheck className="icon-sm" aria-hidden="true" />
           <span>{dict.maps.universalPrivateInBrowser}</span>
         </div>
       </SelectableCard>
@@ -163,7 +162,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
                   {label || ''}
                 </span>
                 {isSelected && (
-                  <CheckCircle2 className="h-4 w-4 shrink-0 text-accent-green" aria-hidden="true" />
+                  <CheckCircle2 className="icon-md shrink-0 text-accent-green" aria-hidden="true" />
                 )}
               </div>
               <p className="text-mini text-text-muted leading-relaxed">
@@ -183,7 +182,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
     {/* Why Fallback Is Needed Box */}
     <div className="rounded-card border border-accent-amber/30 bg-accent-amber/10 p-4 space-y-2">
       <div className="flex items-center gap-2 text-accent-amber type-strong">
-        <Info className="h-4 w-4 shrink-0" aria-hidden="true" />
+        <Info className="icon-md shrink-0" aria-hidden="true" />
         <span>{t.whyNeededTitle || ''}</span>
       </div>
       <p className="type-body text-text-secondary">
@@ -195,7 +194,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
     <Surface tone="elevated" padding="none" className="p-4 space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <DownloadCloud className="h-4 w-4 text-accent-red" aria-hidden="true" />
+          <DownloadCloud className="icon-md text-accent-red" aria-hidden="true" />
           <span className="type-strong text-text-primary">
             {modelProgress.status === 'downloading'
               ? formatMessage((t.downloadProgress || ''), { progress: modelProgress.progress })
@@ -223,7 +222,7 @@ export const VoiceEngineInfoBody: React.FC<Omit<VoiceEngineInfoModalProps, 'isOp
             size="sm"
             onClick={onPreloadModel}
           >
-            <RefreshCw className="h-3 w-3" aria-hidden="true" />
+            <RefreshCw aria-hidden="true" />
             <span>{dict.maps.preloadModel}</span>
           </Button>
         </div>

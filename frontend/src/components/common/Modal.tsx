@@ -298,7 +298,7 @@ export const Modal: React.FC<ModalProps> = ({
         floating ? 'absolute right-3 top-3 z-20 h-9 w-9 bg-bg-surface/60 backdrop-blur-sm' : 'h-9 w-9 sm:h-10 sm:w-10'
       )}
     >
-      <X className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
+      <X className="icon-md sm:icon-lg" aria-hidden="true" />
     </button>
   );
 

@@ -9,14 +9,16 @@ import { Input, Textarea } from '@/components/common/Field';
 import { Button } from '@/components/common/Button';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {  Plus,
+import {
+  Plus,
   Save,
   Play,
   Download,
   Share2,
   ShieldCheck,
   Check,
-  AlertCircle,} from 'lucide-react';
+  CircleAlert,
+} from 'lucide-react';
 import type {
   ChallengeDefinition,
   RoundConfig,
@@ -266,14 +268,14 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
       {/* Validation / Success Notices */}
       {errorMsg && (
         <div className="w-full max-w-2xl mb-6 p-4 rounded-card bg-accent-red/20 border border-accent-red/40 text-accent-red type-strong flex items-center gap-2 shadow-lg">
-          <AlertCircle className="w-4 h-4 flex-shrink-0" />
+          <CircleAlert className="icon-md flex-shrink-0" />
           <span>{errorMsg}</span>
         </div>
       )}
 
       {successMsg && (
         <div className="w-full max-w-2xl mb-6 p-4 rounded-card bg-accent-green/20 border border-accent-green/40 text-accent-green type-strong flex items-center gap-2 shadow-lg">
-          <Check className="w-4 h-4 flex-shrink-0" />
+          <Check className="icon-md flex-shrink-0" />
           <span>{successMsg}</span>
         </div>
       )}
@@ -339,7 +341,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
           onClick={handleAddRound}
           variant="secondary" size="md" dashed className="group w-full py-3.5"
         >
-          <Plus className="w-4 h-4 group-hover:scale-125 transition-transform text-accent-red" />
+          <Plus className="icon-md group-hover:scale-125 transition-transform text-accent-red" />
           <span>{c.addRound}</span>
         </Button>
       </div>
@@ -351,7 +353,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
           size="lg"
           onClick={handleSaveToMyTrials}
         >
-          <Save className="w-4 h-4" />
+          <Save />
           <span>{c.saveToMyTrials}</span>
         </Button>
 
@@ -360,7 +362,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
           size="lg"
           onClick={handleSaveAndPlay}
         >
-          <Play className="w-4 h-4 fill-current" />
+          <Play className="fill-current" />
           <span>{c.saveAndPlay}</span>
         </Button>
 
@@ -369,7 +371,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
           size="md"
           onClick={() => { void handleExportJson(); }}
         >
-          <Download className="w-4 h-4" />
+          <Download />
           <span>{t.exportJson}</span>
         </Button>
 
@@ -381,12 +383,12 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
         >
           {shareSuccess ? (
             <>
-              <Check className="w-4 h-4 text-accent-green" />
+              <Check className="text-accent-green" />
               <span className="text-accent-green">{t.linkCopied}</span>
             </>
           ) : (
             <>
-              <Share2 className="w-4 h-4" />
+              <Share2 />
               <span>{t.shareTrial}</span>
             </>
           )}
@@ -397,7 +399,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
       {isAdmin && (
         <Surface padding="none" className="w-full max-w-2xl p-6 border-accent-amber/40 shadow-2xl relative">
           <div className="flex items-center gap-2 text-accent-amber type-card-title mb-2">
-            <ShieldCheck className="w-5 h-5" />
+            <ShieldCheck className="icon-lg" />
             <span>{c.publishOfficialModalTitle}</span>
           </div>
           <p className="text-xs text-text-muted mb-4">
@@ -424,7 +426,7 @@ export const MinigameCreator: React.FC<MinigameCreatorProps> = ({ catalog, local
               disabled={isPublishingOfficial}
               variant="amber" size="md" className="w-full sm:w-auto"
             >
-              <PerkHexIcon className="w-4 h-4" />
+              <PerkHexIcon className="icon-md" />
               <span>{isPublishingOfficial ? c.publishing : c.confirmPublish}</span>
             </Button>
           </div>

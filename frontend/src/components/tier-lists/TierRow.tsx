@@ -123,7 +123,7 @@ export const TierRow = React.memo(function TierRow({
             }}
             variant="amberSoft" size="sm" dashed className="min-h-11 group-data-[fit]/board:min-h-0 group-data-[fit]/board:py-0.5 self-center"
           >
-            <ArrowDownToLine className="h-3.5 w-3.5" aria-hidden="true" />
+            <ArrowDownToLine className="icon-sm" aria-hidden="true" />
             {t.moveHere}
           </Button>
         )}
@@ -147,7 +147,7 @@ export const TierRow = React.memo(function TierRow({
               title={formatMessage(t.clearTierAria, { label: tier.label })}
               className="opacity-70 transition-opacity hover:opacity-100 focus-visible:opacity-100"
             >
-              <Eraser className="h-3.5 w-3.5" aria-hidden="true" />
+              <Eraser aria-hidden="true" />
             </Button>
           ) : (
             <span aria-hidden="true" className="h-6 w-6" />

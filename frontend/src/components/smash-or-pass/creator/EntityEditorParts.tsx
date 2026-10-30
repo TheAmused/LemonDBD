@@ -161,7 +161,7 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
                   {/* Edit overlay icon on hover */}
                   <div className="absolute inset-0 z-0 flex items-center justify-center bg-bg-primary/50 opacity-0 group-hover/item:opacity-100 transition-opacity backdrop-blur-xs">
                     <span className="flex h-7 w-7 items-center justify-center rounded-chip bg-bg-surface/90 text-accent-red shadow-sm border border-border-color/60">
-                      <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
+                      <Pencil className="icon-sm" aria-hidden="true" />
                     </span>
                   </div>
 
@@ -172,7 +172,7 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
                     aria-label={formatMessage(c.removeCandidateAria, { name: entity.name || displayIndex })}
                     variant="overlay" size="xs" icon pill className="absolute top-1 right-1 z-10 opacity-80 sm:opacity-0 group-hover/item:opacity-100 hover:opacity-100"
                   >
-                    <X className="h-3 w-3" aria-hidden="true" />
+                    <X aria-hidden="true" />
                   </Button>
                 </div>
 
@@ -200,7 +200,7 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
                 variant="secondary" size="md" dashed className="group aspect-square h-auto w-full flex-col"
               >
                 <div className="flex flex-col items-center gap-1">
-                  <Plus className="h-5 w-5 transition-transform group-hover:scale-110" />
+                  <Plus className="icon-lg transition-transform group-hover:scale-110" />
                   <span className="type-label-2xs">{c.add}</span>
                 </div>
               </Button>

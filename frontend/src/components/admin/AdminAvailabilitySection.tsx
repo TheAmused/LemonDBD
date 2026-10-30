@@ -14,7 +14,7 @@ import { TileButton } from '@/components/common/TileButton';
 import { ToggleChip } from '@/components/common/ToggleChip';
 import { EmptyState } from '@/components/common/EmptyState';
 import { tip } from '@/components/common/Tooltip';
-import { KillerIcon, SurvivorIcon, PerkHexIcon } from '@/components/icons/DbdIcons';
+import { MaskIcon, PerkHexIcon, PersonIcon } from '@/components/icons/DbdIcons';
 import { AdminReasonModal } from '@/components/admin/AdminReasonModal';
 import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -191,7 +191,7 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
               value={kind}
               onChange={setKind}
               options={[
-                { value: 'characters', label: t.characters, icon: <KillerIcon className="icon-sm" /> },
+                { value: 'characters', label: t.characters, icon: <MaskIcon className="icon-sm" /> },
                 { value: 'perks', label: t.perks, icon: <PerkHexIcon className="icon-sm" /> },
               ]}
             />
@@ -201,12 +201,12 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
               value={role}
               onChange={setRole}
               options={[
-                { value: 'Survivor', label: t.roleSurvivor, icon: <SurvivorIcon className="icon-sm" />, activeClassName: 'bg-accent-green text-text-inverted' },
-                { value: 'Killer', label: t.roleKiller, icon: <KillerIcon className="icon-sm" /> },
+                { value: 'Survivor', label: t.roleSurvivor, activeClassName: 'bg-accent-green text-text-inverted' },
+                { value: 'Killer', label: t.roleKiller },
               ]}
             />
             <ToggleChip size="sm" pressed={disabledOnly} onClick={() => setDisabledOnly((v) => !v)}>
-              <Ban className="icon-sm" aria-hidden="true" />
+              <Ban aria-hidden="true" />
               {formatMessage(t.disabledOnly, { count: disabledCount })}
             </ToggleChip>
             <SearchInput
@@ -254,9 +254,9 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
                             className={cn('h-full w-full', isCharacter ? 'object-cover' : 'object-contain', item.is_disabled && 'opacity-40 grayscale')}
                           />
                         ) : isCharacter ? (
-                          <KillerIcon className="h-8 w-8 text-text-muted" aria-hidden="true" />
+                          <PersonIcon className="h-8 w-8 text-text-muted" aria-hidden="true" />
                         ) : (
-                          <PerkHexIcon className="h-6 w-6 text-text-muted" aria-hidden="true" />
+                          <PerkHexIcon className="icon-xl text-text-muted" aria-hidden="true" />
                         )}
                         {item.is_disabled && (
                           <span className="absolute inset-x-0 bottom-0 bg-accent-red py-0.5 text-center type-micro font-bold text-text-inverted">

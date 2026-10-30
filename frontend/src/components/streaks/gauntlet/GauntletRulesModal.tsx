@@ -1,5 +1,4 @@
 'use client';
-import { PadlockHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/streaks/gauntlet/GauntletRulesModal.tsx
 
 import React from 'react';
@@ -24,6 +23,7 @@ import {
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Surface } from '@/components/common/Surface';
+import { LockIcon } from '@/components/icons/DbdIcons';
 
 export interface GauntletRulesModalProps {
   isOpen: boolean;
@@ -214,7 +214,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
                 const Icon = BOOST_ICONS[boost];
                 return (
                   <li key={boost} className="flex items-start gap-2">
-                    <Icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-red" aria-hidden="true" />
+                    <Icon className="mt-0.5 icon-sm shrink-0 text-accent-red" aria-hidden="true" />
                     <span>{text}</span>
                   </li>
                 );
@@ -273,7 +273,7 @@ export const GauntletRulesModal: React.FC<GauntletRulesModalProps> = ({ isOpen, 
   
                   <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
                     <div className="flex items-center gap-1.5 type-strong text-text-secondary whitespace-nowrap">
-                      <PadlockHeartIcon className="w-3.5 h-3.5" aria-hidden="true" />
+                      <LockIcon className="icon-sm" aria-hidden="true" />
                       <span>{perkLimitText}</span>
                     </div>
                   </div>

@@ -94,7 +94,7 @@ export function TierColorPicker({ color, onChange, size = 'md' }: TierColorPicke
         mark={
           isHex ? (
             <span className="flex items-center justify-center rounded-full bg-bg-primary/85 p-0.5 text-text-primary" aria-hidden="true">
-              <Check className={small ? 'h-3 w-3' : 'h-3.5 w-3.5'} />
+              <Check className={small ? 'icon-xs' : 'icon-sm'} />
             </span>
           ) : (
             <></>
@@ -128,7 +128,7 @@ export function TierColorPicker({ color, onChange, size = 'md' }: TierColorPicke
                 aria-label={t.pickFromScreen}
                 variant="secondary" size="md" icon className="shrink-0"
               >
-                <Pipette className="h-4 w-4" aria-hidden="true" />
+                <Pipette aria-hidden="true" />
               </Button>
             )}
           </div>

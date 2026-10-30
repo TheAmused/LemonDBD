@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { Alert } from '@/components/common/Alert';
-import { FileJson, LayoutList, Plus, RotateCcw, TriangleAlert } from 'lucide-react';
+import { FileJson, LayoutList, Plus, RotateCcw, Settings, CircleAlert } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
@@ -26,7 +26,6 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { AccordionSection } from '@/components/common/AccordionSection';
 import { Tooltip } from '@/components/common/Tooltip';
-import { ThunderPulseIcon } from '@/components/icons/DbdIcons';
 import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
 import { PreferencesPromptModal } from '@/components/common/PreferencesPromptModal';
 import { usePreferences } from '@/hooks/usePreferences';
@@ -158,7 +157,7 @@ export function TierListHub({ locale }: TierListHubProps) {
               aria-label={dict.smashOrPass.effectsPrefs.button}
               className="h-9 w-9 min-h-9 min-w-9"
             >
-              <ThunderPulseIcon className="h-4 w-4" aria-hidden="true" />
+              <Settings className="icon-md" aria-hidden="true" />
             </Button>
           </Tooltip>
         }
@@ -169,13 +168,13 @@ export function TierListHub({ locale }: TierListHubProps) {
           <TierListSkeleton className="min-h-60" />
         ) : error && lists.length === 0 ? (
           <EmptyState
-            icon={TriangleAlert}
+            icon={CircleAlert}
             title={t.loadError}
             subtitle={t.loadErrorSubtitle}
             action={{
               label: (
                 <>
-                  <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+                  <RotateCcw className="icon-sm" aria-hidden="true" />
                   {t.retry}
                 </>
               ),
@@ -207,7 +206,7 @@ export function TierListHub({ locale }: TierListHubProps) {
         onToggle={toggleCustom}
         banner="/images/banners/banner_account.webp"
         badge={hydrated && (<Badge tone="red" size="sm" plain>{customCount}</Badge>)}
-        headerAction={<div className="flex items-center gap-2"><Button variant="secondary" onClick={handleOpenImport} className={HEADER_BTN}><FileJson className="h-4 w-4 shrink-0" aria-hidden="true" /><span className="hidden sm:inline">{t.importJson}</span></Button><Button variant="primary" onClick={createBlank} className={HEADER_BTN}><Plus className="h-4 w-4 shrink-0" aria-hidden="true" /><span className="hidden sm:inline">{t.newCustomList}</span></Button></div>}
+        headerAction={<div className="flex items-center gap-2"><Button variant="secondary" onClick={handleOpenImport} className={HEADER_BTN}><FileJson className="shrink-0" aria-hidden="true" /><span className="hidden sm:inline">{t.importJson}</span></Button><Button variant="primary" onClick={createBlank} className={HEADER_BTN}><Plus className="shrink-0" aria-hidden="true" /><span className="hidden sm:inline">{t.newCustomList}</span></Button></div>}
         stickyHeader
         as="section"
         bodyClassName="p-4 sm:p-6"

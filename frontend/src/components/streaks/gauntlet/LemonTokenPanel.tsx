@@ -42,7 +42,7 @@ const BoostTile: React.FC<BoostTileProps> = ({ boost, label, price, disabled, on
       disabled={disabled}
       className="flex min-w-0 flex-col items-center justify-center gap-1 rounded-control border border-border-color bg-bg-surface px-2 py-2 text-center transition-colors sm:flex-row sm:gap-2 sm:px-3 sm:text-left enabled:cursor-pointer enabled:hover:border-accent-amber/60 enabled:hover:bg-bg-elevated disabled:cursor-not-allowed disabled:opacity-45" press={false}
     >
-      <Icon className="h-5 w-5 shrink-0 text-accent-amber" aria-hidden="true" />
+      <Icon className="icon-lg shrink-0 text-accent-amber" aria-hidden="true" />
       <span className="type-caption min-w-0 text-text-primary max-sm:text-xs max-sm:leading-tight">{label}</span>
       <span className="type-label-sm text-accent-amber">{price}</span>
     </TileButton>
@@ -100,7 +100,7 @@ export const LemonTokenPanel: React.FC<LemonTokenPanelProps> = ({
       )}
 
       <div className="ml-auto flex items-center gap-1.5 type-card-title max-sm:order-first">
-        <Coins className="h-4 w-4 text-accent-amber" aria-hidden="true" />
+        <Coins className="icon-md text-accent-amber" aria-hidden="true" />
         <span>
           {dict.streaks.tokensLabel}: {tokens} / {boosts.cap}
         </span>

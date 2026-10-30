@@ -4,10 +4,10 @@
 import React, { useState } from 'react';
 import type { Role } from '@/types/gauntletStreak';
 import type { OwnedCharacterItem } from '../useOwnedRoster';
-import { Check, User, ShieldCheck } from 'lucide-react';
+import { Check, Flag } from 'lucide-react';
 import { avatarUrlForCharacter, staticUrl } from '@/utils/staticUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
-import { KillerIcon } from '@/components/icons/DbdIcons';
+import { PersonIcon } from '@/components/icons/DbdIcons';
 
 import { SkeletonBlock } from '@/components/common/Skeleton';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -120,12 +120,12 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
               >
                 {completed && (
                   <div className="absolute top-1 right-1 bg-accent-green text-text-inverted p-1 rounded-full shadow-md z-10">
-                    <Check className="w-3.5 h-3.5 stroke-[3]" />
+                    <Check className="icon-sm stroke-[3]" />
                   </div>
                 )}
                 {checkpoint && !completed && !active && (
                   <div className="absolute top-1 right-1 bg-accent-amber text-text-inverted p-1 rounded-full shadow-md z-10">
-                    <ShieldCheck className="w-3 h-3" />
+                    <Flag className="icon-xs" />
                   </div>
                 )}
 
@@ -141,7 +141,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-text-muted">
-                      {role === 'survivor' ? <User className="w-8 h-8" /> : <KillerIcon className="w-8 h-8" />}
+                      <PersonIcon className="w-8 h-8" />
                     </div>
                   )}
                 </div>

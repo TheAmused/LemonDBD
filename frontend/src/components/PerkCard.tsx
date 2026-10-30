@@ -1,5 +1,4 @@
 'use client';
-import { PadlockHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/PerkCard.tsx
 
 import React, { useState } from 'react';
@@ -15,6 +14,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
+import { LockIcon } from '@/components/icons/DbdIcons';
 
 const DisabledReasonModal = dynamic(
   () => import('@/components/DisabledReasonModal').then((m) => m.DisabledReasonModal),
@@ -172,7 +172,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
               className="absolute top-1 right-1 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-bg-primary/90 shadow-xs border border-border-color"
               {...tip(dict.modal.unownedPerk, undefined, 'status')}
             >
-              <PadlockHeartIcon className="h-3.5 w-3.5 text-text-muted" />
+              <LockIcon className="icon-sm text-text-muted" />
             </div>
           )}
         </div>

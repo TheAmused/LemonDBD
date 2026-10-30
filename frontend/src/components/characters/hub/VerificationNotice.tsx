@@ -20,7 +20,7 @@ export function VerificationNotice({ onVerify, onDismiss }: VerificationNoticePr
     <Toast
       tone="amberSolid"
       align="center"
-      icon={<MailWarning className="h-4 w-4" />}
+      icon={<MailWarning className="icon-md" />}
       message={dict.user.verifyEmailRequired}
       actions={
         <>

@@ -376,7 +376,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       <h1 className="sr-only">{isEditing ? t.editDetails : c.pageTitle}</h1>
       {restored && (
         <Toast
-          icon={<History className="h-4 w-4 2xl:h-5 2xl:w-5" aria-hidden="true" />}
+          icon={<History className="icon-md 2xl:icon-lg" aria-hidden="true" />}
           message={c.draftRestored}
           actions={
             <Button variant="secondary" size="sm" onClick={startOver} className="whitespace-nowrap">

@@ -28,7 +28,7 @@ const Model3DContent: React.FC<{ src: string; closeLabel: string }> = ({ src, cl
         className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 shadow-md"
         aria-label={closeLabel}
       >
-        <X className="w-5 h-5" />
+        <X />
       </Button>
       <Img
         src={src}

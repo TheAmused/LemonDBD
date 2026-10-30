@@ -28,6 +28,8 @@ export default {
   currentPasswordHint: "アカウント情報を更新するために必要です",
   currentPasswordRequired: "アカウント情報を更新するには、現在のパスワードを入力する必要があります。",
   currentPasswordIncorrect: "現在のパスワードが正しくありません。",
+  showPassword: "パスワードを表示",
+  hidePassword: "パスワードを隠す",
   forgotSentNotice: "そのメールアドレスが登録されている場合、パスワード再設定リンクを送信しました。",
   signIn: "ログイン",
   createAccount: "アカウント作成",

@@ -1,17 +1,11 @@
 'use client';
 // frontend/src/components/smash-or-pass/roster-select/RosterPickerFooter.tsx
-import {
-  AshUrnIcon,
-  LetterSendIcon,
-  PadlockHeartIcon,
-  QuillEditIcon,
-  SealCheckIcon,
-} from '@/components/icons/DbdIcons';
-import { Flag } from 'lucide-react';
+import { Flag, RotateCcw, Check, Pencil, Send } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { useDictionary } from '@/context/DictionaryContext';
 import type { RosterItem } from '@/types/smashOrPass';
 import { rosterDisplayName } from './rosterDisplay';
+import { LockIcon } from '@/components/icons/DbdIcons';
 
 interface RosterPickerFooterProps {
   /** The roster in the middle of the carousel. */
@@ -48,7 +42,7 @@ export function RosterPickerFooter({
           onClick={onCommit}
           className="px-8 sm:px-10 uppercase tracking-widest"
         >
-          <SealCheckIcon className="h-5 w-5" aria-hidden="true" />
+          <Check className="icon-lg" aria-hidden="true" />
           <span>
             {dict.smashOrPass.selectPrefix ? `${dict.smashOrPass.selectPrefix} ` : ''}
             {rosterDisplayName(activeRosterInCenter)}
@@ -60,7 +54,7 @@ export function RosterPickerFooter({
           disabled
           className="px-8 sm:px-10 uppercase tracking-widest"
         >
-          <PadlockHeartIcon className="h-5 w-5 text-text-muted" aria-hidden="true" />
+          <LockIcon className="icon-lg text-text-muted" aria-hidden="true" />
           <span>
             {rosterDisplayName(activeRosterInCenter)} ({dict.smashOrPass.comingSoon})
           </span>
@@ -76,7 +70,7 @@ export function RosterPickerFooter({
               aria-label={dict.smashOrPass.picker.editRoster}
               className="h-11 w-11 sm:h-13 sm:w-13"
             >
-              <QuillEditIcon className="h-5 w-5" aria-hidden="true" />
+              <Pencil className="icon-lg" aria-hidden="true" />
             </Button>
           )}
           {onExportRoster && (
@@ -86,7 +80,7 @@ export function RosterPickerFooter({
               aria-label={dict.smashOrPass.picker.exportRoster}
               className="h-11 w-11 sm:h-13 sm:w-13"
             >
-              <LetterSendIcon className="h-5 w-5" aria-hidden="true" />
+              <Send className="icon-lg" aria-hidden="true" />
             </Button>
           )}
           {onReportRoster && (
@@ -96,7 +90,7 @@ export function RosterPickerFooter({
               aria-label={dict.tierLists.reportButtonAria}
               className="h-11 w-11 sm:h-13 sm:w-13"
             >
-              <Flag className="h-5 w-5 text-accent-red" aria-hidden="true" />
+              <Flag className="icon-lg text-accent-red" aria-hidden="true" />
             </Button>
           )}
           {onDeleteRoster && (
@@ -106,7 +100,7 @@ export function RosterPickerFooter({
               aria-label={dict.smashOrPass.picker.deleteRoster}
               className="h-11 w-11 sm:h-13 sm:w-13"
             >
-              <AshUrnIcon className="h-5 w-5" aria-hidden="true" />
+              <RotateCcw className="icon-lg" aria-hidden="true" />
             </Button>
           )}
         </>

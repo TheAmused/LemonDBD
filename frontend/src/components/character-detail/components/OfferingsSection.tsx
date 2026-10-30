@@ -5,7 +5,7 @@ import React, { useMemo } from 'react';
 import {  Coins,
   Map as MapIcon,
   EyeOff,
-  Layers,
+  DoorOpen,
   Box,} from 'lucide-react';
 import type {
   OfferingItem,
@@ -16,7 +16,7 @@ import {
   getRarityRank
 } from '../types';
 import { CategoryPicker } from './CategoryPicker';
-import { MoriCharmIcon, WardCharmIcon, BloodwebIcon } from '@/components/icons/DbdIcons';
+import { MoriCharmIcon, WardCharmIcon, DiceIcon, SparkleIcon } from '@/components/icons/DbdIcons';
 import { usePersistentString } from '@/hooks/usePersistentString';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
@@ -61,7 +61,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         {
           key: 'special',
           label: t.categorySpecial,
-          icon: BloodwebIcon,
+          icon: SparkleIcon,
           desc: t.categorySpecialDesc,
         },
         {
@@ -100,7 +100,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
       {
         key: 'special',
         label: t.categorySpecial,
-        icon: BloodwebIcon,
+        icon: SparkleIcon,
         desc: t.categorySpecialDesc,
       },
       {
@@ -112,7 +112,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
       {
         key: 'luck',
         label: t.categoryLuck,
-        icon: BloodwebIcon,
+        icon: DiceIcon,
         desc: t.categoryLuckDesc,
       },
       {
@@ -130,7 +130,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
       {
         key: 'blueprint',
         label: t.categoryBlueprint,
-        icon: Layers,
+        icon: DoorOpen,
         desc: t.categoryBlueprintDesc,
       },
       {
@@ -322,7 +322,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
             return {
               value: cat.key,
               label: cat.label,
-              icon: <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />,
+              icon: <Icon className="icon-sm shrink-0" aria-hidden="true" />,
               buttonProps: { ...tip(`${cat.label} - ${cat.desc}`, undefined, 'default'), 'aria-label': `${cat.label} - ${cat.desc}` },
             };
           })}

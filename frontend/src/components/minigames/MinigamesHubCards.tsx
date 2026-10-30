@@ -61,7 +61,7 @@ export const FlagshipCard: React.FC<ModeCardProps & { badge: string; ctaIcon?: L
       <div>
         <div className="flex items-center justify-between mb-4">
           <div className={cn('w-12 h-12 rounded-card flex items-center justify-center group-hover:scale-110 transition-transform', classes.icon)}>
-            <Icon className="w-6 h-6" />
+            <Icon className="icon-xl" />
           </div>
           <Badge tone={tone} size="sm">
             {badge}
@@ -71,7 +71,7 @@ export const FlagshipCard: React.FC<ModeCardProps & { badge: string; ctaIcon?: L
         <p className="type-body text-text-secondary">{description}</p>
       </div>
       <Link href={href} className={buttonClassName(button, 'md', 'mt-6 w-full')}>
-        {CtaIcon ? <CtaIcon className="w-4 h-4" /> : <Play className="w-4 h-4 fill-current" />}
+        {CtaIcon ? <CtaIcon className="icon-md" /> : <Play className="icon-md fill-current" />}
         <span>{cta}</span>
       </Link>
     </Surface>
@@ -85,13 +85,13 @@ export const GuesserCard: React.FC<ModeCardProps> = ({ tone, icon: Icon, title, 
     <Surface padding="none" className={cn('p-5 shadow-lg flex flex-col justify-between transition-all group', classes.hover)}>
       <div>
         <div className={cn('w-10 h-10 rounded-card flex items-center justify-center mb-3 group-hover:scale-105 transition-transform', classes.icon)}>
-          <Icon className="w-5 h-5" />
+          <Icon className="icon-lg" />
         </div>
         <h3 className="text-base font-bold text-text-primary mb-1">{title}</h3>
         <p className="type-body text-text-secondary">{description}</p>
       </div>
       <Link href={href} className={buttonClassName(button, 'md', 'mt-5 w-full')}>
-        <Play className="w-3.5 h-3.5 fill-current" />
+        <Play className="icon-sm fill-current" />
         <span>{cta}</span>
       </Link>
     </Surface>
@@ -144,7 +144,7 @@ export const CustomTrialCard: React.FC<CustomTrialCardProps> = ({
           href={`/${locale}/minigames/play?id=${encodeURIComponent(String(trial.id))}`}
           className={buttonClassName('success', 'sm')}
         >
-          <Play className="w-3.5 h-3.5 fill-current" />
+          <Play className="icon-sm fill-current" />
           <span>{t.playTrial}</span>
         </Link>
 
@@ -152,17 +152,17 @@ export const CustomTrialCard: React.FC<CustomTrialCardProps> = ({
           <Button variant="secondary" size="sm" icon onClick={onShare} disabled={isShareLoading}
             {...tip(t.shareTrial, undefined, 'action')} aria-label={t.shareTrial}
           >
-            {isCopied ? <Check className="w-4 h-4 text-accent-green" /> : <Share2 className="w-4 h-4" />}
+            {isCopied ? <Check className="text-accent-green" /> : <Share2 />}
           </Button>
           <Button variant="secondary" size="sm" icon onClick={onExport}
             {...tip(t.exportJson, undefined, 'action')} aria-label={t.exportJson}
           >
-            <Download className="w-4 h-4" />
+            <Download />
           </Button>
           <Button variant="danger" size="sm" icon onClick={onDelete}
             {...tip(t.deleteTrial, undefined, 'action')} aria-label={t.deleteTrial}
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 />
           </Button>
         </div>
       </div>

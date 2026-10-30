@@ -173,7 +173,7 @@ export const TwoFactorSetupModal: React.FC<TwoFactorSetupModalProps> = ({ isOpen
               <code className="break-all rounded-chip bg-bg-primary px-2.5 py-1.5 text-xs tracking-widest text-text-primary shadow-inner select-all">
                 {setup.secret.match(/.{1,4}/g)?.join(' ')}
               </code>
-              <Button type="button" variant="secondary" size="sm" onClick={() => { void copyKey(); }} leftIcon={keyCopied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}>
+              <Button type="button" variant="secondary" size="sm" onClick={() => { void copyKey(); }} leftIcon={keyCopied ? <Check className="icon-sm" /> : <Copy className="icon-sm" />}>
                 <span>{keyCopied ? t.copied : t.copyKey}</span>
               </Button>
             </div>

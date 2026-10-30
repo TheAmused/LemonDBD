@@ -43,7 +43,7 @@ const SidebarNavLinkBase: React.FC<SidebarNavLinkProps> = ({
   const innerContent = (
     <>
       <div className="flex items-center gap-3 min-w-0">
-        <Icon className={`h-4 w-4 shrink-0 ${ICON_COLOR}`} />
+        <Icon className={`icon-md shrink-0 ${ICON_COLOR}`} />
         <span className="truncate">{label}</span>
       </div>
       {badge && (

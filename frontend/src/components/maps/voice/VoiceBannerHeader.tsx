@@ -73,9 +73,9 @@ export function VoiceBannerHeader({
           variant="soft" size="sm" pill
         >
           {activeEngine === 'web-speech' ? (
-            <Globe className="h-4 w-4 text-accent-red" aria-hidden="true" />
+            <Globe className="icon-md text-accent-red" aria-hidden="true" />
           ) : (
-            <Brain className="h-4 w-4 text-accent-red" aria-hidden="true" />
+            <Brain className="icon-md text-accent-red" aria-hidden="true" />
           )}
           <span>
             {activeEngine === 'web-speech'
@@ -93,9 +93,9 @@ export function VoiceBannerHeader({
           variant="secondary" size="md" icon
         >
           {soundEnabled ? (
-            <Volume2 className="h-4 w-4" aria-hidden="true" />
+            <Volume2 aria-hidden="true" />
           ) : (
-            <VolumeX className="h-4 w-4 text-text-muted" aria-hidden="true" />
+            <VolumeX className="text-text-muted" aria-hidden="true" />
           )}
         </Button>
       </div>
@@ -119,9 +119,9 @@ export function VoiceBannerHeader({
           variant="soft" size="xs" pill
         >
           {activeEngine === 'web-speech' ? (
-            <Globe className="h-3.5 w-3.5 text-accent-red" aria-hidden="true" />
+            <Globe className="text-accent-red" aria-hidden="true" />
           ) : (
-            <Brain className="h-3.5 w-3.5 text-accent-red" aria-hidden="true" />
+            <Brain className="text-accent-red" aria-hidden="true" />
           )}
           <span>
             {activeEngine === 'web-speech'
@@ -139,9 +139,9 @@ export function VoiceBannerHeader({
           variant="secondary" size="sm" icon pill
         >
           {soundEnabled ? (
-            <Volume2 className="h-3.5 w-3.5" aria-hidden="true" />
+            <Volume2 aria-hidden="true" />
           ) : (
-            <VolumeX className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
+            <VolumeX className="text-text-muted" aria-hidden="true" />
           )}
         </Button>
 

@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
-import { BookOpen, Flame, Bookmark, Calendar, ShieldCheck } from 'lucide-react';
+import { BookOpen, Zap, Bookmark, Calendar } from 'lucide-react';
 import type {
   CharacterViewBaseProps,
   AddonItem,
@@ -116,7 +116,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
                       }}
                     />
                   ) : (
-                    <Flame className="h-10 w-10 text-accent-red animate-pulse" aria-hidden="true" />
+                    <Zap className="h-10 w-10 text-accent-red animate-pulse" aria-hidden="true" />
                   )}
                 </TileButton>
               )}
@@ -138,7 +138,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
               <Button
                 variant="secondary"
                 onClick={() => setIsLoreModalOpen(true)}
-                leftIcon={<BookOpen className="h-4 w-4" aria-hidden="true" />}
+                leftIcon={<BookOpen className="icon-md" aria-hidden="true" />}
                 className=""
               >
                 <span>{t.viewLore || ''}</span>
@@ -146,18 +146,17 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
 
               {chapterName && (
                 <InfoChip>
-                  <Bookmark className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                  <Bookmark className="icon-sm shrink-0" aria-hidden="true" />
                   {chapterName}
                 </InfoChip>
               )}
 
               <InfoChip>
-                <Calendar className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                <Calendar className="icon-sm shrink-0" aria-hidden="true" />
                 {releaseDate}
               </InfoChip>
 
               <InfoChip>
-                <ShieldCheck className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
                 {character.is_licensed
                   ? t.dlcLicensed
                   : t.dlcOriginal}

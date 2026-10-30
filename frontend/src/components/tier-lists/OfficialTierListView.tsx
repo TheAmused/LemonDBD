@@ -4,7 +4,7 @@
 import { logger } from '@/utils/logger';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { RotateCcw, SearchX, TriangleAlert } from 'lucide-react';
+import { RotateCcw, SearchX, CircleAlert } from 'lucide-react';
 import { Alert } from '@/components/common/Alert';
 import { EmptyState } from '@/components/common/EmptyState';
 import {
@@ -105,7 +105,7 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
     return (
       <div className="relative z-10 flex flex-col gap-2">
         <EmptyState
-          icon={notFound ? SearchX : TriangleAlert}
+          icon={notFound ? SearchX : CircleAlert}
           title={notFound ? t.notFoundTitle : t.loadError}
           subtitle={notFound ? t.notFoundSubtitle : t.loadErrorSubtitle}
           action={
@@ -114,7 +114,7 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
               : {
                   label: (
                     <>
-                      <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+                      <RotateCcw className="icon-sm" aria-hidden="true" />
                       {t.retry}
                     </>
                   ),
@@ -130,13 +130,13 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
     return (
       <div className="relative z-10 flex flex-col gap-2">
         <EmptyState
-          icon={TriangleAlert}
+          icon={CircleAlert}
           title={t.loadError}
           subtitle={t.loadErrorSubtitle}
           action={{
             label: (
               <>
-                <RotateCcw className="h-3.5 w-3.5" aria-hidden="true" />
+                <RotateCcw className="icon-sm" aria-hidden="true" />
                 {t.retry}
               </>
             ),

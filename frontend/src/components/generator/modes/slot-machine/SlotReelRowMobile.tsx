@@ -1,5 +1,4 @@
 'use client';
-import { PadlockHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/generator/modes/slot-machine/SlotReelRowMobile.tsx
 import React from 'react';
 import { Ban, Check, Plus } from 'lucide-react';
@@ -10,6 +9,7 @@ import { getPerkIconUrl } from '@/utils/perkUtils';
 import type { MachinePhase, Reel } from './slotMachineTypes';
 import { TileButton } from "@/components/common/TileButton";
 import { Img } from '@/components/common/Img';
+import { LockIcon } from '@/components/icons/DbdIcons';
 
 export interface SlotReelProps {
   reel: Reel;
@@ -161,9 +161,9 @@ export function SlotReelRowMobile({
             : `#${reel.id + 1}`}
         </span>
         {reel.locked ? (
-          <PadlockHeartIcon className="h-4 w-4 text-accent-amber mt-0.5" />
+          <LockIcon className="icon-md text-accent-amber mt-0.5" />
         ) : landedBroken ? (
-          <Ban className="h-4 w-4 text-accent-red mt-0.5" />
+          <Ban className="icon-md text-accent-red mt-0.5" />
         ) : null}
       </div>
 
@@ -194,11 +194,11 @@ export function SlotReelRowMobile({
             )}
             aria-label={`#${reel.id + 1}`} press={false}
           >
-            {isStaged ? <Check className="h-5 w-5" /> : <Plus className="h-5 w-5" />}
+            {isStaged ? <Check className="icon-lg" /> : <Plus className="icon-lg" />}
           </TileButton>
         ) : reel.locked ? (
           <div className="h-10 w-10 rounded-card bg-accent-amber/20 border border-accent-amber/40 flex items-center justify-center text-accent-amber">
-            <PadlockHeartIcon className="h-5 w-5" />
+            <LockIcon className="icon-lg" />
           </div>
         ) : (
           <div className="h-10 w-10" />

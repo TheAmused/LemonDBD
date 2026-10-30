@@ -74,7 +74,7 @@ export function CharacterDetailClient({ slug }: { slug: string }) {
             href={`/${locale}/characters`}
             className={buttonClassName('primary', 'md')}
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="icon-md" />
             <span>{t.backToCharacters}</span>
           </Link>
         </EmptyState>

@@ -2,11 +2,12 @@
 // frontend/src/components/streaks/id-please/IdPleaseProgress.tsx
 
 import React from 'react';
-import { Infinity as InfinityIcon, Trophy } from 'lucide-react';
+import { Infinity as InfinityIcon } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
 import { everyNthCheckpoint } from '@/utils/challengeCheckpoints';
 import { formatMessage } from '@/utils/i18nFormat';
 import type { IdPleaseBadgeProgress } from '@/types/idPleaseStreak';
+import { TrophyIcon } from '@/components/icons/DbdIcons';
 
 /** Where the badge sits on the track; the rest is the endless tail that follows it. */
 const BADGE_AT_PERCENT = 62;
@@ -63,13 +64,13 @@ export const IdPleaseProgress: React.FC<IdPleaseProgressProps> = ({ unit, progre
             className="absolute inset-y-1/2 right-6 border-t-2 border-dashed border-border-color"
             style={{ left: `${BADGE_AT_PERCENT}%` }}
           />
-          <InfinityIcon className="absolute right-0 top-1/2 h-5 w-5 -translate-y-1/2 text-text-muted" />
+          <InfinityIcon className="absolute right-0 top-1/2 icon-lg -translate-y-1/2 text-text-muted" />
 
           <span
             className="absolute top-1/2 flex h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-accent-amber bg-bg-elevated text-accent-amber shadow-glow-amber-sm"
             style={{ left: `${BADGE_AT_PERCENT}%` }}
           >
-            <Trophy className="h-4 w-4" />
+            <TrophyIcon className="icon-md" />
           </span>
         </div>
       </div>

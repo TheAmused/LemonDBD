@@ -1,9 +1,8 @@
 'use client';
-import { PadlockHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/user/UserProfileForm.tsx
 
 import React, { useState } from 'react';
-import { Mail, Eye, EyeOff, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Mail, Eye, EyeOff, CheckCircle2, CircleAlert } from 'lucide-react';
 import type { StatusFeedback } from '@/types/userProfile';
 import { updateUserProfile, ApiError, type UpdateProfilePayload } from '@/services/userProfileApi';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
@@ -20,6 +19,7 @@ import { TwoFactorSection } from '@/components/user/TwoFactorSection';
 import { AccordionSection } from '@/components/common/AccordionSection';
 import { useSiteConfig } from '@/context/SiteConfigContext';
 import { formatMessage } from '@/utils/i18nFormat';
+import { LockIcon } from '@/components/icons/DbdIcons';
 
 interface UserProfileFormProps {
   login: string;
@@ -188,9 +188,9 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
           }`}
         >
           {statusMessage.type === 'success' ? (
-            <CheckCircle2 className="h-4 w-4 shrink-0" />
+            <CheckCircle2 className="icon-md shrink-0" />
           ) : (
-            <AlertCircle className="h-4 w-4 shrink-0" />
+            <CircleAlert className="icon-md shrink-0" />
           )}
           <span>{statusMessage.text}</span>
         </div>
@@ -229,7 +229,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
             </label>
             <div className="relative">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-text-muted">
-                <Mail className="h-4 w-4" />
+                <Mail className="icon-md" />
               </div>
               <Input
                 type="email"
@@ -271,9 +271,10 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 type="button"
                 tabIndex={-1}
                 onClick={() => setShowCurrentPassword((prev) => !prev)}
+                aria-label={showCurrentPassword ? t.hidePassword : t.showPassword}
                 variant="ghost" size="xs" icon className="absolute right-1.5 top-1/2 -translate-y-1/2"
               >
-                {showCurrentPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                {showCurrentPassword ? <EyeOff /> : <Eye />}
               </Button>
             </div>
           </div>
@@ -299,7 +300,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
           {!hasPassword && (
             <div className="space-y-3 pt-3 border-t border-border-color">
               <span className="type-label-sm text-text-primary flex items-center gap-2">
-                <PadlockHeartIcon className="h-3.5 w-3.5 text-accent-amber" />
+                <LockIcon className="icon-sm text-accent-amber" />
                 <span>{t.setPasswordTitle}</span>
               </span>
               <p className="type-caption text-text-secondary">{t.setPasswordDesc}</p>
@@ -309,7 +310,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                 size="sm"
                 loading={isSendingSetPassword}
                 onClick={() => { void handleSendSetPasswordLink(); }}
-                leftIcon={<Mail className="h-3.5 w-3.5" />}
+                leftIcon={<Mail className="icon-sm" />}
               >
                 <span>{t.setPasswordButton}</span>
               </Button>
@@ -321,7 +322,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
           <div className="space-y-3 pt-3 border-t border-border-color">
             <div className="flex items-center justify-between">
               <span className="type-label-sm text-text-primary flex items-center gap-2">
-                <PadlockHeartIcon className="h-3.5 w-3.5 text-accent-amber" />
+                <LockIcon className="icon-sm text-accent-amber" />
                 <span>{dict.user.passwordLabel}</span>
               </span>
               <span className="type-caption text-text-muted">
@@ -347,9 +348,10 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                     type="button"
                     tabIndex={-1}
                     onClick={() => setShowNewPassword((prev) => !prev)}
+                    aria-label={showNewPassword ? t.hidePassword : t.showPassword}
                     variant="ghost" size="xs" icon className="absolute right-1.5 top-1/2 -translate-y-1/2"
                   >
-                    {showNewPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                    {showNewPassword ? <EyeOff /> : <Eye />}
                   </Button>
                 </div>
               </div>
@@ -376,9 +378,10 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
                     type="button"
                     tabIndex={-1}
                     onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    aria-label={showConfirmPassword ? t.hidePassword : t.showPassword}
                     variant="ghost" size="xs" icon className="absolute right-1.5 top-1/2 -translate-y-1/2"
                   >
-                    {showConfirmPassword ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                    {showConfirmPassword ? <EyeOff /> : <Eye />}
                   </Button>
                 </div>
               </div>

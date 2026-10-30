@@ -2,8 +2,8 @@
 // frontend/src/components/DisabledBadge.tsx
 
 import React from 'react';
-import { AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/common/Button';
+import { TriangleAlert } from 'lucide-react';
 
 interface DisabledBadgeProps {
   label: string;
@@ -29,7 +29,7 @@ export const DisabledBadge: React.FC<DisabledBadgeProps> = ({
     aria-label={ariaLabel || label}
     className={className || `absolute ${position} z-10 bg-bg-surface/90`}
   >
-    <AlertTriangle className="h-3.5 w-3.5" />
+    <TriangleAlert />
   </Button>
 );
 

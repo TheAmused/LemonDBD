@@ -145,7 +145,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
             />
 
             <p className="flex items-start gap-1.5 text-tiny sm:text-mini text-text-secondary">
-              <Info className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0 mt-0.5" />
+              <Info className="icon-xs sm:icon-sm shrink-0 mt-0.5" />
               <span>
                 {t.legendCustomizeHint}
               </span>

@@ -530,6 +530,7 @@ export default {
     badgeGradientColor: 'Gradient / kolor odznaki',
     markAsFallback: 'Oznacz jako domyślny archetyp awaryjny (używany, gdy żadne warunki nie są spełnione)',
     rulesTitle: 'Reguły oceniania i wyzwalacze',
+    removeRule: 'Usuń regułę',
     addCondition: 'Dodaj warunek',
   },
   sharing: {

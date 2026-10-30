@@ -2,12 +2,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Plus, X, Shield, User } from 'lucide-react';
+import { Plus, X, User } from 'lucide-react';
 
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
+import { MaskIcon } from '@/components/icons/DbdIcons';
 
 interface RosterTaxonomyBlockProps {
   roles: string[];
@@ -76,7 +77,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
       <div className="flex flex-col gap-3 pb-6 md:pb-0 md:pr-6">
         <div className="flex flex-col items-center justify-center text-center gap-1">
           <div className="flex items-center justify-center gap-2">
-            <Shield className="h-4 w-4 text-accent-red" />
+            <MaskIcon className="icon-md text-accent-red" />
             <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-text-primary">
               {tx.rolesTitle}
             </h3>
@@ -110,7 +111,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
             onClick={() => handleAddRole()}
             className="shrink-0"
           >
-            <Plus className="h-3.5 w-3.5" />
+            <Plus />
             <span>{tx.add}</span>
           </Button>
         </div>
@@ -153,7 +154,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
                   variant="ghost" size="xs" icon pill
                   aria-label={tx.removeRoleAria}
                 >
-                  <X className="h-3 w-3" />
+                  <X />
                 </Button>
               </Badge>
             ))
@@ -165,7 +166,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
       <div className="flex flex-col gap-3 pt-6 md:pt-0 md:pl-6">
         <div className="flex flex-col items-center justify-center text-center gap-1">
           <div className="flex items-center justify-center gap-2">
-            <User className="h-4 w-4 text-accent-green" />
+            <User className="icon-md text-accent-green" />
             <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-text-primary">
               {tx.gendersTitle}
             </h3>
@@ -199,7 +200,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
             onClick={() => handleAddGender()}
             className="shrink-0"
           >
-            <Plus className="h-3.5 w-3.5" />
+            <Plus />
             <span>{tx.add}</span>
           </Button>
         </div>
@@ -242,7 +243,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
                   variant="ghost" size="xs" icon pill
                   aria-label={tx.removeGenderAria}
                 >
-                  <X className="h-3 w-3" />
+                  <X />
                 </Button>
               </Badge>
             ))

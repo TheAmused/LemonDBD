@@ -59,7 +59,7 @@ export function StreaksLayoutShell({ children }: { children: React.ReactNode }) 
       ) : isAuthenticated ? (
         <div className="flex flex-col items-center justify-center rounded-card border border-dashed border-border-color bg-bg-surface/60 px-6 py-20 text-center">
           <IconTile tone="amber" size="md">
-            <MailWarning className="h-5 w-5 text-accent-amber" />
+            <MailWarning className="icon-lg text-accent-amber" />
           </IconTile>
           <h2 className="mt-4 text-sm font-extrabold tracking-wide text-text-primary">
             {dict.streaks.verifyEmailToTrack}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trophy } from 'lucide-react';
+import { Flag } from 'lucide-react';
 
 /** Card chrome shared by every win screen: the checkpoint modal's amber gradient, without the motion. */
 export const CELEBRATION_CARD_CLASSES =
@@ -11,7 +11,7 @@ export const CelebrationBadge: React.FC = () => (
     className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border-2 border-accent-amber bg-gradient-to-br from-accent-amber to-accent-amber-hover text-text-inverted"
     aria-hidden="true"
   >
-    <Trophy className="h-10 w-10" />
+    <Flag className="h-10 w-10" />
   </div>
 );
 

@@ -197,13 +197,13 @@ export function ExportModal<D>({
               className={buttonClassName}
               aria-live="polite"
             >
-              {linkCopy === 'copied' ? <Check className="h-4 w-4" aria-hidden="true" /> : <Link2 className="h-4 w-4" aria-hidden="true" />}
+              {linkCopy === 'copied' ? <Check aria-hidden="true" /> : <Link2 aria-hidden="true" />}
               {copyLabel(linkCopy, labels.copyLink)}
             </Button>
           </div>
           {shareUrl.length > shareLinkWarnChars && (
             <p className="flex items-start gap-2 rounded-card border border-accent-amber/40 bg-accent-amber/10 p-3 type-strong text-accent-amber">
-              <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+              <TriangleAlert className="mt-0.5 icon-md shrink-0" aria-hidden="true" />
               {formatMessage(labels.linkTooLong, { count: shareUrl.length.toLocaleString(locale) })}
             </p>
           )}
@@ -231,7 +231,7 @@ export function ExportModal<D>({
               }}
               className={buttonClassName}
             >
-              <Download className="h-4 w-4" aria-hidden="true" />
+              <Download aria-hidden="true" />
               {labels.downloadFile}
             </Button>
             <Button
@@ -246,7 +246,7 @@ export function ExportModal<D>({
               className={buttonClassName}
               aria-live="polite"
             >
-              {jsonCopy === 'copied' ? <Check className="h-4 w-4" aria-hidden="true" /> : <Copy className="h-4 w-4" aria-hidden="true" />}
+              {jsonCopy === 'copied' ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
               {copyLabel(jsonCopy, labels.copyJson)}
             </Button>
           </div>

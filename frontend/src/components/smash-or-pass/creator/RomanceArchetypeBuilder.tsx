@@ -1,5 +1,5 @@
 'use client';
-import { BloodwebIcon, ThornHeartIcon } from '@/components/icons/DbdIcons';
+import { HeartIcon, SparkleIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/smash-or-pass/creator/RomanceArchetypeBuilder.tsx
 
 import React, { useState } from 'react';
@@ -27,8 +27,8 @@ import { Surface } from '@/components/common/Surface';
 import { Img } from '@/components/common/Img';
 
 const ICON_PRESETS: Array<{ name: string; icon: React.ComponentType<{ className?: string }> }> = [
-  { name: 'sparkles', icon: BloodwebIcon },
-  { name: 'heart', icon: ThornHeartIcon },
+  { name: 'sparkles', icon: SparkleIcon },
+  { name: 'heart', icon: HeartIcon },
   { name: 'flame', icon: Flame },
   { name: 'skull', icon: Skull },
   { name: 'zap', icon: Zap },
@@ -131,7 +131,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
           onClick={addArchetype}
           className="self-start sm:self-auto"
         >
-          <Plus className="h-4 w-4" />
+          <Plus />
           <span>{ab.addArchetype}</span>
         </Button>
       </div>
@@ -162,7 +162,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                       {arch.icon_url ? (
                         <Img src={arch.icon_url} alt="" className="h-full w-full object-cover" />
                       ) : (
-                        <ThornHeartIcon className="h-4 w-4 text-accent-red" />
+                        <HeartIcon className="icon-md text-accent-red" />
                       )}
                     </div>
                     <div className="min-w-0">
@@ -189,11 +189,11 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                       })}
                       onClick={() => removeArchetype(arch.id)}
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 />
                     </Button>
                     <ChevronDown
                       className={cn(
-                        'h-4 w-4 text-text-muted transition-transform',
+                        'icon-md text-text-muted transition-transform',
                         isExpanded && 'rotate-180'
                       )}
                     />
@@ -254,7 +254,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                                   aria-label={p.name}
                                   onClick={() => updateArchetype(arch.id, { icon_name: p.name, icon_url: undefined })}
                                 >
-                                  <PIcon className="h-4 w-4" />
+                                  <PIcon />
                                 </ToggleChip>
                               );
                             })}
@@ -274,7 +274,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                               placeholder={ab.iconUrlPlaceholder}
                               className="pl-8 sm:text-xs"
                             />
-                            <LinkIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" />
+                            <LinkIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 icon-sm text-text-muted" />
                           </div>
                         </div>
                       </div>
@@ -314,7 +314,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                           onClick={() => addRule(arch.id)}
                           variant="linkDanger" size="sm"
                         >
-                          <Plus className="h-3 w-3" />
+                          <Plus />
                           <span>{ab.addCondition}</span>
                         </Button>
                       </div>
@@ -403,9 +403,10 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                           <Button
                             variant="ghost" size="xs" icon
                             onClick={() => removeRule(arch.id, rIdx)}
+                            aria-label={ab.removeRule}
                             className="ml-auto"
                           >
-                            <Trash2 className="h-3.5 w-3.5" />
+                            <Trash2 />
                           </Button>
                         </div>
                       ))}

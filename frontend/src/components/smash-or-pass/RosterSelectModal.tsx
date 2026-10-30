@@ -2,7 +2,7 @@
 // frontend/src/components/smash-or-pass/RosterSelectModal.tsx
 
 import React from 'react';
-import { CardStackIcon, ImportScrollIcon, ThornChevronIcon } from '@/components/icons/DbdIcons';
+import { CardStackIcon, UploadIcon, ChevronIcon } from '@/components/icons/DbdIcons';
 import type { RosterItem } from '@/types/smashOrPass';
 import { Modal } from '@/components/common/Modal';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
@@ -129,7 +129,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                   onClick={onImportRoster}
                   variant="secondary" size="sm"
                 >
-                  <ImportScrollIcon className="h-4 w-4" aria-hidden="true" />
+                  <UploadIcon className="icon-md" aria-hidden="true" />
                   {dict.smashOrPass.picker.importRoster}
                 </Button>
               )}
@@ -163,7 +163,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                 onClick={stepPrev}
                 variant="soft" size="lg" icon pill className="absolute left-2 z-50 sm:left-4 sm:h-14 sm:w-14 md:left-8 hover:scale-110 active:scale-95"
               >
-                <ThornChevronIcon className="h-6 w-6 sm:h-7 sm:w-7 rotate-180" aria-hidden="true" />
+                <ChevronIcon className="icon-xl sm:h-7 sm:w-7 rotate-180" aria-hidden="true" />
               </Button>
 
               <Button
@@ -176,7 +176,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
                 onClick={stepNext}
                 variant="soft" size="lg" icon pill className="absolute right-2 z-50 sm:right-4 sm:h-14 sm:w-14 md:right-8 hover:scale-110 active:scale-95"
               >
-                <ThornChevronIcon className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
+                <ChevronIcon className="icon-xl sm:h-7 sm:w-7" aria-hidden="true" />
               </Button>
             </>
           )}

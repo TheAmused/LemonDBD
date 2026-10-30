@@ -18,12 +18,8 @@ import { AppBackground } from '@/components/layout/AppBackground';
 import { AppShell } from '@/components/layout/AppShell';
 import { SiteBannerGate } from '@/components/layout/SiteBannerGate';
 import { SiteConfigProvider } from '@/context/SiteConfigContext';
-import { Playfair_Display } from 'next/font/google';
 import '@/app/globals.css';
 import { NAV_GROUP_BOOT_SCRIPT } from '@/components/sidebar/navGroupBoot';
-
-// Self-hosted at build time by next/font (no request to Google from visitors' browsers).
-const playfair = Playfair_Display({ subsets: ['latin', 'latin-ext'], variable: '--font-playfair', display: 'swap' });
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const locale = resolveLocale((await params).locale);
@@ -74,7 +70,7 @@ export default async function RootLayout({
   const dict = await getDictionary(locale);
 
   return (
-    <html lang={locale} className={playfair.variable} suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: SIDEBAR_INIT_SCRIPT }} />
         {/* schema.org WebSite + Organization for search engines; built from the dictionary, `<` escaped. */}

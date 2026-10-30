@@ -112,8 +112,8 @@ export function AccordionSection({
           <ChevronDown
             aria-hidden="true"
             className={cn(
-              'h-4 w-4 shrink-0 text-accent-red transition-transform duration-300 ease-in-out sm:h-5 sm:w-5',
-              banner && '2xl:h-6 2xl:w-6',
+              'icon-md shrink-0 text-accent-red transition-transform duration-300 ease-in-out sm:icon-lg',
+              banner && '2xl:icon-xl',
               open ? 'rotate-180' : 'rotate-0'
             )}
           />

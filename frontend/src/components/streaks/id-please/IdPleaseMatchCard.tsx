@@ -2,7 +2,6 @@
 // frontend/src/components/streaks/id-please/IdPleaseMatchCard.tsx
 
 import React from 'react';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import type { IdPleaseMatch } from '@/types/idPleaseStreak';
@@ -20,11 +19,9 @@ export const IdPleaseMatchCard: React.FC<IdPleaseMatchCardProps> = ({ match, tit
   const dict = useDictionary();
   const s = dict.streaks;
   const coordinates = usePerkCoordinates();
-  const SideIcon = match.side === 'killer' ? KillerIcon : SurvivorIcon;
   return (
     <section className="mx-auto w-full max-w-4xl">
       <h3 className="mb-3 flex items-center gap-2 type-label text-text-primary">
-        <SideIcon className="h-4 w-4 text-text-muted" aria-hidden="true" />
         <span>{title ?? formatMessage(s.idPleaseMatchLabel, { number: match.number })}</span>
         <span className="text-text-muted" aria-hidden="true">
           ·

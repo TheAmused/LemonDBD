@@ -50,7 +50,7 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
           className="absolute inset-diamond-inner h-auto w-auto sm:h-auto sm:w-auto"
           {...tip(emptyLabel, undefined, 'action')}
         >
-          <Plus className="h-5 w-5 text-text-muted transition-colors group-hover:text-accent-amber" />
+          <Plus className="icon-lg text-text-muted transition-colors group-hover:text-accent-amber" />
         </DiamondSlot>
       )}
 
@@ -65,7 +65,7 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
           {...tip(clearLabel, undefined, 'action')} aria-label={clearLabel}
           variant="primary" size="xs" icon pill className="hit-area absolute left-3/4 top-1/4 z-20 -translate-x-1/2 -translate-y-1/2 pointer-coarse:min-h-0 pointer-coarse:min-w-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
         >
-          <X className="h-3 w-3" />
+          <X />
         </Button>
       )}
     </div>

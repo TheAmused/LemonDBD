@@ -46,7 +46,7 @@ export function ChapterToolbar({
 
       <div className="flex items-center gap-2 w-full sm:w-auto">
         <div className="relative flex-1 sm:w-56">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" />
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 icon-sm text-text-muted" />
           <Input
             type="text"
             fieldSize="sm"
@@ -62,14 +62,14 @@ export function ChapterToolbar({
               aria-label={dict.filters.clearSearch}
               variant="ghost" size="xs" icon className="absolute right-2 top-1/2 -translate-y-1/2"
             >
-              <X className="h-3 w-3" />
+              <X />
             </Button>
           )}
         </div>
 
         <div className="flex items-center gap-1.5 shrink-0">
           <ToggleChip pressed={isAllOwned} size="sm" onClick={onToggleAll}>
-            {isAllOwned && <Check className="h-3.5 w-3.5 stroke-[3]" aria-hidden="true" />}
+            {isAllOwned && <Check className="stroke-[3]" aria-hidden="true" />}
             <span>{t.selectAllButton}</span>
           </ToggleChip>
 

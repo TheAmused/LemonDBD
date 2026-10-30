@@ -181,7 +181,7 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
       <Surface padding="none" className="w-full max-w-lg p-6 shadow-2xl flex flex-col items-center gap-4 relative overflow-hidden">
         {/* Header Badge */}
         <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-accent-red/10 border border-accent-red/30 text-accent-red type-label-sm">
-          <Disc3 className={`w-3.5 h-3.5 ${isPlaying ? 'animate-spin' : ''}`} />
+          <Disc3 className={`icon-sm ${isPlaying ? 'animate-spin' : ''}`} />
           <span>{dict.minigames.audio.themeBadge}</span>
         </div>
 
@@ -226,12 +226,12 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
             >
               {isPlaying ? (
                 <>
-                  <Pause className="w-4 h-4 fill-current" />
+                  <Pause className="fill-current" />
                   <span>{dict.minigames.audio.pauseMusic}</span>
                 </>
               ) : (
                 <>
-                  <Play className="w-4 h-4 fill-current" />
+                  <Play className="fill-current" />
                   <span>{dict.minigames.audio.listenTheme}</span>
                 </>
               )}
@@ -245,7 +245,7 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
               {...tip(isMuted ? dict.minigames.audio.unmute : dict.minigames.audio.mute, undefined, 'action')}
               aria-label={isMuted ? dict.minigames.audio.unmute : dict.minigames.audio.mute}
             >
-              {isMuted ? <VolumeX className="w-4 h-4 text-accent-red" /> : <Volume2 className="w-4 h-4" />}
+              {isMuted ? <VolumeX className="text-accent-red" /> : <Volume2 />}
             </Button>
           </div>
         </div>
@@ -285,7 +285,7 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
                 />
               </div>
             )}
-            <Check className="w-4 h-4" />
+            <Check className="icon-md" />
             <span>{targetChar.name}</span>
           </div>
         )}
@@ -312,7 +312,7 @@ export const AudioGuesser: React.FC<AudioGuesserProps> = ({ roundConfig, charact
                   <span className="text-xs text-text-muted">#{idx + 1}</span>
                   <span>{g.guess.name}</span>
                 </div>
-                {isCorrect ? <Check className="w-4 h-4" /> : <X className="w-4 h-4 opacity-60" />}
+                {isCorrect ? <Check className="icon-md" /> : <X className="icon-md opacity-60" />}
               </div>
             );
           })}

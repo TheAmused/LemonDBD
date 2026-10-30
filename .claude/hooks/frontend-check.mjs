@@ -63,10 +63,13 @@ const run = (label, cmd, args) => {
   runs.push({ label, ok: r.status === 0, out: `${r.stdout ?? ''}\n${r.stderr ?? ''}`.trim() });
 };
 const bin = (name) => path.join(frontend, 'node_modules', '.bin', process.platform === 'win32' ? `${name}.cmd` : name);
-if (code.length) run('oxlint', bin('oxlint'), ['--format=stylish', ...code]);
-if (components.length) {
-  run('hardcoded strings', bin('tsx'), ['scripts/check-hardcoded-strings.ts', '--files', components.join(',')]);
-  run('global styles', bin('tsx'), ['scripts/check-global-styles.ts', '--files', components.join(',')]);
+// Files go in batches: a big branch lists hundreds of paths, more than one Windows command line holds.
+const BATCH = 40;
+const batches = (list) => Array.from({ length: Math.ceil(list.length / BATCH) }, (_, i) => list.slice(i * BATCH, (i + 1) * BATCH));
+for (const files of batches(code)) run('oxlint', bin('oxlint'), ['--format=stylish', ...files]);
+for (const files of batches(components)) {
+  run('hardcoded strings', bin('tsx'), ['scripts/check-hardcoded-strings.ts', '--files', files.join(',')]);
+  run('global styles', bin('tsx'), ['scripts/check-global-styles.ts', '--files', files.join(',')]);
 }
 
 const failed = runs.filter((r) => !r.ok);

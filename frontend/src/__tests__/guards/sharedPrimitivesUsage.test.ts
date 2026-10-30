@@ -67,7 +67,7 @@ describe('shared primitives usage', () => {
     for (const name of ['--container-menu', '--container-field-sm', '--container-field', '--container-field-lg', '--container-cell', '--container-cell-lg', '--breakpoint-phone']) {
       assert.ok(tokens.includes(`${name}:`), name);
     }
-    for (const util of ['icon-2xs', 'icon-xs', 'icon-sm', 'icon-md', 'icon-lg', 'max-h-list', 'max-h-roster', 'min-h-skeleton-tab', 'min-h-skeleton-page', 'grid-cols-field-suffix', 'grid-cols-label-wide', 'grid-cols-label-control', 'no-spinner']) {
+    for (const util of ['icon-2xs', 'icon-xs', 'icon-sm', 'icon-md', 'icon-lg', 'icon-xl', 'max-h-list', 'max-h-roster', 'min-h-skeleton-tab', 'min-h-skeleton-page', 'grid-cols-field-suffix', 'grid-cols-label-wide', 'grid-cols-label-control', 'no-spinner']) {
       assert.ok(tokens.includes(`@utility ${util} `), util);
     }
   });

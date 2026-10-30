@@ -1,8 +1,8 @@
-import { PerkHexIcon } from '@/components/icons/DbdIcons';
+import { PerkHexIcon, MaskIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/minigames/hubModes.ts
 //
 // The fixed game modes the minigames hub offers, as data for FlagshipCard / GuesserCard.
-import { Calendar, Trophy, Layers, MapPin, Zap, Volume2, Eye, BookOpen, Plus } from 'lucide-react';
+import { Calendar, MapPin, Zap, Volume2, Eye, BookOpen, Plus } from 'lucide-react';
 import type { Dictionary } from '@/locales/types';
 
 type MinigamesCopy = Dictionary['minigames'];
@@ -15,11 +15,11 @@ export function flagshipModes(t: MinigamesCopy, locale: string) {
       href: `/${locale}/minigames/play?type=daily&mode=fog_trial`, cta: t.playDaily, button: 'primary',
     },
     {
-      tone: 'amber', icon: Trophy, badge: t.dbdIdleClassic, title: t.dbdIdleClassic, description: t.dbdIdleClassicDesc,
+      tone: 'amber', icon: MaskIcon, badge: t.dbdIdleClassic, title: t.dbdIdleClassic, description: t.dbdIdleClassicDesc,
       href: `/${locale}/minigames/idle`, cta: t.playIdle, button: 'amber',
     },
     {
-      tone: 'red', icon: Layers, badge: t.creatorBadge, title: t.creatorTitle, description: t.creatorSubtitle,
+      tone: 'red', icon: Plus, badge: t.creatorBadge, title: t.creatorTitle, description: t.creatorSubtitle,
       href: `/${locale}/minigames/creator`, cta: t.createChallenge, button: 'primary', ctaIcon: Plus,
     },
   ] as const;

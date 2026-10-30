@@ -132,7 +132,7 @@ export function TierPool({
               aria-label={t.clearSearch}
               variant="ghost" size="xs" icon className="absolute right-2 top-1/2 -translate-y-1/2"
             >
-              <X className="h-3.5 w-3.5" aria-hidden="true" />
+              <X aria-hidden="true" />
             </Button>
           )}
         </div>
@@ -154,7 +154,7 @@ export function TierPool({
           className="relative z-10 col-start-3 row-start-1 justify-self-end flex min-h-10 min-w-10 items-center justify-center cursor-pointer select-none text-text-secondary hover:text-accent-red transition-colors"
         >
           <ChevronDown
-            className={`h-4 w-4 sm:h-5 sm:w-5 text-accent-red transition-transform duration-300 ease-in-out ${
+            className={`icon-md sm:icon-lg text-accent-red transition-transform duration-300 ease-in-out ${
               collapsed ? 'rotate-0' : 'rotate-180'
             }`}
           />
@@ -175,7 +175,7 @@ export function TierPool({
                 onClick={() => onMoveSelectedHere(POOL_CONTAINER_ID)}
                 variant="amberSoft" size="sm" dashed className="shrink-0"
               >
-                <ArrowDownToLine className="h-3.5 w-3.5" aria-hidden="true" />
+                <ArrowDownToLine aria-hidden="true" />
                 {t.moveHere}
               </Button>
             </div>

@@ -61,7 +61,7 @@ export function BugReportDetail({ report, onStatusChange, onReply, onDelete, onS
             aria-label={t.showInUsers}
             {...tip(t.showInUsers, undefined, 'action')}
           >
-            <UserSearch className="icon-sm" aria-hidden="true" />
+            <UserSearch aria-hidden="true" />
           </Button>
         ) : (
           <Badge tone="neutral" size="xs">{t.guestReporter}</Badge>
@@ -100,7 +100,7 @@ export function BugReportDetail({ report, onStatusChange, onReply, onDelete, onS
             aria-label={t.deleteBugReportTitle}
             {...tip(t.deleteBugReportTitle, undefined, 'action')}
           >
-            <Trash2 className="icon-md" aria-hidden="true" />
+            <Trash2 aria-hidden="true" />
           </Button>
         </div>
       </header>
@@ -152,7 +152,7 @@ export function BugReportDetail({ report, onStatusChange, onReply, onDelete, onS
             size="sm"
             loading={busy}
             disabled={unchanged}
-            leftIcon={<Send className="icon-sm" aria-hidden="true" />}
+            leftIcon={<Send aria-hidden="true" />}
             onClick={() => { void run(() => onReply(notes.trim())); }}
           >
             {t.devFeedbackSubmit}

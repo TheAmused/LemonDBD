@@ -4,13 +4,13 @@ import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AlertTriangle } from 'lucide-react';
-import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 
 import { useDictionary } from "@/context/DictionaryContext";
 import { formatMessage } from '@/utils/i18nFormat';
 import { Badge } from '@/components/common/Badge';
 import { Img } from '@/components/common/Img';
+import { TrophyIcon } from '@/components/icons/DbdIcons';
+import { TriangleAlert } from 'lucide-react';
 
 const PANEL_HOVER_CLASSES = 'hover:border-accent-red/50 focus:ring-accent-red';
 
@@ -88,7 +88,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
 
       {disabled ? (
         <Badge tone="amber" size="sm" className="absolute right-3 top-3 z-10">
-          <AlertTriangle className="h-3 w-3" />
+          <TriangleAlert className="icon-xs" />
           {dict.streaks.disabled}
         </Badge>
       ) : comingSoon ? (
@@ -100,7 +100,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
           tone="red" size="sm" plain className="absolute right-3 top-3 z-10"
           aria-label={dict.streaks.completedFullRoster}
         >
-          <AdeptBadgeIcon className="h-3.5 w-3.5" />
+          <TrophyIcon className="icon-sm" />
           {completedFullCount != null && (
             <span className="text-xs font-black leading-none">{completedFullCount}</span>
           )}
@@ -110,7 +110,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
           tone="amber" size="sm" plain className="absolute right-3 top-3 z-10"
           aria-label={dict.streaks.completed}
         >
-          <AdeptBadgeIcon className="h-3.5 w-3.5" />
+          <TrophyIcon className="icon-sm" />
           {completedCount != null && (
             <span className="text-xs font-black leading-none">{completedCount}</span>
           )}

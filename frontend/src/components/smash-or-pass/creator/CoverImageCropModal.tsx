@@ -3,7 +3,7 @@
 
 import { logger } from '@/utils/logger';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { ZoomIn, ZoomOut, RotateCcw, Check, Upload, AlertCircle, Image as ImageIcon } from 'lucide-react';
+import { ZoomIn, ZoomOut, RotateCcw, Check, Upload, Image as ImageIcon, TriangleAlert } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 
 
@@ -340,7 +340,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
                   variant="primary" size="sm"
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  <Upload className="h-3.5 w-3.5" />
+                  <Upload />
                   <span>{cm.uploadLocalFile}</span>
                 </Button>
               </div>
@@ -374,11 +374,11 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
               onClick={() => setZoom((z) => Math.max(1, Math.min(5, Number((z - 0.25).toFixed(2)))))}
               {...tip(cm.zoomOut, undefined, 'action')} aria-label={cm.zoomOut}
             >
-              <ZoomOut className="h-4 w-4" />
+              <ZoomOut />
             </Button>
 
             <span className="type-strong text-text-muted flex items-center gap-1 shrink-0 w-24">
-              <ZoomIn className="h-3.5 w-3.5 text-accent-red" />
+              <ZoomIn className="icon-sm text-accent-red" />
               {Math.round(zoom * 100)}%
             </span>
 
@@ -397,7 +397,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
               onClick={() => setZoom((z) => Math.max(1, Math.min(5, Number((z + 0.25).toFixed(2)))))}
               {...tip(cm.zoomIn, undefined, 'action')} aria-label={cm.zoomIn}
             >
-              <ZoomIn className="h-4 w-4" />
+              <ZoomIn />
             </Button>
           </div>
 
@@ -407,7 +407,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
               onClick={handleReset}
               {...tip(cm.resetTitle, undefined, 'action')} aria-label={cm.resetTitle}
             >
-              <RotateCcw className="h-3.5 w-3.5" />
+              <RotateCcw />
               <span>{cm.reset}</span>
             </Button>
 
@@ -418,7 +418,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
                   onClick={() => fileInputRef.current?.click()}
                   {...tip(cm.uploadPrompt, undefined, 'action')} aria-label={cm.uploadPrompt}
                 >
-                  <Upload className="h-3.5 w-3.5 text-accent-red" />
+                  <Upload className="text-accent-red" />
                   <span>{cm.uploadFile}</span>
                 </Button>
                 <input
@@ -436,7 +436,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
         {/* CORS Notice if canvas export fails on external domains */}
         {corsError && (
           <div className="flex items-start gap-2.5 p-3.5 rounded-card bg-accent-amber/10 border border-accent-amber/30 text-accent-amber text-xs">
-            <AlertCircle className="h-5 w-5 shrink-0 mt-0.5 text-accent-amber" />
+            <TriangleAlert className="icon-lg shrink-0 mt-0.5 text-accent-amber" />
             <div className="space-y-1.5">
               <p className="font-bold">{cm.corsTitle}</p>
               <p className="text-mini text-text-muted leading-relaxed">
@@ -479,7 +479,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
             onClick={handleApplyCrop}
             disabled={!imageLoaded && !currentUrl}
           >
-            <Check className="h-4 w-4" />
+            <Check />
             <span>{cm.applyCrop}</span>
           </Button>
         </div>

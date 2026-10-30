@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { avatarUrlFor } from '../chaos/KillerPickerGrid';
-import { KillerIcon } from '@/components/icons/DbdIcons';
+import { PersonIcon } from '@/components/icons/DbdIcons';
 
 import { useDictionary } from "@/context/DictionaryContext";
 import { Collapsible } from '@/components/common/Collapsible';
@@ -27,7 +27,7 @@ const PreviewTile: React.FC<{ name: string }> = ({ name }) => {
           src={src}
           alt={name}
           imageClassName="w-full h-full object-cover"
-          fallbackIcon={<KillerIcon className="w-6 h-6 text-text-muted" />}
+          fallbackIcon={<PersonIcon className="icon-xl text-text-muted" />}
         />
       </div>
       <span className="text-mini font-medium text-center text-text-muted truncate w-full">

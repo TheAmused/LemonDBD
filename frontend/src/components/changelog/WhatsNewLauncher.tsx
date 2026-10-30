@@ -2,7 +2,7 @@
 // frontend/src/components/changelog/WhatsNewLauncher.tsx
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { Megaphone, Plus, Skull } from 'lucide-react';
+import { Megaphone, Plus } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { useAuth } from '@/context/AuthContext';
 import { useDragReorder } from '@/hooks/useDragReorder';
@@ -224,7 +224,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
         aria-label={t.triggerTitle}
         className={cn('relative', className)}
       >
-        <Megaphone className="h-4 w-4" />
+        <Megaphone />
         {hasUnread && <UnreadDot className="absolute -right-0.5 -top-0.5" />}
       </Button>
 
@@ -247,7 +247,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
               {...tip(t.newEntry, undefined, 'action')} aria-label={t.newEntry}
               variant="secondary" size="md" icon
             >
-              <Plus className="h-4 w-4" />
+              <Plus />
             </Button>
           ) : undefined
         }
@@ -265,7 +265,7 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
             </div>
           )}
 
-          {!loading && listedPosts.length === 0 && <EmptyState variant="inline" icon={Skull} title={t.emptyState} />}
+          {!loading && listedPosts.length === 0 && <EmptyState variant="inline" icon={Megaphone} title={t.emptyState} />}
 
           <div className="divide-y divide-border-color">
             {listedPosts.map((post) => (

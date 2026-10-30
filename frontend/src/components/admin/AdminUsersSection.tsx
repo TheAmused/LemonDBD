@@ -4,7 +4,7 @@
 // The user directory: search and filters (their options carry the counts), the accounts, and the
 // actions on one account. Moderation is the row's main action; the rest sit in its "⋯" menu.
 import React, { useState } from 'react';
-import { Download, Gavel, Pencil, ShieldCheck, ShieldOff, Trash2, Trophy, UserPlus } from 'lucide-react';
+import { Download, Gavel, Pencil, ShieldCheck, ShieldOff, Trash2, UserPlus } from 'lucide-react';
 import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
 import { ActionMenu, type ActionMenuItem } from '@/components/common/ActionMenu';
@@ -16,7 +16,7 @@ import { Pagination } from '@/components/common/Pagination';
 import { Surface } from '@/components/common/Surface';
 import { Table, TableBody, TableHead, TableRow, Td, Th } from '@/components/common/Table';
 import { tip } from '@/components/common/Tooltip';
-import { OverseerEyeIcon } from '@/components/icons/DbdIcons';
+import { CrownIcon, TargetIcon } from '@/components/icons/DbdIcons';
 import { UserAvatar } from '@/components/UserAvatar';
 import { AdminUserChallengesModal } from '@/components/admin/AdminUserChallengesModal';
 import { UserStandingBadge } from '@/components/admin/UserStandingBadge';
@@ -68,7 +68,7 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
 
   const menuItems = (u: UserRow): ActionMenuItem[] => [
     { key: 'edit', label: t.editUser, icon: <Pencil className="icon-md" aria-hidden="true" />, onSelect: () => onEdit(u) },
-    { key: 'challenges', label: t.resetChallenges, icon: <Trophy className="icon-md" aria-hidden="true" />, onSelect: () => setChallengesFor(u) },
+    { key: 'challenges', label: t.resetChallenges, icon: <TargetIcon className="icon-md" aria-hidden="true" />, onSelect: () => setChallengesFor(u) },
     // Your own second factor is switched off on your profile (with your password and a code).
     ...(u.two_factor_enabled && !isSelf(u)
       ? [{ key: '2fa', label: t.resetTwoFactor, icon: <ShieldOff className="icon-md" aria-hidden="true" />, onSelect: () => setPending({ kind: 'resetTwoFactor', user: u }) }]
@@ -90,7 +90,7 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
           aria-label={dict.moderation.admin.openButton}
           {...tip(dict.moderation.admin.openButton, undefined, 'action')}
         >
-          <Gavel className="icon-md" aria-hidden="true" />
+          <Gavel aria-hidden="true" />
         </Button>
       )}
       <ActionMenu label={formatMessage(t.userActions, { username: u.username })} items={menuItems(u)} />
@@ -128,7 +128,7 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
   );
 
   const role = (u: UserRow) => (
-    <Badge tone={u.role === 'admin' ? 'red' : 'neutral'} size="sm" square icon={u.role === 'admin' ? <OverseerEyeIcon className="icon-2xs" /> : undefined}>
+    <Badge tone={u.role === 'admin' ? 'red' : 'neutral'} size="sm" square icon={u.role === 'admin' ? <CrownIcon className="icon-2xs" /> : undefined}>
       {u.role === 'admin' ? t.roleAdmin : t.rolePlayer}
     </Badge>
   );
@@ -184,7 +184,7 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
             { value: 'banned', label: formatMessage(t.standingFilterBanned, count(counts?.banned)) },
           ]}
         />
-        <Button variant="primary" size="sm" onClick={onCreate} leftIcon={<UserPlus className="icon-sm" aria-hidden="true" />}>
+        <Button variant="primary" size="sm" onClick={onCreate} leftIcon={<UserPlus aria-hidden="true" />}>
           {t.createUser}
         </Button>
       </div>

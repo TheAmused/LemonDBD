@@ -3,7 +3,6 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
 import { renderWithDictionary } from '../../helpers/renderWithDictionary';
-import { Flame } from 'lucide-react';
 import { selectOwnedRoster } from '@/components/streaks/useOwnedRoster';
 import { buildCompletionTiles } from '@/components/streaks/ChallengeModeModal';
 import {
@@ -49,7 +48,7 @@ describe('selectOwnedRoster', () => {
 });
 
 describe('buildCompletionTiles', () => {
-  const defs = ['easy', 'medium', 'hell'].map((value) => ({ value, label: value, icon: Flame }));
+  const defs = ['easy', 'medium', 'hell'].map((value) => ({ value, label: value, image: `/images/streaks/modes/chaos-${value}.webp` }));
 
   it('marks every easier tier done when a harder one is cleared and inherits its count', () => {
     const tiles = buildCompletionTiles(CHAOS_DIFFICULTY_ORDER, defs, { medium: 7 }, {});

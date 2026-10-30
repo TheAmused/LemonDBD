@@ -1,6 +1,6 @@
 // frontend/src/components/achievements/TrophySlot.tsx
 import React from 'react';
-import { AdeptBadgeIcon,FullRosterLaurelIcon } from '@/components/icons/DbdIcons';
+import { FullRosterLaurelIcon, TrophyIcon } from '@/components/icons/DbdIcons';
 
 
 import { tip } from '@/components/common/Tooltip';
@@ -14,7 +14,7 @@ interface TrophySlotProps {
 }
 
 const VARIANT_ICON: Record<TrophyVariant, React.ElementType> = {
-  owned: AdeptBadgeIcon,
+  owned: TrophyIcon,
   all: FullRosterLaurelIcon,
 };
 

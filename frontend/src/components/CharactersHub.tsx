@@ -4,7 +4,7 @@
 import React, { useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter, useParams, useSearchParams } from 'next/navigation';
-import { User } from 'lucide-react';
+import { SearchX } from 'lucide-react';
 import { ownershipKey } from '@/utils/characterUtils';
 import { useAuth } from '@/context/AuthContext';
 import { PerksTogglePopup } from '@/components/characters/PerksTogglePopup';
@@ -145,7 +145,7 @@ export const CharactersHub: React.FC = () => {
       ) : filteredCharacters.length === 0 ? (
         <EmptyState
           variant="dashed"
-          icon={User}
+          icon={SearchX}
           className="my-8 sm:my-12 rounded-card border border-dashed border-border-color p-8 sm:p-12 text-center bg-bg-surface backdrop-blur-sm shadow-sm"
           iconClassName="mx-auto h-12 w-12 text-text-muted mb-3"
           headingClassName="text-lg font-bold text-text-primary"

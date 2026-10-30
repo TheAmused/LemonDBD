@@ -1,12 +1,11 @@
 'use client';
 // frontend/src/components/smash-or-pass/hub/HowToPlayModal.tsx
-import { Gamepad2 } from 'lucide-react';
+import { Gamepad2, ZoomIn } from 'lucide-react';
 import {
-  PortraitLoupeIcon,
-  SnuffedCandleIcon,
-  TarotTurnIcon,
-  ThornHeartIcon,
-  ThunderPulseIcon,
+  HeartIcon,
+  PassIcon,
+  SparkleIcon,
+  CardFlipIcon,
 } from '@/components/icons/DbdIcons';
 import { Modal } from '@/components/common/Modal';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -49,7 +48,7 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
         <Surface padding="none" className="p-3.5 sm:p-4 space-y-2.5 shadow-xs">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-card bg-accent-red/10 border border-accent-red/30 text-accent-red shrink-0">
-              <ThornHeartIcon className="h-5 w-5" aria-hidden="true" />
+              <HeartIcon className="icon-lg" aria-hidden="true" />
             </div>
             <div className="min-w-0">
               <span className="type-strong text-text-primary block">{text.swipeTitle}</span>
@@ -58,11 +57,11 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
           </div>
           <div className="flex flex-wrap items-center gap-2 pt-0.5 type-caption">
             <InfoChip>
-              <SnuffedCandleIcon className="h-3.5 w-3.5" aria-hidden="true" />
+              <PassIcon className="icon-sm" aria-hidden="true" />
               <span>{text.passBadge}</span>
             </InfoChip>
             <Badge tone="red" size="md" plain square>
-              <ThornHeartIcon className="h-3.5 w-3.5" aria-hidden="true" />
+              <HeartIcon className="icon-sm" aria-hidden="true" />
               <span>{text.smashBadge}</span>
             </Badge>
           </div>
@@ -72,7 +71,7 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
         <Surface padding="none" className="p-3.5 sm:p-4 space-y-2.5 shadow-xs">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-card bg-accent-amber/10 border border-accent-amber/30 text-accent-amber shrink-0">
-              <TarotTurnIcon className="h-5 w-5" aria-hidden="true" />
+              <CardFlipIcon className="icon-lg" aria-hidden="true" />
             </div>
             <div className="min-w-0">
               <span className="type-strong text-text-primary block">{text.iconsTitle}</span>
@@ -81,11 +80,11 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
           </div>
           <div className="flex flex-wrap items-center gap-2 pt-0.5 type-caption">
             <InfoChip>
-              <TarotTurnIcon className="h-3.5 w-3.5 text-accent-red" aria-hidden="true" />
+              <CardFlipIcon className="icon-sm text-accent-red" aria-hidden="true" />
               <span>{text.flipCardBadge}</span>
             </InfoChip>
             <InfoChip>
-              <PortraitLoupeIcon className="h-3.5 w-3.5 text-accent-amber" aria-hidden="true" />
+              <ZoomIn className="icon-sm text-accent-amber" aria-hidden="true" />
               <span>{text.zoomArtBadge}</span>
             </InfoChip>
           </div>
@@ -95,7 +94,7 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
         <Surface padding="none" className="p-3.5 sm:p-4 space-y-2.5 shadow-xs">
           <div className="flex items-center gap-3">
             <Surface tone="elevated" padding="none" className="flex h-9 w-9 items-center justify-center text-text-primary shrink-0">
-              <Gamepad2 className="h-5 w-5" aria-hidden="true" />
+              <Gamepad2 className="icon-lg" aria-hidden="true" />
             </Surface>
             <div className="min-w-0">
               <span className="type-strong text-text-primary block">{text.keycapsTitle}</span>
@@ -108,7 +107,7 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
         {/* 4. Trial Atmosphere & Lore */}
         <Surface padding="none" className="p-3.5 sm:p-4 flex items-center gap-3 shadow-xs">
           <div className="flex h-9 w-9 items-center justify-center rounded-card bg-accent-purple/10 border border-accent-purple/30 text-accent-purple shrink-0">
-            <ThunderPulseIcon className="h-5 w-5" aria-hidden="true" />
+            <SparkleIcon className="icon-lg" aria-hidden="true" />
           </div>
           <div className="min-w-0">
             <span className="type-strong text-text-primary block">{text.atmosphereTitle}</span>

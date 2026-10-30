@@ -1,5 +1,5 @@
 'use client';
-import { PerkHexIcon, PadlockHeartIcon } from '@/components/icons/DbdIcons';
+import { PerkHexIcon, LockIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/streaks/history/HistoryPerkPoolPanel.tsx
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -31,7 +31,7 @@ const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: bo
           perk={perk}
           src={src}
           alt={displayName}
-          fallbackIcon={<PerkHexIcon className="w-6 h-6 text-text-muted" />}
+          fallbackIcon={<PerkHexIcon className="icon-xl text-text-muted" />}
         />
       </div>
       <span className="text-mini font-medium text-center text-text-secondary leading-tight line-clamp-2">
@@ -50,7 +50,7 @@ const LockedTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displ
           perk={perk}
           src={src}
           alt={displayName}
-          fallbackIcon={<PerkHexIcon className="w-6 h-6 text-text-muted" />}
+          fallbackIcon={<PerkHexIcon className="icon-xl text-text-muted" />}
         />
       </div>
       <span className="text-mini font-medium text-center text-text-muted leading-tight line-clamp-2 opacity-60">
@@ -58,7 +58,7 @@ const LockedTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displ
       </span>
       <div className="absolute inset-0 flex items-center justify-center bg-bg-primary/50">
         <div className="flex h-7 w-7 items-center justify-center rounded-full bg-bg-elevated border border-border-color">
-          <PadlockHeartIcon className="w-3.5 h-3.5 text-text-muted" />
+          <LockIcon className="icon-sm text-text-muted" />
         </div>
       </div>
     </div>
@@ -128,14 +128,14 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
               aria-label={dict.streaks.clearSearch}
               variant="ghost" size="xs" icon className="absolute right-2 top-1/2 -translate-y-1/2"
             >
-              <X className="h-3.5 w-3.5" aria-hidden="true" />
+              <X aria-hidden="true" />
             </Button>
           )}
         </div>
       </div>
 
       <div className="mb-2 flex items-center gap-1.5 type-strong text-accent-green">
-        <CheckCircle2 className="w-3.5 h-3.5" />
+        <CheckCircle2 className="icon-sm" />
         {dict.streaks.availableLabel}
       </div>
       {unlocked.length === 0 ? (
@@ -156,7 +156,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
       )}
 
       <div className="mb-2 flex items-center gap-1.5 type-strong text-text-muted">
-        <PadlockHeartIcon className="w-3.5 h-3.5" />
+        <LockIcon className="icon-sm" />
         {dict.streaks.lockedLabel}
       </div>
       {locked.length === 0 ? (

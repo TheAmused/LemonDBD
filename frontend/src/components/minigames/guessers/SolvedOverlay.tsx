@@ -18,7 +18,7 @@ export function SolvedOverlay({ answer, large = false }: SolvedOverlayProps) {
           large ? 'px-6 py-2.5 text-lg' : 'px-4 py-2 text-base'
         )}
       >
-        <Check className={large ? 'h-5 w-5' : 'h-4 w-4'} />
+        <Check className={large ? 'icon-lg' : 'icon-md'} />
         <span>{answer}</span>
       </div>
     </div>

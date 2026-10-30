@@ -321,7 +321,7 @@ const ToolbarButton: React.FC<
     onMouseDown={(e) => e.preventDefault()}
     {...rest}
   >
-    <Icon className="h-3.5 w-3.5" />
+    <Icon />
   </Button>
 );
 

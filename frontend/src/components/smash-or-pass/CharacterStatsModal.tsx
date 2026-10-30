@@ -2,15 +2,16 @@
 // frontend/src/components/smash-or-pass/CharacterStatsModal.tsx
 
 import React, { useMemo } from 'react';
-import {  Flame,
+import {
+  Flame,
   Quote,
-  ThumbsDown,} from 'lucide-react';
+} from 'lucide-react';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
 import type { EntityItem, EntityStatItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { Modal } from '@/components/common/Modal';
-import { EldritchVoidIcon, FriendzoneIcon, RankFirstIcon, ThornHeartIcon } from '@/components/icons/DbdIcons';
+import { EldritchVoidIcon, FriendzoneIcon, RankFirstIcon, HeartIcon, PassIcon } from '@/components/icons/DbdIcons';
 import { Surface } from '@/components/common/Surface';
 import { formatNumber } from '@/utils/format';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
@@ -89,7 +90,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
         color: 'text-accent-amber',
         bg: 'bg-accent-amber/15 border-accent-amber/40',
         glow: '',
-        icon: <RankFirstIcon className="h-4 w-4 text-accent-amber" />,
+        icon: <RankFirstIcon className="icon-md text-accent-amber" />,
       };
     }
     if (smashRate >= 60) {
@@ -98,7 +99,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
         color: 'text-accent-red',
         bg: 'bg-accent-red/15 border-accent-red/40',
         glow: '',
-        icon: <Flame className="h-4 w-4 text-accent-red" />,
+        icon: <Flame className="icon-md text-accent-red" />,
       };
     }
     if (smashRate >= 40) {
@@ -107,7 +108,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
         color: 'text-text-secondary',
         bg: 'bg-bg-elevated border-border-color',
         glow: '',
-        icon: <FriendzoneIcon className="h-4 w-4 text-text-secondary" />,
+        icon: <FriendzoneIcon className="icon-md text-text-secondary" />,
       };
     }
     return {
@@ -115,7 +116,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
       color: 'text-text-muted',
       bg: 'bg-bg-elevated border-border-color',
       glow: '',
-      icon: <EldritchVoidIcon className="h-4 w-4 text-text-muted" />,
+      icon: <EldritchVoidIcon className="icon-md text-text-muted" />,
     };
   }, [smashRate, rawSmashDict]);
 
@@ -193,7 +194,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
           <div className="text-right">
             <span className="type-micro text-text-muted block">{smashRateLabel}</span>
             <span className="text-xl font-black text-accent-red flex items-center gap-1 justify-end">
-              <ThornHeartIcon className="h-4 w-4 fill-accent-red" /> {smashRate}{percentSign}
+              <HeartIcon className="icon-md fill-accent-red" /> {smashRate}{percentSign}
             </span>
           </div>
         </div>
@@ -202,10 +203,10 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
         <Surface tone="elevated" padding="none" className="space-y-1.5 p-3.5">
           <div className="flex justify-between type-strong">
             <span className="flex items-center gap-1 text-accent-red">
-              <ThornHeartIcon className="h-3.5 w-3.5 fill-accent-red" /> {formatNumber(smashCount)} {smashesLabel} ({smashPct}{percentSign})
+              <HeartIcon className="icon-sm fill-accent-red" /> {formatNumber(smashCount)} {smashesLabel} ({smashPct}{percentSign})
             </span>
             <span className="flex items-center gap-1 text-text-muted">
-              <ThumbsDown className="h-3.5 w-3.5" /> {formatNumber(passCount)} {passesLabel} ({passPct}{percentSign})
+              <PassIcon className="icon-sm" /> {formatNumber(passCount)} {passesLabel} ({passPct}{percentSign})
             </span>
           </div>
           <div className="h-3 w-full bg-bg-elevated rounded-full overflow-hidden flex shadow-inner">
@@ -228,7 +229,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
         {quote && (
           <Surface tone="elevated" padding="none" className="p-3.5 space-y-1">
             <div className="flex items-center gap-1 text-accent-amber type-label-2xs">
-              <Quote className="h-3.5 w-3.5" />
+              <Quote className="icon-sm" />
               <span>{loreQuoteLabel}</span>
             </div>
             <p className="type-body text-text-secondary italic">

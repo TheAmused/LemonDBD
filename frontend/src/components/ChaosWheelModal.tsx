@@ -324,11 +324,11 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
               {...tip(dict.generator.clearMutatorTooltip, undefined, 'action')} aria-label={dict.generator.clearMutatorTooltip}
               variant="ghostDanger" size="sm"
             >
-              <Trash2 className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <Trash2 className="icon-sm sm:icon-md" />
               <span className="hidden xs:inline">{dict.generator.clearMutator}</span>
             </Button>
             <div className="flex items-center gap-1 text-accent-green type-strong-fluid bg-accent-green/10 px-2.5 py-1 rounded-chip border border-accent-green/30">
-              <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden="true" />
+              <Check className="icon-sm sm:icon-md" aria-hidden="true" />
               <span>{dict.smashOrPass.active}</span>
             </div>
           </div>

@@ -34,7 +34,7 @@ export const RulesModalNotices: React.FC<{ notices: RulesModalNotice[]; accentCl
         key={i}
         className={`flex items-start gap-2.5 rounded-card border px-3.5 py-2.5 text-xs leading-relaxed ${accentClassName}`}
       >
-        <Icon className="w-4 h-4 mt-0.5 flex-shrink-0" aria-hidden="true" />
+        <Icon className="icon-md mt-0.5 flex-shrink-0" aria-hidden="true" />
         <span>{text}</span>
       </div>
     ))}

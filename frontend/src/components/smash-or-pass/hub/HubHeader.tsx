@@ -1,22 +1,14 @@
 'use client';
 // frontend/src/components/smash-or-pass/hub/HubHeader.tsx
 import { useRef, useState, type ReactNode } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { BarChart2, ChevronDown, SlidersHorizontal, Settings, Shuffle, RotateCcw, Ellipsis, User, HelpCircle } from 'lucide-react';
 import { Tooltip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
 import { MENU_PANEL_CLASS, Popover, popoverTriggerProps } from '@/components/common/Popover';
 import {
-  AshUrnIcon,
-  CardShuffleIcon,
   CardStackIcon,
-  FogEllipsisIcon,
-  HeartCrownIcon,
-  HeartSieveIcon,
-  LanternQuestionIcon,
-  PersonaSigilIcon,
-  SnuffedCandleIcon,
-  ThornHeartIcon,
-  ThunderPulseIcon,
+  HeartIcon,
+  PassIcon,
 } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
 import type { RosterItem } from '@/types/smashOrPass';
@@ -128,7 +120,7 @@ export function HubHeader({
       <div className="flex flex-col @hub-xl/hub:flex-row items-center justify-between gap-2 @hub-sm/hub:gap-3 @hub-xl/hub:gap-4 w-full">
         {/* ROSTER: heart-flanked selector */}
         <div className="flex items-center justify-center gap-2.5 w-full @hub-xl/hub:w-auto order-1 @hub-xl/hub:order-2 min-w-0">
-          <ThornHeartIcon className="hidden @hub-xs/hub:block h-5 w-5 text-accent-red animate-pulse shrink-0" aria-hidden="true" />
+          <HeartIcon className="hidden @hub-xs/hub:block icon-lg text-accent-red animate-pulse shrink-0" aria-hidden="true" />
 
           <Button
             type="button"
@@ -151,10 +143,10 @@ export function HubHeader({
             <Badge tone="red" size="sm" plain square>
               {rosterBadgeCount}
             </Badge>
-            <ChevronDown className="h-4 w-4 shrink-0 text-accent-red group-hover:translate-y-0.5 transition-transform" aria-hidden="true" />
+            <ChevronDown className="icon-md shrink-0 text-accent-red group-hover:translate-y-0.5 transition-transform" aria-hidden="true" />
           </Button>
 
-          <ThornHeartIcon className="hidden @hub-xs/hub:block h-5 w-5 text-accent-red animate-pulse shrink-0" aria-hidden="true" />
+          <HeartIcon className="hidden @hub-xs/hub:block icon-lg text-accent-red animate-pulse shrink-0" aria-hidden="true" />
         </div>
 
         {/* STATS + ACTIONS: one row from 560px, stacked on phones; dissolves into the main row from 1016px */}
@@ -163,18 +155,18 @@ export function HubHeader({
           <div className="flex items-center justify-center order-2 @hub-sm/hub:order-1 shrink-0">
             <Surface tone="elevated" padding="none" className="flex items-center gap-2 px-3 py-1.5 text-xs shadow-inner">
               <span className="flex items-center gap-1.5 text-text-secondary font-bold">
-                <CardStackIcon className="h-4 w-4 text-text-secondary" aria-hidden="true" />
+                <CardStackIcon className="icon-md text-text-secondary" aria-hidden="true" />
                 <span className="type-card-title text-text-primary">{remainingInDeck}</span>
                 <span className="text-mini text-text-muted font-medium">{hudLabels.left}</span>
               </span>
               <span className="text-border-color">{dict.smashOrPass.pipeSeparator}</span>
               <span className="flex items-center gap-1.5 text-accent-red type-strong-fluid">
-                <ThornHeartIcon className="h-4 w-4" aria-hidden="true" />
+                <HeartIcon className="icon-md" aria-hidden="true" />
                 <span>{sessionSmashes}</span>
               </span>
               <span className="text-border-color">{dict.smashOrPass.pipeSeparator}</span>
               <span className="flex items-center gap-1.5 text-text-muted type-strong-fluid">
-                <SnuffedCandleIcon className="h-4 w-4 text-text-muted" aria-hidden="true" />
+                <PassIcon className="icon-md text-text-muted" aria-hidden="true" />
                 <span>{sessionPasses}</span>
               </span>
               <span className="text-border-color">{dict.smashOrPass.pipeSeparator}</span>
@@ -195,7 +187,7 @@ export function HubHeader({
               onClick={onToggleFilters}
               className="relative"
             >
-              <HeartSieveIcon className="h-5 w-5" aria-hidden="true" />
+              <SlidersHorizontal className="icon-lg" aria-hidden="true" />
               {isFilterActive && (
                 <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-accent-red ring-2 ring-bg-surface" />
               )}
@@ -208,7 +200,7 @@ export function HubHeader({
               variant={effectsEnabled ? 'soft' : 'secondary'}
               onClick={onOpenEffects}
             >
-              <ThunderPulseIcon className="h-5 w-5" aria-hidden="true" />
+              <Settings className="icon-lg" aria-hidden="true" />
             </DockAction>
 
             <DockAction
@@ -218,7 +210,7 @@ export function HubHeader({
               variant="soft"
               onClick={onOpenPersona}
             >
-              <PersonaSigilIcon className="h-5 w-5 text-accent-red" aria-hidden="true" />
+              <User className="icon-lg text-accent-red" aria-hidden="true" />
             </DockAction>
 
             {/* Hall of Fame leaderboard */}
@@ -229,7 +221,7 @@ export function HubHeader({
               variant="amberSoft"
               onClick={onOpenLeaderboard}
             >
-              <HeartCrownIcon className="h-5 w-5 text-accent-amber" aria-hidden="true" />
+              <BarChart2 className="icon-lg text-accent-amber" aria-hidden="true" />
             </DockAction>
 
             <DockAction
@@ -240,7 +232,7 @@ export function HubHeader({
               onClick={onShuffle}
               className={WIDE_ONLY}
             >
-              <CardShuffleIcon className="h-5 w-5" aria-hidden="true" />
+              <Shuffle className="icon-lg" aria-hidden="true" />
             </DockAction>
 
             <DockAction
@@ -251,7 +243,7 @@ export function HubHeader({
               onClick={onReset}
               className={WIDE_ONLY}
             >
-              <AshUrnIcon className="h-5 w-5" aria-hidden="true" />
+              <RotateCcw className="icon-lg" aria-hidden="true" />
             </DockAction>
 
             <DockAction
@@ -262,7 +254,7 @@ export function HubHeader({
               onClick={onOpenHowToPlay}
               className={WIDE_ONLY}
             >
-              <LanternQuestionIcon className="h-5 w-5" aria-hidden="true" />
+              <HelpCircle className="icon-lg" aria-hidden="true" />
             </DockAction>
 
             {/* Narrow hubs: shuffle / reset / help collapse into one menu */}
@@ -277,7 +269,7 @@ export function HubHeader({
                 {...popoverTriggerProps(moreOpen, 'menu')}
                 className={DOCK_BUTTON}
               >
-                <FogEllipsisIcon className="h-5 w-5" aria-hidden="true" />
+                <Ellipsis aria-hidden="true" />
               </Button>
               <Popover
                 open={moreOpen}
@@ -289,16 +281,16 @@ export function HubHeader({
                 className={MENU_PANEL_CLASS}
               >
                 {[
-                  { label: tooltips.shuffle, Icon: CardShuffleIcon, run: onShuffle },
-                  { label: tooltips.resetAllVotes, Icon: AshUrnIcon, run: onReset },
-                  { label: tooltips.howToPlay, Icon: LanternQuestionIcon, run: onOpenHowToPlay },
+                  { label: tooltips.shuffle, Icon: Shuffle, run: onShuffle },
+                  { label: tooltips.resetAllVotes, Icon: RotateCcw, run: onReset },
+                  { label: tooltips.howToPlay, Icon: HelpCircle, run: onOpenHowToPlay },
                 ].map(({ label, Icon, run }) => (
                   <MenuItem
                     key={label}
                     role="menuitem"
                     onClick={fromMore(run)}
                   >
-                    <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                    <Icon className="icon-md shrink-0" aria-hidden="true" />
                     <span>{label}</span>
                   </MenuItem>
                 ))}

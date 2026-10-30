@@ -4,6 +4,7 @@
 // SegmentedControl; one-off actions in Button.
 import React from 'react';
 import { cn } from '@/utils/cn';
+import { buttonIconSizeClass } from '@/components/common/Button';
 
 export type ToggleChipSize = 'xs' | 'sm' | 'md';
 export type ToggleChipTone = 'red' | 'amber';
@@ -49,6 +50,7 @@ export const ToggleChip = React.forwardRef<HTMLButtonElement, ToggleChipProps>(f
         pill ? 'rounded-full' : 'rounded-control',
         icon ? ICON_SIZES[size] : SIZES[size],
         pressed ? ON[tone] : OFF,
+        buttonIconSizeClass(size, icon),
         className
       )}
       {...rest}

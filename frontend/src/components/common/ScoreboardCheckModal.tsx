@@ -7,7 +7,7 @@
 // alias (or login) and reads role, character, result and loadout from the image.
 
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Check, CircleSlash, ImagePlus, TriangleAlert, X } from 'lucide-react';
+import { Check, CircleSlash, ImagePlus, CircleAlert, X } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
@@ -65,11 +65,11 @@ const LoadoutCell: React.FC<{ t: Dict; loadout: Loadout | null }> = ({ t, loadou
 
 const CheckMark: React.FC<{ ok: boolean | null | undefined }> = ({ ok }) =>
   ok === true ? (
-    <Check className="h-4 w-4 text-accent-green" />
+    <Check className="icon-md text-accent-green" />
   ) : ok === false ? (
-    <X className="h-4 w-4 text-accent-red" />
+    <X className="icon-md text-accent-red" />
   ) : (
-    <CircleSlash className="h-4 w-4 text-text-muted" />
+    <CircleSlash className="icon-md text-text-muted" />
   );
 
 export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOpen, onClose }) => {
@@ -194,14 +194,14 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
       <div className="space-y-5">
         {error && (
           <div role="alert" className="flex items-start gap-2 rounded-card border border-accent-red/30 bg-accent-red/10 p-3 text-accent-red">
-            <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" />
+            <CircleAlert className="mt-0.5 icon-md shrink-0" />
             <p className="type-body">{error}</p>
           </div>
         )}
 
         {switchedOff && !error && (
           <output className="flex items-start gap-2 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3 text-accent-amber">
-            <CircleSlash className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+            <CircleSlash className="mt-0.5 icon-md shrink-0" aria-hidden="true" />
             <p className="type-body">{t.switchedOff}</p>
           </output>
         )}
@@ -225,7 +225,7 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
                   size="sm"
                   className="absolute right-2 top-2"
                   onClick={reset}
-                  leftIcon={<X className="h-3.5 w-3.5" />}
+                  leftIcon={<X />}
                   disabled={busy}
                 >
                   {t.remove}

@@ -6,7 +6,7 @@ import { Check } from 'lucide-react';
 import { avatarUrlForCharacter } from '@/utils/staticUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { PerkIcon } from '@/components/ui/PerkIcon';
-import { KillerIcon } from '@/components/icons/DbdIcons';
+import { PersonIcon } from '@/components/icons/DbdIcons';
 
 import { useDictionary } from "@/context/DictionaryContext";
 import { TileButton } from '@/components/common/TileButton';
@@ -40,7 +40,7 @@ const KillerTile: React.FC<{
     >
       {isCompleted && (
         <div className="absolute top-1 right-1 bg-accent-green text-text-inverted p-1 rounded-full shadow-xs z-10">
-          <Check className="w-3.5 h-3.5 stroke-[3]" />
+          <Check className="icon-sm stroke-[3]" />
         </div>
       )}
       <div className="relative w-full aspect-square overflow-hidden bg-bg-primary flex items-center justify-center">
@@ -48,7 +48,7 @@ const KillerTile: React.FC<{
           src={src}
           alt={displayName}
           imageClassName={`w-full h-full object-cover ${isCompleted ? 'brightness-105' : ''}`}
-          fallbackIcon={<KillerIcon className="w-6 h-6 text-text-muted" />}
+          fallbackIcon={<PersonIcon className="icon-xl text-text-muted" />}
         />
       </div>
       <span className="text-mini leading-tight font-medium text-center text-text-secondary line-clamp-2 min-h-two-lines w-full px-1.5 py-2">

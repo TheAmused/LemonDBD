@@ -128,7 +128,7 @@ export function AdminUserChallengesModal({ user, notify, onClose }: AdminUserCha
                     {c.completed && <Badge tone="green" size="sm">{t.challengeCompleted}</Badge>}
                   </div>
                 </div>
-                <Button size="sm" leftIcon={<RotateCcw className="icon-sm" aria-hidden="true" />} onClick={() => setPending(c)}>
+                <Button size="sm" leftIcon={<RotateCcw aria-hidden="true" />} onClick={() => setPending(c)}>
                   {t.resetChallenge}
                 </Button>
               </Surface>

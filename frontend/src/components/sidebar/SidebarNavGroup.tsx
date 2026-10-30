@@ -49,7 +49,7 @@ export const SidebarNavGroup: React.FC<SidebarNavGroupProps> = ({ id, label, ico
         )}
       >
         <span className="flex min-w-0 items-center gap-3">
-          <Icon className="h-4 w-4 shrink-0 text-accent-red" />
+          <Icon className="icon-md shrink-0 text-accent-red" />
           <span className="truncate">{label}</span>
         </span>
       </DisclosureButton>

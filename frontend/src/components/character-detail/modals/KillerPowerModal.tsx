@@ -1,6 +1,6 @@
 // frontend/src/components/character-detail/modals/KillerPowerModal.tsx
 import React from 'react';
-import { BookOpen, Flame } from 'lucide-react';
+import { BookOpen, Zap } from 'lucide-react';
 import type { KillerPowerInfo, CharacterItem, CharacterDetailDictionary } from '../types';
 import { getAssetUrl } from '../types';
 import { RichText } from '@/components/common/RichText';
@@ -49,14 +49,14 @@ export const KillerPowerModal: React.FC<KillerPowerModalProps> = ({
               }}
             />
           ) : (
-            <Flame className="h-8 w-8 text-accent-red animate-pulse" />
+            <Zap className="h-8 w-8 text-accent-red animate-pulse" />
           )}
         </div>
       </div>
       <div className="p-4 sm:p-6 space-y-4 type-body-lg text-text-secondary">
         <div className="space-y-2">
           <span className="flex items-center gap-2 type-label-sm text-text-secondary mb-2">
-            <BookOpen className="h-3.5 w-3.5 text-accent-red" />
+            <BookOpen className="icon-sm text-accent-red" />
             {t.killerPowerDesc}
           </span>
           <div className="space-y-2 text-sm sm:text-base leading-relaxed">

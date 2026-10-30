@@ -388,7 +388,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                 value={layoutTypeRaw}
                 onChange={setLayoutTypeRaw}
                 options={layoutOptions}
-                icon={<Compass className="h-3.5 w-3.5" />}
+                icon={<Compass className="icon-sm" />}
                 ariaLabel={mapsDict.layoutLabel}
                 label={
                   filters.layoutType == null ? (
@@ -403,7 +403,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                 value={sizeRaw}
                 onChange={setSizeRaw}
                 options={sizeOptions}
-                icon={<Maximize2 className="h-3.5 w-3.5" />}
+                icon={<Maximize2 className="icon-sm" />}
                 ariaLabel={mapsDict.surfaceArea}
                 minWidthClass="min-w-55"
                 label={
@@ -419,7 +419,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                 value={sortOrder}
                 onChange={setSortOrder}
                 options={sortOptions}
-                icon={<ArrowDownAZ className="h-3.5 w-3.5" />}
+                icon={<ArrowDownAZ className="icon-sm" />}
                 ariaLabel={mapsDict.sortAria}
                 align="right"
                 label={
@@ -439,7 +439,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   size="sm"
                   onClick={clearFilters}
                 >
-                  <X className="h-3.5 w-3.5" aria-hidden="true" />
+                  <X aria-hidden="true" />
                   {mapsDict.clearFilters}
                 </Button>
               )}

@@ -1,5 +1,5 @@
 'use client';
-import { ThornHeartIcon } from '@/components/icons/DbdIcons';
+import { HeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/smash-or-pass/hub/CardArena.tsx
 import { useDictionary } from '@/context/DictionaryContext';
 import type { EntityItem, RosterItem } from '@/types/smashOrPass';
@@ -65,7 +65,7 @@ export function CardArena({
       ) : loading ? (
         <div className="relative flex flex-col items-center justify-center min-h-[var(--smash-card-h,43.75rem)] pointer-events-auto select-none animate-pulse">
           <div className="relative smash-card-size rounded-card card-ash-border bg-bg-primary flex flex-col items-center justify-center p-6 space-y-4">
-            <ThornHeartIcon className="h-12 w-12 text-accent-red fill-accent-red/30 animate-pulse" />
+            <HeartIcon className="h-12 w-12 text-accent-red fill-accent-red/30 animate-pulse" />
             <span className="type-strong text-text-secondary text-center">
               {dict.smashOrPass.loadingRosterPrefix} {activeRoster.name || selectedRosterSlug} {dict.smashOrPass.loadingRosterSuffix}
             </span>

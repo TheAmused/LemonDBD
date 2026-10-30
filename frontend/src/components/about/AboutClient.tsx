@@ -126,13 +126,13 @@ export function AboutClient() {
         />
 
         <div className="lg:col-span-2 flex flex-wrap items-center justify-center gap-3">
-          <LegalLinkPill href={`/${locale}/terms-of-service`} target="terms-of-service" icon={<FileText className="h-4 w-4" />}>
+          <LegalLinkPill href={`/${locale}/terms-of-service`} target="terms-of-service" icon={<FileText className="icon-md" />}>
             {dict.terms.heading}
           </LegalLinkPill>
-          <LegalLinkPill href={`/${locale}/privacy-policy`} target="privacy-policy" icon={<ShieldCheck className="h-4 w-4" />}>
+          <LegalLinkPill href={`/${locale}/privacy-policy`} target="privacy-policy" icon={<ShieldCheck className="icon-md" />}>
             {dict.privacy.heading}
           </LegalLinkPill>
-          <LegalLinkPill href={`/${locale}/rules`} target="rules" icon={<ScrollText className="h-4 w-4" />}>
+          <LegalLinkPill href={`/${locale}/rules`} target="rules" icon={<ScrollText className="icon-md" />}>
             {dict.rules.heading}
           </LegalLinkPill>
         </div>

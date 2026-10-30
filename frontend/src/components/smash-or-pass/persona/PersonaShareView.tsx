@@ -3,7 +3,7 @@
 import { ArrowLeft, Check, Copy, Share2 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
-import { KillerIcon, SurvivorIcon, ThornHeartIcon } from '@/components/icons/DbdIcons';
+import { HeartIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
 import type { RomancePersonaResult } from '@/utils/smashPersona';
 import type { SocialLink } from './socialLinks';
@@ -57,7 +57,7 @@ export function PersonaShareView({
             )}
           </div>
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-card bg-bg-primary/40 border border-border-color backdrop-blur-md shrink-0">
-            <ThornHeartIcon className="h-3.5 w-3.5 fill-accent-red text-accent-red" />
+            <HeartIcon className="icon-sm fill-accent-red text-accent-red" />
             <span className="type-strong text-text-inverted">
               {persona.smashRate}%
             </span>
@@ -65,11 +65,9 @@ export function PersonaShareView({
         </div>
         <div className="mt-3 flex items-center gap-4 type-caption text-text-inverted/85">
           <span className="flex items-center gap-1.5">
-            <SurvivorIcon className="h-3.5 w-3.5 text-accent-green" />
             <span>{text.filters.survivors} {persona.survivorAffinity}%</span>
           </span>
           <span className="flex items-center gap-1.5">
-            <KillerIcon className="h-3.5 w-3.5 text-accent-red" />
             <span>{text.filters.killers} {persona.killerAffinity}%</span>
           </span>
         </div>
@@ -78,7 +76,7 @@ export function PersonaShareView({
       {/* Social Media Direct Share Grid */}
       <div className="space-y-2 pt-1">
         <span className="type-label-2xs text-text-muted flex items-center gap-1.5">
-          <Share2 className="h-3 w-3 text-accent-red" />
+          <Share2 className="icon-xs text-accent-red" />
           {text.sharing.shareDirectly}
         </span>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
@@ -100,7 +98,7 @@ export function PersonaShareView({
         {/* Status / Feedback Banner (for Telegram, Discord, etc.) */}
         {feedbackNotice && (
           <div className="flex items-center gap-2 p-2.5 rounded-card bg-accent-red/10 border border-accent-red/30 text-accent-red text-xs animate-fadeIn">
-            <Check className="h-4 w-4 shrink-0 stroke-[3]" />
+            <Check className="icon-md shrink-0 stroke-[3]" />
             <span className="leading-snug">{feedbackNotice}</span>
           </div>
         )}
@@ -124,7 +122,7 @@ export function PersonaShareView({
             variant="primary" size="md"
             onClick={onCopyLink}
           >
-            {copiedLink ? <Check className="h-3.5 w-3.5 stroke-[3]" /> : <Copy className="h-3.5 w-3.5" />}
+            {copiedLink ? <Check className="stroke-[3]" /> : <Copy />}
             <span>{copiedLink ? (text.sharing.copied) : (text.sharing.copyLink)}</span>
           </Button>
         </div>
@@ -137,7 +135,7 @@ export function PersonaShareView({
           onClick={onBack}
           className="w-full"
         >
-          <ArrowLeft className="h-4 w-4 text-accent-red" />
+          <ArrowLeft className="icon-md text-accent-red" />
           <span>{text.sharing.backToBreakdown}</span>
         </Button>
       </div>

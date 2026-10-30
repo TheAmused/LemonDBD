@@ -103,7 +103,7 @@ function CardFace({ spec, expanded, onToggle, ghost = false }: { spec: BlockCard
         <BlockTitle title={spec.title} eyebrow={spec.eyebrow} tone={spec.tone} centered={spec.centered} headingId={titleId} />
         <ChevronDown
           className={cn(
-            'absolute right-5 h-4 w-4 transition-transform duration-300 ease-in-out sm:right-7 sm:h-5 sm:w-5',
+            'absolute right-5 icon-md transition-transform duration-300 ease-in-out sm:right-7 sm:icon-lg',
             tone.text,
             expanded ? 'rotate-180' : 'rotate-0'
           )}

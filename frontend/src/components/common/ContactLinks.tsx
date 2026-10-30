@@ -40,8 +40,8 @@ function EmailPill({ email }: { email: string }) {
       <ActionPill
         onClick={() => { void copy(); }}
         aria-label={`${dict.about.contact.copyEmailLabel}: ${email}`}
-        icon={<Mail className="h-4 w-4 text-accent-red" />}
-        trailing={copied ? <Check className="h-3.5 w-3.5 text-accent-green" /> : <Copy className="h-3.5 w-3.5" />}
+        icon={<Mail className="icon-md text-accent-red" />}
+        trailing={copied ? <Check className="icon-sm text-accent-green" /> : <Copy className="icon-sm" />}
       >
         {copied ? dict.about.contact.emailCopied : email}
       </ActionPill>
@@ -65,7 +65,7 @@ export function ContactLinks({ email, className }: { email?: string | null; clas
       {links.discordInvite ? (
         <LinkPill
           href={links.discordInvite}
-          icon={<DiscordIcon className="h-4 w-4 text-brand-discord" />}
+          icon={<DiscordIcon className="icon-md text-brand-discord" />}
           onClick={() => trackEvent('contact_click', { method: 'discord', page: contactPageFromPath(pathname) })}
         >
           {dict.about.contact.discordLabel}

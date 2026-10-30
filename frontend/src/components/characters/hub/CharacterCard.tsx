@@ -12,7 +12,6 @@ import {
   getAvatarUrl as resolveAvatarUrl,
   getAvatarThumbUrl,
 } from '@/components/character-detail/types';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 
 import { Button } from '@/components/common/Button';
 import { Badge } from '@/components/common/Badge';
@@ -82,7 +81,6 @@ export function CharacterCard({
         <Badge
           tone={isSurvivor ? 'green' : 'red'} size="xs" plain className="backdrop-blur-md"
         >
-          {isSurvivor ? <SurvivorIcon className="h-3 w-3" /> : <KillerIcon className="h-3 w-3" />}
           <span>
             {isSurvivor
               ? dict.characterDetail.roleSurvivor

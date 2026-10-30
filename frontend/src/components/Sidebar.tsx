@@ -26,7 +26,7 @@ import { SidebarBottomControls } from './sidebar/SidebarBottomControls';
 import { i18n } from '@/i18n/config';
 import { WhatsNewLauncher } from '@/components/changelog/WhatsNewLauncher';
 import { useChangelogFeed } from '@/components/changelog/useChangelogFeed';
-import { PerkHexIcon, BloodwebIcon, RiftPortalIcon, RealmMapIcon, MaskIcon, AdeptBadgeIcon, EntityHeartIcon } from '@/components/icons/DbdIcons';
+import { PerkHexIcon, MaskIcon, GridIcon, TrophyIcon, DiceIcon, TargetIcon, MapIcon, HeartIcon } from '@/components/icons/DbdIcons';
 
 import { Button } from '@/components/common/Button';
 import { useDictionary, useLocale } from "@/context/DictionaryContext";
@@ -110,9 +110,9 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
       id, label, icon, href: `/${currentLocale}/${segment}`,
     });
     return [
-      page('streaks', dict.sidebar.challenges, RiftPortalIcon, 'streaks'),
-      page('maps', dict.sidebar.mapCallouts, RealmMapIcon, 'maps'),
-      page('generator', dict.filters.generatorTab, BloodwebIcon, 'randomizer'),
+      page('streaks', dict.sidebar.challenges, TargetIcon, 'streaks'),
+      page('maps', dict.sidebar.mapCallouts, MapIcon, 'maps'),
+      page('generator', dict.filters.generatorTab, DiceIcon, 'randomizer'),
       {
         id: 'database',
         label: dict.sidebar.groupDatabase,
@@ -125,14 +125,14 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
       {
         id: 'extras',
         label: dict.sidebar.groupExtras,
-        icon: BloodwebIcon,
+        icon: GridIcon,
         items: [
           page('tier-lists', dict.sidebar.tierLists, LayoutList, 'tier-lists'),
-          page('smash-or-pass', dict.sidebar.smashOrPass, EntityHeartIcon, 'smash-or-pass'),
+          page('smash-or-pass', dict.sidebar.smashOrPass, HeartIcon, 'smash-or-pass'),
           page('minigames', dict.sidebar.minigames, Gamepad2, 'minigames'),
         ],
       },
-      page('trophies', dict.sidebar.trophies, AdeptBadgeIcon, 'achievements'),
+      page('trophies', dict.sidebar.trophies, TrophyIcon, 'achievements'),
       page('settings', dict.sidebar.settings, Settings, 'settings'),
       page('about', dict.sidebar.about, Info, 'about'),
     ];
@@ -257,11 +257,11 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
         >
           <ChevronRight
             aria-hidden="true"
-            className="lemon-sidebar-icon-collapsed h-5 w-5 text-accent-red group-hover:scale-110 transition-transform"
+            className="lemon-sidebar-icon-collapsed icon-lg text-accent-red group-hover:scale-110 transition-transform"
           />
           <ChevronLeft
             aria-hidden="true"
-            className="lemon-sidebar-icon-expanded h-5 w-5 text-accent-red group-hover:scale-110 transition-transform"
+            className="lemon-sidebar-icon-expanded icon-lg text-accent-red group-hover:scale-110 transition-transform"
           />
         </TileButton>
       </aside>
@@ -273,7 +273,7 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
           aria-label={dict.sidebar.homeAria}
         >
           <div className="flex h-9 w-9 items-center justify-center rounded-chip bg-accent-red/15 border border-accent-red/30 text-text-primary p-1">
-            <LemonIcon className="h-6 w-6" />
+            <LemonIcon className="icon-xl" />
           </div>
           <span className="font-extrabold text-sm tracking-wider text-text-primary">
             {dict.app.title}
@@ -290,7 +290,7 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
             aria-expanded={mobileOpen}
             aria-label={dict.sidebar.openDrawer}
           >
-            <Menu className="h-5 w-5" />
+            <Menu />
           </Button>
         </div>
       </header>
@@ -316,7 +316,7 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
           pill
           className="absolute right-3 top-3 z-20"
         >
-          <X className="h-5 w-5" />
+          <X className="icon-lg" />
         </Button>
         {renderSidebarContent()}
       </Modal>

@@ -2,8 +2,8 @@
 // frontend/src/components/streaks/history/HistoryRowClearedBanner.tsx
 
 import React, { useEffect } from 'react';
-import { AdeptBadgeIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from "@/context/DictionaryContext";
+import { TrophyIcon } from '@/components/icons/DbdIcons';
 
 export interface HistoryRowClearedBannerProps {
   rowNumber: number | null;
@@ -23,7 +23,7 @@ export const HistoryRowClearedBanner: React.FC<HistoryRowClearedBannerProps> = (
   return (
     <div className="fixed inset-x-0 top-4 z-50 flex justify-center px-4">
       <div className="chaos-badge-pop flex items-center gap-2.5 rounded-card border-2 border-accent-green bg-bg-surface px-5 py-3 shadow-xl">
-        <AdeptBadgeIcon className="h-5 w-5 text-accent-green" />
+        <TrophyIcon className="icon-lg text-accent-green" />
         <span className="type-card-title text-text-primary">
           {dict.streaks.rowClearedPrefix} {rowNumber + 1}{' '}
           {dict.streaks.rowUnlockedSuffix}

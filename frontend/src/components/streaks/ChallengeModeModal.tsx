@@ -14,8 +14,7 @@ export interface TierTileDef {
   value: string;
   label: string;
   description?: string;
-  icon: React.ElementType;
-  image?: string;
+  image: string;
 }
 
 /**

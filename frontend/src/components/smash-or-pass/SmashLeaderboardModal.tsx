@@ -3,9 +3,8 @@
 
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
-  Skull,
   Search,
-  ArrowUpDown,
+  ArrowDownUp,
   X,
   Flame,
   Layers,
@@ -18,7 +17,7 @@ import { Modal } from '@/components/common/Modal';
 import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
 import { Tooltip } from '@/components/common/Tooltip';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { KillerIcon, SurvivorIcon,FriendzoneIcon,EldritchVoidIcon,RankFirstIcon,ThornHeartIcon } from '@/components/icons/DbdIcons';
+import { FriendzoneIcon, EldritchVoidIcon, RankFirstIcon, HeartIcon } from '@/components/icons/DbdIcons';
 
 
 import { Button } from '@/components/common/Button';
@@ -142,25 +141,25 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       godTier: {
         name: rawSmashDict.tiers.godTier,
         style: 'border-accent-amber/50 bg-accent-amber/15 text-accent-amber',
-        icon: <RankFirstIcon className="h-3.5 w-3.5 text-accent-amber" aria-hidden="true" />,
+        icon: <RankFirstIcon className="icon-sm text-accent-amber" aria-hidden="true" />,
         range: '>= 80%',
       },
       fatalAttraction: {
         name: rawSmashDict.tiers.fatalAttraction,
         style: 'border-accent-red/50 bg-accent-red/15 text-accent-red',
-        icon: <Flame className="h-3.5 w-3.5 text-accent-red" aria-hidden="true" />,
+        icon: <Flame className="icon-sm text-accent-red" aria-hidden="true" />,
         range: '60% - 79%',
       },
       friendzone: {
         name: rawSmashDict.tiers.friendzone,
         style: 'border-border-color bg-bg-elevated text-text-secondary',
-        icon: <FriendzoneIcon className="h-3.5 w-3.5 text-text-secondary" aria-hidden="true" />,
+        icon: <FriendzoneIcon className="icon-sm text-text-secondary" aria-hidden="true" />,
         range: '40% - 59%',
       },
       eldritchVoid: {
         name: rawSmashDict.tiers.eldritchVoid,
         style: 'border-border-color bg-bg-elevated text-text-muted',
-        icon: <EldritchVoidIcon className="h-3.5 w-3.5 text-text-muted" aria-hidden="true" />,
+        icon: <EldritchVoidIcon className="icon-sm text-text-muted" aria-hidden="true" />,
         range: '< 40%',
       },
     }),
@@ -262,60 +261,33 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   const candidatesWord = rawSmashDict.candidatesWord;
   const percentSign = rawSmashDict.percentSign;
 
-  // Dropdown Options with Full Icon Coverage
+  // Plain text options, like every other dropdown on the site; only the trigger carries an icon.
   const roleOptions: DropdownOption<'all' | 'Survivor' | 'Killer'>[] = [
-    { value: 'all', label: allRolesLabel, icon: <Users className="h-3.5 w-3.5 text-text-muted" /> },
-    { value: 'Survivor', label: survivorsLabel, icon: <SurvivorIcon className="h-3.5 w-3.5 text-accent-green" /> },
-    { value: 'Killer', label: killersLabel, icon: <KillerIcon className="h-3.5 w-3.5 text-accent-red" /> },
+    { value: 'all', label: allRolesLabel },
+    { value: 'Survivor', label: survivorsLabel },
+    { value: 'Killer', label: killersLabel },
   ];
 
   const genderOptions: DropdownOption<'all' | 'female' | 'male' | 'monster_other'>[] = [
     { value: 'all', label: allGendersLabel },
-    {
-      value: 'female',
-      label: femaleOnlyLabel,
-      icon: <span className="flex h-3.5 w-3.5 items-center justify-center type-strong text-accent-red">♀</span>,
-    },
-    {
-      value: 'male',
-      label: maleOnlyLabel,
-      icon: <span className="flex h-3.5 w-3.5 items-center justify-center type-strong text-text-secondary">♂</span>,
-    },
-    { value: 'monster_other', label: monstersLabel, icon: <Skull className="h-3.5 w-3.5 text-text-muted" /> },
+    { value: 'female', label: femaleOnlyLabel },
+    { value: 'male', label: maleOnlyLabel },
+    { value: 'monster_other', label: monstersLabel },
   ];
 
   const tierOptions: DropdownOption<'all' | TierKey>[] = [
-    { value: 'all', label: allTiersLabel, icon: <Layers className="h-3.5 w-3.5 text-text-muted" /> },
-    {
-      value: 'godTier',
-      label: tierMetadata.godTier.name,
-      sublabel: tierMetadata.godTier.range,
-      icon: <RankFirstIcon className="h-3.5 w-3.5 text-accent-amber" />,
-    },
-    {
-      value: 'fatalAttraction',
-      label: tierMetadata.fatalAttraction.name,
-      sublabel: tierMetadata.fatalAttraction.range,
-      icon: <Flame className="h-3.5 w-3.5 text-accent-red" />,
-    },
-    {
-      value: 'friendzone',
-      label: tierMetadata.friendzone.name,
-      sublabel: tierMetadata.friendzone.range,
-      icon: <FriendzoneIcon className="h-3.5 w-3.5 text-text-secondary" />,
-    },
-    {
-      value: 'eldritchVoid',
-      label: tierMetadata.eldritchVoid.name,
-      sublabel: tierMetadata.eldritchVoid.range,
-      icon: <EldritchVoidIcon className="h-3.5 w-3.5 text-text-muted" />,
-    },
+    { value: 'all', label: allTiersLabel },
+    ...(['godTier', 'fatalAttraction', 'friendzone', 'eldritchVoid'] as const).map((tier) => ({
+      value: tier,
+      label: tierMetadata[tier].name,
+      sublabel: tierMetadata[tier].range,
+    })),
   ];
 
   const sortOptions: DropdownOption<'smash_rate' | 'total_votes' | 'smash_count'>[] = [
-    { value: 'smash_rate', label: sortSmashRateLabel, icon: <ThornHeartIcon className="h-4 w-4 text-accent-red" /> },
-    { value: 'total_votes', label: sortTotalVotesLabel, icon: <Users className="h-3.5 w-3.5 text-text-secondary" /> },
-    { value: 'smash_count', label: sortMostSmashesLabel, icon: <Flame className="h-3.5 w-3.5 text-accent-amber" /> },
+    { value: 'smash_rate', label: sortSmashRateLabel },
+    { value: 'total_votes', label: sortTotalVotesLabel },
+    { value: 'smash_count', label: sortMostSmashesLabel },
   ];
 
   return (
@@ -335,7 +307,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
         <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
           {/* 1. Search Bar */}
           <div className="relative flex-1 min-w-35">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-text-muted" aria-hidden="true" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 icon-sm text-text-muted" aria-hidden="true" />
             <Input
               fieldSize="sm"
               type="text"
@@ -349,9 +321,10 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
               <Button
                 variant="ghost" size="xs" icon
                 onClick={() => setSearchQuery('')}
+                aria-label={dict.filters.clearSearch}
                 className="absolute right-1.5 top-1/2 -translate-y-1/2"
               >
-                <X className="h-3.5 w-3.5" />
+                <X />
               </Button>
             )}
           </div>
@@ -361,7 +334,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
             value={roleFilter}
             onChange={setRoleFilter}
             options={roleOptions}
-            icon={<Users className="h-3.5 w-3.5" />}
+            icon={<Users className="icon-sm" />}
             ariaLabel={allRolesLabel}
             minWidthClass="min-w-37.5"
           />
@@ -371,7 +344,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
             value={genderFilter}
             onChange={setGenderFilter}
             options={genderOptions}
-            icon={<User className="h-3.5 w-3.5" />}
+            icon={<User className="icon-sm" />}
             ariaLabel={allGendersLabel}
             minWidthClass="min-w-42.5"
           />
@@ -390,7 +363,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
             value={sortBy}
             onChange={setSortBy}
             options={sortOptions}
-            icon={<ArrowUpDown className="h-3.5 w-3.5" />}
+            icon={<ArrowDownUp className="icon-sm" />}
             ariaLabel={sortSmashRateLabel}
             minWidthClass="min-w-40"
             align="right"
@@ -412,7 +385,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
               aria-label={viewMode === 'flat' ? groupByTierLabel : rankedListLabel}
               className="h-8 w-8 sm:h-9 sm:w-9"
             >
-              <Layers className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <Layers className="icon-sm sm:icon-md" />
             </Button>
           </Tooltip>
         </div>
@@ -435,7 +408,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
         {totalCommunityVotes === 0 && !searchQuery.trim() ? (
           <div className="flex flex-col items-center justify-center py-16 text-center space-y-3.5">
             <IconTile tone="red" size="lg" aria-hidden="true">
-              <ThornHeartIcon className="h-8 w-8 text-accent-red animate-pulse" />
+              <HeartIcon className="h-8 w-8 text-accent-red animate-pulse" />
             </IconTile>
             <div className="space-y-1.5 max-w-md">
               <h3 className="text-lg font-black text-text-primary">{noVotesTitle}</h3>
@@ -486,8 +459,8 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
                           locale={locale}
                           backendBase={backendBase}
                           rawSmashDict={rawSmashDict}
-                          survivorsLabel={survivorsLabel}
-                          killersLabel={killersLabel}
+                          survivorLabel={dict.characterDetail.roleSurvivor}
+                          killerLabel={dict.characterDetail.roleKiller}
                           unratedLabel={unratedLabel}
                           noVotesDesc={noVotesDesc}
                           percentSign={percentSign}
@@ -524,8 +497,8 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
                     locale={locale}
                     backendBase={backendBase}
                     rawSmashDict={rawSmashDict}
-                    survivorsLabel={survivorsLabel}
-                    killersLabel={killersLabel}
+                    survivorLabel={dict.characterDetail.roleSurvivor}
+                    killerLabel={dict.characterDetail.roleKiller}
                     unratedLabel={unratedLabel}
                     noVotesDesc={noVotesDesc}
                     percentSign={percentSign}

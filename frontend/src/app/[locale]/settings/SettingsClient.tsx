@@ -3,12 +3,12 @@
 
 import React from 'react';
 import {
-  CampfireIcon,
-  ThornHeartIcon,
-  ThunderPulseIcon,
-  EntityHeartIcon,
-  ChaosSwirlIcon,
-  CautionVeilIcon,
+  ClapperboardIcon,
+  GlobeIcon,
+  MatureIcon,
+  MusicIcon,
+  HeartIcon,
+  VolumeIcon,
 } from '@/components/icons/DbdIcons';
 import { Surface } from '@/components/common/Surface';
 import { Switch } from '@/components/common/Switch';
@@ -26,7 +26,7 @@ function SectionCardHeader({ icon: Icon, title, description }: SectionCardHeader
   return (
     <div className="space-y-1 pb-3 border-b border-border-subtle">
       <div className="flex items-center gap-2.5">
-        <Icon className="h-5 w-5 text-accent-red" aria-hidden="true" />
+        <Icon className="icon-lg text-accent-red" aria-hidden="true" />
         <h2 className="type-section-title text-text-primary">{title}</h2>
       </div>
       {description && (
@@ -51,7 +51,7 @@ export function SettingsClient() {
       {/* 1. Global Site Preferences (Applies site-wide across all pages) */}
       <Surface tone="flat" padding="lg" className="space-y-5">
         <SectionCardHeader
-          icon={CampfireIcon}
+          icon={GlobeIcon}
           title={dict.settings.sectionGlobalTitle}
           description={dict.settings.sectionGlobalDesc}
         />
@@ -61,7 +61,7 @@ export function SettingsClient() {
           <div className="pt-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-1.5">
-                <CampfireIcon className="h-4 w-4 text-accent-amber" aria-hidden="true" />
+                <ClapperboardIcon className="icon-md text-accent-red" aria-hidden="true" />
                 <span className="type-strong-fluid text-text-primary">
                   {dict.settings.campfire}
                 </span>
@@ -93,12 +93,9 @@ export function SettingsClient() {
           <div className="pt-4 flex items-center justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <CautionVeilIcon className="h-4 w-4 text-accent-amber" aria-hidden="true" />
+                <MatureIcon className="icon-md text-accent-red" aria-hidden="true" />
                 <span className="type-strong-fluid text-text-primary">
                   {dict.settings.nsfw}
-                </span>
-                <span className="type-label-2xs font-bold text-accent-amber px-2 py-0.5 rounded-full border border-accent-amber/40 bg-accent-amber/10">
-                  18+
                 </span>
               </div>
               <p className="type-body-fluid text-text-secondary">
@@ -117,7 +114,7 @@ export function SettingsClient() {
       {/* 2. Smash or Pass & Minigames (In-trial effects) */}
       <Surface tone="flat" padding="lg" className="space-y-5">
         <SectionCardHeader
-          icon={ThornHeartIcon}
+          icon={HeartIcon}
           title={dict.settings.sectionMinigamesTitle}
           description={dict.settings.sectionMinigamesDesc}
         />
@@ -127,7 +124,7 @@ export function SettingsClient() {
           <div className="pt-2 flex items-center justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-1.5">
-                <ThunderPulseIcon className="h-4 w-4 text-accent-red" aria-hidden="true" />
+                <VolumeIcon className="icon-md text-accent-red" aria-hidden="true" />
                 <span className="type-strong-fluid text-text-primary">
                   {dict.settings.soundEffects}
                 </span>
@@ -147,7 +144,7 @@ export function SettingsClient() {
           <div className="pt-4 flex items-center justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-1.5">
-                <EntityHeartIcon className="h-4 w-4 text-accent-red" aria-hidden="true" />
+                <MusicIcon className="icon-md text-accent-red" aria-hidden="true" />
                 <span className="type-strong-fluid text-text-primary">
                   {dict.settings.music}
                 </span>
@@ -167,7 +164,7 @@ export function SettingsClient() {
           <div className="pt-4 flex items-center justify-between gap-4">
             <div className="space-y-1">
               <div className="flex items-center gap-1.5">
-                <ChaosSwirlIcon className="h-4 w-4 text-accent-red" aria-hidden="true" />
+                <ClapperboardIcon className="icon-md text-accent-red" aria-hidden="true" />
                 <span className="type-strong-fluid text-text-primary">
                   {dict.settings.animations}
                 </span>

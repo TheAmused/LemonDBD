@@ -79,6 +79,14 @@ const ICON_BUTTON_SIZES: Record<ButtonSize, string> = {
   lg: 'h-12 w-12',
 };
 
+// The size an icon placed straight inside the button takes (see `.button-icons-*` in base.css).
+// An icon that sets its own size keeps it: use that only for a deliberately larger icon.
+const ICON_SIZES: Record<ButtonSize, string> = { xs: 'button-icons-sm', sm: 'button-icons-md', md: 'button-icons-lg', lg: 'button-icons-lg' };
+const LABEL_ICON_SIZES: Record<ButtonSize, string> = { xs: 'button-icons-sm', sm: 'button-icons-sm', md: 'button-icons-md', lg: 'button-icons-md' };
+
+/** The icon-size class for a button-like control of this size; ToggleChip shares it so both size icons alike. */
+export const buttonIconSizeClass = (size: ButtonSize, iconOnly: boolean): string => (iconOnly ? ICON_SIZES : LABEL_ICON_SIZES)[size];
+
 // An overlay control sits on a thumbnail: it keeps its small look and grows only an invisible hit area on touch screens.
 const OVERLAY_TOUCH = 'hit-area pointer-coarse:min-h-0 pointer-coarse:min-w-0';
 
@@ -176,6 +184,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(function 
         variant === 'overlay' && OVERLAY_TOUCH,
         spinnerReplacesLabel && 'relative',
         ringClass,
+        variant !== 'cta' && buttonIconSizeClass(size, icon),
         className
       )}
       {...rest}

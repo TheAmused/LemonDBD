@@ -134,13 +134,13 @@ const AttributeCell: React.FC<AttributeCellProps> = ({ evaluation, value }) => {
       <div className="flex items-center justify-center gap-1">
         <span className="truncate max-w-30">{value ?? '-'}</span>
         {direction === 'higher' && (
-          <ArrowUp className="w-3.5 h-3.5 text-text-inverted flex-shrink-0 animate-bounce" />
+          <ArrowUp className="icon-sm text-text-inverted flex-shrink-0 animate-bounce" />
         )}
         {direction === 'lower' && (
-          <ArrowDown className="w-3.5 h-3.5 text-text-inverted flex-shrink-0 animate-bounce" />
+          <ArrowDown className="icon-sm text-text-inverted flex-shrink-0 animate-bounce" />
         )}
         {isCorrect && !direction && (
-          <Check className="w-3.5 h-3.5 text-text-inverted flex-shrink-0" />
+          <Check className="icon-sm text-text-inverted flex-shrink-0" />
         )}
       </div>
     </td>

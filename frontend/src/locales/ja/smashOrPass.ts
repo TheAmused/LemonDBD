@@ -514,6 +514,7 @@ export default {
     badgeGradientColor: 'バッジのグラデーション / カラー',
     markAsFallback: 'フォールバック用のデフォルトアーキタイプとして指定（どの条件も満たさない場合に使用）',
     rulesTitle: '判定ルールとトリガー',
+    removeRule: 'ルールを削除',
     addCondition: '条件を追加',
   },
   sharing: {

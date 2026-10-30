@@ -43,7 +43,7 @@ export function ActionMenu({ label, items, size = 'sm', className }: ActionMenuP
         className={className}
         {...popoverTriggerProps(open, 'menu')}
       >
-        <Ellipsis className="h-4 w-4" aria-hidden="true" />
+        <Ellipsis aria-hidden="true" />
       </Button>
       <Popover
         open={open}

@@ -12,7 +12,6 @@ import {
 import { PerkDescription } from '@/components/PerkDescription';
 import { tip } from '@/components/common/Tooltip';
 import { Modal } from '@/components/common/Modal';
-import { KillerIcon, SurvivorIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Img } from '@/components/common/Img';
 import { PerkTypeBadges } from '@/components/perks/PerkTypeBadges';
@@ -45,7 +44,6 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose, onSelectTyp
     !perk.character ||
     perk.character === 'General' ||
     Boolean(perk.is_generic_counterpart);
-  const isSurvivor = perk.category === 'Survivor';
 
   /* Perk icon | title | owner avatar. Both sides share one size so the title stays centred. */
   const header = (
@@ -75,27 +73,22 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose, onSelectTyp
         )}
       </div>
 
-      <div
-        className={`flex ${SLOT_SIZE} shrink-0 items-center justify-center`}
-        {...tip(
-          isGeneral ? dict.modal.generalPerk : perk.character,
-          undefined,
-          'character'
-        )}
-      >
-        {!isGeneral && avatarSrc && !avatarError ? (
+      {/* General perks and missing portraits leave the slot empty; it still keeps the title centred. */}
+      {!isGeneral && avatarSrc && !avatarError ? (
+        <div
+          className={`flex ${SLOT_SIZE} shrink-0 items-center justify-center`}
+          {...tip(perk.character, undefined, 'character')}
+        >
           <Img
             src={avatarSrc}
             alt={perk.character}
             onError={() => setAvatarError(true)}
             className="h-full w-full rounded-full object-cover ring-2 ring-accent-amber/40 shadow-lg"
           />
-        ) : isSurvivor ? (
-          <SurvivorIcon className="h-1/2 w-1/2 text-accent-green" />
-        ) : (
-          <KillerIcon className="h-1/2 w-1/2 text-accent-red" />
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className={`${SLOT_SIZE} shrink-0`} aria-hidden="true" />
+      )}
     </div>
   );
 

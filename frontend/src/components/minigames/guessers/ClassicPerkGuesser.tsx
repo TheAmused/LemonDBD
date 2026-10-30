@@ -99,7 +99,7 @@ const PerkAttrCell: React.FC<{ evaluation?: AttributeEvaluation; value?: string 
     <td className={`p-2.5 rounded-card border shadow-md font-semibold text-xs transition-all ${bgStyle}`}>
       <div className="flex items-center justify-center gap-1">
         <span className={wrap ? 'max-w-35 break-words' : 'truncate max-w-35'}>{value ?? '-'}</span>
-        {isCorrect && <Check className="w-3.5 h-3.5 text-text-inverted flex-shrink-0" />}
+        {isCorrect && <Check className="icon-sm text-text-inverted flex-shrink-0" />}
       </div>
     </td>
   );

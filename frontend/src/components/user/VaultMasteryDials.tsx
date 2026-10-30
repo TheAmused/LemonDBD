@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { KillerIcon, SurvivorIcon, BloodwebIcon } from '@/components/icons/DbdIcons';
+import { PerkHexIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from "@/context/DictionaryContext";
 
 interface MetricItem {
@@ -35,7 +35,7 @@ interface DialProps {
   percentage: number;
   strokeClass: string;
   accentClass: string;
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   compact?: boolean;
 }
 
@@ -119,9 +119,11 @@ const RadialDial: React.FC<DialProps> = ({
 
       {/* Title & Icon below */}
       <div className="flex items-center gap-1 sm:gap-1.5 shrink-0 mt-auto max-w-full">
-        <div className={`rounded-chip ${compact ? 'p-0.5 sm:p-1' : 'p-0.5 sm:p-1 lg:p-1.5 2xl:p-2'} ${accentClass} shrink-0`}>
-          {icon}
-        </div>
+        {icon && (
+          <div className={`rounded-chip ${compact ? 'p-0.5 sm:p-1' : 'p-0.5 sm:p-1 lg:p-1.5 2xl:p-2'} ${accentClass} shrink-0`}>
+            {icon}
+          </div>
+        )}
         <span
           className={`${
             compact ? 'text-micro sm:text-tiny' : 'text-micro xs:text-tiny sm:text-xs 2xl:text-sm'
@@ -159,7 +161,6 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({ ownership,
       {!hideTitle && (
         <div className="flex items-center justify-center text-center">
           <h2 className="text-xs sm:text-sm font-black uppercase tracking-widest text-text-primary flex items-center justify-center gap-2">
-            <BloodwebIcon className="h-4 w-4 text-accent-amber" />
             <span>{dict.user.vaultMastery}</span>
           </h2>
         </div>
@@ -174,7 +175,6 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({ ownership,
           percentage={survPercent}
           strokeClass="stroke-accent-green"
           accentClass="bg-accent-green/15 text-accent-green"
-          icon={<SurvivorIcon className={compact ? 'h-3 w-3' : 'h-3.5 w-3.5'} />}
           compact={compact}
         />
 
@@ -186,7 +186,6 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({ ownership,
           percentage={killerPercent}
           strokeClass="stroke-accent-red"
           accentClass="bg-accent-red/15 text-accent-red"
-          icon={<KillerIcon className={compact ? 'h-3 w-3' : 'h-3.5 w-3.5'} />}
           compact={compact}
         />
 
@@ -198,7 +197,7 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({ ownership,
           percentage={perkPercent}
           strokeClass="stroke-accent-amber"
           accentClass="bg-accent-amber/15 text-accent-amber"
-          icon={<BloodwebIcon className={compact ? 'h-3 w-3' : 'h-3.5 w-3.5'} />}
+          icon={<PerkHexIcon className={compact ? 'icon-xs' : 'icon-sm'} />}
           compact={compact}
         />
       </div>

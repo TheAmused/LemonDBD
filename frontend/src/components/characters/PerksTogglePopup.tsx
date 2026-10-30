@@ -1,5 +1,4 @@
 'use client';
-import { PadlockHeartIcon } from '@/components/icons/DbdIcons';
 // frontend/src/components/characters/PerksTogglePopup.tsx
 import React from 'react';
 import { Check } from 'lucide-react';
@@ -9,6 +8,7 @@ import { ownsPerk } from '@/utils/characterUtils';
 import { useDictionary } from "@/context/DictionaryContext";
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
+import { LockIcon } from '@/components/icons/DbdIcons';
 
 export interface PerksTogglePopupPerk {
   perk_id: number;
@@ -126,7 +126,7 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
                       : 'border-border-color bg-bg-surface text-text-muted'
                   }`}
                 >
-                  {isUnlocked ? <Check className="h-3.5 w-3.5" /> : <PadlockHeartIcon className="h-3.5 w-3.5" />}
+                  {isUnlocked ? <Check className="icon-sm" /> : <LockIcon className="icon-sm" />}
                 </div>
               </div>
               <span className="line-clamp-2 text-mini font-semibold leading-tight text-text-primary">

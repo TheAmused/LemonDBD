@@ -43,7 +43,7 @@ export function ExportTab({ tab }: { tab: ReturnType<typeof useExportTab> }) {
           onClick={() => { void handleExecuteExport(); }}
           loading={isExporting}
           disabled={exportTargets.length === 0}
-          leftIcon={<Download className="h-3.5 w-3.5" />}
+          leftIcon={<Download className="icon-sm" />}
         >
           <span>
             {isExporting ? dict.admin.exportingStatus : dict.admin.downloadBackup} ({exportTargets.length})

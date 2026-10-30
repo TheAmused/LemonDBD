@@ -40,7 +40,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear 
               variant="secondary"
               size="sm"
               onClick={onClear}
-              leftIcon={<Trash2 className="h-3.5 w-3.5 text-accent-red" aria-hidden="true" />}
+              leftIcon={<Trash2 className="icon-sm text-accent-red" aria-hidden="true" />}
               className="min-h-9 shrink-0 whitespace-nowrap px-3 hover:border-accent-red/50 hover:text-accent-red"
             >
               {c.removeAll}
@@ -81,7 +81,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear 
                   className="absolute inset-0 z-0 flex items-center justify-center bg-bg-primary/50 opacity-0 group-hover/item:opacity-100 transition-opacity backdrop-blur-xs cursor-pointer"
                 >
                   <span className="flex h-7 w-7 items-center justify-center rounded-chip bg-bg-surface/90 text-accent-red shadow-sm border border-border-color/60">
-                    <Pencil className="h-3.5 w-3.5" aria-hidden="true" />
+                    <Pencil className="icon-sm" aria-hidden="true" />
                   </span>
                   <span className="sr-only">{c.editItem}</span>
                 </button>
@@ -93,7 +93,7 @@ export function CreatorItems({ items, onRename, onUpdateItem, onRemove, onClear 
                   aria-label={formatMessage(c.removeItemAria, { name: item.name })}
                   variant="overlay" size="xs" icon pill className="absolute top-1 right-1 z-10 opacity-80 sm:opacity-0 group-hover/item:opacity-100 hover:opacity-100"
                 >
-                  <X className="h-3 w-3" aria-hidden="true" />
+                  <X aria-hidden="true" />
                 </Button>
               </div>
 

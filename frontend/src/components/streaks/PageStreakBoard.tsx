@@ -81,7 +81,7 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
           onClick={() => setConfirmingResetAll(true)}
           variant="secondary" size="sm"
         >
-          <RotateCcw className="w-3.5 h-3.5" />
+          <RotateCcw />
           {dict.streaks.resetAllRuns}
         </Button>
       </div>

@@ -7,19 +7,19 @@ import { Modal, useModal } from '@/components/common/Modal';
 import {
   Plus,
   Clock,
-  CheckCircle,
   XCircle,
-  HelpCircle,
+  Wrench,
   Image as ImageIcon,
   ChevronDown,
   X,
   Maximize2,
+  CheckCircle2,
 } from 'lucide-react';
 import type { UserBugReport } from '@/types/userProfile';
 import { UserBugReportsSkeleton } from './UserBugReportsSkeleton';
 import { Pagination } from '@/components/common/Pagination';
 import { bugAttachmentUrl } from '@/utils/api';
-import { FogReportIcon,OverseerEyeIcon } from '@/components/icons/DbdIcons';
+import { FogReportIcon,CrownIcon } from '@/components/icons/DbdIcons';
 
 import { EmptyState } from '@/components/common/EmptyState';
 import { UnreadDot } from '@/components/common/UnreadDot';
@@ -76,21 +76,21 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       case 'in_progress':
         return (
           <Badge tone="red" size="sm" square>
-            <Clock className="h-3 w-3" />
+            <Wrench className="icon-xs" />
             <span>{t.statusInProgress}</span>
           </Badge>
         );
       case 'resolved':
         return (
           <Badge tone="green" size="sm" square>
-            <CheckCircle className="h-3 w-3" />
+            <CheckCircle2 className="icon-xs" />
             <span>{t.statusResolved}</span>
           </Badge>
         );
       case 'rejected':
         return (
           <Badge tone="neutral" size="sm" square>
-            <XCircle className="h-3 w-3" />
+            <XCircle className="icon-xs" />
             <span>{t.statusClosed}</span>
           </Badge>
         );
@@ -98,7 +98,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       default:
         return (
           <Badge tone="amber" size="sm" square>
-            <HelpCircle className="h-3 w-3" />
+            <Clock className="icon-xs" />
             <span>{t.statusPending}</span>
           </Badge>
         );
@@ -110,14 +110,14 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
       {!hideHeading ? (
         <div className="flex items-center justify-between gap-3 pb-2.5 border-b border-border-color shrink-0">
           <h2 className="text-sm sm:text-base font-black tracking-wider text-text-primary flex items-center gap-2">
-            <FogReportIcon className="h-4 w-4 text-accent-red" />
+            <FogReportIcon className="icon-md text-accent-red" />
             <span>{t.bugReportsTitle}</span>
           </h2>
           <Button
             variant="primary"
             size="sm"
             onClick={onOpenReportModal}
-            leftIcon={<Plus className="h-3.5 w-3.5" />}
+            leftIcon={<Plus className="icon-sm" />}
           >
             <span>{t.reportNewBug}</span>
           </Button>
@@ -179,7 +179,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                     </span>
                     <span className="p-1 rounded-chip bg-bg-elevated/80 text-accent-red">
                       <ChevronDown
-                        className={`h-4 w-4 transition-transform duration-300 ease-in-out ${
+                        className={`icon-md transition-transform duration-300 ease-in-out ${
                           isOpen ? 'rotate-180' : 'rotate-0'
                         }`}
                       />
@@ -201,7 +201,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                   {report.images && report.images.length > 0 && (
                     <div className="space-y-1.5 pt-1">
                       <span className="type-label-2xs text-text-muted flex items-center gap-1">
-                        <ImageIcon className="h-3 w-3 text-accent-red" />
+                        <ImageIcon className="icon-xs text-accent-red" />
                         {t.attachments} ({report.images.length})
                       </span>
                       <div className="flex flex-wrap items-center gap-2.5 pt-0.5">
@@ -225,7 +225,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                                 className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-300"
                               />
                               <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                <Maximize2 className="h-4 w-4 text-text-inverted" />
+                                <Maximize2 className="icon-md text-text-inverted" />
                               </div>
                             </TileButton>
                           );
@@ -238,7 +238,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
                   {report.admin_notes && (
                     <div className="mt-2 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-3 space-y-1">
                       <div className="flex items-center gap-2 text-accent-amber type-strong">
-                        <OverseerEyeIcon className="h-3.5 w-3.5" />
+                        <CrownIcon className="icon-sm" />
                         <span>{t.devResponse}</span>
                       </div>
                       <p className="text-xs text-text-secondary italic">
@@ -251,7 +251,7 @@ export const UserBugReportsList: React.FC<UserBugReportsListProps> = ({
 
                   {awaitingReply && (
                     <p className="mt-2 flex items-center gap-2 rounded-card border border-border-color bg-bg-elevated/60 p-3 type-caption text-text-muted">
-                      <Clock className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                      <Clock className="icon-sm shrink-0" aria-hidden="true" />
                       <span>{t.noDevResponseYet}</span>
                     </p>
                   )}
@@ -310,7 +310,7 @@ const PreviewCloseButton: React.FC<{ label: string }> = ({ label }) => {
       className="absolute right-2 top-2 z-10 shadow-lg"
       aria-label={label}
     >
-      <X className="h-5 w-5" />
+      <X />
     </Button>
   );
 };

@@ -12,6 +12,7 @@
 // plain function like this one.
 import { useCallback, useSyncExternalStore } from 'react';
 import { getLocalStorage } from '@/utils/safeStorage';
+import { DEFAULT_BACKGROUND_ANIMATION } from '@/utils/backgroundAnimation';
 
 export const GLOBAL_NSFW_KEY = 'lemondbd_show_nsfw';
 const GLOBAL_NSFW_ONBOARDED_KEY = 'lemondbd_nsfw_onboarded';
@@ -81,7 +82,7 @@ export function setGlobalNsfwPreference(enabled: boolean): void {
         sounds: typeof existing.sounds === 'boolean' ? existing.sounds : true,
         music: typeof existing.music === 'boolean' ? existing.music : true,
         nsfw: enabled,
-        backgroundAnimation: existing.backgroundAnimation || 'on',
+        backgroundAnimation: existing.backgroundAnimation || DEFAULT_BACKGROUND_ANIMATION,
         gifs: typeof existing.gifs === 'boolean' ? existing.gifs : true,
         chosenAt: Date.now(),
       };

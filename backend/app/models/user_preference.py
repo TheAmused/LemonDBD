@@ -9,6 +9,9 @@ from sqlalchemy.orm import Mapped, mapped_column
 from app.core.extensions import Base
 from app.models.base import utcnow
 
+# What an account gets until the user picks a background animation ("on", "eco" or "off").
+DEFAULT_BACKGROUND_ANIMATION = "eco"
+
 
 class UserPreference(Base):
     """Stores user preferences for audio, visual effects, and content filtering.
@@ -27,7 +30,7 @@ class UserPreference(Base):
     sounds_enabled: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     music_enabled: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     nsfw_enabled: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    background_animation: Mapped[str] = mapped_column(String(16), default="on", nullable=False)
+    background_animation: Mapped[str] = mapped_column(String(16), default=DEFAULT_BACKGROUND_ANIMATION, nullable=False)
     gifs_enabled: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     chosen_at: Mapped[int] = mapped_column(BigInteger, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(

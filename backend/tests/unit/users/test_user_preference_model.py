@@ -85,7 +85,7 @@ def test_user_preference_defaults_and_update(db_session: Session) -> None:
     assert loaded.sounds_enabled is True
     assert loaded.music_enabled is True
     assert loaded.nsfw_enabled is False
-    assert loaded.background_animation == "on"
+    assert loaded.background_animation == "eco"
     assert loaded.gifs_enabled is True
 
     # Update fields

@@ -16,6 +16,7 @@ import { i18n } from '@/i18n/config';
 import { backgroundEffectForSegments, type BackgroundEffect } from '@/components/layout/backgroundEffects';
 
 import { usePreferences } from '@/hooks/usePreferences';
+import { DEFAULT_BACKGROUND_ANIMATION } from '@/utils/backgroundAnimation';
 
 const CampfireParticles = dynamic(
   () => import('@/components/common/CampfireParticles').then((m) => m.CampfireParticles),
@@ -40,7 +41,7 @@ const EFFECT_CLASS = 'absolute inset-0 h-full w-full opacity-90 transition-opaci
 
 export const AppBackground: React.FC<AppBackgroundProps> = ({ mode: explicitMode }) => {
   const { preferences } = usePreferences();
-  const mode = explicitMode ?? preferences?.backgroundAnimation ?? 'on';
+  const mode = explicitMode ?? preferences?.backgroundAnimation ?? DEFAULT_BACKGROUND_ANIMATION;
   const pathname = usePathname() || '/';
   const effect = useMemo(() => {
     const segments = pathname.split('/').filter(Boolean);

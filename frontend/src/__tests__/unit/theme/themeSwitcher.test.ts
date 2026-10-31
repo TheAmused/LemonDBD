@@ -86,7 +86,7 @@ describe('SidebarBottomControls Theme Switcher', () => {
     assert.ok(html.includes('System theme'), 'Button must show the system theme label');
   });
 
-  it('falls back to the Laptop/system option when theme is unset or unrecognized', () => {
+  it('falls back to the dark option when theme is unset or unrecognized', () => {
     const html = renderWithDictionary(
       React.createElement(SidebarBottomControls, {
         currentLocale: 'en',
@@ -96,7 +96,7 @@ describe('SidebarBottomControls Theme Switcher', () => {
       })
     );
 
-    assert.ok(html.includes('System theme'), 'Must fall back to the system option label');
+    assert.ok(html.includes('Dark mode'), 'Must fall back to the dark option label');
   });
 
   it('uses dictionary fallbacks for light, light-lemon, dark, and system labels when provided', () => {

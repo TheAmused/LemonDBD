@@ -9,7 +9,6 @@ import { Sun, Moon, Laptop, Citrus } from 'lucide-react';
 import { FlagIcon } from './FlagIcon';
 import { FogReportIcon, CampfireMugIcon } from '@/components/icons/DbdIcons';
 
-import { tip } from '@/components/common/Tooltip';
 import { FitText } from '@/components/common/FitText';
 import { useDictionary } from "@/context/DictionaryContext";
 import { useIsClient } from '@/hooks/useIsClient';
@@ -116,8 +115,8 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
     { id: 'dark', label: darkLabel, short: dict.sidebar.themeDarkShort, icon: <Moon className="icon-md" /> },
     { id: 'system', label: systemLabel, short: dict.sidebar.themeSystemShort, icon: <Laptop className="icon-md" /> },
   ];
-  const currentThemeOption =
-    THEME_OPTIONS.find((t) => t.id === theme) ?? THEME_OPTIONS.find((t) => t.id === 'system')!;
+  const defaultThemeOption = THEME_OPTIONS.find((t) => t.id === 'dark')!;
+  const currentThemeOption = THEME_OPTIONS.find((t) => t.id === theme) ?? defaultThemeOption;
 
   const currentLanguage =
     LANGUAGES.find((l) => l.code === currentLocale) ?? LANGUAGES[0];
@@ -200,13 +199,13 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
             className="w-full min-w-0"
           >
             {/* The stored theme is only known after mount; the server always
-                renders the "system" icon, so the client must too until then
+                renders the default theme's icon, so the client must too until then
                 (a Moon vs Laptop swap here was React hydration error #418 on
                 every fully prerendered page for dark / lemon users). */}
             <span className="shrink-0">
-              {isMounted ? currentThemeOption.icon : THEME_OPTIONS[THEME_OPTIONS.length - 1].icon}
+              {isMounted ? currentThemeOption.icon : defaultThemeOption.icon}
             </span>
-            <FitText minScale={0.8} alternatives={isMounted ? [currentThemeOption.short] : undefined} className="min-w-0 text-center">{isMounted ? currentThemeOption.label : ''}</FitText>
+            <FitText minScale={0.8} alternatives={isMounted ? [currentThemeOption.short] : undefined} title="" className="min-w-0 text-center">{isMounted ? currentThemeOption.label : ''}</FitText>
           </Button>
 
           {isThemeMenuOpen && (
@@ -220,7 +219,6 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
                     setTheme(opt.id);
                     setIsThemeMenuOpen(false);
                   }}
-                  {...tip(opt.label, undefined, 'action')} aria-label={opt.label}
                 >
                   <span className="shrink-0">{opt.icon}</span>
                   <span className="whitespace-nowrap">{opt.label}</span>

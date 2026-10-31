@@ -1301,6 +1301,7 @@
       "jungle_gyms_count": 1,
       "is_shack": false,
       "is_main_building": true,
+      "is_retired": true,
       "size_sq_tiles": 132.0,
       "size_sq_meters": 8448,
       "description": "12-Clock Callout System for Lampkin Lane (Haddonfield). Standard top-middle starts at 12 o'clock.",

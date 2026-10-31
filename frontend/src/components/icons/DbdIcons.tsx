@@ -63,6 +63,9 @@ export { CheckIcon } from './ui/CheckIcon';
 export { LockIcon } from './ui/LockIcon';
 export { SparkleIcon } from './ui/SparkleIcon';
 export { CardFlipIcon } from './ui/CardFlipIcon';
+export { MinusIcon } from './ui/MinusIcon';
+export { PlusIcon } from './ui/PlusIcon';
+export { FitIcon } from './ui/FitIcon';
 
 // Brand logos
 export { DiscordIcon } from './brand/DiscordIcon';

@@ -1,30 +1,22 @@
 import { MAP_VARIANT_GROUPS } from '@/utils/mapVoiceData';
 
-export type MapSource = 'all' | 'lemondbd' | 'hens333' | 'samoelcolt';
-
 export interface MatchResult {
   matchedMapName: string;
   matchedMapId?: number;
-  source: MapSource;
   confidence: number;
   isVariant: boolean;
   availableVariants?: string[];
-  action?: 'navigate' | 'switch_source' | 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close';
-  actionPayload?: string;
+  action?: 'navigate' | 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close';
 }
 
 export interface MapDataEntry {
-  /** The integer primary key, matching `MapRealm.id`. It used to be a slug
-   *  (`hens_azarovs_resting_place`) that spelled out the callout provider and
-   *  the map name -- both of which this row already carries as `source` and
-   *  `name`. This is the subset of `MapRealm` the matcher reads; it stays a
-   *  structural type rather than importing `MapRealm` so the matcher can be
-   *  called with any row-like object. */
+  /** The integer primary key, matching `MapRealm.id`. This is the subset of
+   *  `MapRealm` the matcher reads; it stays a structural type rather than
+   *  importing `MapRealm` so the matcher can be called with any row-like object. */
   id: number;
   name: string;
   raw_name?: string; // English canonical name — present on non-English locales
   realm?: string;
-  source?: string;
 }
 
 // ─── Normalization & Levenshtein Distance ──────────────────────────────────────
@@ -344,7 +336,6 @@ export function createMapMatchResult(
   matchedMapName: string,
   confidence: number,
   isVariant: boolean,
-  currentSource: MapSource = 'all',
   allMaps?: Array<MapDataEntry>,
   customVariants?: string[]
 ): MatchResult {
@@ -353,34 +344,11 @@ export function createMapMatchResult(
     : getVariantsForMap(matchedMapName);
 
   let matchedMapId: number | undefined;
-  let finalSource: MapSource = currentSource;
 
   if (allMaps && allMaps.length > 0) {
     const targetNorm = normalizeForComparison(matchedMapName);
 
-    // Try finding exact name and preferred source
-    let found: MapDataEntry | undefined;
-
-    if (currentSource !== 'all') {
-      found = allMaps.find(
-        (m) =>
-          normalizeForComparison(m.name) === targetNorm &&
-          m.source?.toLowerCase() === currentSource.toLowerCase()
-      );
-    }
-
-    if (!found) {
-      // Find matching map from any source, prioritizing our own (lemondbd)
-      found = allMaps.find(
-        (m) =>
-          normalizeForComparison(m.name) === targetNorm &&
-          m.source?.toLowerCase() === 'lemondbd'
-      );
-    }
-
-    if (!found) {
-      found = allMaps.find((m) => normalizeForComparison(m.name) === targetNorm);
-    }
+    let found = allMaps.find((m) => normalizeForComparison(m.name) === targetNorm);
 
     if (!found) {
       // Check raw_name (English canonical name) — crucial for non-English locales
@@ -412,14 +380,12 @@ export function createMapMatchResult(
     if (found) {
       matchedMapId = found.id;
       matchedMapName = found.name;
-      finalSource = (found.source as MapSource) || currentSource;
     }
   }
 
   return {
     matchedMapName,
     matchedMapId,
-    source: finalSource,
     confidence,
     isVariant,
     availableVariants: availableVariants.length > 0 ? availableVariants : undefined,

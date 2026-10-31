@@ -15,7 +15,7 @@ import {
   type ModelQuality,
   type VoiceEngineType,
 } from '@/services/clientSpeechModel';
-import { getVariantsForMap, matchVoiceQuery, type MapSource, type MatchResult } from '@/utils/mapVoiceMatcher';
+import { getVariantsForMap, matchVoiceQuery, type MatchResult } from '@/utils/mapVoiceMatcher';
 import { playMatchSuccessSound, type SpeechRecognitionInstance } from '@/components/maps/VoiceCommandBannerParts';
 import { useStartListening } from './useStartListening';
 import type { VoiceCommandBannerProps, VoiceStatusState } from './voiceTypes';
@@ -24,14 +24,12 @@ import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 type VoiceSessionOptions = Pick<
   VoiceCommandBannerProps,
-  'locale' | 'currentSource' | 'onSourceChange' | 'onSelectMap' | 'onAction' | 'availableMaps' | 'active'
+  'locale' | 'onSelectMap' | 'onAction' | 'availableMaps' | 'active'
 >;
 
 /** Owns the voice banner's state: engine choice, listening lifecycle, match execution and hotkeys. */
 export function useVoiceSession({
   locale = 'en',
-  currentSource,
-  onSourceChange,
   onSelectMap,
   onAction,
   availableMaps,
@@ -68,8 +66,6 @@ export function useVoiceSession({
   const mouseDownListeningStateRef = useRef<boolean>(false);
 
   const propsRef = useRef({
-    currentSource,
-    onSourceChange,
     onSelectMap,
     onAction,
     availableMaps,
@@ -78,14 +74,12 @@ export function useVoiceSession({
 
   useEffect(() => {
     propsRef.current = {
-      currentSource,
-      onSourceChange,
       onSelectMap,
       onAction,
       availableMaps,
       soundEnabled,
     };
-  }, [currentSource, onSourceChange, onSelectMap, onAction, availableMaps, soundEnabled]);
+  }, [onSelectMap, onAction, availableMaps, soundEnabled]);
 
   // Browser support is checked again once running in the browser (the server can't know it),
   // while rendering, and picks the engine that browser does best.
@@ -176,22 +170,10 @@ export function useVoiceSession({
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
 
     const {
-      onSourceChange: triggerSourceChange,
       onAction: triggerAction,
       onSelectMap: triggerSelectMap,
       soundEnabled: isSoundOn,
     } = propsRef.current;
-
-    if (result.action === 'switch_source' && result.actionPayload) {
-      setVoiceStatus('matched');
-      if (isSoundOn) playMatchSuccessSound();
-      triggerSourceChange?.(result.actionPayload as MapSource);
-      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
-      resetTimerRef.current = setTimeout(() => {
-        setVoiceStatus('idle');
-      }, 2200);
-      return;
-    }
 
     if (result.action && ['zoom_in', 'zoom_out', 'fullscreen', 'close'].includes(result.action)) {
       setVoiceStatus('matched');
@@ -210,7 +192,7 @@ export function useVoiceSession({
       reportVoiceOutcome('matched');
       setVoiceStatus('matched');
       if (isSoundOn) playMatchSuccessSound();
-      triggerSelectMap(result.matchedMapName, result.matchedMapId, result.source);
+      triggerSelectMap(result.matchedMapName, result.matchedMapId);
 
       const variants =
         result.availableVariants ||
@@ -243,7 +225,6 @@ export function useVoiceSession({
 
       const result = matchVoiceQuery(
         queryText,
-        propsRef.current.currentSource,
         propsRef.current.availableMaps
       );
 
@@ -287,7 +268,6 @@ export function useVoiceSession({
             if (cleanText) {
               const match = matchVoiceQuery(
                 cleanText,
-                propsRef.current.currentSource,
                 propsRef.current.availableMaps
               );
               if (match) {
@@ -324,7 +304,6 @@ export function useVoiceSession({
         pendingMatchRef.current ||
         matchVoiceQuery(
           currentText,
-          propsRef.current.currentSource,
           propsRef.current.availableMaps
         );
 

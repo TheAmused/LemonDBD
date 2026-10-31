@@ -3,12 +3,9 @@ import type React from 'react';
 
 export interface VoiceCommandBannerProps {
   locale?: string;
-  currentSource: 'all' | 'lemondbd' | 'hens333' | 'samoelcolt';
-  /** Omitted where only one map source is offered: a "switch source" command then only confirms. */
-  onSourceChange?: (source: 'all' | 'lemondbd' | 'hens333' | 'samoelcolt') => void;
-  onSelectMap: (mapName: string, mapId?: number, source?: string) => void;
+  onSelectMap: (mapName: string, mapId?: number) => void;
   onAction?: (action: 'zoom_in' | 'zoom_out' | 'fullscreen' | 'close') => void;
-  availableMaps?: Array<{ id: number; name: string; realm?: string; source?: string }>;
+  availableMaps?: Array<{ id: number; name: string; raw_name?: string; realm?: string }>;
   className?: string;
   /** False when the banner is kept mounted but hidden (e.g. behind another
    * mode's UI). Disables the "hold V to talk" hotkey and tears down any
@@ -32,5 +29,5 @@ export type VoiceStatusState =
 /** The latest values of the props the speech callbacks read (kept in a ref so they never go stale). */
 export type VoiceSessionProps = Pick<
   VoiceCommandBannerProps,
-  'currentSource' | 'onSourceChange' | 'onSelectMap' | 'onAction' | 'availableMaps'
+  'onSelectMap' | 'onAction' | 'availableMaps'
 > & { soundEnabled: boolean };

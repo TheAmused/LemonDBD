@@ -317,11 +317,15 @@ def _import_maps(
                 "name", "realm_id", "source_id", "description",
                 "callout_image_url", "callout_image_local_path", "translations",
                 "layout_type", "pallet_density", "jungle_gyms_count",
-                "is_shack", "is_main_building",
+                "is_shack", "is_main_building", "is_retired",
                 "size_sq_tiles", "size_sq_meters",
             ]:
                 if k in mdata:
-                    setattr(map_obj, k, mdata[k])
+                    value = mdata[k]
+                    # NOT NULL column: a backup with `"is_retired": null` means not retired.
+                    if k == "is_retired":
+                        value = bool(value)
+                    setattr(map_obj, k, value)
 
             # `tiles` and `objectives` in an older backup are read
             # and discarded: neither table exists. `map_objectives` was

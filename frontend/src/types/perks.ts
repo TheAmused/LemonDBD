@@ -191,7 +191,6 @@ export interface PerkDictionary {
   };
   maps?: {
     voiceEngineAria?: string;
-    providerAria?: string;
     variants?: string;
     [key: string]: string | undefined;
   };

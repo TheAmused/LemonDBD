@@ -15,6 +15,7 @@ export default {
   groupDatabase: "Database",
   groupExtras: "Community & Games",
   admin: "ADMIN",
+  roleUser: "User",
   adminControlCenter: "Admin Control Center",
   signIn: "Sign In",
   signOut: "Sign Out",

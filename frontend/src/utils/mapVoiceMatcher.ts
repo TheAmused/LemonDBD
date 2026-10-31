@@ -1,5 +1,5 @@
 // frontend/src/utils/mapVoiceMatcher.ts
-import { type MapSource, type MapDataEntry, type MatchResult, normalizeString, cleanSpokenQuery, normalizeForComparison, createMapMatchResult, calculateSimilarity } from "./mapVoiceTextUtils";
+import { type MapDataEntry, type MatchResult, normalizeString, cleanSpokenQuery, normalizeForComparison, createMapMatchResult, calculateSimilarity } from "./mapVoiceTextUtils";
 /**
  * mapVoiceMatcher.ts
  *
@@ -11,7 +11,6 @@ import { type MapSource, type MapDataEntry, type MatchResult, normalizeString, c
  * - Polish localized map names and nicknames (posterunek wschod/zachod, przedszkole 1-5, wieza weglowa 1-2, etc.)
  * - Explicit variant resolution (RPD East/West, Preschool I-V, Coal Tower I/II, etc.)
  * - Generic variant disambiguation pill groups
- * - Provider source switching ("Switch to Hens", "Zmien na Samoela", "Wszystkie mapy")
  * - Navigation action commands ("Zoom in", "Przybliz", "Fullscreen", "Pelny ekran", "Close", "Zamknij")
  * - Levenshtein fuzzy matching and token similarity scoring with full diacritic normalization
  */
@@ -21,7 +20,6 @@ import {
   CANONICAL_MAPS,
   EXPLICIT_VARIANT_RULES,
   GENERIC_VARIANT_RULES,
-  SOURCE_COMMAND_RULES,
   ACTION_COMMAND_RULES,
   type CanonicalMapDefinition,
 } from './mapVoiceData';
@@ -29,12 +27,11 @@ import {
 // ─── Main Match Function ──────────────────────────────────────────────────────
 
 /**
- * Matches a spoken voice query against DBD maps, provider switches, navigation actions,
+ * Matches a spoken voice query against DBD maps, navigation actions,
  * and variant disambiguation engine.
  */
 export function matchVoiceQuery(
   spokenText: string,
-  currentSource: MapSource = 'all',
   allMaps?: Array<MapDataEntry>
 ): MatchResult | null {
   if (!spokenText || typeof spokenText !== 'string') return null;
@@ -49,27 +46,7 @@ export function matchVoiceQuery(
   const cleanRaw = cleanSpokenQuery(rawLower);
   const commandCandidates = [cleanRaw, rawLower].filter(Boolean);
 
-  // 1. Check Pure Source Switching Commands (exact string/normalized match)
-  for (const rule of SOURCE_COMMAND_RULES) {
-    for (const kw of rule.keywords) {
-      const normKw = normalizeForComparison(kw);
-      for (const text of commandCandidates) {
-        const normCmd = normalizeForComparison(text);
-        if (normCmd === normKw || text === normalizeString(kw)) {
-          return {
-            matchedMapName: '',
-            source: rule.source,
-            confidence: 1.0,
-            isVariant: false,
-            action: 'switch_source',
-            actionPayload: rule.source,
-          };
-        }
-      }
-    }
-  }
-
-  // 2. Check Pure Action Navigation Commands (exact string/normalized match so "backwater swamp" isn't caught by "back")
+  // 1. Check Pure Action Navigation Commands (exact string/normalized match so "backwater swamp" isn't caught by "back")
   for (const rule of ACTION_COMMAND_RULES) {
     for (const kw of rule.keywords) {
       const normKw = normalizeForComparison(kw);
@@ -78,7 +55,6 @@ export function matchVoiceQuery(
         if (normCmd === normKw || text === normalizeString(kw)) {
           return {
             matchedMapName: '',
-            source: currentSource,
             confidence: 1.0,
             isVariant: false,
             action: rule.action,
@@ -88,51 +64,11 @@ export function matchVoiceQuery(
     }
   }
 
-  // 3. Check for Source Prefix followed by a Map query (e.g. "hens blood lodge", "samoel dead dawg", "wlacz hensa blood lodge")
-  let effectiveSource: MapSource = currentSource;
-  let queryText = spokenText;
+  // 2. Clean Spoken Text for Map Matching
+  const clean = cleanSpokenQuery(spokenText);
+  const candidateTexts = [clean, spokenText, rawLower].filter(Boolean);
 
-  const sourcePrefixes: Array<{ prefix: string; source: MapSource }> = [
-    { prefix: 'switch to hens333', source: 'hens333' },
-    { prefix: 'switch to hens', source: 'hens333' },
-    { prefix: 'hens333 maps', source: 'hens333' },
-    { prefix: 'hens maps', source: 'hens333' },
-    { prefix: 'hens333', source: 'hens333' },
-    { prefix: 'hens', source: 'hens333' },
-    { prefix: 'zmien na hensa', source: 'hens333' },
-    { prefix: 'zmień na hensa', source: 'hens333' },
-    { prefix: 'wlacz hensa', source: 'hens333' },
-    { prefix: 'włącz hensa', source: 'hens333' },
-    { prefix: 'mapy hensa', source: 'hens333' },
-    { prefix: 'hensa', source: 'hens333' },
-    { prefix: 'switch to samoelcolt', source: 'samoelcolt' },
-    { prefix: 'switch to samoel', source: 'samoelcolt' },
-    { prefix: 'samoelcolt maps', source: 'samoelcolt' },
-    { prefix: 'samoel maps', source: 'samoelcolt' },
-    { prefix: 'samoelcolt', source: 'samoelcolt' },
-    { prefix: 'samoel', source: 'samoelcolt' },
-    { prefix: 'zmien na samoela', source: 'samoelcolt' },
-    { prefix: 'zmień na samoela', source: 'samoelcolt' },
-    { prefix: 'wlacz samoela', source: 'samoelcolt' },
-    { prefix: 'włącz samoela', source: 'samoelcolt' },
-    { prefix: 'mapy samoela', source: 'samoelcolt' },
-    { prefix: 'samoela', source: 'samoelcolt' },
-  ];
-
-  for (const sp of sourcePrefixes) {
-    const normPrefix = normalizeString(sp.prefix);
-    if (rawLower.startsWith(normPrefix + ' ')) {
-      effectiveSource = sp.source;
-      queryText = rawLower.slice(normPrefix.length).trim();
-      break;
-    }
-  }
-
-  // 4. Clean Spoken Text for Map Matching
-  const clean = cleanSpokenQuery(queryText);
-  const candidateTexts = [clean, queryText, rawLower].filter(Boolean);
-
-  // 5. Check for Explicit Variants first (e.g. "rpd east", "preschool 3", "rpd wschod", "badham trzy", "kol tauer 2")
+  // 3. Check for Explicit Variants first (e.g. "rpd east", "preschool 3", "rpd wschod", "badham trzy", "kol tauer 2")
   for (const expRule of EXPLICIT_VARIANT_RULES) {
     for (const kw of expRule.keywords) {
       const normKw = normalizeForComparison(kw);
@@ -143,7 +79,6 @@ export function matchVoiceQuery(
             expRule.canonicalName,
             1.0,
             true,
-            effectiveSource,
             allMaps
           );
         }
@@ -151,7 +86,7 @@ export function matchVoiceQuery(
     }
   }
 
-  // 6. Check Generic Multi-Variant Rules (e.g. "badham", "przedszkole", "rpd", "posterunek", "coal tower", "wieza weglowa")
+  // 4. Check Generic Multi-Variant Rules (e.g. "badham", "przedszkole", "rpd", "posterunek", "coal tower", "wieza weglowa")
   for (const genRule of GENERIC_VARIANT_RULES) {
     for (const kw of genRule.keywords) {
       const normKw = normalizeForComparison(kw);
@@ -163,7 +98,6 @@ export function matchVoiceQuery(
             genRule.defaultCanonical,
             0.98,
             false,
-            effectiveSource,
             allMaps,
             variants
           );
@@ -172,7 +106,7 @@ export function matchVoiceQuery(
     }
   }
 
-  // 7a. Check Exact Match across all Canonical Maps and Aliases
+  // 5a. Check Exact Match across all Canonical Maps and Aliases
   for (const mapDef of CANONICAL_MAPS) {
     const allKeys = [mapDef.canonicalName, ...mapDef.aliases];
     for (const key of allKeys) {
@@ -185,7 +119,6 @@ export function matchVoiceQuery(
             mapDef.canonicalName,
             1.0,
             !!mapDef.isExplicitVariant,
-            effectiveSource,
             allMaps
           );
         }
@@ -193,7 +126,7 @@ export function matchVoiceQuery(
     }
   }
 
-  // 7b. Check Distinct Substring Match across all Canonical Maps and Aliases (e.g. "gideon meat plant", "dracula castle", "chata matki")
+  // 5b. Check Distinct Substring Match across all Canonical Maps and Aliases (e.g. "gideon meat plant", "dracula castle", "chata matki")
   for (const mapDef of CANONICAL_MAPS) {
     const allKeys = [mapDef.canonicalName, ...mapDef.aliases];
     for (const key of allKeys) {
@@ -209,7 +142,6 @@ export function matchVoiceQuery(
             mapDef.canonicalName,
             0.95,
             !!mapDef.isExplicitVariant,
-            effectiveSource,
             allMaps
           );
         }
@@ -217,7 +149,7 @@ export function matchVoiceQuery(
     }
   }
 
-  // 8. Fuzzy Levenshtein Distance & Token Similarity Search
+  // 6. Fuzzy Levenshtein Distance & Token Similarity Search
   let bestMap: CanonicalMapDefinition | null = null;
   let bestScore = 0;
 
@@ -262,7 +194,6 @@ export function matchVoiceQuery(
       bestMap.canonicalName,
       Math.min(1.0, Number(bestScore.toFixed(2))),
       !!bestMap.isExplicitVariant,
-      effectiveSource,
       allMaps
     );
   }
@@ -272,4 +203,4 @@ export function matchVoiceQuery(
 
 // ─── Result Factory ───────────────────────────────────────────────────────────
 export { normalizeString, normalizeForComparison, levenshteinDistance, calculateSimilarity, getVariantsForMap } from "./mapVoiceTextUtils";
-export type { MapSource, MatchResult, MapDataEntry } from "./mapVoiceTextUtils";
+export type { MatchResult, MapDataEntry } from "./mapVoiceTextUtils";

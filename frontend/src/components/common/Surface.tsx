@@ -39,6 +39,8 @@ export interface SurfaceProps extends React.HTMLAttributes<HTMLElement> {
   radius?: SurfaceRadius;
   /** `output` for a live status message (its implicit role is status). */
   as?: 'div' | 'section' | 'article' | 'aside' | 'li' | 'output';
+  /** Below `sm` the box drops its corners and its top and side borders: a full-width strip under a header bar. */
+  stripOnPhone?: boolean;
 }
 
 /** The Surface look for an element that is not a div (<ul>, <pre>): same tones, same radius. */
@@ -51,11 +53,19 @@ export const Surface: React.FC<SurfaceProps> = ({
   padding = 'md',
   radius = 'card',
   as: Tag = 'div',
+  stripOnPhone = false,
   className,
   children,
   ...rest
 }) => (
-  <Tag className={cn(surfaceClassName(tone, padding, radius), className)} {...rest}>
+  <Tag
+    className={cn(
+      surfaceClassName(tone, padding, radius),
+      stripOnPhone && 'max-sm:rounded-none max-sm:border-x-0 max-sm:border-t-0',
+      className
+    )}
+    {...rest}
+  >
     {children}
   </Tag>
 );

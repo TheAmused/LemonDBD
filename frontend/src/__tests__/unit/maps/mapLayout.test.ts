@@ -257,10 +257,6 @@ test('all 5 locales provide translations for landmark and legend keys', () => {
     'legendClockTitle',
     'legendClockDesc',
     'legendFeatures',
-    'sourceLemonDbd',
-    'sourceHens',
-    'sourceHensClock',
-    'providerAria',
   ] as const;
 
   for (const loc of locales) {

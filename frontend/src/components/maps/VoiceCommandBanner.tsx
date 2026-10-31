@@ -9,7 +9,7 @@ import {
 } from '@/services/clientSpeechModel';
 import { useDictionary } from '@/context/DictionaryContext';
 import { VoiceEngineInfoModal } from './VoiceCommandBannerParts';
-import { VoiceBannerHeader } from './voice/VoiceBannerHeader';
+import { VoiceBannerHeader, VoiceEngineControls } from './voice/VoiceBannerHeader';
 import { VoiceMicButton } from './voice/VoiceMicButton';
 import { VoiceStatusMessage } from './voice/VoiceStatusMessage';
 import { VoiceVariantPills } from './voice/VoiceVariantPills';
@@ -22,8 +22,6 @@ export type { VoiceCommandBannerProps, VoiceStatusState } from './voice/voiceTyp
 
 export function VoiceCommandBanner({
   locale = 'en',
-  currentSource,
-  onSourceChange,
   onSelectMap,
   onAction,
   availableMaps,
@@ -34,7 +32,7 @@ export function VoiceCommandBanner({
 }: VoiceCommandBannerProps) {
   const dict = useDictionary();
   const session = useVoiceSession({
-    locale, currentSource, onSourceChange, onSelectMap, onAction, availableMaps, active,
+    locale, onSelectMap, onAction, availableMaps, active,
   });
   const {
     voiceStatus, liveTranscript, matchedResult, disambiguationVariants, errorMessage,
@@ -46,6 +44,9 @@ export function VoiceCommandBanner({
 
   const rawVoiceDict = dict.voice;
   const currentCfg = buildStatusConfig(rawVoiceDict)[voiceStatus];
+  const engineControls = {
+    activeEngine, modelProgress, currentCfg, soundEnabled, setSoundEnabled, setIsInfoModalOpen,
+  };
 
   return (
     // From `md` up the controls row is lifted out of the flow so the mic cluster
@@ -61,17 +62,7 @@ export function VoiceCommandBanner({
           : `relative flex w-full flex-col overflow-hidden rounded-card border border-border-color bg-bg-surface px-4 pt-3.5 pb-4 sm:px-6 sm:pt-4 sm:pb-5 md:min-h-56 shadow-sm transition-all duration-300 ${className}`
       }
     >
-      <VoiceBannerHeader
-        activeEngine={activeEngine}
-        modelProgress={modelProgress}
-        currentCfg={currentCfg}
-        soundEnabled={soundEnabled}
-        setSoundEnabled={setSoundEnabled}
-        setIsInfoModalOpen={setIsInfoModalOpen}
-        centerHeaderSlot={centerHeaderSlot}
-        currentSource={currentSource}
-        onSourceChange={onSourceChange}
-      />
+      <VoiceBannerHeader {...engineControls} centerHeaderSlot={centerHeaderSlot} />
 
       <div className="relative z-10 flex flex-1 flex-col items-center justify-center gap-2 py-1">
         <div className="flex w-full items-center justify-center gap-3 sm:gap-5">
@@ -111,6 +102,8 @@ export function VoiceCommandBanner({
           matchedResult={matchedResult}
           errorMessage={errorMessage}
         />
+
+        <VoiceEngineControls {...engineControls} compact className="md:hidden justify-center" />
       </div>
 
       {disambiguationVariants.length > 0 && (
@@ -127,7 +120,6 @@ export function VoiceCommandBanner({
             void initClientSpeechModel(locale);
           }
         }}
-        browserName={browserInfo.browserName}
         hasNativeWebSpeech={browserInfo.hasNativeWebSpeech}
         modelProgress={modelProgress}
         onPreloadModel={() => { void initClientSpeechModel(locale); }}

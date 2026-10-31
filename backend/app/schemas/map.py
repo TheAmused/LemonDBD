@@ -60,6 +60,7 @@ class MapRealmBase(BaseModel):
     jungle_gyms_count: int | None = DEFAULT_JUNGLE_GYMS
     is_shack: bool | None = DEFAULT_IS_SHACK
     is_main_building: bool | None = DEFAULT_IS_MAIN_BUILDING
+    is_retired: bool = False
     size_sq_tiles: float | None = None
     size_sq_meters: int | None = None
     translations: dict[str, Any] | None = None
@@ -85,6 +86,7 @@ class MapRealmResponse(BaseModel):
     jungle_gyms_count: int = DEFAULT_JUNGLE_GYMS
     is_shack: bool = DEFAULT_IS_SHACK
     is_main_building: bool = DEFAULT_IS_MAIN_BUILDING
+    is_retired: bool = False
     size_sq_tiles: float | None = None
     size_sq_meters: int | None = None
     description: str | None = None

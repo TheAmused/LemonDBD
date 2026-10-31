@@ -4,12 +4,14 @@ from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import (
     JSON,
+    Boolean,
     DateTime,
     Float,
     ForeignKey,
     Integer,
     String,
     Text,
+    false,
 )
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -106,6 +108,8 @@ class MapRealm(Base, TranslatableModelMixin):
     is_main_building: Mapped[bool] = mapped_column(
         nullable=False, default=DEFAULT_IS_MAIN_BUILDING
     )
+    # Taken out of the game (Lampkin Lane, Haddonfield): still listed, but greyed out and not opened.
+    is_retired: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, server_default=false())
 
     # Size measurements (Wiki.gg: sqT = 8x8m tiles, sq_meters = sqT * 64)
     size_sq_tiles: Mapped[float | None] = mapped_column(Float, nullable=True)
@@ -153,6 +157,7 @@ class MapRealm(Base, TranslatableModelMixin):
                 if self.is_main_building is not None
                 else DEFAULT_IS_MAIN_BUILDING
             ),
+            "is_retired": bool(self.is_retired),
             "size_sq_tiles": self.size_sq_tiles,
             "size_sq_meters": self.size_sq_meters,
             "description": self.description,

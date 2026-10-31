@@ -31,8 +31,6 @@ import { Badge } from '@/components/common/Badge';
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
 
-import type { SegmentedControlOption } from '@/components/common/SegmentedControl';
-import { SegmentedControl } from '@/components/common/SegmentedControl';
 
 // Sentinel dropdown value for "no filter"; real attribute values never collide with it.
 // Also what "no filter" persists as in localStorage, since the filter fields
@@ -59,6 +57,9 @@ const REALM_GRID_BREAKPOINTS: { minWidth: number; columns: number }[] = [
   { minWidth: 640, columns: 4 },
 ];
 
+/** Every map of the realm is out of the game. */
+const isRealmRetired = (realmMaps: MapRealm[]) => realmMaps.length > 0 && realmMaps.every((m) => m.is_retired);
+
 // Must match the panel wrapper's transition-duration below.
 const PANEL_EXIT_MS = 300;
 
@@ -68,8 +69,6 @@ export interface MapExplorerProps {
   onAvailableMapsLoaded?: (maps: MapRealm[]) => void;
   backendBase: string;
   locale?: string;
-  source?: 'lemondbd' | 'hens333';
-  onSourceChange?: (source: 'lemondbd' | 'hens333') => void;
   hideSearch?: boolean;
   /** Rendered in the same slot as the search header (e.g. a voice command
    * banner) when `hideSearch` is true. Overlaid in the same grid cell as
@@ -87,8 +86,6 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   onAvailableMapsLoaded,
   backendBase,
   locale,
-  source = 'lemondbd',
-  onSourceChange,
   hideSearch = false,
   voiceSlot,
   modeSwitcherSlot,
@@ -110,7 +107,6 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     onAvailableMapsLoaded,
     onAutoOpen: (map, via) => trackEvent('map_open', mapOpenProps(map, via)),
     locale,
-    source,
   });
 
   // Persisted so a refresh reopens whichever realm you had expanded. Stored
@@ -176,35 +172,26 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     { value: 'za', label: mapsDict.sortZa },
   ];
 
-  const sourceOptions: readonly [
-    SegmentedControlOption<'lemondbd' | 'hens333'>,
-    SegmentedControlOption<'lemondbd' | 'hens333'>,
-  ] = useMemo(
-    () => [
-      {
-        value: 'lemondbd',
-        label: dict.maps.sourceLemonDbd,
-      },
-      {
-        value: 'hens333',
-        label: dict.maps.sourceHensClock,
-        shortLabel: dict.maps.sourceHens,
-      },
-    ],
-    [dict.maps.sourceLemonDbd, dict.maps.sourceHensClock, dict.maps.sourceHens]
-  );
-
   const isSearching = activeSearch.trim().length > 0;
-  const isRealmExpanded = (realm: string) => isSearching || expandedRealm === realm;
+  // A realm whose maps are all retired has a disabled tile, so it must never count as expanded from a
+  // remembered choice either: nothing could collapse it again.
+  const retiredRealms = useMemo(
+    () => new Set(groupedMapsByRealm.filter(({ maps: rm }) => isRealmRetired(rm)).map(({ realm }) => realm)),
+    [groupedMapsByRealm]
+  );
+  const isRealmExpanded = (realm: string) => isSearching || (expandedRealm === realm && !retiredRealms.has(realm));
 
   const pendingOpenRef = useRef<string | null>(null);
+  // Another open realm closes first and this one opens when its exit animation ends. Only a realm that is
+  // actually on screen has that animation: a remembered one that is not (named in another language, hidden
+  // by the filters) would leave the click waiting for an exit that never comes, so it is simply replaced.
   const toggleRealm = (realm: string) => {
     setExpandedRealmRaw((prev) => {
       if (prev === realm) {
         pendingOpenRef.current = null;
         return NONE;
       }
-      if (prev !== NONE) {
+      if (prev !== NONE && renderedRealmsRef.current.has(prev)) {
         pendingOpenRef.current = realm;
         return NONE;
       }
@@ -221,10 +208,10 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   const activeRealms = useMemo(() => {
     const set = new Set<string>();
     displayedGroups.forEach(({ realm }) => {
-      if (isSearching || expandedRealm === realm) set.add(realm);
+      if (isSearching || (expandedRealm === realm && !retiredRealms.has(realm))) set.add(realm);
     });
     return set;
-  }, [displayedGroups, isSearching, expandedRealm]);
+  }, [displayedGroups, isSearching, expandedRealm, retiredRealms]);
   const activeRealmsRef = useRef(activeRealms);
   useLayoutEffect(() => {
     activeRealmsRef.current = activeRealms;
@@ -239,6 +226,10 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
     return new Set([...activeRealms, ...opened].filter((r) => present.has(r)));
   }, [displayedGroups, activeRealms, opened]);
   const openRealms = useMemo(() => new Set([...opened].filter((r) => activeRealms.has(r))), [opened, activeRealms]);
+  const renderedRealmsRef = useRef(renderedRealms);
+  useLayoutEffect(() => {
+    renderedRealmsRef.current = renderedRealms;
+  });
   const exitTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
   const enterFrames = useRef<Map<string, number>>(new Map());
 
@@ -336,36 +327,11 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
               hideSearch ? 'invisible pointer-events-none opacity-0' : 'visible opacity-100'
             }`}
           >
-            <div className="relative z-20 flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3 w-full mb-3">
-              <div className="hidden md:flex md:flex-1" />
-              {modeSwitcherSlot && (
-                <div className="flex items-center justify-center shrink-0">
-                  {modeSwitcherSlot}
-                </div>
-              )}
-              {/* Desktop source switcher */}
-              <div className="hidden md:flex md:flex-1 items-center justify-end gap-2">
-                <span className="type-label-xs text-text-muted">{dict.maps.sourceLabel}</span>
-                <SegmentedControl<'lemondbd' | 'hens333'>
-                  ariaLabel={dict.maps.providerAria}
-                  size="sm"
-                  value={source}
-                  onChange={(val) => onSourceChange?.(val)}
-                  options={sourceOptions}
-                />
+            {modeSwitcherSlot && (
+              <div className="relative z-20 flex items-center justify-center w-full mb-3">
+                {modeSwitcherSlot}
               </div>
-              {/* Mobile source switcher */}
-              <div className="flex md:hidden items-center justify-center gap-2 w-full pt-0.5">
-                <span className="type-label-2xs text-text-muted">{dict.maps.sourceLabel}</span>
-                <SegmentedControl<'lemondbd' | 'hens333'>
-                  ariaLabel={dict.maps.providerAria}
-                  size="sm"
-                  value={source}
-                  onChange={(val) => onSourceChange?.(val)}
-                  options={sourceOptions}
-                />
-              </div>
-            </div>
+            )}
 
             <div className="flex-1 flex flex-col items-center justify-center space-y-4 py-1">
               <SearchInput
@@ -421,7 +387,6 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                 options={sortOptions}
                 icon={<ArrowDownAZ className="icon-sm" />}
                 ariaLabel={mapsDict.sortAria}
-                align="right"
                 label={
                   <>
                     <span className="hidden sm:inline">
@@ -481,15 +446,26 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
             const panelGroups = rowPanels.get(index);
             const showPanel = !!panelGroups && panelGroups.length > 0;
             const isOpen = showPanel && panelGroups!.some((g) => g.open);
+            const realmRetired = retiredRealms.has(realm);
 
             return (
               <React.Fragment key={realm}>
                 <TileButton
                   onClick={() => toggleRealm(realm)}
-                  aria-expanded={expanded}
-                  aria-controls={`realm-panel-${realmIdentifier}`}
-                  aria-label={`${expanded ? dict.maps.collapseRealmAria : dict.maps.expandRealmAria}: ${realm}`}
-                  className={`group relative aspect-square w-full min-h-12 touch-manipulation overflow-hidden rounded-control border-2 text-left duration-200 ${expanded ? 'border-accent-red' : 'border-border-color hover:border-accent-red/60'}`}
+                  disabled={realmRetired}
+                  press={!realmRetired}
+                  aria-expanded={realmRetired ? undefined : expanded}
+                  aria-controls={realmRetired ? undefined : `realm-panel-${realmIdentifier}`}
+                  aria-label={
+                    realmRetired
+                      ? `${realm}: ${dict.maps.retiredMap}`
+                      : `${expanded ? dict.maps.collapseRealmAria : dict.maps.expandRealmAria}: ${realm}`
+                  }
+                  className={`group relative aspect-square w-full min-h-12 touch-manipulation overflow-hidden rounded-control border-2 text-left duration-200 ${
+                    realmRetired
+                      ? 'border-border-color opacity-50 grayscale'
+                      : expanded ? 'border-accent-red' : 'border-border-color hover:border-accent-red/60'
+                  }`}
                 >
                   {bannerSrc ? (
                     <Img
@@ -509,7 +485,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                     {realm}
                   </h2>
                   <Badge tone="overlay" size="sm" plain className="absolute bottom-2 right-2 text-text-inverted">
-                    {realmMaps.length}
+                    {realmRetired ? dict.maps.retiredMap : realmMaps.length}
                   </Badge>
                 </TileButton>
 

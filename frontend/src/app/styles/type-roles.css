@@ -37,6 +37,12 @@
 @utility type-strong-wide { @apply text-mini sm:text-xs wide:text-sm wide-2k:text-base font-bold; }
 @utility type-strong-wide-sm { @apply text-tiny sm:text-mini wide:text-xs wide-2k:text-sm font-bold; }
 @utility type-strong-wide-caps { @apply text-mini sm:text-xs wide:text-sm wide-2k:text-base font-bold uppercase tracking-wider; }
+/* Overlay text read from a distance (the fullscreen map legend): it keeps growing on wide, 2K and 4K screens,
+   where the picture under it grows too. */
+@utility type-label-screen { @apply text-mini sm:text-xs wide:text-sm wide-2k:text-base wide-4k:text-lg font-bold uppercase tracking-wider; }
+@utility type-body-screen { @apply text-xs sm:text-sm wide:text-base wide-2k:text-lg wide-4k:text-xl leading-relaxed; }
+@utility type-strong-screen { @apply text-xs sm:text-sm wide:text-base wide-2k:text-lg wide-4k:text-xl font-bold; }
+@utility type-caption-screen { @apply text-mini sm:text-xs wide:text-sm wide-2k:text-base wide-4k:text-lg; }
 @utility type-body { @apply text-xs leading-relaxed; }
 @utility type-body-fluid { @apply text-xs sm:text-sm leading-relaxed; }
 @utility type-body-lg { @apply text-sm leading-relaxed; }

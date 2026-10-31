@@ -53,14 +53,10 @@ export function getFeatureLandmarkName(
   }
 }
 
-// Referenced translation keys planned for map legend overlay & source toggle
+// Referenced translation keys planned for map legend overlay
 type _ReferencedMapKeys =
   | 'legendTitle'
   | 'legendToggleAria'
   | 'legendClockTitle'
   | 'legendClockDesc'
-  | 'legendFeatures'
-  | 'sourceLemonDbd'
-  | 'sourceHens'
-  | 'sourceHensClock'
-  | 'providerAria';
+  | 'legendFeatures';

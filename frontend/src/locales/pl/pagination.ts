@@ -11,5 +11,4 @@ export default {
   lastPage: "Ostatnia strona",
   goTo: "Przejdź do",
   navAriaLabel: "Nawigacja po stronach",
-  to: "do",
 } as const;

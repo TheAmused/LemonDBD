@@ -8,6 +8,8 @@ export interface PerkTypeSuggestion {
   type: PerkType;
   /** The search text once the words that led to this suggestion are taken out. */
   remainingSearch: string;
+  /** The text starts the type's name, its label or English key ("hea" -> Healing), not just one of its keywords ("alert" -> Tracking). */
+  byLabel: boolean;
 }
 
 const MAX_TYPE_SUGGESTIONS = 4;
@@ -33,7 +35,7 @@ export function suggestPerkTypes(
   const last = foldSearchText(lastSpace >= 0 ? trimmed.slice(lastSpace) : trimmed);
   const longEnough = (fragment: string) => fragment.length >= 2 || hasCjk(fragment);
 
-  const found: (PerkTypeSuggestion & { labelHit: boolean })[] = [];
+  const found: PerkTypeSuggestion[] = [];
   for (const type of PERK_TYPES) {
     if (!available.includes(type)) continue;
     const terms = vocab.byType[type];
@@ -42,10 +44,10 @@ export function suggestPerkTypes(
     else if (head && longEnough(last) && terms.some((term) => startsLike(term, last))) remainingSearch = head;
     if (remainingSearch === null) continue;
     const fragment = remainingSearch === '' ? whole : last;
-    found.push({ type, remainingSearch, labelHit: startsLike(terms[0], fragment) });
+    // The label and the key, compared directly: byType drops duplicates, so in English (label = key) its
+    // second entry is already a keyword.
+    const names = [foldSearchText(vocab.labels[type]), type];
+    found.push({ type, remainingSearch, byLabel: names.some((name) => startsLike(name, fragment)) });
   }
-  return found
-    .sort((a, b) => Number(b.labelHit) - Number(a.labelHit))
-    .slice(0, MAX_TYPE_SUGGESTIONS)
-    .map(({ type, remainingSearch }) => ({ type, remainingSearch }));
+  return found.sort((a, b) => Number(b.byLabel) - Number(a.byLabel)).slice(0, MAX_TYPE_SUGGESTIONS);
 }

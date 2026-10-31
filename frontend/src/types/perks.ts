@@ -13,7 +13,6 @@ export function toLowercaseRole(role: string): LowercaseRole {
 export type GeneratorMode = 'instant' | 'wheel' | 'slot' | 'tarot' | 'crate';
 export type ScopeFilter = 'all' | 'general';
 export type OwnershipFilter = 'all' | 'owned';
-export type SortField = 'name' | 'character';
 export type SortOrder = 'asc' | 'desc';
 
 export interface Perk {
@@ -158,7 +157,6 @@ export interface PerkDictionary {
     allCharacters?: string;
     generalPerksOnly?: string;
     sortByName?: string;
-    sortByCharacter?: string;
     sortByRole?: string;
     orderAsc?: string;
     orderDesc?: string;

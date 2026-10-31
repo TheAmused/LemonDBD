@@ -19,16 +19,3 @@ export function lastPage(total: number, perPage: number): number {
 export function pageRange(page: number, limit: number, totalResults: number): [first: number, last: number] {
   return [totalResults === 0 ? 0 : (page - 1) * limit + 1, Math.min(page * limit, totalResults)];
 }
-
-/** The page buttons of a numbered pager: first, last and the current page with a neighbour on each side; 'gap' stands for the pages left out. */
-export function pageWindow(page: number, totalPages: number): (number | 'gap')[] {
-  const shown = [1, page - 1, page, page + 1, totalPages].filter((n) => n >= 1 && n <= totalPages);
-  const items: (number | 'gap')[] = [];
-  let previous = 0;
-  for (const n of [...new Set(shown)].sort((a, b) => a - b)) {
-    if (n - previous > 1) items.push('gap');
-    items.push(n);
-    previous = n;
-  }
-  return items;
-}

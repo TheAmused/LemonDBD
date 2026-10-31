@@ -54,7 +54,7 @@ export default {
   config_bug_report_discord: "Auf Discord ankündigen",
   config_bug_report_discord_desc: "Jede neue Fehlermeldung in den Discord-Kanal des Teams senden (braucht einen Webhook, siehe Integrationen).",
   config_bug_report_require_image: "Screenshot erforderlich",
-  config_bug_report_require_image_desc: "Wer einen Fehler meldet, muss mindestens einen Screenshot anhängen, bevor die Meldung gesendet werden kann. Standardmäßig aus, da manche Fehler nichts Fotografierbares haben.",
+  config_bug_report_require_image_desc: "Wer einen Fehler meldet, muss mindestens einen Screenshot anhängen, bevor die Meldung gesendet werden kann.",
   config_bug_report_max_images: "Screenshots pro Fehlermeldung",
   config_bug_report_max_images_desc: "Wie viele Screenshots an eine Fehlermeldung angehängt werden können. Zwischen 1 und 4.",
   config_bug_report_image_max_mb: "Größenlimit für Screenshots in Fehlermeldungen",

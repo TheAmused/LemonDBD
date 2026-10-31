@@ -1,18 +1,16 @@
 // frontend/src/__tests__/unit/perks/perkFiltersBar.test.ts
 //
 // The Perks header, one row: role switch on the left, the plain search in the middle, a "Filters" popover
-// (closed on first render) and the sort menu on the right. The result count sits above the grid. Also covers
-// the CustomDropdown children mode the popover is built on, and the numbered pager the grid uses.
+// (closed on first render) and the sort menu on the right. The result count sits in the pager. Also covers
+// the CustomDropdown children mode the popover is built on, and the compact pager the grid uses.
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
 import pl from '@/locales/pl';
 import type { Dictionary } from '@/locales/types';
 import { PerkFilters } from '@/components/PerkFilters';
-import { PerkResultsCount } from '@/components/perks/PerkResultsCount';
 import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
 import { Pagination } from '@/components/common/Pagination';
-import { pageWindow } from '@/constants/pagination';
 import { typesForRole } from '@/utils/perkSearch/match';
 import { renderWithDictionary } from '../../helpers/renderWithDictionary';
 
@@ -27,8 +25,6 @@ function renderFilters(overrides: Partial<React.ComponentProps<typeof PerkFilter
       setScope: () => {},
       ownershipFilter: 'all',
       setOwnershipFilter: () => {},
-      sortBy: 'name',
-      setSortBy: () => {},
       order: 'asc',
       setOrder: () => {},
       ...overrides,
@@ -51,15 +47,20 @@ describe('PerkFilters header', () => {
 
   it('the header holds no count, and its sort menu shows just the current order', () => {
     const html = renderFilters();
-    assert.ok(!html.includes('<output'), 'the result count lives above the grid, not in the search');
+    assert.ok(!html.includes('<output'), 'the result count lives in the pager, not in the search');
     assert.match(html, />Name A-Z</);
     assert.ok(!html.includes('Sort By: '));
     assert.ok(!html.includes('aria-pressed="true"'), 'no chips for the active filters: the Filters button counts them');
   });
 
-  it('the line above the grid shows the page range', () => {
-    const count = renderWithDictionary(React.createElement(PerkResultsCount, { page: 2, limit: 15, totalResults: 176 }));
-    assert.match(count.replace(/<[^>]+>/g, ''), /Showing 16 to 30 of 176 perks/);
+  it('the compact pager shows the page range next to the per-page picker', () => {
+    const html = renderWithDictionary(
+      React.createElement(Pagination, {
+        variant: 'compact', page: 2, totalPages: 12, totalResults: 176, limit: 15, onPageChange: () => {}, onLimitChange: () => {},
+      })
+    );
+    assert.match(html, /aria-label="Showing 16-30 of 176 perks"/);
+    assert.ok(html.indexOf('aria-label="Per page"') < html.indexOf('aria-label="Showing'));
   });
 
   it('the Filters button counts every filter that is on, Owned and General together once', () => {
@@ -73,7 +74,7 @@ describe('PerkFilters header', () => {
     const html = renderWithDictionary(
       React.createElement(PerkFilters, {
         search: '', setSearch: () => {}, role: 'Killer', setRole: () => {}, scope: 'all', setScope: () => {},
-        ownershipFilter: 'all', setOwnershipFilter: () => {}, sortBy: 'name', setSortBy: () => {}, order: 'asc', setOrder: () => {},
+        ownershipFilter: 'all', setOwnershipFilter: () => {}, order: 'asc', setOrder: () => {},
         activeTypes: ['totem'],
       }),
       { dict: pl as Dictionary, locale: 'pl' }
@@ -151,23 +152,16 @@ describe('Pagination count text on very small screens', () => {
   });
 });
 
-describe('numbered pagination', () => {
-  it('pageWindow keeps first, last and the current page with one neighbour each side', () => {
-    assert.deepEqual(pageWindow(1, 1), [1]);
-    assert.deepEqual(pageWindow(1, 3), [1, 2, 3]);
-    assert.deepEqual(pageWindow(5, 20), [1, 'gap', 4, 5, 6, 'gap', 20]);
-    assert.deepEqual(pageWindow(2, 20), [1, 2, 3, 'gap', 20]);
-    assert.deepEqual(pageWindow(20, 20), [1, 'gap', 19, 20]);
-  });
-
-  it('the numbered variant renders page buttons and marks the current one, with no page field', () => {
+describe('compact pagination', () => {
+  it('the compact variant is only < [page] / total >: the current page is the field, no page number buttons', () => {
     const html = renderWithDictionary(
       React.createElement(Pagination, {
-        variant: 'numbered', page: 5, totalPages: 20, totalResults: 300, limit: 15, onPageChange: () => {}, onLimitChange: () => {},
+        variant: 'compact', page: 5, totalPages: 20, totalResults: 300, limit: 15, onPageChange: () => {}, onLimitChange: () => {},
       })
     );
-    assert.match(html, /aria-current="page"[^>]*>5</);
+    assert.match(html, /id="current-page-input"[^>]*value="5"|value="5"[^>]*id="current-page-input"/);
     assert.match(html, />20</);
-    assert.ok(!html.includes('current-page-input'));
+    assert.ok(!html.includes('aria-current="page"'));
+    assert.ok(!html.includes('aria-label="First Page"'));
   });
 });

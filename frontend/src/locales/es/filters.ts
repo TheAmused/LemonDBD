@@ -21,7 +21,6 @@ export default {
   filterByCharacter: "Buscar...",
   generalPerksOnly: "Solo Habilidades Generales",
   sortByName: "Nombre",
-  sortByCharacter: "Personaje",
   sortByRole: "Rol",
   orderAsc: "A-Z",
   orderDesc: "Z-A",

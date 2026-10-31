@@ -30,7 +30,6 @@ describe('Perks: Filter State & Active Filter Computation', () => {
       search: '',
       scope: 'all' as const,
       ownershipFilter: 'all' as const,
-      sortBy: 'name' as const,
       order: 'asc' as const,
     };
 
@@ -48,11 +47,6 @@ describe('Perks: Filter State & Active Filter Computation', () => {
 
     assert.equal(
       computeHasActiveFilters({ ...defaultState, ownershipFilter: 'owned' }),
-      true
-    );
-
-    assert.equal(
-      computeHasActiveFilters({ ...defaultState, sortBy: 'character' }),
       true
     );
 

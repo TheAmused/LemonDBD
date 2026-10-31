@@ -3,7 +3,8 @@
 //
 // The Perks page header, one row of controls of one height: the role switch on the left, and on the right one
 // group of the plain search, the "Filters" popover (All / Owned / General, perk types) and the sort menu. The
-// Filters button carries the number of filters that are on. Below lg the row wraps.
+// Filters button carries the number of filters that are on. Below lg the row wraps. Centred and capped at the
+// width of the Smash or Pass hub header (max-w-6xl), not stretched across the whole page.
 
 import React, { useMemo } from 'react';
 import { SlidersHorizontal } from 'lucide-react';
@@ -14,7 +15,6 @@ import type {
   RoleCategory,
   ScopeFilter,
   OwnershipFilter,
-  SortField,
   SortOrder,
   Perk,
 } from '@/types/perks';
@@ -33,7 +33,6 @@ export function computeHasActiveFilters(state: {
   search: string;
   scope: ScopeFilter;
   ownershipFilter: OwnershipFilter;
-  sortBy: SortField;
   order: SortOrder;
   types?: readonly string[];
 }): boolean {
@@ -42,7 +41,6 @@ export function computeHasActiveFilters(state: {
     (state.types?.length ?? 0) > 0 ||
     state.scope !== 'all' ||
     state.ownershipFilter !== 'all' ||
-    state.sortBy !== 'name' ||
     state.order !== 'asc'
   );
 }
@@ -56,8 +54,6 @@ interface PerkFiltersProps {
   setScope: (scope: ScopeFilter) => void;
   ownershipFilter: OwnershipFilter;
   setOwnershipFilter: (filter: OwnershipFilter) => void;
-  sortBy: SortField;
-  setSortBy: (val: SortField) => void;
   order: SortOrder;
   setOrder: (val: SortOrder) => void;
   /** The current role's perks: the types offered and the search suggestions come from them. */
@@ -78,8 +74,6 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       setScope,
       ownershipFilter,
       setOwnershipFilter,
-      sortBy,
-      setSortBy,
       order,
       setOrder,
       rolePerks = NO_PERKS,
@@ -111,7 +105,7 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
       aria-label={dict.filters.filtersTitle}
       as="section"
       padding="none"
-      className="relative z-30 flex w-full flex-col bg-bg-surface/90 shadow-xs backdrop-blur-xl transition-colors"
+      className="relative z-30 mx-auto flex w-full max-w-6xl flex-col bg-bg-surface/90 shadow-xs backdrop-blur-xl transition-colors"
     >
       <h1 className="sr-only">{dict.filters.perks}</h1>
 
@@ -177,8 +171,6 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
           </CustomDropdown>
 
           <PerkSortMenu
-            sortBy={sortBy}
-            setSortBy={setSortBy}
             order={order}
             setOrder={setOrder}
             buttonClassName={CONTROL_HEIGHT}

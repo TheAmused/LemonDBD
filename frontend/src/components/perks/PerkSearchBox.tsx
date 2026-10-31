@@ -117,8 +117,9 @@ export const PerkSearchBox: React.FC<PerkSearchBoxProps> = ({
         }}
         onKeyDown={(e) => {
           if (e.key === 'Escape') setOpen(false);
-          // Enter takes the first suggested type, so "healing" + Enter becomes a filter chip.
-          if (e.key === 'Enter' && typeSuggestions.length > 0) {
+          // Enter takes the first suggested type when the text names it ("healing" + Enter becomes a filter chip).
+          // A keyword hit is only offered: "alert" is a Tracking keyword, but also a perk's name.
+          if (e.key === 'Enter' && typeSuggestions[0]?.byLabel) {
             e.preventDefault();
             onTypesChange([...activeTypes, typeSuggestions[0].type]);
             setSearch(typeSuggestions[0].remainingSearch);

@@ -347,6 +347,9 @@
   --spacing-hit-xl: 3.125rem;
   --spacing-hit-2xl: 3.375rem;
 
+  /* The icon of a perk card with its name and types (PerkCard): what the name (two lines) and the type row leave of the cell. */
+  --spacing-perk-card-icon: min(calc(100cqh - 4.75rem), 88cqw);
+
   /* Square sizes of the two spinning wheels: `w-wheel h-wheel sm:w-wheel-sm ...`. */
   --spacing-wheel: min(62vw, 36dvh);
   --spacing-wheel-sm: min(285px, 38dvh);

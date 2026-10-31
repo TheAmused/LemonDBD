@@ -13,39 +13,35 @@ test('PerkFilters is properly exported', () => {
 
 test('computeHasActiveFilters is false for the exact default state (Reset button hidden)', () => {
   assert.strictEqual(
-    computeHasActiveFilters({ search: '', scope: 'all', ownershipFilter: 'all', sortBy: 'name', order: 'asc' }),
+    computeHasActiveFilters({ search: '', scope: 'all', ownershipFilter: 'all', order: 'asc' }),
     false
   );
 });
 
 test('computeHasActiveFilters is true when search text is present', () => {
   assert.strictEqual(
-    computeHasActiveFilters({ search: 'sprint burst', scope: 'all', ownershipFilter: 'all', sortBy: 'name', order: 'asc' }),
+    computeHasActiveFilters({ search: 'sprint burst', scope: 'all', ownershipFilter: 'all', order: 'asc' }),
     true
   );
 });
 
 test('computeHasActiveFilters is true when the General Only checkbox is on', () => {
   assert.strictEqual(
-    computeHasActiveFilters({ search: '', scope: 'general', ownershipFilter: 'all', sortBy: 'name', order: 'asc' }),
+    computeHasActiveFilters({ search: '', scope: 'general', ownershipFilter: 'all', order: 'asc' }),
     true
   );
 });
 
 test('computeHasActiveFilters is true when the ownership switch is set to Owned', () => {
   assert.strictEqual(
-    computeHasActiveFilters({ search: '', scope: 'all', ownershipFilter: 'owned', sortBy: 'name', order: 'asc' }),
+    computeHasActiveFilters({ search: '', scope: 'all', ownershipFilter: 'owned', order: 'asc' }),
     true
   );
 });
 
-test('computeHasActiveFilters is true for a non-default sort field or order', () => {
+test('computeHasActiveFilters is true for a non-default sort order', () => {
   assert.strictEqual(
-    computeHasActiveFilters({ search: '', scope: 'all', ownershipFilter: 'all', sortBy: 'character', order: 'asc' }),
-    true
-  );
-  assert.strictEqual(
-    computeHasActiveFilters({ search: '', scope: 'all', ownershipFilter: 'all', sortBy: 'name', order: 'desc' }),
+    computeHasActiveFilters({ search: '', scope: 'all', ownershipFilter: 'all', order: 'desc' }),
     true
   );
 });

@@ -77,10 +77,11 @@ describe('Pagination', () => {
     assert.ok(!embedded.includes('mt-4'));
   });
 
-  it('offers exactly the shared page sizes, through the shared Select', () => {
+  it('picks the page size through the site dropdown, not a native select', () => {
     const html = render();
-    for (const size of PAGE_SIZE_OPTIONS) assert.ok(html.includes(`<option value="${size}"`), String(size));
-    assert.match(html, /<select[^>]*class="[^"]*rounded-control[^"]*"/);
+    assert.ok(!html.includes('<select'));
+    assert.match(html, /<button type="button" aria-expanded="false" aria-label="Per page"/);
+    assert.match(html, new RegExp(`<span class="truncate">${DEFAULT_PAGE_SIZE}</span>`));
   });
 
   it('every list default is one of the offered sizes', () => {

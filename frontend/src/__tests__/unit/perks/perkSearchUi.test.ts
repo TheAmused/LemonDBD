@@ -63,14 +63,9 @@ describe('perk type search UI', () => {
     assert.match(html, /aria-haspopup="true"/);
   });
 
-  it('the perk modal lists the perk\'s types, primary first, as buttons only when they can filter', () => {
-    const plain = renderWithDictionary(React.createElement(PerkTypeBadges, { perk: DEJA_VU }));
-    assert.ok(plain.indexOf('Generator') < plain.indexOf('Tracking'));
-    assert.ok(!plain.includes('aria-pressed'));
-    const clickable = renderWithDictionary(
-      React.createElement(PerkTypeBadges, { perk: DEJA_VU, onSelectType: noop, activeTypes: ['tracking'] })
-    );
-    assert.equal((clickable.match(/aria-pressed="true"/g) || []).length, 1);
-    assert.equal((clickable.match(/aria-pressed="false"/g) || []).length, 1);
+  it('a perk card lists the perk\'s types, primary first, as plain labels', () => {
+    const html = renderWithDictionary(React.createElement(PerkTypeBadges, { perk: DEJA_VU }));
+    assert.ok(html.indexOf('Generator') < html.indexOf('Tracking'));
+    assert.ok(!html.includes('<button'));
   });
 });

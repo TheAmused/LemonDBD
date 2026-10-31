@@ -61,11 +61,8 @@ const typeRank = (entry: IndexedPerk, types: readonly PerkType[]) =>
  * The rank of `perk` for `query` plus the strict `types` filter (type chips),
  * or null when it does not match.
  *
- * A perk matches when it has every strict type and then either
- * - every search word is found in its name, alias, character or real name, or
- * - it has one type of every type group the search named (and is general, if
- *   "general" was named) and the remaining words are found as above.
- * The first branch means naming a type never hides a perk found by its name.
+ * A perk matches when it has every strict type (chips, `type:` terms) and every
+ * search word is found in its name, alias, character or real name.
  */
 export function rankPerk(perk: Perk, query: ParsedPerkQuery, types: readonly PerkType[] = []): number | null {
   const entry = indexOf(perk);
@@ -75,22 +72,13 @@ export function rankPerk(perk: Perk, query: ParsedPerkQuery, types: readonly Per
 
   const words = query.words.map(compactSearchText);
   if (words.length === 0) return strict.length > 0 ? typeRank(entry, strict) : RANK.otherText;
+  if (!matchesWords(entry, words)) return null;
 
-  if (matchesWords(entry, words)) {
-    const whole = words.join('');
-    if (entry.name === whole) return RANK.exactName;
-    if (entry.name.startsWith(whole)) return RANK.namePrefix;
-    if (entry.name.includes(whole)) return RANK.nameContains;
-    return RANK.otherText;
-  }
-
-  const namesFacet = query.typeGroups.length > 0 || query.general;
-  if (!namesFacet) return null;
-  if (query.general && !entry.general) return null;
-  if (!query.typeGroups.every((group) => group.some((type) => entry.types.includes(type)))) return null;
-  if (!matchesWords(entry, query.restWords)) return null;
-  const named = query.typeGroups.flat();
-  return named.length > 0 ? typeRank(entry, named) : RANK.otherText;
+  const whole = words.join('');
+  if (entry.name === whole) return RANK.exactName;
+  if (entry.name.startsWith(whole)) return RANK.namePrefix;
+  if (entry.name.includes(whole)) return RANK.nameContains;
+  return RANK.otherText;
 }
 
 /** The perks that match, in their original order, each with its rank. */
@@ -109,8 +97,8 @@ export function searchPerks<T extends Perk>(
 }
 
 /**
- * A type the search asks for that no perk of `role` has but the other role's
- * perks do, e.g. "exhaustion" on the Killer tab. `typesByRole` comes from the
+ * A type filter (a chip or `type:`/`#`) that no perk of `role` has but the other
+ * role's perks do, e.g. an Exhaustion chip on the Killer tab. `typesByRole` comes from the
  * catalog (perkTypesByRole). Null when there is no such conflict.
  */
 export function roleOnlyConflict(
@@ -120,11 +108,8 @@ export function roleOnlyConflict(
   typesByRole: Readonly<Record<RoleCategory, ReadonlySet<PerkType>>>
 ): { type: PerkType; role: RoleCategory } | null {
   const other: RoleCategory = role === 'Killer' ? 'Survivor' : 'Killer';
-  const groups = [...types.map((type) => [type]), ...query.explicitTypes.map((type) => [type]), ...query.typeGroups];
-  for (const group of groups) {
-    if (group.some((type) => typesByRole[role].has(type))) continue;
-    const elsewhere = group.find((type) => typesByRole[other].has(type));
-    if (elsewhere) return { type: elsewhere, role: other };
+  for (const type of [...types, ...query.explicitTypes]) {
+    if (!typesByRole[role].has(type) && typesByRole[other].has(type)) return { type, role: other };
   }
   return null;
 }

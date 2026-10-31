@@ -1,17 +1,11 @@
 // frontend/src/utils/perkSearch/parse.ts
-import { isPerkType, type PerkType } from '@/utils/perkTypes';
-import { compactSearchText, foldSearchText, hasCjk } from './normalize';
+import type { PerkType } from '@/utils/perkTypes';
+import { foldSearchText, hasCjk } from './normalize';
 import { TYPO_MIN_LENGTH, type PerkFacet, type PerkTypeVocabulary } from './vocabulary';
 
 export interface ParsedPerkQuery {
-  /** Every free-text word, folded (`type:`/`#` terms taken out). */
+  /** Every free-text word, folded (`type:`/`#` terms taken out). Matched against names, aliases and characters only. */
   words: string[];
-  /** The words left once the ones naming a type or "general" are taken out. */
-  restWords: string[];
-  /** Types named implicitly. Each group is one word's meaning (any of its types); all groups must hold. */
-  typeGroups: PerkType[][];
-  /** "general" was named implicitly. */
-  general: boolean;
   /** Types asked for with `type:healing` or `#healing`: strict filters. */
   explicitTypes: PerkType[];
   /** `type:general` / `#general`: a strict filter. */
@@ -20,9 +14,6 @@ export interface ParsedPerkQuery {
 
 export const EMPTY_QUERY: ParsedPerkQuery = {
   words: [],
-  restWords: [],
-  typeGroups: [],
-  general: false,
   explicitTypes: [],
   explicitGeneral: false,
 };
@@ -51,12 +42,12 @@ export function lookupFacets(term: string, vocab: PerkTypeVocabulary): ReadonlyS
 }
 
 /**
- * Splits a search into free text and the perk types it names.
+ * Splits a search into free text and the `type:`/`#` terms.
  *
- * "hex ruin" -> type hex + text "ruin"; "gen aura" -> types generator and aura;
- * "type:chase sprint" -> strict type chase + text "sprint"; "exaustion" ->
- * type exhaustion (one typo). Matching keeps every literal text match as well
- * (see searchPerks), so naming a type never hides a perk found by its name.
+ * "type:chase sprint" -> strict type chase + text "sprint"; "#exaustion" ->
+ * type exhaustion (one typo). Plain words never stand for a type: "alert" finds
+ * the perk Alert, not every Tracking perk. A type is picked on purpose, from
+ * the suggestions under the field or as a chip (see suggestPerkTypes).
  */
 export function parsePerkQuery(raw: string, vocab: PerkTypeVocabulary): ParsedPerkQuery {
   const explicitTypes = new Set<PerkType>();
@@ -76,52 +67,8 @@ export function parsePerkQuery(raw: string, vocab: PerkTypeVocabulary): ParsedPe
     return ' ';
   });
 
-  const words = [...foldSearchText(freeText).split(' '), ...leftovers].filter(Boolean);
-  const restWords: string[] = [];
-  const groups = new Map<string, PerkType[]>();
-  let general = false;
-  const take = (facets: ReadonlySet<PerkFacet>) => {
-    const types = [...facets].filter(isPerkType);
-    if (facets.has('general')) general = true;
-    if (types.length > 0) groups.set([...types].sort().join('|'), types);
-  };
-
-  let i = 0;
-  while (i < words.length) {
-    let matched = 0;
-    for (let len = Math.min(vocab.maxWords, words.length - i); len >= 1 && !matched; len -= 1) {
-      const facets = vocab.phrases.get(words.slice(i, i + len).join(' '));
-      if (facets) {
-        take(facets);
-        matched = len;
-      }
-    }
-    if (matched) {
-      i += matched;
-      continue;
-    }
-    const word = words[i];
-    if (hasCjk(word)) {
-      let rest = word;
-      for (const [phrase, facets] of vocab.cjk) {
-        if (!rest.includes(phrase)) continue;
-        take(facets);
-        rest = rest.split(phrase).join(' ');
-      }
-      restWords.push(...rest.split(' ').filter(Boolean));
-    } else {
-      const facets = lookupFacets(word, vocab);
-      if (facets) take(facets);
-      else restWords.push(word);
-    }
-    i += 1;
-  }
-
   return {
-    words,
-    restWords: restWords.map(compactSearchText),
-    typeGroups: [...groups.values()],
-    general,
+    words: [...foldSearchText(freeText).split(' '), ...leftovers].filter(Boolean),
     explicitTypes: [...explicitTypes],
     explicitGeneral,
   };

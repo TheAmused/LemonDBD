@@ -3,8 +3,9 @@
 //
 // The perk grid filters the full catalog in memory: the page already holds it
 // (the role and owned counts come from it), so search, type filters, sorting
-// and paging never wait on the network. The search understands perk types
-// ("healing", "gens", "type:chase") -- see utils/perkSearch.
+// and paging never wait on the network. Search words match names, aliases and
+// characters; types come from the chips, the suggestions or `type:chase` / `#chase`
+// -- see utils/perkSearch.
 
 import React, { Suspense, useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
@@ -12,7 +13,6 @@ import { useSearchParams } from 'next/navigation';
 import { PerkFilters } from '@/components/PerkFilters';
 import { PerkCard } from '@/components/PerkCard';
 import type { PerkTypeCounts } from '@/components/perks/PerkFilterPanel';
-import { PerkResultsCount } from '@/components/perks/PerkResultsCount';
 import { PerksGridSkeleton } from '@/components/PerksSkeleton';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Pagination } from '@/components/common/Pagination';
@@ -25,7 +25,6 @@ import type {
   RoleCategory,
   ScopeFilter,
   OwnershipFilter,
-  SortField,
   SortOrder,
 } from '@/types/perks';
 import { useImagePrefetch } from '@/components/common/ImagePreloadProvider';
@@ -73,7 +72,6 @@ function PerksContent() {
   const [ownershipFilter, setOwnershipFilter] = useState<OwnershipFilter>('all');
   const [search, setSearch] = useState<string>('');
   const [typeParam, setTypeParam] = useState<string>(paramTypes);
-  const [sortBy, setSortBy] = useState<SortField>('name');
   const [order, setOrder] = useState<SortOrder>('asc');
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(DEFAULT_PERKS_PER_PAGE);
@@ -93,12 +91,6 @@ function PerksContent() {
     setPage(1);
     writeTypeParam(next);
   }, []);
-  const addType = useCallback(
-    (type: PerkType) => {
-      if (!types.includes(type)) setTypes([...types, type]);
-    },
-    [types, setTypes]
-  );
 
   // Shares its cache entry with the tier lists and the profile showcase.
   const { perks: allPerksList, loading, error, refresh } = useCatalogPerks(locale);
@@ -114,8 +106,8 @@ function PerksContent() {
   );
   const sortedPerks = useMemo(() => {
     const matched = searchPerks(scopedPerks, query, types).map((hit) => hit.perk);
-    return sortPerks(matched, sortBy, order, locale);
-  }, [scopedPerks, query, types, sortBy, order, locale]);
+    return sortPerks(matched, order, locale);
+  }, [scopedPerks, query, types, order, locale]);
   // Per type: how many perks stay if it is added to the current search and filters (types combine with AND).
   const typeCounts = useMemo(() => {
     const counts: PerkTypeCounts = {};
@@ -136,14 +128,19 @@ function PerksContent() {
   const typesByRole = useMemo(() => perkTypesByRole(allPerksList), [allPerksList]);
   const conflict = totalResults === 0 ? roleOnlyConflict(query, types, role, typesByRole) : null;
 
+  // The whole page scrolls (the shell's <main>), not a box inside it. A full page of tiles is sized to fill the
+  // screen between the header and the pager; when that would make them smaller than MIN_ROW_HEIGHT_PX (a big
+  // per-page choice, a phone) they keep that size and the page simply gets longer.
   const [rowHeightPx, setRowHeightPx] = useState<number | null>(null);
-  const [needsScroll, setNeedsScroll] = useState<boolean>(false);
   const gridResizeObserverRef = useRef<ResizeObserver | null>(null);
   const gridNodeRef = useRef<HTMLDivElement | null>(null);
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const pagerRef = useRef<HTMLDivElement | null>(null);
   // Rows are sized for a full page, so a short page (a search, the last page) keeps the same tiles and sits at the top.
   const pageSizeRef = useRef<number>(DEFAULT_PERKS_PER_PAGE);
   const GRID_ROW_GAP_PX = 12;
-  const MIN_ROW_HEIGHT_PX = 120;
+  // A tile never gets smaller than this: icon, two lines of name and the type row stay readable.
+  const MIN_ROW_HEIGHT_PX = 200;
   const MAX_ROW_ASPECT = 2.2;
 
   const computeGridMetrics = useCallback((node: HTMLDivElement) => {
@@ -155,17 +152,29 @@ function PerksContent() {
     const colWidthPx = (node.clientWidth - GRID_ROW_GAP_PX * (colCount - 1)) / colCount;
     const maxRowFromWidth = colWidthPx > 0 ? colWidthPx * MAX_ROW_ASPECT : null;
 
-    const h = node.clientHeight;
-    const availableH = Math.max(0, h - 4);
-    const heightBasedRow = availableH > 0 ? Math.max(0, (availableH - GRID_ROW_GAP_PX * (rows - 1)) / rows) : null;
+    // The screen height left for the grid: the scrolling <main>, minus what sits above the grid (in content
+    // coordinates, so a scrolled page measures the same), its bottom padding, and the pager with the gap before it.
+    const main = node.closest('main');
+    let heightBasedRow: number | null = null;
+    if (main) {
+      const gridTop = node.getBoundingClientRect().top - main.getBoundingClientRect().top + main.scrollTop;
+      const mainBottomPad = parseFloat(getComputedStyle(main).paddingBottom) || 0;
+      const column = node.closest<HTMLElement>('[data-perks-column]');
+      const columnGap = column ? parseFloat(getComputedStyle(column).rowGap) || 0 : 0;
+      const pagerH = pagerRef.current ? pagerRef.current.getBoundingClientRect().height + columnGap : 0;
+      // 4px spare: a hovered tile on the last row grows a little and must not tip the page into scrolling.
+      const availableH = main.clientHeight - gridTop - mainBottomPad - pagerH - 4;
+      if (availableH > 0) heightBasedRow = Math.max(0, (availableH - GRID_ROW_GAP_PX * (rows - 1)) / rows);
+    }
 
     const upperBound = maxRowFromWidth ?? Infinity;
     const base = heightBasedRow ?? upperBound;
     const clamped = Math.min(Math.max(base, MIN_ROW_HEIGHT_PX), upperBound);
-    setRowHeightPx(Number.isFinite(clamped) && clamped > 0 ? clamped : null);
-    setNeedsScroll(heightBasedRow !== null && clamped > heightBasedRow);
+    setRowHeightPx(Number.isFinite(clamped) && clamped > 0 ? Math.floor(clamped) : null);
   }, []);
 
+  // ResizeObserver reports every observed box once on observe: that first report is the first measurement.
+  // The header (it wraps on narrow screens), the scroll area and the pager move or size the grid too.
   const measureGridArea = useCallback((node: HTMLDivElement | null) => {
     if (gridResizeObserverRef.current) {
       gridResizeObserverRef.current.disconnect();
@@ -173,11 +182,20 @@ function PerksContent() {
     }
     gridNodeRef.current = node;
     if (!node) return;
-    computeGridMetrics(node);
     const ro = new ResizeObserver(() => computeGridMetrics(node));
     ro.observe(node);
+    const main = node.closest('main');
+    if (main) ro.observe(main);
+    if (headerRef.current) ro.observe(headerRef.current);
+    if (pagerRef.current) ro.observe(pagerRef.current);
     gridResizeObserverRef.current = ro;
   }, [computeGridMetrics]);
+
+  // The pager mounts in the same commit as the grid but after it, so it joins the observer when its own ref attaches.
+  const attachPager = useCallback((node: HTMLDivElement | null) => {
+    pagerRef.current = node;
+    if (node) gridResizeObserverRef.current?.observe(node);
+  }, []);
 
   useEffect(() => {
     pageSizeRef.current = limit;
@@ -191,6 +209,11 @@ function PerksContent() {
       gridResizeObserverRef.current?.disconnect();
     };
   }, []);
+
+  // A new page starts at its top: the pager sits below the grid, so a long page would otherwise open scrolled down.
+  useEffect(() => {
+    gridNodeRef.current?.closest('main')?.scrollTo({ top: 0 });
+  }, [currentPage]);
 
   const { prefetchPerkIcons } = useImagePrefetch();
 
@@ -215,7 +238,6 @@ function PerksContent() {
     setSearch('');
     setScope('all');
     setOwnershipFilter('all');
-    setSortBy('name');
     setOrder('asc');
     setTypes([]);
     setPage(1);
@@ -231,8 +253,8 @@ function PerksContent() {
   const fetchError = Boolean(error) && allPerksList.length === 0;
 
   return (
-    <div className="relative z-10 flex h-full min-h-0 flex-col overflow-hidden gap-3 sm:gap-4">
-      <div className="shrink-0">
+    <div data-perks-column className="relative z-10 flex flex-1 flex-col gap-3 sm:gap-4">
+      <div ref={headerRef} className="shrink-0">
         <PerkFilters
           search={search}
           setSearch={(v) => {
@@ -241,8 +263,6 @@ function PerksContent() {
           }}
           role={role}
           setRole={handleRoleChange}
-          sortBy={sortBy}
-          setSortBy={(s) => setSortBy(s)}
           order={order}
           setOrder={(o) => setOrder(o)}
           scope={scope}
@@ -263,11 +283,7 @@ function PerksContent() {
         />
       </div>
 
-      {!loading && !retrying && perks.length > 0 && (
-        <PerkResultsCount page={currentPage} limit={limit} totalResults={totalResults} />
-      )}
-
-      <div className={`flex min-h-0 flex-1 flex-col overflow-x-hidden ${needsScroll ? "overflow-y-auto" : "overflow-y-hidden"}`}>
+      <div className="flex flex-1 flex-col">
         {fetchError ? (
           <div className="flex flex-col items-center justify-center gap-4 p-12 text-center my-auto">
             <p className="text-text-secondary text-base">{dict.filters.loadError}</p>
@@ -305,10 +321,10 @@ function PerksContent() {
             }}
           />
         ) : (
-          <section aria-label={dict.filters.viewMode} className="flex min-h-0 flex-1 flex-col">
+          <section aria-label={dict.filters.viewMode}>
             <div
               ref={measureGridArea}
-              className="grid min-h-0 w-full flex-1 grid-cols-3 phone-lg:grid-cols-4 sm:grid-cols-5 gap-3"
+              className="grid w-full grid-cols-3 phone-lg:grid-cols-4 sm:grid-cols-5 gap-3"
               style={rowHeightPx ? { gridAutoRows: `${rowHeightPx}px` } : undefined}
             >
               {perks.map((perk, idx) => (
@@ -317,6 +333,7 @@ function PerksContent() {
                   perk={perk}
                   size="fill"
                   showName
+                  showTypes
                   onSelect={setSelectedPerk}
                 />
               ))}
@@ -326,9 +343,9 @@ function PerksContent() {
       </div>
 
       {!loading && perks.length > 0 && (
-        <div className="shrink-0 w-full">
+        <div ref={attachPager} className="shrink-0 w-full">
           <Pagination
-            variant="numbered"
+            variant="compact"
             page={currentPage}
             totalPages={totalPages}
             totalResults={totalResults}
@@ -343,15 +360,7 @@ function PerksContent() {
       )}
 
       {selectedPerk && (
-        <PerkModal
-          perk={selectedPerk}
-          onClose={() => setSelectedPerk(null)}
-          activeTypes={types}
-          onSelectType={(type) => {
-            addType(type);
-            setSelectedPerk(null);
-          }}
-        />
+        <PerkModal perk={selectedPerk} onClose={() => setSelectedPerk(null)} />
       )}
     </div>
   );

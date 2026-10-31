@@ -21,7 +21,6 @@ export default {
   filterByCharacter: "検索...",
   generalPerksOnly: "共通パークのみ表示",
   sortByName: "名前",
-  sortByCharacter: "キャラクター",
   sortByRole: "陣営",
   orderAsc: "A-Z",
   orderDesc: "Z-A",

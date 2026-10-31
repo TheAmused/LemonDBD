@@ -17,6 +17,7 @@ describe('Preferences synchronization and database precedence', () => {
     music: true,
     nsfw: false,
     backgroundAnimation: 'on',
+    gifs: true,
     chosenAt: 1000,
   };
 
@@ -26,6 +27,7 @@ describe('Preferences synchronization and database precedence', () => {
     music: false,
     nsfw: true,
     backgroundAnimation: 'eco',
+    gifs: false,
     chosenAt: 2000,
   };
 
@@ -45,10 +47,12 @@ describe('Preferences synchronization and database precedence', () => {
     const defaults = defaultPreferences(false);
     assert.equal(defaults.effects, true);
     assert.equal(defaults.backgroundAnimation, 'on');
+    assert.equal(defaults.gifs, true);
 
     const reducedDefaults = defaultPreferences(true);
     assert.equal(reducedDefaults.effects, false);
     assert.equal(reducedDefaults.backgroundAnimation, 'eco');
+    assert.equal(reducedDefaults.gifs, true);
   });
 
   it('exports valid localStorage keys for preferences and configured status', () => {
@@ -63,6 +67,7 @@ describe('Preferences synchronization and database precedence', () => {
       music: false,
       nsfw: true,
       background_animation: 'eco',
+      gifs: false,
       chosen_at: 1700000000,
     };
 
@@ -73,8 +78,14 @@ describe('Preferences synchronization and database precedence', () => {
       music: false,
       nsfw: true,
       backgroundAnimation: 'eco',
+      gifs: false,
       chosenAt: 1700000000,
     });
+  });
+
+  it('fromRemote keeps GIFs on when an older server reply does not carry the field', () => {
+    const legacy = { effects: true, sounds: true, music: true, nsfw: false, background_animation: 'on', chosen_at: 5 };
+    assert.equal(fromRemote(legacy as unknown as RemoteUserPreferences).gifs, true);
   });
 
   it('writeLocalPreferences dispatches nsfw-pref-change and preferences-changed with real EventTarget without unbounded loops', () => {

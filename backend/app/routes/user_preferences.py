@@ -33,6 +33,7 @@ def write_preferences():
         music=payload.music,
         nsfw=payload.nsfw,
         background_animation=payload.background_animation,
+        gifs=payload.gifs,
         chosen_at=payload.chosen_at,
     )
     return jsonify({"data": data}), 200

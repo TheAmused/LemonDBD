@@ -54,7 +54,7 @@ export default {
   config_bug_report_discord: "Ogłaszaj na Discordzie",
   config_bug_report_discord_desc: "Wysyłaj każde nowe zgłoszenie błędu na kanał Discord zespołu (wymaga webhooka, zobacz Integracje).",
   config_bug_report_require_image: "Wymagaj zrzutu ekranu",
-  config_bug_report_require_image_desc: "Zgłaszający musi dołączyć co najmniej jeden zrzut ekranu, żeby wysłać zgłoszenie błędu. Domyślnie wyłączone, bo część błędów nie ma co fotografować.",
+  config_bug_report_require_image_desc: "Zgłaszający musi dołączyć co najmniej jeden zrzut ekranu, żeby wysłać zgłoszenie błędu.",
   config_bug_report_max_images: "Zrzuty ekranu w zgłoszeniu błędu",
   config_bug_report_max_images_desc: "Ile zrzutów ekranu można dołączyć do zgłoszenia błędu. Od 1 do 4.",
   config_bug_report_image_max_mb: "Limit rozmiaru zrzutu w zgłoszeniu",

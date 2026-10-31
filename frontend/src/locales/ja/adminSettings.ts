@@ -54,7 +54,7 @@ export default {
   config_bug_report_discord: "Discord に通知",
   config_bug_report_discord_desc: "新しいバグ報告をすべてチームの Discord チャンネルに投稿します（Webhook が必要です。「外部連携」を参照）。",
   config_bug_report_require_image: "スクリーンショットを必須にする",
-  config_bug_report_require_image_desc: "バグ報告を送信する前に、スクリーンショットを1枚以上添付する必要があります。写真に撮れない不具合もあるため、初期設定はオフです。",
+  config_bug_report_require_image_desc: "バグ報告を送信する前に、スクリーンショットを1枚以上添付する必要があります。",
   config_bug_report_max_images: "バグ報告のスクリーンショット枚数",
   config_bug_report_max_images_desc: "バグ報告に添付できるスクリーンショットの枚数です。1枚から4枚までです。",
   config_bug_report_image_max_mb: "バグ報告のスクリーンショットのサイズ上限",

@@ -15,6 +15,7 @@ export default {
   groupDatabase: "データベース",
   groupExtras: "コミュニティ＆ゲーム",
   admin: "管理者",
+  roleUser: "ユーザー",
   adminControlCenter: "管理コントロールセンター",
   signIn: "ログイン",
   signOut: "ログアウト",

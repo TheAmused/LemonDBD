@@ -76,7 +76,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
                 <Badge
                   tone={user.role === 'admin' ? 'red' : 'neutral'} size="xs" square className="inline-block"
                 >
-                  {user.role}
+                  {user.role === 'admin' ? dict.user.roleAdmin : dict.sidebar.roleUser}
                 </Badge>
               </div>
             </Link>

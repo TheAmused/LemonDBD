@@ -7,6 +7,7 @@ export interface RemoteUserPreferences {
   music: boolean;
   nsfw: boolean;
   background_animation: 'on' | 'eco' | 'off';
+  gifs: boolean;
   chosen_at: number;
 }
 

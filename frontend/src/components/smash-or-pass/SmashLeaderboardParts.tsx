@@ -15,7 +15,7 @@ import { formatMessage } from '@/utils/i18nFormat';
 import { Surface } from '@/components/common/Surface';
 import { Badge } from '@/components/common/Badge';
 import { TileButton } from '@/components/common/TileButton';
-import { Img } from '@/components/common/Img';
+import { MotionImg } from '@/components/common/MotionImg';
 
 export interface TierConfig {
   name: string;
@@ -150,7 +150,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
 
         {/* Avatar Portrait */}
         <Surface tone="elevated" padding="none" className="relative h-13 w-13 sm:h-14 sm:w-14 overflow-hidden shrink-0 shadow-inner group-hover:border-accent-red/50 transition-colors">
-          <Img
+          <MotionImg
             src={avatarSrc}
             alt=""
             loading="lazy"

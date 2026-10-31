@@ -11,6 +11,7 @@ interface InteractiveDragBackgroundProps {
   actionTrigger?: DragAction | null;
   triggerKey?: number;
   isPaused?: boolean;
+  showEmbers?: boolean;
 }
 
 export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps> = ({
@@ -20,6 +21,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
   actionTrigger = null,
   triggerKey = 0,
   isPaused = false,
+  showEmbers = true,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
@@ -34,6 +36,7 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
     actionTrigger: null,
     triggerKey: 0,
     isPaused: false,
+    showEmbers: true,
   });
 
   const isLoopActiveRef = useRef(false);
@@ -44,10 +47,11 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
     stateRef.current.dragY = dragY;
     stateRef.current.isDragging = isDragging;
     stateRef.current.isPaused = isPaused;
+    stateRef.current.showEmbers = showEmbers;
     if (!isPaused) {
       kickRenderRef.current();
     }
-  }, [dragX, dragY, isDragging, isPaused]);
+  }, [dragX, dragY, isDragging, isPaused, showEmbers]);
 
   useEffect(() => {
     stateRef.current.actionTrigger = actionTrigger;

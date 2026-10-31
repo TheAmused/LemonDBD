@@ -21,6 +21,7 @@ def get_user_preferences(user_id: int) -> dict[str, Any] | None:
             "music": smash_row.music_enabled,
             "nsfw": False,
             "background_animation": "on",
+            "gifs": True,
             "chosen_at": smash_row.chosen_at,
         }
     return None
@@ -33,6 +34,7 @@ def save_user_preferences(
     music: bool,
     nsfw: bool,
     background_animation: str,
+    gifs: bool | None,
     chosen_at: int,
 ) -> dict[str, Any]:
     """Stores the preferences unless the account already holds a newer choice.
@@ -57,6 +59,8 @@ def save_user_preferences(
     row.music_enabled = music
     row.nsfw_enabled = nsfw
     row.background_animation = background_animation
+    if gifs is not None:
+        row.gifs_enabled = gifs
     row.chosen_at = chosen_at
 
     # Dual-write to smash_user_preferences to maintain legacy backward compatibility

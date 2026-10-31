@@ -28,6 +28,7 @@ class UserPreference(Base):
     music_enabled: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     nsfw_enabled: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     background_animation: Mapped[str] = mapped_column(String(16), default="on", nullable=False)
+    gifs_enabled: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     chosen_at: Mapped[int] = mapped_column(BigInteger, nullable=False)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
@@ -40,5 +41,6 @@ class UserPreference(Base):
             "music": self.music_enabled,
             "nsfw": self.nsfw_enabled,
             "background_animation": self.background_animation,
+            "gifs": self.gifs_enabled,
             "chosen_at": self.chosen_at,
         }

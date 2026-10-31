@@ -3,11 +3,11 @@
 
 import React from 'react';
 import {
+  CampfireIcon,
   ClapperboardIcon,
-  GlobeIcon,
+  ImageIcon,
   MatureIcon,
   MusicIcon,
-  HeartIcon,
   VolumeIcon,
 } from '@/components/icons/DbdIcons';
 import { Surface } from '@/components/common/Surface';
@@ -16,22 +16,25 @@ import { Button } from '@/components/common/Button';
 import { usePreferences, type BackgroundAnimationMode } from '@/hooks/usePreferences';
 import { useDictionary } from '@/context/DictionaryContext';
 
-interface SectionCardHeaderProps {
+interface SettingRowProps {
   icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' | 'false' }>;
   title: string;
-  description?: string;
+  description: string;
+  children: React.ReactNode;
 }
 
-function SectionCardHeader({ icon: Icon, title, description }: SectionCardHeaderProps) {
+/** One setting: icon, name and explanation on the left, its control on the right (wrapping below when narrow). */
+function SettingRow({ icon: Icon, title, description, children }: SettingRowProps) {
   return (
-    <div className="space-y-1 pb-3 border-b border-border-subtle">
-      <div className="flex items-center gap-2.5">
-        <Icon className="icon-lg text-accent-red" aria-hidden="true" />
-        <h2 className="type-section-title text-text-primary">{title}</h2>
+    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 py-4 first:pt-0 last:pb-0">
+      <div className="min-w-0 flex-1 basis-60 space-y-1">
+        <div className="flex items-center gap-2">
+          <Icon className="icon-md text-accent-red" aria-hidden="true" />
+          <span className="type-strong-fluid text-text-primary">{title}</span>
+        </div>
+        <p className="type-body-fluid text-text-secondary">{description}</p>
       </div>
-      {description && (
-        <p className="type-body-2xs text-text-muted">{description}</p>
-      )}
+      {children}
     </div>
   );
 }
@@ -48,138 +51,66 @@ export function SettingsClient() {
 
   return (
     <div className="relative z-10 mx-auto my-auto flex w-full max-w-4xl flex-col gap-6 py-6 sm:py-8">
-      {/* 1. Global Site Preferences (Applies site-wide across all pages) */}
-      <Surface tone="flat" padding="lg" className="space-y-5">
-        <SectionCardHeader
-          icon={GlobeIcon}
-          title={dict.settings.sectionGlobalTitle}
-          description={dict.settings.sectionGlobalDesc}
-        />
+      <Surface tone="flat" padding="lg" className="divide-y divide-border-subtle/60">
+        <SettingRow icon={CampfireIcon} title={dict.settings.campfire} description={dict.settings.campfireDesc}>
+          <fieldset
+            aria-label={dict.settings.campfire}
+            className="flex shrink-0 items-center gap-2 border-0 p-0 m-0"
+          >
+            {campfireModes.map(({ mode, label }) => (
+              <Button
+                key={mode}
+                variant={preferences.backgroundAnimation === mode ? 'primary' : 'secondary'}
+                size="sm"
+                aria-pressed={preferences.backgroundAnimation === mode}
+                onClick={() => void updatePreferences({ backgroundAnimation: mode })}
+                className="min-h-11 min-w-18"
+              >
+                {label}
+              </Button>
+            ))}
+          </fieldset>
+        </SettingRow>
 
-        <div className="space-y-4 divide-y divide-border-subtle/60">
-          {/* Campfire Particles (Ambient Background) */}
-          <div className="pt-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="space-y-1">
-              <div className="flex items-center gap-1.5">
-                <ClapperboardIcon className="icon-md text-accent-red" aria-hidden="true" />
-                <span className="type-strong-fluid text-text-primary">
-                  {dict.settings.campfire}
-                </span>
-              </div>
-              <p className="type-body-fluid text-text-secondary">
-                {dict.settings.campfireDesc}
-              </p>
-            </div>
-            <fieldset
-              aria-label={dict.settings.campfire}
-              className="flex items-center gap-2 self-start sm:self-auto shrink-0 border-0 p-0 m-0"
-            >
-              {campfireModes.map(({ mode, label }) => (
-                <Button
-                  key={mode}
-                  variant={preferences.backgroundAnimation === mode ? 'primary' : 'secondary'}
-                  size="sm"
-                  aria-pressed={preferences.backgroundAnimation === mode}
-                  onClick={() => void updatePreferences({ backgroundAnimation: mode })}
-                  className="min-h-11 min-w-18"
-                >
-                  {label}
-                </Button>
-              ))}
-            </fieldset>
-          </div>
+        <SettingRow icon={ImageIcon} title={dict.settings.gifs} description={dict.settings.gifsDesc}>
+          <Switch
+            checked={preferences.gifs}
+            onChange={(checked) => void updatePreferences({ gifs: checked })}
+            ariaLabel={dict.settings.gifs}
+          />
+        </SettingRow>
 
-          {/* Mature / 18+ Content Toggle */}
-          <div className="pt-4 flex items-center justify-between gap-4">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <MatureIcon className="icon-md text-accent-red" aria-hidden="true" />
-                <span className="type-strong-fluid text-text-primary">
-                  {dict.settings.nsfw}
-                </span>
-              </div>
-              <p className="type-body-fluid text-text-secondary">
-                {dict.settings.nsfwDesc}
-              </p>
-            </div>
-            <Switch
-              checked={preferences.nsfw}
-              onChange={(checked) => void updatePreferences({ nsfw: checked })}
-              ariaLabel={dict.settings.nsfw}
-            />
-          </div>
-        </div>
-      </Surface>
+        <SettingRow icon={MatureIcon} title={dict.settings.nsfw} description={dict.settings.nsfwDesc}>
+          <Switch
+            checked={preferences.nsfw}
+            onChange={(checked) => void updatePreferences({ nsfw: checked })}
+            ariaLabel={dict.settings.nsfw}
+          />
+        </SettingRow>
 
-      {/* 2. Smash or Pass & Minigames (In-trial effects) */}
-      <Surface tone="flat" padding="lg" className="space-y-5">
-        <SectionCardHeader
-          icon={HeartIcon}
-          title={dict.settings.sectionMinigamesTitle}
-          description={dict.settings.sectionMinigamesDesc}
-        />
+        <SettingRow icon={VolumeIcon} title={dict.settings.soundEffects} description={dict.settings.soundEffectsDesc}>
+          <Switch
+            checked={preferences.sounds}
+            onChange={(checked) => void updatePreferences({ sounds: checked })}
+            ariaLabel={dict.settings.soundEffects}
+          />
+        </SettingRow>
 
-        <div className="space-y-4 divide-y divide-border-subtle/60">
-          {/* Sound Effects */}
-          <div className="pt-2 flex items-center justify-between gap-4">
-            <div className="space-y-1">
-              <div className="flex items-center gap-1.5">
-                <VolumeIcon className="icon-md text-accent-red" aria-hidden="true" />
-                <span className="type-strong-fluid text-text-primary">
-                  {dict.settings.soundEffects}
-                </span>
-              </div>
-              <p className="type-body-fluid text-text-secondary">
-                {dict.settings.soundEffectsDesc}
-              </p>
-            </div>
-            <Switch
-              checked={preferences.sounds}
-              onChange={(checked) => void updatePreferences({ sounds: checked })}
-              ariaLabel={dict.settings.soundEffects}
-            />
-          </div>
+        <SettingRow icon={MusicIcon} title={dict.settings.music} description={dict.settings.musicDesc}>
+          <Switch
+            checked={preferences.music}
+            onChange={(checked) => void updatePreferences({ music: checked })}
+            ariaLabel={dict.settings.music}
+          />
+        </SettingRow>
 
-          {/* Music */}
-          <div className="pt-4 flex items-center justify-between gap-4">
-            <div className="space-y-1">
-              <div className="flex items-center gap-1.5">
-                <MusicIcon className="icon-md text-accent-red" aria-hidden="true" />
-                <span className="type-strong-fluid text-text-primary">
-                  {dict.settings.music}
-                </span>
-              </div>
-              <p className="type-body-fluid text-text-secondary">
-                {dict.settings.musicDesc}
-              </p>
-            </div>
-            <Switch
-              checked={preferences.music}
-              onChange={(checked) => void updatePreferences({ music: checked })}
-              ariaLabel={dict.settings.music}
-            />
-          </div>
-
-          {/* Visual Animations */}
-          <div className="pt-4 flex items-center justify-between gap-4">
-            <div className="space-y-1">
-              <div className="flex items-center gap-1.5">
-                <ClapperboardIcon className="icon-md text-accent-red" aria-hidden="true" />
-                <span className="type-strong-fluid text-text-primary">
-                  {dict.settings.animations}
-                </span>
-              </div>
-              <p className="type-body-fluid text-text-secondary">
-                {dict.settings.animationsDesc}
-              </p>
-            </div>
-            <Switch
-              checked={preferences.effects}
-              onChange={(checked) => void updatePreferences({ effects: checked })}
-              ariaLabel={dict.settings.animations}
-            />
-          </div>
-        </div>
+        <SettingRow icon={ClapperboardIcon} title={dict.settings.animations} description={dict.settings.animationsDesc}>
+          <Switch
+            checked={preferences.effects}
+            onChange={(checked) => void updatePreferences({ effects: checked })}
+            ariaLabel={dict.settings.animations}
+          />
+        </SettingRow>
       </Surface>
     </div>
   );

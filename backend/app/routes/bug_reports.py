@@ -29,9 +29,6 @@ logger = logging.getLogger(__name__)
 bug_reports_bp = Blueprint("bug_reports", __name__, url_prefix="/api/v1")
 
 
-#: Same limits as the report form (3 screenshots of at most 2 MB each), enforced here too.
-MAX_BUG_REPORT_IMAGES = 3
-MAX_BUG_REPORT_IMAGE_BYTES = 2 * 1024 * 1024
 #: Refuse to decode anything bigger than this, whatever its file size (a decompression bomb).
 MAX_BUG_REPORT_IMAGE_PIXELS = 40_000_000
 #: Longest side of the stored copy; screenshots are re-encoded, never stored as sent.
@@ -40,12 +37,12 @@ MAX_BUG_REPORT_IMAGE_SIDE = 2560
 MAX_ADMIN_NOTES_LENGTH = 5000
 
 
-def _save_base64_image(b64_data: str) -> str | None:
+def _save_base64_image(b64_data: str, max_bytes: int) -> str | None:
     """Decode one screenshot, check it really is an image, and store a re-encoded WebP copy.
 
     The bytes used to be written as sent under whatever extension the header claimed, so a guest
     could host any file on this domain. Now only something Pillow can decode is kept, at most
-    `MAX_BUG_REPORT_IMAGE_BYTES` and `MAX_BUG_REPORT_IMAGE_PIXELS`, re-encoded (which also drops
+    `max_bytes` (an admin setting, `bug_report_image_max_mb`) and `MAX_BUG_REPORT_IMAGE_PIXELS`, re-encoded (which also drops
     metadata such as GPS tags), in the private attachment folder (bug_report_files). Returns the
     stored path (the attachment route), or None when the payload is refused.
     """
@@ -55,10 +52,10 @@ def _save_base64_image(b64_data: str) -> str | None:
 
     try:
         encoded = b64_data.split(",", 1)[1] if "," in b64_data else b64_data
-        if len(encoded) > (MAX_BUG_REPORT_IMAGE_BYTES * 4) // 3 + 4:
+        if len(encoded) > (max_bytes * 4) // 3 + 4:
             return None
         image_bytes = base64.b64decode(encoded, validate=False)
-        if not image_bytes or len(image_bytes) > MAX_BUG_REPORT_IMAGE_BYTES:
+        if not image_bytes or len(image_bytes) > max_bytes:
             return None
 
         with Image.open(BytesIO(image_bytes)) as probe:
@@ -91,15 +88,16 @@ def _reporter(user: User | None, dto: BugReportSubmitDTO) -> tuple[str, str | No
 
 
 def _store_screenshots(raw_images: list[object]) -> list[str]:
-    """Store the uploaded screenshots (at most MAX_BUG_REPORT_IMAGES) and return their paths.
+    """Store the uploaded screenshots (as many as the admin setting `bug_report_max_images` allows) and return their paths.
 
     Only uploaded screenshots are kept. A remote URL (or any other string) used to be stored
     as-is and then loaded by every admin who opened the ticket: a tracking pixel anyone could plant.
     """
     stored: list[str] = []
-    for img in raw_images[:MAX_BUG_REPORT_IMAGES]:
+    max_bytes = site_settings.bug_report_image_max_bytes()
+    for img in raw_images[: site_settings.bug_report_max_images()]:
         if isinstance(img, str) and img.startswith("data:image"):
-            saved_path = _save_base64_image(img)
+            saved_path = _save_base64_image(img, max_bytes)
             if saved_path:
                 stored.append(saved_path)
     return stored
@@ -152,7 +150,11 @@ def submit_bug_report():
         message=dto.message,
         status="pending",
     )
-    return _save_report(report, _store_screenshots(dto.images))
+    images = _store_screenshots(dto.images)
+    if site_settings.bug_report_image_required() and not images:
+        # Nothing was kept (none sent, or none readable), so there is nothing to clean up.
+        return error_response("bug_report_image_required", 400, lang=extract_lang())
+    return _save_report(report, images)
 
 
 def _save_report(report: BugReport, images: list):

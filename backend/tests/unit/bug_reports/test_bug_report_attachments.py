@@ -1,6 +1,7 @@
 # backend/tests/unit/bug_reports/test_bug_report_attachments.py
 """Bug report screenshots: only real images are kept, re-encoded; remote URLs are dropped."""
 import base64
+import os
 from io import BytesIO
 from pathlib import Path
 
@@ -12,6 +13,7 @@ from PIL import Image
 from app.core.extensions import db
 from app.core.security import generate_token, hash_password
 from app.models import User
+from app.services import site_settings
 
 
 def _png_data_url(size=(32, 24)) -> str:
@@ -61,6 +63,45 @@ def test_at_most_three_screenshots_are_kept(app: Flask, client: FlaskClient, hea
     paths = _submit(client, headers, [_png_data_url() for _ in range(5)])
     try:
         assert len(paths) == 3
+    finally:
+        for path in paths:
+            (Path(app.root_path) / path.lstrip("/")).unlink(missing_ok=True)
+
+
+@pytest.mark.unit
+def test_the_screenshot_count_follows_the_admin_setting(app: Flask, client: FlaskClient, headers) -> None:
+    site_settings.update_settings({"bug_report_max_images": 1})
+    paths = _submit(client, headers, [_png_data_url() for _ in range(3)])
+    try:
+        assert len(paths) == 1
+    finally:
+        for path in paths:
+            (Path(app.root_path) / path.lstrip("/")).unlink(missing_ok=True)
+
+
+@pytest.mark.unit
+def test_the_screenshot_size_follows_the_admin_setting(app: Flask, client: FlaskClient, headers) -> None:
+    buffer = BytesIO()
+    Image.frombytes("RGB", (700, 700), os.urandom(700 * 700 * 3)).save(buffer, format="PNG")  # about 1.4 MB
+    shot = "data:image/png;base64," + base64.b64encode(buffer.getvalue()).decode()
+    paths = _submit(client, headers, [shot])  # under the 2 MB default
+    try:
+        assert len(paths) == 1
+    finally:
+        for path in paths:
+            (Path(app.root_path) / path.lstrip("/")).unlink(missing_ok=True)
+    site_settings.update_settings({"bug_report_image_max_mb": 1})
+    assert _submit(client, headers, [shot]) == []
+
+
+@pytest.mark.unit
+def test_a_screenshot_can_be_made_mandatory(app: Flask, client: FlaskClient, headers) -> None:
+    site_settings.update_settings({"bug_report_require_image": True})
+    res = client.post("/api/v1/bug-reports", json={"title": "t", "message": "m", "images": []}, headers=headers)
+    assert res.status_code == 400
+    paths = _submit(client, headers, [_png_data_url()])
+    try:
+        assert len(paths) == 1
     finally:
         for path in paths:
             (Path(app.root_path) / path.lstrip("/")).unlink(missing_ok=True)

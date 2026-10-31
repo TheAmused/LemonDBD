@@ -4,7 +4,7 @@
 import { TIER_LIST_LIMITS } from './constants';
 
 /** Reads a file's raw bytes back out as a `data:...;base64,...` URL, unmodified. */
-async function fileToDataUrl(file: File): Promise<string | null> {
+export async function fileToDataUrl(file: File): Promise<string | null> {
   try {
     if (typeof file.arrayBuffer === 'function') {
       const bytes = new Uint8Array(await file.arrayBuffer());

@@ -48,15 +48,16 @@ export const CampfireParticles: React.FC<CampfireParticlesProps> = ({ className,
 
     // Color palettes tuned for each theme:
     // Dark: Fiery embers (oranges, ambers, flame reds) with warm glow
-    // Light-lemon: Golden lemon pollen / sparks (amber yellows, lemon golds)
-    // Light: Subtle warm ashes / soft embers (caramel, gentle amber) with lower opacity
+    // Light-lemon: Golden-brown pollen (amber and burnt orange), dark enough to read on the cream page
+    // Light: Slate dust motes, dark enough to read on the grey-white page
+    // No reds on the light themes: at a low alpha they turn pink.
     const colors = isDark
       ? [paletteColor('orange-500'), paletteColor('orange-400'), paletteColor('red-500'), paletteColor('amber-500'), paletteColor('red-600'), paletteColor('amber-400')]
       : isLemon
-      ? [paletteColor('yellow-500'), paletteColor('yellow-400'), paletteColor('amber-600'), paletteColor('amber-500'), paletteColor('yellow-600'), paletteColor('yellow-200')]
-      : [paletteColor('amber-600'), paletteColor('orange-600'), paletteColor('amber-500'), paletteColor('amber-700'), paletteColor('stone-500')];
+      ? [paletteColor('amber-700'), paletteColor('orange-600'), paletteColor('amber-600'), paletteColor('amber-700'), paletteColor('amber-900')]
+      : [paletteColor('slate-700'), paletteColor('zinc-600'), paletteColor('slate-400'), paletteColor('zinc-500'), paletteColor('slate-700')];
 
-    const baseOpacityMult = isDark ? 0.85 : isLemon ? 0.7 : 0.55;
+    const baseOpacityMult = isDark ? 0.85 : 1.1;
 
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);

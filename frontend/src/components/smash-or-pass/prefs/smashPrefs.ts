@@ -1,4 +1,5 @@
 // frontend/src/components/smash-or-pass/prefs/smashPrefs.ts
+import { DEFAULT_BACKGROUND_ANIMATION } from '@/utils/backgroundAnimation';
 
 /**
  * What the viewer chose on the page's warning: whether visual effects (flashes, particles, card
@@ -50,7 +51,7 @@ export function writeLocalPrefs(prefs: SmashPrefs): void {
       sounds: prefs.sounds,
       music: prefs.music,
       nsfw: typeof existing.nsfw === 'boolean' ? existing.nsfw : false,
-      backgroundAnimation: existing.backgroundAnimation || 'on',
+      backgroundAnimation: existing.backgroundAnimation || DEFAULT_BACKGROUND_ANIMATION,
       gifs: typeof existing.gifs === 'boolean' ? existing.gifs : true,
       chosenAt: prefs.chosenAt,
     };

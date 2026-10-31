@@ -46,7 +46,7 @@ describe('Preferences synchronization and database precedence', () => {
   it('computes default preferences respecting reduced motion', () => {
     const defaults = defaultPreferences(false);
     assert.equal(defaults.effects, true);
-    assert.equal(defaults.backgroundAnimation, 'on');
+    assert.equal(defaults.backgroundAnimation, 'eco');
     assert.equal(defaults.gifs, true);
 
     const reducedDefaults = defaultPreferences(true);

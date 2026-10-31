@@ -1,30 +1,23 @@
 'use client';
 // frontend/src/components/sidebar/BugReportModal.tsx
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getBackendBaseUrl, authHeaders, getAuthToken } from '@/utils/api';
 import { useAuth } from '@/context/AuthContext';
 import { useSiteConfig } from '@/context/SiteConfigContext';
 import { LemonIcon } from '@/components/LemonIcon';
 import { useAltcha } from '@/hooks/useAltcha';
 import { AltchaWidget } from '@/components/common/AltchaWidget';
-import {
-  Upload,
-  Image as ImageIcon,
-  Trash2,
-  UserCheck,
-  Mail,
-} from 'lucide-react';
+import { UserCheck, Mail } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { SuccessState } from '@/components/common/SuccessState';
 import { Button } from '@/components/common/Button';
 import { FormField, Input, Textarea } from '@/components/common/Field';
 import { Alert } from '@/components/common/Alert';
-import { IconLabel } from '@/components/common/IconLabel';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
-import { Img } from '@/components/common/Img';
+import { BugReportScreenshots } from '@/components/sidebar/BugReportScreenshots';
 
 export interface BugReportModalProps {
   isOpen: boolean;
@@ -44,17 +37,19 @@ const BUG_GUIDE_ITEMS = [
   { label: 'bugGuideHappenedLabel', text: 'bugGuideHappenedText' },
   { label: 'bugGuideStepsLabel', text: 'bugGuideStepsText' },
   { label: 'bugGuideExpectedLabel', text: 'bugGuideExpectedText' },
+  { label: 'bugGuideScreenshotLabel', text: 'bugGuideScreenshotText' },
 ] as const;
-
-const MAX_SCREENSHOT_BYTES = 2 * 1024 * 1024;
 
 export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose, onSubmitted }) => {
   const dict = useDictionary();
   const { user, isAuthenticated } = useAuth();
   // With guest reports switched off (Settings), a signed-out visitor is asked to sign in up front
   // instead of filling in the form, attachments and all, only to be refused on submit.
-  const { features } = useSiteConfig();
+  const { features, limits } = useSiteConfig();
   const guestsClosed = !isAuthenticated && !features.guestBugReports;
+  // How many screenshots and how large are admin settings (Settings, Bug reports).
+  const { bugReportMaxImages: maxImages, bugReportImageMaxBytes: maxImageBytes } = limits;
+  const imageRequired = features.bugReportRequireImage;
 
   const t = dict.sidebar;
 
@@ -67,8 +62,6 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
     honeypotValue,
     honeypotProps,
   } = useAltcha(!isAuthenticated && isOpen && !guestsClosed);
-
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [title, setTitle] = useState<string>('');
   const [message, setMessage] = useState<string>('');
@@ -92,34 +85,8 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
     }
   }, [isOpen]);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-
-    if (images.length + files.length > 3) {
-      setErrorMsg(t.bugMaxScreenshots);
-      return;
-    }
-
-    setErrorMsg(null);
-    Array.from(files).forEach((file) => {
-      if (file.size > MAX_SCREENSHOT_BYTES) {
-        setErrorMsg(t.bugImageSizeLimit);
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (typeof reader.result === 'string') {
-          setImages((prev) => [...prev, reader.result as string].slice(0, 3));
-        }
-      };
-      reader.readAsDataURL(file);
-    });
-
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+  const handleAddImages = (urls: string[]) => {
+    setImages((prev) => [...prev, ...urls].slice(0, maxImages));
   };
 
   const handleRemoveImage = (index: number) => {
@@ -140,6 +107,11 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
     }
     if (!isAuthenticated && !guestEmail.trim()) {
       setErrorMsg(t.bugGuestEmailRequired);
+      return;
+    }
+
+    if (imageRequired && images.length === 0) {
+      setErrorMsg(t.bugScreenshotRequired);
       return;
     }
 
@@ -289,68 +261,27 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
           onChange={(e) => setMessage(e.target.value)}
           placeholder={t.bugDescriptionPlaceholder || ''}
         />
-        <div className="mt-1.5 space-y-0.5 type-caption text-text-muted">
-          <p>{t.bugGuideTitle || ''}:</p>
-          {BUG_GUIDE_ITEMS.map(({ label, text }, idx) => (
-            <p key={label}>
-              {idx + 1}. {t[label] || ''}: {t[text] || ''}
-            </p>
-          ))}
-        </div>
+        <Surface tone="inset" padding="sm" className="mt-2 space-y-1.5">
+          <p className="type-strong-screen text-text-primary">{t.bugGuideTitle || ''}:</p>
+          <ol className="list-decimal space-y-1 pl-5 type-body-screen text-text-secondary">
+            {BUG_GUIDE_ITEMS.map(({ label, text }) => (
+              <li key={label}>
+                <span className="font-bold text-text-primary">{t[label] || ''}:</span> {t[text] || ''}
+              </li>
+            ))}
+          </ol>
+        </Surface>
       </FormField>
 
-      <div>
-        <div className="flex items-center justify-between mb-1.5">
-          <IconLabel as="label" icon={ImageIcon} variant="heading">{t.bugScreenshotsLabel || ''}</IconLabel>
-          <span className="type-micro text-text-muted">
-            {images.length}/3
-          </span>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3">
-          {images.map((imgSrc, idx) => (
-            <Surface
-              key={idx}
-              tone="elevated" padding="none" className="relative h-16 w-16 overflow-hidden shadow-sm group"
-            >
-              <Img
-                src={imgSrc}
-                alt={`${t.bugScreenshotAlt} #${idx + 1}`}
-                className="h-full w-full object-cover"
-              />
-              <button
-                type="button"
-                onClick={() => handleRemoveImage(idx)}
-                aria-label={`${t.bugRemoveScreenshot} ${idx + 1}`}
-                className="absolute inset-0 bg-accent-red/80 opacity-0 group-hover:opacity-100 flex items-center justify-center text-text-inverted transition-opacity focus:opacity-100"
-              >
-                <Trash2 className="icon-md" aria-hidden="true" />
-              </button>
-            </Surface>
-          ))}
-
-          {images.length < 3 && (
-            <Button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              variant="secondary" size="sm" dashed className="h-16 w-28 flex-col gap-0.5"
-            >
-              <Upload className="icon-md mb-0.5" aria-hidden="true" />
-              <span>{t.bugUploadImage || ''}</span>
-            </Button>
-          )}
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageUpload}
-            className="hidden"
-            aria-label={t.bugUploadImage || ''}
-          />
-        </div>
-      </div>
+      <BugReportScreenshots
+        images={images}
+        maxImages={maxImages}
+        maxBytes={maxImageBytes}
+        onAdd={handleAddImages}
+        onRemove={handleRemoveImage}
+        required={imageRequired}
+        disabled={isSubmitting}
+      />
 
       {/* ALTCHA PoW Security & Honeypot Trap */}
       <AltchaWidget

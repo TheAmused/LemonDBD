@@ -7,17 +7,21 @@ import { apiUrl } from '@/utils/api';
 const BANNER_LEVELS: readonly BannerLevel[] = ['info', 'warning', 'critical'];
 const DEFAULT_RESEND_COOLDOWN_SECONDS = 60;
 const DEFAULT_UPLOAD_MAX_BYTES = 8 * 1024 * 1024;
+const DEFAULT_BUG_REPORT_MAX_IMAGES = 3;
+const DEFAULT_BUG_REPORT_IMAGE_MAX_BYTES = 2 * 1024 * 1024;
 
 /** Used until the server answers, and when it cannot be reached: the same behaviour the site had before the setting existed. */
 export const DEFAULT_SITE_CONFIG: SiteConfig = {
   loaded: false,
   banner: { active: false, level: 'info', until: null, text: {} },
   links: { discordInvite: null, donationBmc: null, donationKofi: null, donationMessage: null },
-  features: { registrationOpen: true, emailVerificationRequired: true, googleSignIn: false, contentReportsOpen: true, scoreboardOcr: true, guestBugReports: true },
+  features: { registrationOpen: true, emailVerificationRequired: true, googleSignIn: false, contentReportsOpen: true, scoreboardOcr: true, guestBugReports: true, bugReportRequireImage: false },
   limits: {
     resendCooldownSeconds: DEFAULT_RESEND_COOLDOWN_SECONDS,
     passwordMinLength: MIN_PASSWORD_LENGTH,
     scoreboardUploadMaxBytes: DEFAULT_UPLOAD_MAX_BYTES,
+    bugReportMaxImages: DEFAULT_BUG_REPORT_MAX_IMAGES,
+    bugReportImageMaxBytes: DEFAULT_BUG_REPORT_IMAGE_MAX_BYTES,
   },
 };
 
@@ -68,11 +72,14 @@ export function parseSiteConfig(body: unknown): SiteConfig {
       contentReportsOpen: asBool(features.content_reports_open, defaults.features.contentReportsOpen),
       guestBugReports: asBool(features.guest_bug_reports, defaults.features.guestBugReports),
       scoreboardOcr: asBool(features.scoreboard_ocr, defaults.features.scoreboardOcr),
+      bugReportRequireImage: asBool(features.bug_report_require_image, defaults.features.bugReportRequireImage),
     },
     limits: {
       resendCooldownSeconds: asCount(limits.resend_cooldown_seconds, defaults.limits.resendCooldownSeconds, 1),
       passwordMinLength: asCount(limits.password_min_length, defaults.limits.passwordMinLength, MIN_PASSWORD_LENGTH),
       scoreboardUploadMaxBytes: asCount(limits.scoreboard_upload_max_bytes, defaults.limits.scoreboardUploadMaxBytes, 1),
+      bugReportMaxImages: asCount(limits.bug_report_max_images, defaults.limits.bugReportMaxImages, 1),
+      bugReportImageMaxBytes: asCount(limits.bug_report_image_max_bytes, defaults.limits.bugReportImageMaxBytes, 1),
     },
   };
 }

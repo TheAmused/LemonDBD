@@ -143,6 +143,13 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "es": "Inicia sesión para enviar un informe de error.",
         "ja": "バグ報告を送信するにはログインしてください。",
     },
+    "bug_report_image_required": {
+        "en": "Attach at least one screenshot.",
+        "pl": "Dołącz co najmniej jeden zrzut ekranu.",
+        "de": "Hänge mindestens einen Screenshot an.",
+        "es": "Adjunta al menos una captura de pantalla.",
+        "ja": "スクリーンショットを1枚以上添付してください。",
+    },
 }
 
 

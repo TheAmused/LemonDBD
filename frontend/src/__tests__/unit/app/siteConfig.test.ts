@@ -15,7 +15,7 @@ const FULL = {
     donation_message: '  Thanks!  ',
   },
   features: { registration_open: false, email_verification_required: true, google_sign_in: true, content_reports_open: false, scoreboard_ocr: true },
-  limits: { resend_cooldown_seconds: 120, password_min_length: 10, scoreboard_upload_max_bytes: 2097152 },
+  limits: { resend_cooldown_seconds: 120, password_min_length: 10, scoreboard_upload_max_bytes: 2097152, bug_report_max_images: 4, bug_report_image_max_bytes: 1048576 },
 };
 
 describe('parseSiteConfig', () => {
@@ -30,7 +30,7 @@ describe('parseSiteConfig', () => {
     assert.equal(config.features.contentReportsOpen, false);
     assert.equal(config.features.guestBugReports, true); // missing from the answer: the default
     assert.equal(parseSiteConfig({ features: { guest_bug_reports: false } }).features.guestBugReports, false);
-    assert.deepEqual(config.limits, { resendCooldownSeconds: 120, passwordMinLength: 10, scoreboardUploadMaxBytes: 2097152 });
+    assert.deepEqual(config.limits, { resendCooldownSeconds: 120, passwordMinLength: 10, scoreboardUploadMaxBytes: 2097152, bugReportMaxImages: 4, bugReportImageMaxBytes: 1048576 });
   });
 
   it('only trusts https links', () => {

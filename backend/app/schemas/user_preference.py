@@ -12,4 +12,5 @@ class UserPreferenceIn(BaseModel):
     music: bool = True
     nsfw: bool = False
     background_animation: Literal["on", "eco", "off"] = "on"
+    gifs: bool | None = None  # absent from older clients: keep what the account has saved
     chosen_at: int = Field(strict=True, ge=0)

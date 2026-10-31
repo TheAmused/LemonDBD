@@ -18,6 +18,8 @@ export interface SitePreferences {
   music: boolean;
   nsfw: boolean;
   backgroundAnimation: BackgroundAnimationMode;
+  /** Animated GIFs play; off shows their first frame only. */
+  gifs: boolean;
   chosenAt: number;
 }
 
@@ -47,6 +49,7 @@ export function defaultPreferences(reducedMotion?: boolean): SitePreferences {
     music: !isReduced,
     nsfw: false,
     backgroundAnimation: isReduced ? 'eco' : 'on',
+    gifs: true,
     chosenAt: 0,
   };
 }
@@ -58,6 +61,7 @@ export function toRemote(prefs: SitePreferences): RemoteUserPreferences {
     music: prefs.music,
     nsfw: prefs.nsfw,
     background_animation: prefs.backgroundAnimation,
+    gifs: prefs.gifs,
     chosen_at: prefs.chosenAt,
   };
 }
@@ -72,6 +76,7 @@ export function fromRemote(remote: RemoteUserPreferences): SitePreferences {
     music: !!remote.music,
     nsfw: !!remote.nsfw,
     backgroundAnimation,
+    gifs: remote.gifs !== false,
     chosenAt: Number(remote.chosen_at) || 0,
   };
 }
@@ -119,6 +124,7 @@ export function parseSitePreferences(value: unknown): SitePreferences | null {
     music: v.music,
     nsfw: v.nsfw,
     backgroundAnimation,
+    gifs: typeof v.gifs === 'boolean' ? v.gifs : true,
     chosenAt: v.chosenAt,
   };
 }
@@ -146,6 +152,7 @@ export function readLocalPreferences(): SitePreferences | null {
           music: typeof p.music === 'boolean' ? p.music : true,
           nsfw: rawNsfw === 'true',
           backgroundAnimation: 'on',
+          gifs: true,
           chosenAt: typeof p.chosenAt === 'number' ? p.chosenAt : 0,
         };
       }

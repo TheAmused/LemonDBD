@@ -16,7 +16,7 @@ import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
 import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
 import { cn } from '@/utils/cn';
-import { Img } from '@/components/common/Img';
+import { MotionImg } from '@/components/common/MotionImg';
 
 interface RosterCarouselCardProps {
   roster: RosterItem;
@@ -110,7 +110,7 @@ export function RosterCarouselCard({
         }}
         className="absolute inset-0 z-10 cursor-pointer rounded-card focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red"
       />
-      <Img
+      <MotionImg
         src={coverUrl}
         alt=""
         loading="lazy"

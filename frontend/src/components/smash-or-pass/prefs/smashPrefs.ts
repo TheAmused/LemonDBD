@@ -51,6 +51,7 @@ export function writeLocalPrefs(prefs: SmashPrefs): void {
       music: prefs.music,
       nsfw: typeof existing.nsfw === 'boolean' ? existing.nsfw : false,
       backgroundAnimation: existing.backgroundAnimation || 'on',
+      gifs: typeof existing.gifs === 'boolean' ? existing.gifs : true,
       chosenAt: prefs.chosenAt,
     };
     localStorage.setItem('lemondbd_preferences_v2', JSON.stringify(updated));

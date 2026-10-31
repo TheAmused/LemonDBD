@@ -42,7 +42,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
   const router = useRouter();
   const dict = useDictionary();
   const { isAuthenticated } = useAuth();
-  const { isConfigured } = usePreferences();
+  const { isConfigured, preferences } = usePreferences();
   const [smashAck, setSmashAck] = useState<boolean>(true);
   const [promptDismissed, setPromptDismissed] = useState<boolean>(false);
 
@@ -155,7 +155,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
         effectsEnabled ? '' : '[&_*]:animate-none!'
       }`}
     >
-      {/* The ambient embers always stay; with effects off they just stop reacting to swipes and votes. */}
+      {/* The ambient embers follow the Settings campfire switch; with effects off they just stop reacting to swipes and votes. */}
       <Suspense fallback={null}>
         <InteractiveDragBackground
           dragX={effectsEnabled ? exit.dragPhysics.x : 0}
@@ -164,6 +164,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
           actionTrigger={effectsEnabled ? animTrigger.type : null}
           triggerKey={effectsEnabled ? animTrigger.key : 0}
           isPaused={overlays.areModalsOpen}
+          showEmbers={preferences.backgroundAnimation !== 'off'}
         />
       </Suspense>
 

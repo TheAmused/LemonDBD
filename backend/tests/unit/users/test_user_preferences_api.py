@@ -35,6 +35,7 @@ class TestUserPreferencesApi:
             "music": False,
             "nsfw": True,
             "background_animation": "eco",
+            "gifs": False,
             "chosen_at": 1000,
         }
         put_res = client.put(URL, headers=_headers(user.id), json=payload)
@@ -68,6 +69,7 @@ class TestUserPreferencesApi:
         assert data["music"] is False
         assert data["nsfw"] is False
         assert data["background_animation"] == "on"
+        assert data["gifs"] is True
         assert data["chosen_at"] == 500
 
     @pytest.mark.parametrize(
@@ -84,6 +86,21 @@ class TestUserPreferencesApi:
         client = app.test_client()
         res = client.put(URL, headers=_headers(user.id), json=invalid_body)
         assert res.status_code == 400
+
+    def test_gifs_defaults_to_on_when_the_client_omits_it(self, app: Flask, db_session: Session) -> None:
+        user = create_user(db_session)
+        client = app.test_client()
+        res = client.put(URL, headers=_headers(user.id), json={"chosen_at": 10})
+        assert res.status_code == 200
+        assert res.get_json()["data"]["gifs"] is True
+
+    def test_older_client_without_gifs_keeps_the_saved_choice(self, app: Flask, db_session: Session) -> None:
+        user = create_user(db_session)
+        client = app.test_client()
+        assert client.put(URL, headers=_headers(user.id), json={"gifs": False, "chosen_at": 10}).status_code == 200
+        res = client.put(URL, headers=_headers(user.id), json={"effects": False, "chosen_at": 20})
+        assert res.status_code == 200
+        assert res.get_json()["data"]["gifs"] is False
 
     def test_dual_write_to_smash_preferences(self, app: Flask, db_session: Session) -> None:
         from app.models.smash_or_pass import SmashUserPreference
@@ -158,6 +175,7 @@ class TestUserPreferencesApi:
             "music": False,
             "nsfw": True,
             "background_animation": "eco",
+            "gifs": False,
             "chosen_at": 2000,
         }
         res1 = client.put(URL, headers=_headers(user.id), json=newer_payload)
@@ -169,6 +187,7 @@ class TestUserPreferencesApi:
             "music": True,
             "nsfw": False,
             "background_animation": "on",
+            "gifs": True,
             "chosen_at": 1000,
         }
         res2 = client.put(URL, headers=_headers(user.id), json=older_payload)

@@ -47,6 +47,7 @@ def test_user_preference_crud(db_session: Session) -> None:
         music_enabled=False,
         nsfw_enabled=True,
         background_animation="eco",
+        gifs_enabled=False,
         chosen_at=123456789,
     )
     db_session.add(pref)
@@ -55,6 +56,7 @@ def test_user_preference_crud(db_session: Session) -> None:
     loaded = db_session.get(UserPreference, user.id)
     assert loaded is not None
     assert loaded.music_enabled is False
+    assert loaded.gifs_enabled is False
     assert loaded.nsfw_enabled is True
     assert loaded.background_animation == "eco"
     d = loaded.to_dict()
@@ -63,6 +65,7 @@ def test_user_preference_crud(db_session: Session) -> None:
     assert d["music"] is False
     assert d["nsfw"] is True
     assert d["background_animation"] == "eco"
+    assert d["gifs"] is False
     assert d["chosen_at"] == 123456789
 
 
@@ -83,6 +86,7 @@ def test_user_preference_defaults_and_update(db_session: Session) -> None:
     assert loaded.music_enabled is True
     assert loaded.nsfw_enabled is False
     assert loaded.background_animation == "on"
+    assert loaded.gifs_enabled is True
 
     # Update fields
     loaded.background_animation = "off"

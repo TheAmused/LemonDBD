@@ -23,6 +23,7 @@ Cel: jedna zmiana w jednym miejscu przesuwa wygląd całej strony. Poniżej źr�
 | Powiadomienie w rogu (toast) | `common/Toast.tsx` | `<Toast icon message actions onDismiss>` |
 | Kafel z ikoną (nad tytułem, w nagłówku sekcji) | `common/IconTile.tsx` | `<IconTile tone size>` |
 | Miniatura obrazka w wierszu listy | `common/Thumb.tsx` | `<Thumb src alt size fit fallback>` |
+| Obrazek, który stoi w miejscu, gdy GIF-y są wyłączone w Ustawieniach (plansze Smash or Pass) | `common/MotionImg.tsx` | `<MotionImg src alt>` zamiast `<Img>` |
 | Zwijane ciało (animacja, `inert` gdy zamknięte) | `common/Collapsible.tsx` | `<Collapsible open>`; sekcja z nagłówkiem to `AccordionSection` |
 | Przycisk-kafel (obrazek, karta, slot): kursor, fokus, powiększenie | `common/TileButton.tsx` | `<TileButton press>` (wygląd kafla zostaje w `className`) |
 | Przycisk otwierający zwinięty blok | `common/DisclosureButton.tsx` | `<DisclosureButton open chevron>` |

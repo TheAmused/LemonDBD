@@ -36,6 +36,8 @@ export interface DragState {
   actionTrigger: DragAction | null;
   triggerKey: number;
   isPaused: boolean;
+  /** The ambient embers; off follows the Settings campfire switch. */
+  showEmbers: boolean;
 }
 
 interface Scene {
@@ -320,11 +322,11 @@ function drawBurst(ctx: CanvasRenderingContext2D, burst: Particle[]) {
   }
 }
 
-/** Draws one frame: glow, embers, the drag rain, then any vote burst. */
+/** Draws one frame: glow, embers (unless switched off), the drag rain, then any vote burst. */
 export function drawScene(ctx: CanvasRenderingContext2D, scene: Scene, state: DragState, width: number, height: number): void {
   ctx.clearRect(0, 0, width, height);
   drawAmbientGlow(ctx, state, width, height);
-  drawEmbers(ctx, scene.embers, width, height);
+  if (state.showEmbers) drawEmbers(ctx, scene.embers, width, height);
   drawDragRain(ctx, scene, state, width, height);
   drawBurst(ctx, scene.burstParticles);
 }

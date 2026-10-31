@@ -82,6 +82,7 @@ export function setGlobalNsfwPreference(enabled: boolean): void {
         music: typeof existing.music === 'boolean' ? existing.music : true,
         nsfw: enabled,
         backgroundAnimation: existing.backgroundAnimation || 'on',
+        gifs: typeof existing.gifs === 'boolean' ? existing.gifs : true,
         chosenAt: Date.now(),
       };
       storage.setItem('lemondbd_preferences_v2', JSON.stringify(updated));

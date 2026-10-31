@@ -17,7 +17,7 @@ import { formatNumber } from '@/utils/format';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
-import { Img } from '@/components/common/Img';
+import { MotionImg } from '@/components/common/MotionImg';
 
 /** An entity, optionally carrying legacy vote-response fields. */
 type StatsCharacter = EntityItem & {
@@ -146,7 +146,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
 
   const portrait = (
     <div className="relative h-20 w-20 rounded-card overflow-hidden border border-accent-red/40 shrink-0 bg-bg-primary shadow-md">
-      <Img
+      <MotionImg
         src={avatarSrc}
         alt={name}
         loading="lazy"

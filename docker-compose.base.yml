@@ -144,7 +144,6 @@ services:
       - DISCORD_INVITE_URL=${DISCORD_INVITE_URL:-https://discord.gg/Veygfp6XfT}
       - DONATION_BMC_URL=${DONATION_BMC_URL:-https://buymeacoffee.com/lemondbd}
       - DONATION_KOFI_URL=${DONATION_KOFI_URL:-https://ko-fi.com/lemondbd}
-      - DONATION_PATREON_URL=${DONATION_PATREON_URL:-https://patreon.com/lemondbd}
       - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL:-}
       - DISCORD_CHANGELOG_WEBHOOK_URL=${DISCORD_CHANGELOG_WEBHOOK_URL:-}
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-}

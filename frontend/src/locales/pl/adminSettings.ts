@@ -97,8 +97,6 @@ export default {
   config_donation_bmc_url_desc: "Puste pole ukrywa tę opcję w oknie wsparcia.",
   config_donation_kofi_url: "Link do Ko-fi",
   config_donation_kofi_url_desc: "Puste pole ukrywa tę opcję w oknie wsparcia.",
-  config_donation_patreon_url: "Link do Patreona",
-  config_donation_patreon_url_desc: "Puste pole ukrywa tę opcję w oknie wsparcia.",
   config_donation_message: "Wiadomość w oknie wsparcia",
   config_donation_message_desc: "Tekst nad opcjami wsparcia, we wszystkich językach. Puste pole używa wbudowanej, przetłumaczonej wiadomości.",
   config_rate_auth_per_minute: "Logowanie i rejestracja",

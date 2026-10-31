@@ -51,7 +51,6 @@ _FALLBACK_DEFAULTS: dict[str, str | int | bool] = {
     "discord_invite_url": "",
     "donation_bmc_url": "",
     "donation_kofi_url": "",
-    "donation_patreon_url": "",
     "donation_message": "",
     "verification_code_hours": 24,
     "reset_token_minutes": 60,
@@ -89,7 +88,6 @@ _CONFIG_DEFAULTS: dict[str, str] = {
     "discord_invite_url": "DISCORD_INVITE_URL",
     "donation_bmc_url": "DONATION_BMC_URL",
     "donation_kofi_url": "DONATION_KOFI_URL",
-    "donation_patreon_url": "DONATION_PATREON_URL",
 }
 
 # The environment variable / config key a secret falls back to when the admin has not set one.
@@ -386,7 +384,6 @@ def public_config() -> dict[str, Any]:
             "discord_invite": link("discord_invite_url"),
             "donation_bmc": link("donation_bmc_url"),
             "donation_kofi": link("donation_kofi_url"),
-            "donation_patreon": link("donation_patreon_url"),
             "donation_message": link("donation_message"),
         },
         "features": {

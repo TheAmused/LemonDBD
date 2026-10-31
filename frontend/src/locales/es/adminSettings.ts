@@ -97,8 +97,6 @@ export default {
   config_donation_bmc_url_desc: "Vacío oculta esta opción en la ventana de apoyo.",
   config_donation_kofi_url: "Enlace de Ko-fi",
   config_donation_kofi_url_desc: "Vacío oculta esta opción en la ventana de apoyo.",
-  config_donation_patreon_url: "Enlace de Patreon",
-  config_donation_patreon_url_desc: "Vacío oculta esta opción en la ventana de apoyo.",
   config_donation_message: "Mensaje de la ventana de apoyo",
   config_donation_message_desc: "Texto sobre las opciones de apoyo, en todos los idiomas. Vacío usa el mensaje integrado y traducido.",
   config_rate_auth_per_minute: "Inicio de sesión y registro",

@@ -68,7 +68,7 @@ class TestUserPreferencesApi:
         assert data["sounds"] is True
         assert data["music"] is False
         assert data["nsfw"] is False
-        assert data["background_animation"] == "on"
+        assert data["background_animation"] == "eco"
         assert data["gifs"] is True
         assert data["chosen_at"] == 500
 

@@ -80,7 +80,7 @@ export default async function RootLayout({
         <UmamiScript />
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           themes={['light', 'dark', 'light-lemon']}
           enableSystem
           disableTransitionOnChange

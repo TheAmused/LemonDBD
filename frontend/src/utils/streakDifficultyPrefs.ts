@@ -74,6 +74,9 @@ export function markPageStreakIntroSeen() {
 export type StreakRole = 'survivor' | 'killer' | 'challenge';
 
 const LAST_ROLE_KEY = 'lemon_dbd_streaks_last_role_v1';
+/** The server redirect from /streaks reads this cookie, so the saved role has to live in a cookie too. */
+export const STREAK_ROLE_COOKIE = 'lemon_dbd_streaks_last_role';
+const STREAK_ROLE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
 export function getSavedStreakRole(): StreakRole | null {
   const value = safeGetItem(LAST_ROLE_KEY);
@@ -82,4 +85,7 @@ export function getSavedStreakRole(): StreakRole | null {
 
 export function saveStreakRole(role: StreakRole) {
   safeSetItem(LAST_ROLE_KEY, role);
+  if (typeof document !== 'undefined') {
+    document.cookie = `${STREAK_ROLE_COOKIE}=${role}; path=/; max-age=${STREAK_ROLE_COOKIE_MAX_AGE}; samesite=lax`;
+  }
 }

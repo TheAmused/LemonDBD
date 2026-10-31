@@ -311,10 +311,10 @@ class TestPublicConfig:
     def test_links_start_from_the_config_and_can_be_changed_or_hidden(self, client: FlaskClient, app: Flask, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setitem(app.config, "DONATION_KOFI_URL", "https://ko-fi.com/from-config")
         assert client.get(self.URL).get_json()["links"]["donation_kofi"] == "https://ko-fi.com/from-config"
-        site_settings.update_settings({"donation_kofi_url": "https://ko-fi.com/new", "donation_patreon_url": ""})
+        site_settings.update_settings({"donation_kofi_url": "https://ko-fi.com/new", "donation_bmc_url": ""})
         links = client.get(self.URL).get_json()["links"]
         assert links["donation_kofi"] == "https://ko-fi.com/new"
-        assert links["donation_patreon"] is None  # an empty link is hidden
+        assert links["donation_bmc"] is None  # an empty link is hidden
 
     def test_feature_flags_follow_the_switches(self, client: FlaskClient, app: Flask, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setitem(app.config, "GOOGLE_CLIENT_ID", "client.apps.googleusercontent.com")

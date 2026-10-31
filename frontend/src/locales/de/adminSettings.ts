@@ -97,8 +97,6 @@ export default {
   config_donation_bmc_url_desc: "Leer blendet diese Option im Unterstützungsfenster aus.",
   config_donation_kofi_url: "Ko-fi-Link",
   config_donation_kofi_url_desc: "Leer blendet diese Option im Unterstützungsfenster aus.",
-  config_donation_patreon_url: "Patreon-Link",
-  config_donation_patreon_url_desc: "Leer blendet diese Option im Unterstützungsfenster aus.",
   config_donation_message: "Nachricht im Unterstützungsfenster",
   config_donation_message_desc: "Text über den Unterstützungsoptionen, in allen Sprachen. Leer wird die eingebaute, übersetzte Nachricht verwendet.",
   config_rate_auth_per_minute: "Anmeldung & Registrierung",

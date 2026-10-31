@@ -57,6 +57,11 @@ SETTING_SPECS: tuple[SettingSpec, ...] = (
     SettingSpec("scoreboard_ocr_enabled", "bool", "access", public=True),
     SettingSpec("guest_bug_reports", "bool", "bug_reports", public=True),
     SettingSpec("bug_report_discord", "bool", "bug_reports"),
+    SettingSpec("bug_report_require_image", "bool", "bug_reports", public=True),
+    # Screenshots on a report. The ceilings keep one request (base64 inflates by a third) under
+    # MAX_CONTENT_LENGTH: 4 images of 3 MB come to about 16 MB, against the 20 MB default.
+    _int_spec("bug_report_max_images", "bug_reports", 1, 4, public=True),
+    _int_spec("bug_report_image_max_mb", "bug_reports", 1, 3, public=True),
     # Site-wide notice (a banner under the header). Text is plain; the front end never renders HTML.
     SettingSpec("site_banner_enabled", "bool", "notices", public=True),
     SettingSpec("site_banner_level", "choice", "notices", choices=BANNER_LEVELS, public=True),

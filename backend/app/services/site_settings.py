@@ -43,6 +43,9 @@ _FALLBACK_DEFAULTS: dict[str, str | int | bool] = {
     "scoreboard_ocr_enabled": True,
     "guest_bug_reports": True,
     "bug_report_discord": True,
+    "bug_report_require_image": False,
+    "bug_report_max_images": 3,
+    "bug_report_image_max_mb": 2,
     "site_banner_enabled": False,
     "site_banner_level": "info",
     "site_banner_until": "",
@@ -300,6 +303,21 @@ def bug_report_discord_enabled() -> bool:
     return bool(get_setting("bug_report_discord"))
 
 
+def bug_report_image_required() -> bool:
+    """Whether a bug report must carry at least one screenshot."""
+    return bool(get_setting("bug_report_require_image"))
+
+
+def bug_report_max_images() -> int:
+    """How many screenshots one bug report may carry."""
+    return int(get_setting("bug_report_max_images"))
+
+
+def bug_report_image_max_bytes() -> int:
+    """The largest single bug report screenshot, in bytes."""
+    return int(get_setting("bug_report_image_max_mb")) * 1024 * 1024
+
+
 def rate_limit(key: str) -> int:
     """Requests per minute allowed by one of the ``rate_*_per_minute`` settings."""
     return int(get_setting(key))
@@ -395,11 +413,14 @@ def public_config() -> dict[str, Any]:
             # visitor to sign in instead of letting them fill the form in for nothing.
             "guest_bug_reports": guest_bug_reports_allowed(),
             "scoreboard_ocr": scoreboard_ocr_enabled(),
+            "bug_report_require_image": bug_report_image_required(),
         },
         "limits": {
             "resend_cooldown_seconds": int(get_setting("resend_cooldown_seconds")),
             "password_min_length": password_min_length(),
             "scoreboard_upload_max_bytes": scoreboard_upload_max_bytes(),
+            "bug_report_max_images": bug_report_max_images(),
+            "bug_report_image_max_bytes": bug_report_image_max_bytes(),
         },
     }
 

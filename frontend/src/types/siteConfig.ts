@@ -33,10 +33,15 @@ export interface SiteConfig {
     /** Whether signed-out visitors may send bug reports. */
     guestBugReports: boolean;
     scoreboardOcr: boolean;
+    /** Whether a bug report must carry at least one screenshot. */
+    bugReportRequireImage: boolean;
   };
   limits: {
     resendCooldownSeconds: number;
     passwordMinLength: number;
     scoreboardUploadMaxBytes: number;
+    /** How many screenshots a bug report may carry, and the largest one (admin settings). */
+    bugReportMaxImages: number;
+    bugReportImageMaxBytes: number;
   };
 }

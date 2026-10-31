@@ -248,18 +248,21 @@ export function UserProfileClient() {
         />
       </div>
 
-      <BugReportModal
-        isOpen={bugModalOpen}
-        onSubmitted={() => setReportSubmitted(true)}
-        onClose={() => {
-          setBugModalOpen(false);
-          // Only a new report changes the list; closing the dialog unused no longer resets it to page 1.
-          if (reportSubmitted) {
-            setReportSubmitted(false);
-            void fetchMyReports(1);
-          }
-        }}
-      />
+      {/* Mounted only once opened, so its code is fetched on the click, not on every profile visit. */}
+      {bugModalOpen && (
+        <BugReportModal
+          isOpen={bugModalOpen}
+          onSubmitted={() => setReportSubmitted(true)}
+          onClose={() => {
+            setBugModalOpen(false);
+            // Only a new report changes the list; closing the dialog unused no longer resets it to page 1.
+            if (reportSubmitted) {
+              setReportSubmitted(false);
+              void fetchMyReports(1);
+            }
+          }}
+        />
+      )}
     </>
   );
 }

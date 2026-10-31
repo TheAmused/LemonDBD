@@ -87,6 +87,8 @@ class TestRegistry:
         assert SPEC_BY_KEY["match_log_max_entries"].maximum == 100
         assert SPEC_BY_KEY["scoreboard_upload_max_mb"].maximum == 8
         assert SPEC_BY_KEY["smash_image_max_mb"].maximum == 5
+        # 4 images of 3 MB, inflated by base64, must stay under the 20 MB request cap
+        assert SPEC_BY_KEY["bug_report_max_images"].maximum * SPEC_BY_KEY["bug_report_image_max_mb"].maximum * 4 / 3 < 20
         with pytest.raises(ValueError):
             validate_setting("content_evidence_days", 15)
 
@@ -488,6 +490,15 @@ class TestWiring:
     def test_upload_cap_follows_the_setting(self, client: FlaskClient) -> None:
         site_settings.update_settings({"scoreboard_upload_max_mb": 2})
         assert client.get("/api/v1/scoreboard/status").get_json()["max_bytes"] == 2 * 1024 * 1024
+
+    def test_bug_report_screenshot_limits_are_public(self, client: FlaskClient) -> None:
+        limits = client.get("/api/v1/site-config").get_json()["limits"]
+        assert (limits["bug_report_max_images"], limits["bug_report_image_max_bytes"]) == (3, 2 * 1024 * 1024)
+        assert client.get("/api/v1/site-config").get_json()["features"]["bug_report_require_image"] is False
+        site_settings.update_settings({"bug_report_max_images": 4, "bug_report_image_max_mb": 3, "bug_report_require_image": True})
+        assert client.get("/api/v1/site-config").get_json()["features"]["bug_report_require_image"] is True
+        limits = client.get("/api/v1/site-config").get_json()["limits"]
+        assert (limits["bug_report_max_images"], limits["bug_report_image_max_bytes"]) == (4, 3 * 1024 * 1024)
 
     def test_evidence_lifetime_is_capped_by_the_policy(self, monkeypatch: pytest.MonkeyPatch) -> None:
         from app.services import content_moderation_service as service

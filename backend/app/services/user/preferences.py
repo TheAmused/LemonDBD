@@ -4,7 +4,7 @@ from typing import Any
 
 from app.core.extensions import db
 from app.models.smash_or_pass import SmashUserPreference
-from app.models.user_preference import UserPreference
+from app.models.user_preference import DEFAULT_BACKGROUND_ANIMATION, UserPreference
 
 
 def get_user_preferences(user_id: int) -> dict[str, Any] | None:
@@ -20,7 +20,7 @@ def get_user_preferences(user_id: int) -> dict[str, Any] | None:
             "sounds": smash_row.sounds_enabled,
             "music": smash_row.music_enabled,
             "nsfw": False,
-            "background_animation": "on",
+            "background_animation": DEFAULT_BACKGROUND_ANIMATION,
             "gifs": True,
             "chosen_at": smash_row.chosen_at,
         }

@@ -9,6 +9,7 @@ import {
   type RemoteUserPreferences,
 } from '@/services/userPreferencesApi';
 import { useOnceInBrowser } from '@/hooks/useOnceInBrowser';
+import { DEFAULT_BACKGROUND_ANIMATION } from '@/utils/backgroundAnimation';
 
 export type BackgroundAnimationMode = 'on' | 'eco' | 'off';
 
@@ -48,7 +49,7 @@ export function defaultPreferences(reducedMotion?: boolean): SitePreferences {
     sounds: true,
     music: !isReduced,
     nsfw: false,
-    backgroundAnimation: isReduced ? 'eco' : 'on',
+    backgroundAnimation: DEFAULT_BACKGROUND_ANIMATION,
     gifs: true,
     chosenAt: 0,
   };
@@ -69,7 +70,7 @@ export function toRemote(prefs: SitePreferences): RemoteUserPreferences {
 export function fromRemote(remote: RemoteUserPreferences): SitePreferences {
   const bg = remote.background_animation;
   const backgroundAnimation: BackgroundAnimationMode =
-    bg === 'on' || bg === 'eco' || bg === 'off' ? bg : 'on';
+    bg === 'on' || bg === 'eco' || bg === 'off' ? bg : DEFAULT_BACKGROUND_ANIMATION;
   return {
     effects: !!remote.effects,
     sounds: !!remote.sounds,
@@ -117,7 +118,7 @@ export function parseSitePreferences(value: unknown): SitePreferences | null {
   }
   const bg = v.backgroundAnimation;
   const backgroundAnimation: BackgroundAnimationMode =
-    bg === 'on' || bg === 'eco' || bg === 'off' ? bg : 'on';
+    bg === 'on' || bg === 'eco' || bg === 'off' ? bg : DEFAULT_BACKGROUND_ANIMATION;
   return {
     effects: v.effects,
     sounds: v.sounds,
@@ -151,7 +152,7 @@ export function readLocalPreferences(): SitePreferences | null {
           sounds: typeof p.sounds === 'boolean' ? p.sounds : true,
           music: typeof p.music === 'boolean' ? p.music : true,
           nsfw: rawNsfw === 'true',
-          backgroundAnimation: 'on',
+          backgroundAnimation: DEFAULT_BACKGROUND_ANIMATION,
           gifs: true,
           chosenAt: typeof p.chosenAt === 'number' ? p.chosenAt : 0,
         };

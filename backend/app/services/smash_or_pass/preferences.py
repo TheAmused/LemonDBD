@@ -5,7 +5,7 @@ from typing import Any
 
 from app.core.extensions import db
 from app.models.smash_or_pass import SmashUserPreference
-from app.models.user_preference import UserPreference
+from app.models.user_preference import DEFAULT_BACKGROUND_ANIMATION, UserPreference
 
 
 def get_preferences(user_id: int) -> dict[str, Any] | None:
@@ -60,7 +60,7 @@ def save_preferences(
             sounds_enabled=sounds,
             music_enabled=music,
             nsfw_enabled=False,
-            background_animation="on",
+            background_animation=DEFAULT_BACKGROUND_ANIMATION,
             chosen_at=chosen_at,
         )
         db.session.add(user_pref)

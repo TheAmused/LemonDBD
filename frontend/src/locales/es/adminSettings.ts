@@ -54,7 +54,7 @@ export default {
   config_bug_report_discord: "Anunciar en Discord",
   config_bug_report_discord_desc: "Publicar cada informe de error nuevo en el canal de Discord del equipo (necesita un webhook, ver Integraciones).",
   config_bug_report_require_image: "Exigir una captura de pantalla",
-  config_bug_report_require_image_desc: "Quien reporta debe adjuntar al menos una captura antes de enviar el reporte de error. Desactivado por defecto, porque algunos errores no tienen nada que fotografiar.",
+  config_bug_report_require_image_desc: "Quien reporta debe adjuntar al menos una captura antes de enviar el reporte de error.",
   config_bug_report_max_images: "Capturas por reporte de error",
   config_bug_report_max_images_desc: "Cuántas capturas de pantalla se pueden adjuntar a un reporte de error. Entre 1 y 4.",
   config_bug_report_image_max_mb: "Límite de tamaño de capturas en reportes",

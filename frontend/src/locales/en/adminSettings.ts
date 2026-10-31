@@ -54,7 +54,7 @@ export default {
   config_bug_report_discord: "Announce on Discord",
   config_bug_report_discord_desc: "Post every new bug report to the team's Discord channel (needs a webhook, see Integrations).",
   config_bug_report_require_image: "Require a screenshot",
-  config_bug_report_require_image_desc: "Reporters must attach at least one screenshot before a bug report can be sent. Off by default, since some bugs have nothing to photograph.",
+  config_bug_report_require_image_desc: "Reporters must attach at least one screenshot before a bug report can be sent.",
   config_bug_report_max_images: "Screenshots per bug report",
   config_bug_report_max_images_desc: "How many screenshots a reporter can attach to a bug report. Between 1 and 4.",
   config_bug_report_image_max_mb: "Bug report screenshot limit",

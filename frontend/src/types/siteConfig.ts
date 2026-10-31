@@ -23,7 +23,6 @@ export interface SiteConfig {
     discordInvite: string | null;
     donationBmc: string | null;
     donationKofi: string | null;
-    donationPatreon: string | null;
     donationMessage: string | null;
   };
   features: {

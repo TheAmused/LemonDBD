@@ -97,8 +97,6 @@ export default {
   config_donation_bmc_url_desc: "空欄にすると、サポートのウィンドウでこの項目が非表示になります。",
   config_donation_kofi_url: "Ko-fi のリンク",
   config_donation_kofi_url_desc: "空欄にすると、サポートのウィンドウでこの項目が非表示になります。",
-  config_donation_patreon_url: "Patreon のリンク",
-  config_donation_patreon_url_desc: "空欄にすると、サポートのウィンドウでこの項目が非表示になります。",
   config_donation_message: "サポートウィンドウのメッセージ",
   config_donation_message_desc: "サポート項目の上に表示するテキスト（全言語共通）。空欄の場合は、組み込みの翻訳済みメッセージを使います。",
   config_rate_auth_per_minute: "ログインと新規登録",

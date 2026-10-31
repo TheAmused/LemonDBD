@@ -71,4 +71,3 @@ export { FitIcon } from './ui/FitIcon';
 export { DiscordIcon } from './brand/DiscordIcon';
 export { BuyMeACoffeeIcon } from './brand/BuyMeACoffeeIcon';
 export { KofiIcon } from './brand/KofiIcon';
-export { PatreonIcon } from './brand/PatreonIcon';

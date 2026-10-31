@@ -97,7 +97,7 @@ test('transcribeClientAudio handles empty and short audio buffers safely', async
   assert.strictEqual(shortResult, '');
 });
 
-test('VoiceEngineInfoModal renders dual-engine explanation and compatibility details', () => {
+test('VoiceEngineInfoModal renders both engines, the accuracy choice and the download progress', () => {
   const mockProgress = {
     status: 'downloading' as const,
     progress: 45,
@@ -107,18 +107,16 @@ test('VoiceEngineInfoModal renders dual-engine explanation and compatibility det
     React.createElement(VoiceEngineInfoBody, {
       currentEngine: 'client-model',
       onSelectEngine: () => {},
-      browserName: 'Mozilla Firefox',
       hasNativeWebSpeech: false,
       modelProgress: mockProgress,
       onPreloadModel: () => {},
     })
   );
 
-  // Title is rendered by the shared Modal header; the body holds the explanations
-  assert.ok(html.includes('Mozilla Firefox'));
+  // Title is rendered by the shared Modal header; the body holds the engine cards
   assert.ok(html.includes('Web Speech Framework'));
-  assert.ok(html.includes('Client-Side AI Model') || html.includes('Client-Side'));
-  assert.ok(html.includes('Why is a Client-Side Fallback Needed?'));
+  assert.ok(html.includes('Client-Side'));
+  assert.ok(html.includes('Local model accuracy'));
   assert.ok(html.includes('45%'));
 });
 
@@ -132,40 +130,33 @@ test('VoiceEngineInfoModal handles native Web Speech engine active state', () =>
     React.createElement(VoiceEngineInfoBody, {
       currentEngine: 'web-speech',
       onSelectEngine: () => {},
-      browserName: 'Google Chrome',
       hasNativeWebSpeech: true,
       modelProgress: mockProgress,
       onPreloadModel: () => {},
     })
   );
 
-  assert.ok(html.includes('Google Chrome'));
-  assert.ok(html.includes('Google / Web Speech API'));
-  assert.ok(html.includes('0MB download overhead'));
+  assert.ok(html.includes('Nothing to download.'));
+  assert.ok(html.includes('Chrome • Edge • Safari'));
 });
 
 test('VoiceCommandBanner renders active engine badge and fallback trigger', () => {
   const html = renderWithDictionary(
     React.createElement(VoiceCommandBanner, {
       locale: 'en',
-      currentSource: 'lemondbd',
-      onSourceChange: () => {},
       onSelectMap: () => {},
       onAction: () => {},
       availableMaps: [],
     })
   );
 
-  // Banner should render engine indicator pill
-  assert.ok(
-    html.includes('Local AI Model') ||
-    html.includes('Web Speech API') ||
-    html.includes('Voice Recognition Engine')
-  );
-  // Banner renders source toggle with LemonDBD and Hens333 (12-Clock)
-  assert.ok(html.includes('LemonDBD'));
-  assert.ok(html.includes('Hens333'));
+  // Banner should render the engine button, named for what it is
+  assert.ok(html.includes('Engine: Local AI') || html.includes('Engine: Google'));
+  // One map source: no source toggle any more
+  assert.ok(!html.includes('Hens333'));
   assert.ok(!html.includes('SamoelColt'));
+  // The engine and sound buttons carry no tooltip
+  assert.ok(!html.includes('data-tooltip'));
 });
 
 test('Multilingual translations dictionary coverage for voice recognition fallback', () => {
@@ -183,8 +174,6 @@ test('Multilingual translations dictionary coverage for voice recognition fallba
     assert.ok(dict.voice.howItWorksTitle, `Missing voice.howItWorksTitle in ${lang}.json`);
     assert.ok(dict.voice.howItWorksNative, `Missing voice.howItWorksNative in ${lang}.json`);
     assert.ok(dict.voice.howItWorksClient, `Missing voice.howItWorksClient in ${lang}.json`);
-    assert.ok(dict.voice.whyNeededTitle, `Missing voice.whyNeededTitle in ${lang}.json`);
-    assert.ok(dict.voice.whyNeededText, `Missing voice.whyNeededText in ${lang}.json`);
     assert.ok(dict.voice.statusReady, `Missing voice.statusReady in ${lang}.json`);
   }
 });

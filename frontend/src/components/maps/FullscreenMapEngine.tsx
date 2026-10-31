@@ -2,27 +2,109 @@
 
 import { Button } from '@/components/common/Button';
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import {
-  X,
-  ZoomIn,
-  ZoomOut,
-  RotateCcw,
-  ImageOff,
-  Compass,
-  Home,
-  Building2,
-  Maximize2,
-} from 'lucide-react';
+import { X, ImageOff, Building2, Compass, Home, Maximize2, type LucideIcon } from 'lucide-react';
 import type { MapRealm } from '@/types/map';
 import { getLayoutTypeLabel, getMapImageSrc } from '@/utils/mapUtils';
-
-import { tip } from '@/components/common/Tooltip';
-import { Modal } from '@/components/common/Modal';
 import { formatNumber } from '@/utils/format';
 import { formatMessage } from '@/utils/i18nFormat';
-import { useDictionary } from "@/context/DictionaryContext";
 import { Surface } from '@/components/common/Surface';
+import { CheckIcon } from '@/components/icons/DbdIcons';
+import { cn } from '@/utils/cn';
+
+import { Modal } from '@/components/common/Modal';
+import { useDictionary } from "@/context/DictionaryContext";
 import { Img } from '@/components/common/Img';
+import { ZoomControl, type ZoomValue } from '@/components/common/ZoomControl';
+
+/** The zoom steps of the -/+ buttons, in percent of the picture's real size. */
+const MAP_ZOOM_STEPS = [25, 50, 75, 100, 150, 200, 300] as const;
+const MAX_ZOOM = MAP_ZOOM_STEPS[MAP_ZOOM_STEPS.length - 1];
+
+// ─── Legend ──────────────────────────────────────────────────────────────────
+// The map's facts as a legend over the map: surface area, layout, and whether the map has a shack and a
+// main building. A card in the corner of the map area, not badges in the header bar. It grows with the
+// screen (wide, 2K, 4K) like the picture beside it. On a phone, where there is no free space beside the
+// map, it is a strip under the header instead, always open.
+
+const LAYOUT_TONE: Record<string, string> = {
+  Indoor: 'text-accent-red',
+  Hybrid: 'text-accent-amber',
+  Outdoor: 'text-accent-green',
+};
+
+const LEGEND_ICON = 'icon-md shrink-0 wide:icon-lg wide-4k:icon-xl';
+
+function LegendRow({ icon: Icon, label, children }: { icon: LucideIcon; label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex items-center gap-2.5 wide-2k:gap-3.5">
+      <dt className="flex items-center gap-2.5 wide-2k:gap-3.5 type-body-screen text-text-muted">
+        <Icon className={cn(LEGEND_ICON, 'text-accent-red')} aria-hidden="true" />
+        {label}
+      </dt>
+      <dd className="ml-auto pl-3 wide-2k:pl-6 type-strong-screen text-text-primary text-right">{children}</dd>
+    </div>
+  );
+}
+
+/** A structure the map has (check) or lacks (cross); the full "Shack" / "No Shack" text is read out. */
+function Presence({ present, yes, no }: { present: boolean; yes: string; no: string }) {
+  const Icon = present ? CheckIcon : X;
+  return (
+    <span className="inline-flex">
+      <Icon className={cn(LEGEND_ICON, present ? 'text-accent-green' : 'text-text-muted')} aria-hidden="true" />
+      <span className="sr-only">{present ? yes : no}</span>
+    </span>
+  );
+}
+
+export const MapDetailsLegend: React.FC<{ map: MapRealm; className?: string }> = ({ map, className }) => {
+  const dict = useDictionary();
+  const m = dict.maps;
+
+  // Phones: a flat strip under the header, two facts per line, so nothing covers the map. From `sm` up:
+  // the card in the corner of the map area, with its title.
+  return (
+    <Surface
+      as="aside"
+      aria-label={m.legendTitle}
+      tone="elevated"
+      padding="none"
+      stripOnPhone
+      className={cn(
+        'px-4 py-2.5',
+        'sm:bg-bg-elevated/90 sm:p-4 sm:backdrop-blur-xl sm:shadow-2xl wide-2k:p-5 wide-4k:p-6',
+        className
+      )}
+    >
+      <h3 className="max-sm:hidden type-label-screen text-text-muted">{m.legendTitle}</h3>
+      <dl className="grid grid-cols-2 gap-x-5 gap-y-1.5 sm:mt-3 sm:block sm:space-y-2.5 wide-2k:mt-4 wide-2k:space-y-3.5">
+        {map.size_sq_tiles != null && (
+          <LegendRow icon={Maximize2} label={m.surfaceArea}>
+            {map.size_sq_tiles} {m.sqTilesUnit}
+            {map.size_sq_meters != null && (
+              <span className="block type-caption-screen text-text-muted">
+                {formatMessage(m.sqMetersSuffix, { value: formatNumber(map.size_sq_meters) })}
+              </span>
+            )}
+          </LegendRow>
+        )}
+        {map.layout_type && (
+          <LegendRow icon={Compass} label={m.layoutLabel}>
+            <span className={LAYOUT_TONE[map.layout_type] ?? LAYOUT_TONE.Outdoor}>
+              {getLayoutTypeLabel(map.layout_type, m)}
+            </span>
+          </LegendRow>
+        )}
+        <LegendRow icon={Home} label={m.shackYes}>
+          <Presence present={map.is_shack} yes={m.shackYes} no={m.shackNo} />
+        </LegendRow>
+        <LegendRow icon={Building2} label={m.mainBuildingYes}>
+          <Presence present={map.is_main_building} yes={m.mainBuildingYes} no={m.mainBuildingNo} />
+        </LegendRow>
+      </dl>
+    </Surface>
+  );
+};
 
 interface FullscreenMapEngineProps {
   mapId: number;
@@ -41,13 +123,18 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
   );
   const imageSrc = getMapImageSrc(activeMap, backendBase);
 
-  const [zoom, setZoom] = useState<number>(1.0);
+  // Zoom is a percent of the picture's real size, or 'fit' (the whole picture in the map area, which is
+  // also how a map opens). Wheel and pinch zoom freely between the smallest step (or Fit, if smaller) and
+  // the largest; the -/+ buttons step to the next of MAP_ZOOM_STEPS.
+  const [zoom, setZoom] = useState<ZoomValue>('fit');
+  const [natural, setNatural] = useState<{ w: number; h: number } | null>(null);
+  const [box, setBox] = useState<{ w: number; h: number } | null>(null);
   const [pan, setPan] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [dragStart, setDragStart] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
 
   const [initialPinchDistance, setInitialPinchDistance] = useState<number | null>(null);
-  const [initialZoom, setInitialZoom] = useState<number>(1.0);
+  const [initialZoom, setInitialZoom] = useState<number>(100);
 
   // Another map: start from a fresh view. Done while rendering (not in an effect), so the new
   // map never paints with the previous one's zoom and pan first.
@@ -55,26 +142,60 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
   if (viewedMapId !== mapId) {
     setViewedMapId(mapId);
     setImageFailed(false);
-    setZoom(1.0);
+    setNatural(null);
+    setZoom('fit');
     setPan({ x: 0, y: 0 });
   }
+
+  const fitPercent = natural && box ? Math.min(box.w / natural.w, box.h / natural.h) * 100 : 100;
+  const zoomPercent = zoom === 'fit' ? fitPercent : zoom;
+  // Fit can be above the largest step (a small picture on a big screen), so it widens both bounds.
+  const clampZoom = useCallback(
+    (percent: number) =>
+      Math.min(Math.max(percent, Math.min(MAP_ZOOM_STEPS[0], fitPercent)), Math.max(MAX_ZOOM, fitPercent)),
+    [fitPercent]
+  );
+  // The wheel listener is attached once, so it reads the latest values from here.
+  const zoomRef = useRef({ zoomPercent, clampZoom });
+  useEffect(() => {
+    zoomRef.current = { zoomPercent, clampZoom };
+  });
 
   const containerRef = useRef<HTMLDivElement>(null);
   const pointerDownPosRef = useRef<{ x: number; y: number } | null>(null);
   const draggedRef = useRef<boolean>(false);
 
+  // The room the picture can fill: the map area minus its padding (the bottom padding keeps the toolbar clear).
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
+    const measure = () => {
+      const cs = getComputedStyle(el);
+      const w = el.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      const h = el.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      if (w > 0 && h > 0) setBox((prev) => (prev && prev.w === w && prev.h === h ? prev : { w, h }));
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
-      const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
-      setZoom((prev) => Math.min(Math.max(prev * zoomFactor, 0.5), 5.0));
+      const { zoomPercent: current, clampZoom: clamp } = zoomRef.current;
+      setZoom(clamp(current * (e.deltaY < 0 ? 1.15 : 0.85)));
     };
     el.addEventListener('wheel', onWheel, { passive: false });
     return () => {
+      observer.disconnect();
       el.removeEventListener('wheel', onWheel);
     };
+  }, []);
+
+  // The picture's real size, from the load event or, for a cached picture that loaded before React
+  // attached it, straight from the element.
+  const readNatural = useCallback((img: HTMLImageElement | null) => {
+    if (!img || !img.complete || img.naturalWidth === 0) return;
+    const next = { w: img.naturalWidth, h: img.naturalHeight };
+    setNatural((prev) => (prev && prev.w === next.w && prev.h === next.h ? prev : next));
   }, []);
 
   // The picture being panned: the callout <img>.
@@ -129,7 +250,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
         e.touches[0].clientY - e.touches[1].clientY
       );
       setInitialPinchDistance(dist);
-      setInitialZoom(zoom);
+      setInitialZoom(zoomPercent);
     }
   };
 
@@ -149,8 +270,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
         e.touches[0].clientX - e.touches[1].clientX,
         e.touches[0].clientY - e.touches[1].clientY
       );
-      const factor = currentDist / initialPinchDistance;
-      setZoom(Math.min(Math.max(initialZoom * factor, 0.5), 5.0));
+      setZoom(clampZoom(initialZoom * (currentDist / initialPinchDistance)));
     }
   };
 
@@ -159,86 +279,39 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
     setInitialPinchDistance(null);
   };
 
-  const handleResetView = useCallback(() => {
-    setZoom(1.0);
+  // Fit and the percent button also bring the picture back to the middle; a -/+ step keeps the pan.
+  const handleZoomChange = (next: ZoomValue) => {
+    if (next === 'fit') setPan({ x: 0, y: 0 });
+    setZoom(next === 'fit' ? next : clampZoom(next));
+  };
+  const handleZoomReset = () => {
     setPan({ x: 0, y: 0 });
-  }, []);
-
-  const structureBadge = (present: boolean) =>
-    present
-      ? 'text-accent-green bg-accent-green/10 border-accent-green/40'
-      : 'text-text-muted bg-bg-elevated border-border-color';
-
-  const getLayoutBadge = (layout?: string) => {
-    switch (layout) {
-      case 'Indoor':
-        return 'text-accent-red bg-accent-red/10 border-accent-red/40';
-      case 'Hybrid':
-        return 'text-accent-amber bg-accent-amber/10 border-accent-amber/40';
-      case 'Outdoor':
-      default:
-        return 'text-accent-green bg-accent-green/10 border-accent-green/40';
-    }
+    setZoom(100);
   };
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col justify-between overflow-hidden text-text-primary">
-      <header className="relative shrink-0 z-40 px-3 sm:px-6 py-2 sm:py-2.5 bg-bg-primary border-b border-border-color/80 shadow-2xl">
-        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
-          {activeMap && (
-            <div className="min-w-0 flex-1 flex flex-wrap items-center justify-center sm:justify-start gap-1.5 text-xs">
-              {activeMap.size_sq_tiles != null ? (
-                <Surface tone="elevated" padding="none" className="inline-flex items-center gap-1.5 px-2.5 py-1 border-accent-red/40 text-text-secondary shadow-sm shrink-0">
-                  <Maximize2 className="icon-sm text-accent-red shrink-0" />
-                  <span className="text-text-muted">{dict.maps.surfaceArea}</span>
-                  <span className="type-strong text-text-primary">{activeMap.size_sq_tiles}</span>
-                  <span className="text-accent-red font-bold">{dict.maps.sqTilesUnit}</span>
-                  {activeMap.size_sq_meters != null && (
-                    <span className="text-text-muted type-micro pl-0.5">
-                      {formatMessage((dict.maps.sqMetersSuffix), { value: formatNumber(activeMap.size_sq_meters) })}
-                    </span>
-                  )}
-                </Surface>
-              ) : null}
-
-              {activeMap.layout_type && (
-                <span
-                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-control border font-semibold text-xs shrink-0 ${getLayoutBadge(
-                    activeMap.layout_type
-                  )}`}
-                >
-                  <Compass className="icon-sm shrink-0" />
-                  {getLayoutTypeLabel(activeMap.layout_type, dict.maps)}
-                </span>
-              )}
-
-              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-control border text-xs font-semibold shrink-0 ${structureBadge(activeMap.is_shack)}`}>
-                <Home className="icon-sm shrink-0" />
-                {activeMap.is_shack ? (dict.maps.shackYes) : (dict.maps.shackNo)}
-              </span>
-              <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-control border text-xs font-semibold shrink-0 ${structureBadge(activeMap.is_main_building)}`}>
-                <Building2 className="icon-sm shrink-0" />
-                {activeMap.is_main_building
-                  ? (dict.maps.mainBuildingYes)
-                  : (dict.maps.mainBuildingNo)}
-              </span>
-            </div>
-          )}
-
-          <div className="flex items-center gap-2 shrink-0">
-            <Button
-              variant="ghost"
-              size="md"
-              icon
-              data-modal-close
-              onClick={onClose}
-              aria-label={dict.modal.close}
-            >
-              <X aria-hidden="true" />
-            </Button>
-          </div>
+      <header className="relative shrink-0 z-40 grid grid-cols-[1fr_auto_1fr] items-center gap-3 px-3 sm:px-6 py-2 sm:py-2.5 bg-bg-primary border-b border-border-color/80 shadow-2xl">
+        <span aria-hidden="true" />
+        <h2 className="min-w-0 truncate text-center type-page-title text-text-primary">{activeMap?.name}</h2>
+        <div className="flex justify-end">
+          <Button
+            variant="ghost"
+            size="md"
+            icon
+            data-modal-close
+            onClick={onClose}
+            aria-label={dict.modal.close}
+          >
+            <X aria-hidden="true" />
+          </Button>
         </div>
       </header>
+
+      {/* In the flow under the header on a phone; over the map's corner from `sm` up. */}
+      {activeMap && (
+        <MapDetailsLegend map={activeMap} className="relative z-30 shrink-0 sm:absolute sm:left-6 sm:top-20 sm:z-40" />
+      )}
 
       <div
         ref={containerRef}
@@ -262,13 +335,16 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
             src={imageSrc}
             alt={activeMap?.name || ''}
             draggable={false}
+            ref={readNatural}
+            onLoad={(e) => readNatural(e.currentTarget)}
             style={{
-              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoomPercent / 100})`,
               transformOrigin: 'center center',
               transition: isDragging ? 'none' : 'transform 75ms ease-out',
             }}
-            className={`max-w-full max-h-full object-contain select-none shadow-2xl ${isDragging ? 'cursor-grabbing' : 'cursor-grab'
-              }`}
+            className={`max-w-none shrink-0 select-none shadow-2xl ${natural ? '' : 'invisible'} ${
+              isDragging ? 'cursor-grabbing' : 'cursor-grab'
+            }`}
             onError={() => setImageFailed(true)}
           />
         ) : (
@@ -282,50 +358,23 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
       </div>
 
       <footer className="absolute inset-x-0 bottom-4 sm:inset-x-auto sm:right-6 z-40 flex justify-center sm:justify-end pointer-events-none">
-        <Surface
-          role="toolbar"
-          aria-label={dict.maps.engineControlsAria}
-          tone="elevated" padding="none" className="pointer-events-auto shrink-0 flex items-center gap-2 bg-bg-elevated/90 p-2 backdrop-blur-xl shadow-2xl"
-        >
-          <Button
-            variant="ghost"
-            size="sm"
-            icon
-            onClick={() => setZoom((z) => Math.max(z - 0.2, 0.5))}
-            {...tip(dict.maps.zoomOut, undefined, 'action')}
-            aria-label={dict.maps.zoomOutAria}
-          >
-            <ZoomOut />
-          </Button>
-
-          <span className="type-strong text-text-primary px-2 min-w-hit-xl text-center">
-            {Math.round(zoom * 100)}{dict.maps.percentSign}
-          </span>
-
-          <Button
-            variant="ghost"
-            size="sm"
-            icon
-            onClick={() => setZoom((z) => Math.min(z + 0.2, 5.0))}
-            {...tip(dict.maps.zoomIn, undefined, 'action')}
-            aria-label={dict.maps.zoomInAria}
-          >
-            <ZoomIn />
-          </Button>
-
-          <div className="w-px h-4 bg-border-color my-auto" />
-
-          <Button
-            variant="ghost"
-            size="sm"
-            icon
-            onClick={handleResetView}
-            {...tip(dict.maps.resetPanZoom, undefined, 'action')}
-            aria-label={dict.maps.resetPanAndZoomAria}
-          >
-            <RotateCcw />
-          </Button>
-        </Surface>
+        <div role="toolbar" aria-label={dict.maps.engineControlsAria} className="pointer-events-auto">
+          <ZoomControl
+            value={zoom}
+            steps={MAP_ZOOM_STEPS}
+            onChange={handleZoomChange}
+            onReset={handleZoomReset}
+            fitValue={fitPercent}
+            labels={{
+              zoomOut: dict.maps.zoomOut,
+              zoomIn: dict.maps.zoomIn,
+              reset: dict.maps.zoomReset,
+              fit: dict.maps.zoomFit,
+              fitHint: dict.maps.zoomFitHint,
+            }}
+            className="shadow-2xl"
+          />
+        </div>
       </footer>
     </div>
   );
@@ -350,7 +399,7 @@ export const FullscreenMapEngine: React.FC<FullscreenMapEngineProps> = (props) =
     backdrop="none"
     borderless
     zIndexClassName="z-40 lg:z-30"
-    containerClassName="left-[var(--sidebar-width,0rem)] transition-[left] duration-300 ease-in-out"
+    containerClassName="left-[var(--sidebar-width,0rem)] right-0 w-auto transition-[left] duration-300 ease-in-out"
     className="bg-bg-primary"
     bodyClassName="flex flex-col overflow-hidden"
   >

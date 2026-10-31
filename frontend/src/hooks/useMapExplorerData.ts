@@ -5,7 +5,7 @@ import { logger } from '@/utils/logger';
 import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
 import { useState, useEffect, useMemo, useRef } from 'react';
 import type { MapRealm, Realm } from '@/types/map';
-import { fetchMaps, fetchRealms, mapsCacheKey, realmsCacheKey } from '@/services/mapApi';
+import { MAP_SOURCE, fetchMaps, fetchRealms, mapsCacheKey, realmsCacheKey } from '@/services/mapApi';
 import { readCache } from '@/services/dataCache';
 
 const SEARCH_MIN_CHARS = 3;
@@ -17,7 +17,6 @@ export interface UseMapExplorerDataOptions {
   /** Called when a map opens by itself (a voice command or a `?mapName=` link), not from a card click. */
   onAutoOpen?: (map: MapRealm, via: 'voice' | 'link') => void;
   locale?: string;
-  source?: 'lemondbd' | 'hens333';
 }
 
 export function normalizeMapSearch(s: string): string {
@@ -80,13 +79,12 @@ export interface UseMapExplorerDataReturn {
 }
 
 export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): UseMapExplorerDataReturn {
-  const { initialMapName = '', selectedMap, onAvailableMapsLoaded, onAutoOpen, locale, source } = options;
-  const activeSource = source || 'lemondbd';
+  const { initialMapName = '', selectedMap, onAvailableMapsLoaded, onAutoOpen, locale } = options;
 
   // Seed straight from the cache during the first render. Waiting for the
   // effect below would repaint the spinner for a frame on every return visit,
   // even though the data is already in memory.
-  const cachedMaps = readCache<{ maps: MapRealm[] }>(mapsCacheKey('', activeSource, undefined, locale))?.maps;
+  const cachedMaps = readCache<{ maps: MapRealm[] }>(mapsCacheKey('', MAP_SOURCE, undefined, locale))?.maps;
 
   const [maps, setMaps] = useState<MapRealm[]>(cachedMaps ?? []);
   const [realmImages, setRealmImages] = useState<Record<string, Realm>>(() => {
@@ -102,18 +100,6 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [loading, setLoading] = useState(cachedMaps === undefined);
   const [openMapId, setOpenMapId] = useState<number | null>(null);
-
-  const [prevSource, setPrevSource] = useState(activeSource);
-  if (prevSource !== activeSource) {
-    setPrevSource(activeSource);
-    if (cachedMaps) {
-      setMaps(cachedMaps);
-      setLoading(false);
-    } else {
-      setMaps([]);
-      setLoading(true);
-    }
-  }
 
   const onAvailableMapsLoadedRef = useRef(onAvailableMapsLoaded);
   useEffect(() => {
@@ -145,12 +131,12 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
       try {
         // Only show the spinner when there is genuinely nothing to display;
         // a cached result should swap in without a loading flash.
-        if (readCache(mapsCacheKey('', activeSource, undefined, locale)) === undefined) {
+        if (readCache(mapsCacheKey('', MAP_SOURCE, undefined, locale)) === undefined) {
           setLoading(true);
         }
         // Fetch the full list once; filtering is done client-side (M4: backend only
         // searches the English name column, so non-English searches produce 0 results)
-        const data = await fetchMaps(undefined, '', activeSource, locale);
+        const data = await fetchMaps(undefined, '', MAP_SOURCE, locale);
         const loaded: MapRealm[] = data?.maps || [];
         if (!isCancelled) {
           setMaps(loaded);
@@ -178,7 +164,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
     return () => {
       isCancelled = true;
     };
-  }, [locale, activeSource]);
+  }, [locale]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -221,7 +207,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
     // Prefer a direct id lookup (set by voice commands on non-English locales) over name matching.
     const directId = rawObj?.mapId as number | undefined;
     const match = directId ? maps.find((m) => m.id === directId) : findMapByName(maps, targetMapName ?? '');
-    if (match) {
+    if (match && !match.is_retired) {
       setHandledTargetKey(targetKey);
       if (openMapId !== match.id) {
         setOpenMapId(match.id);

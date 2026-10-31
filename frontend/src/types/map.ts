@@ -9,12 +9,6 @@ export interface Realm {
   image_local_path: string;
 }
 
-export interface MapSource {
-  id: number;
-  code: string;
-  label: string;
-}
-
 /** A point in metres: x grows east, y grows south. */
 export type MapPoint = [number, number];
 
@@ -73,6 +67,8 @@ export interface MapRealm {
   pallet_density: string;
   is_shack: boolean;
   is_main_building: boolean;
+  /** Taken out of the game (Lampkin Lane): still listed, but greyed out and never opened. */
+  is_retired?: boolean;
   size_sq_tiles?: number | null;
   size_sq_meters?: number | null;
   /** Null for maps with no published to-scale outline: the callout image is shown instead. */

@@ -18,19 +18,19 @@ test('levenshteinDistance calculates standard edit distances correctly', () => {
 });
 
 test('Exact match recognition for canonical map names', () => {
-  const r1 = matchVoiceQuery("Azarov's Resting Place", 'all', mockMaps);
+  const r1 = matchVoiceQuery("Azarov's Resting Place", mockMaps);
   assert.ok(r1);
   assert.strictEqual(r1.matchedMapName, "Azarov's Resting Place");
   assert.strictEqual(r1.matchedMapId, 1);
   assert.strictEqual(r1.action, 'navigate');
   assert.ok(r1.confidence >= 0.95);
 
-  const r2 = matchVoiceQuery("Dead Dawg Saloon", 'all', mockMaps);
+  const r2 = matchVoiceQuery("Dead Dawg Saloon", mockMaps);
   assert.ok(r2);
   assert.strictEqual(r2.matchedMapName, 'Dead Dawg Saloon');
   assert.strictEqual(r2.action, 'navigate');
 
-  const r3 = matchVoiceQuery("The Game", 'all', mockMaps);
+  const r3 = matchVoiceQuery("The Game", mockMaps);
   assert.ok(r3);
   assert.strictEqual(r3.matchedMapName, 'The Game');
 });
@@ -199,33 +199,6 @@ test('Generic query disambiguation for multi-variant maps', () => {
   assert.deepStrictEqual(getVariantsForMap('Dead Dawg Saloon'), []);
 });
 
-test('Provider source switching commands', () => {
-  const rHens1 = matchVoiceQuery("switch to hens");
-  assert.ok(rHens1);
-  assert.strictEqual(rHens1.action, 'switch_source');
-  assert.strictEqual(rHens1.actionPayload, 'hens333');
-
-  const rHens2 = matchVoiceQuery("12 clock");
-  assert.ok(rHens2);
-  assert.strictEqual(rHens2.action, 'switch_source');
-  assert.strictEqual(rHens2.actionPayload, 'hens333');
-
-  const rSamoel1 = matchVoiceQuery("switch to samoel");
-  assert.ok(rSamoel1);
-  assert.strictEqual(rSamoel1.action, 'switch_source');
-  assert.strictEqual(rSamoel1.actionPayload, 'samoelcolt');
-
-  const rSamoel2 = matchVoiceQuery("isometric");
-  assert.ok(rSamoel2);
-  assert.strictEqual(rSamoel2.action, 'switch_source');
-  assert.strictEqual(rSamoel2.actionPayload, 'samoelcolt');
-
-  const rAll = matchVoiceQuery("all maps");
-  assert.ok(rAll);
-  assert.strictEqual(rAll.action, 'switch_source');
-  assert.strictEqual(rAll.actionPayload, 'all');
-});
-
 test('Action navigation commands', () => {
   const rZoomIn = matchVoiceQuery("zoom in");
   assert.ok(rZoomIn);
@@ -274,20 +247,6 @@ test('Fuzzy matching on misrecognitions and typos', () => {
   // Total gibberish should return null
   const rGibberish = matchVoiceQuery("xyz123 random nonesense banana apple pear");
   assert.strictEqual(rGibberish, null);
-});
-
-test('Source-aware map ID resolution', () => {
-  // If currentSource is samoelcolt, should prefer samoel map ID
-  const rSamoel = matchVoiceQuery("coal tower", 'samoelcolt', mockMaps);
-  assert.ok(rSamoel);
-  assert.strictEqual(rSamoel.matchedMapId, 15);
-  assert.strictEqual(rSamoel.source, 'samoelcolt');
-
-  // If currentSource is hens333, should prefer hens map ID
-  const rHens = matchVoiceQuery("coal tower", 'hens333', mockMaps);
-  assert.ok(rHens);
-  assert.strictEqual(rHens.matchedMapId, 10);
-  assert.strictEqual(rHens.source, 'hens333');
 });
 
 test('Additional variant groups and generic mappings', () => {
@@ -361,24 +320,6 @@ test('Exact action matching does not intercept substring phrases (e.g. backwater
   assert.notStrictEqual(rSwamp.action, 'close');
 });
 
-test('Source-prefixed map queries route to appropriate source provider', () => {
-  // "hens blood lodge"
-  const rHens = matchVoiceQuery("hens blood lodge", 'all', mockMaps);
-  assert.ok(rHens);
-  assert.strictEqual(rHens.matchedMapName, "Blood Lodge");
-  assert.strictEqual(rHens.source, 'hens333');
-  assert.strictEqual(rHens.matchedMapId, 2);
-  assert.strictEqual(rHens.action, 'navigate');
-
-  // "samoel dead dawg"
-  const rSamoel = matchVoiceQuery("samoel dead dawg", 'all', mockMaps);
-  assert.ok(rSamoel);
-  assert.strictEqual(rSamoel.matchedMapName, "Dead Dawg Saloon");
-  assert.strictEqual(rSamoel.source, 'samoelcolt');
-  assert.strictEqual(rSamoel.matchedMapId, 16);
-  assert.strictEqual(rSamoel.action, 'navigate');
-});
-
 test('Unicode NFD accents resolution (e.g. Léry\'s)', () => {
   const rLeryAccented = matchVoiceQuery("Léry's Memorial Institute");
   assert.ok(rLeryAccented);
@@ -402,10 +343,10 @@ test('Ormond Lake Mine does not return mount_ormond resort variants', () => {
 
 test('Matches map by raw_name on non-English locale (e.g. Japanese localized name with English canonical raw_name)', () => {
   const nonEnglishMaps = [
-    { id: 42, name: '石炭の塔', raw_name: 'Coal Tower', source: 'hens333' },
-    { id: 43, name: 'アザロフの休憩所', raw_name: "Azarov's Resting Place", source: 'hens333' },
+    { id: 42, name: '石炭の塔', raw_name: 'Coal Tower' },
+    { id: 43, name: 'アザロフの休憩所', raw_name: "Azarov's Resting Place" },
   ];
-  const result = matchVoiceQuery('coal tower', 'all', nonEnglishMaps);
+  const result = matchVoiceQuery('coal tower', nonEnglishMaps);
   assert.ok(result);
   assert.strictEqual(result.matchedMapId, 42);
   assert.strictEqual(result.matchedMapName, '石炭の塔');

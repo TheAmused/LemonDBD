@@ -86,9 +86,7 @@ export function VoiceStatusMessage({
               <span className="type-strong-fluid text-accent-green truncate max-w-70 sm:max-w-xl">
                 {matchedResult.matchedMapName
                   ? `${rawVoiceDict.matchedPrefix || ''} ${matchedResult.matchedMapName}`
-                  : matchedResult.action === 'switch_source'
-                    ? `${rawVoiceDict.switchedPrefix || ''} ${matchedResult.actionPayload}`
-                    : `${rawVoiceDict.actionPrefix || ''} ${matchedResult.action}`}
+                  : `${rawVoiceDict.actionPrefix || ''} ${matchedResult.action}`}
               </span>
             </div>
             {liveTranscript && (

@@ -97,8 +97,6 @@ export default {
   config_donation_bmc_url_desc: "Empty hides this option in the support window.",
   config_donation_kofi_url: "Ko-fi link",
   config_donation_kofi_url_desc: "Empty hides this option in the support window.",
-  config_donation_patreon_url: "Patreon link",
-  config_donation_patreon_url_desc: "Empty hides this option in the support window.",
   config_donation_message: "Support window message",
   config_donation_message_desc: "Text above the support options, in every language. Empty uses the built-in, translated message.",
   config_rate_auth_per_minute: "Sign-in & sign-up requests",

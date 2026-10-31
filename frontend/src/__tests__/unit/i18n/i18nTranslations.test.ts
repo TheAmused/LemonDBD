@@ -141,11 +141,9 @@ test('Sidebar Bug Report and Buy Coffee i18n coverage across all locales', () =>
     'bugErrorMessage',
     'bugCloseButton',
     'coffeeTitle',
-    'coffeeFuelNotice',
     'coffeeDonationMessage',
     'coffeeBuyMeCoffeeTagline',
     'coffeeKofiTagline',
-    'coffeePatreonTagline',
     'coffeeVisit',
     'coffeeClose',
   ] as const;

@@ -2,8 +2,8 @@
 // frontend/src/components/sidebar/BuyCoffeeModal.tsx
 
 import React from 'react';
-import {  ExternalLink,} from 'lucide-react';
-import { BuyMeACoffeeIcon, KofiIcon, PatreonIcon } from '@/components/icons/DbdIcons';
+import { ExternalLink } from 'lucide-react';
+import { BuyMeACoffeeIcon, KofiIcon } from '@/components/icons/DbdIcons';
 
 import { Modal } from '@/components/common/Modal';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -44,15 +44,6 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
       buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-text-inverted',
       icon: KofiIcon,
     },
-    {
-      name: 'Patreon Community',
-      url: links.donationPatreon,
-      tagline: t.coffeePatreonTagline,
-      accentColor:
-        'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
-      buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-text-inverted',
-      icon: PatreonIcon,
-    },
   ].flatMap(({ url, ...gateway }) => (url ? [{ ...gateway, url }] : []));
 
   return (
@@ -66,12 +57,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
       padded
       bodyClassName="space-y-6"
     >
-    <Surface tone="elevated" padding="none" className="p-4 type-body text-text-secondary space-y-1">
-      <div className="flex items-center gap-1.5 font-bold text-accent-red mb-1">
-        <span>{t.coffeeFuelNotice}</span>
-      </div>
-      <p>{donationMessage}</p>
-    </Surface>
+    <p className="type-body text-text-secondary">{donationMessage}</p>
 
     <div className="space-y-3">
       {supportGateways.length === 0 && (

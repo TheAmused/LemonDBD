@@ -10,9 +10,8 @@ const FULL = {
   banner: { active: true, level: 'warning', until: null, text: { en: 'Maintenance tonight', pl: 'Prace serwisowe' } },
   links: {
     discord_invite: 'https://discord.gg/abc',
-    donation_bmc: null,
+    donation_bmc: 'javascript:alert(1)',
     donation_kofi: 'https://ko-fi.com/x',
-    donation_patreon: 'javascript:alert(1)',
     donation_message: '  Thanks!  ',
   },
   features: { registration_open: false, email_verification_required: true, google_sign_in: true, content_reports_open: false, scoreboard_ocr: true },
@@ -36,7 +35,7 @@ describe('parseSiteConfig', () => {
 
   it('only trusts https links', () => {
     const config = parseSiteConfig(FULL);
-    assert.equal(config.links.donationPatreon, null);
+    assert.equal(config.links.donationBmc, null);
     assert.equal(parseSiteConfig({ links: { discord_invite: 'http://discord.gg/abc' } }).links.discordInvite, null);
   });
 

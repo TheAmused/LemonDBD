@@ -12,7 +12,7 @@ const DEFAULT_UPLOAD_MAX_BYTES = 8 * 1024 * 1024;
 export const DEFAULT_SITE_CONFIG: SiteConfig = {
   loaded: false,
   banner: { active: false, level: 'info', until: null, text: {} },
-  links: { discordInvite: null, donationBmc: null, donationKofi: null, donationPatreon: null, donationMessage: null },
+  links: { discordInvite: null, donationBmc: null, donationKofi: null, donationMessage: null },
   features: { registrationOpen: true, emailVerificationRequired: true, googleSignIn: false, contentReportsOpen: true, scoreboardOcr: true, guestBugReports: true },
   limits: {
     resendCooldownSeconds: DEFAULT_RESEND_COOLDOWN_SECONDS,
@@ -59,7 +59,6 @@ export function parseSiteConfig(body: unknown): SiteConfig {
       discordInvite: asLink(links.discord_invite),
       donationBmc: asLink(links.donation_bmc),
       donationKofi: asLink(links.donation_kofi),
-      donationPatreon: asLink(links.donation_patreon),
       donationMessage: typeof links.donation_message === 'string' && links.donation_message.trim() ? links.donation_message.trim() : null,
     },
     features: {

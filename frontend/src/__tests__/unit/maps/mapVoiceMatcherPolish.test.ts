@@ -228,82 +228,6 @@ test('Polish localized map names and disambiguation triggers', () => {
   assert.strictEqual(rOrmondDwa.isVariant, true);
 });
 
-test('Polish provider source switching commands', () => {
-  // Hens333 switching
-  const rHens1 = matchVoiceQuery("zmien na hensa");
-  assert.ok(rHens1);
-  assert.strictEqual(rHens1.action, 'switch_source');
-  assert.strictEqual(rHens1.actionPayload, 'hens333');
-
-  const rHens2 = matchVoiceQuery("wlacz hensa");
-  assert.ok(rHens2);
-  assert.strictEqual(rHens2.action, 'switch_source');
-  assert.strictEqual(rHens2.actionPayload, 'hens333');
-
-  const rHens3 = matchVoiceQuery("mapy hensa");
-  assert.ok(rHens3);
-  assert.strictEqual(rHens3.action, 'switch_source');
-  assert.strictEqual(rHens3.actionPayload, 'hens333');
-
-  const rHens4 = matchVoiceQuery("system zegarowy");
-  assert.ok(rHens4);
-  assert.strictEqual(rHens4.action, 'switch_source');
-  assert.strictEqual(rHens4.actionPayload, 'hens333');
-
-  // Polish diacritics
-  const rHensDiacritics = matchVoiceQuery("włącz hensa");
-  assert.ok(rHensDiacritics);
-  assert.strictEqual(rHensDiacritics.action, 'switch_source');
-  assert.strictEqual(rHensDiacritics.actionPayload, 'hens333');
-
-  // SamoelColt switching
-  const rSamoel1 = matchVoiceQuery("zmien na samoela");
-  assert.ok(rSamoel1);
-  assert.strictEqual(rSamoel1.action, 'switch_source');
-  assert.strictEqual(rSamoel1.actionPayload, 'samoelcolt');
-
-  const rSamoel2 = matchVoiceQuery("wlacz samoela");
-  assert.ok(rSamoel2);
-  assert.strictEqual(rSamoel2.action, 'switch_source');
-  assert.strictEqual(rSamoel2.actionPayload, 'samoelcolt');
-
-  const rSamoel3 = matchVoiceQuery("mapy samoela");
-  assert.ok(rSamoel3);
-  assert.strictEqual(rSamoel3.action, 'switch_source');
-  assert.strictEqual(rSamoel3.actionPayload, 'samoelcolt');
-
-  const rSamoel4 = matchVoiceQuery("rzut izometryczny");
-  assert.ok(rSamoel4);
-  assert.strictEqual(rSamoel4.action, 'switch_source');
-  assert.strictEqual(rSamoel4.actionPayload, 'samoelcolt');
-
-  const rSamoel5 = matchVoiceQuery("izometria");
-  assert.ok(rSamoel5);
-  assert.strictEqual(rSamoel5.action, 'switch_source');
-  assert.strictEqual(rSamoel5.actionPayload, 'samoelcolt');
-
-  // All maps switching
-  const rAll1 = matchVoiceQuery("wszystkie mapy");
-  assert.ok(rAll1);
-  assert.strictEqual(rAll1.action, 'switch_source');
-  assert.strictEqual(rAll1.actionPayload, 'all');
-
-  const rAll2 = matchVoiceQuery("pokaz wszystko");
-  assert.ok(rAll2);
-  assert.strictEqual(rAll2.action, 'switch_source');
-  assert.strictEqual(rAll2.actionPayload, 'all');
-
-  const rAll3 = matchVoiceQuery("wszystkie zrodla");
-  assert.ok(rAll3);
-  assert.strictEqual(rAll3.action, 'switch_source');
-  assert.strictEqual(rAll3.actionPayload, 'all');
-
-  const rAllDiacritics = matchVoiceQuery("pokaż wszystko");
-  assert.ok(rAllDiacritics);
-  assert.strictEqual(rAllDiacritics.action, 'switch_source');
-  assert.strictEqual(rAllDiacritics.actionPayload, 'all');
-});
-
 test('Polish action navigation commands', () => {
   // Zoom in
   const rZoomIn1 = matchVoiceQuery("przybliz");
@@ -362,8 +286,4 @@ test('Polish action navigation commands', () => {
   assert.ok(rProszePrzybliz);
   assert.strictEqual(rProszePrzybliz.action, 'zoom_in');
 
-  const rSwitchHensPlease = matchVoiceQuery("switch to hens please");
-  assert.ok(rSwitchHensPlease);
-  assert.strictEqual(rSwitchHensPlease.action, 'switch_source');
-  assert.strictEqual(rSwitchHensPlease.actionPayload, 'hens333');
 });

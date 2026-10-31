@@ -1,6 +1,5 @@
 // frontend/src/utils/mapVoiceRules.ts
-// Variant, source and action command rule tables for the map voice matcher (split out of mapVoiceData.ts).
-import type { MapSource } from './mapVoiceMatcher';
+// Variant and action command rule tables for the map voice matcher (split out of mapVoiceData.ts).
 
 // ─── Explicit Variant Resolution Rules ────────────────────────────────────────
 
@@ -305,50 +304,6 @@ export const GENERIC_VARIANT_RULES: GenericVariantRule[] = [
     keywords: ["mount ormond", "ormond", "mount ormond resort", "gora ormond", "góra ormond", "resort ormond"],
     defaultCanonical: "Mount Ormond Resort",
     variantGroupKey: "mount_ormond",
-  },
-];
-
-// ─── Provider Source Switching Rules ──────────────────────────────────────────
-
-export interface SourceCommandRule {
-  keywords: string[];
-  source: MapSource;
-}
-
-export const SOURCE_COMMAND_RULES: SourceCommandRule[] = [
-  {
-    keywords: [
-      "switch to hens", "switch to hens333", "hens maps", "hens map",
-      "hens callouts", "12 clock", "twelve clock", "12 o clock", "twelve o clock",
-      "12 o'clock", "twelve o'clock", "switch hens", "use hens", "hens provider", "hens",
-      // Polish Provider Switching commands
-      "zmien na hensa", "zmień na hensa", "wlacz hensa", "włącz hensa",
-      "mapy hensa", "mapa hensa", "system zegarowy", "zegar hensa",
-      "przelacz na hensa", "przełącz na hensa", "zrodlo hens", "źródło hens"
-    ],
-    source: "hens333",
-  },
-  {
-    keywords: [
-      "switch to samoel", "switch to samoelcolt", "samoel maps", "samoel map",
-      "samoel callouts", "isometric", "isometric maps", "switch samoel", "use samoel",
-      "samoel provider", "samoel",
-      // Polish Provider Switching commands
-      "zmien na samoela", "zmień na samoela", "wlacz samoela", "włącz samoela",
-      "mapy samoela", "mapa samoela", "rzut izometryczny", "izometria", "mapy izometryczne",
-      "przelacz na samoela", "przełącz na samoela", "zrodlo samoela", "źródło samoela"
-    ],
-    source: "samoelcolt",
-  },
-  {
-    keywords: [
-      "all maps", "all map", "all sources", "all source", "switch to all",
-      "show all maps", "reset source", "all providers", "all provider", "both sources",
-      // Polish Provider Switching commands
-      "wszystkie mapy", "pokaz wszystko", "pokaż wszystko", "wszystkie zrodla", "wszystkie źródła",
-      "pokaz wszystkie mapy", "pokaż wszystkie mapy", "wszystkie", "reset zrodla", "reset źródła"
-    ],
-    source: "all",
   },
 ];
 

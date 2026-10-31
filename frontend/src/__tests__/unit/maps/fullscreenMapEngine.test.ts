@@ -63,7 +63,7 @@ const sampleMidwichMap: MapRealm = {
   callout_image_url: 'https://hens333.com/img/dbd/callouts/Other/Midwich.gif',
 };
 
-test('FullscreenMapEngine renders outdoor map tactical intel badges and telemetry', () => {
+test('FullscreenMapEngine names the map in the header and lists its facts in the legend', () => {
   const html = renderWithDictionary(
     React.createElement(FullscreenMapEngine, {
       mapId: 1,
@@ -73,16 +73,24 @@ test('FullscreenMapEngine renders outdoor map tactical intel badges and telemetr
     })
   );
 
-  assert.ok(!html.includes('<h1'), 'the map name is not shown as a heading');
+  assert.ok(/<h2[^>]*>Azarov&#x27;s Resting Place<\/h2>/.test(html), 'the map name heads the view');
+  assert.ok(html.includes('aria-label="Map Legend"'), 'the facts sit in the legend');
+  const legend = html.slice(html.indexOf('aria-label="Map Legend"'), html.indexOf('</aside>'));
+  assert.ok(!legend.includes('aria-expanded'), 'the legend never folds, not even on a phone');
+  assert.ok(html.indexOf('aria-label="Map Legend"') < html.indexOf('role="presentation"'), 'on a phone the legend sits above the map, not over it');
+  assert.ok(html.includes('type-strong-screen'), 'the legend text grows on wide, 2K and 4K screens');
   assert.ok(!html.includes('Autohaven Wreckers'), 'the realm is not shown');
   assert.ok(html.includes('Outdoor'));
-  assert.ok(html.includes('>176<'));
+  assert.ok(html.includes('176 sqT'));
   assert.ok(html.includes('11,264 m²'));
   assert.ok(!html.includes('Pallets'), 'pallet amount is not shown');
   assert.ok(!html.includes('Gyms'), 'jungle gym count stays in data only');
   assert.ok(!html.includes('Totems'), 'totem count is not shown');
   assert.ok(html.includes('>Shack<'));
   assert.ok(html.includes('>Main Building<'));
+  // The shared zoom control: -, percent, +, Fit (a map opens fitted)
+  assert.ok(html.includes('aria-label="Zoom Out"') && html.includes('aria-label="Zoom In"'));
+  assert.match(html, /aria-pressed="true"[^>]*aria-label="Fit the whole map on screen"/);
 });
 
 test('FullscreenMapEngine renders indoor map tactical intel without shack and 0 maze tiles', () => {
@@ -97,7 +105,7 @@ test('FullscreenMapEngine renders indoor map tactical intel without shack and 0 
 
   assert.ok(!html.includes('Gideon Meat Plant'), 'the realm is not shown');
   assert.ok(html.includes('Indoor'));
-  assert.ok(html.includes('>142<'));
+  assert.ok(html.includes('142 sqT'));
   assert.ok(html.includes('9,088 m²'));
   assert.ok(html.includes('No Shack'));
   assert.ok(html.includes('No Main Building'));
@@ -114,6 +122,6 @@ test('FullscreenMapEngine renders float tile size accurately', () => {
   );
 
   assert.ok(html.includes('Midwich Elementary School'));
-  assert.ok(html.includes('>113.5<'));
+  assert.ok(html.includes('113.5 sqT'));
   assert.ok(html.includes('7,264 m²'));
 });

@@ -185,7 +185,6 @@ export function useStartListening(ctx: StartListeningContext) {
 
           let bestMatch = matchVoiceQuery(
             combinedTranscript,
-            propsRef.current.currentSource,
             propsRef.current.availableMaps
           );
 
@@ -193,7 +192,6 @@ export function useStartListening(ctx: StartListeningContext) {
             for (const alt of alternatives) {
               const altMatch = matchVoiceQuery(
                 alt,
-                propsRef.current.currentSource,
                 propsRef.current.availableMaps
               );
               if (altMatch) {
@@ -262,7 +260,6 @@ export function useStartListening(ctx: StartListeningContext) {
               pendingMatchRef.current ||
               matchVoiceQuery(
                 currentText,
-                propsRef.current.currentSource,
                 propsRef.current.availableMaps
               );
 

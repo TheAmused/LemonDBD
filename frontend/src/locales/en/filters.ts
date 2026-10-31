@@ -21,7 +21,6 @@ export default {
   filterByCharacter: "Search...",
   generalPerksOnly: "General Perks Only",
   sortByName: "Name",
-  sortByCharacter: "Character",
   sortByRole: "Role",
   orderAsc: "A-Z",
   orderDesc: "Z-A",

@@ -1,6 +1,7 @@
 // frontend/src/utils/perkSearch/vocabulary.ts
 //
-// The words that name a perk type in a search. Three sources, merged:
+// The words that name a perk type: the type suggestions under the search field
+// and `type:`/`#` terms use them (plain search words never do). Three sources, merged:
 // - the type keys and the English community terms below, active in every
 //   language (players say "gens" and "loop" whatever the UI language is);
 // - the active locale's type labels;
@@ -8,7 +9,7 @@
 // The "general" words (`generalKeywords`) work the same way and select the
 // perks no character owns.
 import { PERK_TYPES, type PerkType } from '@/utils/perkTypes';
-import { compactSearchText, foldSearchText, hasCjk } from './normalize';
+import { foldSearchText, hasCjk } from './normalize';
 
 /** A type, or the general-perk scope, that a search word can stand for. */
 export type PerkFacet = PerkType | 'general';
@@ -46,10 +47,6 @@ type FacetEntry = readonly [phrase: string, facets: ReadonlySet<PerkFacet>];
 export interface PerkTypeVocabulary {
   /** Folded phrase ("scourge hook") -> what it stands for. */
   readonly phrases: ReadonlyMap<string, ReadonlySet<PerkFacet>>;
-  /** Most words in one phrase, for longest-match-first scanning. */
-  readonly maxWords: number;
-  /** Japanese/Chinese phrases, longest first, matched inside a word. */
-  readonly cjk: readonly FacetEntry[];
   /** Single Latin words long enough for typo matching. */
   readonly typoTargets: readonly FacetEntry[];
   /** Every folded word that names each type (label first), for suggestions. */
@@ -85,11 +82,6 @@ export function buildPerkTypeVocabulary(words: PerkTypeWords): PerkTypeVocabular
   const entries: FacetEntry[] = [...phrases.entries()];
   return {
     phrases,
-    maxWords: Math.max(1, ...entries.map(([phrase]) => phrase.split(' ').length)),
-    cjk: entries
-      .filter(([phrase]) => hasCjk(phrase))
-      .map(([phrase, facets]): FacetEntry => [compactSearchText(phrase), facets])
-      .sort((a, b) => b[0].length - a[0].length),
     typoTargets: entries.filter(([phrase]) => !phrase.includes(' ') && !hasCjk(phrase) && phrase.length >= TYPO_MIN_LENGTH),
     byType,
     labels: words.labels,

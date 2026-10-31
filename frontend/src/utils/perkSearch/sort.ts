@@ -1,5 +1,5 @@
 // frontend/src/utils/perkSearch/sort.ts
-import type { Perk, SortField, SortOrder } from '@/types/perks';
+import type { Perk, SortOrder } from '@/types/perks';
 import type { PerkSearchHit } from './match';
 
 /** Best match first, then by name in the UI language. */
@@ -9,13 +9,8 @@ export function sortByRelevance<T extends Perk>(hits: readonly PerkSearchHit<T>[
     .map((hit) => hit.perk);
 }
 
-/** The Perks page orders: by displayed name, or by character with name as the tie-break. */
-export function sortPerks<T extends Perk>(perks: readonly T[], field: SortField, order: SortOrder, locale: string): T[] {
-  const byName = (a: T, b: T) => a.name.localeCompare(b.name, locale);
-  const compare =
-    field === 'character'
-      ? (a: T, b: T) => (a.character || '').localeCompare(b.character || '', locale) || byName(a, b)
-      : byName;
-  const sorted = [...perks].sort(compare);
+/** The Perks page order: by displayed name, A to Z or Z to A. */
+export function sortPerks<T extends Perk>(perks: readonly T[], order: SortOrder, locale: string): T[] {
+  const sorted = [...perks].sort((a, b) => a.name.localeCompare(b.name, locale));
   return order === 'desc' ? sorted.reverse() : sorted;
 }

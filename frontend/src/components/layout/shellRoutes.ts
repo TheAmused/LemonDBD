@@ -85,7 +85,8 @@ export const ROUTE_SHELLS: ReadonlyArray<ShellRoute> = [
     shell: {
       padding: 'tight',
       outerClassName: 'h-dvh overflow-hidden text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300',
-      mainClassName: 'relative flex h-full min-h-0 flex-col overflow-hidden gap-3 sm:gap-4',
+      // The page itself scrolls when a big per-page choice makes the grid taller than the screen.
+      mainClassName: 'relative flex h-full min-h-0 flex-col overflow-y-auto gap-3 sm:gap-4',
     },
   },
   { prefix: ['privacy-policy'], shell: LEGAL },

@@ -83,29 +83,20 @@ describe('folding and parsing', () => {
     assert.ok(!withinOneEdit('chase', 'chosen'));
   });
 
-  it('finds type words, phrases, typos and the general scope', () => {
-    const q = parsePerkQuery('gen aura', vocabEn);
-    assert.deepEqual(q.typeGroups, [['generator'], ['tracking']]);
-    assert.deepEqual(q.restWords, []);
-    assert.deepEqual(parsePerkQuery('scourge hook pain', vocabEn).typeGroups, [['hooks']]);
-    assert.deepEqual(parsePerkQuery('scourge hook pain', vocabEn).restWords, ['pain']);
-    assert.deepEqual(parsePerkQuery('exaustion', vocabEn).typeGroups, [['exhaustion']]);
-    assert.deepEqual(parsePerkQuery('totem', vocabEn).typeGroups, [['totem']]);
-    assert.deepEqual(parsePerkQuery('hex', vocabEn).typeGroups, [['totem']]);
-    assert.ok(parsePerkQuery('ogólne', vocabPl).general);
+  it('keeps plain words as text, even when they name a type', () => {
+    const q = parsePerkQuery('gen aura alert', vocabEn);
+    assert.deepEqual(q.words, ['gen', 'aura', 'alert']);
+    assert.deepEqual(q.explicitTypes, []);
+    assert.equal(parsePerkQuery('ogólne', vocabPl).explicitGeneral, false);
   });
 
-  it('takes `type:` and `#` terms as strict filters', () => {
+  it('takes `type:` and `#` terms as strict filters, typos and the general scope included', () => {
     const q = parsePerkQuery('type:chase #heal sprint', vocabEn);
     assert.deepEqual(q.explicitTypes.sort(), ['chase', 'healing']);
     assert.deepEqual(q.words, ['sprint']);
     assert.deepEqual(parsePerkQuery('type:nonsense', vocabEn).words, ['nonsense']);
-  });
-
-  it('finds Japanese type words inside an unspaced query', () => {
-    const q = parsePerkQuery('治療パーク', vocabJa);
-    assert.deepEqual(q.typeGroups, [['healing']]);
-    assert.deepEqual(q.restWords, ['パーク']);
+    assert.deepEqual(parsePerkQuery('#exaustion', vocabEn).explicitTypes, ['exhaustion']);
+    assert.ok(parsePerkQuery('#ogólne', vocabPl).explicitGeneral);
   });
 });
 
@@ -121,18 +112,12 @@ describe('matching', () => {
     assert.deepEqual(names(SURVIVORS, 'meg sprint'), ['Sprint Burst']);
   });
 
-  it('finds every perk of a named type, plus literal name matches', () => {
-    assert.deepEqual(names(SURVIVORS, 'healing'), ['Boon: Circle of Healing', 'Botany Knowledge', 'Self-Care']);
-    assert.deepEqual(names(SURVIVORS, 'heal'), ['Boon: Circle of Healing', 'Botany Knowledge', 'Self-Care']);
-    assert.deepEqual(names(SURVIVORS, 'leczenie', vocabPl), ['Boon: Circle of Healing', 'Botany Knowledge', 'Self-Care']);
-    assert.deepEqual(names(SURVIVORS, 'circle of healing'), ['Boon: Circle of Healing']);
-  });
-
-  it('combines a type with the remaining words, and several types with AND', () => {
+  it('a word that names a type only finds perks by their text, not every perk of the type', () => {
+    assert.deepEqual(names(SURVIVORS, 'healing'), ['Boon: Circle of Healing']);
+    assert.deepEqual(names(SURVIVORS, 'leczenie', vocabPl), []);
+    assert.deepEqual(names(SURVIVORS, 'aura'), []);
     assert.deepEqual(names(KILLERS, 'hex ruin'), ['Hex: Ruin']);
     assert.deepEqual(names(KILLERS, 'ruin hex'), ['Hex: Ruin']);
-    assert.deepEqual(names(SURVIVORS, 'gen aura'), ['Deja Vu']);
-    assert.deepEqual(names(SURVIVORS, 'healing claudette'), ['Botany Knowledge', 'Self-Care']);
   });
 
   it('applies type chips and `type:` strictly', () => {
@@ -141,15 +126,13 @@ describe('matching', () => {
     assert.deepEqual(names(SURVIVORS, 'type:aura'), ['Deja Vu', 'Kindred']);
   });
 
-  it('ranks name matches above type matches and primary types above secondary ones', () => {
-    const query = parsePerkQuery('healing', vocabEn);
-    assert.equal(rankPerk(SELF_CARE, query), RANK.primaryType);
-    assert.equal(rankPerk(CIRCLE, query), RANK.nameContains);
-    const aura = parsePerkQuery('aura', vocabEn);
-    assert.equal(rankPerk(KINDRED, aura), RANK.primaryType);
-    assert.equal(rankPerk(DEJA_VU, aura), RANK.secondaryType);
+  it('ranks exact names first, and with only type filters primary types above secondary ones', () => {
     assert.equal(rankPerk(SPRINT_BURST, parsePerkQuery('sprint burst', vocabEn)), RANK.exactName);
-    const ordered = sortByRelevance(searchPerks(SURVIVORS, aura), 'en').map((p) => p.name);
+    assert.equal(rankPerk(SPRINT_BURST, parsePerkQuery('sprint', vocabEn)), RANK.namePrefix);
+    assert.equal(rankPerk(CIRCLE, parsePerkQuery('healing', vocabEn)), RANK.nameContains);
+    assert.equal(rankPerk(KINDRED, EMPTY_QUERY, ['tracking']), RANK.primaryType);
+    assert.equal(rankPerk(DEJA_VU, EMPTY_QUERY, ['tracking']), RANK.secondaryType);
+    const ordered = sortByRelevance(searchPerks(SURVIVORS, EMPTY_QUERY, ['tracking']), 'en').map((p) => p.name);
     assert.deepEqual(ordered, ['Kindred', 'Deja Vu']);
   });
 
@@ -159,32 +142,39 @@ describe('matching', () => {
 
   it('explains a role-only type on the wrong role', () => {
     const byRole = perkTypesByRole([...SURVIVORS, ...KILLERS, CIRCLE]);
-    assert.deepEqual(roleOnlyConflict(parsePerkQuery('exhaustion', vocabEn), [], 'Killer', byRole), { type: 'exhaustion', role: 'Survivor' });
+    assert.deepEqual(roleOnlyConflict(parsePerkQuery('#exhaustion', vocabEn), [], 'Killer', byRole), { type: 'exhaustion', role: 'Survivor' });
     assert.deepEqual(roleOnlyConflict(EMPTY_QUERY, ['hooks'], 'Survivor', byRole), { type: 'hooks', role: 'Killer' });
     assert.equal(roleOnlyConflict(EMPTY_QUERY, ['totem'], 'Survivor', byRole), null);
-    assert.equal(roleOnlyConflict(parsePerkQuery('totem', vocabEn), [], 'Killer', byRole), null);
-    assert.equal(roleOnlyConflict(parsePerkQuery('generator', vocabEn), [], 'Killer', byRole), null);
+    assert.equal(roleOnlyConflict(parsePerkQuery('exhaustion', vocabEn), [], 'Killer', byRole), null);
+    assert.equal(roleOnlyConflict(parsePerkQuery('#generator', vocabEn), [], 'Killer', byRole), null);
   });
 });
 
 describe('suggestions and sorting', () => {
   it('suggests types for a partial word and says what search text remains', () => {
     const all = [...PERK_TYPES];
-    assert.deepEqual(suggestPerkTypes('hea', vocabEn, all), [{ type: 'healing', remainingSearch: '' }]);
-    assert.deepEqual(suggestPerkTypes('claudette hea', vocabEn, all), [{ type: 'healing', remainingSearch: 'claudette' }]);
+    assert.deepEqual(suggestPerkTypes('hea', vocabEn, all), [{ type: 'healing', remainingSearch: '', byLabel: true }]);
+    assert.deepEqual(suggestPerkTypes('claudette hea', vocabEn, all), [{ type: 'healing', remainingSearch: 'claudette', byLabel: true }]);
     assert.deepEqual(suggestPerkTypes('hea', vocabEn, ['tracking']), []);
     assert.deepEqual(suggestPerkTypes('h', vocabEn, all), []);
     assert.equal(suggestPerkTypes('lecz', vocabPl, all)[0]?.type, 'healing');
     assert.equal(suggestPerkTypes('治', vocabJa, all)[0]?.type, 'healing');
   });
 
-  it('sorts by displayed name or by character', () => {
-    assert.deepEqual(sortPerks([KINDRED, DEJA_VU], 'name', 'asc', 'en').map((p) => p.name), ['Deja Vu', 'Kindred']);
-    assert.deepEqual(sortPerks([KINDRED, DEJA_VU], 'name', 'desc', 'en').map((p) => p.name), ['Kindred', 'Deja Vu']);
-    assert.deepEqual(
-      sortPerks([SPRINT_BURST, SELF_CARE, BOTANY], 'character', 'asc', 'en').map((p) => p.name),
-      ['Botany Knowledge', 'Self-Care', 'Sprint Burst']
-    );
+  it('marks a keyword hit apart from a hit on the type name, so Enter only takes the latter', () => {
+    const all = [...PERK_TYPES];
+    assert.deepEqual(suggestPerkTypes('alert', vocabEn, all), [{ type: 'tracking', remainingSearch: '', byLabel: false }]);
+    assert.equal(suggestPerkTypes('healing', vocabPl, all)[0]?.byLabel, true);
+    // In English the label is the key, so the term list has no separate key entry: a keyword must not pass for it.
+    for (const keyword of ['scourge', 'med', 'block', 'sneak', 'loop']) {
+      assert.equal(suggestPerkTypes(keyword, vocabEn, all)[0]?.byLabel, false, keyword);
+    }
+    assert.equal(suggestPerkTypes('hooks', vocabEn, all)[0]?.byLabel, true);
+  });
+
+  it('sorts by displayed name', () => {
+    assert.deepEqual(sortPerks([KINDRED, DEJA_VU], 'asc', 'en').map((p) => p.name), ['Deja Vu', 'Kindred']);
+    assert.deepEqual(sortPerks([KINDRED, DEJA_VU], 'desc', 'en').map((p) => p.name), ['Kindred', 'Deja Vu']);
   });
 });
 
@@ -195,15 +185,18 @@ describe('the real seed catalog', () => {
   const catalog = (lang: 'en' | 'pl') =>
     rows.map((row) => perk(lang === 'en' ? row.name : row.translations?.pl?.name || row.name, row.perk_types, { category: row.role }));
 
-  it('every type word finds every perk of that type', { skip: rows.length === 0 }, () => {
-    for (const [lang, vocab] of [['en', vocabEn], ['pl', vocabPl]] as const) {
-      const perks = catalog(lang);
-      for (const type of PERK_TYPES) {
-        const typed = perks.filter((p) => p.perk_types?.includes(type)).map((p) => p.name);
-        const found = new Set(searchPerks(perks, parsePerkQuery(vocab.labels[type], vocab)).map((h) => h.perk.name));
-        for (const name of typed) assert.ok(found.has(name), `${lang} "${vocab.labels[type]}" missed ${name}`);
-      }
+  it('a `#type` term finds every perk of that type', { skip: rows.length === 0 }, () => {
+    const perks = catalog('en');
+    for (const type of PERK_TYPES) {
+      const typed = perks.filter((p) => p.perk_types?.includes(type)).map((p) => p.name);
+      const found = new Set(searchPerks(perks, parsePerkQuery(`#${type}`, vocabEn)).map((h) => h.perk.name));
+      for (const name of typed) assert.ok(found.has(name), `"#${type}" missed ${name}`);
     }
+  });
+
+  it('a perk name that is also a type keyword finds only that perk', { skip: rows.length === 0 }, () => {
+    const found = searchPerks(catalog('en'), parsePerkQuery('Alert', vocabEn)).map((h) => h.perk.name);
+    assert.deepEqual(found, ['Alert']);
   });
 
   it('plain names still find exactly their perk first', { skip: rows.length === 0 }, () => {

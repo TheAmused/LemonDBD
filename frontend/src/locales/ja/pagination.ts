@@ -11,5 +11,4 @@ export default {
   lastPage: "最後のページ",
   goTo: "移動:",
   navAriaLabel: "ページネーションナビゲーション",
-  to: "〜",
 } as const;

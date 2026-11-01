@@ -1,5 +1,7 @@
 // frontend/src/locales/pl/about.ts
 export default {
+  lastUpdatedLabel: "Ostatnia aktualizacja",
+  lastUpdated: "31 października 2026",
   pageTitle: "LemonDBD - O nas",
   who: {
     heading: "Kim jesteśmy?",
@@ -31,7 +33,7 @@ export default {
     ],
   },
   credits: {
-    heading: "Podziękowania",
+    heading: "Pomoc przy projekcie",
     text: "Dziękujemy wszystkim, którzy pomogli nam w tworzeniu tego projektu.",
   },
   contact: {

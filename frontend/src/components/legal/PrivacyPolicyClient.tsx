@@ -1,9 +1,11 @@
 'use client';
 
 import React from 'react';
+import { GlobeIcon } from '@/components/icons/DbdIcons';
 import { RichText } from '@/components/common/RichText';
 import { BlockCard } from '@/components/common/BlockCard';
-import { LegalPageLayout } from '@/components/legal/LegalPage';
+import { LegalLinks } from '@/components/about/AboutClient';
+import { LegalIntro, LegalPageLayout } from '@/components/legal/LegalPage';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { usePrivacyInfo } from '@/hooks/usePrivacyInfo';
 import { fillPrivacyPlaceholders } from '@/utils/privacyPlaceholders';
@@ -87,13 +89,12 @@ export function PrivacyPolicyClient() {
   return (
     <LegalPageLayout
       heading={privacy.heading}
-      lastUpdated={`${privacy.lastUpdatedLabel}: ${privacy.lastUpdated}`}
+      lastUpdatedLabel={privacy.lastUpdatedLabel}
+      lastUpdated={privacy.lastUpdated}
     >
       {privacy ? (
         <>
-          <p className="text-center text-text-muted text-sm leading-relaxed sm:text-base">
-            {privacy.translationNotice}
-          </p>
+          <LegalIntro notices={[{ icon: GlobeIcon, text: privacy.translationNotice }]} />
           <div className="flex flex-col gap-6">
             {ALL_BLOCK_IDS.map((id) => (
               <BlockCard key={id} id={id} storageKey={`lemondbd_drawer_privacy_open_${id}`} title={blockTitle(id)}>
@@ -103,6 +104,7 @@ export function PrivacyPolicyClient() {
           </div>
         </>
       ) : null}
+      <LegalLinks exclude="privacy-policy" />
     </LegalPageLayout>
   );
 }

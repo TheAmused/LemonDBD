@@ -55,6 +55,7 @@ export { GridIcon } from './ui/GridIcon';
 export { WarningIcon } from './ui/WarningIcon';
 export { MatureIcon } from './ui/MatureIcon';
 export { GlobeIcon } from './ui/GlobeIcon';
+export { InfoIcon } from './ui/InfoIcon';
 export { MusicIcon } from './ui/MusicIcon';
 export { VolumeIcon } from './ui/VolumeIcon';
 export { UploadIcon } from './ui/UploadIcon';

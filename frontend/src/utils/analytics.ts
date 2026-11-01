@@ -27,7 +27,7 @@ export interface AnalyticsEvents {
   map_voice_command: { result: 'matched' | 'nomatch'; engine: 'web-speech' | 'client-model' };
   // About and legal pages
   contact_click: { method: 'email' | 'discord'; page: ContactPage | 'other' };
-  legal_link_click: { target: 'terms-of-service' | 'privacy-policy' | 'rules' };
+  legal_link_click: { target: 'about' | 'terms-of-service' | 'privacy-policy' | 'rules' };
   // User profile
   showcase_complete: { role: Role };
   avatar_upload: undefined;

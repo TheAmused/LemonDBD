@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation';
 import { Check, Copy, Mail } from 'lucide-react';
 import { DiscordIcon } from '@/components/icons/DbdIcons';
 import { ActionPill, LinkPill } from '@/components/common/LinkPill';
+import { TooltipBubble } from '@/components/common/Tooltip';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useSiteConfig } from '@/context/SiteConfigContext';
 import { contactPageFromPath, trackEvent } from '@/utils/analytics';
@@ -20,33 +21,34 @@ const COPIED_MS = 2000;
 function EmailPill({ email }: { email: string }) {
   const dict = useDictionary();
   const pathname = usePathname();
-  const [copied, setCopied] = useState(false);
+  const [copiedAnchor, setCopiedAnchor] = useState<HTMLElement | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => () => {
     if (timer.current) clearTimeout(timer.current);
   }, []);
 
-  const copy = async () => {
+  const copy = async (anchor: HTMLElement) => {
     if (!(await copyTextWithFallback(email))) return;
     trackEvent('contact_click', { method: 'email', page: contactPageFromPath(pathname) });
-    setCopied(true);
+    setCopiedAnchor(anchor);
     if (timer.current) clearTimeout(timer.current);
-    timer.current = setTimeout(() => setCopied(false), COPIED_MS);
+    timer.current = setTimeout(() => setCopiedAnchor(null), COPIED_MS);
   };
 
   return (
     <>
       <ActionPill
-        onClick={() => { void copy(); }}
+        onClick={(e) => { void copy(e.currentTarget); }}
         aria-label={`${dict.about.contact.copyEmailLabel}: ${email}`}
         icon={<Mail className="icon-md text-accent-red" />}
-        trailing={copied ? <Check className="icon-sm text-accent-green" /> : <Copy className="icon-sm" />}
+        trailing={copiedAnchor ? <Check className="icon-sm text-accent-green" /> : <Copy className="icon-sm" />}
       >
-        {copied ? dict.about.contact.emailCopied : email}
+        {email}
       </ActionPill>
+      {copiedAnchor ? <TooltipBubble anchor={copiedAnchor} title={dict.about.contact.emailCopied} variant="action" /> : null}
       <output aria-live="polite" className="sr-only">
-        {copied ? dict.about.contact.emailCopied : ''}
+        {copiedAnchor ? dict.about.contact.emailCopied : ''}
       </output>
     </>
   );

@@ -4,6 +4,7 @@
 // the Rules. Adding a section = add its text to every locale and its id to the document's `order`;
 // adding a document = one more entry here plus its locale file. Nothing else knows the sections.
 import type { BlockTone } from '@/components/common/BlockCard';
+import type { LegalPageId } from '@/components/legal/LegalPage';
 import type { Locale } from '@/i18n/config';
 import type { Dictionary } from '@/locales/types';
 import { formatMessage } from '@/utils/i18nFormat';
@@ -38,7 +39,7 @@ export interface LegalDocText {
 
 interface LegalDocSpec {
   /** URL segment under /[locale]/. */
-  path: string;
+  path: Exclude<LegalPageId, 'about'>;
   /** Render order of the sections. */
   order: readonly string[];
   /** The section that ends with the contact buttons. */

@@ -2,14 +2,16 @@
 
 import React from 'react';
 import { FileText, ScrollText, ShieldCheck } from 'lucide-react';
+import { InfoIcon } from '@/components/icons/DbdIcons';
 import { ContactLinks } from '@/components/common/ContactLinks';
 import { BlockCardPair, type BlockCardProps } from '@/components/common/BlockCard';
 import { RichText } from '@/components/common/RichText';
-import { LegalLinkPill } from '@/components/legal/LegalPage';
+import { LastUpdatedStamp, LegalLinkPill, type LegalPageId } from '@/components/legal/LegalPage';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { usePrivacyInfo } from '@/hooks/usePrivacyInfo';
+import { cn } from '@/utils/cn';
 
-const CREDITS = ['test1', 'test2', 'test3', 'test4', 'test5'] as const;
+const CREDITS = ['bromu', 'lift', 'aquamarine', 'packleader'] as const;
 
 interface AboutSectionConfig {
   id: string;
@@ -22,7 +24,7 @@ const toCard = ({ id, heading, children }: AboutSectionConfig): BlockCardProps =
   storageKey: `lemondbd_drawer_about_${id}`,
   title: heading ?? '',
   centered: true,
-  bodyClassName: 'type-body-lg',
+  bodyClassName: 'type-body-lg wide:text-base wide-2k:text-lg wide-4k:text-xl',
   children,
 });
 
@@ -30,8 +32,28 @@ function SyncedAboutPair({ sectionA, sectionB }: { sectionA: AboutSectionConfig;
   return <BlockCardPair a={toCard(sectionA)} b={toCard(sectionB)} />;
 }
 
-export function AboutClient() {
+/** Pills to About us, Terms, Privacy Policy and Rules, minus the page we are on. */
+export function LegalLinks({ exclude, className }: { exclude?: LegalPageId; className?: string }) {
   const locale = useLocale();
+  const dict = useDictionary();
+  const pages: { target: LegalPageId; label: string; icon: React.ReactNode }[] = [
+    { target: 'about', label: dict.sidebar.about, icon: <InfoIcon className="icon-md" /> },
+    { target: 'terms-of-service', label: dict.terms.heading, icon: <FileText className="icon-md" /> },
+    { target: 'privacy-policy', label: dict.privacy.heading, icon: <ShieldCheck className="icon-md" /> },
+    { target: 'rules', label: dict.rules.heading, icon: <ScrollText className="icon-md" /> },
+  ];
+  return (
+    <nav className={cn('flex flex-wrap items-center justify-center gap-3', className)}>
+      {pages.filter((p) => p.target !== exclude).map((p) => (
+        <LegalLinkPill key={p.target} href={`/${locale}/${p.target}`} target={p.target} icon={p.icon}>
+          {p.label}
+        </LegalLinkPill>
+      ))}
+    </nav>
+  );
+}
+
+export function AboutClient() {
   const dict = useDictionary();
   const about = dict.about;
   const contactEmail = usePrivacyInfo()?.contactEmail;
@@ -41,19 +63,11 @@ export function AboutClient() {
     : 'About us';
 
   return (
-    <div className="relative z-10 mx-auto my-auto flex w-full max-w-5xl xl:max-w-6xl flex-col gap-6 sm:gap-8 py-6 sm:py-10">
-      <header className="flex flex-col items-center text-center gap-2.5 sm:gap-3 pt-2 sm:pt-4">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight text-text-primary">
-          {pageHeading}
-        </h1>
-        {about.features.paragraphs?.[0] ? (
-          <p className="max-w-2xl type-body-fluid text-text-muted text-center px-4">
-            <RichText text={about.features.paragraphs[0]} />
-          </p>
-        ) : null}
-      </header>
+    <div className="relative z-10 mx-auto my-auto flex w-full max-w-5xl xl:max-w-6xl 2xl:max-w-page wide:max-w-page-lg wide-4k:max-w-page-xl flex-col gap-6 sm:gap-8 wide-2k:gap-10 py-6 sm:py-10">
+      <LastUpdatedStamp label={about.lastUpdatedLabel} date={about.lastUpdated} />
+      <h1 className="sr-only">{pageHeading}</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 wide-2k:gap-8 wide-4k:gap-10">
         <SyncedAboutPair
           sectionA={{
             id: 'who',
@@ -125,17 +139,7 @@ export function AboutClient() {
           }}
         />
 
-        <div className="lg:col-span-2 flex flex-wrap items-center justify-center gap-3">
-          <LegalLinkPill href={`/${locale}/terms-of-service`} target="terms-of-service" icon={<FileText className="icon-md" />}>
-            {dict.terms.heading}
-          </LegalLinkPill>
-          <LegalLinkPill href={`/${locale}/privacy-policy`} target="privacy-policy" icon={<ShieldCheck className="icon-md" />}>
-            {dict.privacy.heading}
-          </LegalLinkPill>
-          <LegalLinkPill href={`/${locale}/rules`} target="rules" icon={<ScrollText className="icon-md" />}>
-            {dict.rules.heading}
-          </LegalLinkPill>
-        </div>
+        <LegalLinks exclude="about" className="lg:col-span-2" />
       </div>
     </div>
   );

@@ -34,6 +34,32 @@ describe('legal documents as rendered', () => {
   }
 });
 
+describe('legal page links and stamps', () => {
+  // The row of pills at the bottom; the sections also link to each other inside their text.
+  const legalHrefs = () => within(screen.getByRole('navigation')).getAllByRole('link').map((a) => a.getAttribute('href'));
+
+  it('Terms and Rules link to About us and the two other legal pages, never to themselves', () => {
+    render(<LegalDocPage doc="terms" />, { wrapper: withNextApp({ pathname: '/en/terms-of-service' }).wrapper });
+    assert.deepEqual(legalHrefs(), ['/en/about', '/en/privacy-policy', '/en/rules']);
+  });
+
+  it('Rules links to About us, Terms and Privacy Policy', () => {
+    render(<LegalDocPage doc="rules" />, { wrapper: withNextApp({ pathname: '/en/rules' }).wrapper });
+    assert.deepEqual(legalHrefs(), ['/en/about', '/en/terms-of-service', '/en/privacy-policy']);
+  });
+
+  it('the pages carry a last-updated stamp and no visible title', () => {
+    render(<LegalDocPage doc="rules" />, { wrapper: withNextApp({ pathname: '/en/rules' }).wrapper });
+    assert.ok(screen.getByText(`${en.rules.lastUpdatedLabel}: ${en.rules.lastUpdated}`));
+    assert.equal(screen.getByRole('heading', { level: 1 }).className, 'sr-only');
+  });
+
+  it('About us carries a last-updated stamp too', () => {
+    render(<AboutClient />, { wrapper: withNextApp({ pathname: '/en/about' }).wrapper });
+    assert.ok(screen.getByText(`${en.about.lastUpdatedLabel}: ${en.about.lastUpdated}`));
+  });
+});
+
 describe('about page legal links', () => {
   it('Terms, Privacy Policy and Rules are linked in that order, in the current language', () => {
     render(<AboutClient />, { wrapper: withNextApp({ pathname: '/en/about' }).wrapper });

@@ -1,5 +1,7 @@
 // frontend/src/locales/ja/about.ts
 export default {
+  lastUpdatedLabel: "最終更新日",
+  lastUpdated: "2026年10月31日",
   pageTitle: "LemonDBD - 私たちについて",
   who: {
     heading: "私たちについて",
@@ -31,7 +33,7 @@ export default {
     ],
   },
   credits: {
-    heading: "クレジット",
+    heading: "プロジェクトへの協力",
     text: "このプロジェクトを手伝ってくれたすべての人に感謝します。",
   },
   contact: {

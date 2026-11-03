@@ -7,7 +7,6 @@ import { Button } from '@/components/common/Button';
 import Link from 'next/link';
 import { LogIn, LogOut, Pencil } from 'lucide-react';
 import { UserAvatar } from '@/components/UserAvatar';
-import { CrownIcon } from '@/components/icons/DbdIcons';
 
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -21,11 +20,12 @@ export interface SidebarUserSectionProps {
   currentLocale: string;
   user: UserProfile | null;
   isAuthenticated: boolean;
-  isAdmin: boolean;
   onOpenAuthModal: () => void;
   onOpenVerifyModal: () => void;
   onLogout: () => void;
   onOpenInsults: () => void;
+  /** Warms the dialog's code so the first click does not wait for the download. */
+  onPreloadInsults?: () => void;
   onNavigateMobile?: () => void;
 }
 
@@ -33,11 +33,11 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
       currentLocale,
       user,
       isAuthenticated,
-      isAdmin,
       onOpenAuthModal,
       onOpenVerifyModal,
       onLogout,
       onOpenInsults,
+      onPreloadInsults,
       onNavigateMobile,
     }) => {
   const dict = useDictionary();
@@ -52,6 +52,7 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
         isActive={false}
         hasPopup="dialog"
         onClick={onOpenInsults}
+        onWarm={onPreloadInsults}
       />
       {!isAuthenticated || !user ? (
         <Button
@@ -82,17 +83,6 @@ export const SidebarUserSection: React.FC<SidebarUserSectionProps> = ({
             </Link>
 
             <div className="flex items-center gap-1">
-              {isAdmin && (
-                <Link
-                  href={`/${currentLocale}/admin`}
-                  {...tip(dict.sidebar.adminControlCenter, undefined, 'action')}
-                  aria-label={dict.sidebar.adminControlCenter}
-                  onClick={onNavigateMobile}
-                  className="p-1 rounded-control text-accent-red hover:bg-accent-red/10 transition-colors"
-                >
-                  <CrownIcon className="icon-md" />
-                </Link>
-              )}
               <Button
                 type="button"
                 onClick={onLogout}

@@ -14,6 +14,31 @@ export function getOnboardingStorageKey(userId?: string | number | null): string
   return 'lemondbd_onboarding_draft_guest';
 }
 
+export function getOnboardingStepStorageKey(userId?: string | number | null): string {
+  return getOnboardingStorageKey(userId).replace('_draft_', '_step_');
+}
+
+/** The wizard step the user was on (intro / language / roster), or null when none was saved. */
+export function loadOnboardingStep(userId?: string | number | null): string | null {
+  const storage = getLocalStorage();
+  if (!storage) return null;
+  try {
+    return storage.getItem(getOnboardingStepStorageKey(userId));
+  } catch {
+    return null;
+  }
+}
+
+export function saveOnboardingStep(userId: string | number | undefined | null, step: string): void {
+  const storage = getLocalStorage();
+  if (!storage) return;
+  try {
+    storage.setItem(getOnboardingStepStorageKey(userId), step);
+  } catch {
+    // Graceful fallback for restricted storage or quota exceeded
+  }
+}
+
 export function loadOnboardingDraft(userId?: string | number | null): OnboardingStoredDraft | null {
   const storage = getLocalStorage();
   if (!storage) return null;
@@ -58,6 +83,7 @@ export function clearOnboardingDraft(userId?: string | number | null): void {
   if (!storage) return;
   try {
     storage.removeItem(getOnboardingStorageKey(userId));
+    storage.removeItem(getOnboardingStepStorageKey(userId));
   } catch {
     // Graceful fallback
   }

@@ -120,7 +120,7 @@ jobs:
         working-directory: .
         run: |
           cp .env.example .env.prod
-          sed -i -E 's/^(POSTGRES_PASSWORD|UMAMI_APP_SECRET|PGADMIN_DEFAULT_PASSWORD|UMAMI_ADMIN_PASSWORD)=\r?$/\1=ci-only/' .env.prod
+          sed -i -E 's/^(POSTGRES_PASSWORD|UMAMI_APP_SECRET|UMAMI_ADMIN_PASSWORD)=\r?$/\1=ci-only/' .env.prod
       - name: Unit tests and guards
         run: npm test
       - name: Production build (lint, type-check, build, built-output check)

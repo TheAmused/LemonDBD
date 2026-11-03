@@ -22,7 +22,7 @@ class TestArchitectureGuards:
         )
 
     def test_database_connection_pool_bounds(self) -> None:
-        """Connection pool size + overflow must leave headroom for external services (Umami, pgAdmin)."""
+        """Connection pool size + overflow must leave headroom for external services (Umami)."""
         engine_opts = Config.SQLALCHEMY_ENGINE_OPTIONS
         pool_size = engine_opts.get("pool_size", 10)
         max_overflow = engine_opts.get("max_overflow", 5)

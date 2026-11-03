@@ -246,30 +246,6 @@ services:
     networks:
       - dbd_network
 
-  pgadmin:
-    image: dpage/pgadmin4:9.18
-    container_name: dbd_pgadmin
-    restart: unless-stopped
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@lemondbd.com}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:?set PGADMIN_DEFAULT_PASSWORD}
-      # Server mode: pgAdmin asks for PGADMIN_DEFAULT_EMAIL / PGADMIN_DEFAULT_PASSWORD. Desktop mode
-      # ('False') has no login at all, which is a database console for anyone who reaches the port.
-      PGADMIN_CONFIG_SERVER_MODE: 'True'
-      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
-      PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: 'True'
-      PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
-    volumes:
-      - pgadmin_data:/var/lib/pgadmin
-      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json:ro
-    expose:
-      - "80"
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - dbd_network
-
   frontend:
     build:
       context: ./frontend
@@ -278,7 +254,6 @@ services:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://localhost}
         NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-}
         NEXT_PUBLIC_UMAMI_URL: ${NEXT_PUBLIC_UMAMI_URL:-}
-        NEXT_PUBLIC_PGADMIN_URL: ${NEXT_PUBLIC_PGADMIN_URL:-https://localhost:5050}
     container_name: dbd_frontend
     restart: unless-stopped
     expose:
@@ -290,7 +265,6 @@ services:
       - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-}
       - NEXT_PUBLIC_UMAMI_URL=${NEXT_PUBLIC_UMAMI_URL:-}
       - UMAMI_PUBLIC_URL=${NEXT_PUBLIC_UMAMI_URL:-}
-      - NEXT_PUBLIC_PGADMIN_URL=${NEXT_PUBLIC_PGADMIN_URL:-https://localhost:5050}
       - UMAMI_INTERNAL_URL=http://umami:3000
       - UMAMI_ADMIN_USERNAME=${UMAMI_ADMIN_USERNAME:-admin}
       # Must match the Umami admin password: change Umami's built-in admin/umami login in its
@@ -322,9 +296,6 @@ services:
       - "80:80"
       - "443:443"
       - "${UMAMI_PORT:-8117}:8117"
-      # Loopback only unless PGADMIN_BIND says otherwise: reach it on the server itself or through an
-      # SSH tunnel (ssh -L 5050:127.0.0.1:5050 <host>), never straight from the internet.
-      - "${PGADMIN_BIND:-127.0.0.1}:${PGADMIN_PORT:-5050}:5050"
     volumes:
       - nginx_logs:/var/log/nginx
     # nginx runs as its own unprivileged user (nginx/Dockerfile); this lets it bind 80 and 443
@@ -345,15 +316,11 @@ services:
         restart: true
       umami:
         condition: service_started
-      pgadmin:
-        condition: service_started
     networks:
       - dbd_network
 
 volumes:
   postgres_data:
-    driver: local
-  pgadmin_data:
     driver: local
   backend_data:
     driver: local

@@ -21,10 +21,5 @@ export default {
   chaptersTitle: "チャプター",
   perksButton: "パーク",
   continueButton: "次へ",
-  skipButton: "スキップ",
-  skipModalTitle: "キャラクター設定をスキップしますか？",
-  skipModalBody: "スキップすると、無料の基本キャラクターのみが解放されます。それ以外は、後でキャラクターページから自分で解放するまでロックされたままになります。",
-  skipModalConfirm: "はい、今はスキップする",
-  skipModalCancel: "戻る",
   savingLabel: "保存中...",
 };

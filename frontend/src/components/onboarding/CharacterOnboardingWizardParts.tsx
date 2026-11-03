@@ -6,12 +6,7 @@ import { getAvatarUrl } from '@/components/character-detail/types';
 
 export const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
-/** Which step to resume on after a language-triggered locale redirect.
- * `dict`/`locale` are resolved server-side by the `[locale]` layout, so
- * navigating to a different `/[locale]/welcome` remounts this component fresh
- * and the step it was on has to survive the reload. */
-export const RESUME_VIEW_KEY = 'onboarding_view_after_language_redirect';
-
+/** The wizard's three steps, in order. The current one is kept in localStorage (see onboardingStorage). */
 export type OnboardingView = 'intro' | 'language' | 'roster';
 
 export function resolveOnboardingView(stored: string | null): OnboardingView {

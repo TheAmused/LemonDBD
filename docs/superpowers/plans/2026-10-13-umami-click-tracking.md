@@ -369,6 +369,36 @@ Notes:
 - Password reset completion, failed logins, logout, resend verification code,
   demo accounts (dev only).
 
+## Buy me a coffee modal (sidebar) [DONE]
+
+| Event | Props | Where |
+|-------|-------|-------|
+| `coffee_modal_open` | none | `Sidebar.tsx`, `onOpenCoffeeModal` handler (the only entry point) |
+| `coffee_link_click` | `provider`: `buy_me_a_coffee` / `ko_fi` | `sidebar/BuyCoffeeModal.tsx`, `onClick` of each gateway link |
+
+Reading the data: open count vs click count per provider gives the conversion
+and which platform people prefer. Only gateways the admin left enabled are
+rendered, so a provider with no link simply has no clicks.
+
+## Bug report modal [DONE]
+
+Shared modal (`sidebar/BugReportModal.tsx`), opened from the sidebar and from the
+reports drawer on `/user`. It is mounted only while open, so the events live in
+the modal and a `source` prop tells the two entry points apart.
+
+| Event | Props | Where |
+|-------|-------|-------|
+| `bug_report_open` | `source`: `sidebar` / `profile`, `access`: `member` / `guest` / `guest_blocked` | effect on show, once per opening |
+| `bug_report_start` | `access`: `member` / `guest` | first edit of any field (title, description, e-mail, screenshot added), once per opening |
+| `bug_report_submit` | `access`, `screenshots`: number attached | after the server accepted the report |
+
+Funnel: open, start, submit. `guest_blocked` counts signed out visitors who hit
+the "sign in first" message when guest reports are off.
+
+Screenshots: `screenshots` on `bug_report_submit` answers whether people attach
+pictures. Attempts that are abandoned are NOT tracked (no signal worth a
+separate event). Not tracked: validation errors, server errors, cancel.
+
 ## Out of scope (user visible pages only)
 
 welcome (almost empty), admin, minigames, achievements.

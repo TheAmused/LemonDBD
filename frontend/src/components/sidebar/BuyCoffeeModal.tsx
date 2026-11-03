@@ -9,6 +9,7 @@ import { Modal } from '@/components/common/Modal';
 import { useDictionary } from "@/context/DictionaryContext";
 import { useSiteConfig } from '@/context/SiteConfigContext';
 import { Surface } from '@/components/common/Surface';
+import { trackEvent } from '@/utils/analytics';
 
 export interface BuyCoffeeModalProps {
   isOpen: boolean;
@@ -27,6 +28,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
 
   const supportGateways = [
     {
+      provider: 'buy_me_a_coffee' as const,
       name: 'Buy Me a Coffee',
       url: links.donationBmc,
       tagline: t.coffeeBuyMeCoffeeTagline,
@@ -36,6 +38,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
       icon: BuyMeACoffeeIcon,
     },
     {
+      provider: 'ko_fi' as const,
       name: 'Ko-fi',
       url: links.donationKofi,
       tagline: t.coffeeKofiTagline,
@@ -71,6 +74,7 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
             href={gateway.url}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackEvent('coffee_link_click', { provider: gateway.provider })}
             className={`group flex items-center justify-between p-3.5 rounded-control border transition-all duration-200 cursor-pointer ${gateway.accentColor}`}
           >
             <div className="flex items-center gap-3">

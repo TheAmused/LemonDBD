@@ -32,6 +32,7 @@ import { Button } from '@/components/common/Button';
 import { useDictionary, useLocale } from "@/context/DictionaryContext";
 import { IconTile } from '@/components/common/IconTile';
 import { TileButton } from "@/components/common/TileButton";
+import { trackEvent } from '@/utils/analytics';
 
 const AuthModal = dynamic(() => import('./AuthModal').then((m) => m.AuthModal), { ssr: false });
 const BugReportModal = dynamic(
@@ -229,6 +230,7 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
           setMobileOpen(false);
         }}
         onOpenCoffeeModal={() => {
+          trackEvent('coffee_modal_open');
           setCoffeeModalOpen(true);
           setMobileOpen(false);
         }}
@@ -331,6 +333,7 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
       {bugModalOpen && (
         <BugReportModal
           isOpen={bugModalOpen}
+          source="sidebar"
           onClose={() => setBugModalOpen(false)}
         />
       )}

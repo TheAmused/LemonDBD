@@ -14,6 +14,7 @@ export default {
   termsOfService: "Nutzungsbedingungen",
   groupDatabase: "Datenbank",
   groupExtras: "Community & Spiele",
+  groupAdmin: "Administration",
   admin: "ADMIN",
   roleUser: "Benutzer",
   adminControlCenter: "Admin-Kontrollzentrum",

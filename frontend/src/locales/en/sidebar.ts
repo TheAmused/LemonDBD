@@ -14,6 +14,7 @@ export default {
   termsOfService: "Terms",
   groupDatabase: "Database",
   groupExtras: "Community & Games",
+  groupAdmin: "Administration",
   admin: "ADMIN",
   roleUser: "User",
   adminControlCenter: "Admin Control Center",

@@ -3,20 +3,11 @@
 
 import { useCallback } from 'react';
 import { playFanfare } from '@/utils/perkAudio';
-import { triggerDbdBurst } from '../lib/dbdBurst';
-import type { RoleCategory } from '@/types/perks';
 
+/** What happens when a loadout is finished: the fanfare. No particle burst on this page. */
 export function useJackpotCelebration() {
-  const celebrate = useCallback((role: RoleCategory, originEl?: HTMLElement | null) => {
+  const celebrate = useCallback(() => {
     playFanfare();
-
-    const prefersReducedMotion =
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (!prefersReducedMotion) {
-      triggerDbdBurst(originEl ?? null, role);
-    }
   }, []);
 
   return { celebrate };

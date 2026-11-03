@@ -1,5 +1,8 @@
 // frontend/src/utils/perkAudio.ts
-const AUDIO_KEY = 'lemon_dbd_audio_enabled_v1';
+// The site-wide "Sound effects" switch (Settings page, and the randomizer toolbar, which writes the
+// same preference). PreferencesContext stores it under these keys; this file only reads them.
+const PREFERENCES_KEY = 'lemondbd_preferences_v2';
+const LEGACY_PREFERENCES_KEY = 'lemondbd_smash_prefs_v1';
 
 let audioCtx: AudioContext | null = null;
 
@@ -19,24 +22,27 @@ function getAudioContext(): AudioContext | null {
   return audioCtx;
 }
 
+function readSoundsFlag(storage: Storage, key: string): boolean | null {
+  try {
+    const raw = storage.getItem(key);
+    if (!raw) return null;
+    const parsed: unknown = JSON.parse(raw);
+    if (parsed && typeof parsed === 'object') {
+      const sounds = (parsed as Record<string, unknown>).sounds;
+      if (typeof sounds === 'boolean') return sounds;
+    }
+  } catch {
+    // Unreadable storage or corrupted JSON: treated as "no choice made".
+  }
+  return null;
+}
+
+/** Whether sound effects are on: the site-wide preference, on until the visitor turns it off. */
 export function getAudioEnabled(): boolean {
   if (typeof window === 'undefined' || !window.localStorage) return true;
-  try {
-    const item = window.localStorage.getItem(AUDIO_KEY);
-    if (item === null) return true;
-    return item !== 'false';
-  } catch {
-    return true;
-  }
+  const storage = window.localStorage;
+  return readSoundsFlag(storage, PREFERENCES_KEY) ?? readSoundsFlag(storage, LEGACY_PREFERENCES_KEY) ?? true;
 }
-
-export function setAudioEnabled(enabled: boolean): void {
-  if (typeof window === 'undefined' || !window.localStorage) return;
-  try {
-    window.localStorage.setItem(AUDIO_KEY, enabled ? 'true' : 'false');
-  } catch {}
-}
-
 
 export function playReelTick(pitchMultiplier = 1.0): void {
   if (!getAudioEnabled()) return;

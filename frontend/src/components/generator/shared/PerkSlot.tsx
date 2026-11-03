@@ -45,6 +45,8 @@ export interface PerkSlotProps {
    * "Curse of Blindness" mutator), which does NOT show the coordinate tag.
    * Blind Mode always shows it. */
   isBlind?: boolean;
+  /** Grey icon, for perks that are on offer but not picked yet. */
+  muted?: boolean;
   onClick?: () => void;
 }
 
@@ -66,6 +68,7 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
       announce = false,
       size = 'default',
       isBlind = false,
+      muted = false,
       onClick,
     }) => {
   const dict = useDictionary();
@@ -110,6 +113,8 @@ export const PerkSlot: React.FC<PerkSlotProps> = ({
         coordinate={coordinate}
         size={size}
         isBlind={isBlind}
+        showName={!isBlind}
+        muted={muted}
       />
 
       {announce && !isBlind && (

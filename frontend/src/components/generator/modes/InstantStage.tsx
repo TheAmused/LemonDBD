@@ -34,6 +34,8 @@ export interface InstantStageProps {
   onSelectPerk: (perk: Perk) => void;
   isBlind?: boolean;
   backendBase?: string;
+  /** The loadout drawn last time, shown from the start. */
+  initialSlots?: DrawnSlot[];
 }
 
 export const InstantStage: React.FC<InstantStageProps> = ({
@@ -47,9 +49,10 @@ export const InstantStage: React.FC<InstantStageProps> = ({
       onRevealSlot,
       onSelectPerk,
       isBlind = false,
+      initialSlots,
     }) => {
   const dict = useDictionary();
-  const [revealSlots, setRevealSlots] = useState<(DrawnSlot | null)[]>([null, null, null, null]);
+  const [revealSlots, setRevealSlots] = useState<(DrawnSlot | null)[]>(() => [0, 1, 2, 3].map((i) => initialSlots?.[i] ?? null));
   const stopTimeoutsRef = useRef<(NodeJS.Timeout | number)[]>([]);
   const resultsRef = useRef<HTMLDivElement | null>(null);
   const { celebrate } = useJackpotCelebration();
@@ -86,7 +89,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
     });
 
     const finalTimeoutId = window.setTimeout(() => {
-      celebrate(role, resultsRef.current);
+      celebrate();
       onRollComplete(slots);
       onLoadoutComplete?.();
       isRollingRef.current = false;

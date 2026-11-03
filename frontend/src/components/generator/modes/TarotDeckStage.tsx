@@ -31,6 +31,8 @@ export interface TarotDeckStageProps {
   onSelectPerk: (perk: Perk) => void;
   isBlind?: boolean;
   backendBase?: string;
+  /** The loadout flipped last time, shown face up from the start. */
+  initialSlots?: DrawnSlot[];
 }
 
 interface TarotCard {
@@ -76,9 +78,18 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
       onRevealSlot,
       onSelectPerk,
       isBlind = false,
+      initialSlots,
     }) => {
   const dict = useDictionary();
-  const [cards, setCards] = useState<TarotCard[] | null>(null);
+  const [cards, setCards] = useState<TarotCard[] | null>(() =>
+    initialSlots?.length
+      ? initialSlots.map((slot) => ({
+          type: slot.perk ? pickPerkTarotType(slot.perk) : 'entity',
+          slot,
+          flipped: true,
+        }))
+      : null
+  );
   const resultsRef = useRef<HTMLDivElement | null>(null);
   const { celebrate } = useJackpotCelebration();
   const reduceMotion = useReducedMotion();
@@ -110,7 +121,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
     setCards(next);
 
     if (next.every((c) => c.flipped)) {
-      celebrate(role, resultsRef.current);
+      celebrate();
       onRollComplete(next.map((c) => c.slot));
       onLoadoutComplete?.();
     }

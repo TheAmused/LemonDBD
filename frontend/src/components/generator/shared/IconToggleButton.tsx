@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { ToggleChip } from '@/components/common/ToggleChip';
+import { cn } from '@/utils/cn';
 
 interface IconToggleButtonProps {
   icon: React.ReactNode;
@@ -29,7 +30,9 @@ export const IconToggleButton: React.FC<IconToggleButtonProps> = ({
     size="md"
     onClick={onClick}
     aria-label={label}
-    className={className ? `min-w-hit px-2.5 sm:min-w-11 pointer-coarse:min-w-11 ${className}` : 'min-w-hit px-2.5 sm:min-w-11 pointer-coarse:min-w-11'}
+    // Takes the height of the row it sits in (the Survivor/Killer toggle beside it), and the same
+    // horizontal padding as that toggle's options.
+    className={cn('min-w-hit self-stretch px-2 py-0 sm:min-w-11 sm:px-3 wide:px-4 pointer-coarse:min-w-11', className)}
   >
     {icon}
     {badge !== undefined && <span className="type-strong">{badge}</span>}

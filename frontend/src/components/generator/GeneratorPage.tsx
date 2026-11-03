@@ -13,7 +13,7 @@ import type {
 
 import { useAuth } from '@/context/AuthContext';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { getAudioEnabled, setAudioEnabled } from '@/utils/perkAudio';
+import { usePreferences } from '@/hooks/usePreferences';
 import { computeEligiblePool, computePlayablePool, PERKS_PER_PAGE } from './lib/perkPicker';
 import type {
   GeneratorStoredState} from './lib/generatorStorage';
@@ -25,6 +25,10 @@ import {
   clearDrawnPerksForRole,
   getActiveMutatorForRole,
   saveActiveMutatorForRole,
+  BATCH_MODES,
+  getLastRoll,
+  saveLastRoll,
+  clearLastRolls,
 } from './lib/generatorStorage';
 import { trackEvent } from '@/utils/analytics';
 import { buildRollProps } from './lib/rollTracking';
@@ -58,13 +62,15 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   const dict = useDictionary();
   const locale = useLocale();
   const { user } = useAuth();
+  const { preferences, updatePreferences } = usePreferences();
+  // Sound is the site-wide preference, so the toolbar button and the Settings page always agree.
+  const audioEnabled = preferences.sounds;
   const backendBase = getBackendBaseUrl();
 
   const [role, setRole] = useState<RoleCategory>('Survivor');
   const [genMode, setGenMode] = useState<GeneratorMode>('instant');
   const [noRepeatPerks, setNoRepeatPerks] = useState<boolean>(true);
   const [spinDurationSec, setSpinDurationSec] = useState<number>(3);
-  const [audioEnabled, setAudioEnabledState] = useState<boolean>(true);
 
   const [drawnPerks, setDrawnPerks] = useState<(string | number)[]>([]);
   const [loadout, setLoadout] = useState<(DrawnSlot | null)[]>([null, null, null, null]);
@@ -72,6 +78,11 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   const [isChaosModalOpen, setIsChaosModalOpen] = useState(false);
   const [activeMutator, setActiveMutator] = useState<ChaosMutator | null>(null);
   const [blindMode, setBlindMode] = useState<boolean>(false);
+
+  // The last finished loadout of each batch mode (Instant, Slot, Tarot, Crate), for the current role.
+  const [lastRolls, setLastRolls] = useState<Partial<Record<GeneratorMode, DrawnSlot[]>>>({});
+  const loadLastRolls = (forRole: RoleCategory) =>
+    Object.fromEntries(BATCH_MODES.map((m) => [m, getLastRoll(m, forRole)])) as Partial<Record<GeneratorMode, DrawnSlot[]>>;
 
   const [revealedSlots, setRevealedSlots] = useState<boolean[]>([false, false, false, false]);
 
@@ -89,13 +100,13 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   const [restored, setRestored] = useState(false);
   if (isClient && !restored) {
     setRestored(true);
-    setAudioEnabledState(getAudioEnabled());
 
     const saved = getStoredGeneratorState();
     const restoredRole: RoleCategory = saved?.role === 'Survivor' || saved?.role === 'Killer' ? saved.role : role;
     // Drawn perks and the active mutator (curse) are kept per role, so they persist until reset.
     setDrawnPerks(getDrawnPerksForRole(restoredRole));
     setActiveMutator(getActiveMutatorForRole(restoredRole));
+    setLastRolls(loadLastRolls(restoredRole));
     if (saved) {
       setRole(restoredRole);
       if (saved.genMode && KNOWN_MODES.includes(saved.genMode)) setGenMode(saved.genMode);
@@ -170,6 +181,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     setRole(newRole);
     setDrawnPerks(getDrawnPerksForRole(newRole));
     setActiveMutator(getActiveMutatorForRole(newRole));
+    setLastRolls(Object.fromEntries(BATCH_MODES.map((m) => [m, getLastRoll(m, newRole)])));
     setLoadout([null, null, null, null]);
     setActiveSlotIdx(0);
     setRevealedSlots([false, false, false, false]);
@@ -184,12 +196,8 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   }, []);
 
   const handleToggleAudio = useCallback(() => {
-    setAudioEnabledState((prev) => {
-      const next = !prev;
-      setAudioEnabled(next);
-      return next;
-    });
-  }, []);
+    void updatePreferences({ sounds: !audioEnabled });
+  }, [audioEnabled, updatePreferences]);
 
   const handleToggleBlindMode = useCallback(() => {
     setBlindMode((prev) => !prev);
@@ -208,6 +216,8 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     saveActiveMutatorForRole(role, null);
     setDrawnPerks([]);
     clearDrawnPerksForRole(role);
+    clearLastRolls(role);
+    setLastRolls({});
   }, [role]);
 
   /** Just the drawn-perk memory, from the low-pool warning modal's Reset
@@ -250,6 +260,8 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
 
   const handleBatchRollComplete = useCallback((slots: DrawnSlot[]) => {
     setRevealedSlots([false, false, false, false]);
+    saveLastRoll(genMode, role, slots);
+    setLastRolls((prev) => ({ ...prev, [genMode]: slots }));
 
     // ONLY add to drawnPerks if no-repeat mode is actually ON!
     if (noRepeatPerks) {
@@ -262,7 +274,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         });
       }
     }
-  }, [noRepeatPerks, role]);
+  }, [genMode, noRepeatPerks, role]);
 
   const handleRevealSlot = useCallback((idx: number) => {
     setRevealedSlots((prev) => {
@@ -272,10 +284,15 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     });
   }, []);
 
+  /** The saved loadout of a mode, with each perk swapped for its current copy (so the language and ownership are today's). */
+  const freshLastRoll = (mode: GeneratorMode): DrawnSlot[] =>
+    (lastRolls[mode] ?? []).map((s) => ({ ...s, perk: allPerks.find((p) => p.id === s.perk?.id) ?? s.perk }));
+
   const topLeft = <ModeSwitcher mode={genMode} onChange={handleGenModeChange} />;
 
   const topRight = (
-    <>
+    // One row of one height: the toolbar buttons stretch to the Survivor/Killer toggle.
+    <div className="flex flex-wrap items-stretch justify-center gap-2 sm:gap-3">
       <RoleToggle role={role} onChange={handleRoleChange} className="mr-1" />
       <Toolbar
         noRepeatPerks={noRepeatPerks}
@@ -290,7 +307,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         activeMutator={activeMutator}
         onResetAll={handleResetAllLoadoutAndWheels}
       />
-    </>
+    </div>
   );
 
   return (
@@ -321,7 +338,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
               // modes keep it: their lighter per-draw local state (locked/scattered
               // items, flipped cards, spun reels) was written to be cleared by a
               // fresh mount on role change, not by a prop.
-              key={genMode === 'wheel' ? genMode : `${genMode}-${role}`}
+              key={genMode === 'wheel' ? genMode : `${genMode}-${role}-${restored}`}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.18, ease: 'easeOut' }}
@@ -349,6 +366,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
             {genMode === 'instant' && (
               <InstantStage
                 role={role}
+                initialSlots={freshLastRoll('instant')}
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
@@ -364,6 +382,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
             {genMode === 'slot' && (
               <SlotMachineStage
                 role={role}
+                initialSlots={freshLastRoll('slot')}
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
@@ -378,6 +397,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
             {genMode === 'tarot' && (
               <TarotDeckStage
                 role={role}
+                initialSlots={freshLastRoll('tarot')}
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}
@@ -392,6 +412,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
             {genMode === 'crate' && (
               <LootCrateStage
                 role={role}
+                initialSlots={freshLastRoll('crate')}
                 activePlayablePerks={activePlayablePerks}
                 activeMutator={activeMutator}
                 onRollComplete={handleBatchRollComplete}

@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { Repeat, Volume2, VolumeX, RotateCcw, EyeOff, Info } from 'lucide-react';
+import { Repeat, Volume2, VolumeX, RotateCcw, EyeOff } from 'lucide-react';
 import type { ChaosMutator } from '@/types/chaos';
 import { WheelIcon } from '@/components/icons/DbdIcons';
 
@@ -45,8 +45,10 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       onResetAll,
     }) => {
   const dict = useDictionary();
+  // The tag every perk carries, without its brackets ("P/S"; "P/C" in Spanish), so the button reads like the tag it explains.
+  const coordinateTag = `${dict.generator.coordOpenPage.replace(/^[[［]/, '')}${dict.generator.coordSlot}`;
   return (
-    <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
+    <div className="flex items-stretch gap-1 sm:gap-1.5 shrink-0">
         {/* Explains the [P/S] tag every drawn perk carries, across every mode
          * (Wheel, Instant, Slot Machine, Tarot, Loot Crate) since this toolbar
          * is mounted regardless of which one is active. Purely informational --
@@ -58,7 +60,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           }
         >
           <IconToggleButton
-            icon={<Info className="icon-lg" />}
+            icon={<span aria-hidden="true" className="type-strong-wide whitespace-nowrap">{coordinateTag}</span>}
             label={dict.generator.coordinateLegendTooltip}
           />
         </Tooltip>

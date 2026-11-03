@@ -21,10 +21,5 @@ export default {
   chaptersTitle: "Chapters",
   perksButton: "Perks",
   continueButton: "Continue",
-  skipButton: "Skip",
-  skipModalTitle: "Skip character setup?",
-  skipModalBody: "If you skip, only the free base-game characters will be unlocked for you. Everything else stays locked until you unlock it yourself from your Characters page later.",
-  skipModalConfirm: "Yes, skip for now",
-  skipModalCancel: "Go back",
   savingLabel: "Saving...",
 };

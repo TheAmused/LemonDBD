@@ -6,6 +6,8 @@ import {
   loadOnboardingDraft,
   saveOnboardingDraft,
   clearOnboardingDraft,
+  loadOnboardingStep,
+  saveOnboardingStep,
   OnboardingStoredDraft,
 } from '@/utils/onboardingStorage';
 
@@ -74,5 +76,16 @@ describe('Onboarding LocalStorage Draft Persistence', () => {
 
     clearOnboardingDraft(777);
     assert.strictEqual(loadOnboardingDraft(777), null);
+  });
+
+  it('keeps the wizard step per user and drops it together with the draft', () => {
+    assert.strictEqual(loadOnboardingStep(7), null);
+    saveOnboardingStep(7, 'roster');
+    saveOnboardingStep(8, 'language');
+    assert.strictEqual(loadOnboardingStep(7), 'roster');
+    assert.strictEqual(loadOnboardingStep(8), 'language');
+    clearOnboardingDraft(7);
+    assert.strictEqual(loadOnboardingStep(7), null);
+    assert.strictEqual(loadOnboardingStep(8), 'language');
   });
 });

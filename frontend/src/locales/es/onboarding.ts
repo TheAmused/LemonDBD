@@ -21,10 +21,5 @@ export default {
   chaptersTitle: "Capítulos",
   perksButton: "Habilidades",
   continueButton: "Continuar",
-  skipButton: "Omitir",
-  skipModalTitle: "¿Omitir la configuración de personajes?",
-  skipModalBody: "Si omites este paso, solo se desbloquearán los personajes gratuitos del juego base. Todo lo demás permanecerá bloqueado hasta que lo desbloquees tú mismo más adelante desde tu página de Personajes.",
-  skipModalConfirm: "Sí, omitir por ahora",
-  skipModalCancel: "Volver",
   savingLabel: "Guardando...",
 };

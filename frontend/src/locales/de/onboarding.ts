@@ -21,10 +21,5 @@ export default {
   chaptersTitle: "Kapitel",
   perksButton: "Perks",
   continueButton: "Weiter",
-  skipButton: "Überspringen",
-  skipModalTitle: "Charaktereinrichtung überspringen?",
-  skipModalBody: "Wenn du überspringst, werden nur die kostenlosen Basisspiel-Charaktere für dich freigeschaltet. Alles andere bleibt gesperrt, bis du es später selbst auf deiner Charaktere-Seite freischaltest.",
-  skipModalConfirm: "Ja, vorerst überspringen",
-  skipModalCancel: "Zurück",
   savingLabel: "Wird gespeichert...",
 };

@@ -21,6 +21,7 @@ export interface WheelStageProps {
   activeSlotIdx: number;
   activeMutator: ChaosMutator | null;
   onWinSlot: (wonData: DrawnSlot) => void;
+  onSpinStart?: () => void;
   revealedSlots: boolean[];
   onRevealSlot: (idx: number) => void;
   onSelectPerk: (perk: Perk) => void;
@@ -38,6 +39,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
   loadout,
   activeSlotIdx,
   onWinSlot,
+  onSpinStart,
   revealedSlots,
   onRevealSlot,
   onSelectPerk,
@@ -52,7 +54,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
     spinButtonText, handleStartSpin,
   } = useWheelStage({
     totalPages, perksPerPage, lastPagePerks, spinDurationSec, role, sortedPerks,
-    loadout, activeSlotIdx, activeMutator, onWinSlot, backendBase,
+    loadout, activeSlotIdx, activeMutator, onWinSlot, onSpinStart, backendBase,
   });
 
   const renderFlankSlot = (idx: number) => {

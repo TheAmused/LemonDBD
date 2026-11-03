@@ -131,6 +131,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
   const [phase, setPhase] = useState<CratePhase>(initialSlots?.length ? 'complete' : 'closed');
   const [scatterPool, setScatterPool] = useState<ScatterItem[]>([]);
   const [lockedItems, setLockedItems] = useState<ScatterItem[]>([]);
+  const lockedIds = new Set(lockedItems.map((l) => l.id));
   const [selected, setSelected] = useState<DrawnSlot[]>(initialSlots ?? []);
   const resultsRef = useRef<HTMLDivElement | null>(null);
   const isMountedRef = useRef(true);
@@ -197,30 +198,29 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
 
     const nextSelected = [...selected, { page: item.page, slot: item.slot, perk: item.perk }];
 
-    // The picked perk stays exactly where it landed and switches to a
-    // locked visual -- it moves into its own array so it's never touched
-    // by the scatterPool's AnimatePresence exit animation (that's reserved
-    // for perks the Entity claims away below).
+    // The picked perk stays exactly where it landed: it keeps its place in the scatter pool and
+    // simply loses its grey (see `lockedIds`). Only perks the Entity claims leave the field.
     setLockedItems((prev) => [...prev, item]);
 
-    // Remove the picked perk, then let the Entity claim 1-2 more at random
-    // -- but never delete past what's still needed to finish the loadout,
-    // and never past what's actually available.
-    const { remaining: remainingPool, claimed } = entityClaims(
-      scatterPool.filter((p) => p.id !== item.id),
+    // Let the Entity claim 1-2 of the offerings still on the field at random -- but never past
+    // what's still needed to finish the loadout, and never past what's actually available.
+    const { remaining, claimed } = entityClaims(
+      scatterPool.filter((p) => p.id !== item.id && !lockedIds.has(p.id)),
       LOADOUT_SIZE - nextSelected.length
     );
     if (claimed > 0) {
       const thudTimeoutId = window.setTimeout(() => playReelThud(), 150);
       timeoutsRef.current.push(thudTimeoutId);
     }
+    const keptIds = new Set(remaining.map((p) => p.id));
+    const remainingPool = scatterPool.filter((p) => p.id === item.id || lockedIds.has(p.id) || keptIds.has(p.id));
 
     setSelected(nextSelected);
     setScatterPool(remainingPool);
 
     // Complete once the loadout is full, or if the Entity ran out of perks
     // to offer before that (only possible with a very small playable pool).
-    if (nextSelected.length >= LOADOUT_SIZE || remainingPool.length === 0) {
+    if (nextSelected.length >= LOADOUT_SIZE || remaining.length === 0) {
       setPhase('complete');
       celebrate();
       onRollComplete(nextSelected);
@@ -316,7 +316,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
             {/* Scattered Offerings: Symmetrically Centered Flex Wrap */}
             <div className="flex flex-wrap items-center justify-center gap-2.5 xs:gap-3 sm:gap-4 w-full max-w-sm sm:max-w-md mx-auto py-1">
               <AnimatePresence>
-                {scatterPool.map((item) => (
+                {scatterPool.filter((item) => !lockedIds.has(item.id)).map((item) => (
                   <motion.div
                     key={`mob-scatter-${item.id}`}
                     initial={reduceMotion ? false : { opacity: 0, scale: 0.6 }}
@@ -344,24 +344,6 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
 
           {/* Desktop (>= md): Cinematic absolute scatter field */}
           <div className="relative h-full min-h-80 w-full flex-1 hidden md:block">
-            {lockedItems.map((item) => (
-              <motion.div
-                key={`locked-${item.id}`}
-                className="absolute -translate-x-1/2 -translate-y-1/2"
-                style={scatterPointStyle(item)}
-                initial={reduceMotion ? false : { scale: item.scale * 1.3, opacity: 0.4 }}
-                animate={{ scale: item.scale, opacity: 1, rotate: 0 }}
-                transition={reduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 260, damping: 18 }}
-              >
-                <div className="relative">
-                  <PerkSlot perk={item.perk} role={role} page={item.page} slot={item.slot} />
-                  <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
-                    <LockIcon className="icon-sm" />
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-
             <AnimatePresence>
               {scatterPool.map((item) => (
                 <motion.div
@@ -374,14 +356,21 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                   transition={reduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 210, damping: 16 }}
                   whileHover={reduceMotion ? undefined : { scale: item.scale * 1.1, rotate: 0, zIndex: 20 }}
                 >
-                  <PerkSlot
-                    perk={item.perk}
-                    role={role}
-                    page={item.page}
-                    slot={item.slot}
-                    muted
-                    onClick={() => handlePick(item)}
-                  />
+                  <div className="relative">
+                    <PerkSlot
+                      perk={item.perk}
+                      role={role}
+                      page={item.page}
+                      slot={item.slot}
+                      muted={!lockedIds.has(item.id)}
+                      onClick={lockedIds.has(item.id) ? undefined : () => handlePick(item)}
+                    />
+                    {lockedIds.has(item.id) && (
+                      <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
+                        <LockIcon className="icon-sm" />
+                      </div>
+                    )}
+                  </div>
                 </motion.div>
               ))}
             </AnimatePresence>

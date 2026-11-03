@@ -13,7 +13,8 @@ import {  Menu,
   LayoutList,
   Gamepad2,
   Settings,
-  Library,} from 'lucide-react';
+  Library,
+} from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { LemonIcon } from './LemonIcon';
 import { useAuth } from '@/context/AuthContext';
@@ -26,7 +27,7 @@ import { SidebarBottomControls } from './sidebar/SidebarBottomControls';
 import { i18n } from '@/i18n/config';
 import { WhatsNewLauncher } from '@/components/changelog/WhatsNewLauncher';
 import { useChangelogFeed } from '@/components/changelog/useChangelogFeed';
-import { PerkHexIcon, MaskIcon, GridIcon, TrophyIcon, DiceIcon, TargetIcon, MapIcon, HeartIcon } from '@/components/icons/DbdIcons';
+import { PerkHexIcon, MaskIcon, GridIcon, TrophyIcon, DiceIcon, TargetIcon, MapIcon, HeartIcon, CrownIcon } from '@/components/icons/DbdIcons';
 
 import { Button } from '@/components/common/Button';
 import { useDictionary, useLocale } from "@/context/DictionaryContext";
@@ -43,10 +44,14 @@ const BuyCoffeeModal = dynamic(
   { ssr: false }
 );
 
+// One loader shared by the dynamic component and the preload: the first click used to wait for the
+// chunk (about 160ms, a stalled page), later ones found it cached (about 24ms).
+const loadBardInsults = () => import('./sidebar/BardInsultsModal');
 const BardInsultsModal = dynamic(
-  () => import('./sidebar/BardInsultsModal').then((m) => m.BardInsultsModal),
+  () => loadBardInsults().then((m) => m.BardInsultsModal),
   { ssr: false }
 );
+const preloadBardInsults = () => { void loadBardInsults(); };
 
 /** A page link (`href`) or a button that opens a dialog (`onSelect`). */
 interface NavItem {
@@ -89,6 +94,17 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
   const [insultsModalOpen, setInsultsModalOpen] = useState(false);
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);
+
+  // Fetch the insults dialog while the browser is idle, so it is ready before anyone clicks.
+  useEffect(() => {
+    const idle = window.requestIdleCallback;
+    if (idle) {
+      const handle = idle(preloadBardInsults);
+      return () => window.cancelIdleCallback(handle);
+    }
+    const timer = setTimeout(preloadBardInsults, 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -137,6 +153,14 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
       page('about', dict.sidebar.about, Info, 'about'),
     ];
   }, [dict, currentLocale]);
+
+  // Shown to admins only, under the regular links.
+  const adminEntry = useMemo((): NavItem => ({
+    id: 'admin',
+    label: dict.sidebar.adminControlCenter,
+    icon: CrownIcon,
+    href: `/${currentLocale}/admin`,
+  }), [dict, currentLocale]);
 
   // Admin-only pages are hidden from everyone else; a group left empty disappears with them.
   const visibleNavEntries = useMemo(() => {
@@ -198,13 +222,17 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
               </SidebarNavGroup>
             ) : renderNavItem(entry)
           ))}
+          {isAdmin && (
+            <div className="mt-3 space-y-1 border-t border-border-color pt-3">
+              {renderNavItem(adminEntry)}
+            </div>
+          )}
         </nav>
 
         <SidebarUserSection
           currentLocale={currentLocale}
           user={user}
           isAuthenticated={isAuthenticated}
-          isAdmin={isAdmin}
           onOpenAuthModal={() => {
             setAuthModalIntent('login');
             setAuthModalOpen(true);
@@ -218,6 +246,7 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
             setInsultsModalOpen(true);
             setMobileOpen(false);
           }}
+          onPreloadInsults={preloadBardInsults}
           onNavigateMobile={() => setMobileOpen(false)}
         />
       </div>

@@ -99,6 +99,32 @@ export function saveActiveMutatorForRole(role: RoleCategory, mutator: ChaosMutat
   }
 }
 
+/** The modes that draw a whole loadout at once; the wheel keeps its own loadout in the generator state. */
+export const BATCH_MODES: GeneratorMode[] = ['instant', 'slot', 'tarot', 'crate'];
+
+const lastRollKey = (mode: GeneratorMode, role: RoleCategory) => `lemon_last_roll_${mode}_${role}`;
+
+/** The last finished loadout of one mode and role, so it is still on screen after a reload. */
+export function getLastRoll(mode: GeneratorMode, role: RoleCategory): DrawnSlot[] {
+  const saved = safeGetJSON<unknown[]>(lastRollKey(mode, role), []);
+  const slots = saved.filter(
+    (s): s is DrawnSlot =>
+      Boolean(s) &&
+      typeof s === 'object' &&
+      Boolean((s as DrawnSlot).perk) &&
+      (s as DrawnSlot).perk?.category === role
+  );
+  return slots.length === saved.length ? slots : [];
+}
+
+export function saveLastRoll(mode: GeneratorMode, role: RoleCategory, slots: DrawnSlot[]): boolean {
+  return safeSetJSON(lastRollKey(mode, role), slots);
+}
+
+export function clearLastRolls(role: RoleCategory): void {
+  BATCH_MODES.forEach((mode) => safeRemoveItem(lastRollKey(mode, role)));
+}
+
 export function getStoredGeneratorState(): Partial<GeneratorStoredState> | null {
   const state = safeGetJSON<Partial<GeneratorStoredState> | null>(GENERATOR_STORAGE_KEY, null);
   if (state && typeof state === 'object' && !Array.isArray(state)) {

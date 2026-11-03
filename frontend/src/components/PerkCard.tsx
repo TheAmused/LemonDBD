@@ -42,13 +42,15 @@ interface PerkCardProps {
   coordinate?: { page: number; slot: number };
   size?: 'default' | 'large' | 'fill' | 'tarot' | 'compact' | 'wheelFlank';
   isBlind?: boolean;
-  /** Print the perk name under the icon (size="fill" only). The name sits on the page, no frame or background. */
+  /** Print the perk name under the icon. On a fixed-size card it is drawn inside the same square, so the card keeps its footprint. */
   showName?: boolean;
   /** Print the perk types under the name (named fill cards only). */
   showTypes?: boolean;
+  /** Grey icon (colour comes back when the prop is dropped); a hover glow keeps its own colour. */
+  muted?: boolean;
 }
 
-export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, size = 'default', isBlind = false, showName = false, showTypes = false }) => {
+export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, size = 'default', isBlind = false, showName = false, showTypes = false, muted = false }) => {
   const dict = useDictionary();
   const locale = useLocale();
   const [avatarError, setAvatarError] = useState(false);
@@ -67,6 +69,8 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
   const isOwned = perk.is_owned !== false;
 
   const named = showName && size === 'fill';
+  // Fixed-size cards (every size but fill) print the name inside their square, under a smaller icon.
+  const inlineName = showName && size !== 'fill';
   const typed = named && showTypes;
   const generalLabel = dict.modal.generalPerk;
   // The types joined the way the UI language writes a list. getKnownPerkTypes is never empty.
@@ -114,6 +118,8 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
         onClick={() => onSelect(perk)}
         aria-label={ariaLabel}
         className={`relative flex items-center justify-center duration-200 ${
+          inlineName ? 'flex-col gap-0.5' : ''
+        } ${
           named
             ? 'h-full w-full flex-col gap-1'
             : size === 'tarot' || size === 'compact'
@@ -130,7 +136,9 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
         )}
 
         <div className={`relative flex items-center justify-center transition-transform duration-200 ${
-          named ? `${typed ? NAMED_TYPED_ICON_CLASS : NAMED_ICON_CLASS} group-hover:scale-105` : 'h-full w-full'
+          named
+            ? `${typed ? NAMED_TYPED_ICON_CLASS : NAMED_ICON_CLASS} group-hover:scale-105`
+            : inlineName ? 'min-h-0 w-full flex-1' : 'h-full w-full'
         }`}>
           <div
             className={`relative flex h-full w-full items-center justify-center ${
@@ -141,12 +149,14 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
               perk={perk}
               src={iconSrc}
               className="h-full w-full"
-              imageClassName="h-full w-full object-contain filter drop-shadow-xl group-hover:drop-shadow-glow-red-sm transition-all duration-200 pointer-events-none"
+              imageClassName={`h-full w-full object-contain filter drop-shadow-xl group-hover:drop-shadow-glow-red-sm transition-all duration-200 pointer-events-none ${muted ? 'grayscale' : ''}`}
             />
 
             {avatarSrc && !avatarError && !isGeneral && (
               <div
-                className={`absolute bottom-0 right-0 overflow-hidden rounded-full pointer-events-none bg-bg-primary shadow-lg border border-border-color ${
+                className={`absolute bottom-0 right-0 overflow-hidden rounded-full pointer-events-none bg-bg-primary shadow-lg border border-border-color transition-[filter] duration-200 ${
+                  muted ? 'grayscale ' : ''
+                }${
                   size === 'compact'
                     ? 'h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7'
                     : size === 'tarot'
@@ -194,6 +204,20 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
             className={`type-card-title line-clamp-2 w-full text-balance text-center ${
               perk.is_disabled || !isOwned ? 'text-text-muted' : 'text-text-primary'
             }`}
+          >
+            {perk.name}
+          </span>
+        )}
+
+        {inlineName && (
+          <span
+            className={`line-clamp-2 w-full shrink-0 text-balance text-center font-bold leading-tight px-0.5 ${
+              size === 'compact'
+                ? 'text-micro'
+                : size === 'tarot'
+                  ? 'text-micro sm:text-tiny xl:text-mini text-tarot-ink'
+                  : 'text-tiny sm:text-mini xl:text-xs wide:text-sm'
+            } ${size === 'tarot' ? '' : perk.is_disabled || !isOwned ? 'text-text-muted' : 'text-text-primary'}`}
           >
             {perk.name}
           </span>

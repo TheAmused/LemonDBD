@@ -2,44 +2,42 @@
 // frontend/src/components/generator/modes/slot-machine/useSlotMachine.ts
 import React, { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
+import type { Perk, DrawnSlot } from '@/types/perks';
 import type { ChaosMutator } from '@/types/chaos';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
-import { playReelTick, playReelThud, playCurseSound } from '@/utils/perkAudio';
+import { playReelTick, playReelThud, playCurseSound, playFanfare } from '@/utils/perkAudio';
 import { pickRandomLoadout, buildDrawnSlots } from '../../lib/perkPicker';
 import { getSelectionRange, SLOT_LOADOUT_SIZE } from '../../lib/slotMachineRules';
-import { useJackpotCelebration } from '../../shared/useJackpotCelebration';
 import { buildStrip, FINAL_INDEX, REEL_COUNT, STRIP_FILLER, TICK_INTERVAL_MS } from './slotMachineStrip';
 import type { MachinePhase, Reel } from './slotMachineTypes';
 import { useReelSizing } from './useReelSizing';
 
 interface SlotMachineInput {
-  role: RoleCategory;
   activePlayablePerks: Perk[];
   activeMutator: ChaosMutator | null;
   onRollComplete: (slots: DrawnSlot[]) => void;
   /** Fires once the loadout is full (analytics). */
   onLoadoutComplete?: () => void;
+  /** The loadout locked in last time, shown from the start. */
+  initialSlots?: DrawnSlot[];
 }
 
 /** The slot machine's whole state machine: pull, spin, stage reels, confirm, repeat until the loadout is full. */
-export function useSlotMachine({ role, activePlayablePerks, activeMutator, onRollComplete, onLoadoutComplete }: SlotMachineInput) {
+export function useSlotMachine({ activePlayablePerks, activeMutator, onRollComplete, onLoadoutComplete, initialSlots }: SlotMachineInput) {
   const dict = useDictionary();
-  const [phase, setPhase] = useState<MachinePhase>('idle');
+  const [phase, setPhase] = useState<MachinePhase>(initialSlots?.length ? 'complete' : 'idle');
   const [reels, setReels] = useState<Reel[]>([]);
   const [spinningIds, setSpinningIds] = useState<Set<number>>(new Set());
   const [staged, setStaged] = useState<Set<number>>(new Set());
   const [cycleIndex, setCycleIndex] = useState(0);
-  const [selected, setSelected] = useState<DrawnSlot[]>([]);
+  const [selected, setSelected] = useState<DrawnSlot[]>(initialSlots ?? []);
   const { reelAreaRef, cellPx, isMobile } = useReelSizing(phase);
 
   const reelsRef = useRef<Reel[]>([]);
   const tickIntervalsRef = useRef<Map<number, ReturnType<typeof setInterval>>>(new Map());
   const pendingDoneRef = useRef<{ remaining: Set<number>; onAllDone: () => void } | null>(null);
   const fallbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const resultsRef = useRef<HTMLDivElement | null>(null);
-  const { celebrate } = useJackpotCelebration();
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -238,7 +236,7 @@ export function useSlotMachine({ role, activePlayablePerks, activeMutator, onRol
 
     if (nextSelected.length >= SLOT_LOADOUT_SIZE) {
       setPhase('complete');
-      celebrate(role, resultsRef.current);
+      playFanfare();
       onRollComplete(nextSelected);
       onLoadoutComplete?.();
       return;
@@ -288,7 +286,6 @@ export function useSlotMachine({ role, activePlayablePerks, activeMutator, onRol
     cellPx,
     isMobile,
     reelAreaRef,
-    resultsRef,
     canConfirm,
     confirmHint,
     handleReelTransitionEnd,

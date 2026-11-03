@@ -23,7 +23,7 @@ import {
 import { Perk } from '@/types/perks';
 import { ChaosMutator } from '@/types/chaos';
 import { getMutatorDisplayLines, CHAOS_MUTATORS } from '@/components/ChaosWheelModal';
-import { getAudioEnabled, setAudioEnabled } from '@/utils/perkAudio';
+import { getAudioEnabled } from '@/utils/perkAudio';
 
 // In-memory localStorage mock for node environment
 function createMockLocalStorage() {
@@ -512,23 +512,24 @@ test('generatorStorage: corrupted data & edge-case resilience', async (t) => {
   });
 
 
-  await t.test('audio settings getter and setter handle corrupted storage without exceptions', () => {
+  await t.test('audio follows the site-wide sounds preference and survives corrupted storage', () => {
     const mock = createMockLocalStorage();
     globalThis.window = { localStorage: mock } as any;
 
-    // Default without storage is true
+    // No choice made yet: on
     assert.strictEqual(getAudioEnabled(), true);
 
-    setAudioEnabled(false);
+    mock.setItem('lemondbd_preferences_v2', JSON.stringify({ sounds: false }));
     assert.strictEqual(getAudioEnabled(), false);
 
-    setAudioEnabled(true);
+    mock.setItem('lemondbd_preferences_v2', JSON.stringify({ sounds: true }));
     assert.strictEqual(getAudioEnabled(), true);
 
-    // Corrupt the key with garbage text
-    mock.setItem('lemon_dbd_audio_enabled_v1', 'unparseable');
-    // Should safely fallback to true
+    // Corrupt the key with garbage text: falls back to the legacy key, then to on
+    mock.setItem('lemondbd_preferences_v2', 'unparseable');
     assert.strictEqual(getAudioEnabled(), true);
+    mock.setItem('lemondbd_smash_prefs_v1', JSON.stringify({ sounds: false }));
+    assert.strictEqual(getAudioEnabled(), false);
   });
 
   await t.test('GENERATOR_STORAGE_KEY uses v9 to isolate pristine wheel generator state', () => {

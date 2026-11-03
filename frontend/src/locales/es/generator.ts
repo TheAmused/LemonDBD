@@ -163,6 +163,7 @@ export default {
   blindModeTooltipTitle: "Modo a Ciegas",
   blindModeTooltipDesc: "Oculta cada ícono de perk tras un '?' de forma permanente. Consulta el número de página y casilla en el juego para ver qué te tocó.",
   chaosMutatorTooltipDesc: "Gira para obtener una maldición o bendición aleatoria que altere este equipo de perks.",
+  coordinateLegendIcon: "P/C",
   coordinateLegendTooltip: "Qué significa P/C",
   coordinateLegendTooltipTitle: "Página / Casilla",
   coordinateLegendTooltipDesc: "Cada perk indica dónde encontrarlo en tu inventario dentro del juego. El primer número es la Página, el segundo es la Casilla en esa página: [P3/C7] significa Página 3, Casilla 7.",

@@ -163,6 +163,7 @@ export default {
   blindModeTooltipTitle: "Tryb Ślepy",
   blindModeTooltipDesc: "Na stałe ukrywa każdą ikonę perka za znakiem '?'. Sprawdź numer strony i slotu w grze, aby zobaczyć, co wylosowałeś.",
   chaosMutatorTooltipDesc: "Zakręć, aby otrzymać losową klątwę lub błogosławieństwo próby, które zmieni ten zestaw perków.",
+  coordinateLegendIcon: "S/S",
   coordinateLegendTooltip: "Co oznacza S/S",
   coordinateLegendTooltipTitle: "Strona / Slot",
   coordinateLegendTooltipDesc: "Każdy perk pokazuje, gdzie go znaleźć w ekwipunku w grze. Pierwsza liczba to Strona, druga to Slot na tej stronie: [S3/S7] oznacza Stronę 3, Slot 7.",

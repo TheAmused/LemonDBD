@@ -180,11 +180,19 @@ class TestPageStreakRoster:
         assert self.service.get_run(self.user_id, "Trapper") is None
 
     def test_roster_reflects_started_run(self) -> None:
-        self.service.start_run(self.user_id, "Nurse")
+        run = self.service.start_run(self.user_id, "Nurse")
+        page = run["pages"][0]
+        self.service.submit_result(self.user_id, "Nurse", 1, page[: self.service.expected_build_size(page)], "win")
         roster = {entry["killer"]: entry for entry in self.service.get_roster(self.user_id)}
         assert roster["Nurse"]["status"] == "in_progress"
-        assert roster["Nurse"]["current_page"] == 1
+        assert roster["Nurse"]["current_page"] == 2
         assert roster["Trapper"]["status"] == "not_started"
+
+    def test_roster_does_not_count_an_opened_killer_as_started(self) -> None:
+        """Opening a killer creates its run, but nothing is started until the first match is played."""
+        self.service.start_run(self.user_id, "Nurse")
+        roster = {entry["killer"]: entry for entry in self.service.get_roster(self.user_id)}
+        assert roster["Nurse"]["status"] == "not_started"
 
     def test_runs_are_isolated_per_user(self, user_service: UserService) -> None:
         other_user, _ = user_service.register_user("other_roster_user", "other_roster_user", "other_r@test.com", "Pass123!")

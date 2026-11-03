@@ -30,6 +30,7 @@ def run_to_dict(
         "status": r.status,
         "attempts": r.attempts,
         "attempt": r.attempt,
+        "attempt_matches": r.attempt_matches,
         "current_page": r.current_page,
         "best_page": r.best_page,
         "pages": pages,

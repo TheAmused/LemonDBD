@@ -17,7 +17,6 @@ page_streak_bp = make_streak_blueprint(
     invalid_value_hint="required",
     has_reveal=False,
     get_run_method="get_run",
-    stats_requires_param=False,
 )
 
 

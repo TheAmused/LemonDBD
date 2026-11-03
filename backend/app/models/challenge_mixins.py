@@ -41,6 +41,9 @@ class RetryableRunMixin(ChallengeRunMixin):
     total_losses: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)
     #: Matches since the run began or was last completed; starts over with `attempts`.
     playthrough_matches: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)
+    #: Matches played in the current attempt. An attempt only counts once it has one: opening the page or
+    #: pressing reset on an untouched attempt starts nothing.
+    attempt_matches: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)
 
     def record_match(self, result: str) -> None:
         if result == "win":
@@ -48,6 +51,7 @@ class RetryableRunMixin(ChallengeRunMixin):
         else:
             self.total_losses += 1
         self.playthrough_matches += 1
+        self.attempt_matches += 1
 
     def finish_playthrough(self) -> None:
         """The run was completed: the next playthrough counts its attempts and matches from zero."""
@@ -58,13 +62,16 @@ class RetryableRunMixin(ChallengeRunMixin):
         """A failed attempt: count it, and file the next matches under a new group."""
         self.attempts += 1
         self.attempt += 1
+        self.attempt_matches = 0
 
     def abandon_attempt(self) -> None:
-        """The player gives the run up. A finished run already started its attempt count over, so only a run in play counts it."""
+        """The player gives the run up. A finished run already started its attempt count over, so only a run in play counts it,
+        and only if it got to play a match: giving up an untouched attempt leaves the count where it was."""
         if self.status == "completed":
             self.attempt += 1
-        else:
+        elif self.attempt_matches > 0:
             self.start_new_attempt()
+        self.attempt_matches = 0
         self.playthrough_matches = 0
 
 

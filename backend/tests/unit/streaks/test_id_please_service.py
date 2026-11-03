@@ -60,6 +60,17 @@ class TestRunLifecycle:
         with pytest.raises(ValueError, match="temporarily disabled"):
             service.get_or_create_run(small, "hardcore")
 
+    def test_an_admin_can_still_play_a_disabled_mode(self, service: IdPleaseService, small: int, db_session: Session) -> None:
+        from app.models import User
+
+        run = start(service, small)
+        db_session.add(ChallengeModeSetting(mode="id_please", is_enabled=False, disabled_reason="bug"))
+        db_session.get(User, small).role = "admin"
+        db_session.commit()
+        assert service.get_or_create_run(small, "hardcore")["difficulty"] == "hardcore"
+        assert service.abandon_run(small, "milestones")["current_match"] == 0
+        assert service.submit_opening(small, run["id"], "survivor", [0, 1, 2, 3]) is not None
+
     def test_abandon_returns_to_setup_and_keeps_the_best(self, service: IdPleaseService, small: int) -> None:
         run = play(service, small, start(service, small), ["win", "win", "win"])
         assert run["best_streak"] == 3

@@ -141,13 +141,14 @@ def build_roster_summary(
         r = runs.get(killer)
         avatar_local_path = avatar_map.get(killer)
         ever_completed = killer in completed_killers
-        if r is None:
+        # Opening a killer creates its run, but nothing is started until the first match is played.
+        if r is None or (r.status == "in_progress" and r.attempt_matches == 0):
             roster.append({
                 "killer": killer,
                 "status": "not_started",
-                "attempt": 0,
+                "attempt": r.attempt if r else 0,
                 "current_page": 0,
-                "best_page": 0,
+                "best_page": r.best_page if r else 0,
                 "page_count": page_count,
                 "avatar_local_path": avatar_local_path,
                 "ever_completed": ever_completed,

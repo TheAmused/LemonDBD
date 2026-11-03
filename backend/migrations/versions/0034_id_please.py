@@ -36,6 +36,7 @@ def upgrade() -> None:
             sa.Column("total_wins", sa.Integer(), nullable=False, server_default="0"),
             sa.Column("total_losses", sa.Integer(), nullable=False, server_default="0"),
             sa.Column("playthrough_matches", sa.Integer(), nullable=False, server_default="0"),
+            sa.Column("attempt_matches", sa.Integer(), nullable=False, server_default="0"),
             sa.Column("current_streak", sa.Integer(), nullable=False, server_default="0"),
             sa.Column("best_streak", sa.Integer(), nullable=False, server_default="0"),
             sa.Column("last_checkpoint_streak", sa.Integer(), nullable=False, server_default="0"),

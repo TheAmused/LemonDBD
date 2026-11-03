@@ -15,7 +15,6 @@ import { playFanfare, playReelThud, playCardFlip } from '@/utils/perkAudio';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Surface } from '@/components/common/Surface';
-import { LockIcon } from '@/components/icons/DbdIcons';
 
 export interface LootCrateStageProps {
   role: RoleCategory;
@@ -295,9 +294,6 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                 return locked ? (
                   <div key={`mob-tray-locked-${locked.id}`} className="relative">
                     <PerkSlot perk={locked.perk} role={role} page={locked.page} slot={locked.slot} size="compact" />
-                    <div className="absolute -top-1.5 -right-1.5 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
-                      <LockIcon className="icon-xs" />
-                    </div>
                   </div>
                 ) : (
                   <div
@@ -362,11 +358,6 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                       muted={!lockedIds.has(item.id)}
                       onClick={lockedIds.has(item.id) ? undefined : () => handlePick(item)}
                     />
-                    {lockedIds.has(item.id) && (
-                      <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
-                        <LockIcon className="icon-sm" />
-                      </div>
-                    )}
                   </div>
                 </motion.div>
               ))}

@@ -237,6 +237,12 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
     );
   }, [genMode, role, blindMode, activeMutator, noRepeatPerks, audioEnabled]);
 
+  /** A spin for slot #1 starts a new loadout: the four perks of the last one go. */
+  const handleWheelSpinStart = useCallback(() => {
+    setLoadout([null, null, null, null]);
+    setRevealedSlots([false, false, false, false]);
+  }, []);
+
   const handleWheelWinSlot = useCallback((wonData: DrawnSlot) => {
     // The wheel fills one slot per spin: the 4th win is the finished loadout.
     if (activeSlotIdx === 3) trackRoll();
@@ -356,6 +362,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
                 activeSlotIdx={activeSlotIdx}
                 activeMutator={activeMutator}
                 onWinSlot={handleWheelWinSlot}
+                onSpinStart={handleWheelSpinStart}
                 revealedSlots={revealedSlots}
                 onRevealSlot={handleRevealSlot}
                 onSelectPerk={onSelectPerk}

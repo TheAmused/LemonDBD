@@ -26,6 +26,8 @@ interface WheelStageInput {
   activeSlotIdx: number;
   activeMutator: ChaosMutator | null;
   onWinSlot: (wonData: DrawnSlot) => void;
+  /** Fires when a spin for slot #1 starts: the previous loadout is over and must be cleared. */
+  onSpinStart?: () => void;
   backendBase?: string;
 }
 
@@ -41,6 +43,7 @@ export function useWheelStage({
   activeSlotIdx,
   activeMutator,
   onWinSlot,
+  onSpinStart,
   backendBase,
 }: WheelStageInput) {
   const dict = useDictionary();
@@ -184,6 +187,7 @@ export function useWheelStage({
   const handleStartSpin = async () => {
     if (isSpinning || sortedPerks.length === 0) return;
     setIsSpinning(true);
+    if (activeSlotIdx === 0) onSpinStart?.();
     if (!reduceMotion) startEmberDrift();
 
     try {
@@ -200,7 +204,7 @@ export function useWheelStage({
 
       // Exclude perks already in the current loadout (other slots) to prevent duplicates
       const alreadyWonIds = new Set(
-        loadout
+        loadout && activeSlotIdx > 0
           ? loadout
               .map((s) => s?.perk?.id)
               .filter((id): id is number => typeof id === 'number')

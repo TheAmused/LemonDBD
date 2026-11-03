@@ -64,16 +64,12 @@ export const InstantStage: React.FC<InstantStageProps> = ({
     };
   }, []);
 
-  const isRollingRef = useRef(false);
-
   const handleRoll = () => {
     if (activePlayablePerks.length === 0) return;
-    if (isRollingRef.current) return;
-    isRollingRef.current = true;
 
     onRollStart?.();
 
-    // Cancel any previous in-flight timeouts
+    // A new roll replaces the previous one: its pending sounds and completion are cancelled, so rolls can be spammed.
     stopTimeoutsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
     stopTimeoutsRef.current = [];
 
@@ -92,7 +88,6 @@ export const InstantStage: React.FC<InstantStageProps> = ({
       celebrate();
       onRollComplete(slots);
       onLoadoutComplete?.();
-      isRollingRef.current = false;
     }, slots.length * 150 + 200);
     stopTimeoutsRef.current.push(finalTimeoutId);
   };

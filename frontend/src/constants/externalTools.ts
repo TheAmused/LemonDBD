@@ -3,7 +3,7 @@
 // port. The ports are the `listen` ports of nginx/default.conf; __tests__/guards/externalToolPorts.test.ts
 // fails when the two drift apart.
 
-export const EXTERNAL_TOOL_PORTS = { umami: 8117, pgAdmin: 5050 } as const;
+export const EXTERNAL_TOOL_PORTS = { umami: 8117 } as const;
 
 /** Host to assume when the code runs where there is no window (server render). */
 export const FALLBACK_TOOL_HOST = 'localhost';

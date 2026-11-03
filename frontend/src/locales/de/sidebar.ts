@@ -73,7 +73,6 @@ export default {
   openDrawer: "Navigationsmenü öffnen",
   closeDrawer: "Navigationsmenü schließen",
   verified: "Verifiziert",
-  adminPanel: "Admin-Kontrollzentrum",
   streaks: "Herausforderungen & Serien",
   generator: "Perk-Zufallsgenerator",
   maps: "Karten-Explorer",

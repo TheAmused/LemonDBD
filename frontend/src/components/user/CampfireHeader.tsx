@@ -3,22 +3,15 @@
 
 import type { OwnershipSummary } from '@/context/AuthContext';
 import React from 'react';
-import Link from 'next/link';
-import {  ChevronRight,
-  Camera,
-  Calendar,} from 'lucide-react';
+import { Camera, Calendar } from 'lucide-react';
 import { UserAvatar } from '@/components/UserAvatar';
 import { VaultMasteryDials } from '@/components/user/VaultMasteryDials';
 import type { StatusFeedback } from '@/types/userProfile';
-import { CrownIcon } from '@/components/icons/DbdIcons';
 
 import { Spinner } from '@/components/common/Spinner';
 import { formatDate } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
-import { Badge } from '@/components/common/Badge';
-import { buttonClassName } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
-import { WrapRow } from '@/components/common/WrapRow';
 
 interface CampfireHeaderProps {
   user: {
@@ -34,7 +27,6 @@ interface CampfireHeaderProps {
   saveError?: string | null;
   onDevotionChange?: (devotion: number) => void;
   onGradeRankChange?: (rank: string) => void;
-  currentLocale: string;
   previewUrl?: string | null;
   isUploadingAvatar?: boolean;
   onAvatarClick?: () => void;
@@ -44,7 +36,6 @@ interface CampfireHeaderProps {
 export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
       user,
       ownership,
-      currentLocale,
       previewUrl,
       isUploadingAvatar,
       onAvatarClick,
@@ -101,18 +92,11 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
 
           {/* Name, Role, Title & Account Metadata */}
           <div className="space-y-2.5 min-w-0">
-            <WrapRow>
-              <h1 className="text-2xl sm:text-3xl font-black tracking-wide text-text-primary truncate">
-                {user.username}
-              </h1>
-              {user.role === 'admin' && (
-                <Badge tone="red" size="md" square>
-                  {dict.user.roleAdmin}
-                </Badge>
-              )}
-            </WrapRow>
+            <h1 className="text-2xl sm:text-3xl font-black tracking-wide text-text-primary truncate">
+              {user.username}
+            </h1>
 
-            {/* Account Metadata: Member Since, Admin Panel Link */}
+            {/* Account Metadata: Member Since */}
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1.5 pt-0.5 text-xs text-text-secondary">
               {user.created_at && (
                 <span className="flex items-center gap-1.5">
@@ -124,16 +108,6 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                     </strong>
                   </span>
                 </span>
-              )}
-              {user.role === 'admin' && (
-                <Link
-                  href={`/${currentLocale}/admin`}
-                  className={buttonClassName('soft', 'xs')}
-                >
-                  <CrownIcon className="icon-xs" />
-                  <span>{dict.sidebar.adminPanel}</span>
-                  <ChevronRight className="icon-2xs" />
-                </Link>
               )}
             </div>
           </div>

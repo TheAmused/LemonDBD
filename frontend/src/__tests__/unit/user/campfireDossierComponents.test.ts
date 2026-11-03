@@ -31,7 +31,6 @@ describe('Campfire Dossier: CampfireHeader', () => {
         saveError: null,
         onDevotionChange: () => {},
         onGradeRankChange: () => {},
-        currentLocale: 'en',
       })
     );
 
@@ -44,13 +43,27 @@ describe('Campfire Dossier: CampfireHeader', () => {
     assert.ok(!html.includes('master@fog.dbd'));
   });
 
+  it('shows an admin the same header: no Administrator badge and no admin panel link', () => {
+    const html = renderWithDictionary(
+      React.createElement(CampfireHeader, {
+        user: { ...mockUser, role: 'admin' },
+        isSaving: false,
+        saveError: null,
+      })
+    );
+
+    assert.ok(html.includes('CampfireMaster'));
+    assert.ok(!html.includes('Administrator'));
+    assert.ok(!html.includes('Admin Control Center'));
+    assert.ok(!html.includes('href="/en/admin"'));
+  });
+
   it('renders square-ish avatar container matching block height', () => {
     const html = renderWithDictionary(
       React.createElement(CampfireHeader, {
         user: mockUser,
         isSaving: false,
         saveError: null,
-        currentLocale: 'en',
       })
     );
 

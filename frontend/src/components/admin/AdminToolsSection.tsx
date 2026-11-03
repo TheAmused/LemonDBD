@@ -5,11 +5,11 @@
 // and restore, and the tests that prove a feature works end to end (OCR, email, Discord).
 import React, { useCallback, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Database, Download, ExternalLink, LineChart, Mail, MapPin, MessageSquare, Play, RefreshCw, ScanText, Trash2, Upload } from 'lucide-react';
+import { Download, ExternalLink, LineChart, Mail, MapPin, MessageSquare, Play, RefreshCw, ScanText, Trash2, Upload } from 'lucide-react';
 import { Badge, type BadgeTone } from '@/components/common/Badge';
 import { Button, buttonClassName } from '@/components/common/Button';
 import { AccordionSection } from '@/components/common/AccordionSection';
-import { analyticsUrl, pgAdminUrl } from '@/components/admin/adminLinks';
+import { analyticsUrl } from '@/components/admin/adminLinks';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { adminToolDrawerKey } from '@/components/admin/adminStorage';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
@@ -229,13 +229,6 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
         id="database"
         title={t.databaseTitle}
         subtitle={t.databaseSubtitle}
-        action={
-          <a href={pgAdminUrl()} target="_blank" rel="noopener noreferrer" className={buttonClassName('secondary', 'sm')}>
-            <Database className="icon-sm" aria-hidden="true" />
-            {t.pgAdmin}
-            <ExternalLink className="icon-xs" aria-hidden="true" />
-          </a>
-        }
       >
         <ToolRow title={t.exportJson} description={t.exportBackupDesc}>
           <Button size="sm" leftIcon={<Download aria-hidden="true" />} onClick={() => setBackupTab('export')}>

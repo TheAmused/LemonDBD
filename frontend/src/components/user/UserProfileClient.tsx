@@ -205,7 +205,6 @@ export function UserProfileClient() {
           saveError={showcaseHook.saveError}
           onDevotionChange={showcaseHook.setDevotionLevel}
           onGradeRankChange={showcaseHook.setGradeRank}
-          currentLocale={currentLocale}
           previewUrl={optimisticPreview}
           isUploadingAvatar={isUploadingAvatar}
           onAvatarClick={() => fileInputRef.current?.click()}

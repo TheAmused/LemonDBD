@@ -73,7 +73,6 @@ export default {
   openDrawer: "Otwórz menu boczne",
   closeDrawer: "Zamknij menu boczne",
   verified: "Zweryfikowano",
-  adminPanel: "Panel Administracyjny",
   streaks: "Wyzwania i Streaki",
   generator: "Losownik Umiejętności",
   maps: "Eksplorator Map",

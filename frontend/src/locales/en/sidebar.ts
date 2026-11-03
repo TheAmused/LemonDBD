@@ -73,7 +73,6 @@ export default {
   openDrawer: "Open Navigation Drawer",
   closeDrawer: "Close Navigation Drawer",
   verified: "Verified",
-  adminPanel: "Admin Control Center",
   streaks: "Challenges & Streaks",
   generator: "Perk Randomizer",
   maps: "Map Explorer",

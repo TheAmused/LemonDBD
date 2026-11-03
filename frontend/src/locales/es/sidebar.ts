@@ -73,7 +73,6 @@ export default {
   openDrawer: "Abrir Menú Lateral",
   closeDrawer: "Cerrar Menú Lateral",
   verified: "Verificado",
-  adminPanel: "Centro de Control de Administración",
   streaks: "Desafíos y Rachas",
   generator: "Aleatorizador de Habilidades",
   maps: "Explorador de Mapas",

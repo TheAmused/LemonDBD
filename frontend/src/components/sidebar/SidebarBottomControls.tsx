@@ -35,6 +35,8 @@ export interface SidebarBottomControlsProps {
   currentLocale: string;
   onOpenBugModal: () => void;
   onOpenCoffeeModal: () => void;
+  /** Called with the locale the visitor picked in the language menu (the Sidebar saves it on the account). */
+  onLanguageSelect?: (locale: string) => void;
   theme?: string;
   setTheme?: (theme: string) => void;
   mounted?: boolean;
@@ -72,6 +74,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
       currentLocale,
       onOpenBugModal,
       onOpenCoffeeModal,
+      onLanguageSelect,
       theme: propTheme,
       setTheme: propSetTheme,
       mounted: propMounted,
@@ -170,6 +173,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
                       e.preventDefault();
                       return;
                     }
+                    if (lang.code !== currentLocale) onLanguageSelect?.(lang.code);
                     setSwitchingFrom(pathname);
                     setIsLangMenuOpen(false);
                   }}

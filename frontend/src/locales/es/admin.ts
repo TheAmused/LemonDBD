@@ -24,7 +24,6 @@ export default {
   createAccount: "Crear cuenta",
   export: "Exportar",
   import: "Importar",
-  pgAdmin: "pgAdmin (BD)",
   ocrCheck: "Comprobación OCR",
   refreshTitle: "Recargar la sección abierta",
   refresh: "Actualizar",

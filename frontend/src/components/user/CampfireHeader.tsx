@@ -3,25 +3,15 @@
 
 import type { OwnershipSummary } from '@/context/AuthContext';
 import React from 'react';
-import Link from 'next/link';
-import {  ChevronRight,
-  Camera,
-  Calendar,} from 'lucide-react';
+import { Camera, Calendar } from 'lucide-react';
 import { UserAvatar } from '@/components/UserAvatar';
 import { VaultMasteryDials } from '@/components/user/VaultMasteryDials';
-import { CustomDropdown } from '@/components/common/CustomDropdown';
-import { PLAYER_TITLES, type UserShowcaseState } from '@/types/userShowcase';
 import type { StatusFeedback } from '@/types/userProfile';
-import { CrownIcon } from '@/components/icons/DbdIcons';
 
-import { tip } from '@/components/common/Tooltip';
 import { Spinner } from '@/components/common/Spinner';
 import { formatDate } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
-import { Badge } from '@/components/common/Badge';
-import { buttonClassName } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
-import { WrapRow } from '@/components/common/WrapRow';
 
 interface CampfireHeaderProps {
   user: {
@@ -32,14 +22,11 @@ interface CampfireHeaderProps {
     created_at?: string;
     avatar_url?: string;
   };
-  showcase: UserShowcaseState;
   ownership?: OwnershipSummary | null;
   isSaving?: boolean;
   saveError?: string | null;
-  onTitleChange: (title: string) => void;
   onDevotionChange?: (devotion: number) => void;
   onGradeRankChange?: (rank: string) => void;
-  currentLocale: string;
   previewUrl?: string | null;
   isUploadingAvatar?: boolean;
   onAvatarClick?: () => void;
@@ -48,10 +35,7 @@ interface CampfireHeaderProps {
 
 export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
       user,
-      showcase,
       ownership,
-      onTitleChange,
-      currentLocale,
       previewUrl,
       isUploadingAvatar,
       onAvatarClick,
@@ -70,7 +54,6 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
               type="button"
               className="relative group cursor-pointer shrink-0 rounded-card focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
               onClick={onAvatarClick}
-              {...tip(dict.user.changeAvatar, undefined, 'action')}
               aria-label={dict.user.changeAvatar}
             >
               <span className="relative block rounded-card p-0.5 border-2 border-accent-red/60 bg-bg-surface shadow-md">
@@ -109,33 +92,11 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
 
           {/* Name, Role, Title & Account Metadata */}
           <div className="space-y-2.5 min-w-0">
-            <WrapRow>
-              <h1 className="text-2xl sm:text-3xl font-black tracking-wide text-text-primary truncate">
-                {user.username}
-              </h1>
-              {user.role === 'admin' && (
-                <Badge tone="red" size="md" square>
-                  {dict.user.roleAdmin}
-                </Badge>
-              )}
-            </WrapRow>
+            <h1 className="text-2xl sm:text-3xl font-black tracking-wide text-text-primary truncate">
+              {user.username}
+            </h1>
 
-            {/* Selectable Player Title Plaque via CustomDropdown */}
-            <div className="flex items-center justify-center sm:justify-start">
-              <CustomDropdown
-                value={showcase.playerTitle}
-                onChange={onTitleChange}
-                options={PLAYER_TITLES.map((title) => ({
-                  value: title,
-                  label: `« ${title} »`,
-                }))}
-                buttonClassName="border-accent-amber/35 bg-accent-amber/10 text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber text-xs font-bold tracking-wide"
-                menuClassName="bg-bg-surface border-border-color shadow-xl"
-                ariaLabel={dict.user.playerTitle}
-              />
-            </div>
-
-            {/* Account Metadata: Member Since, Admin Panel Link */}
+            {/* Account Metadata: Member Since */}
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1.5 pt-0.5 text-xs text-text-secondary">
               {user.created_at && (
                 <span className="flex items-center gap-1.5">
@@ -147,16 +108,6 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                     </strong>
                   </span>
                 </span>
-              )}
-              {user.role === 'admin' && (
-                <Link
-                  href={`/${currentLocale}/admin`}
-                  className={buttonClassName('soft', 'xs')}
-                >
-                  <CrownIcon className="icon-xs" />
-                  <span>{dict.sidebar.adminPanel}</span>
-                  <ChevronRight className="icon-2xs" />
-                </Link>
               )}
             </div>
           </div>

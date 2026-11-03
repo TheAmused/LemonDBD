@@ -95,7 +95,7 @@ test('normalizeChapterKey matches names that differ only by a leading "The " or 
   assert.notStrictEqual(normalizeChapterKey('Chucky'), normalizeChapterKey('Jason'));
 });
 
-test('resolveOnboardingView resumes the step a locale redirect left behind', () => {
+test('resolveOnboardingView resumes a saved step', () => {
   assert.strictEqual(resolveOnboardingView('language'), 'language');
   assert.strictEqual(resolveOnboardingView('roster'), 'roster');
 });

@@ -97,7 +97,6 @@ export default {
 
   // --- Campfire Dossier additions ---
   tabSanctum: "アカウント管理",
-  playerTitle: "プレイヤータスク",
   devotion: "信仰度",
   gradeRank: "グレードランク",
   survivorMain: "メインサバイバー",

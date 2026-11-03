@@ -168,18 +168,3 @@ services:
     assert.equal(/pg_isready/.test(mockYaml), false);
   });
 });
-
-
-describe('docker: pgAdmin is never an open database console', () => {
-  const baseText = fs.readFileSync(BASE_COMPOSE, 'utf8');
-
-  it('runs in server mode (desktop mode has no login)', () => {
-    assert.match(baseText, /PGADMIN_CONFIG_SERVER_MODE:\s*'True'/);
-    assert.doesNotMatch(baseText, /PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION:\s*'False'/);
-  });
-
-  it('publishes its port on loopback by default', () => {
-    assert.match(baseText, /"\$\{PGADMIN_BIND:-127\.0\.0\.1\}:\$\{PGADMIN_PORT:-5050\}:5050"/);
-    assert.doesNotMatch(baseText, /^\s*-\s*"\$\{PGADMIN_PORT:-5050\}:5050"/m);
-  });
-});

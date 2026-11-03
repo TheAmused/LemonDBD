@@ -80,7 +80,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentLocale: propLocale }) =
   const activeLocale = useLocale();
   const currentLocale = propLocale || activeLocale;
 const { isCollapsed, toggleSidebar } = useSidebarState();
-  const { user, isAuthenticated, isAdmin, logout } = useAuth();
+  const { user, isAuthenticated, isAdmin, logout, setPreferredLanguage } = useAuth();
   // One fetch for both launchers (desktop sidebar and mobile header).
   const changelogFeed = useChangelogFeed();
 
@@ -245,6 +245,8 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
 
       <SidebarBottomControls
         currentLocale={currentLocale}
+        // Saved on the account so the proxy opens a locale-less `/` in the language last picked here.
+        onLanguageSelect={(locale) => { if (isAuthenticated) void setPreferredLanguage(locale); }}
         onOpenBugModal={() => {
           setBugModalOpen(true);
           setMobileOpen(false);

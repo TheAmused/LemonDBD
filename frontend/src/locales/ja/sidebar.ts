@@ -14,6 +14,7 @@ export default {
   termsOfService: "利用規約",
   groupDatabase: "データベース",
   groupExtras: "コミュニティ＆ゲーム",
+  groupAdmin: "管理",
   admin: "管理者",
   roleUser: "ユーザー",
   adminControlCenter: "管理コントロールセンター",

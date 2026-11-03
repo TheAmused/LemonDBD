@@ -13,11 +13,13 @@ import {  Menu,
   LayoutList,
   Gamepad2,
   Settings,
-  Library,} from 'lucide-react';
+  Library,
+} from 'lucide-react';
 import { useSidebarState } from '@/hooks/useSidebarState';
 import { LemonIcon } from './LemonIcon';
 import { useAuth } from '@/context/AuthContext';
 import dynamic from 'next/dynamic';
+import type { BardInsultsModalProps } from './sidebar/BardInsultsModal';
 import { SidebarNavLink } from './sidebar/SidebarNavLink';
 import { SidebarNavGroup } from './sidebar/SidebarNavGroup';
 import { adminOnlyPageFromPathname } from '@/utils/adminOnlyPages';
@@ -26,7 +28,7 @@ import { SidebarBottomControls } from './sidebar/SidebarBottomControls';
 import { i18n } from '@/i18n/config';
 import { WhatsNewLauncher } from '@/components/changelog/WhatsNewLauncher';
 import { useChangelogFeed } from '@/components/changelog/useChangelogFeed';
-import { PerkHexIcon, MaskIcon, GridIcon, TrophyIcon, DiceIcon, TargetIcon, MapIcon, HeartIcon } from '@/components/icons/DbdIcons';
+import { PerkHexIcon, MaskIcon, GridIcon, TrophyIcon, DiceIcon, TargetIcon, MapIcon, HeartIcon, CrownIcon } from '@/components/icons/DbdIcons';
 
 import { Button } from '@/components/common/Button';
 import { useDictionary, useLocale } from "@/context/DictionaryContext";
@@ -43,10 +45,11 @@ const BuyCoffeeModal = dynamic(
   { ssr: false }
 );
 
-const BardInsultsModal = dynamic(
-  () => import('./sidebar/BardInsultsModal').then((m) => m.BardInsultsModal),
-  { ssr: false }
-);
+// The dialog's code is fetched when the visitor points at, focuses or clicks its button, not for everyone
+// on page load. Once it has arrived the component is kept mounted (closed), so opening it later is only a
+// state flip: with next/dynamic every open went through Suspense again, which is why it was sometimes
+// instant and sometimes not.
+const loadBardInsults = () => import('./sidebar/BardInsultsModal');
 
 /** A page link (`href`) or a button that opens a dialog (`onSelect`). */
 interface NavItem {
@@ -87,6 +90,10 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
   const [bugModalOpen, setBugModalOpen] = useState(false);
   const [coffeeModalOpen, setCoffeeModalOpen] = useState(false);
   const [insultsModalOpen, setInsultsModalOpen] = useState(false);
+  const [InsultsModal, setInsultsModal] = useState<React.ComponentType<BardInsultsModalProps> | null>(null);
+  const preloadBardInsults = useCallback(() => {
+    void loadBardInsults().then((m) => setInsultsModal(() => m.BardInsultsModal));
+  }, []);
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);
 
@@ -138,13 +145,26 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
     ];
   }, [dict, currentLocale]);
 
+  // A group of its own, for admins only.
+  const adminGroup = useMemo((): NavGroup => ({
+    id: 'admin',
+    label: dict.sidebar.groupAdmin,
+    icon: CrownIcon,
+    items: [{
+      id: 'admin-panel',
+      label: dict.sidebar.adminControlCenter,
+      icon: Settings,
+      href: `/${currentLocale}/admin`,
+    }],
+  }), [dict, currentLocale]);
+
   // Admin-only pages are hidden from everyone else; a group left empty disappears with them.
   const visibleNavEntries = useMemo(() => {
     const visible = (item: NavItem) => isAdmin || !item.href || !adminOnlyPageFromPathname(item.href, i18n.locales);
-    return navEntries
+    return (isAdmin ? [...navEntries, adminGroup] : navEntries)
       .map((entry) => ('items' in entry ? { ...entry, items: entry.items.filter(visible) } : entry))
       .filter((entry) => ('items' in entry ? entry.items.length > 0 : visible(entry)));
-  }, [navEntries, isAdmin]);
+  }, [navEntries, adminGroup, isAdmin]);
 
   const renderNavItem = (item: NavItem) => (
     <SidebarNavLink
@@ -204,7 +224,6 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
           currentLocale={currentLocale}
           user={user}
           isAuthenticated={isAuthenticated}
-          isAdmin={isAdmin}
           onOpenAuthModal={() => {
             setAuthModalIntent('login');
             setAuthModalOpen(true);
@@ -215,9 +234,11 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
           }}
           onLogout={logout}
           onOpenInsults={() => {
+            preloadBardInsults();
             setInsultsModalOpen(true);
             setMobileOpen(false);
           }}
+          onPreloadInsults={preloadBardInsults}
           onNavigateMobile={() => setMobileOpen(false)}
         />
       </div>
@@ -340,8 +361,8 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
           onClose={() => setCoffeeModalOpen(false)}
         />
       )}
-      {insultsModalOpen && (
-        <BardInsultsModal
+      {InsultsModal && (
+        <InsultsModal
           isOpen={insultsModalOpen}
           onClose={() => setInsultsModalOpen(false)}
         />

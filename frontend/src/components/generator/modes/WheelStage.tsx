@@ -48,7 +48,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
   const dict = useDictionary();
   const {
     isSpinning, isMorphing, statusText, reduceMotion,
-    wheelCanvasRef, particlesCanvasRef, wheelWrapperRef,
+    wheelCanvasRef, particlesCanvasRef,
     spinButtonText, handleStartSpin,
   } = useWheelStage({
     totalPages, perksPerPage, lastPagePerks, spinDurationSec, role, sortedPerks,
@@ -95,7 +95,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
           {renderFlankSlot(1)}
         </div>
 
-        <div ref={wheelWrapperRef} className="order-1 flex flex-col items-center justify-center xl:order-2">
+        <div className="order-1 flex flex-col items-center justify-center xl:order-2">
           <div className="relative flex items-center justify-center w-full">
             <canvas
               ref={particlesCanvasRef}

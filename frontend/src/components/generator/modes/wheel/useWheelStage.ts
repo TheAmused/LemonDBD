@@ -7,13 +7,13 @@ import type { ChaosMutator } from '@/types/chaos';
 import { useDictionary } from '@/context/DictionaryContext';
 import { getPerkIconUrl } from '@/utils/perkUtils';
 import { formatMessage } from '@/utils/i18nFormat';
-import { useJackpotCelebration } from '../../shared/useJackpotCelebration';
 import { drawWheel } from './wheelDrawing';
 
 import { useEmberDrift } from './useEmberDrift';
 import { pickRandomLoadout } from '../../lib/perkPicker';
 import { useReducedMotion } from 'framer-motion';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
+import { playFanfare } from '@/utils/perkAudio';
 
 interface WheelStageInput {
   totalPages: number;
@@ -52,7 +52,6 @@ export function useWheelStage({
   const reduceMotion = useReducedMotion() ?? false;
 
   const wheelCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const wheelWrapperRef = useRef<HTMLDivElement | null>(null);
   const isMountedRef = useRef<boolean>(true);
 
   const wheelAngleRef = useRef<number>(0);
@@ -61,8 +60,6 @@ export function useWheelStage({
 
   const imageCacheRef = useRef<Map<string, HTMLImageElement>>(new Map());
   const { particlesCanvasRef, startEmberDrift, stopEmberDrift } = useEmberDrift();
-
-  const { celebrate } = useJackpotCelebration();
 
   const effectiveTotalPages = Math.max(1, totalPages);
 
@@ -291,7 +288,7 @@ export function useWheelStage({
       stopEmberDrift();
       setIsSpinning(false);
       setStatusText(targetPerk ? `${targetPerk.name} [P${targetPage}/S${targetSlot}]` : '');
-      celebrate(role, wheelWrapperRef.current);
+      playFanfare();
 
       if (targetPerk) {
         onWinSlot({ page: targetPage, slot: targetSlot, perk: targetPerk });
@@ -322,7 +319,6 @@ export function useWheelStage({
     reduceMotion,
     wheelCanvasRef,
     particlesCanvasRef,
-    wheelWrapperRef,
     spinButtonText,
     handleStartSpin,
   };

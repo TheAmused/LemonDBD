@@ -163,6 +163,7 @@ export default {
   blindModeTooltipTitle: "Blind Mode",
   blindModeTooltipDesc: "Hides every perk icon behind a '?'. Check the page and slot number in-game to see what you drew.",
   chaosMutatorTooltipDesc: "Spin for a random Trial curse or buff to twist this loadout.",
+  coordinateLegendIcon: "P/S",
   coordinateLegendTooltip: "What P/S Means",
   coordinateLegendTooltipTitle: "Page / Slot",
   coordinateLegendTooltipDesc: "Each perk is tagged with where to find it in your in-game inventory. The first number is the Page, the second is the Slot on that page: [P3/S7] means Page 3, Slot 7.",

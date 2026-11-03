@@ -37,7 +37,6 @@ def make_streak_blueprint(
     has_reveal: bool = True,
     reveal_method: str = "reveal",
     get_run_method: str = "get_or_create_run",
-    stats_requires_param: bool = True,
     game_modes: Sequence[str] | None = None,
 ) -> Blueprint:
     """Build the run/reveal/abandon/stats endpoints shared by every "pick a
@@ -136,16 +135,13 @@ def make_streak_blueprint(
     @bp.route("/stats", methods=["GET"])
     @login_required
     def get_stats():
-        service = get_service()
-        if not stats_requires_param:
-            stats = service.get_stats(g.current_user.id)
-            return jsonify({"stats": stats}), 200
         value = clean_value(request.args.get(param_name))
         if not value:
             return _param_error("query")
         mode_kwargs, mode_error = read_mode_kwargs(request.args)
         if mode_error:
             return mode_error
+        service = get_service()
         stats = service.get_stats(g.current_user.id, value, **mode_kwargs)
         return jsonify({"stats": stats}), 200
 

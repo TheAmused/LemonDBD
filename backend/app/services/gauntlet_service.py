@@ -217,7 +217,7 @@ class GauntletService(StreakRunService):
         """Spend tokens on the match in play: a different killer, a chosen killer or one more free perk slot."""
         if boost not in ("reroll", "pick", "slot"):
             raise ValueError("Unknown boost")
-        assert_challenge_mode_enabled("gauntlet")
+        assert_challenge_mode_enabled("gauntlet", user_id)
         r = self._find_run_by_id(user_id, run_id)
         if not r:
             raise ValueError("Run not found")
@@ -273,7 +273,7 @@ class GauntletService(StreakRunService):
         if use_shield and result != "loss":
             raise ValueError("A shield only cancels a loss")
         if triggered_by != "inactivity":
-            assert_challenge_mode_enabled("gauntlet")
+            assert_challenge_mode_enabled("gauntlet", user_id)
 
         r = self._load_run_for_result(user_id, run_id)
         self._freeze_pool_if_needed(r)

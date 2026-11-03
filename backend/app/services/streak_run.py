@@ -80,7 +80,7 @@ class StreakRunService:
         if run:
             return self._present(run)
 
-        assert_challenge_mode_enabled(self.mode)
+        assert_challenge_mode_enabled(self.mode, user_id)
 
         with transaction():
             run = self._build_run(user_id, *variant)
@@ -93,7 +93,7 @@ class StreakRunService:
         The run row stays, so its match logs do. Its progress is overwritten with what a
         brand new run starts with; the best streak is a record, so it is left alone.
         """
-        assert_challenge_mode_enabled(self.mode)
+        assert_challenge_mode_enabled(self.mode, user_id)
         run = self._find_run(user_id, *variant, lock=True)
         if not run:
             raise ValueError("Run not found")

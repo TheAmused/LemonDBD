@@ -8,14 +8,13 @@ from app.schemas.streak import StreakStats
 from app.services.streak_stats import fetch_streak_stats
 
 
-def fetch_page_streak_user_stats(user_id: int) -> StreakStats[PageStreakStatsLog]:
-    """Aggregates match history across every killer's Page Streak run for this user."""
-    runs = db.session.execute(
-        select(PageStreakRun.id, PageStreakRun.killer).where(PageStreakRun.user_id == user_id)
+def fetch_page_streak_user_stats(user_id: int, killer: str) -> StreakStats[PageStreakStatsLog]:
+    """Match history of one killer's Page Streak run. Every killer keeps its own stats."""
+    run_ids = db.session.scalars(
+        select(PageStreakRun.id).where(PageStreakRun.user_id == user_id, PageStreakRun.killer == killer)
     ).all()
-    killer_by_run_id: dict[int, str] = {run_id: killer for run_id, killer in runs}
 
     def with_killer(log: PageStreakPageLog) -> PageStreakStatsLog:
-        return {**log.to_dict(), "killer": killer_by_run_id.get(log.run_id)}
+        return {**log.to_dict(), "killer": killer}
 
-    return fetch_streak_stats(list(killer_by_run_id), PageStreakRun, PageStreakPageLog, with_killer)
+    return fetch_streak_stats(run_ids, PageStreakRun, PageStreakPageLog, with_killer)

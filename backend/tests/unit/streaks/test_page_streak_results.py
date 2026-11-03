@@ -135,8 +135,29 @@ class TestPageStreakResults:
         self.service.abandon_run(self.user_id, "Nurse")
 
         roster = {entry["killer"]: entry for entry in self.service.get_roster(self.user_id)}
-        assert roster["Nurse"]["status"] == "in_progress"
+        assert roster["Nurse"]["status"] == "not_started"
         assert roster["Nurse"]["ever_completed"] is True
+
+    def test_resetting_an_untouched_attempt_does_not_count_it(self) -> None:
+        self.service.abandon_run(self.user_id, "Nurse")
+        run = self.service.abandon_run(self.user_id, "Nurse")
+        assert run is not None
+        assert (run["attempts"], run["attempt"], run["attempt_matches"]) == (0, 1, 0)
+
+    def test_resetting_after_a_match_counts_the_attempt(self) -> None:
+        self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")
+        run = self.service.abandon_run(self.user_id, "Nurse")
+        assert run is not None
+        assert (run["attempts"], run["attempt"], run["attempt_matches"]) == (1, 2, 0)
+
+    def test_a_loss_ends_the_attempt_and_the_next_one_has_no_matches_yet(self) -> None:
+        run = self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "loss")
+        assert run is not None
+        assert (run["attempts"], run["attempt"], run["attempt_matches"]) == (1, 2, 0)
+        page = run["pages"][0]
+        run = self.service.submit_result(self.user_id, "Nurse", 1, page[: self.service.expected_build_size(page)], "win")
+        assert run is not None
+        assert run["attempt_matches"] == 1
 
     def test_reset_all_wipes_runs_and_completion_badges(self) -> None:
         from app.core.extensions import db

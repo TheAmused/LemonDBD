@@ -79,27 +79,27 @@ class PageStreakService:
         return self._with_artwork(user_id, fetch_run(user_id, killer, self.build_pages))
 
     def start_run(self, user_id: int, killer: str) -> PageStreakRunState | None:
-        assert_challenge_mode_enabled("page_streak")
+        assert_challenge_mode_enabled("page_streak", user_id)
         return self._with_artwork(user_id, create_new_run(user_id, killer, self.get_killers, self.build_pages))
 
     def expected_build_size(self, page_perks: list[str]) -> int:
         return min(BUILD_SIZE, len(page_perks))
 
     def submit_result(self, user_id: int, killer: str, page: int, perks: list[str], result: str) -> PageStreakRunState | None:
-        assert_challenge_mode_enabled("page_streak")
+        assert_challenge_mode_enabled("page_streak", user_id)
         run = record_match_result(user_id, killer, page, perks, result, self.build_pages)
         return self._with_artwork(user_id, run)
 
     def abandon_run(self, user_id: int, killer: str) -> PageStreakRunState | None:
-        assert_challenge_mode_enabled("page_streak")
+        assert_challenge_mode_enabled("page_streak", user_id)
         return self._with_artwork(user_id, abandon_active_run(user_id, killer, self.build_pages))
 
     def reset_all(self, user_id: int) -> None:
-        assert_challenge_mode_enabled("page_streak")
+        assert_challenge_mode_enabled("page_streak", user_id)
         reset_all_runs(user_id)
 
-    def get_stats(self, user_id: int) -> StreakStats[PageStreakStatsLog]:
-        return fetch_page_streak_user_stats(user_id)
+    def get_stats(self, user_id: int, killer: str) -> StreakStats[PageStreakStatsLog]:
+        return fetch_page_streak_user_stats(user_id, killer)
 
     def get_completions(self, user_id: int, killer: str) -> list[ChallengeCompletionDict]:
         return fetch_challenge_completions(user_id, "page_streak", killer)

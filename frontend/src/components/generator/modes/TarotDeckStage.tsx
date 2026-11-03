@@ -1,7 +1,7 @@
 // frontend/src/components/generator/modes/TarotDeckStage.tsx
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { DbdButton } from '@/components/common/Button';
 import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
@@ -12,9 +12,8 @@ import { pickRandomLoadout, buildDrawnSlots, pickPerkTarotType } from '../lib/pe
 import { DEFAULT_TYPE_NAMES, tarotCard, tarotImageUrl, type TarotSide } from '../lib/tarotCards';
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
-import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { StageIdleColumn, StagePrompt, StageProp } from '../shared/StageIdle';
-import { playCardFlip } from '@/utils/perkAudio';
+import { playFanfare, playCardFlip } from '@/utils/perkAudio';
 import { useDictionary } from "@/context/DictionaryContext";
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
@@ -79,8 +78,6 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
     }) => {
   const dict = useDictionary();
   const [cards, setCards] = useState<TarotCard[] | null>(null);
-  const resultsRef = useRef<HTMLDivElement | null>(null);
-  const { celebrate } = useJackpotCelebration();
   const reduceMotion = useReducedMotion();
 
   const typeNames = dict.generator.tarotCardNames || DEFAULT_TYPE_NAMES;
@@ -110,7 +107,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
     setCards(next);
 
     if (next.every((c) => c.flipped)) {
-      celebrate(role, resultsRef.current);
+      playFanfare();
       onRollComplete(next.map((c) => c.slot));
       onLoadoutComplete?.();
     }
@@ -123,7 +120,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
       </StagePrompt>
 
       {cards ? (
-        <div ref={resultsRef} className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 lg:grid-cols-4 max-w-full justify-items-center lg:gap-4 xl:gap-6 2xl:gap-8 wide:gap-10 wide-2k:gap-12 wide-4k:gap-16">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 lg:grid-cols-4 max-w-full justify-items-center lg:gap-4 xl:gap-6 2xl:gap-8 wide:gap-10 wide-2k:gap-12 wide-4k:gap-16">
           {cards.map((card, idx) => {
             const { name, slug } = tarotCard(card.type, role);
             const cardName = typeNames[name] || DEFAULT_TYPE_NAMES[name];

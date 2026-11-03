@@ -40,10 +40,10 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   backendBase,
 }) => {
   const dict = useDictionary();
-  const machine = useSlotMachine({ role, activePlayablePerks, activeMutator, onRollComplete, onLoadoutComplete });
+  const machine = useSlotMachine({ activePlayablePerks, activeMutator, onRollComplete, onLoadoutComplete });
   const {
     phase, reels, spinningIds, staged, cycleIndex, selected, cellPx, isMobile,
-    reelAreaRef, resultsRef, canConfirm, confirmHint,
+    reelAreaRef, canConfirm, confirmHint,
     handleReelTransitionEnd, handlePullLever, toggleStage, handleConfirm, handleReset,
   } = machine;
 
@@ -138,7 +138,6 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
           onRevealSlot={onRevealSlot}
           onSelectPerk={onSelectPerk}
           isBlind={isBlind}
-          resultsRef={resultsRef}
           onReset={handleReset}
         />
       )}

@@ -21,6 +21,7 @@ export interface WheelStageProps {
   activeSlotIdx: number;
   activeMutator: ChaosMutator | null;
   onWinSlot: (wonData: DrawnSlot) => void;
+  onSpinStart?: () => void;
   revealedSlots: boolean[];
   onRevealSlot: (idx: number) => void;
   onSelectPerk: (perk: Perk) => void;
@@ -38,6 +39,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
   loadout,
   activeSlotIdx,
   onWinSlot,
+  onSpinStart,
   revealedSlots,
   onRevealSlot,
   onSelectPerk,
@@ -48,11 +50,11 @@ export const WheelStage: React.FC<WheelStageProps> = ({
   const dict = useDictionary();
   const {
     isSpinning, isMorphing, statusText, reduceMotion,
-    wheelCanvasRef, particlesCanvasRef, wheelWrapperRef,
+    wheelCanvasRef, particlesCanvasRef,
     spinButtonText, handleStartSpin,
   } = useWheelStage({
     totalPages, perksPerPage, lastPagePerks, spinDurationSec, role, sortedPerks,
-    loadout, activeSlotIdx, activeMutator, onWinSlot, backendBase,
+    loadout, activeSlotIdx, activeMutator, onWinSlot, onSpinStart, backendBase,
   });
 
   const renderFlankSlot = (idx: number) => {
@@ -95,7 +97,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
           {renderFlankSlot(1)}
         </div>
 
-        <div ref={wheelWrapperRef} className="order-1 flex flex-col items-center justify-center xl:order-2">
+        <div className="order-1 flex flex-col items-center justify-center xl:order-2">
           <div className="relative flex items-center justify-center w-full">
             <canvas
               ref={particlesCanvasRef}
@@ -122,7 +124,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
               // makes them structurally identical, so they can never diverge.
               className={`block disabled:cursor-default w-wheel h-wheel min-w-50 min-h-50 sm:w-wheel-sm sm:h-wheel-sm md:w-wheel-md md:h-wheel-md lg:w-wheel-lg lg:h-wheel-lg xl:w-wheel-xl xl:h-wheel-xl 2xl:w-wheel-2xl 2xl:h-wheel-2xl wide:w-wheel-wide! wide:h-wheel-wide! wide-2k:w-wheel-2k! wide-2k:h-wheel-2k! wide-4k:w-wheel-4k! wide-4k:h-wheel-4k! transition-all duration-300 ease-out transform select-none ${
                 !isSpinning && sortedPerks.length > 0
-                  ? 'cursor-pointer hover:scale-[1.02] active:scale-[0.98] hover:drop-shadow-glow-amber-md'
+                  ? 'cursor-pointer hover:scale-[1.02] active:scale-[0.98] hover:drop-shadow-glow-red-md'
                   : ''
               } ${
                 isMorphing && !reduceMotion ? 'scale-75 opacity-0 rotate-[180deg]' : 'scale-100 opacity-100 rotate-0'

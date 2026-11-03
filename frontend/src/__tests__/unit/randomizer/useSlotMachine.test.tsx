@@ -15,7 +15,7 @@ const perks: Perk[] = Array.from({ length: 12 }, (_, i) => ({
 } as Perk));
 
 const mount = () =>
-  renderHook(() => useSlotMachine({ role: 'Survivor', activePlayablePerks: perks, activeMutator: null, onRollComplete: () => {} }), {
+  renderHook(() => useSlotMachine({ activePlayablePerks: perks, activeMutator: null, onRollComplete: () => {} }), {
     wrapper: withDictionary(),
   });
 const landed = { propertyName: 'transform' } as React.TransitionEvent<HTMLDivElement>;

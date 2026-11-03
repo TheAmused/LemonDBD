@@ -2,12 +2,12 @@
 // frontend/src/components/generator/modes/wheel/useWheelStage.ts
 import { logger } from '@/utils/logger';
 import { useCallback, useEffect, useEffectEvent, useRef, useState } from 'react';
+import { playFanfare } from '@/utils/perkAudio';
 import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import type { ChaosMutator } from '@/types/chaos';
 import { useDictionary } from '@/context/DictionaryContext';
 import { getPerkIconUrl } from '@/utils/perkUtils';
 import { formatMessage } from '@/utils/i18nFormat';
-import { useJackpotCelebration } from '../../shared/useJackpotCelebration';
 import { drawWheel } from './wheelDrawing';
 
 import { useEmberDrift } from './useEmberDrift';
@@ -26,6 +26,8 @@ interface WheelStageInput {
   activeSlotIdx: number;
   activeMutator: ChaosMutator | null;
   onWinSlot: (wonData: DrawnSlot) => void;
+  /** Fires when a spin for slot #1 starts: the previous loadout is over and must be cleared. */
+  onSpinStart?: () => void;
   backendBase?: string;
 }
 
@@ -41,6 +43,7 @@ export function useWheelStage({
   activeSlotIdx,
   activeMutator,
   onWinSlot,
+  onSpinStart,
   backendBase,
 }: WheelStageInput) {
   const dict = useDictionary();
@@ -52,7 +55,6 @@ export function useWheelStage({
   const reduceMotion = useReducedMotion() ?? false;
 
   const wheelCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const wheelWrapperRef = useRef<HTMLDivElement | null>(null);
   const isMountedRef = useRef<boolean>(true);
 
   const wheelAngleRef = useRef<number>(0);
@@ -62,7 +64,6 @@ export function useWheelStage({
   const imageCacheRef = useRef<Map<string, HTMLImageElement>>(new Map());
   const { particlesCanvasRef, startEmberDrift, stopEmberDrift } = useEmberDrift();
 
-  const { celebrate } = useJackpotCelebration();
 
   const effectiveTotalPages = Math.max(1, totalPages);
 
@@ -184,6 +185,7 @@ export function useWheelStage({
   const handleStartSpin = async () => {
     if (isSpinning || sortedPerks.length === 0) return;
     setIsSpinning(true);
+    if (activeSlotIdx === 0) onSpinStart?.();
     if (!reduceMotion) startEmberDrift();
 
     try {
@@ -200,7 +202,7 @@ export function useWheelStage({
 
       // Exclude perks already in the current loadout (other slots) to prevent duplicates
       const alreadyWonIds = new Set(
-        loadout
+        loadout && activeSlotIdx > 0
           ? loadout
               .map((s) => s?.perk?.id)
               .filter((id): id is number => typeof id === 'number')
@@ -291,7 +293,7 @@ export function useWheelStage({
       stopEmberDrift();
       setIsSpinning(false);
       setStatusText(targetPerk ? `${targetPerk.name} [P${targetPage}/S${targetSlot}]` : '');
-      celebrate(role, wheelWrapperRef.current);
+      playFanfare();
 
       if (targetPerk) {
         onWinSlot({ page: targetPage, slot: targetSlot, perk: targetPerk });
@@ -322,7 +324,6 @@ export function useWheelStage({
     reduceMotion,
     wheelCanvasRef,
     particlesCanvasRef,
-    wheelWrapperRef,
     spinButtonText,
     handleStartSpin,
   };

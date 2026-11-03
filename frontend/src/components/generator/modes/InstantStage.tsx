@@ -84,10 +84,13 @@ export const InstantStage: React.FC<InstantStageProps> = ({
       stopTimeoutsRef.current.push(timeoutId);
     });
 
+    // Every click is a finished roll: its perks leave the No-Repeat pool right away, however fast
+    // the next click comes. Only the fanfare waits for the reveal (and is dropped by a newer roll).
+    onRollComplete(slots);
+    onLoadoutComplete?.();
+
     const finalTimeoutId = window.setTimeout(() => {
       celebrate();
-      onRollComplete(slots);
-      onLoadoutComplete?.();
     }, slots.length * 150 + 200);
     stopTimeoutsRef.current.push(finalTimeoutId);
   };

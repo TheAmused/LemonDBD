@@ -24,6 +24,7 @@ import { SlotMachineStage } from './SlotMachineStage';
 import { KillerPickerGrid } from './KillerPickerGrid';
 import { useAuth } from '@/context/AuthContext';
 import { saveChaosDifficulty } from '@/utils/streakDifficultyPrefs';
+import { attemptsStarted } from '@/utils/challengeAttempts';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
 import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
@@ -259,7 +260,6 @@ export const ChaosBoard: React.FC = () => {
         <AbandonConfirmModal
           open={confirmingAbandon}
           busy={busy}
-          message={dict.streaks.abandonConfirmPrompt}
           onCancel={() => setConfirmingAbandon(false)}
           onConfirm={handleAbandon}
         />
@@ -268,7 +268,7 @@ export const ChaosBoard: React.FC = () => {
           isOpen={isStatsOpen}
           onClose={() => setIsStatsOpen(false)}
           stats={stats}
-          attempts={run ? run.attempts + 1 : undefined}
+          attempts={run ? attemptsStarted(run) : undefined}
         />
         <ChallengeCompletionHistoryDrawer
           isOpen={isHistoryOpen}

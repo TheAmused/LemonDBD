@@ -11,7 +11,5 @@ export default {
   ownedPerks: "Posiadane Umiejętności",
   active: "Aktywne",
   loss: "Przegrana",
-  current: "Aktualna",
-  best: "Najlepsza",
   progress: 'Postęp',
 } as const;

@@ -20,6 +20,7 @@ import { HistoryNextRowPreview } from './HistoryNextRowPreview';
 import { HistoryRowClearedBanner } from './HistoryRowClearedBanner';
 import type { Perk } from '@/types/gauntletStreak';
 import { saveHistoryMode } from '@/utils/streakDifficultyPrefs';
+import { attemptsStarted } from '@/utils/challengeAttempts';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
 import { StreakActionBar, StreakActionButton } from '../StreakActionBar';
@@ -198,7 +199,6 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
         <AbandonConfirmModal
           open={confirmingAbandon}
           busy={busy}
-          message={dict.streaks.historyAbandonConfirmPrompt}
           onCancel={() => setConfirmingAbandon(false)}
           onConfirm={handleAbandon}
         />
@@ -207,7 +207,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           isOpen={isStatsOpen}
           onClose={() => setIsStatsOpen(false)}
           stats={stats}
-          attempts={run ? run.attempts + 1 : undefined}
+          attempts={run ? attemptsStarted(run) : undefined}
         />
         <ChallengeCompletionHistoryDrawer
           isOpen={isHistoryOpen}

@@ -28,7 +28,7 @@ export const HistoryStatsDrawer: React.FC<HistoryStatsDrawerProps> = ({ isOpen, 
     )}
     renderMeta={(log) => (
       <span>
-        {dict.streaks.killersColonLabel} {log.streak_after} {dict.streaks.middotSeparator}{' '}
+        {log.result === 'win' && <>{dict.streaks.killersColonLabel} {log.streak_after} {dict.streaks.middotSeparator}{' '}</>}
         {dict.streaks.rowLabel} {log.row_index + 1}
       </span>
     )}

@@ -32,8 +32,12 @@ export const ChaosStatsDrawer: React.FC<ChaosStatsDrawerProps> = ({ isOpen, onCl
     )}
     renderMeta={(log) => (
       <span className="inline-flex items-center gap-1.5">
-        {dict.streaks.streakLabel} {log.streak_after}
-        <span>{dict.streaks.middotSeparator}</span>
+        {log.result === 'win' && (
+          <>
+            {dict.streaks.streakLabel} {log.streak_after}
+            <span>{dict.streaks.middotSeparator}</span>
+          </>
+        )}
         {log.addon_rarities.map((rarity, i) => (
           <Img
             key={i}

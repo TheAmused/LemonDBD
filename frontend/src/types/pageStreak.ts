@@ -46,6 +46,8 @@ export interface PageStreakRun {
   attempts: number;
   /** Which attempt group the next match is filed under; only ever grows. */
   attempt: number;
+  /** Matches played in the current attempt; the attempt only counts once it has one. */
+  attempt_matches: number;
   current_page: number;
   best_page: number;
   pages: string[][];

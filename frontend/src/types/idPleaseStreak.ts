@@ -116,6 +116,8 @@ export interface IdPleaseRun {
   roster_fingerprint: string;
   attempts: number;
   attempt: number;
+  /** Matches played in the current attempt; the attempt only counts once it has one. */
+  attempt_matches: number;
   total_wins: number;
   total_losses: number;
   created_at?: string;

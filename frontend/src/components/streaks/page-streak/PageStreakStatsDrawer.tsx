@@ -11,7 +11,7 @@ export interface PageStreakStatsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   stats: PageStreakStats | null;
-  /** The open killer's current attempt number. */
+  /** The open killer's current attempt number. The stats are that killer's own. */
   attempts?: number;
 }
 
@@ -27,7 +27,6 @@ export const PageStreakStatsDrawer: React.FC<PageStreakStatsDrawerProps> = ({ is
     renderLabel={(log) => (
       <div className="text-base font-bold text-text-primary">{characterDisplayName(log.killer)}</div>
     )}
-    renderGroupLabel={(log) => characterDisplayName(log.killer)}
     renderMeta={(log) => (
       <span>
         {dict.streaks.pageLabel} {log.page_number}

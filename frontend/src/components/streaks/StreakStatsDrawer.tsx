@@ -30,7 +30,7 @@ export interface StreakStatsDrawerProps<TLog extends StreakMatchLogBase> {
   attempts?: number;
   /** The main label for a match row: character/killer name, or the "Auto-loss" badge is handled for you. */
   renderLabel: (log: TLog) => React.ReactNode;
-  /** Secondary line under the label, e.g. "Streak: 4" or "Attempt 2, Page 3". */
+  /** Secondary line under the label, e.g. "Streak: 4" or "Attempt 2, Page 3". Return null for no line. A loss does not show the streak. */
   renderMeta: (log: TLog) => React.ReactNode;
   /** Extra text after "Attempt N" in an attempt's header, e.g. the killer when one drawer covers several runs. */
   renderGroupLabel?: (log: TLog) => React.ReactNode;

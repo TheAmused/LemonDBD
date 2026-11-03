@@ -14,6 +14,7 @@ import { ChallengeProgress } from '../ChallengeProgress';
 import { ChallengeCompletionHistoryDrawer, Confetti, AbandonConfirmModal } from '../lazyChallengeParts';
 import { useCelebrateOnRise, useCelebration } from '../useCelebration';
 import { staticUrl } from '@/utils/staticUrl';
+import { attemptsStarted } from '@/utils/challengeAttempts';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
@@ -213,7 +214,6 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
           <AbandonConfirmModal
             open={confirmingAbandon}
             busy={busy}
-            message={dict.streaks.pageStreakAbandonConfirmPrompt}
             onCancel={() => setConfirmingAbandon(false)}
             onConfirm={() => {
               setConfirmingAbandon(false);
@@ -226,7 +226,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
             isOpen={isStatsOpen}
             onClose={() => setIsStatsOpen(false)}
             stats={stats}
-            attempts={run.attempts + 1}
+            attempts={attemptsStarted(run)}
           />
           <ChallengeCompletionHistoryDrawer
             isOpen={isHistoryOpen}

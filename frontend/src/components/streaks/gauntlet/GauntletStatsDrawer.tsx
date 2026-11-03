@@ -26,11 +26,13 @@ export const GauntletStatsDrawer: React.FC<GauntletStatsDrawerProps> = ({ isOpen
     renderLabel={(log: MatchLog) => (
       <div className="text-base font-bold text-text-primary">{characterDisplayName(log.character_id)}</div>
     )}
-    renderMeta={(log: MatchLog) => (
-      <span>
-        {dict.streaks.streakLabel} {log.streak_after}
-      </span>
-    )}
+    renderMeta={(log: MatchLog) =>
+      log.result === 'win' ? (
+        <span>
+          {dict.streaks.streakLabel} {log.streak_after}
+        </span>
+      ) : null
+    }
   />
   );
 };

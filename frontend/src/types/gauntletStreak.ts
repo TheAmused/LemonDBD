@@ -91,6 +91,8 @@ export interface GauntletRun {
   owned_characters: string[];
   pool_frozen: boolean;
   attempts: number;
+  /** Matches played in the current attempt; the attempt only counts once it has one. */
+  attempt_matches: number;
   tier_info: TierInfo;
   /** Lemon killer: spendable balance, what the last win rolled (0 after a loss) and the free slots bought for this match. */
   tokens: number;

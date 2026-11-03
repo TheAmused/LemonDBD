@@ -10,6 +10,7 @@ import { TOAST_DURATION_MS } from '@/constants/timing';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import { saveIdPleaseDifficulty } from '@/utils/streakDifficultyPrefs';
+import { attemptsStarted } from '@/utils/challengeAttempts';
 import { ID_PLEASE_MODE_BY_LANE, idPleaseLaneForRole, idPleaseLaneSide, parseIdPleaseDifficulty } from '@/types/idPleaseStreak';
 import type { IdPleaseNotice } from './useIdPleaseRun';
 import { ChallengeErrorBanner, ChallengePanel } from '../ChallengePanel';
@@ -197,11 +198,10 @@ export const IdPleaseBoard: React.FC<IdPleaseBoardProps> = ({ role }) => {
       <AbandonConfirmModal
         open={confirmingAbandon}
         busy={busy}
-        message={s.idPleaseAbandonPrompt}
         onCancel={() => setConfirmingAbandon(false)}
         onConfirm={handleAbandon}
       />
-      <IdPleaseStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} attempts={run ? run.attempts + 1 : undefined} />
+      <IdPleaseStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} attempts={run ? attemptsStarted(run) : undefined} />
       <ChallengeCompletionHistoryDrawer
         isOpen={isHistoryOpen}
         onClose={() => setIsHistoryOpen(false)}

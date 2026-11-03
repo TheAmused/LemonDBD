@@ -19,6 +19,7 @@ export function StreakMatchRow<TLog extends StreakMatchLogBase>({ log, renderLab
   const dict = useDictionary();
   const locale = useLocale();
   const isWin = log.result === 'win';
+  const meta = renderMeta(log);
   return (
     <Surface tone="elevated" padding="none" className="flex items-center justify-between px-4 py-3.5 hover:border-border-subtle transition-colors shadow-sm">
       <div className="pl-1">
@@ -30,7 +31,7 @@ export function StreakMatchRow<TLog extends StreakMatchLogBase>({ log, renderLab
         ) : (
           renderLabel(log)
         )}
-        <div className="text-xs text-text-secondary mt-1.5">{renderMeta(log)}</div>
+        {meta && <div className="text-xs text-text-secondary mt-1.5">{meta}</div>}
       </div>
 
       <div className="text-right">

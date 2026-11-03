@@ -6,6 +6,9 @@ import { GAUNTLET_GAME_MODES } from '@/types/gauntletStreak';
 import type { IdPleaseDifficulty, IdPleaseLane } from '@/types/idPleaseStreak';
 import { ID_PLEASE_DIFFICULTIES } from '@/types/idPleaseStreak';
 import { safeGetItem, safeSetItem } from '@/utils/safeStorage';
+import { STREAK_ROLE_COOKIE, type StreakRole } from '@/utils/streakRole';
+
+export type { StreakRole };
 
 const CHAOS_DIFFICULTY_KEY = 'lemon_dbd_chaos_streak_difficulty_v1';
 const HISTORY_MODE_KEY = 'lemon_dbd_history_streak_mode_v1';
@@ -71,11 +74,7 @@ export function markPageStreakIntroSeen() {
   safeSetItem(PAGE_STREAK_SEEN_KEY, '1');
 }
 
-export type StreakRole = 'survivor' | 'killer' | 'challenge';
-
 const LAST_ROLE_KEY = 'lemon_dbd_streaks_last_role_v1';
-/** The server redirect from /streaks reads this cookie, so the saved role has to live in a cookie too. */
-export const STREAK_ROLE_COOKIE = 'lemon_dbd_streaks_last_role';
 const STREAK_ROLE_COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
 export function getSavedStreakRole(): StreakRole | null {

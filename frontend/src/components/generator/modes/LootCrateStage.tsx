@@ -30,6 +30,8 @@ export interface LootCrateStageProps {
   onSelectPerk: (perk: Perk) => void;
   isBlind?: boolean;
   backendBase?: string;
+  /** The loadout picked last time, shown from the start. */
+  initialSlots?: DrawnSlot[];
 }
 
 type CratePhase = 'closed' | 'shaking' | 'scattering' | 'complete';
@@ -123,12 +125,13 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
       onRevealSlot,
       onSelectPerk,
       isBlind = false,
+      initialSlots,
     }) => {
   const dict = useDictionary();
-  const [phase, setPhase] = useState<CratePhase>('closed');
+  const [phase, setPhase] = useState<CratePhase>(initialSlots?.length ? 'complete' : 'closed');
   const [scatterPool, setScatterPool] = useState<ScatterItem[]>([]);
   const [lockedItems, setLockedItems] = useState<ScatterItem[]>([]);
-  const [selected, setSelected] = useState<DrawnSlot[]>([]);
+  const [selected, setSelected] = useState<DrawnSlot[]>(initialSlots ?? []);
   const resultsRef = useRef<HTMLDivElement | null>(null);
   const isMountedRef = useRef(true);
   const timeoutsRef = useRef<(NodeJS.Timeout | number)[]>([]);
@@ -219,7 +222,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
     // to offer before that (only possible with a very small playable pool).
     if (nextSelected.length >= LOADOUT_SIZE || remainingPool.length === 0) {
       setPhase('complete');
-      celebrate(role, resultsRef.current);
+      celebrate();
       onRollComplete(nextSelected);
       onLoadoutComplete?.();
     }
@@ -294,9 +297,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                 const locked = lockedItems[slotIdx];
                 return locked ? (
                   <div key={`mob-tray-locked-${locked.id}`} className="relative">
-                    <div className="rounded-card ring-2 ring-accent-amber/60">
-                      <PerkSlot perk={locked.perk} role={role} page={locked.page} slot={locked.slot} size="compact" />
-                    </div>
+                    <PerkSlot perk={locked.perk} role={role} page={locked.page} slot={locked.slot} size="compact" />
                     <div className="absolute -top-1.5 -right-1.5 z-30 flex h-5 w-5 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
                       <LockIcon className="icon-xs" />
                     </div>
@@ -332,6 +333,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                       page={item.page}
                       slot={item.slot}
                       size="compact"
+                      muted
                       onClick={() => handlePick(item)}
                     />
                   </motion.div>
@@ -352,9 +354,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                 transition={reduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 260, damping: 18 }}
               >
                 <div className="relative">
-                  <div className="rounded-card ring-2 ring-accent-amber/60">
-                    <PerkSlot perk={item.perk} role={role} page={item.page} slot={item.slot} />
-                  </div>
+                  <PerkSlot perk={item.perk} role={role} page={item.page} slot={item.slot} />
                   <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
                     <LockIcon className="icon-sm" />
                   </div>
@@ -366,7 +366,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
               {scatterPool.map((item) => (
                 <motion.div
                   key={item.id}
-                  className="absolute -translate-x-1/2 -translate-y-1/2 group hover:drop-shadow-glow-amber-sm transition-[filter] duration-200"
+                  className="absolute -translate-x-1/2 -translate-y-1/2 group"
                   style={scatterPointStyle(item)}
                   initial={reduceMotion ? false : { opacity: 0, x: item.fromX, y: item.fromY, rotate: item.rotate * 2.2, scale: 0.4 }}
                   animate={{ opacity: 1, x: 0, y: 0, rotate: item.rotate, scale: item.scale }}
@@ -379,6 +379,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                     role={role}
                     page={item.page}
                     slot={item.slot}
+                    muted
                     onClick={() => handlePick(item)}
                   />
                 </motion.div>

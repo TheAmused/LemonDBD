@@ -2,7 +2,7 @@
 // frontend/src/components/generator/modes/slot-machine/useSlotMachine.ts
 import React, { useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
+import type { Perk, DrawnSlot } from '@/types/perks';
 import type { ChaosMutator } from '@/types/chaos';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
@@ -15,23 +15,24 @@ import type { MachinePhase, Reel } from './slotMachineTypes';
 import { useReelSizing } from './useReelSizing';
 
 interface SlotMachineInput {
-  role: RoleCategory;
   activePlayablePerks: Perk[];
   activeMutator: ChaosMutator | null;
   onRollComplete: (slots: DrawnSlot[]) => void;
   /** Fires once the loadout is full (analytics). */
   onLoadoutComplete?: () => void;
+  /** The loadout locked in last time, shown from the start. */
+  initialSlots?: DrawnSlot[];
 }
 
 /** The slot machine's whole state machine: pull, spin, stage reels, confirm, repeat until the loadout is full. */
-export function useSlotMachine({ role, activePlayablePerks, activeMutator, onRollComplete, onLoadoutComplete }: SlotMachineInput) {
+export function useSlotMachine({ activePlayablePerks, activeMutator, onRollComplete, onLoadoutComplete, initialSlots }: SlotMachineInput) {
   const dict = useDictionary();
-  const [phase, setPhase] = useState<MachinePhase>('idle');
+  const [phase, setPhase] = useState<MachinePhase>(initialSlots?.length ? 'complete' : 'idle');
   const [reels, setReels] = useState<Reel[]>([]);
   const [spinningIds, setSpinningIds] = useState<Set<number>>(new Set());
   const [staged, setStaged] = useState<Set<number>>(new Set());
   const [cycleIndex, setCycleIndex] = useState(0);
-  const [selected, setSelected] = useState<DrawnSlot[]>([]);
+  const [selected, setSelected] = useState<DrawnSlot[]>(initialSlots ?? []);
   const { reelAreaRef, cellPx, isMobile } = useReelSizing(phase);
 
   const reelsRef = useRef<Reel[]>([]);
@@ -238,7 +239,7 @@ export function useSlotMachine({ role, activePlayablePerks, activeMutator, onRol
 
     if (nextSelected.length >= SLOT_LOADOUT_SIZE) {
       setPhase('complete');
-      celebrate(role, resultsRef.current);
+      celebrate();
       onRollComplete(nextSelected);
       onLoadoutComplete?.();
       return;

@@ -291,7 +291,7 @@ export function useWheelStage({
       stopEmberDrift();
       setIsSpinning(false);
       setStatusText(targetPerk ? `${targetPerk.name} [P${targetPage}/S${targetSlot}]` : '');
-      celebrate(role, wheelWrapperRef.current);
+      celebrate();
 
       if (targetPerk) {
         onWinSlot({ page: targetPage, slot: targetSlot, perk: targetPerk });

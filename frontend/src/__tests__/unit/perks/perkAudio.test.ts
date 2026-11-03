@@ -4,7 +4,6 @@ import test from 'node:test';
 import assert from 'node:assert';
 import {
   getAudioEnabled,
-  setAudioEnabled,
   playReelTick,
   playReelThud,
   playCardFlip,
@@ -13,11 +12,8 @@ import {
   playClick,
 } from '@/utils/perkAudio';
 
-test('perkAudio: audio state defaults to true and respects storage', () => {
+test('perkAudio: audio state defaults to true outside a browser', () => {
   // In node environment without window, should safely return true
-  assert.strictEqual(getAudioEnabled(), true);
-  setAudioEnabled(false);
-  setAudioEnabled(true);
   assert.strictEqual(getAudioEnabled(), true);
 });
 

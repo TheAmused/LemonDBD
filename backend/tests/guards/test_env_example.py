@@ -89,6 +89,6 @@ def test_prod_example_has_the_same_keys_with_production_values() -> None:
     assert prod["SESSION_COOKIE_SECURE"] == "true"
     assert prod["RATELIMIT_ENABLED"] == "true" and prod["ALTCHA_ENFORCED"] == "true"
     for secret in ("SECRET_KEY", "JWT_SECRET_KEY", "TWO_FACTOR_ENCRYPTION_KEY", "POSTGRES_PASSWORD",
-                   "UMAMI_APP_SECRET", "UMAMI_ADMIN_PASSWORD", "PGADMIN_DEFAULT_PASSWORD"):
+                   "UMAMI_APP_SECRET", "UMAMI_ADMIN_PASSWORD"):
         assert prod[secret] == "", f"{secret} must be left for the operator to fill in"
     assert "*" not in prod["CORS_ORIGINS"]

@@ -73,7 +73,6 @@ export default {
   openDrawer: "ナビゲーションドロワーを開く",
   closeDrawer: "ナビゲーションドロワーを閉じる",
   verified: "認証済み",
-  adminPanel: "管理コントロールセンター",
   streaks: "チャレンジ＆ストリーク",
   generator: "パークランダマイザー",
   maps: "マップエクスプローラー",

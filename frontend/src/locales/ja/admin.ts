@@ -24,7 +24,6 @@ export default {
   createAccount: "アカウント作成",
   export: "エクスポート",
   import: "インポート",
-  pgAdmin: "pgAdmin (DB)",
   ocrCheck: "OCRチェック",
   refreshTitle: "開いているセクションを再読み込み",
   refresh: "更新",

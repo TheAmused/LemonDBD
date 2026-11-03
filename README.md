@@ -50,8 +50,7 @@ cp .env.example .env          # the pointer file compose reads first (ENV_FILE /
 
 Then open `http://localhost` (or `https://localhost`, with the self-signed certificate nginx
 generates). The API answers on `/api/v1/health`, and in development the backend is also published
-on `http://127.0.0.1:5000`. Umami is on `https://localhost:8117` and pgAdmin on
-`https://localhost:5050`.
+on `http://127.0.0.1:5000`. Umami is on `https://localhost:8117`.
 
 With `FLASK_ENV=development` the sign-in dialog offers demo accounts and the secret checks are
 relaxed; never use that value outside your own machine.
@@ -72,7 +71,7 @@ python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().d
 
 The backend refuses to start with an empty or publicly known `SECRET_KEY`, `JWT_SECRET_KEY` or
 `TWO_FACTOR_ENCRYPTION_KEY`, or with `CORS_ORIGINS=*`; compose refuses to start without the
-database, Umami and pgAdmin passwords. In production also set `SESSION_COOKIE_SECURE=true` and
+database and Umami passwords. In production also set `SESSION_COOKIE_SECURE=true` and
 `NEXT_PUBLIC_SITE_URL` (canonical links, sitemap and link previews use it), and put a real
 certificate (or Cloudflare) in front of nginx.
 
@@ -108,7 +107,7 @@ frontend type-check, lint, guards, unit tests and production build on every push
 backend/     Flask app (app/routes, app/services, app/models, app/schemas), migrations, tests
 frontend/    Next.js app (src/app/[locale], src/components, src/locales), tests
 nginx/       reverse proxy config and security headers
-docker/      tunnel notifier, CrowdSec, pgAdmin and Postgres init
+docker/      tunnel notifier, CrowdSec and Postgres init
 k6/          load-test scenarios and suites
 docs/        feature plan and design notes
 ```

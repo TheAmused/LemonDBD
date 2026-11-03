@@ -12,5 +12,3 @@ function externalUrl(configured: string | undefined, port: number): string {
 
 /** Umami: page views and feature usage. */
 export const analyticsUrl = () => externalUrl(process.env.NEXT_PUBLIC_UMAMI_URL, EXTERNAL_TOOL_PORTS.umami);
-/** pgAdmin: the PostgreSQL console. */
-export const pgAdminUrl = () => externalUrl(process.env.NEXT_PUBLIC_PGADMIN_URL, EXTERNAL_TOOL_PORTS.pgAdmin);

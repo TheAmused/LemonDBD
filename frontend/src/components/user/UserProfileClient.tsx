@@ -200,11 +200,9 @@ export function UserProfileClient() {
 
         <CampfireHeader
           user={user}
-          showcase={showcaseHook.showcase}
           ownership={ownership}
           isSaving={showcaseHook.isSaving}
           saveError={showcaseHook.saveError}
-          onTitleChange={showcaseHook.setPlayerTitle}
           onDevotionChange={showcaseHook.setDevotionLevel}
           onGradeRankChange={showcaseHook.setGradeRank}
           currentLocale={currentLocale}

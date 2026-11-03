@@ -97,7 +97,6 @@ export default {
 
   // --- Campfire Dossier additions ---
   tabSanctum: "Gestión de Cuenta",
-  playerTitle: "Título de Jugador",
   devotion: "Devoción",
   gradeRank: "Grado de Rango",
   survivorMain: "Superviviente Principal",

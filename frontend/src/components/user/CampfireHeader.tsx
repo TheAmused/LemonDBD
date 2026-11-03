@@ -9,12 +9,9 @@ import {  ChevronRight,
   Calendar,} from 'lucide-react';
 import { UserAvatar } from '@/components/UserAvatar';
 import { VaultMasteryDials } from '@/components/user/VaultMasteryDials';
-import { CustomDropdown } from '@/components/common/CustomDropdown';
-import { PLAYER_TITLES, type UserShowcaseState } from '@/types/userShowcase';
 import type { StatusFeedback } from '@/types/userProfile';
 import { CrownIcon } from '@/components/icons/DbdIcons';
 
-import { tip } from '@/components/common/Tooltip';
 import { Spinner } from '@/components/common/Spinner';
 import { formatDate } from '@/utils/format';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -32,11 +29,9 @@ interface CampfireHeaderProps {
     created_at?: string;
     avatar_url?: string;
   };
-  showcase: UserShowcaseState;
   ownership?: OwnershipSummary | null;
   isSaving?: boolean;
   saveError?: string | null;
-  onTitleChange: (title: string) => void;
   onDevotionChange?: (devotion: number) => void;
   onGradeRankChange?: (rank: string) => void;
   currentLocale: string;
@@ -48,9 +43,7 @@ interface CampfireHeaderProps {
 
 export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
       user,
-      showcase,
       ownership,
-      onTitleChange,
       currentLocale,
       previewUrl,
       isUploadingAvatar,
@@ -70,7 +63,6 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
               type="button"
               className="relative group cursor-pointer shrink-0 rounded-card focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
               onClick={onAvatarClick}
-              {...tip(dict.user.changeAvatar, undefined, 'action')}
               aria-label={dict.user.changeAvatar}
             >
               <span className="relative block rounded-card p-0.5 border-2 border-accent-red/60 bg-bg-surface shadow-md">
@@ -119,21 +111,6 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
                 </Badge>
               )}
             </WrapRow>
-
-            {/* Selectable Player Title Plaque via CustomDropdown */}
-            <div className="flex items-center justify-center sm:justify-start">
-              <CustomDropdown
-                value={showcase.playerTitle}
-                onChange={onTitleChange}
-                options={PLAYER_TITLES.map((title) => ({
-                  value: title,
-                  label: `« ${title} »`,
-                }))}
-                buttonClassName="border-accent-amber/35 bg-accent-amber/10 text-accent-amber hover:bg-accent-amber/20 hover:border-accent-amber text-xs font-bold tracking-wide"
-                menuClassName="bg-bg-surface border-border-color shadow-xl"
-                ariaLabel={dict.user.playerTitle}
-              />
-            </div>
 
             {/* Account Metadata: Member Since, Admin Panel Link */}
             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1.5 pt-0.5 text-xs text-text-secondary">

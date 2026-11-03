@@ -47,6 +47,13 @@ export interface AnalyticsEvents {
   smash_stats_open: undefined;
   smash_reset: undefined;
   smash_effects_choice: { effects: 'on' | 'off' };
+  // Support (Buy me a coffee modal)
+  coffee_modal_open: undefined;
+  coffee_link_click: { provider: 'buy_me_a_coffee' | 'ko_fi' };
+  // Bug report modal
+  bug_report_open: { source: 'sidebar' | 'profile'; access: 'member' | 'guest' | 'guest_blocked' };
+  bug_report_start: { access: 'member' | 'guest' };
+  bug_report_submit: { access: 'member' | 'guest'; screenshots: number };
   // Characters
   ownership_mode_enter: undefined;
   ownership_save: { characters_changed: number; perks_changed: number };

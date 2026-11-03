@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/sidebar/BugReportModal.tsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getBackendBaseUrl, authHeaders, getAuthToken } from '@/utils/api';
 import { useAuth } from '@/context/AuthContext';
 import { useSiteConfig } from '@/context/SiteConfigContext';
@@ -18,10 +18,13 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
 import { BugReportScreenshots } from '@/components/sidebar/BugReportScreenshots';
+import { trackEvent } from '@/utils/analytics';
 
 export interface BugReportModalProps {
   isOpen: boolean;
   onClose: () => void;
+  /** Where the modal was opened from (analytics only). */
+  source: 'sidebar' | 'profile';
   /** Called once a report was accepted (lets a list of the user's reports refresh only then). */
   onSubmitted?: () => void;
 }
@@ -40,7 +43,7 @@ const BUG_GUIDE_ITEMS = [
   { label: 'bugGuideScreenshotLabel', text: 'bugGuideScreenshotText' },
 ] as const;
 
-export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose, onSubmitted }) => {
+export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose, source, onSubmitted }) => {
   const dict = useDictionary();
   const { user, isAuthenticated } = useAuth();
   // With guest reports switched off (Settings), a signed-out visitor is asked to sign in up front
@@ -71,6 +74,29 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
+  const openTrackedRef = useRef(false);
+  const startTrackedRef = useRef(false);
+  const access = isAuthenticated ? 'member' : 'guest';
+
+  // One `bug_report_open` per time the modal is shown (the ref also covers the dev double effect).
+  useEffect(() => {
+    if (!isOpen) {
+      openTrackedRef.current = false;
+      startTrackedRef.current = false;
+      return;
+    }
+    if (openTrackedRef.current) return;
+    openTrackedRef.current = true;
+    trackEvent('bug_report_open', { source, access: guestsClosed ? 'guest_blocked' : access });
+  }, [isOpen, source, access, guestsClosed]);
+
+  // The first edit of any field: separates people who only looked from people who began a report.
+  const markStarted = () => {
+    if (startTrackedRef.current) return;
+    startTrackedRef.current = true;
+    trackEvent('bug_report_start', { access });
+  };
+
   useEffect(() => {
     if (!isOpen) {
       const timer = setTimeout(() => {
@@ -86,6 +112,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
   }, [isOpen]);
 
   const handleAddImages = (urls: string[]) => {
+    markStarted();
     setImages((prev) => [...prev, ...urls].slice(0, maxImages));
   };
 
@@ -150,6 +177,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
       if (!res.ok) {
         setErrorMsg(data.error || t.bugErrorMessage);
       } else {
+        trackEvent('bug_report_submit', { access, screenshots: images.length });
         setIsSuccess(true);
         onSubmitted?.();
       }
@@ -235,7 +263,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
             type="email"
             required
             value={guestEmail}
-            onChange={(e) => setGuestEmail(e.target.value)}
+            onChange={(e) => { markStarted(); setGuestEmail(e.target.value); }}
             placeholder={t.bugGuestEmailPlaceholder || ''}
           />
         </FormField>
@@ -247,7 +275,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
           type="text"
           required
           value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          onChange={(e) => { markStarted(); setTitle(e.target.value); }}
           placeholder={t.bugTitlePlaceholder || ''}
         />
       </FormField>
@@ -258,7 +286,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
           required
           rows={5}
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={(e) => { markStarted(); setMessage(e.target.value); }}
           placeholder={t.bugDescriptionPlaceholder || ''}
         />
         <Surface tone="inset" padding="sm" className="mt-2 space-y-1.5">

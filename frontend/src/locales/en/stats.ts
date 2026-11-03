@@ -11,7 +11,5 @@ export default {
   ownedPerks: "Owned Perks",
   active: "Active",
   loss: "Loss",
-  current: "Current",
-  best: "Best",
   progress: 'Progress',
 } as const;

@@ -11,7 +11,5 @@ export default {
   ownedPerks: "所持パーク",
   active: "進行中",
   loss: "敗北",
-  current: "現在",
-  best: "最高",
   progress: '進捗',
 } as const;

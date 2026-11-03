@@ -27,7 +27,7 @@ export const IdPleaseStatsDrawer: React.FC<IdPleaseStatsDrawerProps> = ({ isOpen
       renderLabel={(log) => <div className="text-base font-bold text-text-primary">{characterDisplayName(log.character_name)}</div>}
       renderMeta={(log) => (
         <span>
-          {formatMessage(dict.streaks.idPleaseMatchLabel, { number: log.match_number })} {dict.streaks.middotSeparator} {log.streak_after}
+          {formatMessage(dict.streaks.idPleaseMatchLabel, { number: log.match_number })} {log.result === 'win' && <>{dict.streaks.middotSeparator} {log.streak_after}</>}
         </span>
       )}
     />

@@ -12,6 +12,7 @@ import { Button } from '@/components/common/Button';
 import { Collapsible } from '@/components/common/Collapsible';
 import { cn } from '@/utils/cn';
 import { Surface } from '@/components/common/Surface';
+import { tip } from '@/components/common/Tooltip';
 interface ChallengePanelProps {
   /** Stats and actions strip, rendered as the top section of the card. */
   header: React.ReactNode;
@@ -69,7 +70,7 @@ export const ModeSelectButton: React.FC<ModeSelectButtonProps> = ({ label, tone,
   );
 
   return onClick ? (
-    <Button variant="secondary" onClick={onClick} aria-label={`${title}: ${label}`} className="h-11 min-w-0 gap-2 px-3">
+    <Button variant="secondary" onClick={onClick} aria-label={`${title}: ${label}`} {...tip(title, undefined, 'action')} className="h-11 min-w-0 gap-2 px-3">
       {content}
     </Button>
   ) : (
@@ -132,6 +133,7 @@ export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon
     variant="secondary"
     onClick={onClick}
     aria-label={title}
+    {...tip(title, undefined, 'action')}
     className={cn(
       'h-11 justify-center',
       label ? 'gap-1.5 px-3' : 'px-2 sm:w-10 sm:px-0 lg:w-11',

@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchChallengeModeStatus } from '@/services/challengeModesApi';
 import { useDictionary } from '@/context/DictionaryContext';
+import { useAuth } from '@/context/AuthContext';
 import { TriangleAlert } from 'lucide-react';
 
 interface ChallengeModeGateProps {
@@ -14,9 +15,10 @@ interface ChallengeModeGateProps {
 
 /** Guards a challenge mode's route: while its admin kill switch is on, the
  * actual game board never mounts -- this renders a block screen instead,
- * regardless of how the URL was reached. */
+ * regardless of how the URL was reached. Admins pass through: the switch is for players. */
 export const ChallengeModeGate: React.FC<ChallengeModeGateProps> = ({ mode, children }) => {
   const dict = useDictionary();
+  const { isAdmin } = useAuth();
   const [status, setStatus] = useState<'loading' | 'enabled' | 'disabled'>('loading');
   const [reason, setReason] = useState<string | null>(null);
 
@@ -39,7 +41,7 @@ export const ChallengeModeGate: React.FC<ChallengeModeGateProps> = ({ mode, chil
 
   if (status === 'loading') return null;
 
-  if (status === 'disabled') {
+  if (status === 'disabled' && !isAdmin) {
     return (
       <div className="flex flex-col items-center justify-center gap-4 rounded-card border border-accent-amber/30 bg-accent-amber/10 p-12 text-center">
         <TriangleAlert className="h-12 w-12 text-accent-amber" />

@@ -55,8 +55,8 @@ export async function resetAllRuns(token: string): Promise<void> {
   await postJson<{ success: boolean }>(token, '/run/reset-all', {});
 }
 
-export async function fetchStats(token: string): Promise<PageStreakStats> {
-  const data = await getJson<{ stats: PageStreakStats }>(token, '/stats');
+export async function fetchStats(token: string, killer: string): Promise<PageStreakStats> {
+  const data = await getJson<{ stats: PageStreakStats }>(token, `/stats?killer=${encodeURIComponent(killer)}`);
   return data.stats;
 }
 

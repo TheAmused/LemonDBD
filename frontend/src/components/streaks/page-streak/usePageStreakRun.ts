@@ -12,7 +12,7 @@ export function usePageStreakRun(killer: string) {
       scope: killer,
       label: 'page streak',
       fetchRun: (t) => api.fetchRun(t, killer),
-      fetchStats: (t) => api.fetchStats(t),
+      fetchStats: (t) => api.fetchStats(t, killer),
       fetchCompletions: async (t) => (await api.fetchCompletions(t, killer)).completions,
     });
 

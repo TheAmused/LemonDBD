@@ -24,6 +24,8 @@ export interface ChaosRun {
   perks_revealed: boolean;
   pool_frozen: boolean;
   attempts: number;
+  /** Matches played in the current attempt; the attempt only counts once it has one. */
+  attempt_matches: number;
   checkpoint_interval: number;
   created_at?: string;
   updated_at?: string;

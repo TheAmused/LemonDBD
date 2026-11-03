@@ -30,6 +30,7 @@ import { CharacterRosterGrid } from './CharacterRosterGrid';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
 import { saveGauntletMode } from '@/utils/streakDifficultyPrefs';
+import { attemptsStarted } from '@/utils/challengeAttempts';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 const GauntletStatsDrawer = dynamic(
@@ -274,7 +275,6 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
         <AbandonConfirmModal
           open={confirmingAbandon}
           busy={busy}
-          message={`${dict.streaks.abandonConfirmPrefix} ${dict.streaks?.[role] || role} ${dict.streaks.abandonConfirmSuffix}`}
           onCancel={() => setConfirmingAbandon(false)}
           onConfirm={() => {
             setConfirmingAbandon(false);
@@ -311,7 +311,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           isOpen={isStatsOpen}
           onClose={() => setIsStatsOpen(false)}
           stats={stats}
-          attempts={run ? run.attempts + 1 : undefined}
+          attempts={run ? attemptsStarted(run) : undefined}
         />
         <ChallengeCompletionHistoryDrawer
           isOpen={isHistoryOpen}

@@ -10,7 +10,10 @@ export const SIDEBAR_ROW = 'w-full px-3.5 py-2 type-strong';
 export const SIDEBAR_ROW_HOVER = 'hover:bg-bg-sidebar-hover hover:text-accent-red';
 
 const ICON_COLOR = 'text-accent-red';
-const ACTIVE_CLASSES = 'bg-accent-red/10 text-accent-red border border-accent-red/20';
+// The border is always there (transparent when idle): adding and removing it made the previous link
+// flash the default white border while the transition ran, and nudged the row height by 2px.
+const ACTIVE_CLASSES = 'bg-accent-red/10 text-accent-red border-accent-red/20';
+const IDLE_CLASSES = 'border-transparent';
 
 export interface SidebarNavLinkProps {
   id: string;
@@ -23,6 +26,8 @@ export interface SidebarNavLinkProps {
   /** For a button that opens a dialog instead of going to a page. */
   hasPopup?: 'dialog';
   onClick?: () => void;
+  /** Pointer or keyboard focus arrived: a chance to prefetch whatever the click will need. */
+  onWarm?: () => void;
 }
 
 const SidebarNavLinkBase: React.FC<SidebarNavLinkProps> = ({
@@ -34,10 +39,11 @@ const SidebarNavLinkBase: React.FC<SidebarNavLinkProps> = ({
   badgeColor = 'bg-accent-amber/10 text-accent-amber border-accent-amber/20',
   hasPopup,
   onClick,
+  onWarm,
 }) => {
-  const commonClasses = `${SIDEBAR_ROW} flex items-center justify-between rounded-control transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent-red ${isActive
+  const commonClasses = `${SIDEBAR_ROW} flex items-center justify-between rounded-control border transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red ${isActive
       ? ACTIVE_CLASSES
-      : `text-text-primary ${SIDEBAR_ROW_HOVER}`
+      : `${IDLE_CLASSES} text-text-primary ${SIDEBAR_ROW_HOVER}`
     }`;
 
   const innerContent = (
@@ -75,6 +81,8 @@ const SidebarNavLinkBase: React.FC<SidebarNavLinkProps> = ({
       aria-current={isActive ? 'page' : undefined}
       aria-haspopup={hasPopup}
       onClick={onClick}
+      onPointerEnter={onWarm}
+      onFocus={onWarm}
       className={commonClasses}
     >
       {innerContent}

@@ -53,7 +53,7 @@ export const SidebarNavGroup: React.FC<SidebarNavGroupProps> = ({ id, label, ico
           <span className="truncate">{label}</span>
         </span>
       </DisclosureButton>
-      <Collapsible open={open} className={NAV_GROUP_BODY_CLASS} contentClassName="ml-5 mt-1 space-y-1 border-l border-border-color pl-2">
+      <Collapsible open={open} className={NAV_GROUP_BODY_CLASS} contentClassName="ml-5 mt-1 space-y-1 border-l border-border-color py-0.5 pl-2 pr-0.5">
         {children}
       </Collapsible>
     </div>

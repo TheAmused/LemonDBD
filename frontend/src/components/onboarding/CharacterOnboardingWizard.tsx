@@ -6,9 +6,7 @@ import { Info } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from '@/context/DictionaryContext';
 import { PerksTogglePopup } from '@/components/characters/PerksTogglePopup';
-import { SkipOnboardingModal } from '@/components/onboarding/SkipOnboardingModal';
 import { Spinner } from '@/components/common/Spinner';
-import { Button } from '@/components/common/Button';
 import { ActionBarButton, StickyActionBar } from '@/components/common/StickyActionBar';
 import {
   type OnboardingCharacter,
@@ -55,11 +53,10 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
     expandedChapter, renderedGroup, chapterRowEndIndex,
     toggleChapterExpanded, handleChapterPanelExitComplete,
   } = useChapterExpansion(filteredChapterGroups);
-  const { saving, handleContinue, handleSkipConfirm } = useOnboardingCompletion({
+  const { saving, handleContinue } = useOnboardingCompletion({
     characters, allPerks, ownershipDraft, perkUnlockDraft, onFinished,
   });
 
-  const [isSkipModalOpen, setIsSkipModalOpen] = useState(false);
   const [perksPopupCharacter, setPerksPopupCharacter] = useState<OnboardingCharacter | null>(null);
 
   // Auth finished resolving and there's no session -- the roster fetch never
@@ -99,30 +96,12 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
         <Surface padding="none" className="p-3 sm:p-5 lg:p-6 shadow-2xl space-y-3.5 sm:space-y-4">
           {/* Header Section */}
           <header className="relative flex flex-col items-center text-center space-y-1.5 sm:space-y-2">
-            <div className="sm:absolute sm:right-0 sm:top-0 hidden sm:block">
-              <Button
-                type="button"
-                onClick={() => setIsSkipModalOpen(true)}
-                variant="amberSoft" size="md" className="shrink-0"
-              >
-                {t.skipButton}
-              </Button>
-            </div>
             <h1 className="text-lg sm:text-xl md:text-2xl font-black tracking-tight text-text-primary px-2">
               {t.heading}
             </h1>
             <p className="text-xs sm:text-sm text-text-secondary max-w-xl mx-auto px-2">
               {t.subheading}
             </p>
-            <div className="sm:hidden pt-0.5">
-              <Button
-                type="button"
-                onClick={() => setIsSkipModalOpen(true)}
-                variant="amberSoft" size="sm" className="shrink-0"
-              >
-                {t.skipButton}
-              </Button>
-            </div>
           </header>
 
           <hr className="border-t border-border-color/60 mt-0.5 mb-3 sm:mb-5 lg:mb-6" />
@@ -232,12 +211,6 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
         onClose={() => setPerksPopupCharacter(null)}
         backendBase={backendBase}
         perksLabel={t.perksButton}
-      />
-
-      <SkipOnboardingModal
-        isOpen={isSkipModalOpen}
-        onCancel={() => setIsSkipModalOpen(false)}
-        onConfirm={() => { void handleSkipConfirm(); }}
       />
     </div>
   );

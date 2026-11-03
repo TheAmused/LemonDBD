@@ -21,10 +21,5 @@ export default {
   chaptersTitle: "Rozdziały",
   perksButton: "Perki",
   continueButton: "Kontynuuj",
-  skipButton: "Pomiń",
-  skipModalTitle: "Pominąć konfigurację postaci?",
-  skipModalBody: "Jeśli pominiesz ten krok, odblokowane zostaną tylko darmowe postacie z podstawowej wersji gry. Wszystko inne pozostanie zablokowane, dopóki sam nie odblokujesz tego później na stronie Postacie.",
-  skipModalConfirm: "Tak, pomiń na razie",
-  skipModalCancel: "Wróć",
   savingLabel: "Zapisywanie...",
 };

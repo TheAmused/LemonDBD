@@ -53,6 +53,24 @@ async function viewerIsAdmin(cookie: string): Promise<boolean> {
     }
 }
 
+/** The language a signed-in visitor saved on their account, or null (no session, backend down, none saved). */
+async function viewerPreferredLocale(cookie: string): Promise<Locale | null> {
+    if (!cookie) return null;
+    try {
+        const res = await fetch(`${BACKEND_URL}/api/v1/auth/me`, {
+            headers: { cookie },
+            cache: 'no-store',
+            signal: AbortSignal.timeout(1500),
+        });
+        if (!res.ok) return null;
+        const body = (await res.json()) as { user?: { preferred_language?: string | null } | null };
+        const language = body.user?.preferred_language;
+        return (i18n.locales as readonly string[]).includes(language ?? '') ? (language as Locale) : null;
+    } catch {
+        return null;
+    }
+}
+
 export async function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
 
@@ -83,7 +101,9 @@ export async function proxy(request: NextRequest) {
     );
 
     if (pathnameIsMissingLocale) {
-        const preferredLocale = getPreferredLocale(request);
+        // A signed-in user's saved language wins over the browser's Accept-Language.
+        const preferredLocale =
+            (await viewerPreferredLocale(request.headers.get('cookie') ?? '')) ?? getPreferredLocale(request);
         return NextResponse.redirect(
             new URL(`/${preferredLocale}${pathname}`, request.url)
         );

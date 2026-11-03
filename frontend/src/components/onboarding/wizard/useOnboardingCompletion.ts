@@ -19,7 +19,7 @@ interface OnboardingCompletionInput {
   onFinished: () => void;
 }
 
-/** Saving the drafts (Continue) or leaving them unsaved (Skip), then handing control back. */
+/** Saving the drafts (Continue), then handing control back. */
 export function useOnboardingCompletion({
   characters,
   allPerks,
@@ -57,16 +57,5 @@ export function useOnboardingCompletion({
     }
   };
 
-  const handleSkipConfirm = async () => {
-    setSaving(true);
-    try {
-      await markOnboardingComplete();
-      clearOnboardingDraft(user?.id);
-    } finally {
-      setSaving(false);
-      onFinished();
-    }
-  };
-
-  return { saving, handleContinue, handleSkipConfirm };
+  return { saving, handleContinue };
 }

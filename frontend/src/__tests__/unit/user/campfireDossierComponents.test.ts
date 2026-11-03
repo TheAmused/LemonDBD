@@ -23,14 +23,12 @@ describe('Campfire Dossier: CampfireHeader', () => {
     created_at: '2026-01-01T00:00:00Z',
   };
 
-  it('renders player username, title, and hides devotion, grade, email, and status badges', () => {
+  it('renders player username and hides the Survivor/Killer title, devotion, grade, email, and status badges', () => {
     const html = renderWithDictionary(
       React.createElement(CampfireHeader, {
         user: mockUser,
-        showcase: DEFAULT_SHOWCASE_STATE,
         isSaving: false,
         saveError: null,
-        onTitleChange: () => {},
         onDevotionChange: () => {},
         onGradeRankChange: () => {},
         currentLocale: 'en',
@@ -38,7 +36,8 @@ describe('Campfire Dossier: CampfireHeader', () => {
     );
 
     assert.ok(html.includes('CampfireMaster'));
-    assert.ok(html.includes('Survivor'));
+    assert.ok(!html.includes('Survivor'));
+    assert.ok(!html.includes('Killer'));
     // Omitted / hidden per user mandate
     assert.ok(!html.includes('Saved to Database'));
     assert.ok(!html.includes('Lvl'));
@@ -49,14 +48,13 @@ describe('Campfire Dossier: CampfireHeader', () => {
     const html = renderWithDictionary(
       React.createElement(CampfireHeader, {
         user: mockUser,
-        showcase: DEFAULT_SHOWCASE_STATE,
         isSaving: false,
         saveError: null,
-        onTitleChange: () => {},
         currentLocale: 'en',
       })
     );
 
+    assert.ok(!html.includes('data-tooltip'), 'The avatar carries no hover tooltip');
     assert.ok(html.includes('rounded-card'), 'Must use square-ish rounded borders');
     assert.ok(html.includes('sm:h-36 sm:w-36') || html.includes('xl:h-44 xl:w-44'), 'Must size avatar to 3xl block height');
   });

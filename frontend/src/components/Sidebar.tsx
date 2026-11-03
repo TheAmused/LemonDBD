@@ -19,6 +19,7 @@ import { useSidebarState } from '@/hooks/useSidebarState';
 import { LemonIcon } from './LemonIcon';
 import { useAuth } from '@/context/AuthContext';
 import dynamic from 'next/dynamic';
+import type { BardInsultsModalProps } from './sidebar/BardInsultsModal';
 import { SidebarNavLink } from './sidebar/SidebarNavLink';
 import { SidebarNavGroup } from './sidebar/SidebarNavGroup';
 import { adminOnlyPageFromPathname } from '@/utils/adminOnlyPages';
@@ -44,14 +45,11 @@ const BuyCoffeeModal = dynamic(
   { ssr: false }
 );
 
-// One loader shared by the dynamic component and the preload: the first click used to wait for the
-// chunk (about 160ms, a stalled page), later ones found it cached (about 24ms).
+// The dialog's code is fetched when the visitor points at, focuses or clicks its button, not for everyone
+// on page load. Once it has arrived the component is kept mounted (closed), so opening it later is only a
+// state flip: with next/dynamic every open went through Suspense again, which is why it was sometimes
+// instant and sometimes not.
 const loadBardInsults = () => import('./sidebar/BardInsultsModal');
-const BardInsultsModal = dynamic(
-  () => loadBardInsults().then((m) => m.BardInsultsModal),
-  { ssr: false }
-);
-const preloadBardInsults = () => { void loadBardInsults(); };
 
 /** A page link (`href`) or a button that opens a dialog (`onSelect`). */
 interface NavItem {
@@ -92,19 +90,12 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
   const [bugModalOpen, setBugModalOpen] = useState(false);
   const [coffeeModalOpen, setCoffeeModalOpen] = useState(false);
   const [insultsModalOpen, setInsultsModalOpen] = useState(false);
+  const [InsultsModal, setInsultsModal] = useState<React.ComponentType<BardInsultsModalProps> | null>(null);
+  const preloadBardInsults = useCallback(() => {
+    void loadBardInsults().then((m) => setInsultsModal(() => m.BardInsultsModal));
+  }, []);
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);
-
-  // Fetch the insults dialog while the browser is idle, so it is ready before anyone clicks.
-  useEffect(() => {
-    const idle = window.requestIdleCallback;
-    if (idle) {
-      const handle = idle(preloadBardInsults);
-      return () => window.cancelIdleCallback(handle);
-    }
-    const timer = setTimeout(preloadBardInsults, 2000);
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -154,21 +145,26 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
     ];
   }, [dict, currentLocale]);
 
-  // Shown to admins only, under the regular links.
-  const adminEntry = useMemo((): NavItem => ({
+  // A group of its own, for admins only.
+  const adminGroup = useMemo((): NavGroup => ({
     id: 'admin',
-    label: dict.sidebar.adminControlCenter,
+    label: dict.sidebar.groupAdmin,
     icon: CrownIcon,
-    href: `/${currentLocale}/admin`,
+    items: [{
+      id: 'admin-panel',
+      label: dict.sidebar.adminControlCenter,
+      icon: Settings,
+      href: `/${currentLocale}/admin`,
+    }],
   }), [dict, currentLocale]);
 
   // Admin-only pages are hidden from everyone else; a group left empty disappears with them.
   const visibleNavEntries = useMemo(() => {
     const visible = (item: NavItem) => isAdmin || !item.href || !adminOnlyPageFromPathname(item.href, i18n.locales);
-    return navEntries
+    return (isAdmin ? [...navEntries, adminGroup] : navEntries)
       .map((entry) => ('items' in entry ? { ...entry, items: entry.items.filter(visible) } : entry))
       .filter((entry) => ('items' in entry ? entry.items.length > 0 : visible(entry)));
-  }, [navEntries, isAdmin]);
+  }, [navEntries, adminGroup, isAdmin]);
 
   const renderNavItem = (item: NavItem) => (
     <SidebarNavLink
@@ -222,11 +218,6 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
               </SidebarNavGroup>
             ) : renderNavItem(entry)
           ))}
-          {isAdmin && (
-            <div className="mt-3 space-y-1 border-t border-border-color pt-3">
-              {renderNavItem(adminEntry)}
-            </div>
-          )}
         </nav>
 
         <SidebarUserSection
@@ -243,6 +234,7 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
           }}
           onLogout={logout}
           onOpenInsults={() => {
+            preloadBardInsults();
             setInsultsModalOpen(true);
             setMobileOpen(false);
           }}
@@ -369,8 +361,8 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
           onClose={() => setCoffeeModalOpen(false)}
         />
       )}
-      {insultsModalOpen && (
-        <BardInsultsModal
+      {InsultsModal && (
+        <InsultsModal
           isOpen={insultsModalOpen}
           onClose={() => setInsultsModalOpen(false)}
         />

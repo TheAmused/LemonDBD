@@ -10,9 +10,8 @@ import type { ChaosMutator } from '@/types/chaos';
 import { pickRandomLoadout, buildDrawnSlots } from '../lib/perkPicker';
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
-import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { StagePrompt, StageProp } from '../shared/StageIdle';
-import { playReelThud, playCardFlip } from '@/utils/perkAudio';
+import { playFanfare, playReelThud, playCardFlip } from '@/utils/perkAudio';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Surface } from '@/components/common/Surface';
@@ -133,10 +132,8 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
   const [lockedItems, setLockedItems] = useState<ScatterItem[]>([]);
   const lockedIds = new Set(lockedItems.map((l) => l.id));
   const [selected, setSelected] = useState<DrawnSlot[]>(initialSlots ?? []);
-  const resultsRef = useRef<HTMLDivElement | null>(null);
   const isMountedRef = useRef(true);
   const timeoutsRef = useRef<(NodeJS.Timeout | number)[]>([]);
-  const { celebrate } = useJackpotCelebration();
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -222,7 +219,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
     // to offer before that (only possible with a very small playable pool).
     if (nextSelected.length >= LOADOUT_SIZE || remaining.length === 0) {
       setPhase('complete');
-      celebrate();
+      playFanfare();
       onRollComplete(nextSelected);
       onLoadoutComplete?.();
     }
@@ -383,7 +380,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
           <p className="text-sm font-bold text-text-secondary text-center sm:text-base">
             {dict.generator.scatterComplete}
           </p>
-          <div ref={resultsRef} className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             {selected.map((slot, idx) => {
               const { isObscured, onClick } = getSlotInteraction(
                 idx,

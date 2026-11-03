@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { ToggleChip } from '@/components/common/ToggleChip';
+import { CONTROL_H } from '@/components/perks/PerkSearchBox';
 import { cn } from '@/utils/cn';
 
 interface IconToggleButtonProps {
@@ -16,7 +17,7 @@ interface IconToggleButtonProps {
 }
 
 // A toolbar icon with an optional count badge: a ToggleChip, so it matches every other
-// toggle on the site (accent-red tint when active).
+// toggle on the site (accent-red tint when active). It is as tall as the Survivor/Killer toggle beside it.
 export const IconToggleButton: React.FC<IconToggleButtonProps> = ({
   icon,
   label,
@@ -30,9 +31,7 @@ export const IconToggleButton: React.FC<IconToggleButtonProps> = ({
     size="md"
     onClick={onClick}
     aria-label={label}
-    // Takes the height of the row it sits in (the Survivor/Killer toggle beside it), and the same
-    // horizontal padding as that toggle's options.
-    className={cn('min-w-hit self-stretch px-2 py-0 sm:min-w-11 sm:px-3 wide:px-4 pointer-coarse:min-w-11', className)}
+    className={cn('min-w-hit px-2.5 sm:min-w-11 pointer-coarse:min-w-11', CONTROL_H, className)}
   >
     {icon}
     {badge !== undefined && <span className="type-strong">{badge}</span>}

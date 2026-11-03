@@ -29,7 +29,7 @@ export { TargetIcon } from './dbd/TargetIcon';
 export { MapIcon } from './dbd/MapIcon';
 export { MaskIcon } from './dbd/MaskIcon';
 export { ClapperboardIcon } from './dbd/ClapperboardIcon';
-export { WheelIcon } from './dbd/WheelIcon';
+export { CurseIcon } from './dbd/CurseIcon';
 export { EntityMarkIcon } from './dbd/EntityMarkIcon';
 export { FogDriftIcon } from './dbd/FogDriftIcon';
 export { HeartbeatIcon } from './dbd/HeartbeatIcon';

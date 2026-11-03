@@ -10,9 +10,8 @@ import type { ChaosMutator } from '@/types/chaos';
 import { pickRandomLoadout, buildDrawnSlots } from '../lib/perkPicker';
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
-import { useJackpotCelebration } from '../shared/useJackpotCelebration';
 import { StageIdleColumn, StagePrompt } from '../shared/StageIdle';
-import { playReelThud } from '@/utils/perkAudio';
+import { playFanfare, playReelThud } from '@/utils/perkAudio';
 import { useDictionary } from "@/context/DictionaryContext";
 
 export interface InstantStageProps {
@@ -54,8 +53,6 @@ export const InstantStage: React.FC<InstantStageProps> = ({
   const dict = useDictionary();
   const [revealSlots, setRevealSlots] = useState<(DrawnSlot | null)[]>(() => [0, 1, 2, 3].map((i) => initialSlots?.[i] ?? null));
   const stopTimeoutsRef = useRef<(NodeJS.Timeout | number)[]>([]);
-  const resultsRef = useRef<HTMLDivElement | null>(null);
-  const { celebrate } = useJackpotCelebration();
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
@@ -90,7 +87,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
     onLoadoutComplete?.();
 
     const finalTimeoutId = window.setTimeout(() => {
-      celebrate();
+      playFanfare();
     }, slots.length * 150 + 200);
     stopTimeoutsRef.current.push(finalTimeoutId);
   };
@@ -114,7 +111,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
           empty and filled slots share the exact same footprint, so rolling
           never changes the stage's height (no jump, no reserved dead
           space when idle either). */}
-      <div ref={resultsRef} className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5 lg:grid-cols-4 xl:gap-6 2xl:gap-8 wide:gap-10 wide-2k:gap-12 wide-4k:gap-16">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5 lg:grid-cols-4 xl:gap-6 2xl:gap-8 wide:gap-10 wide-2k:gap-12 wide-4k:gap-16">
         {revealSlots.map((slot, i) => {
           const { isObscured, onClick } = getSlotInteraction(
             i,

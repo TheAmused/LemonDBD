@@ -45,7 +45,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
   const machine = useSlotMachine({ activePlayablePerks, activeMutator, onRollComplete, onLoadoutComplete, initialSlots });
   const {
     phase, reels, spinningIds, staged, cycleIndex, selected, cellPx, isMobile,
-    reelAreaRef, resultsRef, canConfirm, confirmHint,
+    reelAreaRef, canConfirm, confirmHint,
     handleReelTransitionEnd, handlePullLever, toggleStage, handleConfirm, handleReset,
   } = machine;
 
@@ -140,7 +140,6 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
           onRevealSlot={onRevealSlot}
           onSelectPerk={onSelectPerk}
           isBlind={isBlind}
-          resultsRef={resultsRef}
           onReset={handleReset}
         />
       )}

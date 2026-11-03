@@ -163,6 +163,7 @@ export default {
   blindModeTooltipTitle: "Blindmodus",
   blindModeTooltipDesc: "Verbirgt jedes Perk-Symbol dauerhaft hinter einem '?'. Sieh im Spiel die Seiten- und Slot-Nummer nach, um zu erfahren, was du gezogen hast.",
   chaosMutatorTooltipDesc: "Drehe für einen zufälligen Fluch oder Segen der Prüfung, der dieses Perk-Set verändert.",
+  coordinateLegendIcon: "S/S",
   coordinateLegendTooltip: "Was S/S bedeutet",
   coordinateLegendTooltipTitle: "Seite / Slot",
   coordinateLegendTooltipDesc: "Jeder Perk zeigt, wo du ihn in deinem Inventar im Spiel findest. Die erste Zahl ist die Seite, die zweite der Slot auf dieser Seite: [S3/S7] bedeutet Seite 3, Slot 7.",

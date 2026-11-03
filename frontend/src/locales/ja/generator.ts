@@ -163,6 +163,7 @@ export default {
   blindModeTooltipTitle: "ブラインドモード",
   blindModeTooltipDesc: "すべてのパークアイコンを「？」で常に隠します。ゲーム内でページ番号とスロット番号を確認すると、何を引いたか分かります。",
   chaosMutatorTooltipDesc: "回してランダムなトライアルの呪いや恩恵を引き、この編成を変化させます。",
+  coordinateLegendIcon: "P/S",
   coordinateLegendTooltip: "P/Sの意味",
   coordinateLegendTooltipTitle: "ページ / スロット",
   coordinateLegendTooltipDesc: "各パークには、ゲーム内の所持アイテムでの場所が表示されます。最初の数字がページ、2番目の数字がそのページ内のスロットです: ［P3 / S7］はページ3、スロット7を意味します。",

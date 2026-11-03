@@ -1,7 +1,6 @@
 'use client';
 // frontend/src/components/generator/modes/slot-machine/SlotMachineComplete.tsx
 import React from 'react';
-import type { RefObject } from 'react';
 import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import type { ChaosMutator } from '@/types/chaos';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -17,7 +16,6 @@ interface SlotMachineCompleteProps {
   onRevealSlot: (idx: number) => void;
   onSelectPerk: (perk: Perk) => void;
   isBlind: boolean;
-  resultsRef: RefObject<HTMLDivElement | null>;
   onReset: () => void;
 }
 
@@ -30,7 +28,6 @@ export function SlotMachineComplete({
   onRevealSlot,
   onSelectPerk,
   isBlind,
-  resultsRef,
   onReset,
 }: SlotMachineCompleteProps) {
   const dict = useDictionary();
@@ -40,7 +37,7 @@ export function SlotMachineComplete({
       <p className="text-sm font-bold text-text-secondary text-center sm:text-base">
         {dict.generator.scatterComplete}
       </p>
-      <div ref={resultsRef} className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {selected.map((slot, idx) => {
           const { isObscured, onClick } = getSlotInteraction(
             idx,

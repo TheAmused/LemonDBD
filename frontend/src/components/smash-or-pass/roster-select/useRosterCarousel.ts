@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useEffectEvent, useMemo, useRef, useStat
 import type { RosterItem } from '@/types/smashOrPass';
 import { SmashSounds } from '../SmashSoundEffects';
 import { safeGetItem } from '@/utils/safeStorage';
+import { carouselOffset, tieSideOf } from './rosterDisplay';
 
 const STORAGE_KEY = 'dbd_smash_selected_roster';
 
@@ -79,6 +80,8 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
     [N]
   );
 
+  // The tick is played here, once, as the carousel passes each roster (a drag ticks the same way), so a
+  // step or a jump must not play its own on top.
   const animateTo = useCallback(
     (target: number, duration = 420) => {
       aimAt(target);
@@ -192,7 +195,6 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
       }
       if (N <= 1) return;
       const newTarget = Math.round(targetIndexRef.current) - 1;
-      SmashSounds.playHoverTick();
       animateTo(newTarget, 420);
     },
     [animateTo, N]
@@ -206,7 +208,6 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
       }
       if (N <= 1) return;
       const newTarget = Math.round(targetIndexRef.current) + 1;
-      SmashSounds.playHoverTick();
       animateTo(newTarget, 420);
     },
     [animateTo, N]
@@ -342,26 +343,28 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
   const jumpBy = useCallback(
     (visualOffset: number) => {
       animateTo(Math.round(targetIndexRef.current + visualOffset), 420);
-      SmashSounds.playHoverTick();
     },
     [animateTo]
   );
+
+  // The card opposite the centre (the other of two) stays on the side it was last seen on while moving,
+  // so it does not jump across when the carousel comes to rest.
+  const [tieSide, setTieSide] = useState<1 | -1>(1);
+  const movingSide = tieSideOf(visualIndex);
+  if (movingSide !== 0 && movingSide !== tieSide) setTieSide(movingSide);
 
   const visibleCards = useMemo(() => {
     if (N === 0) return [];
 
     return displayedRosters
-      .map((roster, i) => {
-        const diff = ((i - visualIndex) % N + N * 1.5) % N - (N / 2);
-        return {
-          roster,
-          rosterIdx: i,
-          keyId: roster.slug,
-          visualOffset: diff,
-        };
-      })
+      .map((roster, i) => ({
+        roster,
+        rosterIdx: i,
+        keyId: roster.slug,
+        visualOffset: carouselOffset(i, visualIndex, N, tieSide),
+      }))
       .sort((a, b) => Math.abs(b.visualOffset) - Math.abs(a.visualOffset));
-  }, [N, visualIndex, displayedRosters]);
+  }, [N, visualIndex, displayedRosters, tieSide]);
 
   const activeRosterInCenter = N > 0 ? displayedRosters[normalizeIndex(targetIndex)] : null;
 

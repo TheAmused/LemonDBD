@@ -13,6 +13,7 @@ import {
 import { useDictionary } from '@/context/DictionaryContext';
 import type { RosterItem } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { isLocalRosterSlug } from '@/utils/smashOrPass/rosterSlug';
 import { rosterCoverUrl } from '../roster-select/rosterDisplay';
 import { Badge } from '@/components/common/Badge';
 import { MenuItem } from '@/components/common/MenuItem';
@@ -96,6 +97,8 @@ export function HubHeader({
   const dict = useDictionary();
   const tooltips = dict.smashOrPass.tooltips;
   const hudLabels = dict.smashOrPass.hud;
+  // Custom rosters live in this browser only, so they have no Hall of Fame.
+  const hasLeaderboard = !isLocalRosterSlug(activeRoster.slug);
 
   const moreRef = useRef<HTMLButtonElement>(null);
   const [moreOpen, setMoreOpen] = useState(false);
@@ -206,16 +209,18 @@ export function HubHeader({
               <User className="icon-lg" aria-hidden="true" />
             </DockAction>
 
-            {/* Hall of Fame leaderboard */}
-            <DockAction
-              title={dict.smashOrPass.modals.leaderboardTitle}
-              description={tooltips.leaderboardDesc}
-              ariaLabel={tooltips.leaderboard}
-              variant="secondary"
-              onClick={onOpenLeaderboard}
-            >
-              <BarChart2 className="icon-lg" aria-hidden="true" />
-            </DockAction>
+            {/* Hall of Fame leaderboard (official rosters only) */}
+            {hasLeaderboard && (
+              <DockAction
+                title={dict.smashOrPass.modals.leaderboardTitle}
+                description={tooltips.leaderboardDesc}
+                ariaLabel={tooltips.leaderboard}
+                variant="secondary"
+                onClick={onOpenLeaderboard}
+              >
+                <BarChart2 className="icon-lg" aria-hidden="true" />
+              </DockAction>
+            )}
 
             <DockAction
               title={tooltips.shuffle}

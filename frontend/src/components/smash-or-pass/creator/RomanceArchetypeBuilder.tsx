@@ -2,14 +2,15 @@
 // frontend/src/components/smash-or-pass/creator/RomanceArchetypeBuilder.tsx
 
 import React, { useState } from 'react';
-import { Plus, Trash2, ChevronDown } from 'lucide-react';
+import { Plus, Trash2, ChevronDown, Info } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { formatMessage } from '@/utils/i18nFormat';
 import type { ArchetypeRule, CustomRomanceArchetype } from '@/types/smashOrPass';
 import { LABEL } from './styles';
 import { Checkbox } from '@/components/common/Checkbox';
 import { Button } from '@/components/common/Button';
-import { Input, Select, Textarea } from '@/components/common/Field';
+import { Input, Textarea } from '@/components/common/Field';
+import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
 import { useDictionary } from "@/context/DictionaryContext";
 import { ToggleChip } from '@/components/common/ToggleChip';
 import { Badge } from '@/components/common/Badge';
@@ -28,6 +29,16 @@ const COLOR_PRESETS = [
   { label: 'Deep Cyan', value: 'from-accent-cyan to-bg-primary' },
   { label: 'Obsidian Fog', value: 'from-bg-surface to-bg-primary' },
 ];
+
+const RULE_TARGETS: ArchetypeRule['target'][] = [
+  'smash_rate',
+  'total_votes',
+  'role_affinity',
+  'gender_affinity',
+  'role_count',
+  'gender_count',
+];
+const RULE_OPERATORS: ArchetypeRule['operator'][] = ['>=', '<=', '=='];
 
 /** Smash rate and the affinities are percentages; the totals and counts are plain numbers. */
 const isPercentTarget = (target: ArchetypeRule['target']) => target === 'smash_rate' || target.endsWith('_affinity');
@@ -48,6 +59,18 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
   const ab = dict.smashOrPass.archetypeBuilder;
 
   const [expandedId, setExpandedId] = useState<string | null>(archetypes[0]?.id || null);
+
+  const targetLabels: Record<ArchetypeRule['target'], string> = {
+    smash_rate: ab.smashRate,
+    total_votes: ab.totalVotes,
+    role_affinity: ab.roleAffinity,
+    gender_affinity: ab.genderAffinity,
+    role_count: ab.roleCount,
+    gender_count: ab.genderCount,
+  };
+  const operatorLabels: Partial<Record<ArchetypeRule['operator'], string>> = { '>=': ab.opGte, '<=': ab.opLte, '==': ab.opEq };
+  const targetOptions: DropdownOption<ArchetypeRule['target']>[] = RULE_TARGETS.map((value) => ({ value, label: targetLabels[value] }));
+  const operatorOptions: DropdownOption<ArchetypeRule['operator']>[] = RULE_OPERATORS.map((value) => ({ value, label: operatorLabels[value] ?? value }));
 
   const addArchetype = () => {
     const newArch: CustomRomanceArchetype = {
@@ -108,32 +131,15 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
 
   return (
     <div className={cn(embedded ? 'space-y-4' : 'rounded-card border border-border-color bg-bg-surface p-4 sm:p-6 space-y-4')}>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          {!embedded && (
-            <div className="flex items-center gap-2">
-              <h3 className="text-sm sm:text-base font-black uppercase tracking-wider text-text-primary">
-                {ab.sectionTitle}
-              </h3>
-            </div>
-          )}
-          <p className="type-body text-text-muted mt-0.5">
-            {ab.sectionDesc}
-          </p>
-        </div>
-        <Button
-          variant="secondary" size="md"
-          onClick={addArchetype}
-          className="self-start sm:self-auto"
-        >
-          <Plus />
-          <span>{ab.addArchetype}</span>
-        </Button>
-      </div>
-
-      {archetypes.length > 0 && !archetypes.some((a) => a.is_fallback) && (
-        <p className="type-caption text-text-muted">{ab.noFallbackNote}</p>
+      {!embedded && (
+        <h3 className="text-sm sm:text-base font-black uppercase tracking-wider text-text-primary">
+          {ab.sectionTitle}
+        </h3>
       )}
+      <Surface tone="elevated" padding="none" className="flex items-start gap-2.5 p-3 bg-bg-elevated/50">
+        <Info className="mt-0.5 icon-md shrink-0 text-accent-amber" aria-hidden="true" />
+        <p className="type-body text-text-secondary">{ab.sectionDesc}</p>
+      </Surface>
 
       {archetypes.length === 0 ? (
         <EmptyState variant="compact" title={ab.noArchetypes} />
@@ -263,7 +269,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                           const custom = parseCustomGradient(arch.badge_color);
                           return custom ? (
                             <div className="flex flex-wrap items-start gap-x-6 gap-y-3">
-                              <div className="flex flex-wrap items-center gap-2">
+                              <div className="flex min-w-56 flex-1 flex-wrap items-center gap-2">
                                 <span className="type-strong-xs text-text-secondary">{ab.gradientFrom}</span>
                                 <TierColorPicker
                                   size="sm"
@@ -271,7 +277,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                                   onChange={(hex) => updateArchetype(arch.id, { badge_color: encodeCustomGradient({ ...custom, from: hex }) })}
                                 />
                               </div>
-                              <div className="flex flex-wrap items-center gap-2">
+                              <div className="flex min-w-56 flex-1 flex-wrap items-center gap-2">
                                 <span className="type-strong-xs text-text-secondary">{ab.gradientTo}</span>
                                 <TierColorPicker
                                   size="sm"
@@ -299,6 +305,9 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                       >
                         {ab.markAsFallback}
                       </Checkbox>
+                      {!archetypes.some((a) => a.is_fallback) && (
+                        <p className="type-caption text-text-muted">{ab.noFallbackNote}</p>
+                      )}
                     </div>
 
                     {/* Rule Engine Conditions */}
@@ -323,23 +332,18 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                           key={rIdx}
                           className="flex flex-wrap items-center gap-2 py-2.5 text-xs"
                         >
-                          <Select
-                            fieldSize="sm"
+                          <CustomDropdown<ArchetypeRule['target']>
+                            accent="primary"
+                            ariaLabel={ab.rulesTitle}
                             value={rule.target}
-                            onChange={(e) => {
+                            options={targetOptions}
+                            minWidthClass="min-w-48"
+                            buttonClassName="min-h-9"
+                            onChange={(target) => {
                               // A switch from a count (say 500 votes) to a percentage re-caps the value, so the rule can still match.
-                              const target = e.target.value as ArchetypeRule['target'];
                               updateRule(arch.id, rIdx, { target, value: capRuleValue(target, rule.value) });
                             }}
-                            className="w-auto font-bold"
-                          >
-                            <option value="smash_rate">{ab.smashRate}</option>
-                            <option value="total_votes">{ab.totalVotes}</option>
-                            <option value="role_affinity">{ab.roleAffinity}</option>
-                            <option value="gender_affinity">{ab.genderAffinity}</option>
-                            <option value="role_count">{ab.roleCount}</option>
-                            <option value="gender_count">{ab.genderCount}</option>
-                          </Select>
+                          />
 
                           {(rule.target === 'role_affinity' || rule.target === 'role_count') && (
                             <Input
@@ -374,20 +378,15 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                             ))}
                           </datalist>
 
-                          <Select
-                            fieldSize="sm"
+                          <CustomDropdown<ArchetypeRule['operator']>
+                            accent="primary"
+                            ariaLabel={ab.rulesTitle}
                             value={rule.operator}
-                            onChange={(e) =>
-                              updateRule(arch.id, rIdx, {
-                                operator: e.target.value as ArchetypeRule['operator'],
-                              })
-                            }
-                            className="w-auto font-bold"
-                          >
-                            <option value=">=">{ab.opGte}</option>
-                            <option value="<=">{ab.opLte}</option>
-                            <option value="==">{ab.opEq}</option>
-                          </Select>
+                            options={operatorOptions}
+                            minWidthClass="min-w-36"
+                            buttonClassName="min-h-9"
+                            onChange={(operator) => updateRule(arch.id, rIdx, { operator })}
+                          />
 
                           <Input
                             fieldSize="sm"
@@ -421,6 +420,13 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
           })}
         </div>
       )}
+
+      <div className="flex justify-center pt-1">
+        <Button variant="secondary" size="md" onClick={addArchetype}>
+          <Plus />
+          <span>{ab.addArchetype}</span>
+        </Button>
+      </div>
     </div>
   );
 }

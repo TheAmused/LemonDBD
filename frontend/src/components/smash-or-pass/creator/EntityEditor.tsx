@@ -269,14 +269,14 @@ export function CandidateFormInputs({
               placeholder={c.quotePlaceholder}
             />
             <TextField
-              label={`${customLabels.turn_on || c.entityTurnOnLabel} (Optional)`}
+              label={customLabels.turn_on || c.entityTurnOnLabel}
               value={entity.turn_on}
               max={SMASH_ROSTER_LIMITS.maxTurnOn}
               onChange={(v) => onChange({ turn_on: v })}
               placeholder={c.turnOnPlaceholder}
             />
             <TextField
-              label={`${customLabels.dealbreaker || c.entityDealbreakerLabel} (Optional)`}
+              label={customLabels.dealbreaker || c.entityDealbreakerLabel}
               value={entity.dealbreaker}
               max={SMASH_ROSTER_LIMITS.maxDealbreaker}
               onChange={(v) => onChange({ dealbreaker: v })}

@@ -359,6 +359,7 @@ export default {
     coverImageLabel: 'カバー画像URL',
     coverImagePlaceholder: 'https://...',
     themeColorLabel: 'テーマカラー',
+    themeColorHint: '2色でグラデーションになります。このリストのカードの縁に使われます。',
     categoryLabel: 'カテゴリー',
     categoryPlaceholder: '例：カスタム',
     nsfwLabel: 'NSFWコンテンツを含む',

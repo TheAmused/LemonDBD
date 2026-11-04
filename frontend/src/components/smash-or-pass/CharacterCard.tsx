@@ -25,6 +25,7 @@ import { withAlpha } from '@/utils/themeColor';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
 import { isLocalRosterSlug } from '@/utils/smashOrPass/rosterSlug';
 import { candidatePlaceholderPath } from '@/utils/smashOrPass/placeholderArt';
+import { themedEdgeStyle } from '@/utils/smashOrPass/badgeGradient';
 
 const ZoomCloseButton: React.FC<{ label: string }> = ({ label }) => {
   const { close } = useModal();
@@ -57,6 +58,8 @@ interface CharacterCardProps {
   rosterMode?: 'simple' | 'full';
   /** The roster's `portrait_offset_y`: how far down the portrait is shifted, in pixels. */
   portraitOffsetY?: number;
+  /** The roster's `theme_color`: a gradient one paints the card's edge. */
+  themeColor?: string;
   /** False when the viewer switched effects off: no fling, tilt or particle burst; the card fades out gently instead. */
   effects?: boolean;
 }
@@ -73,6 +76,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
       customLabels,
       rosterMode = 'full',
       portraitOffsetY = 0,
+      themeColor,
       effects = true,
     }) => {
   const dict = useDictionary();
@@ -215,6 +219,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
           {/* FRONT FACE */}
           <div
             style={{
+              ...themedEdgeStyle(themeColor, 'var(--bg-primary)'),
               pointerEvents: isFlipped ? 'none' : 'auto',
               visibility: isFlipped ? 'hidden' : 'visible',
               boxShadow: isSmashDrag
@@ -336,6 +341,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             isFlipped={isFlipped}
             customLabels={customLabels}
             rosterMode={rosterMode}
+            themeColor={themeColor}
             greenFlags={sampledGreenFlags}
             redFlags={sampledRedFlags}
             onFlip={() => {

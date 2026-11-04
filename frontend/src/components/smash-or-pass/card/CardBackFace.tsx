@@ -1,5 +1,6 @@
 'use client';
 // frontend/src/components/smash-or-pass/card/CardBackFace.tsx
+import { themedEdgeStyle } from '@/utils/smashOrPass/badgeGradient';
 import { HeartIcon, PassIcon, CardFlipIcon } from '@/components/icons/DbdIcons';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
@@ -17,6 +18,8 @@ interface CardBackFaceProps {
   customLabels?: RosterCustomLabels;
   rosterMode?: 'simple' | 'full';
   /** The green / red flags to list, already picked by the card (see `sampleFlags`). */
+  /** The roster's `theme_color`: a gradient one paints the card's edge. */
+  themeColor?: string;
   greenFlags?: string[];
   redFlags?: string[];
   onFlip: () => void;
@@ -30,6 +33,7 @@ export function CardBackFace({
   isFlipped,
   customLabels,
   rosterMode = 'full',
+  themeColor,
   greenFlags = [],
   redFlags = [],
   onFlip,
@@ -51,6 +55,7 @@ export function CardBackFace({
   return (
     <div
       style={{
+        ...themedEdgeStyle(themeColor, 'var(--bg-primary)'),
         pointerEvents: isFlipped ? 'auto' : 'none',
         visibility: isFlipped ? 'visible' : 'hidden',
       }}

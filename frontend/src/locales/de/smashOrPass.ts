@@ -359,6 +359,7 @@ export default {
     coverImageLabel: 'Titelbild-URL',
     coverImagePlaceholder: 'https://...',
     themeColorLabel: 'Akzentfarbe',
+    themeColorHint: 'Zwei Farben ergeben einen Verlauf. Die Karten dieser Liste bekommen ihn als Rand.',
     categoryLabel: 'Kategorie',
     categoryPlaceholder: 'z.B. Benutzerdefiniert',
     nsfwLabel: 'Enthält NSFW-Inhalte',

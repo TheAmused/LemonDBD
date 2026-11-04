@@ -130,10 +130,10 @@ def seed_smash_rosters():
 
 
 def ensure_roster_assets(static_dir: Path | None = None) -> None:
-    """Ensures roster covers and special cosmetic avatars exist in static avatars dir."""
+    """Notes (at debug level) when the roster covers directory is missing."""
     if static_dir is None:
         static_dir = Path(__file__).resolve().parent.parent / "static"
-    rosters_dir = static_dir / "avatars" / "rosters"
+    rosters_dir = static_dir / "smash-or-pass" / "covers"
     if not rosters_dir.exists():
         logger.debug(f"[smash_seeder] Roster assets directory notice: {rosters_dir} not found")
 

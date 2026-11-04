@@ -25,7 +25,7 @@
           "description": "象徴的なクロスオーバーレジェンドと特別スキン。"
         }
       },
-      "cover_image_url": "/static/avatars/rosters/legendary_characters.webp",
+      "cover_image_url": "/static/smash-or-pass/covers/legendary_characters.webp",
       "theme_color": "#ffd166",
       "category": "Collabs",
       "is_nsfw": false,

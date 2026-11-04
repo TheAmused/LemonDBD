@@ -4,6 +4,7 @@
 // the card is dragged, and the burst after a vote. InteractiveDragBackground owns the canvas, the
 // resize listener and the animation loop; this module only builds and draws the scene.
 import { themeColor, paletteColor, withAlpha } from '@/utils/themeColor';
+import { drawGlowHeart } from './glowHeart';
 
 export type DragAction = 'smash' | 'pass' | 'super_smash';
 
@@ -40,7 +41,16 @@ export interface DragState {
   showEmbers: boolean;
 }
 
+/** Theme colours the per-frame drawing needs, read once with the scene instead of once per particle per frame. */
+interface SceneColors {
+  outline: string;
+  crack: string;
+  shard: string;
+  shardEdge: string;
+}
+
 interface Scene {
+  colors: SceneColors;
   embers: Particle[];
   smashHearts: Particle[];
   sadParticles: Particle[];
@@ -100,7 +110,14 @@ export function createScene(width: number, height: number): Scene {
     rotationSpeed: (Math.random() - 0.5) * 0.02,
   }));
 
-  return { embers, smashHearts, sadParticles, burstParticles: [], pinkPalette };
+  const colors: SceneColors = {
+    outline: themeColor('--bg-primary'),
+    crack: themeColor('--bg-elevated'),
+    shard: themeColor('--bg-primary'),
+    shardEdge: paletteColor('zinc-600'),
+  };
+
+  return { colors, embers, smashHearts, sadParticles, burstParticles: [], pinkPalette };
 }
 
 /** Adds the burst a vote of `action` sets off at the centre of the canvas. */
@@ -143,6 +160,27 @@ export function spawnActionBurst(scene: Scene, action: DragAction, centerX: numb
   }
 }
 
+/**
+ * The vote burst to spawn this frame, and the vote key now handled. A vote that arrives while its
+ * action is off (effects switched off) is still marked handled, so switching effects back on does
+ * not replay the last vote.
+ */
+export function nextBurst(state: Pick<DragState, 'actionTrigger' | 'triggerKey'>, handledKey: number): { handledKey: number; action: DragAction | null } {
+  if (state.triggerKey === handledKey) return { handledKey, action: null };
+  return { handledKey: state.triggerKey, action: state.actionTrigger };
+}
+
+/**
+ * True when a frame would draw nothing and the next one would not either: no embers, no vote burst,
+ * no drag, and every intensity settled at zero. The loop stops there until something moves again.
+ */
+export function isSceneIdle(scene: Pick<Scene, 'burstParticles'>, state: DragState): boolean {
+  if (state.showEmbers || state.isDragging || scene.burstParticles.length > 0) return false;
+  const dragIsOff = Math.abs(state.dragX) <= 20 && state.dragY >= -30;
+  const settled = state.smashIntensity < 0.01 && state.passIntensity < 0.01 && state.superIntensity < 0.01;
+  return dragIsOff && settled;
+}
+
 /** Eases each intensity towards what the current drag asks for. */
 export function updateIntensities(state: DragState): void {
   const targetSmash = state.dragX > 20 ? Math.min(1, (state.dragX - 20) / 75) : 0;
@@ -153,30 +191,9 @@ export function updateIntensities(state: DragState): void {
   state.superIntensity += (targetSuper - state.superIntensity) * 0.12;
 }
 
-function drawHeart(
-  context: CanvasRenderingContext2D,
-  x: number,
-  y: number,
-  size: number,
-  color: string,
-  alpha: number,
-  rotation: number
-) {
-  context.save();
-  context.translate(x, y);
-  context.rotate(rotation);
-  context.scale(size / 20, size / 20);
-  context.globalAlpha = Math.max(0, Math.min(1, alpha));
-  context.fillStyle = color;
-  context.shadowColor = color;
-  context.shadowBlur = 10;
-
-  context.beginPath();
-  context.moveTo(0, 0);
-  context.bezierCurveTo(-10, -10, -20, 5, 0, 20);
-  context.bezierCurveTo(20, 5, 10, -10, 0, 0);
-  context.fill();
-  context.restore();
+/** The neon heart: the glow is part of a cached sprite, not a shadow blur per heart per frame. */
+function drawHeart(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string, alpha: number, rotation: number) {
+  drawGlowHeart(ctx, x, y, size, color, alpha, rotation, 10);
 }
 
 function drawBrokenHeart(
@@ -186,7 +203,8 @@ function drawBrokenHeart(
   size: number,
   color: string,
   alpha: number,
-  rotation: number
+  rotation: number,
+  colors: SceneColors
 ) {
   context.save();
   context.translate(x, y);
@@ -194,7 +212,7 @@ function drawBrokenHeart(
   context.scale(size / 20, size / 20);
   context.globalAlpha = Math.max(0, Math.min(1, alpha));
   context.fillStyle = color;
-  context.strokeStyle = themeColor('--bg-primary');
+  context.strokeStyle = colors.outline;
   context.lineWidth = 2;
 
   context.beginPath();
@@ -205,7 +223,7 @@ function drawBrokenHeart(
   context.stroke();
 
   // Jagged crack down center
-  context.strokeStyle = themeColor('--bg-elevated');
+  context.strokeStyle = colors.crack;
   context.beginPath();
   context.moveTo(0, -5);
   context.lineTo(-2, 4);
@@ -216,13 +234,13 @@ function drawBrokenHeart(
   context.restore();
 }
 
-function drawShard(ctx: CanvasRenderingContext2D, p: Particle, alpha: number) {
+function drawShard(ctx: CanvasRenderingContext2D, p: Particle, alpha: number, colors: SceneColors) {
   ctx.save();
   ctx.translate(p.x, p.y);
   ctx.rotate(p.rotation);
   ctx.globalAlpha = alpha;
-  ctx.fillStyle = themeColor('--bg-primary');
-  ctx.strokeStyle = paletteColor('zinc-600');
+  ctx.fillStyle = colors.shard;
+  ctx.strokeStyle = colors.shardEdge;
   ctx.lineWidth = 1.5;
   ctx.beginPath();
   ctx.moveTo(-p.size / 2, -p.size / 2);
@@ -294,12 +312,12 @@ function drawDragRain(ctx: CanvasRenderingContext2D, scene: Scene, state: DragSt
         s.y = -30;
         s.x = Math.random() * width + 50;
       }
-      drawBrokenHeart(ctx, s.x, s.y, s.size, s.color, s.baseAlpha * state.passIntensity, s.rotation);
+      drawBrokenHeart(ctx, s.x, s.y, s.size, s.color, s.baseAlpha * state.passIntensity, s.rotation, scene.colors);
     }
   }
 }
 
-function drawBurst(ctx: CanvasRenderingContext2D, burst: Particle[]) {
+function drawBurst(ctx: CanvasRenderingContext2D, burst: Particle[], colors: SceneColors) {
   for (let i = burst.length - 1; i >= 0; i--) {
     const p = burst[i];
     p.life = (p.life || 0) + 1;
@@ -313,7 +331,7 @@ function drawBurst(ctx: CanvasRenderingContext2D, burst: Particle[]) {
     if (p.type === 'heart') {
       drawHeart(ctx, p.x, p.y, p.size * (1 + progress * 0.5), p.color, alpha, p.rotation);
     } else if (p.type === 'shattered_shard') {
-      drawShard(ctx, p, alpha);
+      drawShard(ctx, p, alpha, colors);
     }
 
     if (p.life >= (p.maxLife || 60)) {
@@ -328,5 +346,5 @@ export function drawScene(ctx: CanvasRenderingContext2D, scene: Scene, state: Dr
   drawAmbientGlow(ctx, state, width, height);
   if (state.showEmbers) drawEmbers(ctx, scene.embers, width, height);
   drawDragRain(ctx, scene, state, width, height);
-  drawBurst(ctx, scene.burstParticles);
+  drawBurst(ctx, scene.burstParticles, scene.colors);
 }

@@ -13,7 +13,7 @@
           "description": "Neonowe ulepszenia i syntetyczni zabójcy."
         }
       },
-      "cover_image_url": "/static/avatars/rosters/cyberpunk.webp",
+      "cover_image_url": "/static/smash-or-pass/covers/cyberpunk.webp",
       "theme_color": "#00f5d4",
       "category": "Cyberpunk",
       "is_nsfw": false,

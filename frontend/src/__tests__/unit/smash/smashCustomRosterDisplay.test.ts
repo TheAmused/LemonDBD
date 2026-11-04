@@ -47,6 +47,12 @@ describe('stand-in pictures', () => {
     assert.ok(!url.includes('sable_ward'));
     assert.equal(rosterCoverUrl({ ...base, cover_image_url: 'https://example.com/a.webp' }), 'https://example.com/a.webp');
   });
+
+  it('a server roster without a cover gets a stand-in cover too, and one with a cover keeps it', () => {
+    const base = { slug: 'fan_pack', name: 'Fan pack', theme_color: '#112233' } as RosterItem;
+    assert.ok(rosterCoverUrl({ ...base, cover_image_url: null }).endsWith(coverPlaceholderPath('fan_pack')));
+    assert.ok(rosterCoverUrl({ ...base, cover_image_url: '/static/smash-or-pass/covers/canon.webp' }).endsWith('/static/smash-or-pass/covers/canon.webp'));
+  });
 });
 
 describe('role and gender wording', () => {

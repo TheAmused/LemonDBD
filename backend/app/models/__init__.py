@@ -35,7 +35,6 @@ from app.models.smash_or_pass import (
     Entity,
     EntityStat,
     Roster,
-    SmashTaxonomy,
     SmashUserPreference,
     Vote,
 )
@@ -88,7 +87,6 @@ __all__ = [
     "Roster",
     "Entity",
     "EntityStat",
-    "SmashTaxonomy",
     "SmashUserPreference",
     "Vote",
     "BugReport",

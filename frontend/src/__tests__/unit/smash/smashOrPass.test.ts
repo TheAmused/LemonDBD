@@ -132,7 +132,6 @@ test('SmashOrPass: Sound Effects & Web Audio Synthesizer', async (t) => {
     assert.doesNotThrow(() => SmashSounds.playHoverTick());
     assert.doesNotThrow(() => SmashSounds.playSensualHover());
     assert.doesNotThrow(() => SmashSounds.playSadHover());
-    assert.doesNotThrow(() => SmashSounds.playCardGrabSound());
   });
 
   await t.test('SmashSounds plays only what the viewer chose (one switch: the preferences)', () => {

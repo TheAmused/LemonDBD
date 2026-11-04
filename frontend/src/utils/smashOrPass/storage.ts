@@ -38,6 +38,7 @@ import { createRandomId, createVersionedStore, isRecord, readNumber, type SaveRe
 import { sanitizeImageUrl } from './codec';
 import { sanitizeManifest } from '@/utils/shareCodec';
 import { ENTITY_ID_PATTERN, SMASH_ROSTER_LIMITS } from './constants';
+import { canonicalGender } from './terms';
 
 const SMASH_ROSTER_STORAGE_KEY = 'lemondbd_smash_rosters';
 const SMASH_ROSTER_STORE_VERSION = 1 as const;
@@ -63,7 +64,8 @@ function readEntities(raw: unknown): SmashRosterDocumentEntity[] {
       id: e.id,
       name: e.name.slice(0, SMASH_ROSTER_LIMITS.maxEntityName),
       role: typeof e.role === 'string' && e.role ? e.role : 'Survivor',
-      gender: typeof e.gender === 'string' && e.gender ? e.gender : 'female',
+      // Rosters saved before genders were normalised may hold 'Female' or 'Monster'.
+      gender: (typeof e.gender === 'string' && canonicalGender(e.gender)) || 'female',
     };
     const media_url = sanitizeImageUrl(e.media_url);
     if (media_url) entity.media_url = media_url;
@@ -120,7 +122,9 @@ export function migrateSmashRosterState(raw: unknown): SmashRosterStoreState {
         ...(value.is_nsfw === true ? { is_nsfw: true } : {}),
         ...(value.roster_mode === 'simple' ? { roster_mode: 'simple' as const } : { roster_mode: 'full' as const }),
         ...(Array.isArray(value.custom_roles) ? { custom_roles: value.custom_roles as string[] } : {}),
-        ...(Array.isArray(value.custom_genders) ? { custom_genders: value.custom_genders as string[] } : {}),
+        ...(Array.isArray(value.custom_genders)
+          ? { custom_genders: Array.from(new Set((value.custom_genders as string[]).map(canonicalGender).filter(Boolean))) }
+          : {}),
         ...(isRecord(value.custom_labels) ? { custom_labels: value.custom_labels as StoredCustomRoster['custom_labels'] } : {}),
         ...(Array.isArray(value.romance_archetypes) ? { romance_archetypes: value.romance_archetypes as StoredCustomRoster['romance_archetypes'] } : {}),
         ...(manifest ? { _manifest: manifest } : {}),

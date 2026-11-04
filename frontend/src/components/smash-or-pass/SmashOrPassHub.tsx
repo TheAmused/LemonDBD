@@ -1,7 +1,6 @@
 'use client';
 // frontend/src/components/smash-or-pass/SmashOrPassHub.tsx
 import React, { Suspense, useCallback, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from '@/context/DictionaryContext';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
@@ -13,6 +12,7 @@ import { HowToPlayModal } from './hub/HowToPlayModal';
 import { HubFilterDrawer } from './hub/HubFilterDrawer';
 import { HubHeader } from './hub/HubHeader';
 import { HubModals } from './hub/HubModals';
+import { HubSettingsModal } from './hub/HubSettingsModal';
 import { RosterModals } from './hub/RosterModals';
 import { FloatingLoreScattered, InteractiveDragBackground, SmashAnimations } from './hub/lazyParts';
 import { useCardExit } from './hub/useCardExit';
@@ -39,7 +39,6 @@ interface SmashOrPassHubProps {
 }
 
 export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' }) => {
-  const router = useRouter();
   const dict = useDictionary();
   const { isAuthenticated } = useAuth();
   const { isConfigured, preferences } = usePreferences();
@@ -162,7 +161,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
           dragY={effectsEnabled ? exit.dragPhysics.y : 0}
           isDragging={effectsEnabled && exit.dragPhysics.isDragging}
           actionTrigger={effectsEnabled ? animTrigger.type : null}
-          triggerKey={effectsEnabled ? animTrigger.key : 0}
+          triggerKey={animTrigger.key}
           isPaused={overlays.areModalsOpen}
           showEmbers={preferences.backgroundAnimation !== 'off'}
         />
@@ -190,6 +189,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
               character={deck.currentCharacter}
               locale={locale}
               customLabels={activeRoster?.custom_labels}
+              themeColor={activeRoster?.theme_color}
             />
           </Suspense>
 
@@ -203,10 +203,9 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
             sessionSmashRate={sessionSmashRate}
             isFilterActive={deck.roleFilter !== 'all' || deck.genderFilter !== 'all'}
             isFilterDrawerOpen={overlays.isFilterDrawerOpen}
-            effectsEnabled={effectsEnabled}
             onOpenRosters={() => overlays.setIsRosterModalOpen(true)}
             onToggleFilters={() => overlays.setIsFilterDrawerOpen((prev) => !prev)}
-            onOpenEffects={() => router.push(`/${locale}/settings`)}
+            onOpenEffects={() => overlays.setIsSettingsOpen(true)}
             onOpenPersona={() => overlays.setIsPersonaOpen(true)}
             onOpenLeaderboard={() => overlays.setIsLeaderboardOpen(true)}
             onShuffle={deck.shuffleDeck}
@@ -287,6 +286,8 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
       />
 
       <RosterModals locale={locale} overlays={overlays} rosters={rosters} />
+
+      <HubSettingsModal isOpen={overlays.isSettingsOpen} onClose={() => overlays.setIsSettingsOpen(false)} />
 
       <PreferencesPromptModal
         isOpen={isPromptOpen}

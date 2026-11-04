@@ -321,7 +321,7 @@
   --container-workspace-xl: 2400px;
   --container-profile: 1700px;
   --container-profile-xl: 2000px;
-  --container-roster-modal: 1600px;
+  --container-roster-modal: 1400px;
   --container-viewport-sm: 80vw;
   --container-viewport-md: 88vw;
   --container-viewport-lg: 96vw;
@@ -428,6 +428,7 @@
 @utility max-h-modal-tall { max-height: 94dvh; }
 @utility h-modal-tall { height: 94dvh; }
 @utility h-modal-panel { height: 88vh; }
+@utility h-modal-roster { height: 84dvh; }
 /* Two lines of text, for a label that may wrap and must not make its row jump. */
 @utility min-h-two-lines { min-height: 2.4em; }
 

@@ -3,7 +3,6 @@
 import React from 'react';
 import { RotateCcw } from 'lucide-react';
 import { Button } from '@/components/common/Button';
-import { Surface } from '@/components/common/Surface';
 import { EmptyState } from '@/components/common/EmptyState';
 import { useDictionary } from '@/context/DictionaryContext';
 
@@ -27,15 +26,15 @@ export function DeckFinished({ sessionSmashes, sessionPasses, onOpenPersona, onR
       className="max-w-md w-full rounded-card border border-accent-red/30 bg-bg-surface p-8 text-center space-y-5 shadow-xl dark:shadow-2xl backdrop-blur-md pointer-events-auto"
     >
       {/* Session Stats Summary */}
-      <div className="grid grid-cols-2 gap-3 py-2">
-        <Surface tone="elevated" padding="none" className="p-4">
+      <div className="grid grid-cols-2 divide-x divide-border-color py-2">
+        <div>
           <span className="type-label-sm text-accent-red">{dict.smashOrPass.smash}</span>
           <p className="text-2xl font-black text-text-primary">{sessionSmashes}</p>
-        </Surface>
-        <Surface tone="elevated" padding="none" className="p-4">
+        </div>
+        <div>
           <span className="type-label-sm text-text-muted">{dict.smashOrPass.pass}</span>
           <p className="text-2xl font-black text-text-primary">{sessionPasses}</p>
-        </Surface>
+        </div>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3 pt-2">

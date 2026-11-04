@@ -130,10 +130,10 @@ def seed_smash_rosters():
 
 
 def ensure_roster_assets(static_dir: Path | None = None) -> None:
-    """Ensures roster covers and special cosmetic avatars exist in static avatars dir."""
+    """Notes (at debug level) when the roster covers directory is missing."""
     if static_dir is None:
         static_dir = Path(__file__).resolve().parent.parent / "static"
-    rosters_dir = static_dir / "avatars" / "rosters"
+    rosters_dir = static_dir / "smash-or-pass" / "covers"
     if not rosters_dir.exists():
         logger.debug(f"[smash_seeder] Roster assets directory notice: {rosters_dir} not found")
 
@@ -158,6 +158,7 @@ def _seed_smash_rosters_impl():
                     category=r_data.get("category", "DBD"),
                     is_nsfw=r_data.get("is_nsfw", False),
                     is_active=r_data.get("is_active", True),
+                    portrait_offset_y=int(r_data.get("portrait_offset_y", 0)),
                 )
                 db.session.add(roster)
                 db.session.flush()
@@ -170,6 +171,7 @@ def _seed_smash_rosters_impl():
                 roster.category = r_data.get("category", "DBD")
                 roster.is_nsfw = r_data.get("is_nsfw", False)
                 roster.is_active = r_data.get("is_active", True)
+                roster.portrait_offset_y = int(r_data.get("portrait_offset_y", 0))
                 db.session.flush()
 
             # 2. Seed / Upsert Entities for this Roster

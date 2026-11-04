@@ -13,9 +13,9 @@ import {
 import { useDictionary } from '@/context/DictionaryContext';
 import type { RosterItem } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { isLocalRosterSlug } from '@/utils/smashOrPass/rosterSlug';
 import { rosterCoverUrl } from '../roster-select/rosterDisplay';
 import { Badge } from '@/components/common/Badge';
-import { Surface } from '@/components/common/Surface';
 import { MenuItem } from '@/components/common/MenuItem';
 import { MotionImg } from '@/components/common/MotionImg';
 
@@ -27,7 +27,7 @@ interface DockActionProps {
   title: string;
   description: string;
   ariaLabel: string;
-  variant: 'soft' | 'secondary' | 'amberSoft';
+  variant: 'soft' | 'secondary';
   onClick: () => void;
   className?: string;
   children: ReactNode;
@@ -61,7 +61,6 @@ interface HubHeaderProps {
   sessionSmashRate: number;
   isFilterActive: boolean;
   isFilterDrawerOpen: boolean;
-  effectsEnabled: boolean;
   onOpenRosters: () => void;
   onToggleFilters: () => void;
   onOpenEffects: () => void;
@@ -85,7 +84,6 @@ export function HubHeader({
   sessionSmashRate,
   isFilterActive,
   isFilterDrawerOpen,
-  effectsEnabled,
   onOpenRosters,
   onToggleFilters,
   onOpenEffects,
@@ -99,6 +97,8 @@ export function HubHeader({
   const dict = useDictionary();
   const tooltips = dict.smashOrPass.tooltips;
   const hudLabels = dict.smashOrPass.hud;
+  // Custom rosters live in this browser only, so they have no Hall of Fame.
+  const hasLeaderboard = !isLocalRosterSlug(activeRoster.slug);
 
   const moreRef = useRef<HTMLButtonElement>(null);
   const [moreOpen, setMoreOpen] = useState(false);
@@ -151,30 +151,30 @@ export function HubHeader({
 
         {/* STATS + ACTIONS: one row from 560px, stacked on phones; dissolves into the main row from 1016px */}
         <div className="flex flex-col @hub-sm/hub:flex-row items-center justify-between gap-2 @hub-sm/hub:gap-3 w-full order-2 @hub-xl/hub:order-none @hub-xl/hub:contents">
-          {/* Live session telemetry capsule */}
+          {/* Live session figures: plain in the banner, set apart by thin vertical rules (no capsule of their own) */}
           <div className="flex items-center justify-center order-2 @hub-sm/hub:order-1 shrink-0">
-            <Surface tone="elevated" padding="none" className="flex items-center gap-2 px-3 py-1.5 text-xs shadow-inner">
+            <div className="flex items-center gap-3 text-xs">
               <span className="flex items-center gap-1.5 text-text-secondary font-bold">
                 <CardStackIcon className="icon-md text-text-secondary" aria-hidden="true" />
                 <span className="type-card-title text-text-primary">{remainingInDeck}</span>
                 <span className="text-mini text-text-muted font-medium">{hudLabels.left}</span>
               </span>
-              <span className="text-border-color">{dict.smashOrPass.pipeSeparator}</span>
+              <span className="h-5 w-px bg-border-color" aria-hidden="true" />
               <span className="flex items-center gap-1.5 text-accent-red type-strong-fluid">
                 <HeartIcon className="icon-md" aria-hidden="true" />
                 <span>{sessionSmashes}</span>
               </span>
-              <span className="text-border-color">{dict.smashOrPass.pipeSeparator}</span>
+              <span className="h-5 w-px bg-border-color" aria-hidden="true" />
               <span className="flex items-center gap-1.5 text-text-muted type-strong-fluid">
                 <PassIcon className="icon-md text-text-muted" aria-hidden="true" />
                 <span>{sessionPasses}</span>
               </span>
-              <span className="text-border-color">{dict.smashOrPass.pipeSeparator}</span>
+              <span className="h-5 w-px bg-border-color" aria-hidden="true" />
               <span className="text-accent-amber font-black text-xs tracking-wide">
                 {sessionSmashRate}
                 {dict.smashOrPass.percentSign}
               </span>
-            </Surface>
+            </div>
           </div>
 
           {/* Action cluster (>=44px touch targets on touch screens) */}
@@ -185,19 +185,15 @@ export function HubHeader({
               ariaLabel={tooltips.filter}
               variant={isFilterDrawerOpen || isFilterActive ? 'soft' : 'secondary'}
               onClick={onToggleFilters}
-              className="relative"
             >
               <SlidersHorizontal className="icon-lg" aria-hidden="true" />
-              {isFilterActive && (
-                <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-accent-red ring-2 ring-bg-surface" />
-              )}
             </DockAction>
 
             <DockAction
               title={dict.smashOrPass.effectsPrefs.button}
               description={dict.smashOrPass.effectsPrefs.buttonDesc}
               ariaLabel={dict.smashOrPass.effectsPrefs.button}
-              variant={effectsEnabled ? 'soft' : 'secondary'}
+              variant="secondary"
               onClick={onOpenEffects}
             >
               <Settings className="icon-lg" aria-hidden="true" />
@@ -207,22 +203,24 @@ export function HubHeader({
               title={dict.smashOrPass.modals.personaTitle}
               description={tooltips.archetypeDesc}
               ariaLabel={tooltips.archetype}
-              variant="soft"
+              variant="secondary"
               onClick={onOpenPersona}
             >
-              <User className="icon-lg text-accent-red" aria-hidden="true" />
+              <User className="icon-lg" aria-hidden="true" />
             </DockAction>
 
-            {/* Hall of Fame leaderboard */}
-            <DockAction
-              title={dict.smashOrPass.modals.leaderboardTitle}
-              description={tooltips.leaderboardDesc}
-              ariaLabel={tooltips.leaderboard}
-              variant="amberSoft"
-              onClick={onOpenLeaderboard}
-            >
-              <BarChart2 className="icon-lg text-accent-amber" aria-hidden="true" />
-            </DockAction>
+            {/* Hall of Fame leaderboard (official rosters only) */}
+            {hasLeaderboard && (
+              <DockAction
+                title={dict.smashOrPass.modals.leaderboardTitle}
+                description={tooltips.leaderboardDesc}
+                ariaLabel={tooltips.leaderboard}
+                variant="secondary"
+                onClick={onOpenLeaderboard}
+              >
+                <BarChart2 className="icon-lg" aria-hidden="true" />
+              </DockAction>
+            )}
 
             <DockAction
               title={tooltips.shuffle}

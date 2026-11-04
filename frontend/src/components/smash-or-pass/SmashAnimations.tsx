@@ -26,6 +26,8 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({ triggerType, t
   const [activeOverlay, setActiveOverlay] = useState<BurstKind | null>(null);
   const [chromaticShift, setChromaticShift] = useState(false);
   const lastTriggerAtRef = useRef(0);
+  // The vote already there when this mounts (effects were just switched on) is old news, not a new vote.
+  const mountedKeyRef = useRef(triggerKey);
 
   const smashLabel = dict.smashOrPass.controls.smash;
   const superSmashLabel =
@@ -33,7 +35,7 @@ export const SmashAnimations: React.FC<SmashAnimationsProps> = ({ triggerType, t
   const passLabel = dict.smashOrPass.controls.pass;
 
   useEffect(() => {
-    if (!triggerType) return;
+    if (!triggerType || triggerKey === mountedKeyRef.current) return;
 
     // Voting fast: the full-screen flash and filter are what make the page stutter, and nobody
     // can read them at this pace anyway -- the lighter burst below is all a swipe gets.

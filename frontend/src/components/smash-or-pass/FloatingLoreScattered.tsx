@@ -11,14 +11,17 @@ import { FitText } from '@/components/common/FitText';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import { isKiller as isKillerRole, isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
+import { themedEdgeStyle } from '@/utils/smashOrPass/badgeGradient';
 
 interface FloatingLoreScatteredProps {
   character: EntityItem | null;
   locale?: string;
   customLabels?: RosterCustomLabels;
+  /** The roster's `theme_color`: a gradient one paints the edge of the four cards. */
+  themeColor?: string;
 }
 
-export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ character, locale = 'en', customLabels }) => {
+export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ character, locale = 'en', customLabels, themeColor }) => {
   const dict = useDictionary();
   const t = dict.smashOrPass;
   if (!character) return null;
@@ -34,13 +37,13 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
   // Defaults for an entity with no profile yet -- localized copy from the dictionary,
   // not data fallbacks; localizedProfile already resolved locale vs. English.
   const charTitle = profile.archetype || (isSurvivor ? t.loreTitleSurvivor : isKiller ? t.loreTitleKiller : character.role);
-  const charTagline = profile.tagline || (isSurvivor ? t.loreTaglineSurvivor : t.loreTaglineKiller);
+  const charTagline = profile.tagline || (isSurvivor ? t.loreTaglineSurvivor : isKiller ? t.loreTaglineKiller : '');
 
   // Quote resolution: profile quote -> known signature quote for this locale -> generic copy.
   const charQuote =
     profile.quote ||
     t.knownQuotes[character.slug] ||
-    formatMessage(isSurvivor ? t.loreQuoteSurvivor : t.loreQuoteKiller, { name: character.name });
+    formatMessage(isKiller ? t.loreQuoteKiller : t.loreQuoteSurvivor, { name: character.name });
 
   // Localized Labels
   const loreLabels = dict.smashOrPass.loreLabels;
@@ -48,6 +51,8 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
   const signatureQuoteLabel = customLabels?.quote || loreLabels.signatureQuote;
   const turnOnLabel = customLabels?.turn_on || loreLabels.turn_on;
   const dealbreakerLabel = customLabels?.dealbreaker || loreLabels.dealbreaker;
+
+  const edgeStyle = themedEdgeStyle(themeColor, 'var(--bg-surface)');
 
   const handleCardHover = () => {
     SmashSounds.playHoverTick();
@@ -105,7 +110,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
           style={{ animationDelay: '80ms' }}
           onMouseEnter={handleCardHover}
         >
-          <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center">
+          <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center" style={edgeStyle}>
             <div
               data-lore-label=""
               className="sr-only @hub-2xl/hub:not-sr-only @hub-2xl/hub:absolute @hub-2xl/hub:top-0 @hub-2xl/hub:-translate-y-1/2 @hub-2xl/hub:left-1/2 @hub-2xl/hub:-translate-x-1/2 @hub-2xl/hub:inline-flex @hub-2xl/hub:items-center @hub-2xl/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-gutter text-accent-red"
@@ -132,7 +137,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
             style={{ animationDelay: '140ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-emerald backdrop-blur-2xl transition-all duration-300 text-center">
+            <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-emerald backdrop-blur-2xl transition-all duration-300 text-center" style={edgeStyle}>
               <div
                 data-lore-label=""
                 className="sr-only @hub-2xl/hub:not-sr-only @hub-2xl/hub:absolute @hub-2xl/hub:top-0 @hub-2xl/hub:-translate-y-1/2 @hub-2xl/hub:left-1/2 @hub-2xl/hub:-translate-x-1/2 @hub-2xl/hub:inline-flex @hub-2xl/hub:items-center @hub-2xl/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-gutter text-accent-green"
@@ -161,7 +166,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
           style={{ animationDelay: '120ms' }}
           onMouseEnter={handleCardHover}
         >
-          <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-amber backdrop-blur-2xl transition-all duration-300 text-center">
+          <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-amber backdrop-blur-2xl transition-all duration-300 text-center" style={edgeStyle}>
             <div
               data-lore-label=""
               className="sr-only @hub-2xl/hub:not-sr-only @hub-2xl/hub:absolute @hub-2xl/hub:top-0 @hub-2xl/hub:-translate-y-1/2 @hub-2xl/hub:left-1/2 @hub-2xl/hub:-translate-x-1/2 @hub-2xl/hub:inline-flex @hub-2xl/hub:items-center @hub-2xl/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-gutter text-accent-amber"
@@ -185,7 +190,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
             style={{ animationDelay: '160ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center">
+            <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center" style={edgeStyle}>
               <div
                 data-lore-label=""
                 className="sr-only @hub-2xl/hub:not-sr-only @hub-2xl/hub:absolute @hub-2xl/hub:top-0 @hub-2xl/hub:-translate-y-1/2 @hub-2xl/hub:left-1/2 @hub-2xl/hub:-translate-x-1/2 @hub-2xl/hub:inline-flex @hub-2xl/hub:items-center @hub-2xl/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-gutter text-accent-red"

@@ -43,6 +43,8 @@ import {
   uniqueId,
 } from '@/utils/shareCodec';
 import { ENTITY_ID_PATTERN, SHARE_HASH_PARAM, SMASH_ROSTER_LIMITS } from './constants';
+import { isValidBadgeColor } from './badgeGradient';
+import { canonicalGender } from './terms';
 export type SmashRosterErrorCode =
   | 'invalidJson'
   | 'notAnObject'
@@ -110,7 +112,8 @@ function sanitizeEntity(
   taken.add(id);
 
   const role = cleanText(entry.role, SMASH_ROSTER_LIMITS.maxRoleOrGender, counter) || 'Survivor';
-  const gender = cleanText(entry.gender, SMASH_ROSTER_LIMITS.maxRoleOrGender, counter) || 'female';
+  // Stored the way the official rosters store it, so the filters and personas treat both alike.
+  const gender = canonicalGender(cleanText(entry.gender, SMASH_ROSTER_LIMITS.maxRoleOrGender, counter)) || 'female';
 
   const rawMedia = entry.media_url ?? entry.media ?? entry.image_url ?? entry.image;
   const media_url = sanitizeImageUrl(rawMedia) ?? undefined;
@@ -239,9 +242,8 @@ function sanitizeRomanceArchetypes(raw: unknown): CustomRomanceArchetype[] | und
     const id = cleanText(item.id, 64) || slugifyEntityId(title);
     const subtitle = cleanText(item.subtitle, 200);
     const description = cleanText(item.description, 2000);
-    const badge_color = cleanText(item.badge_color, 64) || 'from-accent-red to-bg-primary';
-    const icon_name = cleanText(item.icon_name, 32);
-    const icon_url = sanitizeImageUrl(item.icon_url) || undefined;
+    const rawBadgeColor = cleanText(item.badge_color, 64);
+    const badge_color = rawBadgeColor && isValidBadgeColor(rawBadgeColor) ? rawBadgeColor : 'from-accent-red to-bg-primary';
     const badge_image_url = sanitizeImageUrl(item.badge_image_url) || undefined;
     const is_fallback = item.is_fallback === true;
 
@@ -272,8 +274,6 @@ function sanitizeRomanceArchetypes(raw: unknown): CustomRomanceArchetype[] | und
       subtitle,
       description,
       badge_color,
-      ...(icon_name ? { icon_name } : {}),
-      ...(icon_url ? { icon_url } : {}),
       ...(badge_image_url ? { badge_image_url } : {}),
       ...(is_fallback ? { is_fallback: true } : {}),
       rules,
@@ -314,7 +314,9 @@ export function validateSmashRosterDocument(input: unknown): SmashRosterParseRes
   const is_nsfw = input.is_nsfw === true;
   const roster_mode = input.roster_mode === 'simple' ? 'simple' : 'full';
   const custom_roles = sanitizeStringList(input.custom_roles);
-  const custom_genders = sanitizeStringList(input.custom_genders);
+  const custom_genders = sanitizeStringList(
+    Array.isArray(input.custom_genders) ? input.custom_genders.map((g) => (typeof g === 'string' ? canonicalGender(g) : g)) : input.custom_genders
+  );
   const custom_labels = sanitizeCustomLabels(input.custom_labels);
   const romance_archetypes = sanitizeRomanceArchetypes(input.romance_archetypes);
   const manifest = sanitizeManifest(input._manifest);

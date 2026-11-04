@@ -23,7 +23,6 @@ import { PersonaBreakdown } from './persona/PersonaBreakdown';
 import { PersonaShareView } from './persona/PersonaShareView';
 import { buildSocialLinks } from './persona/socialLinks';
 import { trackEvent } from '@/utils/analytics';
-import { Surface } from '@/components/common/Surface';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface PersonaArchetypeEntry {
@@ -180,10 +179,8 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
       <div className="p-4 sm:p-6 space-y-5">
         {!hasVotes ? (
           /* Sleek, Non-Repetitive Empty State (Untapped Soul) */
-          <Surface tone="elevated" padding="lg" className="flex flex-col items-center justify-center text-center space-y-4 shadow-inner">
-            <Surface padding="none" className="flex h-16 w-16 items-center justify-center text-accent-red">
-              <Compass className="h-8 w-8 text-accent-red" />
-            </Surface>
+          <div className="flex flex-col items-center justify-center text-center space-y-4 py-4 sm:py-8">
+            <Compass className="h-12 w-12 text-accent-red" aria-hidden="true" />
 
             <div className="space-y-1.5 max-w-sm">
               <h3 className="type-page-title text-text-primary">
@@ -205,7 +202,7 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
               <span>{rawSmash.startVoting}</span>
               <ArrowRight />
             </Button>
-          </Surface>
+          </div>
         ) : isSharingView ? (
           <PersonaShareView
             persona={persona}
@@ -214,7 +211,6 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
             feedbackNotice={feedbackNotice}
             copiedLink={copiedLink}
             onCopyLink={() => { void handleCopyLinkOnly(); }}
-            onBack={() => setIsSharingView(false)}
           />
         ) : (
           <PersonaBreakdown

@@ -13,11 +13,12 @@
           "description": "Stylizowane wizualne interpretacje ze świata anime."
         }
       },
-      "cover_image_url": "/static/avatars/rosters/anime_manga.webp",
+      "cover_image_url": "/static/smash-or-pass/covers/anime_manga.webp",
       "theme_color": "#ec4899",
       "category": "Anime",
       "is_nsfw": false,
       "is_active": false,
+      "portrait_offset_y": 0,
       "entities": [
         {
           "slug": "anime_spirit",

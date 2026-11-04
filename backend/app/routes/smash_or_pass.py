@@ -27,7 +27,6 @@ from app.utils.rate_limit import SlidingWindowRateLimiter
 
 
 vote_rate_limiter = SlidingWindowRateLimiter(max_requests=60, window_seconds=60)
-taxonomy_rate_limiter = SlidingWindowRateLimiter(max_requests=20, window_seconds=60)
 proxy_rate_limiter = SlidingWindowRateLimiter(max_requests=60, window_seconds=60)
 
 
@@ -68,45 +67,6 @@ def get_rosters():
         return jsonify({"data": rosters, "count": len(rosters)}), 200
     except Exception as e:
         logger.error(f"Error fetching smash-or-pass rosters: {e}")
-        return api_error("Something went wrong. Please try again.", 500)
-
-
-@smash_or_pass_bp.route("/taxonomies", methods=["GET"])
-def get_taxonomies():
-    """Retrieve all available roles and genders (cached)."""
-    try:
-        data = smash_service.get_taxonomies()
-        return jsonify({"data": data}), 200
-    except Exception as e:
-        logger.error(f"Error fetching smash taxonomies: {e}")
-        return api_error("Something went wrong. Please try again.", 500)
-
-
-@smash_or_pass_bp.route("/taxonomies", methods=["POST"])
-@admin_required
-def register_taxonomy():
-    """Register a role or gender in the shared list every visitor's filters show.
-
-    Admin-only: a regular account's custom terms live in its own (local) roster
-    and in its browser's term cache, so they never reach other visitors
-    unmoderated."""
-    client_ip = get_client_ip()
-    if not taxonomy_rate_limiter.is_allowed(client_ip):
-        return api_error("Too many requests. Please try again later.", 429)
-
-    body = request.get_json(silent=True) or {}
-    term_type = (body.get("type") or "").strip().lower()
-    name = (body.get("name") or "").strip()
-    if term_type not in ("role", "gender"):
-        return api_error("Type must be 'role' or 'gender'", 400)
-    if not name or len(name) > 64:
-        return api_error("Name must be between 1 and 64 characters", 400)
-
-    try:
-        term = smash_service.register_taxonomy(term_type, name)
-        return jsonify({"data": term}), 201
-    except Exception as e:
-        logger.error(f"Error registering taxonomy: {e}")
         return api_error("Something went wrong. Please try again.", 500)
 
 
@@ -326,7 +286,7 @@ def get_roster_leaderboard(slug: str):
     sort_by = request.args.get("sort_by", "smash_rate")
     role = request.args.get("role")
     gender = request.args.get("gender")
-    _, limit = paginate_args(default_per_page=100, max_per_page=250, per_page_arg="limit")
+    _, limit = paginate_args(default_per_page=250, max_per_page=500, per_page_arg="limit")
     lang = _extract_lang()
 
     try:

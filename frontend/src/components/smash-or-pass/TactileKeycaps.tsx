@@ -12,7 +12,6 @@ import { SmashSounds } from './SmashSoundEffects';
 
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
-import { Surface } from '@/components/common/Surface';
 import { TileButton } from "@/components/common/TileButton";
 
 export interface TactileKeycapsProps {
@@ -143,7 +142,7 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({ onPass, onSmash,
   return (
     <div className={`flex flex-col items-center justify-center gap-2 select-none ${className || ''}`}>
       {/* 3D Tactile Keycaps Container */}
-      <Surface padding="none" className="flex items-center justify-center gap-2.5 sm:gap-3 p-2 shadow-lg dark:shadow-2xl backdrop-blur-xl">
+      <div className="flex items-center justify-center gap-2.5 sm:gap-3 p-2">
         {keycaps.map((cap) => {
           const isActive = activeKey === cap.id;
           const isReset = cap.id === 'reset';
@@ -178,15 +177,10 @@ export const TactileKeycaps: React.FC<TactileKeycapsProps> = ({ onPass, onSmash,
             </TileButton>
           );
         })}
-      </Surface>
+      </div>
 
       {/* Instruction Subtitle */}
-      <div className="flex items-center gap-1.5 text-mini font-medium text-text-muted pt-0.5">
-        <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent-red animate-pulse" />
-        <span>
-          {dict.smashOrPass.controls.hint}
-        </span>
-      </div>
+      <p className="text-mini font-medium text-text-muted pt-0.5">{dict.smashOrPass.controls.hint}</p>
     </div>
   );
 };

@@ -9,7 +9,6 @@ import {
   Flame,
   Layers,
   User,
-  Users,
 } from 'lucide-react';
 import type { LeaderboardItem } from '@/types/smashOrPass';
 
@@ -54,15 +53,13 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
     }) => {
   const dict = useDictionary();
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [roleFilter, setRoleFilter] = useState<'all' | 'Survivor' | 'Killer'>('all');
   const [genderFilter, setGenderFilter] = useState<'all' | 'female' | 'male' | 'monster_other'>('all');
-  const [tierFilter, setTierFilter] = useState<'all' | TierKey>('all');
   const [sortBy, setSortBy] = useState<'smash_rate' | 'total_votes' | 'smash_count'>('smash_rate');
   const [viewMode, setViewMode] = useState<'flat' | 'grouped'>('flat');
   const [visibleCount, setVisibleCount] = useState<number>(35);
 
   // Reset pagination slicing on filters or modal open
-  useOnValueChange(JSON.stringify([searchQuery, roleFilter, genderFilter, tierFilter, sortBy, viewMode, isOpen]), () =>
+  useOnValueChange(JSON.stringify([searchQuery, genderFilter, sortBy, viewMode, isOpen]), () =>
     setVisibleCount(35)
   );
 
@@ -171,16 +168,8 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       .filter((item) => {
         const itemSlug = item.slug || item.character_slug || '';
         const itemName = item.name || item.character_name || '';
-        const totalVotes = item.total_votes ?? item.stat?.total_votes ?? 0;
-        const itemRate = item.smash_rate ?? item.stat?.smash_rate ?? 0;
 
-        if (roleFilter !== 'all' && item.role !== roleFilter) return false;
         if (genderFilter !== 'all' && item.gender !== genderFilter) return false;
-
-        if (tierFilter !== 'all') {
-          const itemTier = getItemTierKey(itemRate, totalVotes);
-          if (itemTier !== tierFilter) return false;
-        }
 
         if (searchQuery.trim()) {
           const q = searchQuery.toLowerCase();
@@ -213,7 +202,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
         }
         return 0;
       });
-  }, [items, roleFilter, genderFilter, tierFilter, searchQuery, sortBy]);
+  }, [items, genderFilter, searchQuery, sortBy]);
 
   const totalCommunityVotes = useMemo(() => {
     return items.reduce((acc, curr) => acc + (curr.total_votes ?? curr.stat?.total_votes ?? 0), 0);
@@ -239,14 +228,10 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
 
   const title = rawSmashDict.modals.leaderboardTitle;
   const searchPlaceholder = rawSmashDict.search;
-  const allRolesLabel = rawSmashDict.filters.allRoles;
-  const survivorsLabel = rawSmashDict.filters.survivors;
-  const killersLabel = rawSmashDict.filters.killers;
   const allGendersLabel = rawSmashDict.filters.allGenders;
   const femaleOnlyLabel = rawSmashDict.filters.femaleOnly;
   const maleOnlyLabel = rawSmashDict.filters.maleOnly;
   const monstersLabel = rawSmashDict.filters.monsters;
-  const allTiersLabel = rawSmashDict.allTiers;
   const unratedLabel = rawSmashDict.tiers.unrated;
 
   const groupByTierLabel = rawSmashDict.groupByTier;
@@ -262,26 +247,11 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
   const percentSign = rawSmashDict.percentSign;
 
   // Plain text options, like every other dropdown on the site; only the trigger carries an icon.
-  const roleOptions: DropdownOption<'all' | 'Survivor' | 'Killer'>[] = [
-    { value: 'all', label: allRolesLabel },
-    { value: 'Survivor', label: survivorsLabel },
-    { value: 'Killer', label: killersLabel },
-  ];
-
   const genderOptions: DropdownOption<'all' | 'female' | 'male' | 'monster_other'>[] = [
     { value: 'all', label: allGendersLabel },
     { value: 'female', label: femaleOnlyLabel },
     { value: 'male', label: maleOnlyLabel },
     { value: 'monster_other', label: monstersLabel },
-  ];
-
-  const tierOptions: DropdownOption<'all' | TierKey>[] = [
-    { value: 'all', label: allTiersLabel },
-    ...(['godTier', 'fatalAttraction', 'friendzone', 'eldritchVoid'] as const).map((tier) => ({
-      value: tier,
-      label: tierMetadata[tier].name,
-      sublabel: tierMetadata[tier].range,
-    })),
   ];
 
   const sortOptions: DropdownOption<'smash_rate' | 'total_votes' | 'smash_count'>[] = [
@@ -329,17 +299,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
             )}
           </div>
 
-          {/* 2. Custom Role Dropdown */}
-          <CustomDropdown<'all' | 'Survivor' | 'Killer'>
-            value={roleFilter}
-            onChange={setRoleFilter}
-            options={roleOptions}
-            icon={<Users className="icon-sm" />}
-            ariaLabel={allRolesLabel}
-            minWidthClass="min-w-37.5"
-          />
-
-          {/* 3. Custom Gender Dropdown */}
+          {/* 2. Custom Gender Dropdown */}
           <CustomDropdown<'all' | 'female' | 'male' | 'monster_other'>
             value={genderFilter}
             onChange={setGenderFilter}
@@ -349,16 +309,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
             minWidthClass="min-w-42.5"
           />
 
-          {/* 4. Custom Tier Dropdown */}
-          <CustomDropdown<'all' | TierKey>
-            value={tierFilter}
-            onChange={setTierFilter}
-            options={tierOptions}
-            ariaLabel={allTiersLabel}
-            minWidthClass="min-w-47.5"
-          />
-
-          {/* 5. Custom Sort Dropdown */}
+          {/* 3. Custom Sort Dropdown */}
           <CustomDropdown<'smash_rate' | 'total_votes' | 'smash_count'>
             value={sortBy}
             onChange={setSortBy}
@@ -369,7 +320,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
             align="right"
           />
 
-          {/* 6. View Mode Toggle with Reusable Tooltip Component */}
+          {/* 4. View Mode Toggle with Reusable Tooltip Component */}
           <Tooltip variant="action"
             title={viewMode === 'flat' ? groupByTierLabel : rankedListLabel}
             description={
@@ -482,7 +433,7 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
               const itemSlug = item.slug || item.character_slug || '';
               const totalVotes = item.total_votes ?? item.stat?.total_votes ?? 0;
               const smashRate = item.smash_rate ?? item.stat?.smash_rate ?? 0;
-              const isTop3 = index < 3 && !searchQuery && tierFilter === 'all';
+              const isTop3 = index < 3 && !searchQuery;
               const tierKey = getItemTierKey(smashRate, totalVotes);
               const tier = tierKey ? tierMetadata[tierKey] : null;
 

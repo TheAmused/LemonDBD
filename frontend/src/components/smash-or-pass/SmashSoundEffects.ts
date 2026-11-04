@@ -2,9 +2,12 @@
 import { SmashSoundBase } from './SmashSoundBase';
 import { jitter, playBell, playNoise, playTone } from './sound/voices';
 
-/** Smashes in a row closer together than this build a combo. */
-const COMBO_WINDOW_S = 8;
-const MAX_COMBO = 5;
+/** A smash this soon after the last one is a quick streak: it gets a light chime, never the full chord. */
+const RAPID_GAP_S = 0.9;
+/** Faster than this the chime is skipped altogether, so mashing the button never stacks sounds. */
+const SKIP_GAP_S = 0.35;
+/** A roster pick this soon after the last one stays silent. */
+const SELECT_MIN_GAP_S = 0.4;
 
 /** The romantic chord a smash rings: F4 A4 C5 E5 A5 C6, or the same with a G5 for a brighter turn. */
 const SMASH_VOICINGS = [
@@ -13,8 +16,8 @@ const SMASH_VOICINGS = [
 ];
 
 class SmashSoundEngine extends SmashSoundBase {
-  private smashCombo = 0;
   private lastSmashAt = -Infinity;
+  private lastSelectAt = -Infinity;
 
   // ================= SOUND EFFECTS: SEXY SMASH & SAD PASS AUDIO SUITE =================
 
@@ -59,42 +62,33 @@ class SmashSoundEngine extends SmashSoundBase {
     });
   }
 
-  // TACTILE CARD LIFT / GRAB: Silky card touch
-  public playCardGrabSound() {
-    const target = this.sfxTarget();
-    if (!target) return;
-    const { ctx, out } = target;
-    const now = ctx.currentTime;
-
-    playTone(ctx, out, {
-      freq: 380 * jitter(40),
-      endFreq: 190,
-      start: now,
-      dur: 0.05,
-      attack: 0.003,
-      peak: 0.03,
-      filter: { type: 'lowpass', from: 1200 },
-    });
-    // The brush of a thumb on the card
-    playNoise(ctx, out, {
-      start: now,
-      dur: 0.04,
-      attack: 0.004,
-      peak: 0.012,
-      filter: { type: 'bandpass', from: 2600, q: 0.8 },
-    });
-  }
-
-  // SEXY SMASH: Warm 808 sub-drop + lush romantic FM chord + golden shimmer; consecutive smashes climb
+  // SEXY SMASH: Warm sub-drop + lush romantic FM chord + golden shimmer. Every smash sounds the same;
+  // quick streaks get a light, short chime and mashing faster than that is skipped.
   public playSmashSound() {
     const target = this.sfxTarget();
     if (!target) return;
     const { ctx, out } = target;
     const now = ctx.currentTime;
 
-    this.smashCombo = now - this.lastSmashAt < COMBO_WINDOW_S ? Math.min(this.smashCombo + 1, MAX_COMBO) : 0;
+    const gap = now - this.lastSmashAt;
     this.lastSmashAt = now;
-    const lift = Math.pow(2, this.smashCombo / 12); // one semitone higher per smash in the combo
+    if (gap < SKIP_GAP_S) return;
+
+    if (gap < RAPID_GAP_S) {
+      // Light variant: three soft notes of the chord, a short tail, no sub-bass, no sparkle, no ducking
+      [523.25, 659.25, 880.0].forEach((freq, idx) => {
+        playBell(ctx, out, {
+          freq,
+          start: now + idx * 0.025,
+          dur: 0.28,
+          attack: 0.015,
+          peak: 0.07 - idx * 0.012,
+          index: 0.6,
+          filter: { type: 'lowpass', from: 3000, to: 1100 },
+        });
+      });
+      return;
+    }
 
     // 1. Sensual deep sub-bass drop (808 style)
     playTone(ctx, out, { freq: 110, endFreq: 36, start: now, dur: 0.4, attack: 0.004, peak: 0.3 });
@@ -103,7 +97,7 @@ class SmashSoundEngine extends SmashSoundBase {
     const voicing = SMASH_VOICINGS[Math.floor(Math.random() * SMASH_VOICINGS.length)];
     voicing.forEach((freq, idx) => {
       playBell(ctx, out, {
-        freq: freq * lift,
+        freq,
         start: now + idx * 0.03,
         dur: 0.62,
         attack: 0.025,
@@ -115,8 +109,8 @@ class SmashSoundEngine extends SmashSoundBase {
 
     // 3. Delicate sparkle pop accent
     playTone(ctx, out, {
-      freq: 1760 * lift,
-      endFreq: 3520 * lift,
+      freq: 1760,
+      endFreq: 3520,
       start: now + 0.08,
       dur: 0.3,
       attack: 0.04,
@@ -124,19 +118,28 @@ class SmashSoundEngine extends SmashSoundBase {
       filter: { type: 'bandpass', from: 3400, q: 4 },
     });
 
-    // 4. A combo earns a high bell that rings on
-    if (this.smashCombo >= 2) {
-      playBell(ctx, out, {
-        freq: 2093 * lift,
-        start: now + 0.12,
-        dur: 1.1,
-        attack: 0.01,
-        peak: 0.03 + this.smashCombo * 0.006,
-        index: 0.4,
-      });
-    }
-
     this.duckMusic(0.55);
+  }
+
+  // ROSTER PICK: one quiet, short bell note. No chord, no music ducking and no link to the smash streak.
+  public playSelectSound() {
+    const target = this.sfxTarget();
+    if (!target) return;
+    const { ctx, out } = target;
+    const now = ctx.currentTime;
+
+    if (now - this.lastSelectAt < SELECT_MIN_GAP_S) return;
+    this.lastSelectAt = now;
+
+    playBell(ctx, out, {
+      freq: 659.25,
+      start: now,
+      dur: 0.22,
+      attack: 0.01,
+      peak: 0.05,
+      index: 0.4,
+      filter: { type: 'lowpass', from: 2400, to: 1000 },
+    });
   }
 
   // SAD PASS: Poignant minor cello sigh + teardrop + cold breeze whisper
@@ -145,7 +148,7 @@ class SmashSoundEngine extends SmashSoundBase {
     if (!target) return;
     const { ctx, out } = target;
     const now = ctx.currentTime;
-    this.smashCombo = 0;
+    this.lastSmashAt = -Infinity;
     const drift = jitter(25);
 
     // 1. Sad cello minor chord (D3, F3, A3), sagging flat
@@ -186,7 +189,7 @@ class SmashSoundEngine extends SmashSoundBase {
     this.duckMusic(0.7);
   }
 
-  // Tactile card flip: a papery flick over a soft thump
+  // Card turn: a soft, low swish of paper through the air, no thump and no click at the start
   public playFlipSound() {
     const target = this.sfxTarget();
     if (!target) return;
@@ -195,19 +198,10 @@ class SmashSoundEngine extends SmashSoundBase {
 
     playNoise(ctx, out, {
       start: now,
-      dur: 0.1,
-      attack: 0.015,
-      peak: 0.05,
-      filter: { type: 'bandpass', from: 1800 * jitter(150), to: 5200, q: 0.9 },
-    });
-    playTone(ctx, out, {
-      freq: 320 * jitter(60),
-      endFreq: 140,
-      start: now,
-      dur: 0.07,
-      attack: 0.003,
-      peak: 0.05,
-      filter: { type: 'lowpass', from: 800 },
+      dur: 0.2,
+      attack: 0.07,
+      peak: 0.028,
+      filter: { type: 'bandpass', from: 700 * jitter(120), to: 1900, q: 0.6 },
     });
   }
 

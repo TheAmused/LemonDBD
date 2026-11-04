@@ -67,13 +67,13 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
     activeRosterInCenter,
     containerRef,
     commitSelection,
-    handleClose,
     stepPrev,
     stepNext,
     jumpBy,
     handlePointerDown,
     handlePointerMove,
     handlePointerUp,
+    handleClickCapture,
   } = useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelectRoster, onClose });
 
   const selectRosterTitle = dict.smashOrPass.selectRoster;
@@ -81,14 +81,14 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
   return (
     <Modal
       isOpen={isOpen}
-      onClose={handleClose}
+      onClose={onClose}
       variant="dialog"
       size="full"
       closeButton="floating"
       ariaLabel={selectRosterTitle}
       closeButtonAriaLabel={dict.modal.close}
       backdrop="blur"
-      className="h-modal-tall max-h-275 min-h-145 max-w-roster-modal border-2 border-accent-red/35 rounded-card"
+      className="h-modal-roster max-h-237.5 min-h-145 max-w-roster-modal border-2 border-accent-red/35 rounded-card"
       bodyClassName="flex flex-col overflow-hidden"
     >
       <div className="relative flex min-h-0 w-full flex-1 flex-col items-center justify-between overflow-hidden p-4 sm:p-6 md:p-8">
@@ -107,7 +107,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           />
         </div>
 
-        <div className="text-center pt-1 sm:pt-2 space-y-2.5">
+        <div className="text-center pt-1 sm:pt-2 pb-3 space-y-3">
           <h2 className="text-xl sm:text-3xl md:text-4xl font-black tracking-spaced-md sm:tracking-spaced-lg text-text-primary uppercase">
             {selectRosterTitle}
           </h2>
@@ -143,15 +143,17 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
-          className="relative w-full flex-1 min-h-0 flex items-center justify-center overflow-visible touch-none select-none cursor-grab active:cursor-grabbing my-2"
+          onClickCapture={handleClickCapture}
+          className={`relative w-full flex-1 min-h-0 flex items-center justify-center overflow-visible touch-none select-none my-2 [container-type:size] ${N > 1 ? 'cursor-grab active:cursor-grabbing' : ''}`}
           style={{
             perspective: 1200,
-            ['--card-h' as string]: 'clamp(340px, calc(94dvh - 330px), 760px)',
+            // The centred card is drawn at 1.06x; the carousel's own height (cqh) bounds it, so it never reaches the buttons above.
+            ['--card-h' as string]: 'clamp(260px, calc((100cqh - 1rem) / 1.06), 760px)',
             ['--card-w' as string]: 'calc(var(--card-h) * 0.685)',
           }}
           aria-label={selectRosterTitle}
         >
-          {N > 0 && (
+          {N > 1 && (
             <>
               <Button
                 type="button"

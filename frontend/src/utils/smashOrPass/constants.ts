@@ -46,6 +46,7 @@ export const ENTITY_ID_PATTERN = /^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/;
 
 /** Quick-pick chips in the creator; the field itself is free text on both ends. */
 export const ROLE_QUICK_PICKS = ['Survivor', 'Killer'] as const;
+/** The official rosters' gender keys (see `canonicalGender`); shown with the filters' translated labels. */
 export const GENDER_QUICK_PICKS = ['female', 'male', 'monster_other'] as const;
 
 /** Locales the backend accepts a `translations` override for. English lives

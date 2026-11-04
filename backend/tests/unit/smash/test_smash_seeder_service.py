@@ -21,14 +21,13 @@ class TestSmashSeederService:
         seed_smash_rosters()
 
         rosters = db_session.scalars(select(Roster)).all()
-        assert len(rosters) == 7
+        assert len(rosters) == 6
         roster_slugs = {r.slug for r in rosters}
         assert roster_slugs == {
             "canon",
-            "canon_gemini",
             "hooked_on_you",
             "legendary_characters",
-            "cyberpunk_2077",
+            "cyberpunk",
             "anime_manga",
             "gothic_eldritch",
         }
@@ -49,10 +48,7 @@ class TestSmashSeederService:
         leg_roster = db_session.scalar(select(Roster).where(Roster.slug == "legendary_characters"))
         assert len(leg_roster.entities) == 56
 
-        gemini_roster = db_session.scalar(select(Roster).where(Roster.slug == "canon_gemini"))
-        assert len(gemini_roster.entities) == 98
-
-        cyber_roster = db_session.scalar(select(Roster).where(Roster.slug == "cyberpunk_2077"))
+        cyber_roster = db_session.scalar(select(Roster).where(Roster.slug == "cyberpunk"))
         assert len(cyber_roster.entities) == 10
 
         anime_roster = db_session.scalar(select(Roster).where(Roster.slug == "anime_manga"))
@@ -62,7 +58,7 @@ class TestSmashSeederService:
         assert len(gothic_roster.entities) == 10
 
         all_entities = db_session.scalars(select(Entity)).all()
-        assert len(all_entities) == 98 + 98 + 8 + 56 + 10 + 10 + 10
+        assert len(all_entities) == 98 + 8 + 56 + 10 + 10 + 10
 
         for entity in all_entities:
             assert entity.stat is not None
@@ -97,10 +93,11 @@ class TestSmashSeederService:
         active_rosters = service.get_rosters(active_only=True)
         all_rosters = service.get_rosters(active_only=False)
 
-        # canon_gemini is seeded but switched off, so it is in the full list and not the active one.
-        assert len(active_rosters) == 3
-        assert len(all_rosters) == 7
-        assert "canon_gemini" not in {r["slug"] for r in active_rosters}
+        # Canon and the legendary skins are on; the others are seeded but switched off (hooked_on_you is locked off).
+        assert len(active_rosters) == 2
+        assert len(all_rosters) == 6
+        assert {r["slug"] for r in active_rosters} == {"canon", "legendary_characters"}
+        assert "canon_gemini" not in {r["slug"] for r in all_rosters}
         canon = next((r for r in active_rosters if r["slug"] == "canon"), None)
         assert canon is not None
         assert canon["entity_count"] == 98
@@ -217,7 +214,7 @@ class TestSmashSeederService:
     def test_service_cast_vote_by_entity_id(self, db_session: Session) -> None:
         seed_smash_rosters()
         service = SmashOrPassService()
-        feed_res = service.get_feed(roster_slug="cyberpunk_2077", limit=1)
+        feed_res = service.get_feed(roster_slug="cyberpunk", limit=1)
         target = feed_res["entities"][0]
 
         res = service.cast_vote(

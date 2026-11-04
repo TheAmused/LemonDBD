@@ -13,7 +13,7 @@ export interface SmashPrefs {
   chosenAt: number;
 }
 
-const PREFS_KEY = 'lemondbd_smash_prefs_v1';
+export const PREFS_KEY = 'lemondbd_smash_prefs_v1';
 
 /** A saved choice, or null when it is malformed. One saved before sound effects had their own switch follows `effects`. */
 function parsePrefs(value: unknown): SmashPrefs | null {

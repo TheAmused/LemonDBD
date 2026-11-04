@@ -2,7 +2,7 @@
 // frontend/src/components/smash-or-pass/creator/EntityEditor.tsx
 /**
  * Roster candidate editing components:
- * - CandidateFormInputs: Form inputs to edit the active candidate's profile, portrait, and taxonomy.
+ * - CandidateFormInputs: Form inputs to edit the active candidate's profile, portrait, role and gender.
  * - CandidateTiles: Squished grid of candidates (avatar + name caption) matching the tier list items pattern.
  */
 import { Tabs } from '@/components/common/Tabs';
@@ -13,6 +13,8 @@ import { sanitizeImageUrl } from '@/utils/smashOrPass/codec';
 import { SMASH_ROSTER_LIMITS, TRANSLATABLE_FIELDS, TRANSLATABLE_LOCALES,GENDER_QUICK_PICKS,ROLE_QUICK_PICKS } from '@/utils/smashOrPass/constants';
 import type { RosterCustomLabels } from '@/types/smashOrPass';
 import { LABEL } from './styles';
+import { RequiredMark } from './RequiredMark';
+import { canonicalGender, genderLabel, OFFICIAL_GENDERS, termLabel } from '@/utils/smashOrPass/terms';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { type DraftEntity, type EntityTranslationDraft, TextField, TextAreaField, entityTranslationFieldLabel } from "./EntityEditorParts";
@@ -38,7 +40,6 @@ export interface CandidateFormInputsProps {
   customLabels?: RosterCustomLabels;
   availableRoles?: string[];
   availableGenders?: string[];
-  onRegisterTaxonomy?: (type: 'role' | 'gender', name: string) => void;
 }
 
 export function CandidateFormInputs({
@@ -53,7 +54,6 @@ export function CandidateFormInputs({
       customLabels = {},
       availableRoles = [...ROLE_QUICK_PICKS],
       availableGenders = [...GENDER_QUICK_PICKS],
-      onRegisterTaxonomy,
     }: CandidateFormInputsProps) {
   const dict = useDictionary();
   const c = dict.smashOrPass.creator || {};
@@ -65,6 +65,11 @@ export function CandidateFormInputs({
   const mediaInvalid = Boolean(trimmedMedia) && !safeMedia;
 
   const displayIndex = String(index + 1).padStart(2, '0');
+
+  // Official genders are picked with the chips (stored as the official rosters store them); the text
+  // field holds only an author's own word, and a typed "Female" or "Monster" becomes the official key.
+  const genderIsOfficial = (OFFICIAL_GENDERS as readonly string[]).includes(entity.gender);
+  const ownGenders = availableGenders.filter((g) => !(OFFICIAL_GENDERS as readonly string[]).includes(canonicalGender(g)));
 
   return (
     <div className="flex flex-col gap-4">
@@ -82,14 +87,12 @@ export function CandidateFormInputs({
         </div>
         <div className="w-24 flex justify-end">
           <Button
-            variant="ghost" size="xs"
+            variant="danger" size="sm" icon
             onClick={onRemove}
             aria-label={formatMessage((c.removeCandidateAria), { name: entity.name || displayIndex })}
-           
             {...tip(c.removeCandidate, undefined, 'action')}
           >
             <Trash2 aria-hidden="true" />
-            <span className="hidden sm:inline">{c.removeCandidate}</span>
           </Button>
         </div>
       </div>
@@ -130,6 +133,7 @@ export function CandidateFormInputs({
             <label className="block">
               <span className="mb-1 block type-label-xs text-text-secondary">
                 {c.entityNameLabel}
+                <RequiredMark />
               </span>
               <Input
                 fieldSize="md"
@@ -164,17 +168,13 @@ export function CandidateFormInputs({
                   <Input
                     fieldSize="md"
                     value={entity.role}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      onChange({ role: val });
-                      if (val.trim()) onRegisterTaxonomy?.('role', val);
-                    }}
+                    onChange={(e) => onChange({ role: e.target.value })}
                     placeholder={c.rolePlaceholder}
                     list={`role-picks-${entity.key}`}
                   />
                   <datalist id={`role-picks-${entity.key}`}>
                     {availableRoles.map((r) => (
-                      <option key={r} value={r}>{r}</option>
+                      <option key={r} value={termLabel(r)}>{termLabel(r)}</option>
                     ))}
                   </datalist>
                 </label>
@@ -183,11 +183,11 @@ export function CandidateFormInputs({
                   <div className="flex flex-wrap items-center gap-1 pt-0.5">
                     <span className="text-micro text-text-muted mr-0.5">{c.quick}</span>
                     {availableRoles.slice(0, 4).map((r) => (
-                      <ToggleChip pressed={entity.role.toLowerCase() === r.toLowerCase()} size="xs" tone="red"
+                      <ToggleChip pressed={entity.role.toLowerCase() === termLabel(r).toLowerCase()} size="xs" tone="red"
                         key={r}
-                        onClick={() => onChange({ role: r })}
+                        onClick={() => onChange({ role: termLabel(r) })}
                       >
-                        {r}
+                        {termLabel(r)}
                       </ToggleChip>
                     ))}
                   </div>
@@ -202,31 +202,32 @@ export function CandidateFormInputs({
                   </span>
                   <Input
                     fieldSize="md"
-                    value={entity.gender}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      onChange({ gender: val });
-                      if (val.trim()) onRegisterTaxonomy?.('gender', val);
+                    value={genderIsOfficial ? '' : entity.gender}
+                    onChange={(e) => onChange({ gender: e.target.value })}
+                    onBlur={(e) => {
+                      if (e.target.value.trim()) onChange({ gender: canonicalGender(e.target.value) });
                     }}
                     placeholder={c.genderPlaceholder}
-                    list={`gender-picks-${entity.key}`}
+                    list={ownGenders.length > 0 ? `gender-picks-${entity.key}` : undefined}
                   />
-                  <datalist id={`gender-picks-${entity.key}`}>
-                    {availableGenders.map((g) => (
-                      <option key={g} value={g}>{g}</option>
-                    ))}
-                  </datalist>
+                  {ownGenders.length > 0 && (
+                    <datalist id={`gender-picks-${entity.key}`}>
+                      {ownGenders.map((g) => (
+                        <option key={g} value={g}>{termLabel(g)}</option>
+                      ))}
+                    </datalist>
+                  )}
                 </label>
                 {/* Quick-Pick Gender Chips */}
                 {availableGenders.length > 0 && (
                   <div className="flex flex-wrap items-center gap-1 pt-0.5">
                     <span className="text-micro text-text-muted mr-0.5">{c.quick}</span>
                     {availableGenders.slice(0, 4).map((g) => (
-                      <ToggleChip pressed={entity.gender.toLowerCase() === g.toLowerCase()} size="xs" tone="amber"
+                      <ToggleChip pressed={canonicalGender(entity.gender) === canonicalGender(g)} size="xs" tone="amber"
                         key={g}
-                        onClick={() => onChange({ gender: g })}
+                        onClick={() => onChange({ gender: canonicalGender(g) })}
                       >
-                        {g}
+                        {genderLabel(g, dict.smashOrPass.filters)}
                       </ToggleChip>
                     ))}
                   </div>
@@ -268,14 +269,14 @@ export function CandidateFormInputs({
               placeholder={c.quotePlaceholder}
             />
             <TextField
-              label={`${customLabels.turn_on || c.entityTurnOnLabel} (Optional)`}
+              label={customLabels.turn_on || c.entityTurnOnLabel}
               value={entity.turn_on}
               max={SMASH_ROSTER_LIMITS.maxTurnOn}
               onChange={(v) => onChange({ turn_on: v })}
               placeholder={c.turnOnPlaceholder}
             />
             <TextField
-              label={`${customLabels.dealbreaker || c.entityDealbreakerLabel} (Optional)`}
+              label={customLabels.dealbreaker || c.entityDealbreakerLabel}
               value={entity.dealbreaker}
               max={SMASH_ROSTER_LIMITS.maxDealbreaker}
               onChange={(v) => onChange({ dealbreaker: v })}

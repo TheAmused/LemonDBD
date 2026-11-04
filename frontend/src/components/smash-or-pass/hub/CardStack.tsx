@@ -145,6 +145,7 @@ export function CardStack({
           locale={locale}
           customLabels={activeRoster?.custom_labels}
           rosterMode={activeRoster?.roster_mode}
+          portraitOffsetY={activeRoster?.portrait_offset_y}
         />
       </div>
     </div>

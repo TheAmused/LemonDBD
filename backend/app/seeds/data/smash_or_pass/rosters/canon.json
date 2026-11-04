@@ -13,7 +13,7 @@
           "description": "Oficjalne 98 postaci z mgły próby."
         }
       },
-      "cover_image_url": "/static/avatars/rosters/canon.webp",
+      "cover_image_url": "/static/smash-or-pass/covers/canon.webp",
       "theme_color": "#ff0055",
       "category": "DBD",
       "is_nsfw": false,

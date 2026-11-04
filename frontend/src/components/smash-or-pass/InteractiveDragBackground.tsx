@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { createScene, drawScene, spawnActionBurst, updateIntensities, type DragAction, type DragState } from './dragBackgroundScene';
+import { createScene, drawScene, isSceneIdle, nextBurst, spawnActionBurst, updateIntensities, type DragAction, type DragState } from './dragBackgroundScene';
 
 interface InteractiveDragBackgroundProps {
   dragX?: number; // < 0 is Pass (left), > 0 is Smash (right)
@@ -56,6 +56,8 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
   useEffect(() => {
     stateRef.current.actionTrigger = actionTrigger;
     stateRef.current.triggerKey = triggerKey;
+    // A vote wakes a stopped loop, so its burst gets drawn.
+    if (!stateRef.current.isPaused) kickRenderRef.current();
   }, [actionTrigger, triggerKey]);
 
   useEffect(() => {
@@ -76,7 +78,8 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
     window.addEventListener('resize', handleResize);
 
     const scene = createScene(width, height);
-    let lastHandledKey = 0;
+    // A vote that is already there when the loop starts (effects were just switched on) is not a new one.
+    let lastHandledKey = stateRef.current.triggerKey;
 
     const render = () => {
       if (stateRef.current.isPaused) {
@@ -87,12 +90,17 @@ export const InteractiveDragBackground: React.FC<InteractiveDragBackgroundProps>
 
       const curState = stateRef.current;
       updateIntensities(curState);
-      if (curState.triggerKey !== lastHandledKey && curState.actionTrigger) {
-        lastHandledKey = curState.triggerKey;
-        spawnActionBurst(scene, curState.actionTrigger, width / 2, height / 2);
-      }
+      const burst = nextBurst(curState, lastHandledKey);
+      lastHandledKey = burst.handledKey;
+      if (burst.action) spawnActionBurst(scene, burst.action, width / 2, height / 2);
       drawScene(ctx, scene, curState, width, height);
 
+      // Nothing on screen and nothing moving (embers off, no drag, no burst): stop asking for frames
+      // until a drag, a vote or a preference change kicks the loop again.
+      if (isSceneIdle(scene, curState)) {
+        isLoopActiveRef.current = false;
+        return;
+      }
       animationFrameId = requestAnimationFrame(render);
     };
 

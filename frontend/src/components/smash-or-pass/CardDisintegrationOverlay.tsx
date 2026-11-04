@@ -3,6 +3,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { paletteColor, withAlpha } from '@/utils/themeColor';
+import { drawGlowHeart } from './glowHeart';
 
 export interface CardDisintegrationOverlayProps {
   exitType: 'smash' | 'pass' | 'super_smash';
@@ -148,21 +149,13 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
       size: number,
       color: string,
       alpha: number
-    ) => {
-      context.save();
-      context.translate(x, y);
-      context.scale(size / 20, size / 20);
-      context.globalAlpha = Math.max(0, Math.min(1, alpha));
-      context.fillStyle = color;
-      context.shadowColor = color;
-      context.shadowBlur = 16;
-      context.beginPath();
-      context.moveTo(0, 0);
-      context.bezierCurveTo(-10, -10, -20, 5, 0, 20);
-      context.bezierCurveTo(20, 5, 10, -10, 0, 0);
-      context.fill();
-      context.restore();
-    };
+    ) => drawGlowHeart(context, x, y, size, color, alpha, 0, 16);
+
+    // These fills never change: build them once, not once per scanline per frame.
+    const scanlineLight = withAlpha(paletteColor('zinc-400'), 0.08);
+    const scanlineDark = withAlpha(paletteColor('zinc-950'), 0.25);
+    const glitchLight = withAlpha(paletteColor('zinc-400'), 0.35);
+    const glitchRed = withAlpha(paletteColor('red-600'), 0.3);
 
     const render = (now: number) => {
       const elapsed = Math.max(0, now - startTime);
@@ -201,7 +194,7 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
         ctx.save();
         for (let s = 0; s < scanlineCount; s++) {
           const y = s * 4;
-          ctx.fillStyle = s % 2 === 0 ? withAlpha(paletteColor('zinc-400'), 0.08) : withAlpha(paletteColor('zinc-950'), 0.25);
+          ctx.fillStyle = s % 2 === 0 ? scanlineLight : scanlineDark;
           ctx.fillRect(0, y, width, 1.5);
         }
 
@@ -212,10 +205,10 @@ export const CardDisintegrationOverlay: React.FC<CardDisintegrationOverlayProps>
           const glitchShift = (Math.random() - 0.5) * 35;
 
           // Cyan / Crimson Chromatic Split Bars
-          ctx.fillStyle = withAlpha(paletteColor('zinc-400'), 0.35);
+          ctx.fillStyle = glitchLight;
           ctx.fillRect(glitchShift, glitchY, width, glitchH);
 
-          ctx.fillStyle = withAlpha(paletteColor('red-600'), 0.3);
+          ctx.fillStyle = glitchRed;
           ctx.fillRect(-glitchShift, glitchY + 2, width, glitchH);
         }
         ctx.restore();

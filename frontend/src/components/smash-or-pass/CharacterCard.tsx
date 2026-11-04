@@ -107,7 +107,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
   const hasPortrait = Boolean(character.media_url) || !isLocalRosterSlug(character.roster_id);
 
   const avatarSrc = !hasPortrait
-    ? `${backendBase}${candidatePlaceholderPath(character.id || character.slug || character.name)}`
+    ? `${backendBase}${candidatePlaceholderPath(character.name || character.slug || character.id)}`
     : character.media_url?.startsWith('http') || character.media_url?.startsWith('/static')
       ? `${character.media_url.startsWith('http') ? '' : backendBase}${character.media_url}`
       : resolveAvatarUrl(

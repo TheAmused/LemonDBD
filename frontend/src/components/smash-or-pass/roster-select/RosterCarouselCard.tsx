@@ -12,6 +12,7 @@ import type { RosterItem } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { SmashSounds } from '../SmashSoundEffects';
 import { rosterCoverUrl, rosterDisplayName } from './rosterDisplay';
+import { coverPlaceholderPath } from '@/utils/smashOrPass/placeholderArt';
 import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
 import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
@@ -122,7 +123,7 @@ export function RosterCarouselCard({
           const target = e.target as HTMLImageElement;
           if (!target.dataset.triedFallback) {
             target.dataset.triedFallback = '1';
-            target.src = `${getBackendBaseUrl()}/static/avatars/rosters/${r.slug}.webp`;
+            target.src = `${getBackendBaseUrl()}${coverPlaceholderPath(r.slug)}`;
           } else {
             target.style.display = 'none';
           }

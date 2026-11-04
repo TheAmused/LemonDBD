@@ -161,7 +161,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
           dragY={effectsEnabled ? exit.dragPhysics.y : 0}
           isDragging={effectsEnabled && exit.dragPhysics.isDragging}
           actionTrigger={effectsEnabled ? animTrigger.type : null}
-          triggerKey={effectsEnabled ? animTrigger.key : 0}
+          triggerKey={animTrigger.key}
           isPaused={overlays.areModalsOpen}
           showEmbers={preferences.backgroundAnimation !== 'off'}
         />

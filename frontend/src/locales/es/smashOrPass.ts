@@ -48,8 +48,6 @@ export default {
   trialRumor: 'Rumor de la Prueba y Memes',
   greenFlags: 'Banderas Verdes',
   redFlags: 'Banderas Rojas',
-  showMore: 'Mostrar más',
-  showLess: 'Mostrar menos',
   turnOn: 'Puntos a favor:',
   dealbreaker: 'Puntos en contra:',
   datingPsychology: 'Análisis Psicológico de Citas',

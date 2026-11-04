@@ -48,8 +48,6 @@ export default {
   trialRumor: 'Trial Rumor & Meme',
   greenFlags: 'Green Flags',
   redFlags: 'Red Flags',
-  showMore: 'Show more',
-  showLess: 'Show less',
   turnOn: 'Turn On:',
   dealbreaker: 'Dealbreaker:',
   datingPsychology: 'Dating Psychology Breakdown',

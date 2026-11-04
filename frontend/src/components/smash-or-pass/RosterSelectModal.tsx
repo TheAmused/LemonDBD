@@ -67,7 +67,6 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
     activeRosterInCenter,
     containerRef,
     commitSelection,
-    handleClose,
     stepPrev,
     stepNext,
     jumpBy,
@@ -82,7 +81,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
   return (
     <Modal
       isOpen={isOpen}
-      onClose={handleClose}
+      onClose={onClose}
       variant="dialog"
       size="full"
       closeButton="floating"

@@ -48,8 +48,6 @@ export default {
   trialRumor: 'Prüfungsgerüchte & Memes',
   greenFlags: 'Grüne Flaggen',
   redFlags: 'Rote Flaggen',
-  showMore: 'Mehr anzeigen',
-  showLess: 'Weniger anzeigen',
   turnOn: 'Pluspunkte:',
   dealbreaker: 'Ausschlusskriterium:',
   datingPsychology: 'Dating-Psychologie-Analyse',

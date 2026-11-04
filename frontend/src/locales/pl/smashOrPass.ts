@@ -48,8 +48,6 @@ export default {
   trialRumor: 'Plotka z Próby & Memy',
   greenFlags: 'Zielone Flagi',
   redFlags: 'Czerwone Flagi',
-  showMore: 'Pokaż więcej',
-  showLess: 'Pokaż mniej',
   turnOn: 'Na Plus:',
   dealbreaker: 'Na Minus:',
   datingPsychology: 'Analiza Psychologiczna Randki',

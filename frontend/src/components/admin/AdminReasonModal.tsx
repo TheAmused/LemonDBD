@@ -39,9 +39,6 @@ export const AdminReasonModal: React.FC<AdminReasonModalProps> = ({ isOpen, titl
       footerClassName="justify-end flex-col-reverse sm:flex-row"
       footer={
         <>
-          <Button size="sm" onClick={onCancel} className="w-full sm:w-auto">
-            {dict.admin.cancel}
-          </Button>
           <Button variant="primary" size="sm" onClick={() => onConfirm(reason.trim())} className="w-full sm:w-auto">
             {confirmLabel ?? dict.admin.disable}
           </Button>

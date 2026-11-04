@@ -13,7 +13,6 @@ import { Switch } from '@/components/common/Switch';
 import { TileButton } from '@/components/common/TileButton';
 import { ToggleChip } from '@/components/common/ToggleChip';
 import { EmptyState } from '@/components/common/EmptyState';
-import { tip } from '@/components/common/Tooltip';
 import { MaskIcon, PerkHexIcon, PersonIcon } from '@/components/icons/DbdIcons';
 import { AdminReasonModal } from '@/components/admin/AdminReasonModal';
 import { SEARCH_DEBOUNCE_MS } from '@/constants/timing';
@@ -171,9 +170,7 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
             <li key={setting.mode} className="flex items-center justify-between gap-4 bg-bg-surface p-4 sm:px-5">
               <div className="min-w-0">
                 <p className="type-strong text-text-primary">{modeLabel[setting.mode]}</p>
-                <p className={cn('type-caption', setting.is_enabled ? 'text-text-muted' : 'text-accent-red')}>
-                  {setting.is_enabled ? t.enabledLabel : setting.disabled_reason || t.disabledLabel}
-                </p>
+                {!setting.is_enabled && <p className="type-caption text-accent-red">{setting.disabled_reason || t.disabledLabel}</p>}
               </div>
               <Switch checked={setting.is_enabled} onChange={() => { void toggleMode(setting); }} ariaLabel={modeLabel[setting.mode]} />
             </li>
@@ -236,7 +233,6 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
                       onClick={() => { void (isCharacter ? toggleCharacter(item as AdminCharacterRow) : togglePerk(item as AdminPerkRow)); }}
                       aria-pressed={!item.is_disabled}
                       aria-label={label}
-                      {...tip(item.name, item.disabled_reason || undefined, 'status')}
                       className="group flex w-full flex-col items-center gap-1.5 rounded-control p-1"
                     >
                       <span

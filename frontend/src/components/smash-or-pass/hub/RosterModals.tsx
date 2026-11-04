@@ -151,7 +151,7 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
           <div className="relative flex flex-col items-center gap-2 p-6 rounded-card bg-bg-primary/90 border-2 border-accent-red text-center animate-in zoom-in-75 duration-300">
             <HeartIcon className="h-14 w-14 text-accent-red fill-accent-red animate-bounce" />
             <span className="text-xl font-black tracking-widest text-text-primary uppercase">
-              {getRosterDisplayName({ slug: rosterSwitchEffect })}
+              {getRosterDisplayName(allRosters.find((r) => r.slug === rosterSwitchEffect) ?? { slug: rosterSwitchEffect })}
             </span>
           </div>
         </div>

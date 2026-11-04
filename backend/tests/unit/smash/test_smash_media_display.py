@@ -73,9 +73,10 @@ class TestSeedData:
                 assert "is_active" not in entity, f"{roster['slug']}/{entity['slug']}"
                 assert "media_type" not in entity, f"{roster['slug']}/{entity['slug']}"
 
-    def test_canon_gemini_is_switched_off_and_the_real_canon_is_not(self) -> None:
+    def test_canon_gemini_is_not_seeded_and_hooked_on_you_is_switched_off(self) -> None:
         active = {r["slug"]: r.get("is_active", True) for r in _seed_files()}
-        assert active["canon_gemini"] is False
+        assert "canon_gemini" not in active
+        assert active["hooked_on_you"] is False
         assert active["canon"] is True
 
 

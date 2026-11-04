@@ -30,6 +30,7 @@
       "category": "Collabs",
       "is_nsfw": false,
       "is_active": true,
+      "portrait_offset_y": 0,
       "entities": [
         {
           "slug": "william_birkin",

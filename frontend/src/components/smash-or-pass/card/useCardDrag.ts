@@ -67,7 +67,6 @@ export function useCardDrag({ isTopCard, isExiting, isFlipped, initialExitOffset
     lastDragZoneRef.current = 'neutral';
     setIsDragging(true);
     onDragUpdate?.(0, 0, true);
-    SmashSounds.playCardGrabSound();
   };
 
   const handleTouchMove = useCallback(
@@ -116,7 +115,6 @@ export function useCardDrag({ isTopCard, isExiting, isFlipped, initialExitOffset
     } else {
       setDragOffset({ x: 0, y: 0 });
       onDragUpdate?.(0, 0, false);
-      SmashSounds.playFlipSound();
     }
   }, [isDragging, isTopCard, isExiting, isFlipped, dragOffset, onVote, onDragUpdate]);
 

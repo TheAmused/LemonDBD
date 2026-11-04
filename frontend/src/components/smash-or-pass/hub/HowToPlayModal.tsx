@@ -1,18 +1,10 @@
 'use client';
 // frontend/src/components/smash-or-pass/hub/HowToPlayModal.tsx
-import { Gamepad2, ZoomIn } from 'lucide-react';
-import {
-  HeartIcon,
-  PassIcon,
-  SparkleIcon,
-  CardFlipIcon,
-} from '@/components/icons/DbdIcons';
+import { ZoomIn } from 'lucide-react';
+import { HeartIcon, PassIcon, CardFlipIcon } from '@/components/icons/DbdIcons';
 import { Modal } from '@/components/common/Modal';
 import { useDictionary } from '@/context/DictionaryContext';
 import { TactileKeycaps } from './lazyParts';
-import { Badge } from '@/components/common/Badge';
-import { InfoChip } from '@/components/common/InfoChip';
-import { Surface } from '@/components/common/Surface';
 
 interface HowToPlayModalProps {
   isOpen: boolean;
@@ -23,7 +15,49 @@ interface HowToPlayModalProps {
   onReset: () => void;
 }
 
-/** The controls explanation, with authentic Dead by Daylight iconography and keyboard keycaps. */
+/** One flat section: a title and what it names, with no box around it. */
+function Section({ title, className = '', children }: { title: string; className?: string; children: React.ReactNode }) {
+  return (
+    <section className={`space-y-3 ${className}`}>
+      <h3 className="type-strong text-text-primary">{title}</h3>
+      {children}
+    </section>
+  );
+}
+
+/** The swipe, shown rather than described: a card sways between Pass and Smash, lighting the side it leans to. */
+function SwipeDemo({ passLabel, smashLabel }: { passLabel: string; smashLabel: string }) {
+  return (
+    <div className="flex items-center justify-between gap-2 overflow-hidden py-1">
+      <span className="htp-light-pass flex w-16 shrink-0 flex-col items-center gap-1.5 text-text-secondary">
+        <PassIcon className="icon-xl" aria-hidden="true" />
+        <span className="type-caption">{passLabel}</span>
+      </span>
+      <span className="htp-card flex h-24 w-16 shrink-0 items-end justify-center rounded-card border border-accent-red/60 bg-bg-secondary pb-2 shadow-lg" aria-hidden="true">
+        <span className="h-1 w-8 rounded-full bg-border-color" />
+      </span>
+      <span className="htp-light-smash flex w-16 shrink-0 flex-col items-center gap-1.5 text-accent-red">
+        <HeartIcon className="icon-xl" aria-hidden="true" />
+        <span className="type-caption">{smashLabel}</span>
+      </span>
+    </div>
+  );
+}
+
+/** One of the two buttons on every card: its icon, named. */
+function CardAction({ icon, label }: { icon: React.ReactNode; label: string }) {
+  return (
+    <li className="flex items-center gap-3 text-text-secondary">
+      {icon}
+      <span className="type-caption">{label}</span>
+    </li>
+  );
+}
+
+/**
+ * How the game is played. It adapts to the screen: the swipe demo and the card icons sit side by side
+ * once there is room, and the keyboard shortcuts are left out where there is no keyboard (touch screens).
+ */
 export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onReset }: HowToPlayModalProps) {
   const dict = useDictionary();
   const text = dict.smashOrPass.howToPlayModal;
@@ -36,84 +70,23 @@ export function HowToPlayModal({ isOpen, onClose, onPass, onSmash, onStats, onRe
       size="lg"
       title={text.title}
       closeButtonAriaLabel={dict.modal.close}
-      bodyClassName="p-4 sm:p-5"
+      bodyClassName="p-4 sm:p-6"
     >
-      <div className="space-y-3 text-xs text-text-secondary">
-        {/* Dictionary icon key retention for i18n hygiene */}
-        <span className="sr-only" aria-hidden="true">
-          {text.swipeIcon} {text.iconsIcon} {text.keycapsIcon} {text.atmosphereIcon}
-        </span>
+      <div className="grid gap-6 sm:grid-cols-2 sm:gap-x-8">
+        <Section title={text.swipeTitle}>
+          <SwipeDemo passLabel={text.passBadge} smashLabel={text.smashBadge} />
+        </Section>
 
-        {/* 1. Swipe & Drag Mechanics */}
-        <Surface padding="none" className="p-3.5 sm:p-4 space-y-2.5 shadow-xs">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-card bg-accent-red/10 border border-accent-red/30 text-accent-red shrink-0">
-              <HeartIcon className="icon-lg" aria-hidden="true" />
-            </div>
-            <div className="min-w-0">
-              <span className="type-strong text-text-primary block">{text.swipeTitle}</span>
-              <p className="type-body text-text-muted pt-0.5">{text.swipeDesc}</p>
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 pt-0.5 type-caption">
-            <InfoChip>
-              <PassIcon className="icon-sm" aria-hidden="true" />
-              <span>{text.passBadge}</span>
-            </InfoChip>
-            <Badge tone="red" size="md" plain square>
-              <HeartIcon className="icon-sm" aria-hidden="true" />
-              <span>{text.smashBadge}</span>
-            </Badge>
-          </div>
-        </Surface>
+        <Section title={text.iconsTitle}>
+          <ul className="space-y-3 sm:pt-1">
+            <CardAction icon={<CardFlipIcon className="icon-xl text-accent-red" aria-hidden="true" />} label={text.flipCardBadge} />
+            <CardAction icon={<ZoomIn className="icon-xl text-accent-amber" aria-hidden="true" />} label={text.zoomArtBadge} />
+          </ul>
+        </Section>
 
-        {/* 2. On-Card Action Controls */}
-        <Surface padding="none" className="p-3.5 sm:p-4 space-y-2.5 shadow-xs">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-card bg-accent-amber/10 border border-accent-amber/30 text-accent-amber shrink-0">
-              <CardFlipIcon className="icon-lg" aria-hidden="true" />
-            </div>
-            <div className="min-w-0">
-              <span className="type-strong text-text-primary block">{text.iconsTitle}</span>
-              <p className="type-body text-text-muted pt-0.5">{text.iconsDesc}</p>
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 pt-0.5 type-caption">
-            <InfoChip>
-              <CardFlipIcon className="icon-sm text-accent-red" aria-hidden="true" />
-              <span>{text.flipCardBadge}</span>
-            </InfoChip>
-            <InfoChip>
-              <ZoomIn className="icon-sm text-accent-amber" aria-hidden="true" />
-              <span>{text.zoomArtBadge}</span>
-            </InfoChip>
-          </div>
-        </Surface>
-
-        {/* 3. Tactile Keyboard Controls */}
-        <Surface padding="none" className="p-3.5 sm:p-4 space-y-2.5 shadow-xs">
-          <div className="flex items-center gap-3">
-            <Surface tone="elevated" padding="none" className="flex h-9 w-9 items-center justify-center text-text-primary shrink-0">
-              <Gamepad2 className="icon-lg" aria-hidden="true" />
-            </Surface>
-            <div className="min-w-0">
-              <span className="type-strong text-text-primary block">{text.keycapsTitle}</span>
-              <p className="type-body text-text-muted pt-0.5">{text.keycapsDesc}</p>
-            </div>
-          </div>
-          <TactileKeycaps onPass={onPass} onSmash={onSmash} onStats={onStats} onReset={onReset} className="my-1" />
-        </Surface>
-
-        {/* 4. Trial Atmosphere & Lore */}
-        <Surface padding="none" className="p-3.5 sm:p-4 flex items-center gap-3 shadow-xs">
-          <div className="flex h-9 w-9 items-center justify-center rounded-card bg-accent-purple/10 border border-accent-purple/30 text-accent-purple shrink-0">
-            <SparkleIcon className="icon-lg" aria-hidden="true" />
-          </div>
-          <div className="min-w-0">
-            <span className="type-strong text-text-primary block">{text.atmosphereTitle}</span>
-            <p className="type-body text-text-muted pt-0.5">{text.atmosphereDesc}</p>
-          </div>
-        </Surface>
+        <Section title={text.keycapsTitle} className="border-t border-border-color pt-5 sm:col-span-2 pointer-coarse:hidden">
+          <TactileKeycaps onPass={onPass} onSmash={onSmash} onStats={onStats} onReset={onReset} />
+        </Section>
       </div>
     </Modal>
   );

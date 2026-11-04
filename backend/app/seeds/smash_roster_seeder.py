@@ -158,6 +158,7 @@ def _seed_smash_rosters_impl():
                     category=r_data.get("category", "DBD"),
                     is_nsfw=r_data.get("is_nsfw", False),
                     is_active=r_data.get("is_active", True),
+                    portrait_offset_y=int(r_data.get("portrait_offset_y", 0)),
                 )
                 db.session.add(roster)
                 db.session.flush()
@@ -170,6 +171,7 @@ def _seed_smash_rosters_impl():
                 roster.category = r_data.get("category", "DBD")
                 roster.is_nsfw = r_data.get("is_nsfw", False)
                 roster.is_active = r_data.get("is_active", True)
+                roster.portrait_offset_y = int(r_data.get("portrait_offset_y", 0))
                 db.session.flush()
 
             # 2. Seed / Upsert Entities for this Roster

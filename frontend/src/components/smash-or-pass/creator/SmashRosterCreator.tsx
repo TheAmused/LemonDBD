@@ -21,7 +21,6 @@ import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useSmashRosterStore } from '@/hooks/useSmashRosterStore';
-import { useSmashTaxonomies } from '@/hooks/useSmashTaxonomies';
 import { sanitizeImageUrl } from '@/utils/smashOrPass/codec';
 import { SMASH_ROSTER_LIMITS,GENDER_QUICK_PICKS,ROLE_QUICK_PICKS } from '@/utils/smashOrPass/constants';
 import { CandidateFormInputs, CandidateTiles } from './EntityEditor';
@@ -33,6 +32,7 @@ import { RomanceArchetypeBuilder } from './RomanceArchetypeBuilder';
 import { Button } from '@/components/common/Button';
 import { Section, Feedback } from "./SmashRosterCreatorParts";
 import { useDictionary } from "@/context/DictionaryContext";
+import { formatMessage } from '@/utils/i18nFormat';
 
 import { useRosterDraft } from './useRosterDraft';
 import { useRosterSubmit } from './useRosterSubmit';
@@ -59,7 +59,6 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
   const { isAdmin, user, isAuthenticated, isLoading: authLoading } = useAuth();
   const isUserAdmin = Boolean(isAdmin || user?.role === 'admin');
   const { state: storeState, hydrated: storeHydrated } = useSmashRosterStore();
-  const { roles: taxonomyRoles, genders: taxonomyGenders, registerTerm } = useSmashTaxonomies();
   const editingRoster = editId ? storeState.custom[editId] : undefined;
 
   const [isCropModalOpen, setIsCropModalOpen] = useState(false);
@@ -87,17 +86,16 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
     setActiveTranslationLocale,
   } = useRosterDraft({ editId, editingRoster, storeHydrated });
 
-  const effectiveRoles = useMemo(() => {
-    if (draft.custom_roles && draft.custom_roles.length > 0) return draft.custom_roles;
-    if (taxonomyRoles && taxonomyRoles.length > 0) return taxonomyRoles;
-    return [...ROLE_QUICK_PICKS];
-  }, [draft.custom_roles, taxonomyRoles]);
+  // The roster's own roles and genders, or the standard ones until it defines any.
+  const effectiveRoles = useMemo(
+    () => (draft.custom_roles && draft.custom_roles.length > 0 ? draft.custom_roles : [...ROLE_QUICK_PICKS]),
+    [draft.custom_roles]
+  );
 
-  const effectiveGenders = useMemo(() => {
-    if (draft.custom_genders && draft.custom_genders.length > 0) return draft.custom_genders;
-    if (taxonomyGenders && taxonomyGenders.length > 0) return taxonomyGenders;
-    return [...GENDER_QUICK_PICKS];
-  }, [draft.custom_genders, taxonomyGenders]);
+  const effectiveGenders = useMemo(
+    () => (draft.custom_genders && draft.custom_genders.length > 0 ? draft.custom_genders : [...GENDER_QUICK_PICKS]),
+    [draft.custom_genders]
+  );
 
   const nameMissing = !draft.name.trim();
   const trimmedCover = draft.cover_image_url.trim();
@@ -236,7 +234,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
       <div className={CREATOR_COLUMN}>
         <Section
           title={c.rolesGendersTitle}
-          badge={`${effectiveRoles.length} roles • ${effectiveGenders.length} genders`}
+          badge={formatMessage(c.rolesGendersCount, { roles: effectiveRoles.length, genders: effectiveGenders.length })}
           defaultOpen={false}
         >
           <RosterTaxonomyBlock
@@ -244,7 +242,6 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
             genders={draft.custom_genders || []}
             onChangeRoles={(roles) => patch({ custom_roles: roles })}
             onChangeGenders={(genders) => patch({ custom_genders: genders })}
-            onRegisterTerm={(type, name) => { void registerTerm(type, name); }}
           />
         </Section>
       </div>
@@ -301,7 +298,6 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
                     customLabels={draft.custom_labels}
                     availableRoles={effectiveRoles}
                     availableGenders={effectiveGenders}
-                    onRegisterTaxonomy={(type, name) => { void registerTerm(type, name); }}
                   />
                 )}
 

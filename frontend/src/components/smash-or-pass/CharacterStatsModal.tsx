@@ -15,6 +15,7 @@ import { EldritchVoidIcon, FriendzoneIcon, RankFirstIcon, HeartIcon, PassIcon } 
 import { Surface } from '@/components/common/Surface';
 import { formatNumber } from '@/utils/format';
 import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
+import { roleBadge as getRoleBadge } from '@/utils/smashOrPass/terms';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { MotionImg } from '@/components/common/MotionImg';
@@ -120,9 +121,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
     };
   }, [smashRate, rawSmashDict]);
 
-  const roleLabel = isSurvivor
-    ? rawSmashDict.filters.survivors
-    : rawSmashDict.filters.killers;
+  const roleTag = getRoleBadge(role, rawSmashDict.filters);
 
   const communityConsensusLabel = rawSmashDict.communityConsensus;
   const smashRateLabel = rawSmashDict.statsDetail.communitySmashRate;
@@ -137,10 +136,8 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
   const percentSign = rawSmashDict.percentSign;
 
   const roleBadge = (
-    <Badge
-      tone={isSurvivor ? 'green' : 'red'} size="sm" square
-    >
-      {roleLabel}
+    <Badge tone={roleTag.tone} size="sm" square>
+      {roleTag.label}
     </Badge>
   );
 

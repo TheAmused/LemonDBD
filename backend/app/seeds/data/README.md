@@ -26,7 +26,7 @@ static_export/
 │   └── rosters/                (Individual roster files)
 │       ├── canon.json
 │       ├── anime_manga.json
-│       ├── cyberpunk_2077.json
+│       ├── cyberpunk.json
 │       ├── gothic_eldritch.json
 │       ├── hooked_on_you.json
 │       └── legendary_characters.json

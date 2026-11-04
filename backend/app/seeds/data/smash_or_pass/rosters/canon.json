@@ -18,6 +18,7 @@
       "category": "DBD",
       "is_nsfw": false,
       "is_active": true,
+      "portrait_offset_y": 40,
       "entities": [
         {
           "slug": "ada_wong",

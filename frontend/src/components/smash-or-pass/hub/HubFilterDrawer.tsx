@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useDictionary } from '@/context/DictionaryContext';
 import { isKiller as isKillerRole, isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
+import { genderLabel, termLabel } from '@/utils/smashOrPass/terms';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
 
 interface HubFilterDrawerProps {
@@ -15,6 +16,10 @@ interface HubFilterDrawerProps {
   onFilterChange: (type: 'role' | 'gender', value: string) => void;
   onClose?: () => void;
 }
+
+/** Every gender option lights up the same pink: no green/red here, which would read as survivor/killer. */
+const GENDER_ACTIVE = 'bg-accent-red text-text-inverted';
+const GENDER_ACTIVE_TEXT = 'text-text-inverted';
 
 /** The role and gender segmented switches that expand under the command dock. */
 export function HubFilterDrawer({
@@ -64,7 +69,7 @@ export function HubFilterDrawer({
                   const isKiller = isKillerRole(role);
                   return {
                     value: role,
-                    label: isSurvivor ? filters.survivors : isKiller ? filters.killers : role,
+                    label: isSurvivor ? filters.survivors : isKiller ? filters.killers : termLabel(role),
                     activeClassName: isSurvivor ? 'bg-accent-green text-text-inverted' : 'bg-accent-red text-text-inverted',
                   };
                 }),
@@ -79,18 +84,13 @@ export function HubFilterDrawer({
               onChange={(gender) => onFilterChange('gender', gender)}
               className="w-full md:w-auto"
               options={[
-                { value: 'all', label: filters.allGenders },
-                ...availableGenders.map((gender) => {
-                  const isFemale = gender === 'female';
-                  const isMale = gender === 'male';
-                  const isMonster = gender === 'monster_other';
-                  return {
-                    value: gender,
-                    label: isFemale ? filters.femaleOnly : isMale ? filters.maleOnly : isMonster ? filters.monsters : gender,
-                    activeClassName: isFemale ? 'bg-accent-red text-text-inverted' : isMale ? 'bg-accent-green text-text-inverted' : 'bg-border-subtle text-text-primary',
-                    activeTextColor: isFemale || isMale ? undefined : 'text-text-primary',
-                  };
-                }),
+                { value: 'all', label: filters.allGenders, activeClassName: GENDER_ACTIVE, activeTextColor: GENDER_ACTIVE_TEXT },
+                ...availableGenders.map((gender) => ({
+                  value: gender,
+                  label: genderLabel(gender, filters),
+                  activeClassName: GENDER_ACTIVE,
+                  activeTextColor: GENDER_ACTIVE_TEXT,
+                })),
               ]}
             />
           </div>

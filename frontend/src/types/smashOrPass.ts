@@ -116,6 +116,8 @@ export interface RosterItem {
   category: string;
   is_nsfw: boolean;
   is_active: boolean;
+  /** Pixels the portraits of this roster sit lower on their cards (0 or absent: no shift). */
+  portrait_offset_y?: number;
   entity_count?: number;
   character_count?: number;
   total_votes?: number;
@@ -258,9 +260,6 @@ export interface CustomRomanceArchetype {
   subtitle: string;
   description: string;
   badge_color: string;
-  /** Usually flame, skull, heart, zap, sparkles, shield or compass; other names fall back to a default icon. */
-  icon_name?: string;
-  icon_url?: string;
   badge_image_url?: string;
   is_fallback?: boolean;
   rules: ArchetypeRule[];

@@ -1,7 +1,6 @@
 'use client';
 // frontend/src/app/[locale]/settings/SettingsClient.tsx
 
-import React from 'react';
 import {
   CampfireIcon,
   ClapperboardIcon,
@@ -10,34 +9,12 @@ import {
   MusicIcon,
   VolumeIcon,
 } from '@/components/icons/DbdIcons';
+import { SettingRow } from '@/components/common/SettingRow';
 import { Surface } from '@/components/common/Surface';
 import { Switch } from '@/components/common/Switch';
 import { Button } from '@/components/common/Button';
 import { usePreferences, type BackgroundAnimationMode } from '@/hooks/usePreferences';
 import { useDictionary } from '@/context/DictionaryContext';
-
-interface SettingRowProps {
-  icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean | 'true' | 'false' }>;
-  title: string;
-  description: string;
-  children: React.ReactNode;
-}
-
-/** One setting: icon, name and explanation on the left, its control on the right (wrapping below when narrow). */
-function SettingRow({ icon: Icon, title, description, children }: SettingRowProps) {
-  return (
-    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 py-4 first:pt-0 last:pb-0">
-      <div className="min-w-0 flex-1 basis-60 space-y-1">
-        <div className="flex items-center gap-2">
-          <Icon className="icon-md text-accent-red" aria-hidden="true" />
-          <span className="type-strong-fluid text-text-primary">{title}</span>
-        </div>
-        <p className="type-body-fluid text-text-secondary">{description}</p>
-      </div>
-      {children}
-    </div>
-  );
-}
 
 export function SettingsClient() {
   const dict = useDictionary();

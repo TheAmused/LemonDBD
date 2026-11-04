@@ -16,6 +16,8 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { defaultRosterThemeColor, SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
 import { type Draft, Section } from './SmashRosterCreatorParts';
 import { LABEL } from './styles';
+import { RequiredMark } from './RequiredMark';
+import { TierColorPicker } from '@/components/tier-lists/TierColorPicker';
 
 /** A checkbox row whose whole line is the click target. */
 
@@ -54,7 +56,10 @@ export function RosterBasicsSection({
     <Section title={c.stepBasics}>
       <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-5xl wide-2k:max-w-7xl mx-auto grid gap-4 2xl:gap-6 md:grid-cols-2">
         <label>
-          <span className={LABEL}>{c.nameLabel}</span>
+          <span className={LABEL}>
+            {c.nameLabel}
+            <RequiredMark />
+          </span>
           <Input
             fieldSize="md" invalid={attempted && nameMissing}
             value={draft.name}
@@ -147,12 +152,14 @@ export function RosterBasicsSection({
 
         <div className="md:col-span-2 flex flex-col items-center justify-center text-center">
           <span className={LABEL}>{c.themeColorLabel}</span>
-          <input
-            type="color"
-            value={draft.theme_color || defaultRosterThemeColor()}
-            onChange={(e) => patch({ theme_color: e.target.value })}
-            className="h-10 w-full max-w-xs cursor-pointer rounded-control border border-border-color bg-bg-primary shadow-xs"
-          />
+          <div className="flex w-full max-w-xs flex-wrap items-center justify-center gap-3">
+            <span
+              className="h-11 w-24 rounded-control border border-border-color shadow-xs"
+              style={{ backgroundColor: draft.theme_color || defaultRosterThemeColor() }}
+              aria-hidden="true"
+            />
+            <TierColorPicker color={draft.theme_color || defaultRosterThemeColor()} onChange={(hex) => patch({ theme_color: hex })} />
+          </div>
         </div>
 
         {/* Toggles Row: Simple Version, NSFW, and Official (Admin) */}

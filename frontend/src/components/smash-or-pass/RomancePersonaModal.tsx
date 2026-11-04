@@ -214,7 +214,6 @@ export const RomancePersonaModal: React.FC<RomancePersonaModalProps> = ({ isOpen
             feedbackNotice={feedbackNotice}
             copiedLink={copiedLink}
             onCopyLink={() => { void handleCopyLinkOnly(); }}
-            onBack={() => setIsSharingView(false)}
           />
         ) : (
           <PersonaBreakdown

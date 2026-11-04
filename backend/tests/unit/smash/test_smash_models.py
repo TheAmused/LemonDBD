@@ -83,7 +83,7 @@ class TestSmashModels:
     def test_create_roster_and_entity(self, db_session: Session) -> None:
         roster = Roster(
             slug="test_cyberpunk",
-            name="Cyberpunk 2077",
+            name="Cyberpunk Fog",
             description="Night City votables",
             cover_image_url="https://example.com/cover.png",
             theme_color="#00f5d4",
@@ -125,7 +125,7 @@ class TestSmashModels:
 
         roster_dict = roster.to_dict()
         assert roster_dict["slug"] == "test_cyberpunk"
-        assert roster_dict["name"] == "Cyberpunk 2077"
+        assert roster_dict["name"] == "Cyberpunk Fog"
         assert roster_dict["description"] == "Night City votables"
         assert roster_dict["theme_color"] == "#00f5d4"
 

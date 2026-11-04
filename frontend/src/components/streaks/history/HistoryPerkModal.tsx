@@ -15,6 +15,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 
 import { Button } from '@/components/common/Button';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
+import { useChallengeAnimations } from '../useChallengeAnimations';
 /** "You unlocked 3 new perks", worded and declined for the locale. */
 function unlockedPerksMessage(dict: Dictionary, locale: string, count: number): string {
   return formatMessage(dict.streaks.unlockedPerks, { count }, locale);
@@ -86,14 +87,17 @@ export interface HistoryPerkModalProps {
 
 export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, perks, locale, onClose }) => {
   const dict = useDictionary();
-  const [phase, setPhase] = useState<LockPhase>('locked');
+  const [animations] = useChallengeAnimations();
+  const [animatedPhase, setPhase] = useState<LockPhase>('locked');
+  // With animations off the perks are shown unlocked straight away.
+  const phase: LockPhase = animations ? animatedPhase : 'unlocked';
   const unlockedMessage = unlockedPerksMessage(dict, locale, perks.length);
 
   // Every killer's perks start locked, then the lock shakes, breaks and opens.
   useOnValueChange(killerName, () => setPhase('locked'));
 
   useEffect(() => {
-    if (!killerName) return;
+    if (!killerName || !animations) return;
     const shakeTimer = setTimeout(() => setPhase('shaking'), LOCK_SHAKE_DELAY_MS);
     const breakTimer = setTimeout(() => setPhase('breaking'), LOCK_BREAK_DELAY_MS);
     const unlockTimer = setTimeout(() => setPhase('unlocked'), LOCK_UNLOCKED_DELAY_MS);
@@ -102,7 +106,7 @@ export const HistoryPerkModal: React.FC<HistoryPerkModalProps> = ({ killerName, 
       clearTimeout(breakTimer);
       clearTimeout(unlockTimer);
     };
-  }, [killerName]);
+  }, [killerName, animations]);
 
   return (
     <Modal

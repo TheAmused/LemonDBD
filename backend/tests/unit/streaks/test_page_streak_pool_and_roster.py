@@ -125,20 +125,36 @@ class TestPageStreakRoster:
         seed_perks(self.perks)
         self.service = PageStreakService(perk_service=FakePerkService(self.perks))
 
-    def test_roster_lists_owned_killers_only(self) -> None:
+    def test_roster_lists_every_killer_and_marks_the_owned_ones(self) -> None:
         roster = self.service.get_roster(self.user_id)
         names = [entry["killer"] for entry in roster]
         assert names == ["Nurse", "Trapper"]
-        assert all(entry["status"] == "not_started" for entry in roster)
+        assert all(entry["status"] == "not_started" and entry["owned"] for entry in roster)
         assert roster[0]["page_count"] == 3
 
-    def test_locked_killer_is_excluded_from_roster(self, ownership_service: OwnershipService) -> None:
+    def test_a_killer_the_player_does_not_have_stays_on_the_roster_as_not_owned(self, ownership_service: OwnershipService) -> None:
         from app.core.extensions import db
 
         trapper = db.session.scalars(select(Killer).where(Killer.name == "Trapper")).first()
         ownership_service.set_character_ownership(self.user_id, trapper.id, is_owned=False, role="Killer")
-        names = [entry["killer"] for entry in self.service.get_roster(self.user_id)]
-        assert names == ["Nurse"]
+        owned = {entry["killer"]: entry["owned"] for entry in self.service.get_roster(self.user_id)}
+        assert owned == {"Nurse": True, "Trapper": False}
+        assert self.service.get_killers(self.user_id) == ["Nurse"]
+
+    def test_a_disabled_killer_stays_on_the_roster_marked_but_cannot_be_played(self) -> None:
+        from app.core.extensions import db
+        from app.services.admin_control_service import set_character_disabled
+
+        trapper = db.session.scalars(select(Killer).where(Killer.name == "Trapper")).first()
+        set_character_disabled(trapper.id, True, "power is bugged", "Killer")
+
+        roster = {entry["killer"]: entry for entry in self.service.get_roster(self.user_id)}
+        assert list(roster) == ["Nurse", "Trapper"]
+        assert (roster["Trapper"]["disabled"], roster["Trapper"]["disabled_reason"]) == (True, "power is bugged")
+        assert roster["Nurse"]["disabled"] is False
+        assert self.service.get_killers(self.user_id) == ["Nurse"]
+        with pytest.raises(ValueError):
+            self.service.start_run(self.user_id, "Trapper")
 
     def test_start_run_snapshot_at_is_utc_iso_with_z_suffix(self) -> None:
         run = self.service.start_run(self.user_id, "Nurse")
@@ -148,14 +164,26 @@ class TestPageStreakRoster:
         from datetime import datetime
         datetime.fromisoformat(run["snapshot_at"].replace("Z", "+00:00"))  # must parse cleanly
 
-    def test_start_run_freezes_snapshot(self, ownership_service: OwnershipService) -> None:
+    def test_a_new_run_follows_the_live_pool_until_the_build_is_locked(self, ownership_service: OwnershipService) -> None:
         from app.core.extensions import db
 
         run = self.service.start_run(self.user_id, "Nurse")
-        assert run["status"] == "in_progress"
-        assert run["current_page"] == 1
-        assert run["attempt"] == 1
-        assert run["best_page"] == 0
+        assert (run["status"], run["current_page"], run["attempt"], run["best_page"]) == ("in_progress", 1, 1, 0)
+        assert run["pool_frozen"] is False
+        assert run["page_count"] == 3
+
+        for i in range(1, 21):
+            perk = db.session.scalars(select(Perk).where(Perk.name == f"Perk {i:03d}")).first()
+            ownership_service.set_perk_ownership(self.user_id, perk.id, is_unlocked=False)
+        shrunk = self.service.get_run(self.user_id, "Nurse")
+        assert (shrunk["pool_frozen"], shrunk["page_count"]) == (False, 1)
+
+    def test_locking_the_build_freezes_the_pool(self, ownership_service: OwnershipService) -> None:
+        from app.core.extensions import db
+
+        self.service.start_run(self.user_id, "Nurse")
+        run = self.service.lock_pages(self.user_id, "Nurse")
+        assert run["pool_frozen"] is True
         assert run["page_count"] == 3
         assert len(run["pages"][0]) == 15
 
@@ -166,6 +194,38 @@ class TestPageStreakRoster:
         reloaded = self.service.get_run(self.user_id, "Nurse")
         assert reloaded["page_count"] == 3
         assert len(reloaded["pages"][0]) == 15
+
+    def test_frozen_pages_keep_their_icons_after_a_killer_is_locked(self, ownership_service: OwnershipService) -> None:
+        from app.core.extensions import db
+
+        for perk in self.perks:
+            perk["icon_local_path"] = f"icons/{perk['name']}.png"
+        self.service.start_run(self.user_id, "Trapper")
+        run = self.service.lock_pages(self.user_id, "Trapper")
+        on_pages = {name for page in run["pages"] for name in page}
+        assert on_pages <= set(run["perk_icons"])
+
+        nurse = db.session.scalars(select(Killer).where(Killer.name == "Nurse")).first()
+        ownership_service.set_character_ownership(self.user_id, nurse.id, is_owned=False, role="Killer")
+        for perk in db.session.scalars(select(Perk).where(Perk.killer_id == nurse.id)).all():
+            ownership_service.set_perk_ownership(self.user_id, perk.id, is_unlocked=False)
+
+        reloaded = self.service.get_run(self.user_id, "Trapper")
+        assert {name for page in reloaded["pages"] for name in page} == on_pages
+        assert on_pages <= set(reloaded["perk_icons"])
+
+    def test_a_killer_the_player_does_not_have_cannot_be_opened_or_played(self, ownership_service: OwnershipService) -> None:
+        from app.core.extensions import db
+
+        self.service.start_run(self.user_id, "Nurse")
+        nurse = db.session.scalars(select(Killer).where(Killer.name == "Nurse")).first()
+        ownership_service.set_character_ownership(self.user_id, nurse.id, is_owned=False, role="Killer")
+        with pytest.raises(ValueError, match="not found"):
+            self.service.get_run(self.user_id, "Nurse")
+        with pytest.raises(ValueError, match="not found"):
+            self.service.submit_result(self.user_id, "Nurse", 1, [], "loss")
+        with pytest.raises(ValueError, match="not found"):
+            self.service.get_run(self.user_id, "Made Up Killer")
 
     def test_start_run_twice_is_rejected(self) -> None:
         self.service.start_run(self.user_id, "Nurse")

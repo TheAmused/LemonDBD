@@ -30,7 +30,6 @@ import { IdPleaseProgress } from './IdPleaseProgress';
 import { IdPleaseSetup } from './IdPleaseSetup';
 import { useIdPleaseEligibility } from './useIdPleaseEligibility';
 import { useIdPleaseRun } from './useIdPleaseRun';
-import { TrophyIcon } from '@/components/icons/DbdIcons';
 
 // Opened on demand, like the other challenge boards: none of them is needed to start playing.
 const IdPleaseStatsDrawer = dynamic(() => import('./IdPleaseStatsDrawer').then((m) => m.IdPleaseStatsDrawer), { ssr: false });
@@ -114,7 +113,6 @@ export const IdPleaseBoard: React.FC<IdPleaseBoardProps> = ({ role }) => {
         header={
           <IdPleaseHeader
             difficulty={difficulty}
-            side={side}
             streak={run?.current_streak ?? 0}
             best={run?.best_streak ?? 0}
             onOpenRules={() => setIsRulesOpen(true)}
@@ -143,6 +141,7 @@ export const IdPleaseBoard: React.FC<IdPleaseBoardProps> = ({ role }) => {
             lane={lane}
             difficulty={difficulty}
             startSide={role === 'killer' ? 'killer' : 'survivor'}
+            attemptKey={`${run.id}-${run.attempt}`}
             fingerprint={run.roster_fingerprint}
             busy={busy}
             onStart={(chosenSide, positions) => {
@@ -160,12 +159,6 @@ export const IdPleaseBoard: React.FC<IdPleaseBoardProps> = ({ role }) => {
                     wins: (Math.floor(run.current_streak / run.checkpoint_interval) + 1) * run.checkpoint_interval,
                   })}
                   {run.checkpoint && ` ${formatMessage(s.idPleaseCheckpointNote, { number: run.checkpoint.number })}`}
-                </p>
-              )}
-              {run.badge_earned && (
-                <p className="flex items-center justify-center gap-1 type-strong text-accent-amber">
-                  <TrophyIcon className="icon-sm" aria-hidden="true" />
-                  {s.idPleaseBadgeEarned}
                 </p>
               )}
               <StreakActionBar>

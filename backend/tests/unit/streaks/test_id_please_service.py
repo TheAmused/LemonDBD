@@ -81,6 +81,19 @@ class TestRunLifecycle:
         assert fresh["attempt"] == run["attempt"] + 1
         assert fresh["total_wins"] == 3
 
+    def test_an_attempt_starts_when_the_opening_is_chosen(self, service: IdPleaseService, small: int) -> None:
+        assert new_run(service, small)["attempt_started"] is False
+        assert start(service, small)["attempt_started"] is True
+
+    def test_giving_up_right_after_start_counts_the_attempt(self, service: IdPleaseService, small: int) -> None:
+        start(service, small)
+        fresh = service.abandon_run(small, "milestones")
+        assert (fresh["attempts"], fresh["attempt_started"]) == (1, False)
+
+    def test_giving_up_in_setup_counts_nothing(self, service: IdPleaseService, small: int) -> None:
+        new_run(service, small)
+        assert service.abandon_run(small, "milestones")["attempts"] == 0
+
 
 @pytest.mark.unit
 class TestOpening:

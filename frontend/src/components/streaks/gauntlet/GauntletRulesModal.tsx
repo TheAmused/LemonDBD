@@ -6,18 +6,15 @@ import { BOOST_ICONS } from './boostIcons';
 import type { GauntletGameMode, Role } from '@/types/gauntletStreak';
 import { RulesModalShell } from '../RulesModalShell';
 import {
-  RULE_ADDONS_ALLOWED,
-  RULE_CRASH,
-  RULE_GAME_CANCELLED,
-  RULE_HACKERS,
   RulesConceptCard,
   RulesSection,
   RulesHowItWorks,
   RulesModalFooterSections,
   STANDARD_CLARIFICATIONS_WITH_ADDONS,
   STANDARD_EXCEPTIONS,
+  SURVIVOR_CLARIFICATIONS,
+  SURVIVOR_EXCEPTIONS,
   resolveRuleEntries,
-  type RuleEntryDef,
   type StreakTextKey,
 } from '../RulesModalSections';
 import { formatMessage } from '@/utils/i18nFormat';
@@ -112,33 +109,6 @@ const KILLER_TIERS: TierDefinition[] = [
     streakRange: '31 - 43',
     perkLimit: 0,
     badgeColor: 'text-accent-red',
-  },
-];
-
-const SURVIVOR_EXCEPTIONS: RuleEntryDef[] = [
-  {
-    labelKey: 'excEarlyDcLabel',
-    textKey: 'excEarlyDcText',
-  },
-  RULE_GAME_CANCELLED,
-  RULE_HACKERS,
-  RULE_CRASH,
-];
-
-const SURVIVOR_CLARIFICATIONS: RuleEntryDef[] = [
-  RULE_ADDONS_ALLOWED,
-  {
-    labelKey: 'clarRatOffLabel',
-    textKey: 'clarRatOffText',
-  },
-  {
-    labelKey: 'clarDeathIsDeathLabel',
-    textKey: 'clarDeathIsDeathText',
-  },
-  {
-    labelKey: 'clarKillerDcLabel',
-    textKey: 'clarKillerDcText',
-    variantTextKeys: { solo: 'soloKillerDcText', duo: 'duoKillerDcText', squad: 'squadKillerDcText' },
   },
 ];
 

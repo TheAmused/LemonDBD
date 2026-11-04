@@ -117,15 +117,15 @@ export interface RuleEntryDef {
   variantTextKeys?: Record<string, StreakTextKey>;
 }
 
-export const RULE_GAME_CANCELLED: RuleEntryDef = {
+const RULE_GAME_CANCELLED: RuleEntryDef = {
   labelKey: 'excGameCancelledLabel',
   textKey: 'excGameCancelledText',
 };
-export const RULE_HACKERS: RuleEntryDef = {
+const RULE_HACKERS: RuleEntryDef = {
   labelKey: 'excHackersLabel',
   textKey: 'excHackersText',
 };
-export const RULE_CRASH: RuleEntryDef = {
+const RULE_CRASH: RuleEntryDef = {
   labelKey: 'excCrashLabel',
   textKey: 'excCrashText',
 };
@@ -148,6 +148,26 @@ const DEFAULT_INACTIVITY_DAYS = 90;
 export const STANDARD_EXCEPTIONS: RuleEntryDef[] = [RULE_GAME_CANCELLED, RULE_HACKERS, RULE_CRASH];
 export const STANDARD_CLARIFICATIONS: RuleEntryDef[] = [RULE_SURVIVOR_DC, RULE_NO_DODGING];
 export const STANDARD_CLARIFICATIONS_WITH_ADDONS: RuleEntryDef[] = [...STANDARD_CLARIFICATIONS, RULE_ADDONS_ALLOWED];
+
+/** The survivor side's rules: an early disconnect voids the match too, and the killer's behaviour has its own clarifications. */
+export const SURVIVOR_EXCEPTIONS: RuleEntryDef[] = [
+  { labelKey: 'excEarlyDcLabel', textKey: 'excEarlyDcText' },
+  RULE_GAME_CANCELLED,
+  RULE_HACKERS,
+  RULE_CRASH,
+];
+const SURVIVOR_ONLY_CLARIFICATIONS: RuleEntryDef[] = [
+  { labelKey: 'clarRatOffLabel', textKey: 'clarRatOffText' },
+  { labelKey: 'clarDeathIsDeathLabel', textKey: 'clarDeathIsDeathText' },
+  {
+    labelKey: 'clarKillerDcLabel',
+    textKey: 'clarKillerDcText',
+    variantTextKeys: { solo: 'soloKillerDcText', duo: 'duoKillerDcText', squad: 'squadKillerDcText' },
+  },
+];
+export const SURVIVOR_CLARIFICATIONS: RuleEntryDef[] = [RULE_ADDONS_ALLOWED, ...SURVIVOR_ONLY_CLARIFICATIONS];
+/** Both sides in one list, for a challenge that alternates between them. */
+export const BOTH_SIDES_CLARIFICATIONS: RuleEntryDef[] = [...STANDARD_CLARIFICATIONS_WITH_ADDONS, ...SURVIVOR_ONLY_CLARIFICATIONS];
 
 /** Looks each def up in the copy bag and drops empty rows. */
 export function resolveRuleEntries(copy: StreakCopy, defs: RuleEntryDef[], variant?: string): RuleListEntry[] {

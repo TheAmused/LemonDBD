@@ -6,10 +6,13 @@ export interface AttemptCounters {
   attempts: number;
   /** Matches played in the current attempt. */
   attempt_matches: number;
+  /** Set by modes where an attempt also begins before its first match (Gauntlet's Start). */
+  attempt_started?: boolean;
 }
 
 /**
- * How many attempts the player has actually started. The one in progress only counts once a match was played in it:
- * opening a challenge or pressing reset on an untouched attempt starts nothing.
+ * How many attempts the player has actually started. The one in progress only counts once a match was played in it
+ * (or the mode says it began): opening a challenge or pressing reset on an untouched attempt starts nothing.
  */
-export const attemptsStarted = (run: AttemptCounters): number => run.attempts + (run.attempt_matches > 0 ? 1 : 0);
+export const attemptsStarted = (run: AttemptCounters): number =>
+  run.attempts + ((run.attempt_started ?? run.attempt_matches > 0) ? 1 : 0);

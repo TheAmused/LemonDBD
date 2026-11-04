@@ -45,13 +45,21 @@ class RetryableRunMixin(ChallengeRunMixin):
     #: pressing reset on an untouched attempt starts nothing.
     attempt_matches: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)
 
-    def record_match(self, result: str) -> None:
+    @property
+    def attempt_started(self) -> bool:
+        """Whether the attempt in play counts yet. By default it does once a match was played in it."""
+        return self.attempt_matches > 0
+
+    def record_match(self, result: str, attempt: int) -> None:
+        """Count a match of `attempt`. A match that ended its attempt is recorded after the run moved on to the
+        next one, and belongs to the old one, so it must not make the new attempt look started."""
         if result == "win":
             self.total_wins += 1
         else:
             self.total_losses += 1
         self.playthrough_matches += 1
-        self.attempt_matches += 1
+        if attempt == self.attempt:
+            self.attempt_matches += 1
 
     def finish_playthrough(self) -> None:
         """The run was completed: the next playthrough counts its attempts and matches from zero."""
@@ -69,7 +77,7 @@ class RetryableRunMixin(ChallengeRunMixin):
         and only if it got to play a match: giving up an untouched attempt leaves the count where it was."""
         if self.status == "completed":
             self.attempt += 1
-        elif self.attempt_matches > 0:
+        elif self.attempt_started:
             self.start_new_attempt()
         self.attempt_matches = 0
         self.playthrough_matches = 0

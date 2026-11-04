@@ -27,9 +27,12 @@ export function slugifyEntityId(text: string): string {
   return slugify(text, 'entity');
 }
 
-/** name -> filesystem-safe slug, matching the backend's avatar filename convention. */
+/** name -> filesystem-safe slug, matching the backend's avatar filename convention. Accents are dropped:
+ * "The Onryō" is saved as `the_onryo`. */
 export function sanitizeName(name: string): string {
   return name
+    .normalize('NFKD')
+    .replace(/[̀-ͯ]/g, '')
     .toLowerCase()
     .trim()
     .replace(/[\s\-/]+/g, '_')

@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { RotateCcw } from 'lucide-react';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { PageStreakRoster } from './page-streak/PageStreakRoster';
-import { fetchRoster, resetAllRuns } from '@/services/pageStreakApi';
+import { abandonAllRuns, fetchRoster } from '@/services/pageStreakApi';
 import type { RosterEntry } from '@/types/pageStreak';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -23,8 +23,8 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
   const [reloading, setReloading] = useState(false);
   const loading = reloading || !token || loadedFor !== token;
   const [error, setError] = useState<string | null>(null);
-  const [confirmingResetAll, setConfirmingResetAll] = useState(false);
-  const [resettingAll, setResettingAll] = useState(false);
+  const [confirmingAbandonAll, setConfirmingAbandonAll] = useState(false);
+  const [abandoningAll, setAbandoningAll] = useState(false);
 
   /** Fetches the roster; its state is set in the promise callbacks only. */
   const fetchInto = useCallback(
@@ -59,17 +59,17 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
     };
   }, [token, fetchInto]);
 
-  const handleResetAll = async () => {
+  const handleAbandonAll = async () => {
     if (!token) return;
-    setResettingAll(true);
+    setAbandoningAll(true);
     try {
-      await resetAllRuns(token);
-      setConfirmingResetAll(false);
+      await abandonAllRuns(token);
+      setConfirmingAbandonAll(false);
       await load();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not reset the roster');
+      setError(err instanceof Error ? err.message : 'Could not abandon the runs');
     } finally {
-      setResettingAll(false);
+      setAbandoningAll(false);
     }
   };
 
@@ -78,25 +78,25 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
       <div className="mb-6 flex justify-end">
         <Button
           type="button"
-          onClick={() => setConfirmingResetAll(true)}
+          onClick={() => setConfirmingAbandonAll(true)}
           variant="secondary" size="sm"
         >
           <RotateCcw />
-          {dict.streaks.resetAllRuns}
+          {dict.streaks.abandonAllRuns}
         </Button>
       </div>
 
       <ConfirmModal
-        open={confirmingResetAll}
-        title={dict.streaks.resetAllRunsTitle}
-        message={
-          dict.streaks.resetAllRunsPrompt
-        }
-        confirmLabel={dict.streaks.resetConfirm}
-        cancelLabel={dict.streaks.cancel}
-        busy={resettingAll}
-        onConfirm={() => { void handleResetAll(); }}
-        onCancel={() => setConfirmingResetAll(false)}
+        open={confirmingAbandonAll}
+        title={dict.streaks.abandonAllRunsTitle}
+        message={dict.streaks.abandonAllRunsPrompt}
+        confirmLabel={dict.streaks.abandonConfirm}
+        size="sm"
+        closeButton="header"
+        closeButtonAriaLabel={dict.modal.close}
+        busy={abandoningAll}
+        onConfirm={() => { void handleAbandonAll(); }}
+        onCancel={() => setConfirmingAbandonAll(false)}
       />
 
       <PageStreakRoster locale={locale} roster={roster} loading={loading} error={error} onRetry={() => { void load(); }} />

@@ -19,7 +19,6 @@ import {
 import { idPleaseNeeds } from '@/components/streaks/id-please/idPleaseNeeds';
 import { getTrophyShelves } from '@/components/achievements/shelves';
 import { everyNthCheckpoint } from '@/utils/challengeCheckpoints';
-import { ID_PLEASE_DIFFICULTY_ORDER, isHardestTierCompleted } from '@/utils/challengeTierCompletion';
 import enDict from '@/locales/en';
 import deDict from '@/locales/de';
 import esDict from '@/locales/es';
@@ -41,14 +40,11 @@ describe('ID, Please: difficulties', () => {
     assert.equal(parseIdPleaseDifficulty(null), 'milestones');
   });
 
-  it('keeps the badge streaks, checkpoints and the card trophy consistent', () => {
+  it('keeps the badge streaks and checkpoints consistent', () => {
     assert.deepEqual(ID_PLEASE_BADGE_STREAK, { milestones: 50, hardcore: 30, hardcore_plus: 25 });
     assert.deepEqual(everyNthCheckpoint(10, ID_PLEASE_BADGE_STREAK.milestones), [10, 20, 30, 40]);
     assert.deepEqual(everyNthCheckpoint(0, ID_PLEASE_BADGE_STREAK.hardcore), []);
-    assert.deepEqual([...ID_PLEASE_DIFFICULTY_ORDER], [...ID_PLEASE_DIFFICULTIES]);
-    // The badges are independent: only Hardcore+ earns the card's trophy.
-    assert.equal(isHardestTierCompleted(ID_PLEASE_DIFFICULTY_ORDER, ['milestones', 'hardcore']), false);
-    assert.equal(isHardestTierCompleted(ID_PLEASE_DIFFICULTY_ORDER, ['hardcore_plus']), true);
+    assert.deepEqual([...ID_PLEASE_DIFFICULTIES], ['milestones', 'hardcore', 'hardcore_plus']);
   });
 });
 

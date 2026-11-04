@@ -2,6 +2,10 @@
 // frontend/src/components/streaks/page-streak/PageStreakRunView.tsx
 
 import React, { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { ChevronIcon } from '@/components/icons/DbdIcons';
+import { buttonClassName } from '@/components/common/Button';
 import { usePageStreakRun } from './usePageStreakRun';
 import { RunHeader } from './RunHeader';
 import { PerkPageGrid } from './PerkPageGrid';
@@ -15,17 +19,19 @@ import { ChallengeCompletionHistoryDrawer, Confetti, AbandonConfirmModal } from 
 import { useCelebrateOnRise, useCelebration } from '../useCelebration';
 import { staticUrl } from '@/utils/staticUrl';
 import { attemptsStarted } from '@/utils/challengeAttempts';
-import { useDictionary } from '@/context/DictionaryContext';
+import { useDictionary, useLocale } from '@/context/DictionaryContext';
+import { useStoredItem } from '@/hooks/useStoredItem';
+import {
+  pageStreakBuildStorageKey,
+  pickedPerks,
+  readPageStreakBuild,
+  serializePageStreakBuild,
+  togglePerk,
+  type PageStreakBuild,
+} from '@/utils/pageStreakBuild';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
-
-interface BuildState {
-  /** The page and attempt this build was made for. */
-  key: string;
-  selected: string[];
-  confirmed: boolean;
-}
 
 interface PageStreakRunViewProps {
   killer: string;
@@ -34,7 +40,14 @@ interface PageStreakRunViewProps {
 export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) => {
   const dict = useDictionary();
   const killerDisplayName = useCharacterDisplayName()(killer);
-  const { run, stats, completions, loading, busy, error, startRun, submitResult, abandonRun } = usePageStreakRun(killer);
+  const router = useRouter();
+  const locale = useLocale();
+  const { run, stats, completions, loading, busy, error, errorStatus, startRun, lockPages, submitResult, abandonRun } = usePageStreakRun(killer);
+  // A killer the player does not have (typed into the address bar, or no longer owned) has no run to show.
+  const killerUnavailable = errorStatus === 404;
+  useEffect(() => {
+    if (killerUnavailable) router.replace(`/${locale}/streaks/killer/page-streak`);
+  }, [killerUnavailable, router, locale]);
   const iconByPerk = React.useMemo(() => {
     const entries = Object.entries(run?.perk_icons ?? {});
     return Object.fromEntries(
@@ -43,7 +56,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
   }, [run?.perk_icons]);
   // The page the preview tab was opened on, so moving to the next page drops back to the current page tab.
   const [previewPageKey, setPreviewPageKey] = useState('');
-  const [build, setBuild] = useState<BuildState>({ key: '', selected: [], confirmed: false });
+  const [savedBuild, saveBuild] = useStoredItem(pageStreakBuildStorageKey(killer));
   const [confirmingAbandon, setConfirmingAbandon] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
@@ -56,19 +69,14 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
   // which stops this from retrying in a loop.
   const autoStartedRef = useRef(false);
   useEffect(() => {
-    if (loading || run || busy || error || autoStartedRef.current) return;
+    if (loading || run || busy || error || killerUnavailable || autoStartedRef.current) return;
     autoStartedRef.current = true;
     void startRun();
-  }, [loading, run, busy, error, startRun]);
+  }, [loading, run, busy, error, killerUnavailable, startRun]);
   // Abandoning (or another killer) leaves no run again, so allow the next auto-start.
   useEffect(() => {
     if (run) autoStartedRef.current = false;
   }, [run, killer]);
-
-  // A new page (or a new attempt) always starts from an empty, unconfirmed build. Derived while rendering rather than
-  // reset in an effect, so the old build never shows for a frame on the new page.
-  const buildKey = run ? `${run.attempt}-${run.current_page}-${run.status}` : '';
-  const { selected, confirmed } = build.key === buildKey ? build : { selected: [] as string[], confirmed: false };
 
   useCelebrateOnRise(run?.status === 'completed', celebrate);
 
@@ -79,31 +87,45 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
 
   const currentPagePerks = run ? run.pages[run.current_page - 1] ?? [] : [];
   const buildSize = Math.min(4, currentPagePerks.length);
+  // The build lives in localStorage, so a refresh keeps it. A new page (or a new attempt) always starts from an
+  // empty, unconfirmed one: the saved build is only used when it was made for this very page and attempt.
+  const buildKey = run ? `${run.id}-${run.attempt}-${run.current_page}-${run.status}` : '';
+  const build = readPageStreakBuild(savedBuild, buildKey, currentPagePerks, buildSize);
+  const selected = pickedPerks(build);
+  const { confirmed } = build;
+  const updateBuild = (next: PageStreakBuild) => saveBuild(serializePageStreakBuild(buildKey, next));
   const nextPagePerks = run && run.current_page < run.page_count ? run.pages[run.current_page] : [];
   const viewingNext = nextPagePerks.length > 0 && previewPageKey === pageKey;
 
-  const toggle = (name: string) => {
-    if (selected.includes(name)) setBuild({ key: buildKey, selected: selected.filter((n) => n !== name), confirmed });
-    else if (selected.length < buildSize) setBuild({ key: buildKey, selected: [...selected, name], confirmed });
+  const toggle = (name: string) => updateBuild(togglePerk(build, name));
+  // Locking the build also freezes the run's perk pool; a run that is already frozen has nothing to lock.
+  const confirmBuild = async () => {
+    if (run && !run.pool_frozen && !(await lockPages())) return;
+    updateBuild({ ...build, confirmed: true });
   };
 
   return (
     <div className={run && run.status !== 'completed' ? 'pb-16' : ''}>
       <Confetti active={celebrating} />
 
-      {error && (
+      <Link href={`/${locale}/streaks/killer/page-streak`} className={buttonClassName('secondary', 'sm', 'mt-4')}>
+        <ChevronIcon className="icon-sm rotate-180" aria-hidden="true" />
+        <span>{dict.streaks.back}</span>
+      </Link>
+
+      {error && !killerUnavailable && (
         <div className="mt-4">
           <ChallengeErrorBanner message={error} />
         </div>
       )}
 
-      {loading && (
+      {(loading || killerUnavailable) && (
         <p className="py-10 text-center text-xs text-text-muted">
           {dict.streaks.loadingStreak}
         </p>
       )}
 
-      {!loading && run && (
+      {!loading && !killerUnavailable && run && (
         <div className="mt-4 [&>*:last-child]:mb-0">
           <ChallengePanel
             progress={
@@ -127,7 +149,6 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
             <ChallengeVictoryCard
               title={dict.streaks.pageStreakVictoryTitle}
               subtitle={`${dict.streaks.pageStreakVictoryPrefix} ${killerDisplayName}`}
-              onRestart={() => setConfirmingAbandon(true)}
               busy={busy}
             />
           ) : (
@@ -160,7 +181,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
                   <StreakActionButton
                     variant="red"
                     disabled={busy || selected.length !== buildSize}
-                    onClick={() => setBuild({ key: buildKey, selected, confirmed: true })}
+                    onClick={() => { void confirmBuild(); }}
                   >
                     {dict.streaks.confirmBuild}
                   </StreakActionButton>
@@ -199,8 +220,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
 
                 <aside className="order-first lg:order-none lg:flex lg:items-center lg:justify-center lg:border-l lg:border-border-color lg:pl-6">
                   <BuildPanel
-                    selected={selected}
-                    size={buildSize}
+                    slots={build.slots}
                     iconByPerk={iconByPerk}
                     killerName={killerDisplayName}
                     avatarSrc={staticUrl(run.killer_avatar)}

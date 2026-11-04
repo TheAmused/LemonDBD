@@ -10,10 +10,14 @@ import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { usePerkDisplayName, usePerkLabel } from '@/context/DisplayNamesContext';
 import { normalizeSearchText } from '@/utils/perkUtils';
 import { useDictionary } from "@/context/DictionaryContext";
+import { useProgressiveList } from '@/hooks/useProgressiveList';
 
 import { Button } from '@/components/common/Button';
 import { SearchInput } from '@/components/common/Field';
 import { Surface } from '@/components/common/Surface';
+
+const FIRST_CHUNK = 45;
+
 const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: boolean }> = ({
   perk,
   displayName,
@@ -88,6 +92,11 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
   const locked = pool.filter((p) => !unlockedSet.has(p.name) && matchesQuery(p));
   const noMatchText = dict.streaks.noPerksMatchSearch;
 
+  // The pool has a couple of hundred perks, each with an icon: the tiles fill in as the page is scrolled, the unlocked ones first.
+  const { limit, sentinelRef } = useProgressiveList(unlocked.length + locked.length, normalizedQuery, FIRST_CHUNK, true);
+  const shownUnlocked = unlocked.slice(0, limit);
+  const shownLocked = locked.slice(0, Math.max(0, limit - unlocked.length));
+
   const seenUnlockedRef = useRef<Set<string>>(new Set());
   const [justUnlockedNames, setJustUnlockedNames] = useState<Set<string>>(new Set());
 
@@ -144,7 +153,7 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
         </p>
       ) : (
         <div className="mb-5 grid grid-cols-4 phone-md:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
-          {unlocked.map((perk) => (
+          {shownUnlocked.map((perk) => (
             <UnlockedTile
               key={perk.id ?? perk.name}
               perk={perk}
@@ -165,11 +174,12 @@ export const HistoryPerkPoolPanel: React.FC<HistoryPerkPoolPanelProps> = ({ pool
         </p>
       ) : (
         <div className="grid grid-cols-4 phone-md:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-[repeat(15,minmax(0,1fr))] gap-2">
-          {locked.map((perk) => (
+          {shownLocked.map((perk) => (
             <LockedTile key={perk.id ?? perk.name} perk={perk} displayName={localName(perk)} />
           ))}
         </div>
       )}
+      <div ref={sentinelRef} aria-hidden="true" className="h-px" />
     </Surface>
   );
 };

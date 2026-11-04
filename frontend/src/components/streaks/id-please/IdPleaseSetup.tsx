@@ -15,6 +15,14 @@ import { roleOnlyConflict, searchPerks } from '@/utils/perkSearch/match';
 import { sortByRelevance } from '@/utils/perkSearch/sort';
 import { perkTypesByRole, type PerkType } from '@/utils/perkTypes';
 import { cn } from '@/utils/cn';
+import { useStoredItem } from '@/hooks/useStoredItem';
+import {
+  ID_PLEASE_LOADOUT_SIZE,
+  idPleaseOpeningStorageKey,
+  readIdPleaseOpening,
+  serializeIdPleaseOpening,
+  type IdPleaseOpening,
+} from '@/utils/idPleaseOpening';
 import { formatMessage } from '@/utils/i18nFormat';
 import { idPleaseLaneSide } from '@/types/idPleaseStreak';
 import type { IdPleaseDifficulty, IdPleaseLane, IdPleasePerk, IdPleaseSide } from '@/types/idPleaseStreak';
@@ -25,7 +33,6 @@ import { usePerkCoordinates } from './usePerkCoordinates';
 import type { PerkCoordinate } from './usePerkCoordinates';
 import { useIdPleasePreview, useIdPleaseRoster } from './useIdPleaseSetupData';
 
-const LOADOUT_SIZE = 4;
 // A side has a couple of hundred perks, each with an icon: the grid fills in as it is scrolled.
 const FIRST_CHUNK = 36;
 
@@ -40,13 +47,15 @@ interface IdPleaseSetupProps {
   difficulty: IdPleaseDifficulty;
   /** The side the tab opens on in the mixed lane; ignored by a single-side lane, which has only its own. */
   startSide: IdPleaseSide;
+  /** Names this attempt of this run: a saved opening only applies to the attempt it was made in. */
+  attemptKey: string;
   fingerprint: string | undefined;
   busy: boolean;
   onStart: (side: IdPleaseSide, perkPositions: number[]) => void;
 }
 
 /** Choosing the opening: four perks (and, in the mixed lane, the side to start on), with a preview of the first match (and, in the mixed lane, the second) before you commit. */
-export const IdPleaseSetup: React.FC<IdPleaseSetupProps> = ({ lane, difficulty, startSide, fingerprint, busy, onStart }) => {
+export const IdPleaseSetup: React.FC<IdPleaseSetupProps> = ({ lane, difficulty, startSide, attemptKey, fingerprint, busy, onStart }) => {
   const dict = useDictionary();
   const s = dict.streaks;
   const locale = useLocale();
@@ -54,9 +63,14 @@ export const IdPleaseSetup: React.FC<IdPleaseSetupProps> = ({ lane, difficulty, 
   const { perks: catalog, loading: catalogLoading } = useCatalogPerks(locale);
   const coordinates = usePerkCoordinates();
   const laneSide = idPleaseLaneSide(lane);
-  const [pickedSide, setPickedSide] = useState<IdPleaseSide>(startSide);
-  const side = laneSide ?? pickedSide;
-  const [chosen, setChosen] = useState<number[]>([]);
+  // The side and the perks live in localStorage, so a refresh keeps them. They are only used for this attempt and
+  // this roster: a new attempt, or characters and perks that changed, start from an empty opening.
+  const [savedOpening, saveOpening] = useStoredItem(idPleaseOpeningStorageKey(lane, difficulty));
+  const openingKey = `${attemptKey}|${fingerprint ?? ''}`;
+  const opening = readIdPleaseOpening(savedOpening, openingKey);
+  const side = laneSide ?? opening.side ?? startSide;
+  const chosen = opening.positions;
+  const updateOpening = (next: IdPleaseOpening) => saveOpening(serializeIdPleaseOpening(openingKey, next));
   const [search, setSearch] = useState('');
   const [types, setTypes] = useState<PerkType[]>([]);
 
@@ -66,17 +80,19 @@ export const IdPleaseSetup: React.FC<IdPleaseSetupProps> = ({ lane, difficulty, 
   const preview = useIdPleasePreview(lane, difficulty, side, shuffled ? [] : chosen, fingerprint);
 
   const changeSide = (next: IdPleaseSide) => {
-    setPickedSide(next);
-    setChosen([]);
+    updateOpening({ side: next, positions: [] });
     setSearch('');
     setTypes([]);
   };
 
-  const toggle = (position: number) =>
-    setChosen((current) => {
-      if (current.includes(position)) return current.filter((p) => p !== position);
-      return current.length >= LOADOUT_SIZE ? current : [...current, position];
-    });
+  const toggle = (position: number) => {
+    const positions = chosen.includes(position)
+      ? chosen.filter((p) => p !== position)
+      : chosen.length >= ID_PLEASE_LOADOUT_SIZE
+        ? chosen
+        : [...chosen, position];
+    updateOpening({ side, positions });
+  };
 
   // The perks the player owns on this side, in the order of the in-game inventory, so a perk's [P/S] tag reads straight down the grid.
   const inventory: IdPleasePerk[] = useMemo(
@@ -100,8 +116,8 @@ export const IdPleaseSetup: React.FC<IdPleaseSetupProps> = ({ lane, difficulty, 
   const { limit, rootRef, sentinelRef } = useProgressiveList(visible.length, `${side}|${search}|${types.join(',')}`, FIRST_CHUNK);
   const shown = useMemo(() => visible.slice(0, limit), [visible, limit]);
 
-  const full = chosen.length === LOADOUT_SIZE;
-  const unplayable = !loading && ((roster?.characters.length ?? 0) === 0 || (roster?.perks.length ?? 0) < LOADOUT_SIZE);
+  const full = chosen.length === ID_PLEASE_LOADOUT_SIZE;
+  const unplayable = !loading && ((roster?.characters.length ?? 0) === 0 || (roster?.perks.length ?? 0) < ID_PLEASE_LOADOUT_SIZE);
 
   return (
     <div className="space-y-6">
@@ -133,7 +149,7 @@ export const IdPleaseSetup: React.FC<IdPleaseSetupProps> = ({ lane, difficulty, 
         </div>
 
         {/* The Perks page's search box: perk types as chips, the Types menu, aliases and characters. */}
-        <PerkSearchBox rolePerks={rolePerks} search={search} setSearch={setSearch} activeTypes={types} onTypesChange={setTypes} suggestPerks className="mb-3" />
+        <PerkSearchBox rolePerks={rolePerks} search={search} setSearch={setSearch} activeTypes={types} onTypesChange={setTypes} suggestPerks className="mb-3 max-w-xl" />
 
         {unplayable ? (
           <p className="py-6 text-center text-sm text-text-muted">{s.idPleaseSideEmpty}</p>

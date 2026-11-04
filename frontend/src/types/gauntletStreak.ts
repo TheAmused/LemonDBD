@@ -93,6 +93,8 @@ export interface GauntletRun {
   attempts: number;
   /** Matches played in the current attempt; the attempt only counts once it has one. */
   attempt_matches: number;
+  /** The attempt in play counts: a match was played in it, or it was started from zero with Start. */
+  attempt_started: boolean;
   tier_info: TierInfo;
   /** Lemon killer: spendable balance, what the last win rolled (0 after a loss) and the free slots bought for this match. */
   tokens: number;

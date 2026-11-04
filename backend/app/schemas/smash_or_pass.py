@@ -76,6 +76,7 @@ class RosterResponse(BaseModel):
     category: str
     is_nsfw: bool
     is_active: bool
+    portrait_offset_y: int = 0
     created_at: datetime | None = None
 
     model_config = ConfigDict(from_attributes=True)

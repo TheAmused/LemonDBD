@@ -11,6 +11,7 @@ export function useHubOverlays(isPrefsOpen = false) {
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState<boolean>(false);
   const [isLeaderboardOpen, setIsLeaderboardOpen] = useState<boolean>(false);
   const [isPersonaOpen, setIsPersonaOpen] = useState<boolean>(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
   const [sharedPayload, setSharedPayload] = useState<SharedArchetypePayload | null>(null);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState<boolean>(false);
   const [isHowToPlayOpen, setIsHowToPlayOpen] = useState<boolean>(false);
@@ -42,6 +43,7 @@ export function useHubOverlays(isPrefsOpen = false) {
     isPersonaOpen ||
     isResetConfirmOpen ||
     isHowToPlayOpen ||
+    isSettingsOpen ||
     isPrefsOpen ||
     isRosterModalOpen ||
     isFilterDrawerOpen ||
@@ -59,6 +61,8 @@ export function useHubOverlays(isPrefsOpen = false) {
     setIsLeaderboardOpen,
     isPersonaOpen,
     setIsPersonaOpen,
+    isSettingsOpen,
+    setIsSettingsOpen,
     sharedPayload,
     setSharedPayload,
     isResetConfirmOpen,

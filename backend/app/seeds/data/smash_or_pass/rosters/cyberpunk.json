@@ -4,20 +4,21 @@
   "target": "rosters",
   "rosters": [
     {
-      "slug": "cyberpunk_2077",
-      "name": "Cyberpunk Fog 2077",
+      "slug": "cyberpunk",
+      "name": "Cyberpunk Fog",
       "description": "High-tech neon augments and synth-infused killers.",
       "translations": {
         "pl": {
-          "name": "Cyberpunkowa Mgła 2077",
+          "name": "Cyberpunkowa Mgła",
           "description": "Neonowe ulepszenia i syntetyczni zabójcy."
         }
       },
-      "cover_image_url": "/static/avatars/rosters/cyberpunk_2077.webp",
+      "cover_image_url": "/static/avatars/rosters/cyberpunk.webp",
       "theme_color": "#00f5d4",
       "category": "Cyberpunk",
       "is_nsfw": false,
       "is_active": false,
+      "portrait_offset_y": 0,
       "entities": [
         {
           "slug": "cyber_trickster",

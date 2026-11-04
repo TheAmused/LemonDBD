@@ -141,7 +141,7 @@ export async function fetchLeaderboard(
   const backendBase = getBackendBaseUrl();
   const params = new URLSearchParams();
   params.set('sort_by', options?.sortBy || 'smash_rate');
-  params.set('limit', String(options?.limit || 100));
+  params.set('limit', String(options?.limit || 250));
   if (options?.role && options.role !== 'all') params.set('role', options.role);
   if (options?.gender && options.gender !== 'all') params.set('gender', options.gender);
 

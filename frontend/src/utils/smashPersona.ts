@@ -2,6 +2,7 @@
 
 import type { EntityItem, CustomRomanceArchetype, ArchetypeRule } from '@/types/smashOrPass';
 import { isKiller, isSurvivor } from '@/utils/characterUtils';
+import { canonicalGender } from '@/utils/smashOrPass/terms';
 
 export interface VoteRecord {
   character: EntityItem;
@@ -31,7 +32,6 @@ export interface ArchetypeVisualConfig {
   archKey: string;
   badgeColor: string;
   borderColor: string;
-  iconName: 'compass' | 'skull' | 'flame' | 'shield' | 'heart' | 'zap' | 'sparkles';
 }
 
 export interface RomancePersonaResult {
@@ -41,9 +41,6 @@ export interface RomancePersonaResult {
   description: string;
   badgeColor: string;
   borderColor: string;
-  /** Usually an `ArchetypeVisualConfig` icon name; other names fall back to a default icon. */
-  iconName: string;
-  iconUrl?: string;
   badgeImageUrl?: string;
   killerAffinity: number;
   survivorAffinity: number;
@@ -68,45 +65,69 @@ const ARCHETYPE_VISUALS: Record<string, ArchetypeVisualConfig> = {
     archKey: 'untappedSoul',
     badgeColor: 'from-bg-elevated via-bg-surface to-bg-primary',
     borderColor: 'border-border-color',
-    iconName: 'compass',
   },
   eldritchDevotee: {
     archKey: 'eldritchDevotee',
     badgeColor: 'from-accent-red via-accent-red-hover to-bg-primary',
     borderColor: 'border-accent-red/60',
-    iconName: 'skull',
   },
   redStainAddict: {
     archKey: 'redStainAddict',
     badgeColor: 'from-accent-red via-accent-red-hover to-bg-primary',
     borderColor: 'border-accent-red/60',
-    iconName: 'flame',
   },
   campfireSoulmate: {
     archKey: 'campfireSoulmate',
     badgeColor: 'from-accent-green via-accent-green-hover to-bg-primary',
     borderColor: 'border-accent-green/60',
-    iconName: 'shield',
   },
   entitysParamour: {
     archKey: 'entitysParamour',
     badgeColor: 'from-accent-red via-accent-red-hover to-bg-primary',
     borderColor: 'border-accent-red/60',
-    iconName: 'heart',
   },
   coldHeartedPragmatist: {
     archKey: 'coldHeartedPragmatist',
     badgeColor: 'from-bg-surface via-bg-elevated to-bg-primary',
     borderColor: 'border-border-color',
-    iconName: 'zap',
   },
   fogRomantic: {
     archKey: 'fogRomantic',
     badgeColor: 'from-accent-red via-accent-red-hover to-bg-primary',
     borderColor: 'border-accent-red/60',
-    iconName: 'sparkles',
   },
 };
+
+/**
+ * English copy for when the dictionary has no entry for an archetype: the empty state's own text, and
+ * the Fog Romantic's for everything else. A last resort; the locale dictionaries normally supply it.
+ */
+const FALLBACK_COPY = {
+  untappedSoul: {
+    title: 'The Untapped Soul',
+    subtitle: 'Your trial desires remain veiled in the Fog.',
+    desc: 'Evaluate candidates to unlock your psychological profile, dating analysis, and affinity balance.',
+  },
+  fogRomantic: {
+    title: 'The Fog Romantic',
+    subtitle: 'A balanced soul seeking passion and adrenaline across the trials.',
+    desc: 'You believe that even within the infinite trials of the Entity, a true spark of romance can always be found.',
+  },
+} as const;
+
+/** A built-in archetype's title, subtitle and description: the dictionary's, else `FALLBACK_COPY`. */
+function archetypeCopy(
+  rawArchetypes: Record<string, PersonaArchetypeEntry>,
+  key: string
+): { title: string; subtitle: string; description: string } {
+  const entry = rawArchetypes[key] || {};
+  const fallback = key === 'untappedSoul' ? FALLBACK_COPY.untappedSoul : FALLBACK_COPY.fogRomantic;
+  return {
+    title: entry.title || fallback.title,
+    subtitle: entry.subtitle || fallback.subtitle,
+    description: entry.desc || fallback.desc,
+  };
+}
 
 /**
  * Calculates Romance Persona archetype, affinity percentages, and telemetry from a votes array.
@@ -122,19 +143,26 @@ export function calculateRomancePersona(
     const total = (votes || []).length;
     const smashRate = total > 0 ? Math.round((smashes.length / total) * 100) : 0;
 
-    const fallbackArch = customArchetypes.find((a) => a.is_fallback) || customArchetypes[customArchetypes.length - 1];
+    // The archetype shown when nothing matches: the one the author marked as fallback, else a built-in one
+    // (never an arbitrary archetype of theirs, which would claim the player met rules they did not).
+    const markedFallback = customArchetypes.find((a) => a.is_fallback);
+    const builtIn = (key: 'untappedSoul' | 'fogRomantic'): CustomRomanceArchetype => ({
+      id: key,
+      ...archetypeCopy(rawArchetypes, key),
+      badge_color: ARCHETYPE_VISUALS[key].badgeColor,
+      rules: [],
+    });
 
     if (!votes || votes.length === 0) {
+      const empty = markedFallback || builtIn('untappedSoul');
       return {
-        archKey: fallbackArch.id,
-        title: fallbackArch.title,
-        subtitle: fallbackArch.subtitle,
-        description: fallbackArch.description,
-        badgeColor: fallbackArch.badge_color || 'from-bg-elevated via-bg-surface to-bg-primary',
+        archKey: empty.id,
+        title: empty.title,
+        subtitle: empty.subtitle,
+        description: empty.description,
+        badgeColor: empty.badge_color || 'from-bg-elevated via-bg-surface to-bg-primary',
         borderColor: 'border-border-color',
-        iconName: fallbackArch.icon_name || 'compass',
-        iconUrl: fallbackArch.icon_url,
-        badgeImageUrl: fallbackArch.badge_image_url,
+        badgeImageUrl: empty.badge_image_url,
         killerAffinity: 0,
         survivorAffinity: 0,
         smashRate: 0,
@@ -153,7 +181,7 @@ export function calculateRomancePersona(
       const r = (s.character?.role || '').trim().toLowerCase();
       if (r) roleCountMap.set(r, (roleCountMap.get(r) || 0) + 1);
 
-      const g = (s.character?.gender || '').trim().toLowerCase();
+      const g = canonicalGender(s.character?.gender).toLowerCase();
       if (g) genderCountMap.set(g, (genderCountMap.get(g) || 0) + 1);
     }
 
@@ -162,7 +190,7 @@ export function calculateRomancePersona(
     };
 
     const getGenderCount = (targetGender: string) => {
-      return genderCountMap.get(targetGender.trim().toLowerCase()) || 0;
+      return genderCountMap.get(canonicalGender(targetGender).toLowerCase()) || 0;
     };
 
     const getRoleAffinity = (targetRole: string) => {
@@ -215,13 +243,15 @@ export function calculateRomancePersona(
       }
     };
 
-    // First matching archetype with rules
-    const matched = customArchetypes.find((arch) => {
-      if (!arch.rules || arch.rules.length === 0) return false;
-      return arch.rules.every(evaluateRule);
-    });
+    // Every archetype whose conditions all hold. When several do, the most specific one (the most
+    // conditions) is shown; a tie goes to the one higher in the author's list.
+    let matched: CustomRomanceArchetype | undefined;
+    for (const arch of customArchetypes) {
+      if (!arch.rules || arch.rules.length === 0 || !arch.rules.every(evaluateRule)) continue;
+      if (!matched || arch.rules.length > matched.rules.length) matched = arch;
+    }
 
-    const chosenArch = matched || fallbackArch;
+    const chosenArch = matched || markedFallback || builtIn('fogRomantic');
     const fav = smashes[0]?.character;
     const favoriteChar = fav
       ? {
@@ -239,8 +269,6 @@ export function calculateRomancePersona(
       description: chosenArch.description,
       badgeColor: chosenArch.badge_color || 'from-accent-purple to-accent-indigo-deep',
       borderColor: 'border-accent-red/60',
-      iconName: chosenArch.icon_name || 'sparkles',
-      iconUrl: chosenArch.icon_url,
       badgeImageUrl: chosenArch.badge_image_url,
       killerAffinity: getRoleAffinity('Killer'),
       survivorAffinity: getRoleAffinity('Survivor'),
@@ -253,18 +281,12 @@ export function calculateRomancePersona(
   }
 
   if (!votes || votes.length === 0) {
-    const untapped = rawArchetypes.untappedSoul || {};
     const visual = ARCHETYPE_VISUALS.untappedSoul;
     return {
       archKey: 'untappedSoul',
-      title: untapped.title || 'The Untapped Soul',
-      subtitle: untapped.subtitle || 'Your trial desires remain veiled in the Fog.',
-      description:
-        untapped.desc ||
-        'Evaluate candidates to unlock your psychological profile, dating analysis, and affinity balance.',
+      ...archetypeCopy(rawArchetypes, 'untappedSoul'),
       badgeColor: visual.badgeColor,
       borderColor: visual.borderColor,
-      iconName: visual.iconName,
       killerAffinity: 0,
       survivorAffinity: 0,
       smashRate: 0,
@@ -283,7 +305,7 @@ export function calculateRomancePersona(
 
   const smashedKillers = smashes.filter((v) => isKiller(v.character?.role)).length;
   const smashedSurvivors = smashes.filter((v) => isSurvivor(v.character?.role)).length;
-  const smashedMonsters = smashes.filter((v) => v.character?.gender === 'monster_other').length;
+  const smashedMonsters = smashes.filter((v) => canonicalGender(v.character?.gender) === 'monster_other').length;
 
   let survivorAffinity = 0;
   let killerAffinity = 0;
@@ -331,7 +353,6 @@ export function calculateRomancePersona(
   }
 
   const visual = ARCHETYPE_VISUALS[archKey] || ARCHETYPE_VISUALS.fogRomantic;
-  const arch = rawArchetypes[archKey] || {};
 
   const fav = smashes[0]?.character;
   const favoriteChar = fav
@@ -345,14 +366,9 @@ export function calculateRomancePersona(
 
   return {
     archKey,
-    title: arch.title || 'The Fog Romantic',
-    subtitle: arch.subtitle || 'A balanced soul seeking passion and adrenaline across the trials.',
-    description:
-      arch.desc ||
-      'You believe that even within the infinite trials of the Entity, a true spark of romance can always be found.',
+    ...archetypeCopy(rawArchetypes, archKey),
     badgeColor: visual.badgeColor,
     borderColor: visual.borderColor,
-    iconName: visual.iconName,
     killerAffinity,
     survivorAffinity,
     smashRate,
@@ -375,18 +391,12 @@ export function reconstructSharedPersona(
   rawArchetypes: Record<string, PersonaArchetypeEntry> = {}
 ): RomancePersonaResult {
   const visual = ARCHETYPE_VISUALS[payload.k] || ARCHETYPE_VISUALS.fogRomantic;
-  const arch = rawArchetypes[payload.k] || {};
 
   return {
     archKey: payload.k,
-    title: arch.title || 'The Fog Romantic',
-    subtitle: arch.subtitle || 'A balanced soul seeking passion and adrenaline across the trials.',
-    description:
-      arch.desc ||
-      'You believe that even within the infinite trials of the Entity, a true spark of romance can always be found.',
+    ...archetypeCopy(rawArchetypes, payload.k),
     badgeColor: visual.badgeColor,
     borderColor: visual.borderColor,
-    iconName: visual.iconName,
     killerAffinity: payload.ka,
     survivorAffinity: payload.s,
     smashRate: payload.r,

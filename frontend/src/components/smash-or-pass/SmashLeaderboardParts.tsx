@@ -113,9 +113,6 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
           SmashSounds.playHoverTick();
         }
       }}
-      onMouseDown={() => {
-        SmashSounds.playCardGrabSound();
-      }}
       aria-label={candidateAriaLabel}
       className={`group relative flex w-full flex-col sm:flex-row items-stretch sm:items-center justify-between p-3.5 sm:p-4 rounded-card border text-left transition-all duration-150 select-none hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red gap-3.5 sm:gap-4 ${
         hasUserSmashed

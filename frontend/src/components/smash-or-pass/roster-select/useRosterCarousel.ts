@@ -7,6 +7,11 @@ import { safeGetItem } from '@/utils/safeStorage';
 
 const STORAGE_KEY = 'dbd_smash_selected_roster';
 
+/** A press that moves less than this is a tap (it chooses or jumps); more, and it is a drag. */
+const DRAG_THRESHOLD_PX = 6;
+/** How long after a drag ends a click is still the tail of that drag. */
+const DRAG_CLICK_GRACE_MS = 50;
+
 interface UseRosterCarouselOptions {
   isOpen: boolean;
   rosters: RosterItem[];
@@ -172,7 +177,7 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
           localStorage.setItem(STORAGE_KEY, chosenRoster.slug);
         }
         onSelectRoster(chosenRoster.slug);
-        SmashSounds.playSmashSound();
+        SmashSounds.playSelectSound();
       }
       onClose();
     },
@@ -204,11 +209,12 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
         e.stopPropagation();
         e.preventDefault();
       }
+      if (N <= 1) return;
       const newTarget = Math.round(targetIndexRef.current) - 1;
       SmashSounds.playHoverTick();
       animateTo(newTarget, 420);
     },
-    [animateTo]
+    [animateTo, N]
   );
 
   const stepNext = useCallback(
@@ -217,11 +223,12 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
         e.stopPropagation();
         e.preventDefault();
       }
+      if (N <= 1) return;
       const newTarget = Math.round(targetIndexRef.current) + 1;
       SmashSounds.playHoverTick();
       animateTo(newTarget, 420);
     },
-    [animateTo]
+    [animateTo, N]
   );
 
   useEffect(() => {
@@ -247,28 +254,54 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
   const lastMoveXRef = useRef<number>(0);
   const lastMoveTimeRef = useRef<number>(0);
   const velocityRef = useRef<number>(0);
+  /** Where a press began (null when none is down), and whether it has become a drag yet. */
+  const pressXRef = useRef<number | null>(null);
+  const draggingRef = useRef<boolean>(false);
+  /** True from the moment a press turns into a drag until just after it ends: the click that follows is not a choice. */
+  const dragClickRef = useRef<boolean>(false);
 
   const handlePointerDown = (e: React.PointerEvent) => {
-    if ((e.target as HTMLElement).closest('button')) {
-      return;
-    }
-    if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+    // One roster (or none) has nothing to scroll to.
+    if (N <= 1) return;
+    // Real controls (the arrows, the NSFW reveal) handle themselves. A card's own full-size click
+    // overlay is not one: a drag may start on it, on the centred card as much as on a side one.
+    const control = (e.target as HTMLElement).closest('button');
+    if (control && !control.hasAttribute('data-roster-card')) return;
 
-    setIsDragging(true);
-    dragStartXRef.current = e.clientX;
-    dragStartCenterRef.current = visualIndexRef.current;
+    pressXRef.current = e.clientX;
     lastMoveXRef.current = e.clientX;
     lastMoveTimeRef.current = Date.now();
     velocityRef.current = 0;
-    try {
-      (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-    } catch {
-      // ignore
-    }
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
-    if (!isDragging) return;
+    if (pressXRef.current === null) return;
+
+    if (!draggingRef.current) {
+      // No button held: the press ended outside the carousel before it became a drag (nothing was
+      // captured, so its pointerup went elsewhere). Forget it, or hovering would start a drag.
+      if (e.buttons === 0) {
+        pressXRef.current = null;
+        return;
+      }
+      if (Math.abs(e.clientX - pressXRef.current) < DRAG_THRESHOLD_PX) return;
+      // The press has moved far enough: it is a drag now, and it carries on from where it stands.
+      draggingRef.current = true;
+      dragClickRef.current = true;
+      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+      setIsDragging(true);
+      dragStartXRef.current = e.clientX;
+      dragStartCenterRef.current = visualIndexRef.current;
+      lastMoveXRef.current = e.clientX;
+      lastMoveTimeRef.current = Date.now();
+      try {
+        (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+      } catch {
+        // ignore
+      }
+      return;
+    }
+
     const now = Date.now();
     const dt = Math.max(1, now - lastMoveTimeRef.current);
     const dx = e.clientX - lastMoveXRef.current;
@@ -293,7 +326,12 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
   };
 
   const handlePointerUp = (e: React.PointerEvent) => {
-    if (!isDragging) return;
+    pressXRef.current = null;
+    if (!draggingRef.current) return; // a tap: the card's own click handles it
+    draggingRef.current = false;
+    window.setTimeout(() => {
+      dragClickRef.current = false;
+    }, DRAG_CLICK_GRACE_MS);
     setIsDragging(false);
     try {
       (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
@@ -312,6 +350,12 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
     animateTo(targetCenter, 420);
   };
 
+  /** Capture-phase click guard: the click that ends a drag must not choose or jump to a card. */
+  const handleClickCapture = (e: React.MouseEvent) => {
+    if (!dragClickRef.current) return;
+    e.stopPropagation();
+    e.preventDefault();
+  };
 
   /** Brings a card that is `visualOffset` cards from the centre to the centre. */
   const jumpBy = useCallback(
@@ -359,5 +403,6 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
     handlePointerDown,
     handlePointerMove,
     handlePointerUp,
+    handleClickCapture,
   };
 }

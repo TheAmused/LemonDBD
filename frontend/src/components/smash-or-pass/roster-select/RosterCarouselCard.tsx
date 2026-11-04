@@ -96,6 +96,7 @@ export function RosterCarouselCard({
           stays a separate control): a side card jumps to the centre, the centre one is chosen. */}
       <button
         type="button"
+        data-roster-card=""
         aria-label={rosterLabel}
         onClick={(e) => {
           e.stopPropagation();

@@ -23,6 +23,8 @@ import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 import { useDictionary } from "@/context/DictionaryContext";
 import { withAlpha } from '@/utils/themeColor';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
+import { isLocalRosterSlug } from '@/utils/smashOrPass/rosterSlug';
+import { candidatePlaceholderPath } from '@/utils/smashOrPass/placeholderArt';
 
 const ZoomCloseButton: React.FC<{ label: string }> = ({ label }) => {
   const { close } = useModal();
@@ -53,6 +55,8 @@ interface CharacterCardProps {
   locale?: string;
   customLabels?: RosterCustomLabels;
   rosterMode?: 'simple' | 'full';
+  /** The roster's `portrait_offset_y`: how far down the portrait is shifted, in pixels. */
+  portraitOffsetY?: number;
   /** False when the viewer switched effects off: no fling, tilt or particle burst; the card fades out gently instead. */
   effects?: boolean;
 }
@@ -68,6 +72,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
       locale = 'en',
       customLabels,
       rosterMode = 'full',
+      portraitOffsetY = 0,
       effects = true,
     }) => {
   const dict = useDictionary();
@@ -97,8 +102,13 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
 
   const charTagline = profile.tagline;
 
-  const avatarSrc =
-    character.media_url?.startsWith('http') || character.media_url?.startsWith('/static')
+  // A custom roster's candidate may have no picture at all: it gets one of the stand-in pictures
+  // (the same one every time), and no zoom, since that is not their own art.
+  const hasPortrait = Boolean(character.media_url) || !isLocalRosterSlug(character.roster_id);
+
+  const avatarSrc = !hasPortrait
+    ? `${backendBase}${candidatePlaceholderPath(character.id || character.slug || character.name)}`
+    : character.media_url?.startsWith('http') || character.media_url?.startsWith('/static')
       ? `${character.media_url.startsWith('http') ? '' : backendBase}${character.media_url}`
       : resolveAvatarUrl(
         backendBase,
@@ -229,20 +239,22 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             />
 
             <div className="absolute inset-0 z-0 bg-bg-primary overflow-hidden">
-              <CardAvatarImage
-                src={avatarSrc}
-                name={character.name}
-                slug={character.slug}
-                isSurvivor={isSurvivor}
-                backendBase={backendBase}
-                display={character.media_display}
-                priority={isTopCard}
-                className={
-                  character.media_display
-                    ? 'h-full w-full pointer-events-none transition-transform duration-700 select-none'
-                    : 'h-full w-full object-cover object-top pointer-events-none transition-transform duration-700 select-none'
-                }
-              />
+              <div className="h-full w-full" style={portraitOffsetY ? { transform: `translateY(${portraitOffsetY}px)` } : undefined}>
+                <CardAvatarImage
+                  src={avatarSrc}
+                  name={character.name}
+                  slug={character.slug}
+                  isSurvivor={isSurvivor}
+                  backendBase={backendBase}
+                  display={character.media_display}
+                  priority={isTopCard}
+                  className={
+                    character.media_display
+                      ? 'h-full w-full pointer-events-none transition-transform duration-700 select-none'
+                      : 'h-full w-full object-cover object-top pointer-events-none transition-transform duration-700 select-none'
+                  }
+                />
+              </div>
               <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/40 via-transparent to-bg-primary/60 pointer-events-none" aria-hidden="true" />
             </div>
 
@@ -263,21 +275,23 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                 <CardFlipIcon aria-hidden="true" />
               </Button>
 
-              <Button
-                type="button"
-                onMouseDown={(e) => e.stopPropagation()}
-                onTouchStart={(e) => e.stopPropagation()}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  SmashSounds.playHoverTick();
-                  setIsZoomed(true);
-                }}
-                {...tip(rawSmashDict.zoomFullPortrait, undefined, 'action')}
-                aria-label={rawSmashDict.zoomFullPortrait}
-                variant="overlay" size="lg" icon className="shadow-2xl hover:scale-110 active:scale-95 touch-manipulation"
-              >
-                <ZoomIn aria-hidden="true" />
-              </Button>
+              {hasPortrait && (
+                <Button
+                  type="button"
+                  onMouseDown={(e) => e.stopPropagation()}
+                  onTouchStart={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    SmashSounds.playHoverTick();
+                    setIsZoomed(true);
+                  }}
+                  {...tip(rawSmashDict.zoomFullPortrait, undefined, 'action')}
+                  aria-label={rawSmashDict.zoomFullPortrait}
+                  variant="overlay" size="lg" icon className="shadow-2xl hover:scale-110 active:scale-95 touch-manipulation"
+                >
+                  <ZoomIn aria-hidden="true" />
+                </Button>
+              )}
             </div>
 
             <div className="relative z-30 flex items-center justify-between p-3.5 sm:p-4">
@@ -319,7 +333,6 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
           <CardBackFace
             character={character}
             profile={profile}
-            isSurvivor={isSurvivor}
             isFlipped={isFlipped}
             customLabels={customLabels}
             rosterMode={rosterMode}
@@ -345,8 +358,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
         className="overflow-visible"
         bodyClassName="flex justify-center overflow-visible"
       >
-        <ZoomCloseButton label={dict.modal.close} />
         <div className="relative overflow-hidden rounded-card card-ash-border bg-bg-primary">
+          <ZoomCloseButton label={dict.modal.close} />
           <CardAvatarImage
             src={avatarSrc}
             name={character.name}

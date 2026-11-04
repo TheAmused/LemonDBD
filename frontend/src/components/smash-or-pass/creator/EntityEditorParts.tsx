@@ -204,9 +204,7 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
                   <span className="type-label-2xs">{c.add}</span>
                 </div>
               </Button>
-              <span className="mt-1 h-6 type-micro text-text-muted flex items-center select-none">
-                {c.addCandidateTile}
-              </span>
+              <span className="mt-1 h-6" aria-hidden="true" />
             </li>
           )}
         </ul>

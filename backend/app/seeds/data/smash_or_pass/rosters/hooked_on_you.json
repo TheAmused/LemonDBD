@@ -29,7 +29,8 @@
       "theme_color": "#00f5d4",
       "category": "Dating Sim",
       "is_nsfw": false,
-      "is_active": true,
+      "is_active": false,
+      "portrait_offset_y": 0,
       "entities": [
         {
           "slug": "the_trapper_hoy",

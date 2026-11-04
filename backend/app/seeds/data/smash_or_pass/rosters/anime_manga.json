@@ -18,6 +18,7 @@
       "category": "Anime",
       "is_nsfw": false,
       "is_active": false,
+      "portrait_offset_y": 0,
       "entities": [
         {
           "slug": "anime_spirit",

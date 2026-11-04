@@ -34,13 +34,13 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
   // Defaults for an entity with no profile yet -- localized copy from the dictionary,
   // not data fallbacks; localizedProfile already resolved locale vs. English.
   const charTitle = profile.archetype || (isSurvivor ? t.loreTitleSurvivor : isKiller ? t.loreTitleKiller : character.role);
-  const charTagline = profile.tagline || (isSurvivor ? t.loreTaglineSurvivor : t.loreTaglineKiller);
+  const charTagline = profile.tagline || (isSurvivor ? t.loreTaglineSurvivor : isKiller ? t.loreTaglineKiller : '');
 
   // Quote resolution: profile quote -> known signature quote for this locale -> generic copy.
   const charQuote =
     profile.quote ||
     t.knownQuotes[character.slug] ||
-    formatMessage(isSurvivor ? t.loreQuoteSurvivor : t.loreQuoteKiller, { name: character.name });
+    formatMessage(isKiller ? t.loreQuoteKiller : t.loreQuoteSurvivor, { name: character.name });
 
   // Localized Labels
   const loreLabels = dict.smashOrPass.loreLabels;

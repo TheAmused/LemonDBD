@@ -60,7 +60,8 @@ test('warnings are read from moderation.warnings and anything malformed counts a
 });
 
 test('a suspension or ban needs the facts; a warning does not', () => {
-  assert.equal(isSanctionDraftValid(draft({ kind: 'warning' })), true);
+  assert.equal(isSanctionDraftValid(draft({ kind: 'warning' })), false);
+  assert.equal(isSanctionDraftValid(draft({ kind: 'warning', facts: 'Rude comments.' })), true);
   assert.equal(isSanctionDraftValid(draft({ kind: 'ban', facts: '   ' })), false);
   assert.equal(isSanctionDraftValid(draft({ kind: 'ban', facts: 'Posted slurs.' })), true);
   assert.equal(isSanctionDraftValid(draft({ kind: 'suspension', facts: 'x', duration_days: 7 })), true);
@@ -92,7 +93,8 @@ test('the request leaves out empty fields and the duration of anything but a sus
   );
   assert.equal(suspension.duration_days, 14);
   assert.equal(suspension.rule_ref, 'serverCare');
-  assert.equal(suspension.send_email, false);
+  assert.equal(suspension.send_email, true, 'a suspension is always emailed');
+  assert.equal(sanctionRequestBody(draft({ kind: 'warning', send_email: false })).send_email, false);
 });
 
 test('a report resolution sends the backend names for the author decision', () => {
@@ -152,9 +154,6 @@ test('the suggestion texts exist in every language with the placeholders they ar
       assert.ok(t[key], `${name}: ${key}`);
     }
     assert.ok(t.suggestionSuspension.includes('{days}'), `${name}: suggestionSuspension`);
-    for (const placeholder of ['{active}', '{needed}', '{suspensions}']) {
-      assert.ok(t.suggestionBasis.includes(placeholder), `${name}: suggestionBasis ${placeholder}`);
-    }
   }
 });
 

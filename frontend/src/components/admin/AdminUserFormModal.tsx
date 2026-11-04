@@ -104,9 +104,6 @@ export function AdminUserFormModal({ target, currentUserId, onClose, onCreate, o
       footerClassName="justify-end flex-col-reverse sm:flex-row"
       footer={
         <>
-          <Button size="sm" onClick={onClose} disabled={busy} className="w-full sm:w-auto">
-            {t.cancel}
-          </Button>
           <Button
             type="submit"
             form={FORM_ID}

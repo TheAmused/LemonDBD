@@ -41,7 +41,6 @@ from sqlalchemy import (
     SmallInteger,
     String,
     Text,
-    UniqueConstraint,
 )
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -119,6 +118,9 @@ class Roster(Base, TranslatableModelMixin):
     category: Mapped[str] = mapped_column(String(64), default="DBD", nullable=False)
     is_nsfw: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    #: Pixels every portrait in this roster is shifted down on its card, to hide a cutout that fades
+    #: out above the card's bottom edge. 0 (no shift) for every roster whose art fills the frame.
+    portrait_offset_y: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, nullable=False
     )
@@ -162,6 +164,7 @@ class Roster(Base, TranslatableModelMixin):
             "category": self.category,
             "is_nsfw": self.is_nsfw,
             "is_active": self.is_active,
+            "portrait_offset_y": self.portrait_offset_y,
             "created_at": self.created_at.isoformat() if self.created_at else None,
         }
 
@@ -385,37 +388,6 @@ class Vote(Base):
             "entity_id": self.entity_id,
             "user_id": self.user_id,
             "vote_type": self.vote_type,
-            "created_at": self.created_at.isoformat() if self.created_at else None,
-        }
-
-
-class SmashTaxonomy(Base):
-    """Catalog of known roles and genders for smash-or-pass entities."""
-
-    __tablename__ = "smash_taxonomies"
-    __table_args__ = (
-        UniqueConstraint("type", "slug", name="uq_smash_taxonomies_type_slug"),
-        Index("idx_smash_taxonomies_type", "type"),
-    )
-
-    id: Mapped[str] = mapped_column(
-        String(36), primary_key=True, default=lambda: str(uuid.uuid4())
-    )
-    type: Mapped[str] = mapped_column(String(16), nullable=False)  # 'role' or 'gender'
-    name: Mapped[str] = mapped_column(String(64), nullable=False)  # e.g. 'Survivor', 'ABC'
-    slug: Mapped[str] = mapped_column(String(64), nullable=False)  # normalized lowercase
-    is_predefined: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=utcnow, nullable=False
-    )
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "id": self.id,
-            "type": self.type,
-            "name": self.name,
-            "slug": self.slug,
-            "is_predefined": self.is_predefined,
             "created_at": self.created_at.isoformat() if self.created_at else None,
         }
 

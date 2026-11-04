@@ -18,16 +18,15 @@ class TestSmashOrPassAPI:
         res = client.get("/api/v1/smash-or-pass/rosters")
         assert res.status_code == 200
         json_data = res.get_json()
-        assert json_data["count"] == 7
-        assert len(json_data["data"]) == 7
+        assert json_data["count"] == 6
+        assert len(json_data["data"]) == 6
 
         slugs = {r["slug"] for r in json_data["data"]}
         assert slugs == {
             "canon",
-            "canon_gemini",
             "hooked_on_you",
             "legendary_characters",
-            "cyberpunk_2077",
+            "cyberpunk",
             "anime_manga",
             "gothic_eldritch",
         }
@@ -137,7 +136,7 @@ class TestSmashOrPassAPI:
         assert data1["total_votes"] == 1
         assert data1["smash_rate"] == 100.0
 
-        feed_res = client.get("/api/v1/smash-or-pass/rosters/cyberpunk_2077/feed?limit=1")
+        feed_res = client.get("/api/v1/smash-or-pass/rosters/cyberpunk/feed?limit=1")
         cyber_entity = feed_res.get_json()["data"]["entities"][0]
 
         res2 = client.post(
@@ -357,6 +356,53 @@ class TestSmashOrPassAPI:
         res_404 = client.get("/api/v1/smash-or-pass/rosters/unknown_roster/leaderboard")
         assert res_404.status_code == 404
 
+    def test_leaderboard_lists_every_roster_character_including_unvoted(
+        self, app: Flask, db_session: Session
+    ) -> None:
+        from sqlalchemy import func, select
+
+        from app.models.smash_or_pass import Entity, Roster
+
+        client = app.test_client()
+        user = _create_user(db_session, username="lb_all_user", email="lb_all@test.com")
+        token = generate_token(user.id, role="user")
+        vote = client.post(
+            "/api/v1/smash-or-pass/vote",
+            headers={"Authorization": f"Bearer {token}"},
+            json={"character_slug": "ada_wong", "vote_type": "smash", "session_id": "lb_all_sess"},
+        )
+        assert vote.status_code == 200
+
+        roster_size = db_session.scalar(
+            select(func.count(Entity.id)).join(Roster, Roster.id == Entity.roster_id).where(Roster.slug == "canon")
+        )
+        res = client.get("/api/v1/smash-or-pass/rosters/canon/leaderboard")
+        assert res.status_code == 200
+        body = res.get_json()
+        data = body["data"]
+
+        assert body["count"] == roster_size
+        assert len(data) == roster_size
+        assert data[0]["slug"] == "ada_wong"
+        assert data[0]["total_votes"] == 1
+        assert [e["rank"] for e in data] == list(range(1, roster_size + 1))
+        unvoted = data[1:]
+        assert all(e["total_votes"] == 0 and e["smash_rate"] == 0.0 for e in unvoted)
+        assert all(e["tier"] == "Eldritch Void" for e in unvoted)
+
+        by_votes = client.get("/api/v1/smash-or-pass/rosters/canon/leaderboard?sort_by=total_votes").get_json()["data"]
+        assert len(by_votes) == roster_size
+        assert by_votes[0]["slug"] == "ada_wong"
+
+    def test_only_canon_shifts_its_portraits_down(self, app: Flask, db_session: Session) -> None:
+        client = app.test_client()
+        res = client.get("/api/v1/smash-or-pass/rosters")
+        assert res.status_code == 200
+        offsets = {r["slug"]: r["portrait_offset_y"] for r in res.get_json()["data"]}
+
+        assert offsets["canon"] == 40
+        assert [slug for slug, y in offsets.items() if slug != "canon" and y != 0] == []
+
     def test_legacy_routes_removed_and_user_votes_work(
         self, app: Flask, db_session: Session
     ) -> None:
@@ -409,14 +455,14 @@ class TestSmashOrPassAPI:
             json={"character_slug": "the_trapper", "vote_type": "pass", "roster_slug": "canon"},
         )
 
-        # Cast vote in cyberpunk_2077 roster
-        feed_res = client.get("/api/v1/smash-or-pass/rosters/cyberpunk_2077/feed?limit=1")
+        # Cast vote in cyberpunk roster
+        feed_res = client.get("/api/v1/smash-or-pass/rosters/cyberpunk/feed?limit=1")
         assert feed_res.status_code == 200
         cyber_char = feed_res.get_json()["data"]["entities"][0]
         client.post(
             "/api/v1/smash-or-pass/vote",
             headers={"Authorization": f"Bearer {token}"},
-            json={"entity_id": cyber_char["id"], "vote_type": "super_smash", "roster_slug": "cyberpunk_2077"},
+            json={"entity_id": cyber_char["id"], "vote_type": "super_smash", "roster_slug": "cyberpunk"},
         )
 
         # Fetch rosters
@@ -428,7 +474,7 @@ class TestSmashOrPassAPI:
         assert canon["entity_count"] == 98
         assert canon["total_votes"] == 2
 
-        cyber = next(r for r in data if r["slug"] == "cyberpunk_2077")
+        cyber = next(r for r in data if r["slug"] == "cyberpunk")
         assert cyber["entity_count"] == 10
         assert cyber["total_votes"] == 1
 

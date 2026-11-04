@@ -137,7 +137,7 @@ def _import_rosters(
                 r_created += 1
             else:
                 r_updated += 1
-            for field in ["name", "description", "translations", "cover_image_url", "theme_color", "category", "is_nsfw", "is_active"]:
+            for field in ["name", "description", "translations", "cover_image_url", "theme_color", "category", "is_nsfw", "is_active", "portrait_offset_y"]:
                 if field in r_row:
                     setattr(roster_obj, field, r_row[field])
 

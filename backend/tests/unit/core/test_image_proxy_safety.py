@@ -92,5 +92,5 @@ class TestProxyRoute:
         assert res.headers.get("Access-Control-Allow-Origin") != "*"
 
     def test_every_api_response_is_nosniff(self, app: Flask) -> None:
-        res = app.test_client().get("/api/v1/smash-or-pass/taxonomies")
+        res = app.test_client().get("/api/v1/smash-or-pass/rosters")
         assert res.headers["X-Content-Type-Options"] == "nosniff"

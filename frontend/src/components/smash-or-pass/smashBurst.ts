@@ -3,6 +3,7 @@
 // The canvas burst behind a Smash / Super Smash / Pass vote: what it spawns (shockwaves, lightning,
 // particles) and how one frame of it is drawn. SmashAnimations only owns the canvas and the timers.
 import { themeColor, paletteColor } from '@/utils/themeColor';
+import { drawGlowHeart } from './glowHeart';
 
 export type BurstKind = 'smash' | 'super_smash' | 'pass';
 
@@ -189,7 +190,7 @@ export function createBurst(
   };
 }
 
-// Draw stylized neon heart
+// Draw stylized neon heart (the glow comes from a cached sprite, see glowHeart.ts)
 function drawHeart(
   context: CanvasRenderingContext2D,
   x: number,
@@ -199,21 +200,7 @@ function drawHeart(
   alpha: number,
   rotation: number
 ) {
-  context.save();
-  context.translate(x, y);
-  context.rotate(rotation);
-  context.scale(size / 20, size / 20);
-  context.globalAlpha = Math.max(0, Math.min(1, alpha));
-  context.fillStyle = color;
-  context.shadowColor = color;
-  context.shadowBlur = 16;
-
-  context.beginPath();
-  context.moveTo(0, 0);
-  context.bezierCurveTo(-10, -10, -20, 5, 0, 20);
-  context.bezierCurveTo(20, 5, 10, -10, 0, 0);
-  context.fill();
-  context.restore();
+  drawGlowHeart(context, x, y, size, color, alpha, rotation, 16);
 }
 
 // Draw stylized neon skull

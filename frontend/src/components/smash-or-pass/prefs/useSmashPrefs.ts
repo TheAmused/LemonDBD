@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { fetchSmashPreferences, saveSmashPreferences } from '@/services/smashApi';
 import { SmashSounds } from '../SmashSoundEffects';
-import { defaultPrefs, readLocalPrefs, reconcilePrefs, writeLocalPrefs, type SmashPrefs } from './smashPrefs';
+import { defaultPrefs, PREFS_KEY, readLocalPrefs, reconcilePrefs, writeLocalPrefs, type SmashPrefs } from './smashPrefs';
 import { trackEvent } from '@/utils/analytics';
 import { useOnceInBrowser } from '@/hooks/useOnceInBrowser';
 
@@ -30,6 +30,23 @@ export function useSmashPrefs() {
   const hasReadLocal = useOnceInBrowser(() => setPrefs(readLocalPrefs()));
 
   const userId = isAuthenticated ? (user?.id ?? null) : null;
+
+  // The site's preferences can change while the page is open. In this tab (the settings dialog on this
+  // page) they dual-write this choice's storage key and announce it with `preferences-changed`; in
+  // another tab the browser reports the key's new value with a `storage` event. Either way, re-read it.
+  useEffect(() => {
+    if (!hasReadLocal) return;
+    const pickUp = () => setPrefs(readLocalPrefs());
+    const pickUpFromOtherTab = (e: StorageEvent) => {
+      if (e.key === PREFS_KEY) pickUp();
+    };
+    window.addEventListener('preferences-changed', pickUp);
+    window.addEventListener('storage', pickUpFromOtherTab);
+    return () => {
+      window.removeEventListener('preferences-changed', pickUp);
+      window.removeEventListener('storage', pickUpFromOtherTab);
+    };
+  }, [hasReadLocal]);
 
   useEffect(() => {
     if (!hasReadLocal || isAuthLoading || userId === null || accountCheckedFor === userId) return;

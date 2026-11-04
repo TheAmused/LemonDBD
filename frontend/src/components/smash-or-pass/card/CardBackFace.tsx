@@ -1,5 +1,6 @@
 'use client';
 // frontend/src/components/smash-or-pass/card/CardBackFace.tsx
+import { themedEdgeStyle } from '@/utils/smashOrPass/badgeGradient';
 import { HeartIcon, PassIcon, CardFlipIcon } from '@/components/icons/DbdIcons';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
@@ -7,17 +8,18 @@ import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from '@/context/DictionaryContext';
 import type { EntityItem, RosterCustomLabels } from '@/types/smashOrPass';
 import type { localizedProfile } from '@/utils/entityProfile';
-import { SmashSounds } from '../SmashSoundEffects';
 import { Badge } from '@/components/common/Badge';
+import { roleBadge } from '@/utils/smashOrPass/terms';
 
 interface CardBackFaceProps {
   character: EntityItem;
   profile: ReturnType<typeof localizedProfile>;
-  isSurvivor: boolean;
   isFlipped: boolean;
   customLabels?: RosterCustomLabels;
   rosterMode?: 'simple' | 'full';
   /** The green / red flags to list, already picked by the card (see `sampleFlags`). */
+  /** The roster's `theme_color`: a gradient one paints the card's edge. */
+  themeColor?: string;
   greenFlags?: string[];
   redFlags?: string[];
   onFlip: () => void;
@@ -28,10 +30,10 @@ interface CardBackFaceProps {
 export function CardBackFace({
   character,
   profile,
-  isSurvivor,
   isFlipped,
   customLabels,
   rosterMode = 'full',
+  themeColor,
   greenFlags = [],
   redFlags = [],
   onFlip,
@@ -39,6 +41,7 @@ export function CardBackFace({
 }: CardBackFaceProps) {
   const dict = useDictionary();
   const text = dict.smashOrPass;
+  const role = roleBadge(character.role, text.filters);
   // `|| character.role` is a render-level default for an entity with no archetype yet,
   // not a data fallback — localizedProfile already resolved locale vs. English.
   const charTitle = profile.archetype || character.role;
@@ -52,6 +55,7 @@ export function CardBackFace({
   return (
     <div
       style={{
+        ...themedEdgeStyle(themeColor, 'var(--bg-primary)'),
         pointerEvents: isFlipped ? 'auto' : 'none',
         visibility: isFlipped ? 'visible' : 'hidden',
       }}
@@ -61,7 +65,6 @@ export function CardBackFace({
       role="presentation"
       onClick={(e) => {
         if ((e.target as HTMLElement).closest('[data-card-lore]')) return;
-        SmashSounds.playFlipSound();
         onFlip();
       }}
       className="!absolute inset-0 h-full w-full rounded-card overflow-hidden card-ash-border bg-bg-primary p-4 sm:p-5 flex flex-col justify-between text-text-primary cursor-pointer select-none"
@@ -74,7 +77,6 @@ export function CardBackFace({
           onTouchStart={(e) => e.stopPropagation()}
           onClick={(e) => {
             e.stopPropagation();
-            SmashSounds.playFlipSound();
             onFlip();
           }}
           {...tip(text.flipBack, undefined, 'action')}
@@ -90,12 +92,8 @@ export function CardBackFace({
           </h3>
         </div>
 
-        <Badge
-          tone={isSurvivor ? 'green' : 'red'} size="xs" square
-        >
-          {isSurvivor
-            ? text.filters.survivors
-            : text.filters.killers}
+        <Badge tone={role.tone} size="xs" square>
+          {role.label}
         </Badge>
       </div>
 
@@ -175,14 +173,9 @@ export function CardBackFace({
           </Surface>
         )}
 
-        {/* Mobile-only details (quote/tagline when fragments are hidden) */}
+        {/* Quote/tagline shown inline when the floating lore fragments are hidden (narrow hubs) */}
         {(Boolean(charTagline) || Boolean(charQuote)) && (
-          <details className="@hub-lg/hub:hidden group space-y-2.5">
-            <summary className="flex min-h-9 pointer-coarse:min-h-11 cursor-pointer list-none items-center justify-center rounded-control border border-border-color type-label-xs text-text-secondary transition-colors hover:text-text-primary [&::-webkit-details-marker]:hidden">
-              <span className="group-open:hidden">{text.showMore}</span>
-              <span className="hidden group-open:inline">{text.showLess}</span>
-            </summary>
-
+          <div className="@hub-lg/hub:hidden space-y-2.5">
             {charTagline && <p className="px-1 text-mini text-text-secondary italic leading-snug">{charTagline}</p>}
 
             {charQuote && (
@@ -193,15 +186,15 @@ export function CardBackFace({
                 <p className="text-mini text-text-secondary italic leading-relaxed">{charQuote}</p>
               </Surface>
             )}
-          </details>
+          </div>
         )}
       </div>
       </div>
 
-      {/* Bottom Actions Bar */}
+      {/* Bottom actions: the same round icon buttons as the front of the card */}
       <div className="pt-2 flex items-center justify-between border-t border-border-color shrink-0 gap-2 pointer-events-auto">
         <Button
-          variant="secondary" size="sm"
+          type="button"
           onMouseDown={(e) => e.stopPropagation()}
           onTouchStart={(e) => e.stopPropagation()}
           onClick={(e) => {
@@ -209,13 +202,14 @@ export function CardBackFace({
             const rect = e.currentTarget.getBoundingClientRect();
             onVote('pass', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
           }}
-          className="flex-1"
+          {...tip(text.pass, undefined, 'action')}
+          aria-label={text.pass}
+          variant="secondary" size="lg" icon className="h-13 w-13 shadow-2xl backdrop-blur-md hover:scale-110 active:scale-95 touch-manipulation sm:h-14 sm:w-14"
         >
-          <PassIcon className="icon-lg" aria-hidden="true" />
-          <span>{text.pass}</span>
+          <PassIcon className="icon-xl sm:h-7 sm:w-7" aria-hidden="true" />
         </Button>
         <Button
-          variant="primary" size="sm"
+          type="button"
           onMouseDown={(e) => e.stopPropagation()}
           onTouchStart={(e) => e.stopPropagation()}
           onClick={(e) => {
@@ -223,10 +217,11 @@ export function CardBackFace({
             const rect = e.currentTarget.getBoundingClientRect();
             onVote('smash', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
           }}
-          className="flex-1"
+          {...tip(text.smash, undefined, 'action')}
+          aria-label={text.smash}
+          variant="primary" size="lg" icon className="h-13 w-13 hover:scale-110 active:scale-95 touch-manipulation sm:h-14 sm:w-14"
         >
-          <HeartIcon className="icon-lg" aria-hidden="true" />
-          <span>{text.smash}</span>
+          <HeartIcon className="icon-xl sm:h-7 sm:w-7" aria-hidden="true" />
         </Button>
       </div>
     </div>

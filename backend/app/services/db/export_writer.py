@@ -93,6 +93,7 @@ def serialize_roster(r: Roster, login_by_user_id: dict[int, str]) -> dict[str, A
         "category": r.category,
         "is_nsfw": r.is_nsfw,
         "is_active": r.is_active,
+        "portrait_offset_y": r.portrait_offset_y,
         "entities": [serialize_smash_entity(e, login_by_user_id) for e in r.entities],
     }
 

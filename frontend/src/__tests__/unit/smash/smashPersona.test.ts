@@ -54,7 +54,6 @@ test('SmashPersona: Archetype Calculation Rules', async (t) => {
     assert.strictEqual(result.killerAffinity, 0);
     assert.strictEqual(result.survivorAffinity, 0);
     assert.strictEqual(result.favoriteChar, null);
-    assert.strictEqual(result.iconName, 'compass');
   });
 
   await t.test('classifies as eldritchDevotee when 2 or more monsters are smashed', () => {
@@ -66,7 +65,15 @@ test('SmashPersona: Archetype Calculation Rules', async (t) => {
     const result = calculateRomancePersona(votes, mockArchetypes);
     assert.strictEqual(result.archKey, 'eldritchDevotee');
     assert.strictEqual(result.title, 'Eldritch Devotee');
-    assert.strictEqual(result.iconName, 'skull');
+  });
+
+  await t.test('a custom roster\'s "Monster" counts as a monster, like the official monster_other', () => {
+    const votes: VoteRecord[] = [
+      { character: mockEntity({ gender: 'Monster', role: 'Killer' }), vote: 'smash', timestamp: 1 },
+      { character: mockEntity({ gender: 'monster', role: 'Killer' }), vote: 'smash', timestamp: 2 },
+      { character: mockEntity({ gender: 'Male', role: 'Survivor' }), vote: 'pass', timestamp: 3 },
+    ];
+    assert.strictEqual(calculateRomancePersona(votes, mockArchetypes).archKey, 'eldritchDevotee');
   });
 
   await t.test('classifies as redStainAddict when killer affinity >= 75%', () => {
@@ -80,7 +87,6 @@ test('SmashPersona: Archetype Calculation Rules', async (t) => {
     assert.strictEqual(result.archKey, 'redStainAddict');
     assert.strictEqual(result.killerAffinity, 100);
     assert.strictEqual(result.survivorAffinity, 0);
-    assert.strictEqual(result.iconName, 'flame');
   });
 
   await t.test('classifies as campfireSoulmate when survivor affinity >= 75%', () => {
@@ -94,7 +100,6 @@ test('SmashPersona: Archetype Calculation Rules', async (t) => {
     assert.strictEqual(result.archKey, 'campfireSoulmate');
     assert.strictEqual(result.killerAffinity, 0);
     assert.strictEqual(result.survivorAffinity, 100);
-    assert.strictEqual(result.iconName, 'shield');
   });
 
   await t.test('classifies as entitysParamour when smash rate >= 85% and balanced roles', () => {
@@ -109,7 +114,6 @@ test('SmashPersona: Archetype Calculation Rules', async (t) => {
     const result = calculateRomancePersona(votes, mockArchetypes);
     assert.strictEqual(result.archKey, 'entitysParamour');
     assert.strictEqual(result.smashRate, 100);
-    assert.strictEqual(result.iconName, 'heart');
   });
 
   await t.test('classifies as coldHeartedPragmatist when smash rate <= 20%', () => {
@@ -124,7 +128,6 @@ test('SmashPersona: Archetype Calculation Rules', async (t) => {
     const result = calculateRomancePersona(votes, mockArchetypes);
     assert.strictEqual(result.archKey, 'coldHeartedPragmatist');
     assert.strictEqual(result.smashRate, 17); // 1 / 6 = 16.66% -> 17%
-    assert.strictEqual(result.iconName, 'zap');
   });
 
   await t.test('classifies as fogRomantic when rates and roles are balanced', () => {
@@ -139,7 +142,6 @@ test('SmashPersona: Archetype Calculation Rules', async (t) => {
     assert.strictEqual(result.smashRate, 50);
     assert.strictEqual(result.killerAffinity, 50);
     assert.strictEqual(result.survivorAffinity, 50);
-    assert.strictEqual(result.iconName, 'sparkles');
   });
 
   await t.test('correctly preserves favoriteChar as the first smashed candidate', () => {
@@ -289,7 +291,6 @@ test('SmashPersona: Deep-Link Encoding, Decoding, and URL Construction', async (
     assert.strictEqual(persona.smashRate, 95);
     assert.strictEqual(persona.totalVotes, 30);
     assert.strictEqual(persona.favoriteChar?.name, 'Feng Min');
-    assert.strictEqual(persona.iconName, 'heart');
   });
 
   await t.test('buildTelegramShareUrl uses t.me on mobile and web.telegram.org on desktop', () => {
@@ -442,7 +443,6 @@ test('SmashPersona: Custom Romance Archetype Rule Engine', async (t) => {
       subtitle: 'Drawn to virtuous champions',
       description: 'You fall hardest for heroes standing tall.',
       badge_color: 'from-amber-500 to-yellow-900',
-      icon_url: 'https://example.com/icons/hero.png',
       badge_image_url: 'https://example.com/badges/hero.jpg',
       rules: [
         {
@@ -495,7 +495,6 @@ test('SmashPersona: Custom Romance Archetype Rule Engine', async (t) => {
     const res = calculateRomancePersona(votes, {}, customArchetypes);
     assert.strictEqual(res.archKey, 'hero_devotee');
     assert.strictEqual(res.title, 'Hero Devotee');
-    assert.strictEqual(res.iconUrl, 'https://example.com/icons/hero.png');
     assert.strictEqual(res.badgeImageUrl, 'https://example.com/badges/hero.jpg');
   });
 
@@ -521,3 +520,62 @@ test('SmashPersona: Custom Romance Archetype Rule Engine', async (t) => {
   });
 });
 
+test('SmashPersona: custom archetype resolution', async (t) => {
+  const vote = (gender: string, v: 'smash' | 'pass', n: number): VoteRecord => ({
+    character: { id: String(n), slug: `c${n}`, name: `Char ${n}`, role: 'Hero', gender } as any,
+    vote: v,
+    timestamp: n,
+  });
+  // Four candidates, two women and two men; only the two women are smashed.
+  const votes = [vote('female', 'smash', 1), vote('female', 'smash', 2), vote('male', 'pass', 3), vote('male', 'pass', 4)];
+
+  const generalist: CustomRomanceArchetype = {
+    id: 'romantic',
+    title: 'Romantic',
+    subtitle: '',
+    description: '',
+    badge_color: 'from-accent-red to-bg-primary',
+    rules: [{ target: 'smash_rate', operator: '>=', value: 50 }],
+  };
+  const specialist: CustomRomanceArchetype = {
+    id: 'ladies_man',
+    title: 'Ladies Man',
+    subtitle: '',
+    description: '',
+    badge_color: 'from-accent-red to-bg-primary',
+    rules: [
+      { target: 'smash_rate', operator: '>=', value: 50 },
+      { target: 'gender_affinity', target_value: 'female', operator: '>=', value: 50 },
+    ],
+  };
+
+  await t.test('the most specific of several matching archetypes wins, whatever the list order', () => {
+    assert.equal(calculateRomancePersona(votes, {}, [generalist, specialist]).archKey, 'ladies_man');
+    assert.equal(calculateRomancePersona(votes, {}, [specialist, generalist]).archKey, 'ladies_man');
+  });
+
+  await t.test('equally specific archetypes: the one higher in the list wins', () => {
+    const twin = { ...generalist, id: 'twin', title: 'Twin' };
+    assert.equal(calculateRomancePersona(votes, {}, [generalist, twin]).archKey, 'romantic');
+    assert.equal(calculateRomancePersona(votes, {}, [twin, generalist]).archKey, 'twin');
+  });
+
+  await t.test('with no fallback marked and nothing matching, the built-in Fog Romantic is shown', () => {
+    const picky = { ...specialist, rules: [{ target: 'total_votes' as const, operator: '>=' as const, value: 99 }] };
+    const res = calculateRomancePersona(votes, { fogRomantic: { title: 'Fog Romantic (localized)' } }, [picky]);
+    assert.equal(res.archKey, 'fogRomantic');
+    assert.equal(res.title, 'Fog Romantic (localized)');
+  });
+
+  await t.test('with no fallback marked and no votes yet, the built-in Untapped Soul is shown', () => {
+    const res = calculateRomancePersona([], {}, [generalist]);
+    assert.equal(res.archKey, 'untappedSoul');
+    assert.equal(res.totalVotes, 0);
+  });
+
+  await t.test('a marked fallback still wins over the built-in one', () => {
+    const picky = { ...specialist, rules: [{ target: 'total_votes' as const, operator: '>=' as const, value: 99 }] };
+    const fallback: CustomRomanceArchetype = { ...generalist, id: 'mine', title: 'Mine', is_fallback: true, rules: [] };
+    assert.equal(calculateRomancePersona(votes, {}, [picky, fallback]).archKey, 'mine');
+  });
+});

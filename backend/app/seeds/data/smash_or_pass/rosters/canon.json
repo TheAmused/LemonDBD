@@ -13,11 +13,12 @@
           "description": "Oficjalne 98 postaci z mgły próby."
         }
       },
-      "cover_image_url": "/static/avatars/rosters/canon.webp",
+      "cover_image_url": "/static/smash-or-pass/covers/canon.webp",
       "theme_color": "#ff0055",
       "category": "DBD",
       "is_nsfw": false,
       "is_active": true,
+      "portrait_offset_y": 40,
       "entities": [
         {
           "slug": "ada_wong",

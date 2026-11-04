@@ -243,6 +243,55 @@
   animation: gnLandGlow 900ms ease-out both;
 }
 
+/* How to Play: a card swaying between Pass and Smash, the side it leans toward lighting up. */
+@keyframes htpSway {
+
+  0%,
+  100% {
+    transform: translateX(-1.75rem) rotate(-10deg);
+  }
+
+  50% {
+    transform: translateX(1.75rem) rotate(10deg);
+  }
+}
+
+@keyframes htpLightPass {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes htpLightSmash {
+
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.htp-card {
+  animation: htpSway 3.2s ease-in-out infinite;
+}
+
+.htp-light-pass {
+  animation: htpLightPass 3.2s ease-in-out infinite;
+}
+
+.htp-light-smash {
+  animation: htpLightSmash 3.2s ease-in-out infinite;
+}
+
 .freeze-badge-in {
   animation: freezeBadgeIn 480ms cubic-bezier(0.22, 1.4, 0.36, 1) both;
 }

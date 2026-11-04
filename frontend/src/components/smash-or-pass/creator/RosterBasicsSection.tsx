@@ -16,6 +16,10 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { defaultRosterThemeColor, SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
 import { type Draft, Section } from './SmashRosterCreatorParts';
 import { LABEL } from './styles';
+import { RequiredMark } from './RequiredMark';
+import { GradientEditor } from './GradientEditor';
+import { cn } from '@/utils/cn';
+import { encodeThemeColor, themeGradientOf } from '@/utils/smashOrPass/badgeGradient';
 
 /** A checkbox row whose whole line is the click target. */
 
@@ -54,7 +58,10 @@ export function RosterBasicsSection({
     <Section title={c.stepBasics}>
       <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-5xl wide-2k:max-w-7xl mx-auto grid gap-4 2xl:gap-6 md:grid-cols-2">
         <label>
-          <span className={LABEL}>{c.nameLabel}</span>
+          <span className={LABEL}>
+            {c.nameLabel}
+            <RequiredMark />
+          </span>
           <Input
             fieldSize="md" invalid={attempted && nameMissing}
             value={draft.name}
@@ -145,14 +152,14 @@ export function RosterBasicsSection({
           />
         </div>
 
-        <div className="md:col-span-2 flex flex-col items-center justify-center text-center">
-          <span className={LABEL}>{c.themeColorLabel}</span>
-          <input
-            type="color"
-            value={draft.theme_color || defaultRosterThemeColor()}
-            onChange={(e) => patch({ theme_color: e.target.value })}
-            className="h-10 w-full max-w-xs cursor-pointer rounded-control border border-border-color bg-bg-primary shadow-xs"
+        <div className="md:col-span-2 mx-auto w-full max-w-2xl">
+          <span className={cn(LABEL, 'block text-center')}>{c.themeColorLabel}</span>
+          <GradientEditor
+            value={themeGradientOf(draft.theme_color || defaultRosterThemeColor())}
+            title={draft.name || c.namePlaceholder}
+            onChange={(gradient) => patch({ theme_color: encodeThemeColor(gradient) })}
           />
+          <p className="mt-2 text-center type-caption text-text-muted">{c.themeColorHint}</p>
         </div>
 
         {/* Toggles Row: Simple Version, NSFW, and Official (Admin) */}

@@ -180,9 +180,11 @@ class SmashOrPassService(SmashVotesMixin, SmashRosterAdminMixin):
         if roster_id is None:
             return []
 
+        # Outer join: an entity only gets a stat row on its first vote, and the
+        # leaderboard has to list the whole roster, unvoted characters included.
         stmt = (
             select(Entity, EntityStat)
-            .join(EntityStat, Entity.id == EntityStat.entity_id)
+            .outerjoin(EntityStat, Entity.id == EntityStat.entity_id)
             .where(Entity.roster_id == roster_id)
         )
 
@@ -191,26 +193,33 @@ class SmashOrPassService(SmashVotesMixin, SmashRosterAdminMixin):
         if gender and gender != "all":
             stmt = stmt.where(Entity.gender == gender)
 
+        rate = func.coalesce(EntityStat.smash_rate, 0.0)
+        votes = func.coalesce(EntityStat.total_votes, 0)
+        smashes = func.coalesce(EntityStat.smash_count, 0) + func.coalesce(EntityStat.super_smash_count, 0)
+        chaos = func.coalesce(EntityStat.chaos_rating, 50.0)
+
         if sort_by == "total_votes":
-            stmt = stmt.order_by(EntityStat.total_votes.desc(), EntityStat.smash_rate.desc())
+            order = (votes.desc(), rate.desc())
         elif sort_by == "smash_count":
-            stmt = stmt.order_by((EntityStat.smash_count + EntityStat.super_smash_count).desc(), EntityStat.smash_rate.desc())
+            order = (smashes.desc(), rate.desc())
         elif sort_by == "chaos_rating":
-            stmt = stmt.order_by(EntityStat.chaos_rating.desc(), EntityStat.smash_rate.desc())
+            order = (chaos.desc(), rate.desc())
         else:
-            stmt = stmt.order_by(EntityStat.smash_rate.desc(), EntityStat.total_votes.desc())
+            order = (rate.desc(), votes.desc())
+        # Unvoted characters tie on every stat: roster order keeps them stable.
+        stmt = stmt.order_by(*order, Entity.order_index, Entity.id)
 
         stmt = stmt.limit(limit)
         rows = db.session.execute(stmt).all()
 
         leaderboard = []
         for rank, (entity, stat) in enumerate(rows, start=1):
-            rate = stat.smash_rate if stat.smash_rate is not None else 0.0
-            if rate >= 80.0:
+            smash_rate = (stat.smash_rate if stat else None) or 0.0
+            if smash_rate >= 80.0:
                 tier = "God Tier"
-            elif rate >= 60.0:
+            elif smash_rate >= 60.0:
                 tier = "Fatal Attraction"
-            elif rate >= 40.0:
+            elif smash_rate >= 40.0:
                 tier = "Friendzone"
             else:
                 tier = "Eldritch Void"
@@ -308,6 +317,7 @@ class SmashOrPassService(SmashVotesMixin, SmashRosterAdminMixin):
             "category": roster.category,
             "is_nsfw": roster.is_nsfw,
             "is_active": roster.is_active,
+            "portrait_offset_y": roster.portrait_offset_y,
             "entities": [],
         }
         for e in entities:

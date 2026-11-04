@@ -47,8 +47,8 @@ class TestHookedOnYouRosterIntegrity:
     def hoy_entities(self, hoy_roster: dict) -> list[dict]:
         return hoy_roster.get("entities", [])
 
-    def test_roster_is_active(self, hoy_roster: dict) -> None:
-        assert hoy_roster.get("is_active") is True, "hooked_on_you roster must have is_active: True"
+    def test_roster_is_switched_off(self, hoy_roster: dict) -> None:
+        assert hoy_roster.get("is_active") is False, "hooked_on_you roster is locked to is_active: False"
 
     def test_roster_metadata_translations(self, hoy_roster: dict) -> None:
         translations = hoy_roster.get("translations") or {}

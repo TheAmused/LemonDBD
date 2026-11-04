@@ -119,30 +119,24 @@
 @utility lore-ash-crimson {
   background-image:
     linear-gradient(var(--bg-surface), var(--bg-surface)),
-    repeating-linear-gradient(
-      125deg,
-      var(--palette-zinc-700) 0px,
-      var(--palette-zinc-900) 5px,
-      var(--palette-zinc-500) 10px,
-      color-mix(in srgb, var(--accent-red) 75%, var(--palette-zinc-900)) 16px,
-      var(--palette-zinc-800) 22px,
-      var(--palette-zinc-400) 28px,
-      var(--palette-zinc-900) 34px
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--accent-red) 80%, var(--palette-zinc-400)) 0%,
+      color-mix(in srgb, var(--accent-red) 30%, var(--palette-zinc-900)) 40%,
+      var(--palette-zinc-800) 65%,
+      color-mix(in srgb, var(--accent-red) 55%, var(--palette-zinc-900)) 100%
     );
 }
 
 .lore-ash-crimson {
   background-image:
     linear-gradient(var(--bg-surface), var(--bg-surface)),
-    repeating-linear-gradient(
-      125deg,
-      var(--palette-zinc-700) 0px,
-      var(--palette-zinc-900) 5px,
-      var(--palette-zinc-500) 10px,
-      color-mix(in srgb, var(--accent-red) 75%, var(--palette-zinc-900)) 16px,
-      var(--palette-zinc-800) 22px,
-      var(--palette-zinc-400) 28px,
-      var(--palette-zinc-900) 34px
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--accent-red) 80%, var(--palette-zinc-400)) 0%,
+      color-mix(in srgb, var(--accent-red) 30%, var(--palette-zinc-900)) 40%,
+      var(--palette-zinc-800) 65%,
+      color-mix(in srgb, var(--accent-red) 55%, var(--palette-zinc-900)) 100%
     );
 }
 
@@ -156,30 +150,24 @@
 @utility lore-ash-emerald {
   background-image:
     linear-gradient(var(--bg-surface), var(--bg-surface)),
-    repeating-linear-gradient(
-      125deg,
-      var(--palette-zinc-700) 0px,
-      var(--palette-zinc-900) 5px,
-      var(--palette-zinc-500) 10px,
-      color-mix(in srgb, var(--accent-green) 75%, var(--palette-zinc-900)) 16px,
-      var(--palette-zinc-800) 22px,
-      var(--palette-zinc-400) 28px,
-      var(--palette-zinc-900) 34px
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--accent-green) 80%, var(--palette-zinc-400)) 0%,
+      color-mix(in srgb, var(--accent-green) 30%, var(--palette-zinc-900)) 40%,
+      var(--palette-zinc-800) 65%,
+      color-mix(in srgb, var(--accent-green) 55%, var(--palette-zinc-900)) 100%
     );
 }
 
 .lore-ash-emerald {
   background-image:
     linear-gradient(var(--bg-surface), var(--bg-surface)),
-    repeating-linear-gradient(
-      125deg,
-      var(--palette-zinc-700) 0px,
-      var(--palette-zinc-900) 5px,
-      var(--palette-zinc-500) 10px,
-      color-mix(in srgb, var(--accent-green) 75%, var(--palette-zinc-900)) 16px,
-      var(--palette-zinc-800) 22px,
-      var(--palette-zinc-400) 28px,
-      var(--palette-zinc-900) 34px
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--accent-green) 80%, var(--palette-zinc-400)) 0%,
+      color-mix(in srgb, var(--accent-green) 30%, var(--palette-zinc-900)) 40%,
+      var(--palette-zinc-800) 65%,
+      color-mix(in srgb, var(--accent-green) 55%, var(--palette-zinc-900)) 100%
     );
 }
 
@@ -193,30 +181,24 @@
 @utility lore-ash-amber {
   background-image:
     linear-gradient(var(--bg-surface), var(--bg-surface)),
-    repeating-linear-gradient(
-      125deg,
-      var(--palette-zinc-700) 0px,
-      var(--palette-zinc-900) 5px,
-      var(--palette-zinc-500) 10px,
-      color-mix(in srgb, var(--accent-amber) 80%, var(--palette-zinc-900)) 16px,
-      var(--palette-zinc-800) 22px,
-      var(--palette-zinc-400) 28px,
-      var(--palette-zinc-900) 34px
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--accent-amber) 80%, var(--palette-zinc-400)) 0%,
+      color-mix(in srgb, var(--accent-amber) 30%, var(--palette-zinc-900)) 40%,
+      var(--palette-zinc-800) 65%,
+      color-mix(in srgb, var(--accent-amber) 55%, var(--palette-zinc-900)) 100%
     );
 }
 
 .lore-ash-amber {
   background-image:
     linear-gradient(var(--bg-surface), var(--bg-surface)),
-    repeating-linear-gradient(
-      125deg,
-      var(--palette-zinc-700) 0px,
-      var(--palette-zinc-900) 5px,
-      var(--palette-zinc-500) 10px,
-      color-mix(in srgb, var(--accent-amber) 80%, var(--palette-zinc-900)) 16px,
-      var(--palette-zinc-800) 22px,
-      var(--palette-zinc-400) 28px,
-      var(--palette-zinc-900) 34px
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--accent-amber) 80%, var(--palette-zinc-400)) 0%,
+      color-mix(in srgb, var(--accent-amber) 30%, var(--palette-zinc-900)) 40%,
+      var(--palette-zinc-800) 65%,
+      color-mix(in srgb, var(--accent-amber) 55%, var(--palette-zinc-900)) 100%
     );
 }
 
@@ -228,7 +210,7 @@
 }
 
 /* ---------------------------------------------------------------------------
- * Smash or Pass: Candidate Character Card Ash Border
+ * Smash or Pass: Candidate Character Card Edge (a crimson light catching a dark card)
  * --------------------------------------------------------------------------- */
 @utility card-ash-border {
   background-clip: padding-box, border-box;
@@ -238,19 +220,17 @@
   border-color: transparent;
   background-image:
     linear-gradient(var(--bg-primary), var(--bg-primary)),
-    repeating-linear-gradient(
-      130deg,
-      var(--palette-zinc-700) 0px,
-      var(--palette-zinc-900) 6px,
-      var(--palette-zinc-500) 12px,
-      color-mix(in srgb, var(--accent-red) 75%, var(--palette-zinc-900)) 18px,
-      var(--palette-zinc-800) 25px,
-      var(--palette-zinc-400) 32px,
-      var(--palette-zinc-900) 40px
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--accent-red) 85%, var(--palette-zinc-400)) 0%,
+      color-mix(in srgb, var(--accent-red) 30%, var(--palette-zinc-900)) 38%,
+      var(--palette-zinc-800) 62%,
+      color-mix(in srgb, var(--accent-red) 60%, var(--palette-zinc-900)) 100%
     );
   box-shadow:
     inset 0 0 24px 2px color-mix(in srgb, var(--palette-black) 75%, transparent),
-    0 0 35px color-mix(in srgb, var(--palette-black) 85%, transparent);
+    0 0 35px color-mix(in srgb, var(--palette-black) 85%, transparent),
+    0 0 18px color-mix(in srgb, var(--accent-red) 14%, transparent);
 }
 
 .card-ash-border {
@@ -261,19 +241,17 @@
   border-color: transparent;
   background-image:
     linear-gradient(var(--bg-primary), var(--bg-primary)),
-    repeating-linear-gradient(
-      130deg,
-      var(--palette-zinc-700) 0px,
-      var(--palette-zinc-900) 6px,
-      var(--palette-zinc-500) 12px,
-      color-mix(in srgb, var(--accent-red) 75%, var(--palette-zinc-900)) 18px,
-      var(--palette-zinc-800) 25px,
-      var(--palette-zinc-400) 32px,
-      var(--palette-zinc-900) 40px
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--accent-red) 85%, var(--palette-zinc-400)) 0%,
+      color-mix(in srgb, var(--accent-red) 30%, var(--palette-zinc-900)) 38%,
+      var(--palette-zinc-800) 62%,
+      color-mix(in srgb, var(--accent-red) 60%, var(--palette-zinc-900)) 100%
     );
   box-shadow:
     inset 0 0 24px 2px color-mix(in srgb, var(--palette-black) 75%, transparent),
-    0 0 35px color-mix(in srgb, var(--palette-black) 85%, transparent);
+    0 0 35px color-mix(in srgb, var(--palette-black) 85%, transparent),
+    0 0 18px color-mix(in srgb, var(--accent-red) 14%, transparent);
 }
 
 @utility archetype-plaque {

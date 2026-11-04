@@ -1,12 +1,13 @@
 'use client';
 // frontend/src/components/smash-or-pass/persona/PersonaShareView.tsx
-import { ArrowLeft, Check, Copy, Share2 } from 'lucide-react';
+import { Check, Copy, Share2 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { HeartIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
 import type { RomancePersonaResult } from '@/utils/smashPersona';
 import type { SocialLink } from './socialLinks';
+import { badgeGradientProps } from '@/utils/smashOrPass/badgeGradient';
 
 interface PersonaShareViewProps {
   persona: RomancePersonaResult;
@@ -15,7 +16,6 @@ interface PersonaShareViewProps {
   feedbackNotice: string | null;
   copiedLink: boolean;
   onCopyLink: () => void;
-  onBack: () => void;
 }
 
 /** Sharing, inline in the same modal: a preview of the badge, the networks, and the direct link. */
@@ -26,18 +26,19 @@ export function PersonaShareView({
   feedbackNotice,
   copiedLink,
   onCopyLink,
-  onBack,
 }: PersonaShareViewProps) {
   const dict = useDictionary();
   const text = dict.smashOrPass;
+  const badge = badgeGradientProps(persona.badgeColor);
 
   return (
     <div className="space-y-4">
       {/* Identity Preview Card */}
       <div
-        className={`relative overflow-hidden rounded-card p-4 bg-gradient-to-br ${persona.badgeColor} border-2 ${persona.borderColor} text-text-inverted shadow-lg`}
+        className={`relative overflow-hidden rounded-card p-4 ${badge.className} border-2 ${persona.borderColor} text-text-inverted shadow-lg`}
         style={{
-          backgroundImage: persona.badgeImageUrl ? `url(${persona.badgeImageUrl})` : undefined,
+          ...badge.style,
+          ...(persona.badgeImageUrl ? { backgroundImage: `url(${persona.badgeImageUrl})` } : {}),
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -126,18 +127,6 @@ export function PersonaShareView({
             <span>{copiedLink ? (text.sharing.copied) : (text.sharing.copyLink)}</span>
           </Button>
         </div>
-      </div>
-
-      {/* Return to Breakdown Action */}
-      <div className="pt-2 border-t border-border-color">
-        <Button
-          variant="secondary" size="md"
-          onClick={onBack}
-          className="w-full"
-        >
-          <ArrowLeft className="icon-md text-accent-red" />
-          <span>{text.sharing.backToBreakdown}</span>
-        </Button>
       </div>
     </div>
   );

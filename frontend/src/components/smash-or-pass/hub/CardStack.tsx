@@ -106,6 +106,7 @@ export function CardStack({
             customLabels={activeRoster?.custom_labels}
             rosterMode={activeRoster?.roster_mode}
             portraitOffsetY={activeRoster?.portrait_offset_y}
+            themeColor={activeRoster?.theme_color}
           />
         </div>
       )}
@@ -126,6 +127,7 @@ export function CardStack({
             customLabels={activeRoster?.custom_labels}
             rosterMode={activeRoster?.roster_mode}
             portraitOffsetY={activeRoster?.portrait_offset_y}
+            themeColor={activeRoster?.theme_color}
           />
         </div>
       )}
@@ -146,6 +148,7 @@ export function CardStack({
           customLabels={activeRoster?.custom_labels}
           rosterMode={activeRoster?.roster_mode}
           portraitOffsetY={activeRoster?.portrait_offset_y}
+          themeColor={activeRoster?.theme_color}
         />
       </div>
     </div>

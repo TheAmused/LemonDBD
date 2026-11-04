@@ -375,6 +375,7 @@ export default {
     coverImageLabel: 'URL obrazu okładki',
     coverImagePlaceholder: 'https://...',
     themeColorLabel: 'Kolor motywu',
+    themeColorHint: 'Dwa kolory tworzą gradient. Karty tego rostera dostają go jako obramowanie.',
     categoryLabel: 'Kategoria',
     categoryPlaceholder: 'np. Niestandardowa',
     nsfwLabel: 'Zawiera treści NSFW',

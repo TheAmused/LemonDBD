@@ -359,6 +359,7 @@ export default {
     coverImageLabel: 'URL de imagen de portada',
     coverImagePlaceholder: 'https://...',
     themeColorLabel: 'Color del tema',
+    themeColorHint: 'Dos colores forman un degradado. Las cartas de esta lista lo usan como borde.',
     categoryLabel: 'Categoría',
     categoryPlaceholder: 'ej. Personalizada',
     nsfwLabel: 'Contiene contenido NSFW',

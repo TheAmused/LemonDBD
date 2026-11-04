@@ -17,7 +17,9 @@ import { defaultRosterThemeColor, SMASH_ROSTER_LIMITS } from '@/utils/smashOrPas
 import { type Draft, Section } from './SmashRosterCreatorParts';
 import { LABEL } from './styles';
 import { RequiredMark } from './RequiredMark';
-import { TierColorPicker } from '@/components/tier-lists/TierColorPicker';
+import { GradientEditor } from './GradientEditor';
+import { cn } from '@/utils/cn';
+import { encodeThemeColor, themeGradientOf } from '@/utils/smashOrPass/badgeGradient';
 
 /** A checkbox row whose whole line is the click target. */
 
@@ -150,16 +152,14 @@ export function RosterBasicsSection({
           />
         </div>
 
-        <div className="md:col-span-2 flex flex-col items-center justify-center text-center">
-          <span className={LABEL}>{c.themeColorLabel}</span>
-          <div className="flex w-full max-w-xs flex-wrap items-center justify-center gap-3">
-            <span
-              className="h-11 w-24 rounded-control border border-border-color shadow-xs"
-              style={{ backgroundColor: draft.theme_color || defaultRosterThemeColor() }}
-              aria-hidden="true"
-            />
-            <TierColorPicker color={draft.theme_color || defaultRosterThemeColor()} onChange={(hex) => patch({ theme_color: hex })} />
-          </div>
+        <div className="md:col-span-2 mx-auto w-full max-w-2xl">
+          <span className={cn(LABEL, 'block text-center')}>{c.themeColorLabel}</span>
+          <GradientEditor
+            value={themeGradientOf(draft.theme_color || defaultRosterThemeColor())}
+            title={draft.name || c.namePlaceholder}
+            onChange={(gradient) => patch({ theme_color: encodeThemeColor(gradient) })}
+          />
+          <p className="mt-2 text-center type-caption text-text-muted">{c.themeColorHint}</p>
         </div>
 
         {/* Toggles Row: Simple Version, NSFW, and Official (Admin) */}

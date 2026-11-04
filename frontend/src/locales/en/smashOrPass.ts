@@ -359,6 +359,7 @@ export default {
     coverImageLabel: 'Cover image URL',
     coverImagePlaceholder: 'https://...',
     themeColorLabel: 'Theme color',
+    themeColorHint: 'Two colours make a gradient. Cards of this roster get it as their edge.',
     categoryLabel: 'Category',
     categoryPlaceholder: 'e.g. Custom',
     nsfwLabel: 'Contains NSFW content',

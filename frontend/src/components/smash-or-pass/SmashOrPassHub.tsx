@@ -189,6 +189,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
               character={deck.currentCharacter}
               locale={locale}
               customLabels={activeRoster?.custom_labels}
+              themeColor={activeRoster?.theme_color}
             />
           </Suspense>
 

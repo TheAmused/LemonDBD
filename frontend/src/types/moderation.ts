@@ -198,7 +198,7 @@ export function draftFromSuggestion(draft: SanctionDraft, suggestion: Moderation
 
 /** The decision form is complete: a suspension or ban needs the facts (the evidence itself is wiped). */
 export function isSanctionDraftValid(draft: SanctionDraft): boolean {
-  if (draft.kind !== 'warning' && draft.facts.trim().length === 0) return false;
+  if (draft.facts.trim().length === 0) return false;
   if (draft.kind === 'suspension') {
     return (
       Number.isInteger(draft.duration_days) &&
@@ -219,7 +219,8 @@ export function sanctionRequestBody(draft: SanctionDraft): Record<string, unknow
     duration_days: draft.kind === 'suspension' ? draft.duration_days : undefined,
     facts: text(draft.facts),
     internal_notes: text(draft.internal_notes),
-    send_email: draft.send_email,
+    // Only a warning may go unmailed: a suspension or a ban always tells the user.
+    send_email: draft.kind === 'warning' ? draft.send_email : true,
   };
 }
 

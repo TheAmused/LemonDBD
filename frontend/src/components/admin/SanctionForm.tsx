@@ -24,6 +24,9 @@ import {
   type SanctionTarget,
 } from '@/types/moderation';
 
+/** The red asterisk after a required field's label; fields without it are optional. */
+const REQUIRED_MARK = <span className="text-accent-red"> *</span>;
+
 interface SanctionFormProps {
   draft: SanctionDraft;
   onChange: (patch: Partial<SanctionDraft>) => void;
@@ -56,7 +59,6 @@ export function SanctionForm({
     suspension: t.kindSuspension,
     ban: t.kindBan,
   };
-  const factsRequired = draft.kind !== 'warning';
   const hint = 'mt-1 type-micro text-text-muted';
   const trigger = 'w-full justify-between py-2.5';
   const kindOptions: DropdownOption<SanctionKind>[] = kinds.map((kind) => ({ value: kind, label: kindLabel[kind] }));
@@ -72,7 +74,7 @@ export function SanctionForm({
 
   const durationField = (
     <div>
-      <FieldLabel htmlFor={`${id}-days`}>{t.formDuration}</FieldLabel>
+      <FieldLabel htmlFor={`${id}-days`}>{t.formDuration}{REQUIRED_MARK}</FieldLabel>
       <div className="relative">
         <Input
           id={`${id}-days`}
@@ -99,7 +101,7 @@ export function SanctionForm({
       {kinds.length > 1 ? (
         <div className={cn('grid gap-3', isSuspension ? 'grid-cols-field-suffix' : 'grid-cols-1')}>
           <div className="min-w-0">
-            <FieldLabel as="span">{t.formKind}</FieldLabel>
+            <FieldLabel as="span">{t.formKind}{REQUIRED_MARK}</FieldLabel>
             <CustomDropdown<SanctionKind>
               value={draft.kind}
               options={kindOptions}
@@ -122,7 +124,7 @@ export function SanctionForm({
       <div className={cn('grid gap-3', showReason ? 'grid-cols-2' : 'grid-cols-1')}>
         {showReason && (
           <div className="min-w-0">
-            <FieldLabel as="span">{t.formReason}</FieldLabel>
+            <FieldLabel as="span">{t.formReason}{REQUIRED_MARK}</FieldLabel>
             <CustomDropdown<SanctionDraft['reason_code']>
               value={draft.reason_code}
               options={reasonOptions}
@@ -153,7 +155,7 @@ export function SanctionForm({
       </div>
 
       <div>
-        <FieldLabel htmlFor={`${id}-facts`}>{t.formFacts}</FieldLabel>
+        <FieldLabel htmlFor={`${id}-facts`}>{t.formFacts}{REQUIRED_MARK}</FieldLabel>
         <Textarea
           id={`${id}-facts`}
           fieldSize="sm"
@@ -161,10 +163,10 @@ export function SanctionForm({
           maxLength={MAX_SANCTION_TEXT_LENGTH}
           value={draft.facts}
           onChange={(e) => onChange({ facts: e.target.value })}
-          invalid={factsRequired && draft.facts.trim().length === 0}
+          invalid={draft.facts.trim().length === 0}
           className="resize-none"
         />
-        <p className={hint}>{factsRequired ? t.formFactsRequired : t.formFactsOptional}</p>
+        <p className={hint}>{t.formFactsRequired}</p>
       </div>
 
       {showInternal && (

@@ -83,12 +83,12 @@ describe('SanctionForm', () => {
       })
     );
 
-  it('asks for the duration only for a suspension and marks the facts required for suspension and ban', () => {
+  it('asks for the duration only for a suspension and marks the facts required for every decision', () => {
     assert.ok(!render({ kind: 'warning' }).includes(en.moderation.admin.formDuration));
     assert.ok(render({ kind: 'suspension' }).includes(en.moderation.admin.formDuration));
     assert.ok(!render({ kind: 'ban' }).includes(en.moderation.admin.formDuration));
-    assert.ok(render({ kind: 'ban' }).includes('Required for a suspension or a ban'));
-    assert.ok(render({ kind: 'warning' }).includes(en.moderation.admin.formFactsOptional));
+    assert.ok(render({ kind: 'ban' }).includes(en.moderation.admin.formFactsRequired));
+    assert.ok(render({ kind: 'warning' }).includes(en.moderation.admin.formFactsRequired));
   });
 
   it('shows the chosen reason and rule in their dropdowns, the rule as "Section N: heading"', () => {

@@ -326,6 +326,8 @@ def apply_sanction(admin: User, user_id: int, body: dict[str, Any]) -> UserSanct
     reason_code = body.get("reason_code")
     if not isinstance(reason_code, str):
         raise ModerationError("reason_code is required", 400)
+    # Whatever the decision, the user is told what happened: a warning needs its facts too.
+    _clean_text(body.get("facts"), "facts", required=True)
     send_email = body.get("send_email", True)
     if not isinstance(send_email, bool):
         raise ModerationError("send_email must be true or false", 400)
@@ -338,7 +340,8 @@ def apply_sanction(admin: User, user_id: int, body: dict[str, Any]) -> UserSanct
         rule_ref=body.get("rule_ref"),
         internal_notes=body.get("internal_notes"),
         duration_days=body.get("duration_days"),
-        send_email=send_email,
+        # Only a warning may go unmailed: a suspension or a ban always tells the user.
+        send_email=send_email or kind != "warning",
     )
 
 

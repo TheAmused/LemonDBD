@@ -86,6 +86,8 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
   const [isOpen, toggleOpen] = usePersistentDrawer(ADMIN_STORAGE.moderationPreviewOpen, false);
 
   const valid = isSanctionDraftValid(draft);
+  /** Only a warning may go unmailed. */
+  const sendsEmail = draft.kind !== 'warning' || draft.send_email;
   // Only what the preview depends on: typing in the internal notes must not ask the server again.
   const requestKey = useMemo(() => JSON.stringify(sanctionPreviewBody(draft, target)), [draft, target]);
 
@@ -133,8 +135,8 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
   } else if (tab === 'email') {
     content = (
       <div className="space-y-3">
-        {!draft.send_email && <p className="text-center type-caption text-text-muted">{t.previewNoEmail}</p>}
-        <div className={draft.send_email ? undefined : 'opacity-50'}>
+        {!sendsEmail && <p className="text-center type-caption text-text-muted">{t.previewNoEmail}</p>}
+        <div className={sendsEmail ? undefined : 'opacity-50'}>
           <EmailPreview preview={data} />
         </div>
       </div>

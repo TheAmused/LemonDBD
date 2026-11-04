@@ -86,7 +86,7 @@ test('the request leaves out empty fields and the duration of anything but a sus
     duration_days: undefined,
     facts: undefined,
     internal_notes: undefined,
-    send_email: true,
+    send_email: false,
   });
   const suspension = sanctionRequestBody(
     draft({ kind: 'suspension', facts: 'Spam links.', duration_days: 14, rule_ref: 'serverCare', send_email: false })
@@ -94,7 +94,7 @@ test('the request leaves out empty fields and the duration of anything but a sus
   assert.equal(suspension.duration_days, 14);
   assert.equal(suspension.rule_ref, 'serverCare');
   assert.equal(suspension.send_email, true, 'a suspension is always emailed');
-  assert.equal(sanctionRequestBody(draft({ kind: 'warning', send_email: false })).send_email, false);
+  assert.equal(sanctionRequestBody(draft({ kind: 'warning', send_email: true })).send_email, true);
 });
 
 test('a report resolution sends the backend names for the author decision', () => {

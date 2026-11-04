@@ -176,7 +176,8 @@ export const EMPTY_SANCTION_DRAFT: SanctionDraft = {
   duration_days: DEFAULT_SUSPENSION_DAYS,
   facts: '',
   internal_notes: '',
-  send_email: true,
+  // A warning starts unmailed (the admin opts in); a suspension or a ban switches it on and locks it.
+  send_email: false,
 };
 
 /**
@@ -196,7 +197,7 @@ export function draftFromSuggestion(draft: SanctionDraft, suggestion: Moderation
   return { ...draft, kind: suggestion.kind, duration_days: suggestion.duration_days ?? draft.duration_days };
 }
 
-/** The decision form is complete: a suspension or ban needs the facts (the evidence itself is wiped). */
+/** The decision form is complete: every decision needs its facts (the evidence itself is wiped). */
 export function isSanctionDraftValid(draft: SanctionDraft): boolean {
   if (draft.facts.trim().length === 0) return false;
   if (draft.kind === 'suspension') {

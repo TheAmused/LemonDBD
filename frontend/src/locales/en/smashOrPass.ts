@@ -490,6 +490,7 @@ export default {
     gradientCustom: 'Custom',
     gradientFrom: 'From',
     gradientTo: 'To',
+    gradientSwap: 'Swap colours',
     noFallbackNote: 'No fallback archetype is marked. When no archetype matches, the built-in “The Fog Romantic” is shown.',
     rulesHint: 'All conditions must hold. Affinity is the share of your smashes (%); count is the number of smashes. When several archetypes match, the one with the most conditions wins, then the one higher in the list.',
   },

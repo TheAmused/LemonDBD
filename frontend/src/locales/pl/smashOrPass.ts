@@ -506,6 +506,7 @@ export default {
     gradientCustom: 'Własny',
     gradientFrom: 'Od',
     gradientTo: 'Do',
+    gradientSwap: 'Zamień kolory',
     noFallbackNote: 'Nie zaznaczono archetypu zapasowego. Gdy żaden nie pasuje, pokazuje się wbudowany „Romantyk z Mgły”.',
     rulesHint: 'Wszystkie warunki muszą być spełnione. Powinowactwo to udział Twoich smashów (%), liczba to ilość smashów. Gdy pasuje kilka archetypów, wygrywa ten z największą liczbą warunków, a przy remisie ten wyżej na liście.',
   },

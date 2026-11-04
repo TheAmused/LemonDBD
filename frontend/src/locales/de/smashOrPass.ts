@@ -490,6 +490,7 @@ export default {
     gradientCustom: 'Eigene',
     gradientFrom: 'Von',
     gradientTo: 'Bis',
+    gradientSwap: 'Farben tauschen',
     noFallbackNote: 'Kein Standard-Archetyp markiert. Passt kein Archetyp, wird der integrierte „Der Nebelromantiker“ angezeigt.',
     rulesHint: 'Alle Bedingungen müssen erfüllt sein. Affinität ist der Anteil deiner Smashes (%), Anzahl ist die Zahl der Smashes. Passen mehrere Archetypen, gewinnt der mit den meisten Bedingungen, danach der weiter oben in der Liste.',
   },

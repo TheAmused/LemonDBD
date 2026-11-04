@@ -14,7 +14,7 @@ import { CustomDropdown, type DropdownOption } from '@/components/common/CustomD
 import { useDictionary } from "@/context/DictionaryContext";
 import { ToggleChip } from '@/components/common/ToggleChip';
 import { Badge } from '@/components/common/Badge';
-import { TierColorPicker } from '@/components/tier-lists/TierColorPicker';
+import { GradientEditor } from './GradientEditor';
 import { paletteColor } from '@/utils/themeColor';
 import { badgeGradientProps, encodeCustomGradient, parseCustomGradient } from '@/utils/smashOrPass/badgeGradient';
 import { EmptyState } from '@/components/common/EmptyState';
@@ -267,35 +267,23 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
 
                         {(() => {
                           const custom = parseCustomGradient(arch.badge_color);
+                          const badgeTitle = arch.title || `${ab.titleLabel} #${idx + 1}`;
+                          // A custom gradient is edited on its own preview; a preset only needs the preview.
                           return custom ? (
-                            <div className="flex flex-wrap items-start gap-x-6 gap-y-3">
-                              <div className="flex min-w-56 flex-1 flex-wrap items-center gap-2">
-                                <span className="type-strong-xs text-text-secondary">{ab.gradientFrom}</span>
-                                <TierColorPicker
-                                  size="sm"
-                                  color={custom.from}
-                                  onChange={(hex) => updateArchetype(arch.id, { badge_color: encodeCustomGradient({ ...custom, from: hex }) })}
-                                />
-                              </div>
-                              <div className="flex min-w-56 flex-1 flex-wrap items-center gap-2">
-                                <span className="type-strong-xs text-text-secondary">{ab.gradientTo}</span>
-                                <TierColorPicker
-                                  size="sm"
-                                  color={custom.to}
-                                  onChange={(hex) => updateArchetype(arch.id, { badge_color: encodeCustomGradient({ ...custom, to: hex }) })}
-                                />
-                              </div>
+                            <GradientEditor
+                              value={custom}
+                              title={badgeTitle}
+                              onChange={(gradient) => updateArchetype(arch.id, { badge_color: encodeCustomGradient(gradient) })}
+                            />
+                          ) : (
+                            <div
+                              className={cn('flex h-12 items-center rounded-control border border-border-color px-3', badgeGradientProps(arch.badge_color).className)}
+                              style={badgeGradientProps(arch.badge_color).style}
+                            >
+                              <span className="type-strong truncate text-text-inverted">{badgeTitle}</span>
                             </div>
-                          ) : null;
+                          );
                         })()}
-
-                        {/* The badge as a player will see it */}
-                        <div
-                          className={cn('flex h-12 items-center rounded-control border border-border-color px-3', badgeGradientProps(arch.badge_color).className)}
-                          style={badgeGradientProps(arch.badge_color).style}
-                        >
-                          <span className="type-strong truncate text-text-inverted">{arch.title || `${ab.titleLabel} #${idx + 1}`}</span>
-                        </div>
                       </div>
 
                       <Checkbox

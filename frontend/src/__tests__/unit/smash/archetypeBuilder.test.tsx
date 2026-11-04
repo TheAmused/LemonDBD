@@ -66,7 +66,7 @@ describe('archetype builder', () => {
     assert.equal(marked.view.queryByText(ab.noFallbackNote), null);
   });
 
-  it('"Custom" starts a gradient and offers a picker for each end', () => {
+  it('"Custom" starts a gradient and offers a handle for each end', () => {
     const style = document.documentElement.style;
     // The CSS build shortens #ff0055 to #f05; a browser reports the shortened form.
     style.setProperty('--palette-neon-crimson', '#f05');
@@ -74,6 +74,15 @@ describe('archetype builder', () => {
     const { view, state } = mount([archetype()]);
     fireEvent.click(view.getByText(ab.gradientCustom));
     assert.equal(state.archetypes[0].badge_color, 'custom:#ff0055,#05070c');
-    assert.equal(view.getAllByLabelText(enDict.tierLists.customColor).length, 2);
+    assert.ok(view.getByLabelText('From #ff0055'));
+    assert.ok(view.getByLabelText('To #05070c'));
+  });
+
+  it('a custom gradient is edited on its preview: a handle per end, and a swap', () => {
+    const { view, state } = mount([archetype({ badge_color: 'custom:#112233,#445566' })]);
+    assert.ok(view.getByLabelText('From #112233'));
+    assert.ok(view.getByLabelText('To #445566'));
+    fireEvent.click(view.getByLabelText(ab.gradientSwap));
+    assert.equal(state.archetypes[0].badge_color, 'custom:#445566,#112233');
   });
 });

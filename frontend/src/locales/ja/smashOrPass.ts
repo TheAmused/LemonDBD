@@ -48,8 +48,6 @@ export default {
   trialRumor: '試練の噂＆ミーム',
   greenFlags: '魅力的な特徴 (Green Flags)',
   redFlags: '要注意な特徴 (Red Flags)',
-  showMore: 'もっと見る',
-  showLess: '閉じる',
   turnOn: 'プラス要素:',
   dealbreaker: 'マイナス要素:',
   datingPsychology: '恋愛心理分析',

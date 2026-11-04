@@ -168,14 +168,9 @@ export function CardBackFace({
           </Surface>
         )}
 
-        {/* Mobile-only details (quote/tagline when fragments are hidden) */}
+        {/* Quote/tagline shown inline when the floating lore fragments are hidden (narrow hubs) */}
         {(Boolean(charTagline) || Boolean(charQuote)) && (
-          <details className="@hub-lg/hub:hidden group space-y-2.5">
-            <summary className="flex min-h-9 pointer-coarse:min-h-11 cursor-pointer list-none items-center justify-center rounded-control border border-border-color type-label-xs text-text-secondary transition-colors hover:text-text-primary [&::-webkit-details-marker]:hidden">
-              <span className="group-open:hidden">{text.showMore}</span>
-              <span className="hidden group-open:inline">{text.showLess}</span>
-            </summary>
-
+          <div className="@hub-lg/hub:hidden space-y-2.5">
             {charTagline && <p className="px-1 text-mini text-text-secondary italic leading-snug">{charTagline}</p>}
 
             {charQuote && (
@@ -186,7 +181,7 @@ export function CardBackFace({
                 <p className="text-mini text-text-secondary italic leading-relaxed">{charQuote}</p>
               </Surface>
             )}
-          </details>
+          </div>
         )}
       </div>
       </div>

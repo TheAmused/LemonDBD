@@ -22,7 +22,7 @@ interface UseRosterCarouselOptions {
 
 /**
  * The roster picker's carousel: official/custom tabs, the animated and draggable position, the
- * arrow/Enter/Escape-to-confirm keys, and which roster ends up chosen.
+ * arrow and Enter keys, and which roster ends up chosen.
  */
 export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelectRoster, onClose }: UseRosterCarouselOptions) {
   const isCurrentlyCustom = Boolean(selectedRosterSlug?.startsWith('local:'));
@@ -183,25 +183,6 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
     },
     [N, normalizeIndex, displayedRosters, onSelectRoster, onClose]
   );
-
-  // Closing (X, backdrop, Escape) confirms the roster centered in the carousel.
-  // If that roster is locked/inactive (or nothing is centered), nothing changes
-  // and the roster that was active when the modal opened stays selected.
-  const handleClose = useCallback(() => {
-    if (N > 0) {
-      const centered = displayedRosters[normalizeIndex(targetIndexRef.current)];
-      if (centered && centered.is_active !== false) {
-        if (centered.slug !== activeSelectedSlug) {
-          if (typeof window !== 'undefined') {
-            localStorage.setItem(STORAGE_KEY, centered.slug);
-          }
-          setActiveSelectedSlug(centered.slug);
-          onSelectRoster(centered.slug);
-        }
-      }
-    }
-    onClose();
-  }, [N, displayedRosters, normalizeIndex, activeSelectedSlug, onSelectRoster, onClose]);
 
   const stepPrev = useCallback(
     (e?: React.MouseEvent | React.PointerEvent) => {
@@ -396,7 +377,6 @@ export function useRosterCarousel({ isOpen, rosters, selectedRosterSlug, onSelec
     activeRosterInCenter,
     containerRef,
     commitSelection,
-    handleClose,
     stepPrev,
     stepNext,
     jumpBy,

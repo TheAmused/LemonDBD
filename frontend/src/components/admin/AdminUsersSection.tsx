@@ -243,7 +243,8 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
 
       {total > 0 && (
         <Pagination
-          variant="embedded"
+          variant="compact"
+          className="mt-0 border-t border-border-color px-3 py-2.5 sm:mt-0 sm:px-4 sm:py-2.5"
           page={page}
           totalPages={Math.ceil(total / perPage)}
           totalResults={total}

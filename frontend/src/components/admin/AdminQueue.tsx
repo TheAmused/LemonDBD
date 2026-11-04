@@ -77,9 +77,19 @@ export function AdminQueue<S extends string, T extends { id: number }>({
     }
   };
 
+  // Equal heights only while both drawers are open: a stretched drawer can never look collapsed.
+  const bothOpen = isListOpen && isCaseOpen;
+
   return (
-    <div className="grid w-full grid-cols-1 items-stretch gap-4 lg:grid-cols-12 lg:gap-5">
-      <AccordionSection as="section" title={title} open={isListOpen} onToggle={toggleList} className="h-full lg:col-span-5" bodyClassName="p-0">
+    <div className="grid w-full grid-cols-1 items-start gap-4 lg:grid-cols-12 lg:gap-5">
+      <AccordionSection
+        as="section"
+        title={title}
+        open={isListOpen}
+        onToggle={toggleList}
+        className={cn('lg:col-span-5', bothOpen && 'lg:h-full lg:self-stretch')}
+        bodyClassName="p-0"
+      >
         <div className="space-y-2.5 border-b border-border-color p-3">
           <Tabs<S | 'all'>
             ariaLabel={ariaLabel}
@@ -130,8 +140,8 @@ export function AdminQueue<S extends string, T extends { id: number }>({
         )}
       </AccordionSection>
 
-      <div ref={detailRef} className="scroll-mt-4 lg:col-span-7 [&>*]:h-full">
-        <AccordionSection as="section" title={t.queueCaseTitle} open={isCaseOpen} onToggle={toggleCase} className="h-full" bodyClassName="p-0">
+      <div ref={detailRef} className={cn('scroll-mt-4 lg:col-span-7', bothOpen && 'lg:self-stretch [&>*]:h-full')}>
+        <AccordionSection as="section" title={t.queueCaseTitle} open={isCaseOpen} onToggle={toggleCase} bodyClassName="p-0">
           {detail ?? <EmptyState variant="compact" icon={Inbox} title={t.queueSelectPrompt} />}
         </AccordionSection>
       </div>

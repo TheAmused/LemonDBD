@@ -318,6 +318,7 @@ def test_admin_api_rejects_non_admins_and_bad_bodies(client, admin, player) -> N
     assert client.post(url, headers=_headers(player), json={"kind": "warning", "reason_code": "spam"}).status_code == 403
     assert client.post(url, headers=_headers(admin), json={"kind": "mute", "reason_code": "spam"}).status_code == 400
     assert client.post(url, headers=_headers(admin), json={"kind": "ban", "reason_code": "spam"}).status_code == 400
+    assert client.post(url, headers=_headers(admin), json={"kind": "warning", "reason_code": "spam"}).status_code == 400
     assert client.post("/api/v1/admin/users/99999/sanctions", headers=_headers(admin), json={"kind": "warning", "reason_code": "spam"}).status_code == 404
     assert client.post(f"/api/v1/admin/users/{player.id}/restore", headers=_headers(admin), json={}).status_code == 400
 

@@ -54,7 +54,8 @@ export function ModerationProfileCard({ user, summary, busy, onRestore }: Modera
 
   const stats: [string, string][] = summary
     ? [
-        [t.statWarnings, `${summary.active_warnings} / ${summary.total_warnings}`],
+        [t.statWarningsActive, String(summary.active_warnings)],
+        [t.statWarningsTotal, String(summary.total_warnings)],
         [t.statSuspensions, String(summary.total_suspensions)],
         [t.statBlockedContent, String(summary.content_blocked)],
       ]

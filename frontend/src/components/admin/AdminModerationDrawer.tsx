@@ -35,6 +35,10 @@ import {
 import type { ActionMessage, UserRow } from '@/types/admin';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
 
+/** Switching the decision resets the email switch: on and locked for a suspension or a ban, off (and the admin's call) for a warning. */
+const withEmailRule = (prev: SanctionDraft, next: SanctionDraft): SanctionDraft =>
+  next.kind === prev.kind ? next : { ...next, send_email: next.kind !== 'warning' };
+
 interface AdminModerationDrawerProps {
   user: UserRow | null;
   onClose: () => void;
@@ -65,6 +69,8 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
   const summary = data?.summary;
   const suggestion = summary?.suggestion ?? null;
   const username = user?.username ?? '';
+  /** A suspension or a ban always emails the user; only a warning may go unmailed. */
+  const emailRequired = draft.kind !== 'warning';
 
   const confirmMessage =
     draft.kind === 'warning'
@@ -139,25 +145,23 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
                       <p className="type-label-xs text-text-secondary">
                         {t.suggestionTitle}: <span className="text-text-primary">{suggestionLabel}</span>
                       </p>
-                      <p className="mt-0.5 type-caption text-text-muted">
-                        {formatMessage(t.suggestionBasis, {
-                          active: suggestion.basis.active_warnings,
-                          needed: suggestion.basis.warnings_before_suspension,
-                          suspensions: suggestion.basis.suspensions,
-                        })}
-                      </p>
                     </div>
-                    <Button size="sm" onClick={() => setDraft((d) => draftFromSuggestion(d, suggestion))}>
+                    <Button size="sm" onClick={() => setDraft((d) => withEmailRule(d, draftFromSuggestion(d, suggestion)))}>
                       {t.suggestionApply}
                     </Button>
                   </div>
                   <hr className="border-border-color" />
                 </>
               )}
+              {/* Only a warning may go unmailed: for a suspension or a ban the switch is on, locked and marked required. */}
               <div className="flex items-center justify-between gap-3">
-                <span className="type-body text-text-primary">{t.formSendEmail}</span>
+                <span className="type-body text-text-primary">
+                  {t.formSendEmail}
+                  {emailRequired && <span className="text-accent-red"> *</span>}
+                </span>
                 <Switch
                   checked={draft.send_email}
+                  disabled={emailRequired}
                   onChange={(send_email) => setDraft((d) => ({ ...d, send_email }))}
                   ariaLabel={t.formSendEmail}
                 />
@@ -168,11 +172,11 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
               draft={draft}
               kinds={SANCTION_KINDS}
               previewTarget={{ userId: user.id }}
-              onChange={(patch) => setDraft((d) => patchDraft(d, patch, summary?.next_suspension_days))}
+              onChange={(patch) => setDraft((d) => withEmailRule(d, patchDraft(d, patch, summary?.next_suspension_days)))}
             />
 
             <Button
-              variant={draft.kind === 'warning' ? 'primary' : 'danger'}
+              variant="primary"
               className="w-full"
               disabled={saving || !isSanctionDraftValid(draft)}
               onClick={() => setConfirmingDraft(true)}

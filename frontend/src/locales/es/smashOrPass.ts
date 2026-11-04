@@ -490,6 +490,7 @@ export default {
     gradientCustom: 'Personalizado',
     gradientFrom: 'Desde',
     gradientTo: 'Hasta',
+    gradientSwap: 'Intercambiar colores',
     noFallbackNote: 'No hay arquetipo de reserva marcado. Si ninguno coincide, se muestra el integrado «El Romántico de la Niebla».',
     rulesHint: 'Deben cumplirse todas las condiciones. La afinidad es la proporción de tus smashes (%); el recuento es el número de smashes. Si coinciden varios arquetipos, gana el que tiene más condiciones y, en caso de empate, el que está más arriba en la lista.',
   },

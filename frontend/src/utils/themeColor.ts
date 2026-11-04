@@ -10,11 +10,16 @@ export function themeColor(variable: `--${string}`): string {
 
 const palette = new Map<string, string>();
 
+/** `#abc` as `#aabbcc`: the CSS build shortens `#ff0055` to `#f05`, and colours saved as text are always six digits. */
+function expandShortHex(value: string): string {
+  return /^#[0-9a-f]{3}$/i.test(value) ? `#${value[1]}${value[1]}${value[2]}${value[2]}${value[3]}${value[3]}` : value;
+}
+
 /** A fixed art colour from the `--palette-*` list in tokens.css (the same in every theme), by its name, e.g. 'red-600'. */
 export function paletteColor(name: string): string {
   const cached = palette.get(name);
   if (cached) return cached;
-  const value = themeColor(`--palette-${name}`);
+  const value = expandShortHex(themeColor(`--palette-${name}`));
   if (value) palette.set(name, value);
   return value;
 }

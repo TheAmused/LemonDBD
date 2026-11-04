@@ -252,17 +252,6 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
           title={c.stepEntities}
           badge={draft.entities.length}
           defaultOpen={true}
-          headerAction={
-            <Button
-              variant="secondary" size="sm"
-              onClick={addEntity}
-              disabled={draft.entities.length >= SMASH_ROSTER_LIMITS.maxEntities}
-              className="uppercase tracking-wider"
-            >
-              <Plus aria-hidden="true" />
-              <span>{c.addEntity}</span>
-            </Button>
-          }
         >
           <div className="flex flex-col gap-6">
             {draft.entities.length === 0 ? (

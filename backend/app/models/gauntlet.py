@@ -28,6 +28,11 @@ class GauntletRun(StreakRunMixin, ColumnDictMixin["GauntletRunDict"], Base):
     # Lemon killer boosts: the spendable balance, what the last win rolled (0 after a loss),
     # and the free perk slots bought for the match in play.
     tokens: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)
+
+    @property
+    def attempt_started(self) -> bool:
+        """A new attempt from zero begins when the player presses Start (or accepts a pick), before any match."""
+        return self.attempt_matches > 0 or (self.target_revealed and self.current_streak == 0)
     last_token_roll: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)
     bonus_perk_slots: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)
 

@@ -96,6 +96,8 @@ class GauntletRunDict(TypedDict):
 class GauntletRunState(GauntletRunDict):
     """What every gauntlet endpoint returns: the stored run plus its resolved pool and tier."""
     pool_frozen: bool
+    # Whether the attempt in play counts yet: a match was played in it, or it was started from zero.
+    attempt_started: bool
     owned_characters: list[str]
     tier_info: TierInfo
     # None in modes without boosts.

@@ -17,8 +17,9 @@ export interface ProgressiveList {
  * whenever the sentinel after the last one scrolls near the container's edge.
  * `resetKey` (a search term, a filter) starts the list over from the first chunk
  * and scrolls the container back to the top.
+ * With `inPage` the list scrolls with the page itself: there is no container, only the sentinel is observed.
  */
-export function useProgressiveList(total: number, resetKey: string, step = 32): ProgressiveList {
+export function useProgressiveList(total: number, resetKey: string, step = 32, inPage = false): ProgressiveList {
   const [state, setState] = useState({ key: resetKey, limit: step });
   const [root, setRoot] = useState<HTMLElement | null>(null);
   const [sentinel, setSentinel] = useState<HTMLElement | null>(null);
@@ -32,7 +33,7 @@ export function useProgressiveList(total: number, resetKey: string, step = 32): 
   }, [root, resetKey]);
 
   useEffect(() => {
-    if (!root || !sentinel || limit >= total) return;
+    if ((!root && !inPage) || !sentinel || limit >= total) return;
     // A fresh observer reports the sentinel's current state, so chunks keep
     // coming until it sits outside the margin around the container.
     const observer = new IntersectionObserver(
@@ -45,7 +46,7 @@ export function useProgressiveList(total: number, resetKey: string, step = 32): 
     );
     observer.observe(sentinel);
     return () => observer.disconnect();
-  }, [root, sentinel, limit, total, step]);
+  }, [root, inPage, sentinel, limit, total, step]);
 
   return { limit, rootRef: setRoot, sentinelRef: setSentinel };
 }

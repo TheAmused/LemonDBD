@@ -24,8 +24,9 @@ from app.services.page_streak.runs import (
     abandon_active_run,
     create_new_run,
     fetch_run,
+    lock_pages,
     record_match_result,
-    reset_all_runs,
+    abandon_all_runs,
 )
 from app.services.page_streak.stats import fetch_page_streak_user_stats
 from app.services.perks import PerkService
@@ -71,32 +72,46 @@ class PageStreakService:
             return None
         return {
             **data,
-            "perk_icons": get_perk_icon_map(user_id, self.perk_service, self.ownership_service),
+            "perk_icons": get_perk_icon_map(self.perk_service, {name for page in data["pages"] for name in page}),
             "killer_avatar": get_killer_avatar_map(user_id, self.ownership_service).get(data["killer"]),
         }
 
+    def _require_owned_killer(self, user_id: int, killer: str) -> None:
+        """A killer the player does not have (or no longer has) has no run to open, read or play."""
+        if killer not in self.get_killers(user_id):
+            raise ValueError(f"Killer not found: {killer}")
+
     def get_run(self, user_id: int, killer: str) -> PageStreakRunState | None:
+        self._require_owned_killer(user_id, killer)
         return self._with_artwork(user_id, fetch_run(user_id, killer, self.build_pages))
 
     def start_run(self, user_id: int, killer: str) -> PageStreakRunState | None:
         assert_challenge_mode_enabled("page_streak", user_id)
         return self._with_artwork(user_id, create_new_run(user_id, killer, self.get_killers, self.build_pages))
 
+    def lock_pages(self, user_id: int, killer: str) -> PageStreakRunState | None:
+        """The player confirmed a build: the run keeps its pages from now on."""
+        assert_challenge_mode_enabled("page_streak", user_id)
+        self._require_owned_killer(user_id, killer)
+        return self._with_artwork(user_id, lock_pages(user_id, killer, self.build_pages))
+
     def expected_build_size(self, page_perks: list[str]) -> int:
         return min(BUILD_SIZE, len(page_perks))
 
     def submit_result(self, user_id: int, killer: str, page: int, perks: list[str], result: str) -> PageStreakRunState | None:
         assert_challenge_mode_enabled("page_streak", user_id)
+        self._require_owned_killer(user_id, killer)
         run = record_match_result(user_id, killer, page, perks, result, self.build_pages)
         return self._with_artwork(user_id, run)
 
     def abandon_run(self, user_id: int, killer: str) -> PageStreakRunState | None:
         assert_challenge_mode_enabled("page_streak", user_id)
+        self._require_owned_killer(user_id, killer)
         return self._with_artwork(user_id, abandon_active_run(user_id, killer, self.build_pages))
 
-    def reset_all(self, user_id: int) -> None:
+    def abandon_all(self, user_id: int) -> None:
         assert_challenge_mode_enabled("page_streak", user_id)
-        reset_all_runs(user_id)
+        abandon_all_runs(user_id)
 
     def get_stats(self, user_id: int, killer: str) -> StreakStats[PageStreakStatsLog]:
         return fetch_page_streak_user_stats(user_id, killer)

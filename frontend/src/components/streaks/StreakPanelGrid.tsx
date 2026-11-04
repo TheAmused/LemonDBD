@@ -21,7 +21,6 @@ import {
   isHardestTierCompleted,
   CHAOS_DIFFICULTY_ORDER,
   HISTORY_MODE_ORDER,
-  ID_PLEASE_DIFFICULTY_ORDER,
 } from '@/utils/challengeTierCompletion';
 import { ID_PLEASE_MODE_BY_LANE, idPleaseLaneForRole, type IdPleaseDifficulty } from '@/types/idPleaseStreak';
 import { useIdPleaseEligibility } from './id-please/useIdPleaseEligibility';
@@ -115,12 +114,12 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
   const gauntletCardFullCount = gauntletFullRoster[gauntletVariant] ?? null;
   const chaosCardFullCount = chaosFullRoster[chaosHardestVariant] ?? null;
   const historyCardFullCount = historyFullRoster[historyHardestVariant] ?? null;
-  // ID, Please is endless: its badges are independent, the card's trophy stands for the hardest one, with no count.
+  // ID, Please is endless and its badges are independent: the card's trophy shows as soon as any of them is earned, with no count.
   // Each tab plays its own lane: its own runs, badges and kill switch.
   const idPleaseLane = idPleaseLaneForRole(role);
   const idPleaseMode = ID_PLEASE_MODE_BY_LANE[idPleaseLane];
   const idPleaseCompletedVariants = completionStatus.completions[idPleaseMode] ?? [];
-  const idPleaseCardCompleted = isHardestTierCompleted(ID_PLEASE_DIFFICULTY_ORDER, idPleaseCompletedVariants);
+  const idPleaseCardCompleted = idPleaseCompletedVariants.length > 0;
   const idPleaseEligibility = useIdPleaseEligibility(idPleaseLane, isIdPleaseModalOpen);
   const idPleaseHref = (difficulty: IdPleaseDifficulty) => `/${locale}/streaks/${role}/id-please?difficulty=${difficulty}`;
   const pageStreakCompletedVariants = completionStatus.completions.page_streak ?? [];

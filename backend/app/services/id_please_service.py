@@ -80,6 +80,7 @@ class IdPleaseService(StreakRunService):
         earned = self._badge_earned(run.user_id, run.lane, run.difficulty)
         return {
             **run.to_dict(),
+            "attempt_started": run.attempt_started,
             "match": match_view(run.current_loadout, roster),
             "checkpoint": match_view(run.checkpoint_loadout, roster),
             "checkpoint_interval": checkpoint_interval(run.difficulty),

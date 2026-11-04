@@ -1,27 +1,21 @@
 'use client';
 // frontend/src/components/streaks/useChallengeAnimations.ts
 
-import { useCallback, useSyncExternalStore } from 'react';
-import { getSavedChallengeAnimations, saveChallengeAnimations } from '@/utils/streakDifficultyPrefs';
+import { useCallback } from 'react';
+import { usePreferences } from '@/hooks/usePreferences';
 
-const listeners = new Set<() => void>();
-
-function subscribe(onChange: () => void): () => void {
-  listeners.add(onChange);
-  // Another tab flipping the switch should carry over too.
-  window.addEventListener('storage', onChange);
-  return () => {
-    listeners.delete(onChange);
-    window.removeEventListener('storage', onChange);
-  };
-}
-
-/** Whether the random draws (reels, slot machine, token roulette) play their animation. Shared by every challenge. */
+/**
+ * Whether the random draws (reels, slot machine, token roulette) play their animation.
+ * This is the site-wide "Interactive Animations" setting, so the switch in a challenge header and the
+ * one in the settings page are the same switch, for every challenge and for the rest of the site.
+ */
 export function useChallengeAnimations(): [boolean, (enabled: boolean) => void] {
-  const enabled = useSyncExternalStore(subscribe, getSavedChallengeAnimations, () => true);
-  const setEnabled = useCallback((next: boolean) => {
-    saveChallengeAnimations(next);
-    listeners.forEach((notify) => notify());
-  }, []);
-  return [enabled, setEnabled];
+  const { preferences, updatePreferences } = usePreferences();
+  const setEnabled = useCallback(
+    (next: boolean) => {
+      void updatePreferences({ effects: next });
+    },
+    [updatePreferences]
+  );
+  return [preferences.effects, setEnabled];
 }

@@ -15,7 +15,6 @@ const HISTORY_MODE_KEY = 'lemon_dbd_history_streak_mode_v1';
 const GAUNTLET_MODE_KEY_PREFIX = 'lemon_dbd_gauntlet_streak_mode_v1';
 const ID_PLEASE_DIFFICULTY_KEY_PREFIX = 'lemon_dbd_id_please_difficulty_v2';
 const PAGE_STREAK_SEEN_KEY = 'lemon_dbd_page_streak_seen_v1';
-const CHALLENGE_ANIMATIONS_KEY = 'lemon_dbd_challenge_animations_v1';
 
 export function getSavedChaosDifficulty(): Difficulty | null {
   const value = safeGetItem(CHAOS_DIFFICULTY_KEY);
@@ -55,15 +54,6 @@ export function getSavedGauntletMode(role: GauntletRole): GauntletMode | null {
 
 export function saveGauntletMode(role: GauntletRole, mode: GauntletMode) {
   safeSetItem(`${GAUNTLET_MODE_KEY_PREFIX}_${role}`, mode);
-}
-
-/** Draw animations (reels, slot machine, token roulette) are on unless the player turned them off. */
-export function getSavedChallengeAnimations(): boolean {
-  return safeGetItem(CHALLENGE_ANIMATIONS_KEY) !== 'off';
-}
-
-export function saveChallengeAnimations(enabled: boolean) {
-  safeSetItem(CHALLENGE_ANIMATIONS_KEY, enabled ? 'on' : 'off');
 }
 
 export function hasSeenPageStreakIntro(): boolean {

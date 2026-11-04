@@ -95,10 +95,16 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
   const { characters, loading: loadingRoster, releaseOrder } = useOwnedCharacters(role, run?.tier_info?.roster_limit);
   const frozenCharacters: OwnedCharacterItem[] = React.useMemo(() => {
     const owned = run?.owned_characters ?? [];
+    // The stored picture path first: a name like "The Onryō" is saved as the_onryo, which the name alone would not find.
+    const avatarPaths = new Map(characters.map((c) => [c.name, c.avatar_local_path]));
     return sortByReleaseNumber(
-      owned.map((name) => ({ name, release_number: releaseOrder.get(name) ?? Infinity }))
+      owned.map((name) => ({
+        name,
+        avatar_local_path: avatarPaths.get(name),
+        release_number: releaseOrder.get(name) ?? Infinity,
+      }))
     );
-  }, [run?.owned_characters, releaseOrder]);
+  }, [run?.owned_characters, releaseOrder, characters]);
   const rosterCharacters = run ? frozenCharacters : characters;
   const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);

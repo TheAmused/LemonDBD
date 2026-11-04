@@ -35,13 +35,7 @@ export function StreakMatchRow<TLog extends StreakMatchLogBase>({ log, renderLab
       </div>
 
       <div className="text-right">
-        <div
-          className={`text-xs font-black uppercase px-2 py-0.5 rounded-full inline-block ${
-            isWin
-              ? 'bg-accent-green/20 text-accent-green border border-accent-green/30'
-              : 'bg-accent-red/20 text-accent-red border border-accent-red/30'
-          }`}
-        >
+        <div className={`text-xs font-black uppercase ${isWin ? 'text-accent-green' : 'text-accent-red'}`}>
           {log.result}
         </div>
         {log.timestamp && (

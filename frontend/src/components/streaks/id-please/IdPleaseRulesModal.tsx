@@ -11,8 +11,11 @@ import {
   RulesHowItWorks,
   RulesModalFooterSections,
   RulesSection,
+  BOTH_SIDES_CLARIFICATIONS,
   STANDARD_CLARIFICATIONS_WITH_ADDONS,
   STANDARD_EXCEPTIONS,
+  SURVIVOR_CLARIFICATIONS,
+  SURVIVOR_EXCEPTIONS,
   resolveRuleEntries,
 } from '../RulesModalSections';
 import { ID_PLEASE_DIFFICULTY_TONE } from './idPleaseAssets';
@@ -37,6 +40,9 @@ export const IdPleaseRulesModal: React.FC<IdPleaseRulesModalProps> = ({ isOpen, 
   // Hardcore+ reshuffles the perks at every start, so "the same opening gives the same chain" does not hold there.
   const plus = difficulty === 'hardcore_plus';
   // The win condition is the one the other challenges use, for the side(s) this lane plays.
+  // The same exceptions and clarifications the Gauntlet shows for the side(s) this lane plays.
+  const exceptions = lane === 'killer' ? STANDARD_EXCEPTIONS : SURVIVOR_EXCEPTIONS;
+  const clarifications = { killer: STANDARD_CLARIFICATIONS_WITH_ADDONS, survivor: SURVIVOR_CLARIFICATIONS, mixed: BOTH_SIDES_CLARIFICATIONS }[lane];
   const winCondition = lane === 'killer' ? s.gauntletWinConditionKiller : lane === 'survivor' ? s.gauntletWinConditionSurvivor : s.idPleaseWinMixed;
 
   return (
@@ -81,9 +87,9 @@ export const IdPleaseRulesModal: React.FC<IdPleaseRulesModalProps> = ({ isOpen, 
         copy={s}
         tone="neutral"
         showFreezeNotice={false}
-        exceptions={resolveRuleEntries(s, STANDARD_EXCEPTIONS)}
+        exceptions={resolveRuleEntries(s, exceptions)}
         clarifications={[
-          ...resolveRuleEntries(s, STANDARD_CLARIFICATIONS_WITH_ADDONS),
+          ...resolveRuleEntries(s, clarifications),
           { label: s.idPleaseRuleLockedLabel, text: s.idPleaseRuleRoster },
           { label: s.idPleaseRuleBadgesLabel, text: solo ? s.idPleaseRuleBadgeSolo : s.idPleaseRuleBadge },
         ]}

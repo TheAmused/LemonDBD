@@ -11,6 +11,7 @@ import { TokenRoulette } from './TokenRoulette';
 import type { TokenRollPlay } from './useGauntletRun';
 import { Surface } from '@/components/common/Surface';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
+import { useChallengeAnimations } from '../useChallengeAnimations';
 
 interface TokenRollModalProps {
   /** The win's token roll to play; null keeps the modal closed. */
@@ -29,6 +30,7 @@ export const TokenRollModal: React.FC<TokenRollModalProps> = ({ tokenRoll, cap, 
   const dict = useDictionary();
   const locale = useLocale();
   const [landed, setLanded] = useState(false);
+  const [animations] = useChallengeAnimations();
   // A full balance rolls nothing, so there is no reel to wait for.
   const full = tokenRoll?.roll === 0;
 
@@ -48,7 +50,7 @@ export const TokenRollModal: React.FC<TokenRollModalProps> = ({ tokenRoll, cap, 
       closeButton="none"
       ariaLabel={dict.streaks.tokensLabel}
     >
-      <Surface padding="none" className="ck-card-in relative flex min-h-88 w-full cursor-default flex-col items-center justify-center gap-4 overflow-hidden border-accent-amber/60 px-8 py-12 text-center">
+      <Surface padding="none" className={`${animations ? 'ck-card-in ' : ''}relative flex min-h-88 w-full cursor-default flex-col items-center justify-center gap-4 overflow-hidden border-accent-amber/60 px-8 py-12 text-center`}>
         <Coins className="h-12 w-12 text-accent-amber" aria-hidden="true" />
         <p className="type-label-sm tracking-spaced-md text-accent-amber">
           {full ? dict.streaks.tokenFullTitle : dict.streaks.tokenRollTitle}

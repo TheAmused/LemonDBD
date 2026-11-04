@@ -95,7 +95,8 @@ def make_streak_blueprint(
             fn = getattr(service, get_run_method)
             run = fn(g.current_user.id, value, **mode_kwargs)
         except ValueError as e:
-            return api_error(str(e), 400)
+            status = 404 if "not found" in str(e).lower() else 400
+            return api_error(str(e), status)
         return jsonify({"run": run}), 200
 
     if has_reveal:

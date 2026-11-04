@@ -159,23 +159,41 @@ class TestPageStreakResults:
         assert run is not None
         assert run["attempt_matches"] == 1
 
-    def test_reset_all_wipes_runs_and_completion_badges(self) -> None:
+    def test_abandon_all_gives_up_runs_in_play_and_keeps_history_and_completions(self) -> None:
         from app.core.extensions import db
         from app.models import ChallengeCompletionRecord
 
         self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")
         self.service.submit_result(self.user_id, "Nurse", 2, self.build_for(2), "win")
         self.service.submit_result(self.user_id, "Nurse", 3, self.build_for(3), "win")
+        self.service.abandon_run(self.user_id, "Nurse")
+        self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")
 
-        self.service.reset_all(self.user_id)
+        self.service.abandon_all(self.user_id)
 
-        assert self.service.get_run(self.user_id, "Nurse") is None
+        run = self.service.get_run(self.user_id, "Nurse")
+        assert run is not None
+        assert (run["status"], run["current_page"], run["attempt_matches"]) == ("in_progress", 1, 0)
+        assert len(run["history"]) == 4
         roster = {entry["killer"]: entry for entry in self.service.get_roster(self.user_id)}
         assert roster["Nurse"]["status"] == "not_started"
-        assert roster["Nurse"]["ever_completed"] is False
+        assert roster["Nurse"]["ever_completed"] is True
         assert db.session.scalars(
             select(ChallengeCompletionRecord).where(ChallengeCompletionRecord.user_id == self.user_id)
-        ).first() is None
+        ).first() is not None
+
+    def test_abandon_all_reopens_a_finished_run_and_keeps_its_completion(self) -> None:
+        self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")
+        self.service.submit_result(self.user_id, "Nurse", 2, self.build_for(2), "win")
+        self.service.submit_result(self.user_id, "Nurse", 3, self.build_for(3), "win")
+
+        self.service.abandon_all(self.user_id)
+
+        run = self.service.get_run(self.user_id, "Nurse")
+        assert run is not None
+        assert (run["status"], run["current_page"], run["attempt_matches"]) == ("in_progress", 1, 0)
+        roster = {entry["killer"]: entry for entry in self.service.get_roster(self.user_id)}
+        assert roster["Nurse"]["ever_completed"] is True
 
     def test_reset_restarts_with_fresh_snapshot_and_keeps_history(self, ownership_service: OwnershipService) -> None:
         from app.core.extensions import db

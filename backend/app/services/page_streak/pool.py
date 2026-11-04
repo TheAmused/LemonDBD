@@ -47,7 +47,14 @@ def build_user_perk_pages(user_id: int, perk_service: PerkService, ownership_ser
     return [names[i : i + size] for i in range(0, len(names), size)]
 
 
-def get_perk_icon_map(user_id: int, perk_service: PerkService, ownership_service: OwnershipService) -> dict[str, str]:
-    """Name -> icon_local_path for the user's unlocked killer perk pool."""
-    pool = get_user_killer_pool(user_id, perk_service, ownership_service)
-    return {p["name"]: p["icon_local_path"] for p in pool if p.get("icon_local_path")}
+def get_perk_icon_map(perk_service: PerkService, names: set[str]) -> dict[str, str]:
+    """Name -> icon_local_path for the given killer perks.
+
+    A run's pages are frozen, so what is on them stays on them even after the player locks a perk or a killer.
+    The icons therefore come from the whole catalogue, not from the user's live pool.
+    """
+    return {
+        p["name"]: p["icon_local_path"]
+        for p in fetch_all_killer_perks(perk_service)
+        if p["name"] in names and p.get("icon_local_path")
+    }

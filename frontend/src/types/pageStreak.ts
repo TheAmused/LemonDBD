@@ -11,6 +11,11 @@ export interface RosterEntry {
   avatar_local_path?: string | null;
   /** From the persistent completion history, not this run's own status -- survives a per-killer reset. */
   ever_completed: boolean;
+  /** The killer is in the player's roster. The others are listed too, but cannot be played. */
+  owned: boolean;
+  /** An admin switched the killer off: it stays listed, marked, and cannot be played. */
+  disabled: boolean;
+  disabled_reason: string | null;
 }
 
 /** Mode-wide "every owned killer cleared" trophy. `full_roster` means the

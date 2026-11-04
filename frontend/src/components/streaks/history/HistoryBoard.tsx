@@ -20,6 +20,14 @@ import { HistoryNextRowPreview } from './HistoryNextRowPreview';
 import { HistoryRowClearedBanner } from './HistoryRowClearedBanner';
 import type { Perk } from '@/types/gauntletStreak';
 import { saveHistoryMode } from '@/utils/streakDifficultyPrefs';
+import { useStoredItem } from '@/hooks/useStoredItem';
+import {
+  EMPTY_HISTORY_PICK,
+  historyPickStorageKey,
+  readHistoryPick,
+  serializeHistoryPick,
+  type HistoryPick,
+} from '@/utils/historyPick';
 import { attemptsStarted } from '@/utils/challengeAttempts';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useChallengeCompletionStatus } from '../useChallengeCompletionStatus';
@@ -57,8 +65,11 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
   const { run, stats, completions, loading, busy, error, submitResult, abandon } = useHistoryRun(mode);
   const { pool: perkPool } = useKillerPerkPool();
 
-  const [selectedKillerId, setSelectedKillerId] = useState<string | null>(null);
-  const [acceptedKillerId, setAcceptedKillerId] = useState<string | null>(null);
+  // The pick lives in localStorage, so a refresh keeps it. It is only used for the row of the run it was made on.
+  const [savedPick, savePick] = useStoredItem(historyPickStorageKey(mode));
+  const pickKey = run ? `${run.id}-${run.attempts}-${run.current_row_index}-${run.total_killers_beaten}` : '';
+  const { selected: selectedKillerId, accepted: acceptedKillerId } = readHistoryPick(savedPick, pickKey, run?.current_row_killers ?? []);
+  const updatePick = (next: HistoryPick) => savePick(serializeHistoryPick(pickKey, next));
   const { celebrating, celebrate } = useCelebration();
   const [confirmingAbandon, setConfirmingAbandon] = useState(false);
   const [isRulesOpen, setIsRulesOpen] = useState(false);
@@ -70,19 +81,13 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
 
   const isCompleted = run?.status === 'completed';
 
-  const clearPick = () => {
-    setSelectedKillerId(null);
-    setAcceptedKillerId(null);
-  };
+  // The server creates a run with its killer pool already stored, so pool_frozen is true from the start. The pool only
+  // counts as frozen once something was played in the run (an untouched run still follows the live roster, see
+  // HistoryService._is_untouched). Read from the run itself, so every mode and a page reload agree.
+  const hasProgress = Boolean(run) && (run!.total_killers_beaten > 0 || run!.current_row_index > 0 || run!.completed_killers.length > 0);
+  const poolFrozen = Boolean(run?.pool_frozen) && hasProgress;
 
-  // acceptedKillerId clears after every round (win or loss), so gating the
-  // freeze badge on it directly makes it flicker off between rounds. Track
-  // whether THIS run has ever had a pick accepted at least once instead --
-  // that stays true for the run's whole lifetime, only resetting when
-  // abandon/completion swaps in a different run id.
-  const [engagedRunId, setEngagedRunId] = useState<number | null>(null);
-  if (acceptedKillerId && (run?.id ?? null) !== engagedRunId) setEngagedRunId(run?.id ?? null);
-  const poolFrozen = Boolean(run?.pool_frozen) && run?.id === engagedRunId;
+  const clearPick = () => updatePick(EMPTY_HISTORY_PICK);
 
   const handleResult = async (result: 'win' | 'loss') => {
     if (!acceptedKillerId) return;
@@ -154,7 +159,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
               killers={run?.current_row_killers || []}
               completedKillers={run?.completed_killers || []}
               selectedKillerId={acceptedKillerId ?? selectedKillerId}
-              onSelect={setSelectedKillerId}
+              onSelect={(killerId) => updatePick({ selected: killerId, accepted: null })}
               disabled={busy || Boolean(acceptedKillerId)}
               loading={loading}
               center
@@ -172,7 +177,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
               {!acceptedKillerId ? (
                 <StreakActionButton
                   variant="red"
-                  onClick={() => selectedKillerId && setAcceptedKillerId(selectedKillerId)}
+                  onClick={() => selectedKillerId && updatePick({ selected: selectedKillerId, accepted: selectedKillerId })}
                   disabled={busy || !selectedKillerId}
                 >
                   {dict.streaks.accept}

@@ -2,7 +2,6 @@
 // frontend/src/components/streaks/StreakAttemptGroups.tsx
 
 import React, { useState } from 'react';
-import { tip } from '@/components/common/Tooltip';
 import { StreakMatchRow } from './StreakMatchRow';
 import { useDictionary } from '@/context/DictionaryContext';
 import { Collapsible } from '@/components/common/Collapsible';
@@ -78,9 +77,9 @@ export function StreakAttemptGroups<TLog extends StreakMatchLogBase>({
                 {dict.streaks.attemptLabel} {group.attempt}
                 {renderGroupLabel && <> {dict.streaks.middotSeparator} {renderGroupLabel(group.logs[0])}</>}
               </span>
-              <span className="type-strong text-accent-green" {...tip(dict.streaks.wins, undefined, 'status')}>{group.wins}</span>
+              <span className="type-strong text-accent-green">{group.wins}{dict.streaks.winsShort}</span>
               <span className="text-xs text-text-muted" aria-hidden="true">/</span>
-              <span className="type-strong text-accent-red" {...tip(dict.streaks.losses, undefined, 'status')}>{group.losses}</span>
+              <span className="type-strong text-accent-red">{group.losses}{dict.streaks.lossesShort}</span>
             </DisclosureButton>
             {/* grid-template-rows animates 0fr -> 1fr, which height:auto cannot do */}
             <Collapsible

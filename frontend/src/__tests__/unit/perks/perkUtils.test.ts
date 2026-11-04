@@ -85,6 +85,8 @@ test('staticUrl utilities: staticUrl, sanitizeName, avatarUrlForCharacter, perkI
   assert.ok(staticUrl('icons/perk.png')?.endsWith('/static/icons/perk.png'));
 
   assert.strictEqual(sanitizeName('The Ghost Face'), 'the_ghost_face');
+  assert.strictEqual(sanitizeName('The Onryō'), 'the_onryo');
+  assert.ok(avatarUrlForCharacter('The Onryō', 'killers')?.includes('/static/avatars/killers/the_onryo.webp'));
   assert.ok(avatarUrlForCharacter('The Nurse', 'killers')?.includes('/static/avatars/killers/the_nurse.webp'));
   assert.ok(avatarUrlForCharacter('Dwight Fairfield', 'survivors')?.includes('/static/avatars/survivors/dwight_fairfield.webp'));
 

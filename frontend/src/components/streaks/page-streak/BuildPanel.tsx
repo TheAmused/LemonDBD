@@ -11,8 +11,8 @@ import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { useDictionary } from '@/context/DictionaryContext';
 
 interface BuildPanelProps {
-  selected: string[];
-  size: number;
+  /** One entry per slot, empty ones null. A perk keeps its slot when another one is taken out. */
+  slots: (string | null)[];
   iconByPerk?: Record<string, string>;
   killerName: string;
   avatarSrc?: string;
@@ -32,7 +32,7 @@ const STEP = (SLOT_SIZE + SLOT_GAP) / 2;
 const BOX = SLOT_SIZE + 2 * STEP;
 
 /** The killer and the build being put together, laid out like the profile's main card. */
-export const BuildPanel: React.FC<BuildPanelProps> = ({ selected, size, iconByPerk = {}, killerName, avatarSrc }) => {
+export const BuildPanel: React.FC<BuildPanelProps> = ({ slots, iconByPerk = {}, killerName, avatarSrc }) => {
   const dict = useDictionary();
   const displayName = usePerkDisplayName();
 
@@ -55,8 +55,8 @@ export const BuildPanel: React.FC<BuildPanelProps> = ({ selected, size, iconByPe
 
       <MotionConfig reducedMotion="user">
         <div className="relative shrink-0" style={{ width: `${BOX}rem`, height: `${BOX}rem` }}>
-          {SLOT_OFFSETS.slice(0, size).map((offset, index) => {
-            const name = selected[index];
+          {SLOT_OFFSETS.slice(0, slots.length).map((offset, index) => {
+            const name = slots[index];
             const icon = name ? iconByPerk[name] : undefined;
             return (
               <div

@@ -1,18 +1,8 @@
 // frontend/src/utils/staticUrl.ts
 import { getBackendBaseUrl, staticUrl, backendBase } from './api';
+import { sanitizeName } from '@/lib/slug';
 
-export { staticUrl, backendBase };
-
-/** name -> filesystem-safe slug, matching the backend's avatar filename convention. */
-export function sanitizeName(name: string): string {
-  return name
-    .toLowerCase()
-    .trim()
-    .replace(/[\s\-/]+/g, '_')
-    .replace(/[\\/*?:"<>|]/g, '')
-    .replace(/_+/g, '_')
-    .replace(/^_+|_+$/g, '');
-}
+export { staticUrl, backendBase, sanitizeName };
 
 /** Builds a character avatar URL straight from its name, no lookup needed:
  * `${backendBase}/static/avatars/{killers|survivors}/{sanitized-name}.webp`.

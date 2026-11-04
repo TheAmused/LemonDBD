@@ -49,6 +49,11 @@ class IdPleaseRun(StreakRunMixin, ColumnDictMixin["IdPleaseRunDict"], Base):
         back_populates="run", cascade="all, delete-orphan", order_by="IdPleaseMatchLog.timestamp.asc()"
     )
 
+    @property
+    def attempt_started(self) -> bool:
+        """An attempt begins when the player presses Start (the opening is accepted), before any match; a run in setup has none."""
+        return self.current_match > 0
+
 
 class IdPleaseMatchLog(StreakLogMixin, ColumnDictMixin["IdPleaseMatchLogDict"], Base):
     __tablename__ = "id_please_match_logs"

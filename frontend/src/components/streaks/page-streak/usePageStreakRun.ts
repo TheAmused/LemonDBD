@@ -7,7 +7,7 @@ import * as api from '@/services/pageStreakApi';
 import { useChallengeRun } from '../useChallengeRun';
 
 export function usePageStreakRun(killer: string) {
-  const { token, run, stats, completions, loading, busy, error, load, loadStats, loadCompletions, mutate } =
+  const { token, run, stats, completions, loading, busy, error, errorStatus, load, loadStats, loadCompletions, mutate } =
     useChallengeRun<PageStreakRun, PageStreakStats>({
       scope: killer,
       label: 'page streak',
@@ -18,6 +18,11 @@ export function usePageStreakRun(killer: string) {
 
   const startRun = useCallback(async () => {
     if (token) await mutate(() => api.startRun(token, killer));
+  }, [token, killer, mutate]);
+
+  const lockPages = useCallback(async () => {
+    if (!token) return undefined;
+    return mutate(() => api.lockPages(token, killer));
   }, [token, killer, mutate]);
 
   const submitResult = useCallback(
@@ -35,5 +40,5 @@ export function usePageStreakRun(killer: string) {
     if (token) await mutate(() => api.abandonRun(token, killer));
   }, [token, killer, mutate]);
 
-  return { run, stats, completions, loading, busy, error, reload: load, startRun, submitResult, abandonRun };
+  return { run, stats, completions, loading, busy, error, errorStatus, reload: load, startRun, lockPages, submitResult, abandonRun };
 }

@@ -162,7 +162,6 @@ test('Sidebar Bug Report and Buy Coffee i18n coverage across all locales', () =>
 test('Character Detail combat, terror radius, codex and sort options i18n coverage across all locales', () => {
   const localeDicts: Record<Locale, Dictionary> = { en, es, pl, de, ja };
   const expectedDetailKeys = [
-    'combatAttributes',
     'enteredTheFog',
     'currentBaseTerrorRadius',
     'lullaby',

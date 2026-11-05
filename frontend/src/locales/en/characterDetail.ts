@@ -1,6 +1,8 @@
 // frontend/src/locales/en/characterDetail.ts
 export default {
   backToCharacters: "Back to Characters",
+  backToSurvivors: "Back to Survivors",
+  backToKillers: "Back to Killers",
   myCharacters: "My Characters",
   exitSelection: "Exit Selection",
   saving: "Saving...",
@@ -78,7 +80,6 @@ export default {
   categoryBlueprint: "Blueprints",
   categoryChest: "Chests & Fog",
   clickToInspect: "Click to inspect full mechanics",
-  combatAttributes: 'Killer Attributes',
   enteredTheFog: "Entered The Fog.",
   currentBaseTerrorRadius: "Current Base Terror Radius",
   lullaby: "Lullaby",
@@ -107,7 +108,6 @@ export default {
   emDashSeparator: "—",
   quoteOpen: "\"",
   quoteClose: "\"",
-  compatibleTarget: "Compatible Target:",
   distance45m: "45m",
   distance32m: "32m",
   distance24m: "24m",

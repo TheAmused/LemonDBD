@@ -9,6 +9,8 @@ export interface OwnershipClipOverlayProps {
   isOwned: boolean;
   isPartial: boolean;
   imageSrc?: string;
+  /** Extra classes for the grey copy of the picture, so it can sit exactly over a shifted portrait. */
+  imageClassName?: string;
 }
 
 /** The grayscale-clip + dark-scrim treatment for a locked or partially-owned
@@ -21,6 +23,7 @@ export const OwnershipClipOverlay: React.FC<OwnershipClipOverlayProps> = ({
   isOwned,
   isPartial,
   imageSrc,
+  imageClassName = '',
 }) => {
   if (isOwned) return null;
 
@@ -31,7 +34,7 @@ export const OwnershipClipOverlay: React.FC<OwnershipClipOverlayProps> = ({
           src={imageSrc}
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover object-top grayscale pointer-events-none"
+          className={`absolute inset-0 h-full w-full object-cover object-top grayscale pointer-events-none ${imageClassName}`}
           style={{ clipPath: isPartial ? 'inset(0 50% 0 0)' : 'inset(0 0 0 0)' }}
         />
       )}

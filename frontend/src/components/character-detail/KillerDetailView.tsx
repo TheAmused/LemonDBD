@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
-import { BookOpen, Zap, Bookmark, Calendar } from 'lucide-react';
+import { BookOpen, Zap, Calendar, ArrowRight } from 'lucide-react';
 import type {
   CharacterViewBaseProps,
   AddonItem,
@@ -25,9 +25,8 @@ import type { Perk } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 import { tip } from '@/components/common/Tooltip';
-import { Button } from '@/components/common/Button';
-import { InfoChip } from '@/components/common/InfoChip';
 import { useDictionary } from "@/context/DictionaryContext";
+import { InfoChip, InfoChipButton } from '@/components/common/InfoChip';
 import { TileButton } from '@/components/common/TileButton';
 import { WrapRow } from '@/components/common/WrapRow';
 import { Img } from '@/components/common/Img';
@@ -86,7 +85,7 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
         <CharacterHeroAvatar
           character={character}
           isSurvivor={false}
-          roleLabel={t.roleKiller || ''}
+          chapterName={chapterName}
           backendBase={backendBase}
           onOpenModelModal={() => setIsModelModalOpen(true)}
           t={t}
@@ -134,22 +133,12 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
               </div>
             </div>
 
-            <WrapRow>
-              <Button
-                variant="secondary"
-                onClick={() => setIsLoreModalOpen(true)}
-                leftIcon={<BookOpen className="icon-md" aria-hidden="true" />}
-                className=""
-              >
-                <span>{t.viewLore || ''}</span>
-              </Button>
-
-              {chapterName && (
-                <InfoChip>
-                  <Bookmark className="icon-sm shrink-0" aria-hidden="true" />
-                  {chapterName}
-                </InfoChip>
-              )}
+            <WrapRow className="items-stretch">
+              <InfoChipButton onClick={() => setIsLoreModalOpen(true)}>
+                <BookOpen className="icon-sm shrink-0" aria-hidden="true" />
+                {t.viewLore || ''}
+                <ArrowRight className="icon-sm shrink-0 text-text-muted" aria-hidden="true" />
+              </InfoChipButton>
 
               <InfoChip>
                 <Calendar className="icon-sm shrink-0" aria-hidden="true" />
@@ -244,6 +233,8 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
         item={selectedEquipment}
         onClose={() => setSelectedEquipment(null)}
         backendBase={backendBase}
+        character={character}
+        isSurvivor={false}
         t={t}
       />
 

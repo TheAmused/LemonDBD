@@ -218,6 +218,12 @@ export function getAvatarUrl(
 }
 
 /**
+ * Character portraits are busts with an empty band above the head and a cut edge at the bottom. Zooming
+ * from the top edge and lifting the picture trims that band and pushes the cut under the name / DLC strip.
+ */
+export const PORTRAIT_CROP = 'origin-top scale-112 -translate-y-1/32';
+
+/**
  * Small WebP copy of a character avatar for grids/lists (served by
  * `/api/v1/avatars/thumb/...`). Detail pages keep using `getAvatarUrl` (full image).
  * Falls back to the full avatar when the character has no local file.

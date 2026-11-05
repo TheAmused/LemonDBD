@@ -1,6 +1,8 @@
 // frontend/src/locales/es/characterDetail.ts
 export default {
   backToCharacters: "Volver a Personajes",
+  backToSurvivors: "Volver a Supervivientes",
+  backToKillers: "Volver a Asesinos",
   myCharacters: "Mis Personajes",
   exitSelection: "Salir de Selección",
   saving: "Guardando...",
@@ -78,7 +80,6 @@ export default {
   categoryBlueprint: "Planos",
   categoryChest: "Cofres y Niebla",
   clickToInspect: "Clic para inspeccionar mecánicas completas",
-  combatAttributes: 'Atributos del asesino',
   enteredTheFog: "Entró en la Niebla.",
   currentBaseTerrorRadius: "Radio de Terror Base Actual",
   lullaby: "Nana",
@@ -107,7 +108,6 @@ export default {
   emDashSeparator: "—",
   quoteOpen: "“",
   quoteClose: "”",
-  compatibleTarget: "Objetivo Compatible:",
   distance45m: "45m",
   distance32m: "32m",
   distance24m: "24m",

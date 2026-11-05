@@ -14,15 +14,15 @@ interface KillerCombatStatsProps {
 
 /** One stat of the threat scale: an icon tile, its label and the value. */
 const StatRow: React.FC<{ icon: React.ComponentType<{ className?: string }>; label: string; value: string }> = ({ icon: Icon, label, value }) => (
-  <div className="flex cursor-default items-center gap-3 rounded-card bg-bg-elevated/60 p-2.5">
-    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-card bg-bg-surface text-text-secondary">
+  <Surface tone="flat" padding="none" className="flex cursor-default items-center gap-3 p-3 shadow-sm backdrop-blur-sm">
+    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-card bg-bg-elevated text-text-secondary">
       <Icon className="icon-md" />
     </div>
     <div>
       <span className="block text-tiny text-text-secondary uppercase">{label}</span>
       <span className="block type-strong-fluid text-text-primary">{value}</span>
     </div>
-  </div>
+  </Surface>
 );
 
 export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
@@ -32,14 +32,8 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
   t,
 }) => {
   return (
-    <Surface padding="none" className="p-4 shadow-sm space-y-2 w-full backdrop-blur-sm">
-      <div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between type-label-xs text-text-secondary">
-        <span className="flex items-center gap-1.5 text-accent-red">
-          {t.combatAttributes}
-        </span>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+    <div className="w-full">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {/* Movement Speed */}
         <StatRow icon={Gauge} label={t.movementSpeed} value={killerSpeed} />
 
@@ -49,7 +43,7 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
         {/* Height */}
         <StatRow icon={ArrowUpDown} label={t.height} value={killerHeight} />
       </div>
-    </Surface>
+    </div>
   );
 };
 

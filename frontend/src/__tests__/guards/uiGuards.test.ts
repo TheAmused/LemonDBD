@@ -54,8 +54,8 @@ describe('ui: shared primitives', () => {
   });
 
   it('<Modal> headers are title-only: no icon/tone/centerTitle/subtitle, no custom header, no component or image inside the title or headerLeft', () => {
-    // PerkModal builds its own artwork header on purpose; everything else gets the one centred title.
-    const customHeaderAllowed = ['components/PerkModal.tsx'];
+    // The perk popup and the add-on / item / offering popup build the same artwork header (see ModalIconHeader) on purpose; everything else gets the one centred title.
+    const customHeaderAllowed = ['components/PerkModal.tsx', 'components/character-detail/modals/EquipmentDetailModal.tsx'];
     const descendants = (root: ts.Node): ts.Node[] => {
       const out: ts.Node[] = [];
       const go = (c: ts.Node) => {

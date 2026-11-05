@@ -2,7 +2,8 @@
 // The bar pinned to the bottom of a screen with its confirming actions ("Accept", "Continue", "Confirm
 // build"), so they stay reachable while a long list scrolls. One look for every such bar: same bar, same
 // button size and width. Render it outside any ancestor with a backdrop filter or transform, which would
-// trap the fixed positioning, and keep bottom padding on the page so nothing hides behind it.
+// trap the fixed positioning, and keep bottom padding on the page so nothing hides behind it. `mb-0` matters: inside a `space-y-*` parent the
+// bar gets a bottom margin whenever a later sibling (a toast) is rendered, which lifts it off the screen edge.
 import React from 'react';
 import { Button } from '@/components/common/Button';
 import { cn } from '@/utils/cn';
@@ -18,7 +19,7 @@ export function StickyActionBar({ children, error, sidebarAware = true }: Sticky
   return (
     <div
       className={cn(
-        'fixed right-0 bottom-0 z-30 border-t border-border-color bg-bg-surface/95 shadow-2xl backdrop-blur-md',
+        'fixed right-0 bottom-0 z-30 mb-0 border-t border-border-color bg-bg-surface/95 shadow-2xl backdrop-blur-md',
         sidebarAware ? 'left-[var(--sidebar-width,0rem)] transition-[left] duration-300' : 'left-0'
       )}
     >

@@ -1,6 +1,8 @@
 // frontend/src/locales/ja/characterDetail.ts
 export default {
   backToCharacters: "キャラクター一覧に戻る",
+  backToSurvivors: "サバイバー一覧に戻る",
+  backToKillers: "キラー一覧に戻る",
   myCharacters: "マイキャラクター",
   exitSelection: "選択を終了",
   saving: "保存中...",
@@ -78,7 +80,6 @@ export default {
   categoryBlueprint: "設計図",
   categoryChest: "チェスト＆霧",
   clickToInspect: "クリックで詳細効果を確認",
-  combatAttributes: 'キラー属性',
   enteredTheFog: "霧の森へ足を踏み入れた。",
   currentBaseTerrorRadius: "現在の基礎脅威範囲",
   lullaby: "子守唄",
@@ -107,7 +108,6 @@ export default {
   emDashSeparator: "—",
   quoteOpen: "「",
   quoteClose: "」",
-  compatibleTarget: "対象:",
   distance45m: "45m",
   distance32m: "32m",
   distance24m: "24m",

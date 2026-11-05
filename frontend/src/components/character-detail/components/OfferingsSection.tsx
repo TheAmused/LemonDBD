@@ -323,7 +323,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
               value: cat.key,
               label: cat.label,
               icon: <Icon className="icon-sm shrink-0" aria-hidden="true" />,
-              buttonProps: { ...tip(`${cat.label} - ${cat.desc}`, undefined, 'default'), 'aria-label': `${cat.label} - ${cat.desc}` },
+              buttonProps: { ...tip(cat.desc, undefined, 'default'), 'aria-label': `${cat.label} - ${cat.desc}` },
             };
           })}
         />

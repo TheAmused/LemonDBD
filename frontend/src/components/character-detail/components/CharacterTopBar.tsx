@@ -5,7 +5,6 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import type { CharacterItem, CharacterDetailDictionary } from '../types';
 import { characterSlug } from '../types';
 import { buttonClassName } from '@/components/common/Button';
-import { tip } from '@/components/common/Tooltip';
 
 interface CharacterTopBarProps {
   currentLocale: string;
@@ -53,7 +52,7 @@ export const CharacterTopBar: React.FC<CharacterTopBarProps> = ({
         className={buttonClassName('secondary', 'sm', 'self-start sm:self-auto')}
       >
         <ArrowLeft className="icon-sm" aria-hidden="true" />
-        <span>{t.backToCharacters}</span>
+        <span>{isSurvivor ? t.backToSurvivors : t.backToKillers}</span>
       </Link>
 
       <div className="hidden sm:flex items-center gap-2 self-end sm:self-auto">
@@ -61,7 +60,7 @@ export const CharacterTopBar: React.FC<CharacterTopBarProps> = ({
           <Link
             href={`/${currentLocale}/characters/${characterSlug(prevChar)}`}
             className={buttonClassName('secondary', 'sm')}
-            {...tip(`${t.prevCharacter}: ${prevChar.name}`, undefined, 'character')}
+            aria-label={`${t.prevCharacter}: ${prevChar.name}`}
           >
             <ArrowLeft className="icon-sm" />
             <span className="hidden md:inline truncate max-w-30">{prevChar.name}</span>
@@ -71,7 +70,7 @@ export const CharacterTopBar: React.FC<CharacterTopBarProps> = ({
           <Link
             href={`/${currentLocale}/characters/${characterSlug(nextChar)}`}
             className={buttonClassName('secondary', 'sm')}
-            {...tip(`${t.nextCharacter}: ${nextChar.name}`, undefined, 'character')}
+            aria-label={`${t.nextCharacter}: ${nextChar.name}`}
           >
             <span className="hidden md:inline truncate max-w-30">{nextChar.name}</span>
             <ArrowRight className="icon-sm" />

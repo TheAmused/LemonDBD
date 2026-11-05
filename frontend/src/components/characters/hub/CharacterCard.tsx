@@ -9,7 +9,7 @@ import type {
   CharacterItem} from '@/components/character-detail/types';
 import {
   characterSlug,
-  PORTRAIT_SHIFT,
+  PORTRAIT_CROP,
   getAvatarUrl as resolveAvatarUrl,
   getAvatarThumbUrl,
 } from '@/components/character-detail/types';
@@ -92,9 +92,9 @@ export function CharacterCard({
           alt={char.name}
           loading="lazy"
           decoding="async"
-          className={`h-full w-full object-cover object-top ${PORTRAIT_SHIFT} transition-transform duration-500 ${
+          className={`h-full w-full object-cover object-top ${PORTRAIT_CROP} transition-transform duration-500 ${
             char.is_disabled ? 'grayscale opacity-60' : ''
-          } ${ownershipMode && showLockedOverlay ? '' : 'group-hover:scale-105'}`}
+          } ${ownershipMode && showLockedOverlay ? '' : 'group-hover:scale-120'}`}
           onError={(e) => {
             const target = e.target as HTMLImageElement;
             if (!target.dataset.triedFull && avatarThumbSrc !== avatarSrc) {
@@ -111,7 +111,7 @@ export function CharacterCard({
           }}
         />
         {/* Grey/dim only: owned and locked read from the colour, so no lock or tick badge. */}
-        {ownershipMode && <OwnershipClipOverlay isOwned={isOwned} isPartial={hasPartialPerks} imageSrc={avatarSrc} imageClassName={PORTRAIT_SHIFT} />}
+        {ownershipMode && <OwnershipClipOverlay isOwned={isOwned} isPartial={hasPartialPerks} imageSrc={avatarSrc} imageClassName={PORTRAIT_CROP} />}
 
         {ownershipMode && !isOwned && (
           <div className="pointer-events-none absolute inset-x-0 bottom-1.5 z-20 flex justify-center sm:bottom-2">

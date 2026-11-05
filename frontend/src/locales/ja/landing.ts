@@ -1,8 +1,7 @@
 // frontend/src/locales/ja/landing.ts
 export default {
-  welcomeBadge: "Dead by Daylight コンパニオン",
   welcomeTitle: "LemonDBD へようこそ",
-  welcomeSubtitle: "DbD専用のデータベース、インタラクティブマップ、パークランダマイザー、プレイヤーツールを提供する総合コンパニオンアプリ。",
-  enterButton: 'データベースに入る',
+  welcomeSubtitle: "Dead by Daylight のためのハブ。チャレンジ、マップコールアウト、ランダマイザー、ミニゲームなど、まだまだ盛りだくさん。",
+  settingsButton: "サイトをカスタマイズ",
   characterOverview: "キャラクター一覧",
 } as const;

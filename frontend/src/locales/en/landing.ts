@@ -1,8 +1,7 @@
 // frontend/src/locales/en/landing.ts
 export default {
-  welcomeBadge: "Dead by Daylight Companion",
   welcomeTitle: "Welcome to LemonDBD",
-  welcomeSubtitle: "Your dedicated Dead by Daylight database, interactive map explorer, perk randomizer, and player companion.",
-  enterButton: 'Enter Fog Database',
+  welcomeSubtitle: "Your Dead by Daylight hub: challenges, map callouts, randomizers, minigames and much more.",
+  settingsButton: "Customize your experience",
   characterOverview: "Character Overview",
 } as const;

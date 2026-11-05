@@ -70,3 +70,14 @@ export function getSurvivorAddonCategory(it: AddonItem): SurvivorCategoryKey {
 
   return 'trial_exclusive';
 }
+
+/** The plain item picture (a white glyph on transparent) for each category: the add-on popup shows it, tinted, for "fits this item". */
+export const SURVIVOR_CATEGORY_GLYPH: Partial<Record<SurvivorCategoryKey, string>> = {
+  medkit: 'icons/items/first_aid_kit.webp',
+  toolbox: 'icons/items/toolbox.webp',
+  flashlight: 'icons/items/flashlight.webp',
+  key: 'icons/items/skeleton_key.webp',
+  map: 'icons/items/annotated_map.webp',
+  fog_vial: 'icons/items/apprentices_fog_vial.webp',
+  event: 'icons/items/third_year_party_starter.webp',
+};

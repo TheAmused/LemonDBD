@@ -2,13 +2,14 @@
 import React from 'react';
 import type { AddonItem, CharacterDetailDictionary, CharacterItem, EquipmentItem } from '../types';
 import { getAssetUrl, getAvatarUrl, getRarityTileStyle } from '../types';
-import { getSurvivorAddonCategory } from '../survivorCategories';
+import { SURVIVOR_CATEGORY_GLYPH, getSurvivorAddonCategory } from '../survivorCategories';
 import { CATEGORY_ICONS } from '../components/SurvivorEquipmentSection';
 import { RichText } from '@/components/common/RichText';
 import { Modal } from '@/components/common/Modal';
 import { ModalIconHeader } from '@/components/common/ModalIconHeader';
 import { tip } from '@/components/common/Tooltip';
 import { Img } from '@/components/common/Img';
+import { ContentCropImg } from '@/components/common/ContentCropImg';
 
 interface EquipmentDetailModalProps {
   item: AddonItem | EquipmentItem | null;
@@ -23,10 +24,19 @@ interface EquipmentDetailModalProps {
 /** What an add-on fits, as a picture for the header's right side: the killer's portrait or the item's icon. */
 function TargetPicture({ item, character, isSurvivor, backendBase }: Pick<EquipmentDetailModalProps, 'character' | 'isSurvivor' | 'backendBase'> & { item: AddonItem | EquipmentItem }) {
   if (isSurvivor) {
-    const Icon = CATEGORY_ICONS[getSurvivorAddonCategory(item as AddonItem)];
+    const category = getSurvivorAddonCategory(item as AddonItem);
+    const glyph = SURVIVOR_CATEGORY_GLYPH[category];
+    const Icon = CATEGORY_ICONS[category];
     return (
       <div className="flex h-full w-full items-center justify-center rounded-full bg-bg-elevated text-accent-amber ring-2 ring-accent-amber/40 shadow-lg">
-        <Icon className="h-3/5 w-3/5" aria-hidden="true" />
+        {glyph ? (
+          // The item's own picture in the accent colour, zoomed to what it draws.
+          <span className="block h-3/5 w-3/5">
+            <ContentCropImg src={getAssetUrl(backendBase, glyph)} alt={item.associated_target ?? ''} tint />
+          </span>
+        ) : (
+          <Icon className="h-3/5 w-3/5" aria-hidden="true" />
+        )}
       </div>
     );
   }
@@ -54,14 +64,11 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
     <ModalIconHeader
       leading={
         <div
-          className={`flex h-full w-full items-center justify-center overflow-hidden rounded-card border-2 p-1.5 shadow-md ${rarityTile.bg}`}
+          className={`flex h-full w-full items-center justify-center overflow-hidden rounded-card border-2 p-2 shadow-md ${rarityTile.bg}`}
           style={rarityTile.style}
         >
-          <Img
-            src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
-            alt=""
-            className="h-full w-full object-contain"
-          />
+          {/* Zoomed to what the icon draws, so the frame hugs it instead of showing its transparent margin. */}
+          <ContentCropImg src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)} alt="" />
         </div>
       }
       title={item.name}

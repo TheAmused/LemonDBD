@@ -5,14 +5,16 @@ import React, { useState } from 'react';
 import { ZoomIn } from 'lucide-react';
 import { PersonIcon } from '@/components/icons/DbdIcons';
 import type { CharacterItem, CharacterDetailDictionary } from '../types';
-import { getAvatarUrl } from '../types';
+import { PORTRAIT_SHIFT, getAvatarUrl } from '../types';
 
 import { Img } from '@/components/common/Img';
-export type CharacterHeroAvatarTranslations = Pick<CharacterDetailDictionary, 'view3DModel' | 'dlcLicensed' | 'dlcOriginal'>;
+export type CharacterHeroAvatarTranslations = Pick<CharacterDetailDictionary, 'view3DModel'>;
 
 interface CharacterHeroAvatarProps {
   character: CharacterItem;
   isSurvivor: boolean;
+  /** The chapter / DLC the character came with. */
+  chapterName: string;
   backendBase: string;
   onOpenModelModal: () => void;
   t: CharacterHeroAvatarTranslations;
@@ -21,6 +23,7 @@ interface CharacterHeroAvatarProps {
 export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
   character,
   isSurvivor,
+  chapterName,
   backendBase,
   onOpenModelModal,
   t,
@@ -46,7 +49,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
               loading="eager"
               fetchPriority="high"
               decoding="async"
-              className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-105"
+              className={`h-full w-full object-cover object-top ${PORTRAIT_SHIFT} transition-transform duration-700 group-hover:scale-105`}
               onError={() => setImgFailed(true)}
             />
           ) : (
@@ -66,9 +69,9 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
           </div>
         </div>
 
-        {/* A solid strip, like a name on the character cards: the portrait is a bust cropped at the bottom, and this covers that edge. */}
+        {/* A solid strip, like the name on the character cards: it names the chapter and covers the portrait's cropped bottom edge. */}
         <div className="shrink-0 border-t border-border-color bg-bg-surface px-3 py-3 text-center text-xs font-extrabold leading-tight text-text-primary sm:text-sm">
-          {character.is_licensed ? t.dlcLicensed : t.dlcOriginal}
+          {chapterName}
         </div>
       </button>
     </div>

@@ -11,14 +11,17 @@ import type {
 import {
   formatLocalizedReleaseDate,
 } from './types';
+import { BookOpen, Bookmark, Calendar, ArrowRight } from 'lucide-react';
 import { CharacterTopBar } from './components/CharacterTopBar';
 import { CharacterHeroAvatar } from './components/CharacterHeroAvatar';
-import { CharacterMetaRow } from './components/CharacterMetaRow';
 import { CharacterPerksSection } from './components/CharacterPerksSection';
 import { SurvivorEquipmentSection } from './components/SurvivorEquipmentSection';
 import { OfferingsSection } from './components/OfferingsSection';
 import type { Perk } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
+import { Button } from '@/components/common/Button';
+import { InfoChip } from '@/components/common/InfoChip';
+import { WrapRow } from '@/components/common/WrapRow';
 import { useDictionary } from "@/context/DictionaryContext";
 
 const LoreModal = dynamic(() => import('./modals/LoreModal').then((m) => m.LoreModal), { ssr: false });
@@ -82,13 +85,34 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({ currentLo
               )}
             </div>
 
-            <CharacterMetaRow
-              chapterName={chapterName}
-              releaseDate={releaseDate}
-              isLicensed={character.is_licensed}
-              onOpenLore={() => setIsLoreModalOpen(true)}
-              t={t}
-            />
+            <WrapRow className="items-stretch">
+              <Button
+                variant="secondary"
+                onClick={() => setIsLoreModalOpen(true)}
+                leftIcon={<BookOpen className="icon-md" aria-hidden="true" />}
+                rightIcon={<ArrowRight className="icon-sm text-text-muted" aria-hidden="true" />}
+              >
+                <span>{t.viewLore || ''}</span>
+              </Button>
+
+              {chapterName && (
+                <InfoChip>
+                  <Bookmark className="icon-sm shrink-0" aria-hidden="true" />
+                  {chapterName}
+                </InfoChip>
+              )}
+
+              <InfoChip>
+                <Calendar className="icon-sm shrink-0" aria-hidden="true" />
+                {releaseDate}
+              </InfoChip>
+
+              <InfoChip>
+                {character.is_licensed
+                  ? t.dlcLicensed
+                  : t.dlcOriginal}
+              </InfoChip>
+            </WrapRow>
           </header>
 
           <CharacterPerksSection

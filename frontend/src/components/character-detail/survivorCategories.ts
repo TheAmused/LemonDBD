@@ -1,10 +1,7 @@
 // frontend/src/components/character-detail/survivorCategories.ts
 //
 // Which item type a survivor item or add-on belongs to (med-kit, toolbox, ...), and that type's icon. The
-// equipment section filters by it; the add-on popup shows the same icon as the item the add-on fits.
-import type React from 'react';
-import { ShieldAlert, Wrench, Flashlight, Key, Map as MapIcon, Cloud } from 'lucide-react';
-import { SparkleIcon, MedkitIcon } from '@/components/icons/DbdIcons';
+// equipment section filters by it; the add-on popup reads the same category to pick the item's icon.
 import type { AddonItem, EquipmentItem } from './types';
 
 export type SurvivorCategoryKey =
@@ -73,14 +70,3 @@ export function getSurvivorAddonCategory(it: AddonItem): SurvivorCategoryKey {
 
   return 'trial_exclusive';
 }
-
-export const CATEGORY_ICONS: Record<SurvivorCategoryKey, React.ComponentType<{ className?: string }>> = {
-  medkit: MedkitIcon,
-  toolbox: Wrench,
-  flashlight: Flashlight,
-  key: Key,
-  map: MapIcon,
-  fog_vial: Cloud,
-  event: SparkleIcon,
-  trial_exclusive: ShieldAlert,
-};

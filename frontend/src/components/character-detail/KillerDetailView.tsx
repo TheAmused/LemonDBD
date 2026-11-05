@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Zap } from 'lucide-react';
+import { BookOpen, Zap, Bookmark, Calendar, ArrowRight } from 'lucide-react';
 import type {
   CharacterViewBaseProps,
   AddonItem,
@@ -17,7 +17,6 @@ import {
 } from './types';
 import { CharacterTopBar } from './components/CharacterTopBar';
 import { CharacterHeroAvatar } from './components/CharacterHeroAvatar';
-import { CharacterMetaRow } from './components/CharacterMetaRow';
 import { KillerCombatStats } from './components/KillerCombatStats';
 import { CharacterPerksSection } from './components/CharacterPerksSection';
 import { KillerEquipmentSection } from './components/KillerEquipmentSection';
@@ -27,7 +26,10 @@ import { getBackendBaseUrl } from '@/utils/perkUtils';
 
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from "@/context/DictionaryContext";
+import { Button } from '@/components/common/Button';
+import { InfoChip } from '@/components/common/InfoChip';
 import { TileButton } from '@/components/common/TileButton';
+import { WrapRow } from '@/components/common/WrapRow';
 import { Img } from '@/components/common/Img';
 
 const LoreModal = dynamic(() => import('./modals/LoreModal').then((m) => m.LoreModal), { ssr: false });
@@ -131,13 +133,34 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
               </div>
             </div>
 
-            <CharacterMetaRow
-              chapterName={chapterName}
-              releaseDate={releaseDate}
-              isLicensed={character.is_licensed}
-              onOpenLore={() => setIsLoreModalOpen(true)}
-              t={t}
-            />
+            <WrapRow className="items-stretch">
+              <Button
+                variant="secondary"
+                onClick={() => setIsLoreModalOpen(true)}
+                leftIcon={<BookOpen className="icon-md" aria-hidden="true" />}
+                rightIcon={<ArrowRight className="icon-sm text-text-muted" aria-hidden="true" />}
+              >
+                <span>{t.viewLore || ''}</span>
+              </Button>
+
+              {chapterName && (
+                <InfoChip>
+                  <Bookmark className="icon-sm shrink-0" aria-hidden="true" />
+                  {chapterName}
+                </InfoChip>
+              )}
+
+              <InfoChip>
+                <Calendar className="icon-sm shrink-0" aria-hidden="true" />
+                {releaseDate}
+              </InfoChip>
+
+              <InfoChip>
+                {character.is_licensed
+                  ? t.dlcLicensed
+                  : t.dlcOriginal}
+              </InfoChip>
+            </WrapRow>
           </header>
 
           {/* Combat Stats Mini-Bar */}

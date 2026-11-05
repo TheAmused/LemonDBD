@@ -2,7 +2,8 @@
 // frontend/src/components/character-detail/components/SurvivorEquipmentSection.tsx
 import { Tabs } from '@/components/common/Tabs';
 import React, { useMemo } from 'react';
-import { ShieldAlert } from 'lucide-react';
+import { ShieldAlert, Wrench, Flashlight, Key, Map as MapIcon, Cloud } from 'lucide-react';
+import { SparkleIcon, MedkitIcon } from '@/components/icons/DbdIcons';
 import type {
   AddonItem,
   EquipmentItem,
@@ -15,7 +16,6 @@ import {
 import { CategoryPicker } from './CategoryPicker';
 import type { SurvivorCategoryKey } from '../survivorCategories';
 import {
-  CATEGORY_ICONS,
   getSurvivorAddonCategory,
   getSurvivorItemCategory,
   isSurvivorCategoryKey,
@@ -36,6 +36,17 @@ interface SurvivorEquipmentSectionProps {
   onSelectEquipment: (item: AddonItem | EquipmentItem) => void;
   t: CharacterDetailDictionary;
 }
+
+export const CATEGORY_ICONS: Record<SurvivorCategoryKey, React.ComponentType<{ className?: string }>> = {
+  medkit: MedkitIcon,
+  toolbox: Wrench,
+  flashlight: Flashlight,
+  key: Key,
+  map: MapIcon,
+  fog_vial: Cloud,
+  event: SparkleIcon,
+  trial_exclusive: ShieldAlert,
+};
 
 export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> = ({
   items = [],

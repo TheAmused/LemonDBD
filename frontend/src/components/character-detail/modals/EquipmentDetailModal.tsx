@@ -2,7 +2,8 @@
 import React from 'react';
 import type { AddonItem, CharacterDetailDictionary, CharacterItem, EquipmentItem } from '../types';
 import { getAssetUrl, getAvatarUrl, getRarityTileStyle } from '../types';
-import { CATEGORY_ICONS, getSurvivorAddonCategory } from '../survivorCategories';
+import { getSurvivorAddonCategory } from '../survivorCategories';
+import { CATEGORY_ICONS } from '../components/SurvivorEquipmentSection';
 import { RichText } from '@/components/common/RichText';
 import { Modal } from '@/components/common/Modal';
 import { ModalIconHeader } from '@/components/common/ModalIconHeader';

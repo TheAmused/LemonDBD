@@ -271,13 +271,18 @@ def draw_building_icon(
     draw.line([pt(10, 15), pt(14, 15)], fill=color, width=width)
 
 
-def render_map_layout_to_image(
+FLOOR_ORDER = {"lower": 0, None: 1, "upper": 2}
+FLOOR_TITLES = {"lower": "LOWER FLOOR", "upper": "UPPER FLOOR"}
+PANEL_GAP_PX = 48
+
+
+def render_floor_image(
     layout: dict[str, Any],
-    map_name: str = "",
-    realm_name: str = "",
+    floor: dict[str, Any],
     target_width: int = 1200,
+    title: str | None = None,
 ) -> Image.Image:
-    """Render map layout to high-fidelity tactical callout image.
+    """Render one floor of a map layout to a high-fidelity tactical callout panel.
 
     Matches MapLayoutView:
     - ViewBox: [-PAD_M, -PAD_M] to [width + PAD_M * 2, height + PAD_M * 3]
@@ -295,9 +300,6 @@ def render_map_layout_to_image(
     width_m = float(layout.get("width_m", 128))
     height_m = float(layout.get("height_m", 128))
     cell_m = float(layout.get("cell_m", 8))
-    floors = layout.get("floors", [])
-    floor = floors[0] if floors else {}
-
     total_w_m = width_m + PAD_M * 2.0
     total_h_m = height_m + PAD_M * 3.0
 
@@ -477,6 +479,14 @@ def render_map_layout_to_image(
         th = bbox[3] - bbox[1]
         draw.text((c_x - tw / 2, c_y - th / 2 - 1), "MID", fill=TEXT_MUTED, font=mid_font)
 
+    # Floor title in the top margin (only on maps with more than one floor)
+    if title:
+        title_font = _get_font(max(18, int(round(scale * 4.4))), bold=True)
+        bbox = draw.textbbox((0, 0), title, font=title_font)
+        tw = bbox[2] - bbox[0]
+        th = bbox[3] - bbox[1]
+        draw.text(((target_width - tw) / 2, PAD_M * scale * 0.5 - th / 2), title, fill=TEXT_PRIMARY, font=title_font)
+
     # 9. Scale Bar (Bottom Left: 32m)
     sb_y_m = height_m + PAD_M * 0.9
     sb_p1 = to_canvas(0, sb_y_m)
@@ -496,8 +506,41 @@ def render_map_layout_to_image(
     return img.convert("RGB")
 
 
-def generate_all_map_images() -> None:
-    """Generate accurate WebP callout images for all LemonDBD maps."""
+def render_map_layout_to_image(
+    layout: dict[str, Any],
+    map_name: str = "",
+    realm_name: str = "",
+    target_width: int = 1200,
+) -> Image.Image:
+    """Render a map layout to one callout image: every floor, lower floor first, side by side.
+
+    A single-floor map is one panel `target_width` wide. A map with several floors gets one panel per
+    floor, each with its own 1-12 clock callouts, landmarks and scale bar (all floors share the map's
+    frame, so panels are the same size), a floor title and a divider between them.
+    """
+    floors = sorted(layout.get("floors") or [{}], key=lambda f: FLOOR_ORDER.get(f.get("label"), 1))
+    if len(floors) == 1:
+        return render_floor_image(layout, floors[0], target_width)
+
+    panels = [
+        render_floor_image(layout, f, target_width, title=FLOOR_TITLES.get(f.get("label"), f"FLOOR {i + 1}"))
+        for i, f in enumerate(floors)
+    ]
+    panel_w, panel_h = panels[0].size
+    total_w = panel_w * len(panels) + PANEL_GAP_PX * (len(panels) - 1)
+    canvas = Image.new("RGB", (total_w, panel_h), (11, 14, 20))
+    draw = ImageDraw.Draw(canvas)
+    for i, panel in enumerate(panels):
+        x = i * (panel_w + PANEL_GAP_PX)
+        canvas.paste(panel, (x, 0))
+        if i > 0:
+            line_x = x - PANEL_GAP_PX // 2
+            draw.line([(line_x, int(panel_h * 0.04)), (line_x, int(panel_h * 0.96))], fill=(107, 114, 128), width=3)
+    return canvas
+
+
+def generate_all_map_images(only_ids: set[int] | None = None) -> None:
+    """Generate accurate WebP callout images for all LemonDBD maps (or just `only_ids`)."""
     with open(MAP_LAYOUTS_FILE, encoding="utf-8") as f:
         layouts_data = json.load(f)["map_layouts"]
     layout_by_map_id = {item["map_id"]: item["layout_data"] for item in layouts_data}
@@ -512,7 +555,7 @@ def generate_all_map_images() -> None:
     for map_item in maps_data["maps"]:
         map_id = map_item["id"]
         layout = layout_by_map_id.get(map_id)
-        if not layout:
+        if not layout or (only_ids is not None and map_id not in only_ids):
             continue
 
         realm_name = realms.get(map_item["realm_id"], "Unknown Realm")
@@ -535,7 +578,7 @@ def generate_all_map_images() -> None:
 
         map_item["callout_image_local_path"] = rel_path
         generated_count += 1
-        print(f"[{generated_count}/58] Generated {rel_path} ({img.size[0]}x{img.size[1]})")
+        print(f"[{generated_count}] Generated {rel_path} ({img.size[0]}x{img.size[1]})")
 
     with open(MAPS_FILE, "w", encoding="utf-8") as f:
         json.dump(maps_data, f, indent=2, ensure_ascii=False)
@@ -547,5 +590,6 @@ def generate_all_map_images() -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate DbD tactical map callout images in WebP format.")
     parser.add_argument("--all", action="store_true", help="Generate all maps")
+    parser.add_argument("--ids", type=int, nargs="+", help="Generate only these map ids")
     args = parser.parse_args()
-    generate_all_map_images()
+    generate_all_map_images(set(args.ids) if args.ids else None)

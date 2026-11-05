@@ -220,8 +220,8 @@ test('pages request the maps by the source the seed data actually uses', () => {
   assert.strictEqual(TIER_LIST_MAP_SOURCE, MAP_SOURCE);
 });
 
-test('KNOWN_FEATURE_CODES defines all 10 competitive feature codes', () => {
-  assert.deepStrictEqual([...KNOWN_FEATURE_CODES], ['C|H', 'H/FB', 'WT', 'CT', 'GARDEN', 'STATUE', 'H', 'T', 'P', 'UFO']);
+test('KNOWN_FEATURE_CODES defines all 12 feature codes', () => {
+  assert.deepStrictEqual([...KNOWN_FEATURE_CODES], ['C|H', 'H/FB', 'WT', 'CT', 'GARDEN', 'STATUE', 'H', 'T', 'P', 'UFO', 'MD', 'BD']);
 });
 
 test('getFeatureLandmarkName translates all competitive codes and falls back to code if unknown', () => {
@@ -235,6 +235,8 @@ test('getFeatureLandmarkName translates all competitive codes and falls back to 
   assert.strictEqual(getFeatureLandmarkName('T', en), en.maps.landmarkTower);
   assert.strictEqual(getFeatureLandmarkName('P', en), en.maps.landmarkPagoda);
   assert.strictEqual(getFeatureLandmarkName('UFO', en), en.maps.landmarkShuttle);
+  assert.strictEqual(getFeatureLandmarkName('MD', en), en.maps.landmarkMainDoor);
+  assert.strictEqual(getFeatureLandmarkName('BD', en), en.maps.landmarkBackDoor);
   assert.strictEqual(getFeatureLandmarkName('UNKNOWN_CODE', en), 'UNKNOWN_CODE');
   assert.strictEqual(getFeatureLandmarkName('C|H', {}), 'C|H');
 });

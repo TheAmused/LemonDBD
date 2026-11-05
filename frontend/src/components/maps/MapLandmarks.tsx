@@ -11,6 +11,8 @@ import { Building2, Home } from 'lucide-react';
 import type { MapLandmark } from '@/types/map';
 import { useDictionary } from '@/context/DictionaryContext';
 import { getFeatureLandmarkName } from '@/utils/mapLandmarkLabels';
+import { MARK_BOX, MARK_ICON } from '@/components/maps/MapSymbolKey';
+import { cn } from '@/utils/cn';
 
 /** Marker chip size in metres, for landmarks without a footprint. */
 const CHIP_M = 9;
@@ -21,6 +23,25 @@ const FOOTPRINT_CLASS: Record<MapLandmark['kind'], string> = {
   main: 'fill-accent-red/30 stroke-accent-red',
   shack: 'fill-text-primary/25 stroke-text-primary',
   feature: 'fill-text-muted/30 stroke-text-muted',
+};
+
+/** The square the Main Building (red) and the Shack (white) are drawn as on the map, for the legend. */
+export const LandmarkSquare: React.FC<{ kind: 'main' | 'shack' }> = ({ kind }) => {
+  const Icon = kind === 'main' ? Building2 : Home;
+  return (
+    <span
+      data-landmark-square={kind}
+      className={cn(
+        MARK_BOX,
+        'border-2 border-dashed',
+        kind === 'main'
+          ? 'border-accent-red bg-accent-red/30 text-accent-red'
+          : 'border-text-primary bg-text-primary/25 text-text-primary'
+      )}
+    >
+      <Icon className={MARK_ICON} aria-hidden="true" />
+    </span>
+  );
 };
 
 function LandmarkContent({ lm, size }: { lm: MapLandmark; size: number }) {

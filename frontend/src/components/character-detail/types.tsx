@@ -217,8 +217,11 @@ export function getAvatarUrl(
   return char.avatar_url || char.portrait_url || '';
 }
 
-/** Character portraits are busts cut off at the bottom. Moving the picture down pushes that edge under the name / DLC strip. */
-export const PORTRAIT_SHIFT = 'translate-y-10';
+/**
+ * Character portraits are busts with an empty band above the head and a cut edge at the bottom. Zooming
+ * from the top edge and lifting the picture trims that band and pushes the cut under the name / DLC strip.
+ */
+export const PORTRAIT_CROP = 'origin-top scale-112 -translate-y-1/32';
 
 /**
  * Small WebP copy of a character avatar for grids/lists (served by

@@ -7,7 +7,6 @@ import { CATEGORY_ICONS } from '../components/SurvivorEquipmentSection';
 import { RichText } from '@/components/common/RichText';
 import { Modal } from '@/components/common/Modal';
 import { ModalIconHeader } from '@/components/common/ModalIconHeader';
-import { tip } from '@/components/common/Tooltip';
 import { Img } from '@/components/common/Img';
 import { ContentCropImg } from '@/components/common/ContentCropImg';
 
@@ -77,7 +76,6 @@ export const EquipmentDetailModal: React.FC<EquipmentDetailModalProps> = ({
           <TargetPicture item={item} character={character} isSurvivor={isSurvivor} backendBase={backendBase} />
         ) : undefined
       }
-      trailingProps={tip(item.associated_target, undefined, 'item')}
     />
   );
 

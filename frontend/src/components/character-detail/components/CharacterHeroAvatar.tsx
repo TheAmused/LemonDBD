@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import { ZoomIn } from 'lucide-react';
 import { PersonIcon } from '@/components/icons/DbdIcons';
 import type { CharacterItem, CharacterDetailDictionary } from '../types';
-import { PORTRAIT_SHIFT, getAvatarUrl } from '../types';
+import { PORTRAIT_CROP, getAvatarUrl } from '../types';
 
 import { Img } from '@/components/common/Img';
 export type CharacterHeroAvatarTranslations = Pick<CharacterDetailDictionary, 'view3DModel'>;
@@ -49,7 +49,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
               loading="eager"
               fetchPriority="high"
               decoding="async"
-              className={`h-full w-full object-cover object-top ${PORTRAIT_SHIFT} transition-transform duration-700 group-hover:scale-105`}
+              className={`h-full w-full object-cover object-top ${PORTRAIT_CROP} transition-transform duration-700 group-hover:scale-120`}
               onError={() => setImgFailed(true)}
             />
           ) : (

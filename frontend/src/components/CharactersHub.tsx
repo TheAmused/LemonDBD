@@ -16,7 +16,7 @@ import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { CharacterCard } from '@/components/characters/hub/CharacterCard';
 import { CharactersToolbar } from '@/components/characters/hub/CharactersToolbar';
 import { OwnershipSaveBar } from '@/components/characters/hub/OwnershipSaveBar';
-import { SavedChangesModal } from '@/components/characters/hub/SavedChangesModal';
+import { SavedChangesToast } from '@/components/characters/hub/SavedChangesToast';
 import { VerificationNotice } from '@/components/characters/hub/VerificationNotice';
 import { useCharacterOwnership } from '@/components/characters/hub/useCharacterOwnership';
 import type { CharacterItem, PerkItem, AddonItem, EquipmentItem } from '@/components/character-detail/types';
@@ -84,7 +84,7 @@ export const CharactersHub: React.FC = () => {
   });
   const {
     ownershipMode, ownershipLoading, ownershipSaving, ownershipSaveError, ownershipLoadError,
-    discardConfirmOpen, keepEditing, handleCancelOwnershipMode, savedModalOpen, closeSavedModal,
+    discardConfirmOpen, keepEditing, handleCancelOwnershipMode, savedToastOpen, dismissSavedToast,
     characterOwnershipDraft, allPerks, perkUnlockDraft, perksPopupCharacter, setPerksPopupCharacter,
     handleToggleOwnershipMode, handleToggleCharacterOwned, handleTogglePerkUnlocked,
     handleSaveOwnership, getCharacterPerkStats,
@@ -212,7 +212,7 @@ export const CharactersHub: React.FC = () => {
         />
       )}
 
-      <SavedChangesModal open={savedModalOpen} onClose={closeSavedModal} />
+      <SavedChangesToast open={savedToastOpen} onDismiss={dismissSavedToast} />
 
       <ConfirmModal
         open={discardConfirmOpen}

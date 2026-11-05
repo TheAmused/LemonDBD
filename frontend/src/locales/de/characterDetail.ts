@@ -1,6 +1,8 @@
 // frontend/src/locales/de/characterDetail.ts
 export default {
   backToCharacters: "Zurück zu den Charakteren",
+  backToSurvivors: "Zurück zu den Überlebenden",
+  backToKillers: "Zurück zu den Killern",
   myCharacters: "Meine Charaktere",
   exitSelection: "Auswahl beenden",
   saving: "Wird gespeichert...",
@@ -78,7 +80,6 @@ export default {
   categoryBlueprint: "Baupläne",
   categoryChest: "Kisten & Nebel",
   clickToInspect: "Klicken, um Mechanik zu inspizieren",
-  combatAttributes: 'Killer-Attribute',
   enteredTheFog: "Betrat den Nebel.",
   currentBaseTerrorRadius: "Aktueller Basis-Terror-Radius",
   lullaby: "Wiegenlied",
@@ -107,7 +108,6 @@ export default {
   emDashSeparator: "—",
   quoteOpen: "„",
   quoteClose: "“",
-  compatibleTarget: "Kompatibles Ziel:",
   distance45m: "45m",
   distance32m: "32m",
   distance24m: "24m",

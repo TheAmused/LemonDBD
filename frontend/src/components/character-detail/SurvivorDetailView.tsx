@@ -3,7 +3,6 @@
 
 import React, { useState } from 'react';
 import dynamic from 'next/dynamic';
-import { BookOpen, Bookmark, Calendar } from 'lucide-react';
 import type {
   CharacterViewBaseProps,
   AddonItem,
@@ -14,14 +13,12 @@ import {
 } from './types';
 import { CharacterTopBar } from './components/CharacterTopBar';
 import { CharacterHeroAvatar } from './components/CharacterHeroAvatar';
+import { CharacterMetaRow } from './components/CharacterMetaRow';
 import { CharacterPerksSection } from './components/CharacterPerksSection';
 import { SurvivorEquipmentSection } from './components/SurvivorEquipmentSection';
 import { OfferingsSection } from './components/OfferingsSection';
 import type { Perk } from '@/types/perks';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { Button } from '@/components/common/Button';
-import { InfoChip } from '@/components/common/InfoChip';
-import { WrapRow } from '@/components/common/WrapRow';
 import { useDictionary } from "@/context/DictionaryContext";
 
 const LoreModal = dynamic(() => import('./modals/LoreModal').then((m) => m.LoreModal), { ssr: false });
@@ -66,7 +63,6 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({ currentLo
         <CharacterHeroAvatar
           character={character}
           isSurvivor={true}
-          roleLabel={t.roleSurvivor || ''}
           backendBase={backendBase}
           onOpenModelModal={() => setIsModelModalOpen(true)}
           t={t}
@@ -86,34 +82,13 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({ currentLo
               )}
             </div>
 
-            <WrapRow>
-              <Button
-                variant="secondary"
-                onClick={() => setIsLoreModalOpen(true)}
-                leftIcon={<BookOpen className="icon-md" aria-hidden="true" />}
-                className=""
-              >
-                <span>{t.viewLore || ''}</span>
-              </Button>
-
-              {chapterName && (
-                <InfoChip>
-                  <Bookmark className="icon-sm shrink-0" aria-hidden="true" />
-                  {chapterName}
-                </InfoChip>
-              )}
-
-              <InfoChip>
-                <Calendar className="icon-sm shrink-0" aria-hidden="true" />
-                {releaseDate}
-              </InfoChip>
-
-              <InfoChip>
-                {character.is_licensed
-                  ? t.dlcLicensed
-                  : t.dlcOriginal}
-              </InfoChip>
-            </WrapRow>
+            <CharacterMetaRow
+              chapterName={chapterName}
+              releaseDate={releaseDate}
+              isLicensed={character.is_licensed}
+              onOpenLore={() => setIsLoreModalOpen(true)}
+              t={t}
+            />
           </header>
 
           <CharacterPerksSection
@@ -163,6 +138,8 @@ export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({ currentLo
         item={selectedEquipment}
         onClose={() => setSelectedEquipment(null)}
         backendBase={backendBase}
+        character={character}
+        isSurvivor={true}
         t={t}
       />
 

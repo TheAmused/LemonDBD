@@ -7,7 +7,6 @@ import { getAssetUrl } from '../types';
 import type { Perk } from '@/types/perks';
 import { DisabledBadge } from '@/components/DisabledBadge';
 import { DisabledReasonModal } from '@/components/DisabledReasonModal';
-import { tip } from '@/components/common/Tooltip';
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
 
@@ -39,7 +38,6 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
           <div
             key={`${perk.name}-${idx}`}
             className="relative flex justify-center"
-            {...tip(perk.name, undefined, 'item')}
           >
             <TileButton
               onClick={() =>

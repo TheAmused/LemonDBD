@@ -12,11 +12,9 @@ import {
 import { PerkDescription } from '@/components/PerkDescription';
 import { tip } from '@/components/common/Tooltip';
 import { Modal } from '@/components/common/Modal';
+import { ModalIconHeader } from '@/components/common/ModalIconHeader';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Img } from '@/components/common/Img';
-
-/** Perk icon and owner avatar share this size. */
-const SLOT_SIZE = 'h-14 w-14 phone-lg:h-20 phone-lg:w-20 md:h-24 md:w-24';
 
 interface PerkModalProps {
   perk: Perk | null;
@@ -40,10 +38,11 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose }) => {
     perk.character === 'General' ||
     Boolean(perk.is_generic_counterpart);
 
-  /* Perk icon | title | owner avatar. Both sides share one size so the title stays centred. */
+  /* Perk icon | title | owner avatar. */
   const header = (
-    <div className="grid shrink-0 grid-cols-[auto_1fr_auto] items-center gap-3 px-4 pb-0 pt-12 phone-lg:gap-4 phone-lg:px-6 md:gap-6 md:px-8">
-      <div className={`flex ${SLOT_SIZE} shrink-0 items-center justify-center`}>
+    <ModalIconHeader
+      titleId="perk-modal-title"
+      leading={
         <PerkIcon
           perk={perk}
           src={iconSrc}
@@ -51,40 +50,22 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose }) => {
           imageClassName="h-full w-full scale-[1.3] object-contain drop-shadow-lg"
           fallbackIcon={<ImageOff className="h-8 w-8 text-text-muted" />}
         />
-      </div>
-
-      <div className="min-w-0 text-center">
-        <h2
-          id="perk-modal-title"
-          className="text-xl phone-lg:text-2xl md:text-3xl font-black text-text-primary tracking-tight leading-tight text-balance [overflow-wrap:anywhere]"
-        >
-          {perk.name}
-        </h2>
-        {perk.alternate_name && (
-          <p className="mt-1.5 type-strong text-accent-amber">
-            {dict.modal.alias && `${dict.modal.alias}: `}
-            {perk.alternate_name}
-          </p>
-        )}
-      </div>
-
-      {/* General perks and missing portraits leave the slot empty; it still keeps the title centred. */}
-      {!isGeneral && avatarSrc && !avatarError ? (
-        <div
-          className={`flex ${SLOT_SIZE} shrink-0 items-center justify-center`}
-          {...tip(perk.character, undefined, 'character')}
-        >
+      }
+      title={perk.name}
+      subtitle={perk.alternate_name && `${dict.modal.alias && `${dict.modal.alias}: `}${perk.alternate_name}`}
+      /* General perks and missing portraits leave the slot empty; it still keeps the title centred. */
+      trailing={
+        !isGeneral && avatarSrc && !avatarError ? (
           <Img
             src={avatarSrc}
             alt={perk.character}
             onError={() => setAvatarError(true)}
             className="h-full w-full rounded-full object-cover ring-2 ring-accent-amber/40 shadow-lg"
           />
-        </div>
-      ) : (
-        <div className={`${SLOT_SIZE} shrink-0`} aria-hidden="true" />
-      )}
-    </div>
+        ) : undefined
+      }
+      trailingProps={tip(perk.character, undefined, 'character')}
+    />
   );
 
   return (

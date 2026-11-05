@@ -1,6 +1,8 @@
 // frontend/src/locales/pl/characterDetail.ts
 export default {
   backToCharacters: "Powrót do Postaci",
+  backToSurvivors: "Powrót do Ocalałych",
+  backToKillers: "Powrót do Zabójców",
   myCharacters: "Moje Postacie",
   exitSelection: "Zakończ Wybór",
   saving: "Zapisywanie...",
@@ -78,7 +80,6 @@ export default {
   categoryBlueprint: "Plany",
   categoryChest: "Skrzynie i Mgła",
   clickToInspect: "Kliknij, aby zbadać pełną mechanikę",
-  combatAttributes: 'Atrybuty Zabójcy',
   enteredTheFog: "Wkroczył we Mgłę.",
   currentBaseTerrorRadius: "Aktualny Bazowy Promień Terroru",
   lullaby: "Kołysanka",
@@ -107,7 +108,6 @@ export default {
   emDashSeparator: "—",
   quoteOpen: "„",
   quoteClose: "”",
-  compatibleTarget: "Zgodny Cel:",
   distance45m: "45m",
   distance32m: "32m",
   distance24m: "24m",

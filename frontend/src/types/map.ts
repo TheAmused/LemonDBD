@@ -67,7 +67,7 @@ export interface MapRealm {
   pallet_density: string;
   is_shack: boolean;
   is_main_building: boolean;
-  /** Taken out of the game (Lampkin Lane): still listed, but greyed out and never opened. */
+  /** Taken out of the game (Lampkin Lane): still listed and can be opened, but greyed out. */
   is_retired?: boolean;
   size_sq_tiles?: number | null;
   size_sq_meters?: number | null;

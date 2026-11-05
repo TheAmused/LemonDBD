@@ -148,3 +148,14 @@ def test_every_landmark_stands_on_its_floor() -> None:
                 assert any(_point_in_ring(lm["x"], lm["y"], r) for r in floor["outline"]), (m["name"], lm)
     assert kinds == {"main", "shack", "feature"}
 
+
+
+@pytest.mark.unit
+def test_police_station_wings_mark_their_outside_exits() -> None:
+    layouts = _map_layouts()
+    for m in _maps():
+        if not m["name"].startswith("Police Station"):
+            continue
+        lower = next(f for f in layouts[m["id"]]["floors"] if f["label"] == "lower")
+        codes = sorted(lm["label"] for lm in lower["landmarks"] if lm["kind"] == "feature")
+        assert codes == ["BD", "GARDEN", "MD"], m["name"]

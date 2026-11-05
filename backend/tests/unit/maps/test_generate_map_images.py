@@ -1,7 +1,7 @@
 # backend/tests/unit/maps/test_generate_map_images.py
 import pytest
 from PIL import Image
-from scripts.generate_map_images import render_map_layout_to_image, slugify
+from scripts.generate_map_images import PANEL_GAP_PX, render_map_layout_to_image, slugify
 
 
 @pytest.mark.unit
@@ -36,7 +36,28 @@ def test_render_map_layout_to_image() -> None:
         layout,
         map_name="Test Map",
         realm_name="Test Realm",
-        canvas_size=1024,
+        target_width=1024,
     )
     assert isinstance(img, Image.Image)
-    assert img.size == (1024, 1024)
+    assert img.width == 1024
+
+
+@pytest.mark.unit
+def test_every_floor_of_a_multi_floor_map_is_drawn() -> None:
+    ring = [[[0, 0], [64, 0], [64, 48], [0, 48]]]
+    one = {"cell_m": 8, "width_m": 64, "height_m": 48, "floors": [{"label": None, "outline": ring}]}
+    two = {
+        "cell_m": 8,
+        "width_m": 64,
+        "height_m": 48,
+        "floors": [
+            {"label": "upper", "outline": ring},
+            {"label": "lower", "outline": ring},
+        ],
+    }
+    single = render_map_layout_to_image(one, target_width=800)
+    double = render_map_layout_to_image(two, target_width=800)
+    assert single.width == 800
+    # Two panels of the single-floor size plus the gap between them, same height.
+    assert double.width == 2 * 800 + PANEL_GAP_PX
+    assert double.height == single.height

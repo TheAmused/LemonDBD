@@ -3151,7 +3151,27 @@
                 ]
               ]
             ],
-            "area_m2": 5232
+            "area_m2": 5232,
+            "landmarks": [
+              {
+                "kind": "feature",
+                "x": 68,
+                "y": 4,
+                "label": "BD"
+              },
+              {
+                "kind": "feature",
+                "x": 46,
+                "y": 64,
+                "label": "MD"
+              },
+              {
+                "kind": "feature",
+                "x": 75,
+                "y": 58,
+                "label": "GARDEN"
+              }
+            ]
           },
           {
             "label": "upper",
@@ -3372,7 +3392,27 @@
                 ]
               ]
             ],
-            "area_m2": 5200
+            "area_m2": 5200,
+            "landmarks": [
+              {
+                "kind": "feature",
+                "x": 34,
+                "y": 4,
+                "label": "BD"
+              },
+              {
+                "kind": "feature",
+                "x": 46,
+                "y": 69,
+                "label": "MD"
+              },
+              {
+                "kind": "feature",
+                "x": 76,
+                "y": 62,
+                "label": "GARDEN"
+              }
+            ]
           },
           {
             "label": "upper",

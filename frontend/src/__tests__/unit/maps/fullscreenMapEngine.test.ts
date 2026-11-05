@@ -88,6 +88,12 @@ test('FullscreenMapEngine names the map in the header and lists its facts in the
   assert.ok(!html.includes('Totems'), 'totem count is not shown');
   assert.ok(html.includes('>Shack<'));
   assert.ok(html.includes('>Main Building<'));
+  assert.ok(html.includes('data-landmark-square="main"') && html.includes('data-landmark-square="shack"'), 'Main Building and Shack are drawn as their red and white squares');
+  const key = html.slice(html.indexOf('data-testid="map-symbol-key"'));
+  for (const name of ['Cow Tree / Harvester', 'Water Tower', 'Main Door (exit)', 'Back Door (exit)', '16 m game tile', 'Off-limits area']) {
+    assert.ok(key.includes(name), `the symbol key lists ${name}`);
+  }
+  assert.ok(key.includes('>C|H<'), 'the key shows the codes themselves');
   // The shared zoom control: -, percent, +, Fit (a map opens fitted)
   assert.ok(html.includes('aria-label="Zoom Out"') && html.includes('aria-label="Zoom In"'));
   assert.match(html, /aria-pressed="true"[^>]*aria-label="Fit the whole map on screen"/);

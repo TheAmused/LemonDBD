@@ -217,6 +217,9 @@ export function getAvatarUrl(
   return char.avatar_url || char.portrait_url || '';
 }
 
+/** Character portraits are busts cut off at the bottom. Moving the picture down pushes that edge under the name / DLC strip. */
+export const PORTRAIT_SHIFT = 'translate-y-10';
+
 /**
  * Small WebP copy of a character avatar for grids/lists (served by
  * `/api/v1/avatars/thumb/...`). Detail pages keep using `getAvatarUrl` (full image).

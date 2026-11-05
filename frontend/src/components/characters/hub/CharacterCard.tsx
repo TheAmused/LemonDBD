@@ -9,6 +9,7 @@ import type {
   CharacterItem} from '@/components/character-detail/types';
 import {
   characterSlug,
+  PORTRAIT_SHIFT,
   getAvatarUrl as resolveAvatarUrl,
   getAvatarThumbUrl,
 } from '@/components/character-detail/types';
@@ -91,7 +92,7 @@ export function CharacterCard({
           alt={char.name}
           loading="lazy"
           decoding="async"
-          className={`h-full w-full object-cover object-top transition-transform duration-500 ${
+          className={`h-full w-full object-cover object-top ${PORTRAIT_SHIFT} transition-transform duration-500 ${
             char.is_disabled ? 'grayscale opacity-60' : ''
           } ${ownershipMode && showLockedOverlay ? '' : 'group-hover:scale-105'}`}
           onError={(e) => {
@@ -110,7 +111,7 @@ export function CharacterCard({
           }}
         />
         {/* Grey/dim only: owned and locked read from the colour, so no lock or tick badge. */}
-        {ownershipMode && <OwnershipClipOverlay isOwned={isOwned} isPartial={hasPartialPerks} imageSrc={avatarSrc} />}
+        {ownershipMode && <OwnershipClipOverlay isOwned={isOwned} isPartial={hasPartialPerks} imageSrc={avatarSrc} imageClassName={PORTRAIT_SHIFT} />}
 
         {ownershipMode && !isOwned && (
           <div className="pointer-events-none absolute inset-x-0 bottom-1.5 z-20 flex justify-center sm:bottom-2">

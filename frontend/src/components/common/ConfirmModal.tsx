@@ -56,7 +56,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
     busy={busy}
     padded
     bodyClassName="text-center"
-    footerClassName="flex-row justify-stretch gap-2 p-4 sm:px-6"
+    footerClassName="flex-row items-stretch justify-stretch gap-2 p-4 sm:px-6"
     footer={
       <>
         {cancelLabel && (
@@ -64,7 +64,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
             type="button"
             onClick={onCancel}
             disabled={busy}
-            className="min-w-0 flex-1 rounded-control px-3 border border-border-color bg-bg-surface py-3 type-card-title text-text-secondary transition-colors hover:bg-bg-elevated hover:text-text-primary disabled:opacity-50 cursor-pointer shadow-xs"
+            className="min-w-0 flex-1 inline-flex items-center justify-center rounded-control px-3 border border-border-color bg-bg-surface py-3 type-card-title text-text-secondary transition-colors hover:bg-bg-elevated hover:text-text-primary disabled:opacity-50 cursor-pointer shadow-xs"
           >
             {cancelLabel}
           </button>
@@ -75,7 +75,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
           aria-busy={busy || undefined}
           onClick={onConfirm}
           disabled={busy || confirmDisabled}
-          className="min-w-0 flex-1 px-3 inline-flex items-center justify-center gap-2 rounded-control bg-accent-red py-3 type-card-title text-text-inverted shadow-md shadow-accent-red/20 transition-all hover:bg-accent-red-hover disabled:opacity-50 cursor-pointer"
+          className="min-w-0 flex-1 px-3 inline-flex items-center justify-center gap-2 rounded-control border border-transparent bg-accent-red py-3 type-card-title text-text-inverted shadow-md shadow-accent-red/20 transition-all hover:bg-accent-red-hover disabled:opacity-50 cursor-pointer"
         >
           {!busy && confirmIcon}
           {busy && !busyLabel ? (

@@ -33,12 +33,6 @@ export const KillerCombatStats: React.FC<KillerCombatStatsProps> = ({
 }) => {
   return (
     <Surface padding="none" className="p-4 shadow-sm space-y-2 w-full backdrop-blur-sm">
-      <div className="flex flex-col gap-0.5 sm:flex-row sm:items-center sm:justify-between type-label-xs text-text-secondary">
-        <span className="flex items-center gap-1.5 text-accent-red">
-          {t.combatAttributes}
-        </span>
-      </div>
-
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {/* Movement Speed */}
         <StatRow icon={Gauge} label={t.movementSpeed} value={killerSpeed} />

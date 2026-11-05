@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/characters/hub/useCharacterOwnership.ts
 import { logger } from '@/utils/logger';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   buildCharacterOwnershipDraft,
   changedCharacterUpdates,
@@ -63,27 +63,10 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
   const [ownershipSaveError, setOwnershipSaveError] = useState<string | null>(null);
   const [ownershipLoadError, setOwnershipLoadError] = useState<string | null>(null);
   const [discardConfirmOpen, setDiscardConfirmOpen] = useState<boolean>(false);
-  const [savedModalOpen, setSavedModalOpen] = useState<boolean>(false);
-  const savedModalTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const closeSavedModal = useCallback(() => {
-    if (savedModalTimerRef.current) clearTimeout(savedModalTimerRef.current);
-    setSavedModalOpen(false);
-  }, []);
-
-  const triggerSavedModal = useCallback(() => {
-    if (savedModalTimerRef.current) clearTimeout(savedModalTimerRef.current);
-    setSavedModalOpen(true);
-    savedModalTimerRef.current = setTimeout(() => {
-      closeSavedModal();
-    }, 1800);
-  }, [closeSavedModal]);
-
-  useEffect(() => {
-    return () => {
-      if (savedModalTimerRef.current) clearTimeout(savedModalTimerRef.current);
-    };
-  }, []);
+  // The "saved" toast; it leaves on its own (see Toast's autoDismissMs).
+  const [savedToastOpen, setSavedToastOpen] = useState<boolean>(false);
+  // Stable: the toast restarts its timer whenever this changes.
+  const dismissSavedToast = useCallback(() => setSavedToastOpen(false), []);
 
   // Keyed by "survivor:7" / "killer:7", not by a bare id: survivors and
   // killers are numbered separately now, so an id alone collides.
@@ -238,13 +221,10 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
       });
 
       handleCancelOwnershipMode();
-      triggerSavedModal();
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          invalidate(catalogKey('perks'));
-          invalidate(catalogKey('characters'));
-        }, 150);
-      });
+      setSavedToastOpen(true);
+      // Only the perk list carries the user's `is_owned`. The character roster is the same for everyone,
+      // and dropping it here emptied the grid under the page: the cards blinked out and back in.
+      invalidate(catalogKey('perks'));
     } catch (err: unknown) {
       logger.error('Failed to save ownership changes:', err);
       setOwnershipSaveError(dict.characterDetail.saveOwnershipError);
@@ -268,8 +248,8 @@ export function useCharacterOwnership({ locale, onLoginRequired, onVerificationR
     ownershipLoadError,
     discardConfirmOpen,
     keepEditing: () => setDiscardConfirmOpen(false),
-    savedModalOpen,
-    closeSavedModal,
+    savedToastOpen,
+    dismissSavedToast,
     characterOwnershipDraft,
     allPerks,
     perkUnlockDraft,

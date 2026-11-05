@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useDictionary } from '@/context/DictionaryContext';
 import { DisabledBadge } from '@/components/DisabledBadge';
-import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
+import { OwnershipClipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
 import type {
   CharacterItem} from '@/components/character-detail/types';
 import {
@@ -14,7 +14,6 @@ import {
 } from '@/components/character-detail/types';
 
 import { Button } from '@/components/common/Button';
-import { Badge } from '@/components/common/Badge';
 import { Surface } from '@/components/common/Surface';
 import { Img } from '@/components/common/Img';
 interface CharacterCardProps {
@@ -77,18 +76,6 @@ export function CharacterCard({
           className="absolute inset-0 z-10 rounded-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red"
         />
       )}
-      <div className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 z-20">
-        <Badge
-          tone={isSurvivor ? 'green' : 'red'} size="xs" plain className="backdrop-blur-md"
-        >
-          <span>
-            {isSurvivor
-              ? dict.characterDetail.roleSurvivor
-              : dict.characterDetail.roleKiller}
-          </span>
-        </Badge>
-      </div>
-
       {char.is_disabled && !ownershipMode && (
         <DisabledBadge
           label={char.name}
@@ -97,7 +84,8 @@ export function CharacterCard({
         />
       )}
 
-      <div className="relative h-full w-full overflow-hidden bg-bg-elevated">
+      {/* The portrait is a bust cropped at the bottom; the solid name bar under it covers that edge. */}
+      <div className="relative min-h-0 w-full flex-1 overflow-hidden bg-bg-elevated">
         <Img
           src={avatarThumbSrc}
           alt={char.name}
@@ -121,33 +109,28 @@ export function CharacterCard({
             }
           }}
         />
-        {ownershipMode && (
-          <CharacterOwnershipOverlay
-            isOwned={isOwned}
-            hasPartialPerks={hasPartialPerks}
-            avatarSrc={avatarSrc}
-            lockedTitle={dict.modal.unownedPerk}
-            ownedTitle={dict.filters.ownedOnly}
-          />
+        {/* Grey/dim only: owned and locked read from the colour, so no lock or tick badge. */}
+        {ownershipMode && <OwnershipClipOverlay isOwned={isOwned} isPartial={hasPartialPerks} imageSrc={avatarSrc} />}
+
+        {ownershipMode && !isOwned && (
+          <div className="pointer-events-none absolute inset-x-0 bottom-1.5 z-20 flex justify-center sm:bottom-2">
+            <Button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpenPerks(char);
+              }}
+              variant="amberSoft" size="xs" className="pointer-events-auto"
+            >
+              <span>{dict.filters.perks}</span>
+              {perkStats.total > 0 && ` (${perkStats.unlocked}/${perkStats.total})`}
+            </Button>
+          </div>
         )}
       </div>
 
-      {/* Sticky bottom overlay with centered name and perks button above */}
-      <div className="absolute inset-x-0 bottom-0 z-20 flex flex-col items-center justify-end px-2 pt-10 pb-2 sm:pb-2.5 bg-gradient-to-t from-bg-surface via-bg-surface/85 to-transparent pointer-events-none">
-        {ownershipMode && !isOwned && (
-          <Button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onOpenPerks(char);
-            }}
-            variant="amberSoft" size="xs" className="mb-1 sm:mb-1.5 pointer-events-auto"
-          >
-            <span>{dict.filters.perks}</span>
-            {perkStats.total > 0 && ` (${perkStats.unlocked}/${perkStats.total})`}
-          </Button>
-        )}
-        <h3 className="w-full text-center font-extrabold text-mini sm:text-xs md:text-sm text-text-primary group-hover:text-accent-red transition-colors truncate px-1 pointer-events-none leading-tight">
+      <div className="pointer-events-none relative z-20 shrink-0 border-t border-border-color bg-bg-surface px-2 py-2.5 transition-colors group-hover:bg-bg-elevated sm:py-3">
+        <h3 className="w-full truncate px-1 text-center text-mini font-extrabold leading-tight text-text-primary transition-colors group-hover:text-accent-red sm:text-xs md:text-sm">
           {char.name}
         </h3>
       </div>

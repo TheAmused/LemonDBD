@@ -2,18 +2,13 @@
 // frontend/src/components/landing/HomePage.tsx
 
 import React, { useEffect, Suspense } from 'react';
-import Link from 'next/link';
-import { } from 'next/navigation';
 import { LemonIcon } from '@/components/LemonIcon';
 
-import { SlidersHorizontal } from 'lucide-react';
 import { DbdSpinner } from '@/components/common/DbdSpinner';
 import { useImagePrefetch } from '@/components/common/ImagePreloadProvider';
-import { useDictionary, useLocale } from '@/context/DictionaryContext';
-import { buttonClassName } from '@/components/common/Button';
+import { useDictionary } from '@/context/DictionaryContext';
 
 function LandingContent() {
-  const locale = useLocale();
   const { prefetchImages } = useImagePrefetch();
 
   const dict = useDictionary();
@@ -43,19 +38,6 @@ function LandingContent() {
         <p className="text-sm sm:text-base text-text-secondary leading-relaxed font-medium max-w-md">
           {dict.landing.welcomeSubtitle}
         </p>
-      )}
-
-      {/* Navigation lives in the sidebar, so the hero only points at tailoring the site. */}
-      {dict.landing.settingsButton && (
-        <div className="mt-8">
-          <Link
-            href={`/${locale}/settings`}
-            className={buttonClassName('primary', 'lg')}
-          >
-            <SlidersHorizontal className="icon-md" />
-            <span>{dict.landing.settingsButton}</span>
-          </Link>
-        </div>
       )}
     </div>
   );

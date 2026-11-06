@@ -8,7 +8,7 @@
  */
 import React, { useId, useMemo } from 'react';
 import type { MapLayout } from '@/types/map';
-import { clockLabels, floorBounds, ringsToPath, GAME_TILE_M } from '@/utils/mapLayout';
+import { clockLabels, floorBounds, ringsToPath, roomBox, GAME_TILE_M } from '@/utils/mapLayout';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import { MapLandmarks } from '@/components/maps/MapLandmarks';
@@ -17,6 +17,8 @@ import { MapLandmarks } from '@/components/maps/MapLandmarks';
 const THUMB_FRAME_M = 152;
 /** Margin around the full view, in metres. */
 const PAD_M = 8;
+/** Extra margin on a floor with named rooms: its clock numbers are printed outside the outline. */
+const ROOMS_PAD_M = 6;
 const SCALE_BAR_M = 32;
 
 export interface MapLayoutViewProps extends Omit<React.SVGProps<SVGSVGElement>, 'viewBox'> {
@@ -46,10 +48,13 @@ export const MapLayoutView: React.FC<MapLayoutViewProps> = ({
   // useId() can contain ':' or '«»', which do not survive inside url(#...): keep it to safe characters.
   const clipId = `map-clip-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
   const floor = layout.floors[Math.min(floorIndex, layout.floors.length - 1)];
-  const floorPath = useMemo(() => ringsToPath(floor.outline), [floor]);
+  // Holes are rings of the same path: with fill-rule evenodd they cut the floor open.
+  const floorPath = useMemo(() => ringsToPath([...floor.outline, ...(floor.holes ?? [])]), [floor]);
   const blockedPath = useMemo(() => ringsToPath(floor.blocked ?? []), [floor]);
   const clock = useMemo(() => (variant === 'full' ? clockLabels(floor) : null), [floor, variant]);
   const { width_m: width, height_m: height } = layout;
+  const hasRooms = (floor.rooms?.length ?? 0) > 0;
+  const extra = hasRooms ? ROOMS_PAD_M : 0;
 
   if (variant === 'thumb') {
     const b = floorBounds(floor);
@@ -62,7 +67,7 @@ export const MapLayoutView: React.FC<MapLayoutViewProps> = ({
         {...rest}
       >
         <title>{title}</title>
-        <path d={floorPath} className="fill-accent-red/15 stroke-text-primary" strokeWidth={2} strokeLinejoin="round" />
+        <path d={floorPath} fillRule="evenodd" className="fill-accent-red/15 stroke-text-primary" strokeWidth={2} strokeLinejoin="round" />
         {blockedPath && <path d={blockedPath} className="fill-text-muted/40" />}
       </svg>
     );
@@ -70,17 +75,17 @@ export const MapLayoutView: React.FC<MapLayoutViewProps> = ({
 
   return (
     <svg
-      viewBox={`${-PAD_M} ${-PAD_M} ${width + PAD_M * 2} ${height + PAD_M * 3}`}
+      viewBox={`${-PAD_M - extra} ${-PAD_M - extra} ${width + (PAD_M + extra) * 2} ${height + PAD_M * 3 + extra}`}
       className={className}
       {...rest}
     >
       <title>{title}</title>
       <defs>
         <clipPath id={clipId}>
-          <path d={floorPath} />
+          <path d={floorPath} clipRule="evenodd" />
         </clipPath>
       </defs>
-      <path d={floorPath} className="fill-bg-elevated" />
+      <path d={floorPath} fillRule="evenodd" className="fill-bg-elevated" />
       <g clipPath={`url(#${clipId})`} fill="none">
         <path d={gridLines(width, height, layout.cell_m)} className="stroke-border-color" strokeWidth={0.3} />
         <path
@@ -92,6 +97,28 @@ export const MapLayoutView: React.FC<MapLayoutViewProps> = ({
       </g>
       {blockedPath && <path d={blockedPath} className="fill-text-muted/40 stroke-text-muted" strokeWidth={0.4} />}
       <path d={floorPath} fill="none" className="stroke-accent-red" strokeWidth={1.1} strokeLinejoin="round" />
+      {floor.rooms && floor.rooms.length > 0 && (
+        <g className="pointer-events-none select-none" textAnchor="middle" dominantBaseline="central">
+          {floor.rooms.map((room, i) => {
+            const box = roomBox(room);
+            const lines = (room.label ?? '').split('\n');
+            return (
+              <g key={i}>
+                {room.ring && room.ring.length >= 3 && (
+                  <path d={ringsToPath([room.ring])} fill="none" className="stroke-text-muted" strokeWidth={0.35} />
+                )}
+                <text x={box.x} y={box.y} fontSize={2.6} fontWeight={700} className="fill-text-secondary">
+                  {lines.map((line, n) => (
+                    <tspan key={n} x={box.x} dy={n === 0 ? `${-(lines.length - 1) * 0.55}em` : '1.1em'}>
+                      {line}
+                    </tspan>
+                  ))}
+                </text>
+              </g>
+            );
+          })}
+        </g>
+      )}
       {floor.landmarks && floor.landmarks.length > 0 && <MapLandmarks landmarks={floor.landmarks} />}
       {clock && (
         <g className="pointer-events-none select-none font-bold" textAnchor="middle" dominantBaseline="central">
@@ -107,7 +134,7 @@ export const MapLayoutView: React.FC<MapLayoutViewProps> = ({
           )}
         </g>
       )}
-      <g className="pointer-events-none select-none" transform={`translate(0 ${height + PAD_M * 0.9})`}>
+      <g className="pointer-events-none select-none" transform={`translate(0 ${height + (hasRooms ? 12.5 : PAD_M * 0.9)})`}>
         <path d={`M0 -1.2V0H${SCALE_BAR_M}V-1.2`} fill="none" className="stroke-text-muted" strokeWidth={0.5} />
         <text x={SCALE_BAR_M + 2} y={0} fontSize={3.2} dominantBaseline="central" className="fill-text-muted">
           {formatMessage(dict.maps.metresValue, { value: SCALE_BAR_M })}

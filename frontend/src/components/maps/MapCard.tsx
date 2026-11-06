@@ -25,12 +25,11 @@ export const MapCard: React.FC<MapCardProps> = ({ map, backendBase, onSelect }) 
   return (
     <TileButton
       onClick={() => onSelect(map)}
-      disabled={retired}
-      press={!retired}
       aria-label={retired ? `${map.name}: ${dict.maps.retiredMap}` : undefined}
       className={cn(
-        'group flex flex-col items-center gap-2 rounded-control border-2 border-border-color bg-bg-surface p-2 min-h-11 touch-manipulation transition-all duration-200 shadow-sm',
-        retired ? 'opacity-50 grayscale' : 'hover:border-accent-red'
+        'group flex flex-col items-center gap-2 rounded-control border-2 border-border-color bg-bg-surface p-2 min-h-11 touch-manipulation transition-all duration-200 shadow-sm hover:border-accent-red',
+        // Greyed with a filter, not opacity: a see-through card lets the background particles show through.
+        retired && 'grayscale brightness-75'
       )}
       data-testid={`map-card-${map.id}`}
     >

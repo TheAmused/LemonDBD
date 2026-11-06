@@ -59,3 +59,17 @@ test('MapCard falls back to the remote callout URL when no local path is set', (
   );
   assert.ok(html.includes('https://hens333.com/img/dbd/callouts/Azarovs/Azarovs%20Resting%20Place.webp'));
 });
+
+test('A retired map stays a normal, clickable button, greyed with a filter (not opacity)', () => {
+  const html = renderWithDictionary(
+    React.createElement(MapCard, {
+      map: { ...sampleMap, is_retired: true },
+      backendBase: 'http://localhost:5000',
+      onSelect: () => {},
+    })
+  );
+  assert.ok(!/<button[^>]*\sdisabled(=|\s|>)/.test(html), 'a retired map can be opened');
+  assert.ok(html.includes('grayscale'), 'it is greyed out');
+  assert.ok(!html.includes('opacity-50'), 'a see-through card would show the background particles');
+  assert.ok(html.includes('Removed from the game'));
+});

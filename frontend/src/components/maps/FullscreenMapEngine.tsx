@@ -2,12 +2,11 @@
 
 import { Button } from '@/components/common/Button';
 import React, { useEffect, useMemo, useState, useRef, useCallback } from 'react';
-import { X, ImageOff, Building2, Compass, Home, Maximize2, type LucideIcon } from 'lucide-react';
+import { X, ImageOff, Compass, Maximize2 } from 'lucide-react';
 import type { MapRealm } from '@/types/map';
 import { getLayoutTypeLabel, getMapImageSrc } from '@/utils/mapUtils';
 import { formatNumber } from '@/utils/format';
 import { formatMessage } from '@/utils/i18nFormat';
-import { Surface } from '@/components/common/Surface';
 import { CheckIcon } from '@/components/icons/DbdIcons';
 import { cn } from '@/utils/cn';
 
@@ -15,6 +14,10 @@ import { Modal } from '@/components/common/Modal';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Img } from '@/components/common/Img';
 import { ZoomControl, type ZoomValue } from '@/components/common/ZoomControl';
+import { LandmarkSquare } from '@/components/maps/MapLandmarks';
+import { MapSymbolKey } from '@/components/maps/MapSymbolKey';
+import { MapLegendFrame } from '@/components/maps/MapLegendFrame';
+import { useMapLayout } from '@/hooks/useMapLayout';
 
 /** The zoom steps of the -/+ buttons, in percent of the picture's real size. */
 const MAP_ZOOM_STEPS = [25, 50, 75, 100, 150, 200, 300] as const;
@@ -22,9 +25,11 @@ const MAX_ZOOM = MAP_ZOOM_STEPS[MAP_ZOOM_STEPS.length - 1];
 
 // ─── Legend ──────────────────────────────────────────────────────────────────
 // The map's facts as a legend over the map: surface area, layout, and whether the map has a shack and a
-// main building. A card in the corner of the map area, not badges in the header bar. It grows with the
-// screen (wide, 2K, 4K) like the picture beside it. On a phone, where there is no free space beside the
-// map, it is a strip under the header instead, always open.
+// main building (drawn as the red and the amber square they are on the map), then a key to the other
+// symbols of the picture (clock numbers, off-limits area, game tile, every landmark code). A card in the
+// corner of the map area, not badges in the header bar. It grows with the screen (wide, 2K, 4K) like the
+// picture beside it. On a phone, where there is no free space beside the map, it is a strip under the
+// header instead, always open, without the key.
 
 const LAYOUT_TONE: Record<string, string> = {
   Indoor: 'text-accent-red',
@@ -33,12 +38,13 @@ const LAYOUT_TONE: Record<string, string> = {
 };
 
 const LEGEND_ICON = 'icon-md shrink-0 wide:icon-lg wide-4k:icon-xl';
+const FACT_ICON = cn(LEGEND_ICON, 'text-accent-red');
 
-function LegendRow({ icon: Icon, label, children }: { icon: LucideIcon; label: string; children: React.ReactNode }) {
+function LegendRow({ mark, label, children }: { mark: React.ReactNode; label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-center gap-2.5 wide-2k:gap-3.5">
       <dt className="flex items-center gap-2.5 wide-2k:gap-3.5 type-body-screen text-text-muted">
-        <Icon className={cn(LEGEND_ICON, 'text-accent-red')} aria-hidden="true" />
+        {mark}
         {label}
       </dt>
       <dd className="ml-auto pl-3 wide-2k:pl-6 type-strong-screen text-text-primary text-right">{children}</dd>
@@ -46,13 +52,12 @@ function LegendRow({ icon: Icon, label, children }: { icon: LucideIcon; label: s
   );
 }
 
-/** A structure the map has (check) or lacks (cross); the full "Shack" / "No Shack" text is read out. */
-function Presence({ present, yes, no }: { present: boolean; yes: string; no: string }) {
-  const Icon = present ? CheckIcon : X;
+/** A structure the map has: a check, with the full "Shack" / "Main Building" text read out. */
+function Presence({ yes }: { yes: string }) {
   return (
     <span className="inline-flex">
-      <Icon className={cn(LEGEND_ICON, present ? 'text-accent-green' : 'text-text-muted')} aria-hidden="true" />
-      <span className="sr-only">{present ? yes : no}</span>
+      <CheckIcon className={cn(LEGEND_ICON, 'text-accent-green')} aria-hidden="true" />
+      <span className="sr-only">{yes}</span>
     </span>
   );
 }
@@ -60,26 +65,17 @@ function Presence({ present, yes, no }: { present: boolean; yes: string; no: str
 export const MapDetailsLegend: React.FC<{ map: MapRealm; className?: string }> = ({ map, className }) => {
   const dict = useDictionary();
   const m = dict.maps;
+  // The map list leaves the layout out; the key needs it to know which codes the picture shows.
+  const layout = useMapLayout(map);
+  const keyed = layout && !map.layout ? { ...map, layout } : map;
 
-  // Phones: a flat strip under the header, two facts per line, so nothing covers the map. From `sm` up:
-  // the card in the corner of the map area, with its title.
+  // Only what the map has is listed: a shack or a main building it lacks is not mentioned, and the symbol
+  // key below names only the symbols drawn on it. The frame folds, moves and remembers both.
   return (
-    <Surface
-      as="aside"
-      aria-label={m.legendTitle}
-      tone="elevated"
-      padding="none"
-      stripOnPhone
-      className={cn(
-        'px-4 py-2.5',
-        'sm:bg-bg-elevated/90 sm:p-4 sm:backdrop-blur-xl sm:shadow-2xl wide-2k:p-5 wide-4k:p-6',
-        className
-      )}
-    >
-      <h3 className="max-sm:hidden type-label-screen text-text-muted">{m.legendTitle}</h3>
+    <MapLegendFrame title={m.legendTitle} toggleLabel={m.legendToggleAria} moveLabel={m.legendMoveAria} className={className}>
       <dl className="grid grid-cols-2 gap-x-5 gap-y-1.5 sm:mt-3 sm:block sm:space-y-2.5 wide-2k:mt-4 wide-2k:space-y-3.5">
         {map.size_sq_tiles != null && (
-          <LegendRow icon={Maximize2} label={m.surfaceArea}>
+          <LegendRow mark={<Maximize2 className={FACT_ICON} aria-hidden="true" />} label={m.surfaceArea}>
             {map.size_sq_tiles} {m.sqTilesUnit}
             {map.size_sq_meters != null && (
               <span className="block type-caption-screen text-text-muted">
@@ -89,20 +85,25 @@ export const MapDetailsLegend: React.FC<{ map: MapRealm; className?: string }> =
           </LegendRow>
         )}
         {map.layout_type && (
-          <LegendRow icon={Compass} label={m.layoutLabel}>
+          <LegendRow mark={<Compass className={FACT_ICON} aria-hidden="true" />} label={m.layoutLabel}>
             <span className={LAYOUT_TONE[map.layout_type] ?? LAYOUT_TONE.Outdoor}>
               {getLayoutTypeLabel(map.layout_type, m)}
             </span>
           </LegendRow>
         )}
-        <LegendRow icon={Home} label={m.shackYes}>
-          <Presence present={map.is_shack} yes={m.shackYes} no={m.shackNo} />
-        </LegendRow>
-        <LegendRow icon={Building2} label={m.mainBuildingYes}>
-          <Presence present={map.is_main_building} yes={m.mainBuildingYes} no={m.mainBuildingNo} />
-        </LegendRow>
+        {map.is_shack && (
+          <LegendRow mark={<LandmarkSquare kind="shack" />} label={m.shackYes}>
+            <Presence yes={m.shackYes} />
+          </LegendRow>
+        )}
+        {map.is_main_building && (
+          <LegendRow mark={<LandmarkSquare kind="main" />} label={m.mainBuildingYes}>
+            <Presence yes={m.mainBuildingYes} />
+          </LegendRow>
+        )}
       </dl>
-    </Surface>
+      <MapSymbolKey map={keyed} className="mt-3 max-sm:hidden border-t border-border-color/60 pt-3 wide-2k:mt-4 wide-2k:pt-4" />
+    </MapLegendFrame>
   );
 };
 

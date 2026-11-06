@@ -12,6 +12,8 @@ export const KNOWN_FEATURE_CODES = [
   'T',
   'P',
   'UFO',
+  'MD',
+  'BD',
 ] as const;
 
 export type FeatureCode = (typeof KNOWN_FEATURE_CODES)[number];
@@ -48,6 +50,10 @@ export function getFeatureLandmarkName(
       return maps.landmarkPagoda || code;
     case 'UFO':
       return maps.landmarkShuttle || code;
+    case 'MD':
+      return maps.landmarkMainDoor || code;
+    case 'BD':
+      return maps.landmarkBackDoor || code;
     default:
       return code;
   }

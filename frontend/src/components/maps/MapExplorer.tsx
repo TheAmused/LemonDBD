@@ -30,6 +30,7 @@ import { Surface } from '@/components/common/Surface';
 import { Badge } from '@/components/common/Badge';
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
+import { cn } from '@/utils/cn';
 
 
 // Sentinel dropdown value for "no filter"; real attribute values never collide with it.
@@ -173,13 +174,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   ];
 
   const isSearching = activeSearch.trim().length > 0;
-  // A realm whose maps are all retired has a disabled tile, so it must never count as expanded from a
-  // remembered choice either: nothing could collapse it again.
-  const retiredRealms = useMemo(
-    () => new Set(groupedMapsByRealm.filter(({ maps: rm }) => isRealmRetired(rm)).map(({ realm }) => realm)),
-    [groupedMapsByRealm]
-  );
-  const isRealmExpanded = (realm: string) => isSearching || (expandedRealm === realm && !retiredRealms.has(realm));
+  const isRealmExpanded = (realm: string) => isSearching || expandedRealm === realm;
 
   const pendingOpenRef = useRef<string | null>(null);
   // Another open realm closes first and this one opens when its exit animation ends. Only a realm that is
@@ -208,10 +203,10 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
   const activeRealms = useMemo(() => {
     const set = new Set<string>();
     displayedGroups.forEach(({ realm }) => {
-      if (isSearching || (expandedRealm === realm && !retiredRealms.has(realm))) set.add(realm);
+      if (isSearching || expandedRealm === realm) set.add(realm);
     });
     return set;
-  }, [displayedGroups, isSearching, expandedRealm, retiredRealms]);
+  }, [displayedGroups, isSearching, expandedRealm]);
   const activeRealmsRef = useRef(activeRealms);
   useLayoutEffect(() => {
     activeRealmsRef.current = activeRealms;
@@ -446,26 +441,24 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
             const panelGroups = rowPanels.get(index);
             const showPanel = !!panelGroups && panelGroups.length > 0;
             const isOpen = showPanel && panelGroups!.some((g) => g.open);
-            const realmRetired = retiredRealms.has(realm);
+            const realmRetired = isRealmRetired(realmMaps);
 
             return (
               <React.Fragment key={realm}>
                 <TileButton
                   onClick={() => toggleRealm(realm)}
-                  disabled={realmRetired}
-                  press={!realmRetired}
-                  aria-expanded={realmRetired ? undefined : expanded}
-                  aria-controls={realmRetired ? undefined : `realm-panel-${realmIdentifier}`}
-                  aria-label={
-                    realmRetired
-                      ? `${realm}: ${dict.maps.retiredMap}`
-                      : `${expanded ? dict.maps.collapseRealmAria : dict.maps.expandRealmAria}: ${realm}`
-                  }
-                  className={`group relative aspect-square w-full min-h-12 touch-manipulation overflow-hidden rounded-control border-2 text-left duration-200 ${
-                    realmRetired
-                      ? 'border-border-color opacity-50 grayscale'
-                      : expanded ? 'border-accent-red' : 'border-border-color hover:border-accent-red/60'
+                  aria-expanded={expanded}
+                  aria-controls={`realm-panel-${realmIdentifier}`}
+                  aria-label={`${expanded ? dict.maps.collapseRealmAria : dict.maps.expandRealmAria}: ${realm}${
+                    realmRetired ? ` (${dict.maps.retiredMap})` : ''
                   }`}
+                  // A retired realm is greyed with a filter, not opacity: a see-through tile lets the
+                  // background particles show through it.
+                  className={cn(
+                    'group relative aspect-square w-full min-h-12 touch-manipulation overflow-hidden rounded-control border-2 text-left duration-200',
+                    expanded ? 'border-accent-red' : 'border-border-color hover:border-accent-red/60',
+                    realmRetired && 'grayscale brightness-75'
+                  )}
                 >
                   {bannerSrc ? (
                     <Img
@@ -496,9 +489,13 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                     style={{ gridColumn: '1 / -1', gridTemplateRows: isOpen ? '1fr' : '0fr' }}
                   >
                     <div className="overflow-hidden">
-                      <Surface padding="sm" className="space-y-4 bg-bg-surface/50">
-                        {(panelGroups ?? []).map((group) => (
-                          <div key={group.realm} className="space-y-2">
+                      {/* Realms that share a row sit side by side, a vertical rule between them. */}
+                      <Surface padding="sm" className="flex flex-col gap-4 bg-bg-surface/50 sm:flex-row sm:flex-wrap sm:items-start sm:gap-x-4">
+                        {(panelGroups ?? []).map((group, groupIndex) => (
+                          <div
+                            key={group.realm}
+                            className={cn('space-y-2', groupIndex > 0 && 'sm:border-l sm:border-border-color sm:pl-4')}
+                          >
                             {(panelGroups?.length ?? 0) > 1 && (
                               <h3 className="type-label-sm text-text-muted">
                                 {group.realm}

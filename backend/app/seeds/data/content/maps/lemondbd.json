@@ -1534,7 +1534,7 @@
       "layout_type": "Outdoor",
       "pallet_density": "Medium",
       "jungle_gyms_count": 3,
-      "is_shack": true,
+      "is_shack": false,
       "is_main_building": true,
       "size_sq_tiles": 152.0,
       "size_sq_meters": 9728,

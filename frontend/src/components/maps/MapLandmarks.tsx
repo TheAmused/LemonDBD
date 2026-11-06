@@ -21,11 +21,11 @@ const ICON_MAX_M = 7;
 
 const FOOTPRINT_CLASS: Record<MapLandmark['kind'], string> = {
   main: 'fill-accent-red/30 stroke-accent-red',
-  shack: 'fill-text-primary/25 stroke-text-primary',
+  shack: 'fill-accent-amber/30 stroke-accent-amber',
   feature: 'fill-text-muted/30 stroke-text-muted',
 };
 
-/** The square the Main Building (red) and the Shack (white) are drawn as on the map, for the legend. */
+/** The square the Main Building (red) and the Shack (amber) are drawn as on the map, for the legend. */
 export const LandmarkSquare: React.FC<{ kind: 'main' | 'shack' }> = ({ kind }) => {
   const Icon = kind === 'main' ? Building2 : Home;
   return (
@@ -36,7 +36,7 @@ export const LandmarkSquare: React.FC<{ kind: 'main' | 'shack' }> = ({ kind }) =
         'border-2 border-dashed',
         kind === 'main'
           ? 'border-accent-red bg-accent-red/30 text-accent-red'
-          : 'border-text-primary bg-text-primary/25 text-text-primary'
+          : 'border-accent-amber bg-accent-amber/30 text-accent-amber'
       )}
     >
       <Icon className={MARK_ICON} aria-hidden="true" />
@@ -67,7 +67,7 @@ function LandmarkContent({ lm, size }: { lm: MapLandmark; size: number }) {
       width={size}
       height={size}
       strokeWidth={2.4}
-      className={lm.w ? (lm.kind === 'main' ? 'text-accent-red' : 'text-text-primary') : lm.kind === 'main' ? 'text-text-inverted' : 'text-bg-primary'}
+      className={lm.w ? (lm.kind === 'main' ? 'text-accent-red' : 'text-accent-amber') : lm.kind === 'main' ? 'text-text-inverted' : 'text-bg-primary'}
       aria-hidden="true"
     />
   );
@@ -118,7 +118,7 @@ export const MapLandmarks: React.FC<{ landmarks: readonly MapLandmark[] }> = ({ 
               width={w}
               height={h}
               rx={1.4}
-              className={lm.kind === 'main' ? 'fill-accent-red' : 'fill-text-primary'}
+              className={lm.kind === 'main' ? 'fill-accent-red' : 'fill-accent-amber'}
             />
             <LandmarkContent lm={lm} size={CHIP_M * 0.7} />
           </g>

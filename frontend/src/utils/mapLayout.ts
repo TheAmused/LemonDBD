@@ -5,7 +5,7 @@
  * -- the 8 m squares, the 16 m game tiles and the 12-clock callouts -- is computed here from
  * that outline, so the view itself only paints.
  */
-import type { MapLandmark, MapLayout, MapLayoutFloor, MapPoint } from '@/types/map';
+import type { MapLandmark, MapLayout, MapLayoutFloor, MapPoint, MapRoom } from '@/types/map';
 
 /** One game tile is a 2x2 block of 8 m squares. */
 export const GAME_TILE_M = 16;
@@ -27,9 +27,10 @@ export function pointInRing(x: number, y: number, ring: readonly MapPoint[]): bo
   return inside;
 }
 
-/** Is (x, y) playable floor: inside an outline ring and outside every blocked ring? */
+/** Is (x, y) playable floor: inside an outline ring, outside every hole and every blocked ring? */
 export function pointOnFloor(floor: MapLayoutFloor, x: number, y: number): boolean {
   if (!floor.outline.some((ring) => pointInRing(x, y, ring))) return false;
+  if ((floor.holes ?? []).some((ring) => pointInRing(x, y, ring))) return false;
   return !(floor.blocked ?? []).some((ring) => pointInRing(x, y, ring));
 }
 
@@ -103,11 +104,29 @@ const LANDMARK_CLEARANCE_M = 4;
 const SECTOR_OFFSETS = [0, 5, -5, 10, -10, 14, -14];
 /** How much further inwards a clock number may move to clear a landmark, in metres. */
 const LANDMARK_SEARCH_M = 10;
+/** On a floor with named rooms the numbers would sit on the names: they are printed this far outside the outline. */
+const OUTSIDE_M = 5;
+/** MID needs less clear floor on such a floor: its corridors are narrow. */
+const ROOMS_CLEARANCE_M = 2;
 /** Half the size of a landmark drawn as a marker (no footprint), in metres. */
 const MARKER_HALF_M = 4.5;
 
+/** The box a room's name takes, so clock numbers keep clear of it like of a landmark. */
+export function roomBox(room: MapRoom): Pick<MapLandmark, 'x' | 'y' | 'w' | 'h'> {
+  const ring = room.ring;
+  if (!ring || ring.length === 0) return { x: room.x ?? 0, y: room.y ?? 0, w: room.w ?? 12, h: room.h ?? 4 };
+  const xs = ring.map((p) => p[0]);
+  const ys = ring.map((p) => p[1]);
+  return {
+    x: room.x ?? (Math.min(...xs) + Math.max(...xs)) / 2,
+    y: room.y ?? (Math.min(...ys) + Math.max(...ys)) / 2,
+    w: Math.min(Math.max(...xs) - Math.min(...xs), 14),
+    h: Math.min(Math.max(...ys) - Math.min(...ys), 6),
+  };
+}
+
 /** Distance from (x, y) to a landmark's footprint (its rotated bounding box) or marker; 0 inside. */
-export function distanceToLandmark(lm: MapLandmark, x: number, y: number): number {
+export function distanceToLandmark(lm: Pick<MapLandmark, 'x' | 'y' | 'w' | 'h' | 'angle'>, x: number, y: number): number {
   let hw = MARKER_HALF_M;
   let hh = MARKER_HALF_M;
   if (lm.w && lm.h) {
@@ -131,7 +150,10 @@ export function clockLabels(floor: MapLayoutFloor): { center: MapPoint; labels: 
   const cx = (b.minX + b.maxX) / 2;
   const cy = (b.minY + b.maxY) / 2;
   const reach = Math.hypot(b.maxX - b.minX, b.maxY - b.minY);
-  const landmarks = floor.landmarks ?? [];
+  const rooms = floor.rooms ?? [];
+  const landmarks = [...(floor.landmarks ?? []), ...rooms.map(roomBox)];
+  const clearance = rooms.length > 0 ? ROOMS_CLEARANCE_M : CLOCK_CLEARANCE_M;
+  const inOutline = (x: number, y: number) => floor.outline.some((ring) => pointInRing(x, y, ring));
   const clearOfLandmarks = (x: number, y: number) =>
     landmarks.every((lm) => distanceToLandmark(lm, x, y) >= LANDMARK_CLEARANCE_M);
   // Place one number along a ray from the centre; null when the ray never touches the floor.
@@ -140,10 +162,17 @@ export function clockLabels(floor: MapLayoutFloor): { center: MapPoint; labels: 
     const dx = Math.sin(angle);
     const dy = -Math.cos(angle);
     let lastInside = -1;
+    let lastInOutline = -1;
     for (let r = 0; r <= reach; r += RAY_STEP_M) {
       if (pointOnFloor(floor, cx + dx * r, cy + dy * r)) lastInside = r;
+      if (inOutline(cx + dx * r, cy + dy * r)) lastInOutline = r;
     }
     if (lastInside < 0) return null;
+    if (rooms.length > 0) {
+      // Beyond the last point of the outline itself: a blocked room at the edge is no reason to stop short.
+      const out = Math.max(lastInOutline, lastInside) + OUTSIDE_M;
+      return [cx + dx * out, cy + dy * out];
+    }
     const start = Math.max(0, lastInside - CLOCK_INSET_M);
     let edgeSafe: number | null = null;
     let best: number | null = null;
@@ -153,12 +182,12 @@ export function clockLabels(floor: MapLayoutFloor): { center: MapPoint; labels: 
     for (let r = start; r >= stop && best === null; r -= RAY_STEP_M) {
       const x = cx + dx * r;
       const y = cy + dy * r;
-      if (!hasClearance(floor, x, y, CLOCK_CLEARANCE_M)) continue;
+      if (!hasClearance(floor, x, y, clearance)) continue;
       edgeSafe ??= r;
       if (clearOfLandmarks(x, y)) best = r;
     }
     for (let r = stop; edgeSafe === null && r >= 0; r -= RAY_STEP_M) {
-      if (hasClearance(floor, cx + dx * r, cy + dy * r, CLOCK_CLEARANCE_M)) edgeSafe = r;
+      if (hasClearance(floor, cx + dx * r, cy + dy * r, clearance)) edgeSafe = r;
     }
     // Narrow spots with no clearance anywhere along the ray: the last point that is on the floor.
     const r = best ?? edgeSafe ?? lastInside;
@@ -175,7 +204,7 @@ export function clockLabels(floor: MapLayoutFloor): { center: MapPoint; labels: 
     }
     if (point) labels.push({ hour, x: point[0], y: point[1] });
   }
-  const showMid = hasClearance(floor, cx, cy, CLOCK_CLEARANCE_M) && clearOfLandmarks(cx, cy);
+  const showMid = hasClearance(floor, cx, cy, clearance) && clearOfLandmarks(cx, cy);
   return { center: [cx, cy], labels, showMid };
 }
 
@@ -194,7 +223,7 @@ export function layoutPictureDataUri(layout: MapLayout): string {
   const blocked = floor.blocked?.length ? `<path d="${ringsToPath(floor.blocked)}" fill="#8b8f98" fill-opacity="0.45"/>` : '';
   const svg =
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x0} ${y0} ${PICTURE_FRAME_M} ${PICTURE_FRAME_M}">` +
-    `<path d="${ringsToPath(floor.outline)}" fill="#e5484d" fill-opacity="0.22" stroke="#e5484d" stroke-width="2.5" stroke-linejoin="round"/>` +
+    `<path d="${ringsToPath([...floor.outline, ...(floor.holes ?? [])])}" fill-rule="evenodd" fill="#e5484d" fill-opacity="0.22" stroke="#e5484d" stroke-width="2.5" stroke-linejoin="round"/>` +
     `${blocked}</svg>`;
   return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
 }

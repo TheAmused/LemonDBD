@@ -22,6 +22,7 @@ import {
   layoutPictureDataUri,
   pointOnFloor,
   ringsToPath,
+  roomBox,
 } from '@/utils/mapLayout';
 import { getFeatureLandmarkName, KNOWN_FEATURE_CODES, type FeatureCode } from '@/utils/mapLandmarkLabels';
 import en from '@/locales/en';
@@ -333,5 +334,61 @@ test('MapLegend renders correctly when open and closed', () => {
   assert.ok(openWithFeatures.includes('Water Tower'));
 });
 
+// A 48 m square floor with an open courtyard in the middle and two named rooms.
+const withCourtyard: MapLayout = {
+  v: 1,
+  cell_m: 8,
+  width_m: 48,
+  height_m: 48,
+  floors: [
+    {
+      label: 'upper',
+      outline: [[[0, 0], [48, 0], [48, 48], [0, 48]]],
+      holes: [[[16, 16], [32, 16], [32, 32], [16, 32]]],
+      rooms: [
+        { ring: [[0, 0], [16, 0], [16, 16], [0, 16]], label: 'STAIRS' },
+        { label: 'LIBRARY\nRESERVE', x: 40, y: 8 },
+      ],
+      area_m2: 2048,
+    },
+  ],
+};
 
+test('a hole is open space: not floor, not a square, and no clock number sits in it', () => {
+  const floor = withCourtyard.floors[0];
+  assert.ok(pointOnFloor(floor, 8, 8));
+  assert.ok(!pointOnFloor(floor, 24, 24), 'the courtyard is not floor');
+  const squares = floorSquares(withCourtyard, floor);
+  assert.strictEqual(squares.length, 36 - 4, 'the 4 squares of the courtyard are dropped');
+  const { labels, showMid } = clockLabels(floor);
+  assert.ok(!showMid, 'the centre of the map is the courtyard');
+  assert.strictEqual(labels.length, 12);
+  for (const l of labels) {
+    // Names fill a floor with rooms: the numbers are printed just outside the outline instead.
+    assert.ok(!pointOnFloor(floor, l.x, l.y), `hour ${l.hour} is outside the floor`);
+    assert.ok(l.x >= -8 && l.x <= 56 && l.y >= -8 && l.y <= 56, `hour ${l.hour} stays in the margin`);
+  }
+  const twelve = labels.find((l) => l.hour === 12);
+  assert.ok(twelve && twelve.y < 0 && Math.abs(twelve.x - 24) < 1, '12 is straight above the map');
+});
 
+test('roomBox centres a ring, honours x/y and boxes a bare name', () => {
+  assert.deepStrictEqual(roomBox({ ring: [[0, 0], [10, 0], [10, 4], [0, 4]] }), { x: 5, y: 2, w: 10, h: 4 });
+  assert.deepStrictEqual(roomBox({ ring: [[0, 0], [40, 0], [40, 30], [0, 30]], x: 3, y: 4 }), { x: 3, y: 4, w: 14, h: 6 });
+  assert.deepStrictEqual(roomBox({ label: 'MUSIC', x: 20, y: 8 }), { x: 20, y: 8, w: 12, h: 4 });
+  assert.deepStrictEqual(roomBox({ label: 'TOILETS', x: 20, y: 8, w: 7.5, h: 3.5 }), { x: 20, y: 8, w: 7.5, h: 3.5 });
+});
+
+test('MapLayoutView cuts the hole out of the floor and prints the room names', () => {
+  const html = renderWithDictionary(React.createElement(MapLayoutView, { layout: withCourtyard, title: 'Midwich' }));
+  assert.ok(html.includes('fill-rule="evenodd"'), 'outline and hole are one even-odd path');
+  assert.ok(html.includes('M16 16L32 16L32 32L16 32Z'), 'the hole ring is in the floor path');
+  assert.ok(html.includes('STAIRS'));
+  assert.ok(html.includes('LIBRARY') && html.includes('RESERVE'), 'a label breaks at the newline');
+});
+
+test('layoutPictureDataUri keeps holes open with an even-odd fill', () => {
+  const uri = decodeURIComponent(layoutPictureDataUri(withCourtyard));
+  assert.ok(uri.includes('fill-rule="evenodd"'));
+  assert.ok(uri.includes('M16 16L32 16L32 32L16 32Z'));
+});

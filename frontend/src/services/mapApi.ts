@@ -1,5 +1,5 @@
 // frontend/src/services/mapApi.ts
-import type { MapRealm, Realm } from '@/types/map';
+import type { MapLayout, MapRealm, Realm } from '@/types/map';
 import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson } from '@/services/dataCache';
 
 /** The map source every page loads (`map_sources.code`): LemonDBD's own drawn maps. */
@@ -48,4 +48,13 @@ export async function fetchMaps(
 export async function fetchRealms(lang?: string): Promise<{ realms: Realm[] }> {
   const url = realmsCacheKey(lang);
   return fetchCached(url, () => fetchJson<{ realms: Realm[] }>(url), { ttlMs: CATALOG_TTL_MS });
+}
+
+/** The to-scale layout of one map. `GET /maps` leaves it out, so whatever draws on it asks for it by map. */
+export function mapLayoutCacheKey(mapId: number): string {
+  return catalogKey(`maps/${mapId}/layout`);
+}
+
+export async function fetchMapLayout(mapId: number): Promise<{ map_id: number; version: number; layout: MapLayout }> {
+  return fetchJson(mapLayoutCacheKey(mapId));
 }

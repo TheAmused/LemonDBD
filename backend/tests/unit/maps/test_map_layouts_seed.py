@@ -14,7 +14,7 @@ SEED = CONTENT / "maps" / "lemondbd.json"
 LAYOUTS_SEED = CONTENT / "map_layouts.json"
 STATIC = Path(__file__).resolve().parents[3] / "app" / "static"
 
-#: Forgotten Ruins' size counts the Dungeon too, whose outline the wiki does not publish.
+#: Forgotten Ruins' size counts the Dungeon too, which the map no longer draws.
 PARTIAL_FLOORS = {"Forgotten Ruins"}
 
 
@@ -50,7 +50,9 @@ def test_every_map_is_drawn_and_from_our_own_source() -> None:
 def test_only_maps_without_a_published_outline_are_approximate() -> None:
     layouts = _map_layouts()
     approx = {m["name"] for m in _maps() if layouts.get(m["id"], {}).get("approx")}
-    assert approx == {"The Underground Complex", "Police Station East Wing", "Police Station West Wing", "Trickster's Delusion"}
+    assert approx == {
+        "The Underground Complex", "Police Station East Wing", "Police Station West Wing", "Trickster's Delusion",
+    }
 
 
 @pytest.mark.unit
@@ -60,7 +62,11 @@ def test_every_layout_matches_the_map_size() -> None:
         layout = layouts.get(m["id"])
         if not layout or m["name"] in PARTIAL_FLOORS:
             continue
-        total = sum(_ring_area(r) for floor in layout["floors"] for r in floor["outline"])
+        # A courtyard open to the sky is a hole in the floor: it is not part of the map's size.
+        total = sum(
+            sum(_ring_area(r) for r in floor["outline"]) - sum(_ring_area(r) for r in floor.get("holes", []))
+            for floor in layout["floors"]
+        )
         assert total == pytest.approx(m["size_sq_meters"], rel=0.03 if layout.get("approx") else 0.02), m["name"]
 
 
@@ -79,7 +85,7 @@ def test_layout_shape_is_well_formed() -> None:
         assert max(xs) == layout["width_m"] and max(ys) == layout["height_m"], m["name"]
         for floor in layout["floors"]:
             assert floor["label"] in (None, "upper", "lower"), m["name"]
-            for ring in floor["outline"] + floor.get("blocked", []):
+            for ring in floor["outline"] + floor.get("blocked", []) + floor.get("holes", []):
                 assert len(ring) >= 3 and _ring_area(ring) > 0, m["name"]
                 assert ring[0] != ring[-1], f"{m['name']}: rings are implicitly closed"
 
@@ -159,3 +165,35 @@ def test_police_station_wings_mark_their_outside_exits() -> None:
         lower = next(f for f in layouts[m["id"]]["floors"] if f["label"] == "lower")
         codes = sorted(lm["label"] for lm in lower["landmarks"] if lm["kind"] == "feature")
         assert codes == ["BD", "GARDEN", "MD"], m["name"]
+
+
+@pytest.mark.unit
+def test_holes_and_rooms_sit_inside_their_floor() -> None:
+    layouts = _map_layouts()
+    seen_holes = seen_rooms = 0
+    for m in _maps():
+        layout = layouts.get(m["id"])
+        if not layout:
+            continue
+        for floor in layout["floors"]:
+            for hole in floor.get("holes", []):
+                seen_holes += 1
+                assert all(any(_point_in_ring(x, y, r) for r in floor["outline"]) for x, y in hole), m["name"]
+            for room in floor.get("rooms", []):
+                seen_rooms += 1
+                assert room.get("ring") or ("label" in room and "x" in room and "y" in room), (m["name"], room)
+                if room.get("ring"):
+                    assert len(room["ring"]) >= 3 and _ring_area(room["ring"]) > 0, (m["name"], room)
+    assert seen_holes == 1, "only Midwich's upper floor has a courtyard open to the sky"
+    assert seen_rooms > 0
+
+
+@pytest.mark.unit
+def test_maps_without_a_shack_in_their_layout_do_not_claim_one() -> None:
+    layouts = _map_layouts()
+    for m in _maps():
+        layout = layouts.get(m["id"])
+        if not layout:
+            continue
+        drawn = any(lm["kind"] == "shack" for floor in layout["floors"] for lm in floor.get("landmarks", []))
+        assert m["is_shack"] == drawn, m["name"]

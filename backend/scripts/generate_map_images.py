@@ -17,7 +17,7 @@ import unicodedata
 from pathlib import Path
 from typing import Any
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parents[1]
 SEEDS_DIR = ROOT / "app" / "seeds" / "data" / "content"
@@ -71,10 +71,27 @@ def point_on_floor(floor: dict[str, Any], x: float, y: float) -> bool:
     outline = floor.get("outline", [])
     if not any(point_in_ring(x, y, ring) for ring in outline):
         return False
+    if any(point_in_ring(x, y, ring) for ring in floor.get("holes", [])):
+        return False
     blocked = floor.get("blocked", [])
     if any(point_in_ring(x, y, ring) for ring in blocked):
         return False
     return True
+
+
+def room_box(room: dict[str, Any]) -> dict[str, float]:
+    """Where a room's name is printed, as a landmark-like box the clock numbers keep clear of."""
+    ring = room.get("ring")
+    if not ring:  # a name placed on its own, over a zone that is drawn elsewhere
+        return {"x": float(room.get("x", 0.0)), "y": float(room.get("y", 0.0)), "w": float(room.get("w", 12.0)), "h": float(room.get("h", 4.0))}
+    xs = [p[0] for p in ring]
+    ys = [p[1] for p in ring]
+    return {
+        "x": float(room.get("x", (min(xs) + max(xs)) / 2.0)),
+        "y": float(room.get("y", (min(ys) + max(ys)) / 2.0)),
+        "w": min(max(xs) - min(xs), 14.0),
+        "h": min(max(ys) - min(ys), 6.0),
+    }
 
 
 def floor_bounds(floor: dict[str, Any]) -> tuple[float, float, float, float]:
@@ -120,12 +137,17 @@ def get_clock_labels(floor: dict[str, Any]) -> tuple[tuple[float, float], list[d
     cx = (min_x + max_x) / 2.0
     cy = (min_y + max_y) / 2.0
     reach = math.hypot(max_x - min_x, max_y - min_y)
-    landmarks = floor.get("landmarks", [])
+    landmarks = list(floor.get("landmarks", [])) + [room_box(r) for r in floor.get("rooms", [])]
 
     landmark_clearance_m = 4.0
-    clock_clearance_m = 4.0
+    # Corridors between named rooms are narrow: a number there needs less clear floor around it.
+    clock_clearance_m = 2.0 if floor.get("rooms") else 4.0
     clock_inset_m = 7.0
+    # Landmarks are only dodged a short way inwards of the edge.
     landmark_search_m = 10.0
+    # On a floor with named rooms the numbers would sit on the names: they are printed just outside
+    # the outline instead, in the margin of the picture.
+    outside_m = 5.0 if bool(floor.get("rooms")) else None
     ray_step_m = 0.5
     sector_offsets = [0, 5, -5, 10, -10, 14, -14]
 
@@ -138,12 +160,19 @@ def get_clock_labels(floor: dict[str, Any]) -> tuple[tuple[float, float], list[d
         dy = -math.cos(angle)
         last_inside = -1.0
         r = 0.0
+        last_in_outline = -1.0
         while r <= reach:
             if point_on_floor(floor, cx + dx * r, cy + dy * r):
                 last_inside = r
+            if any(point_in_ring(cx + dx * r, cy + dy * r, ring) for ring in floor.get("outline", [])):
+                last_in_outline = r
             r += ray_step_m
         if last_inside < 0:
             return None
+        if outside_m is not None:
+            # Beyond the last point of the outline itself: a blocked room at the edge is no reason to stop short.
+            out_r = max(last_in_outline, last_inside) + outside_m
+            return (cx + dx * out_r, cy + dy * out_r)
 
         start = max(0.0, last_inside - clock_inset_m)
         edge_safe = None
@@ -271,13 +300,18 @@ def draw_building_icon(
     draw.line([pt(10, 15), pt(14, 15)], fill=color, width=width)
 
 
-def render_map_layout_to_image(
+FLOOR_ORDER = {"lower": 0, None: 1, "upper": 2}
+FLOOR_TITLES = {"lower": "LOWER FLOOR", "upper": "UPPER FLOOR"}
+PANEL_GAP_PX = 48
+
+
+def render_floor_image(
     layout: dict[str, Any],
-    map_name: str = "",
-    realm_name: str = "",
+    floor: dict[str, Any],
     target_width: int = 1200,
+    title: str | None = None,
 ) -> Image.Image:
-    """Render map layout to high-fidelity tactical callout image.
+    """Render one floor of a map layout to a high-fidelity tactical callout panel.
 
     Matches MapLayoutView:
     - ViewBox: [-PAD_M, -PAD_M] to [width + PAD_M * 2, height + PAD_M * 3]
@@ -295,22 +329,26 @@ def render_map_layout_to_image(
     width_m = float(layout.get("width_m", 128))
     height_m = float(layout.get("height_m", 128))
     cell_m = float(layout.get("cell_m", 8))
-    floors = layout.get("floors", [])
-    floor = floors[0] if floors else {}
-
-    total_w_m = width_m + PAD_M * 2.0
-    total_h_m = height_m + PAD_M * 3.0
+    side_extra_m = 4.0 if any(f.get("rooms") for f in layout.get("floors", [])) else 0.0
+    total_w_m = width_m + PAD_M * 2.0 + side_extra_m * 2.0
+    # Clock numbers of floors with named rooms are printed outside the outline: leave room above it
+    # for the 12 under the floor title. Every floor of the map gets it so the panels stay the same size.
+    top_extra_m = 8.0 if any(f.get("rooms") for f in layout.get("floors", [])) else 0.0
+    total_h_m = height_m + PAD_M * 3.0 + top_extra_m
 
     scale = target_width / max(total_w_m, 1.0)
     target_height = int(math.ceil(total_h_m * scale))
 
     def to_canvas(x: float, y: float) -> tuple[float, float]:
-        return (x + PAD_M) * scale, (y + PAD_M) * scale
+        return (x + PAD_M + side_extra_m) * scale, (y + PAD_M + top_extra_m) * scale
 
     # Theme colors matching MapLayoutView in dark theme
     BG_PRIMARY = (11, 14, 20, 255)         # Canvas void / background
     BG_ELEVATED = (22, 27, 34, 255)        # Playable floor fill
     STROKE_RED = (239, 68, 68, 255)        # DbD Crimson Red (#ef4444)
+    SHACK_FILL = (245, 158, 11, 75)        # Shack footprint tint, the amber of the frontend (#f59e0b)
+    SHACK_STROKE = (245, 158, 11, 255)     # Shack dashed outline
+    SHACK_ICON = (252, 211, 77, 255)       # Shack house glyph, a lighter amber (#fcd34d)
     BLOCKED_FILL = (56, 65, 82, 255)       # Non-playable blocked dead-space (#384152)
     BLOCKED_STROKE = (100, 116, 139, 255)  # Blocked stroke (#64748b)
     GRID_BORDER = (45, 55, 72, 200)        # 8m sub-grid stroke (#2d3748)
@@ -328,6 +366,9 @@ def render_map_layout_to_image(
         if len(ring) >= 3:
             pts = [to_canvas(pt[0], pt[1]) for pt in ring]
             mask_draw.polygon(pts, fill=255)
+    for ring in floor.get("holes", []):
+        if len(ring) >= 3:
+            mask_draw.polygon([to_canvas(pt[0], pt[1]) for pt in ring], fill=0)
 
     # 3. Floor Elevated Fill
     floor_layer = Image.new("RGBA", (target_width, target_height), BG_ELEVATED)
@@ -369,8 +410,10 @@ def render_map_layout_to_image(
         p2 = to_canvas(width_m, gy)
         draw_dashed_line(grid_draw, p1, p2, fill=GRID_TILE, width=dash_w, dash_len=dash_px, gap_len=gap_px)
 
-    # Paste masked grid
-    img.paste(grid_layer, (0, 0), floor_mask)
+    # Lay the grid over the floor (composited, so the floor keeps its fill; a paste would replace it with the
+    # layer's transparent pixels and turn the floor, and everything tinted over it, into flat colour).
+    grid_layer.putalpha(ImageChops.multiply(grid_layer.getchannel("A"), floor_mask))
+    img.alpha_composite(grid_layer)
 
     # 5. Blocked / Cutout Polygons
     draw = ImageDraw.Draw(img)
@@ -381,10 +424,37 @@ def render_map_layout_to_image(
 
     # 6. Bold Crimson Red Floor Outline
     outline_w = max(2, int(round(scale * 1.1)))
-    for ring in floor.get("outline", []):
+    for ring in [*floor.get("outline", []), *floor.get("holes", [])]:
         if len(ring) >= 3:
             pts = [to_canvas(pt[0], pt[1]) for pt in ring]
             draw.polygon(pts, outline=STROKE_RED, width=outline_w)
+
+    # 6b. Rooms: thin outlines with their names, under the landmarks and the clock numbers.
+    ROOM_STROKE = (118, 130, 148, 255)
+    ROOM_TEXT = (226, 232, 240, 255)
+    for room in floor.get("rooms", []):
+        ring = room.get("ring") or []
+        if len(ring) >= 3:
+            draw.polygon([to_canvas(pt[0], pt[1]) for pt in ring], outline=ROOM_STROKE, width=max(1, int(round(scale * 0.25))))
+        label = str(room.get("label", ""))
+        if not label:
+            continue
+        box = room_box(room)
+        lines = label.split("\n")
+        avail_w = max(box["w"], 6.0) * scale * 0.94
+        size = max(9, int(round(scale * 2.6)))
+        while size > 9:
+            font = _get_font(size, bold=True)
+            if max(draw.textlength(line, font=font) for line in lines) <= avail_w:
+                break
+            size -= 1
+        font = _get_font(size, bold=True)
+        line_h = size * 1.15
+        cx_px, cy_px = to_canvas(box["x"], box["y"])
+        top = cy_px - line_h * len(lines) / 2.0
+        for i, line in enumerate(lines):
+            tw = draw.textlength(line, font=font)
+            draw.text((cx_px - tw / 2.0, top + i * line_h), line, fill=ROOM_TEXT, font=font)
 
     # 7. Landmarks (Main Building, Shack, Feature Codes)
     landmarks = floor.get("landmarks", [])
@@ -426,12 +496,12 @@ def render_map_layout_to_image(
                 draw_dashed_polygon(draw, corners_canvas, fill=(239, 68, 68, 255), width=max(2, int(round(scale * 0.5))), dash_len=lm_dash, gap_len=lm_gap)
                 draw_building_icon(draw, c_pt[0], c_pt[1], icon_size, (255, 120, 120, 255), width=icon_stroke_w)
             elif kind == "shack":
-                tint_draw.polygon(corners_canvas, fill=(255, 255, 255, 20))
+                tint_draw.polygon(corners_canvas, fill=SHACK_FILL)
                 img.alpha_composite(tint_layer)
                 shack_dash = max(4.0, scale * 1.0)
                 shack_gap = max(3.0, scale * 0.8)
-                draw_dashed_polygon(draw, corners_canvas, fill=(241, 245, 249, 230), width=max(1, int(round(scale * 0.35))), dash_len=shack_dash, gap_len=shack_gap)
-                draw_house_icon(draw, c_pt[0], c_pt[1], min(fw, fh) * 0.45 * scale, TEXT_PRIMARY, width=icon_stroke_w)
+                draw_dashed_polygon(draw, corners_canvas, fill=SHACK_STROKE, width=max(2, int(round(scale * 0.4))), dash_len=shack_dash, gap_len=shack_gap)
+                draw_house_icon(draw, c_pt[0], c_pt[1], icon_size, SHACK_ICON, width=icon_stroke_w)
             else:
                 tint_draw.polygon(corners_canvas, fill=(148, 163, 184, 55))
                 img.alpha_composite(tint_layer)
@@ -477,8 +547,17 @@ def render_map_layout_to_image(
         th = bbox[3] - bbox[1]
         draw.text((c_x - tw / 2, c_y - th / 2 - 1), "MID", fill=TEXT_MUTED, font=mid_font)
 
+    # Floor title in the top margin (only on maps with more than one floor)
+    if title:
+        title_font = _get_font(max(18, int(round(scale * 4.4))), bold=True)
+        bbox = draw.textbbox((0, 0), title, font=title_font)
+        tw = bbox[2] - bbox[0]
+        th = bbox[3] - bbox[1]
+        draw.text(((target_width - tw) / 2, PAD_M * scale * 0.5 - th / 2), title, fill=TEXT_PRIMARY, font=title_font)
+
     # 9. Scale Bar (Bottom Left: 32m)
-    sb_y_m = height_m + PAD_M * 0.9
+    # Below the outline the 5, 6 and 7 are printed on floors with named rooms: the ruler goes lower.
+    sb_y_m = height_m + (12.5 if bool(floor.get("rooms")) else PAD_M * 0.9)
     sb_p1 = to_canvas(0, sb_y_m)
     sb_p2 = to_canvas(SCALE_BAR_M, sb_y_m)
     tick_len = scale * 1.2
@@ -496,8 +575,41 @@ def render_map_layout_to_image(
     return img.convert("RGB")
 
 
-def generate_all_map_images() -> None:
-    """Generate accurate WebP callout images for all LemonDBD maps."""
+def render_map_layout_to_image(
+    layout: dict[str, Any],
+    map_name: str = "",
+    realm_name: str = "",
+    target_width: int = 1200,
+) -> Image.Image:
+    """Render a map layout to one callout image: every floor, lower floor first, side by side.
+
+    A single-floor map is one panel `target_width` wide. A map with several floors gets one panel per
+    floor, each with its own 1-12 clock callouts, landmarks and scale bar (all floors share the map's
+    frame, so panels are the same size), a floor title and a divider between them.
+    """
+    floors = sorted(layout.get("floors") or [{}], key=lambda f: FLOOR_ORDER.get(f.get("label"), 1))
+    if len(floors) == 1:
+        return render_floor_image(layout, floors[0], target_width)
+
+    panels = [
+        render_floor_image(layout, f, target_width, title=FLOOR_TITLES.get(f.get("label"), f"FLOOR {i + 1}"))
+        for i, f in enumerate(floors)
+    ]
+    panel_w, panel_h = panels[0].size
+    total_w = panel_w * len(panels) + PANEL_GAP_PX * (len(panels) - 1)
+    canvas = Image.new("RGB", (total_w, panel_h), (11, 14, 20))
+    draw = ImageDraw.Draw(canvas)
+    for i, panel in enumerate(panels):
+        x = i * (panel_w + PANEL_GAP_PX)
+        canvas.paste(panel, (x, 0))
+        if i > 0:
+            line_x = x - PANEL_GAP_PX // 2
+            draw.line([(line_x, int(panel_h * 0.04)), (line_x, int(panel_h * 0.96))], fill=(107, 114, 128), width=3)
+    return canvas
+
+
+def generate_all_map_images(only_ids: set[int] | None = None) -> None:
+    """Generate accurate WebP callout images for all LemonDBD maps (or just `only_ids`)."""
     with open(MAP_LAYOUTS_FILE, encoding="utf-8") as f:
         layouts_data = json.load(f)["map_layouts"]
     layout_by_map_id = {item["map_id"]: item["layout_data"] for item in layouts_data}
@@ -512,7 +624,7 @@ def generate_all_map_images() -> None:
     for map_item in maps_data["maps"]:
         map_id = map_item["id"]
         layout = layout_by_map_id.get(map_id)
-        if not layout:
+        if not layout or (only_ids is not None and map_id not in only_ids):
             continue
 
         realm_name = realms.get(map_item["realm_id"], "Unknown Realm")
@@ -535,7 +647,7 @@ def generate_all_map_images() -> None:
 
         map_item["callout_image_local_path"] = rel_path
         generated_count += 1
-        print(f"[{generated_count}/58] Generated {rel_path} ({img.size[0]}x{img.size[1]})")
+        print(f"[{generated_count}] Generated {rel_path} ({img.size[0]}x{img.size[1]})")
 
     with open(MAPS_FILE, "w", encoding="utf-8") as f:
         json.dump(maps_data, f, indent=2, ensure_ascii=False)
@@ -547,5 +659,6 @@ def generate_all_map_images() -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate DbD tactical map callout images in WebP format.")
     parser.add_argument("--all", action="store_true", help="Generate all maps")
+    parser.add_argument("--ids", type=int, nargs="+", help="Generate only these map ids")
     args = parser.parse_args()
-    generate_all_map_images()
+    generate_all_map_images(set(args.ids) if args.ids else None)

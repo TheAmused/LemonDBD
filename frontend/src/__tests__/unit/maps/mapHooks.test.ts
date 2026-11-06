@@ -4,6 +4,7 @@ import assert from 'node:assert';
 import {
   normalizeMapSearch,
   groupMapsByRealmSorted,
+  filterMapsBySearch,
   useMapExplorerData,
 } from '@/hooks/useMapExplorerData';
 import type { MapRealm } from '@/types/map';
@@ -92,4 +93,25 @@ test('groupMapsByRealmSorted never produces an empty-map section, satisfying "hi
     grouped.map((g) => g.realm),
     ['Springwood']
   );
+});
+
+test('filterMapsBySearch matches the realm name as well as the map name', () => {
+  const names = (found: MapRealm[]) => found.map((m) => m.name);
+  const wreckers = sampleMockMaps.filter((m) => m.realm === 'Autohaven Wreckers');
+  assert.ok(wreckers.length > 0);
+  assert.deepStrictEqual(names(filterMapsBySearch(sampleMockMaps, 'autohaven')), names(wreckers));
+  assert.deepStrictEqual(names(filterMapsBySearch(sampleMockMaps, 'Spring wood')), names(sampleMockMaps.filter((m) => m.realm === 'Springwood')));
+  assert.deepStrictEqual(names(filterMapsBySearch(sampleMockMaps, "azarov's resting")), names(sampleMockMaps.filter((m) => m.name.startsWith('Azarov'))));
+});
+
+test('filterMapsBySearch also matches the English realm name on a translated page', () => {
+  const translated: MapRealm[] = [{ ...sampleMockMaps[0], realm: 'Złomowisko', raw_realm: 'Autohaven Wreckers' }];
+  assert.strictEqual(filterMapsBySearch(translated, 'autohaven').length, 1);
+  assert.strictEqual(filterMapsBySearch(translated, 'złomowisko').length, 1);
+  assert.strictEqual(filterMapsBySearch(translated, 'springwood').length, 0);
+});
+
+test('filterMapsBySearch returns every map for a search with nothing to match on', () => {
+  assert.strictEqual(filterMapsBySearch(sampleMockMaps, '').length, sampleMockMaps.length);
+  assert.strictEqual(filterMapsBySearch(sampleMockMaps, '  ...  ').length, sampleMockMaps.length);
 });

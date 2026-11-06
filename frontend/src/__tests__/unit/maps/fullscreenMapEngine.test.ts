@@ -4,7 +4,29 @@ import assert from 'node:assert';
 import React from 'react';
 import { renderWithDictionary } from '../../helpers/renderWithDictionary';
 import { FullscreenMapEngineView as FullscreenMapEngine } from '@/components/maps/FullscreenMapEngine';
-import type { MapRealm } from '@/types/map';
+import type { MapLayout, MapRealm } from '@/types/map';
+
+/** One floor with an off-limits block and four landmark codes: what the symbol key must name, and nothing else. */
+const sampleOutdoorLayout: MapLayout = {
+  v: 1,
+  cell_m: 8,
+  width_m: 64,
+  height_m: 64,
+  floors: [
+    {
+      label: null,
+      outline: [[[0, 0], [64, 0], [64, 64], [0, 64]]],
+      blocked: [[[8, 8], [16, 8], [16, 16], [8, 16]]],
+      area_m2: 4032,
+      landmarks: [
+        { kind: 'feature', x: 24, y: 24, label: 'C|H' },
+        { kind: 'feature', x: 40, y: 24, label: 'WT' },
+        { kind: 'feature', x: 32, y: 60, label: 'MD' },
+        { kind: 'feature', x: 32, y: 4, label: 'BD' },
+      ],
+    },
+  ],
+};
 
 const sampleOutdoorMap: MapRealm = {
   id: 1,
@@ -23,6 +45,7 @@ const sampleOutdoorMap: MapRealm = {
   size_sq_meters: 11264,
   description: 'Dumbbell-shaped tactical Autohaven layout',
   callout_image_url: 'https://hens333.com/img/dbd/callouts/Azarovs/Azarovs%20Resting%20Place.webp',
+  layout: sampleOutdoorLayout,
 };
 
 const sampleIndoorMap: MapRealm = {
@@ -76,7 +99,9 @@ test('FullscreenMapEngine names the map in the header and lists its facts in the
   assert.ok(/<h2[^>]*>Azarov&#x27;s Resting Place<\/h2>/.test(html), 'the map name heads the view');
   assert.ok(html.includes('aria-label="Map Legend"'), 'the facts sit in the legend');
   const legend = html.slice(html.indexOf('aria-label="Map Legend"'), html.indexOf('</aside>'));
-  assert.ok(!legend.includes('aria-expanded'), 'the legend never folds, not even on a phone');
+  assert.ok(/aria-expanded="true"[^>]*aria-label="Toggle Map Legend"|aria-label="Toggle Map Legend"[^>]*aria-expanded="true"/.test(legend), 'the legend can be folded, and starts open');
+  assert.ok(legend.includes('data-testid="map-legend-grip"'), 'the legend has a handle to move it by');
+  assert.ok(!legend.includes('class="hidden'), 'the legend body is not hidden by default');
   assert.ok(html.indexOf('aria-label="Map Legend"') < html.indexOf('role="presentation"'), 'on a phone the legend sits above the map, not over it');
   assert.ok(html.includes('type-strong-screen'), 'the legend text grows on wide, 2K and 4K screens');
   assert.ok(!html.includes('Autohaven Wreckers'), 'the realm is not shown');
@@ -88,6 +113,15 @@ test('FullscreenMapEngine names the map in the header and lists its facts in the
   assert.ok(!html.includes('Totems'), 'totem count is not shown');
   assert.ok(html.includes('>Shack<'));
   assert.ok(html.includes('>Main Building<'));
+  assert.ok(html.includes('data-landmark-square="main"') && html.includes('data-landmark-square="shack"'), 'Main Building and Shack are drawn as their red and amber squares');
+  const key = html.slice(html.indexOf('data-testid="map-symbol-key"'));
+  for (const name of ['Cow Tree / Harvester', 'Water Tower', 'Main Door (exit)', 'Back Door (exit)', '16 m game tile', 'Off-limits area']) {
+    assert.ok(key.includes(name), `the symbol key lists ${name}`);
+  }
+  assert.ok(key.includes('>C|H<'), 'the key shows the codes themselves');
+  for (const absent of ['>UFO<', '>GARDEN<', '>STATUE<', 'Garden', 'Statue']) {
+    assert.ok(!key.includes(absent), `the key names only what the map has, not ${absent}`);
+  }
   // The shared zoom control: -, percent, +, Fit (a map opens fitted)
   assert.ok(html.includes('aria-label="Zoom Out"') && html.includes('aria-label="Zoom In"'));
   assert.match(html, /aria-pressed="true"[^>]*aria-label="Fit the whole map on screen"/);
@@ -107,8 +141,11 @@ test('FullscreenMapEngine renders indoor map tactical intel without shack and 0 
   assert.ok(html.includes('Indoor'));
   assert.ok(html.includes('142 sqT'));
   assert.ok(html.includes('9,088 m²'));
-  assert.ok(html.includes('No Shack'));
-  assert.ok(html.includes('No Main Building'));
+  assert.ok(!html.includes('Shack'), 'a map without a shack does not mention one');
+  assert.ok(!html.includes('Main Building'), 'a map without a main building does not mention one');
+  const key = html.slice(html.indexOf('data-testid="map-symbol-key"'));
+  assert.ok(!key.includes('Off-limits area') && !key.includes('16 m game tile'), 'no layout drawn: no layout symbols keyed');
+  assert.ok(!key.includes('Landmarks &amp; Features'), 'no landmark codes: no landmarks heading');
 });
 
 test('FullscreenMapEngine renders float tile size accurately', () => {

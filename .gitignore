@@ -108,7 +108,11 @@ frontend/pnpm-debug.log*
 backend/app/static/avatars/
 backend/app/static/chapters/
 backend/app/static/icons/
-backend/app/static/maps/
+# Map images: our generated callouts are tracked, the downloaded third-party ones and thumbnails are not.
+backend/app/static/maps/*
+!backend/app/static/maps/callouts/
+backend/app/static/maps/callouts/*
+!backend/app/static/maps/callouts/lemondbd/
 backend/app/static/realms/
 backend/app/static/uploads/
 backend/app/static/audio/cache/

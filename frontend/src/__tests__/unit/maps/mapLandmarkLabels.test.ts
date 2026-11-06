@@ -8,7 +8,7 @@ import es from '@/locales/es';
 import ja from '@/locales/ja';
 import pl from '@/locales/pl';
 
-test('KNOWN_FEATURE_CODES defines all 10 competitive feature codes', () => {
+test('KNOWN_FEATURE_CODES defines all 12 feature codes', () => {
   assert.deepStrictEqual(KNOWN_FEATURE_CODES, [
     'C|H',
     'H/FB',
@@ -20,6 +20,8 @@ test('KNOWN_FEATURE_CODES defines all 10 competitive feature codes', () => {
     'T',
     'P',
     'UFO',
+    'MD',
+    'BD',
   ]);
 });
 
@@ -35,6 +37,8 @@ test('getFeatureLandmarkName translates all codes across all languages', () => {
     'T': en.maps.landmarkTower,
     'P': en.maps.landmarkPagoda,
     'UFO': en.maps.landmarkShuttle,
+    'MD': en.maps.landmarkMainDoor,
+    'BD': en.maps.landmarkBackDoor,
   };
 
   for (const code of KNOWN_FEATURE_CODES) {
@@ -75,6 +79,10 @@ test('all 5 locales provide translations for landmark and legend keys', () => {
     'landmarkTower',
     'landmarkPagoda',
     'landmarkShuttle',
+    'landmarkMainDoor',
+    'landmarkBackDoor',
+    'legendBlocked',
+    'legendGameTile',
     'legendTitle',
     'legendToggleAria',
     'legendClockTitle',

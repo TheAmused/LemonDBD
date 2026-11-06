@@ -33,7 +33,7 @@ test('getDictionary falls back to English for unknown locales', async () => {
   const fallbackDict = await getDictionary('fr' as unknown as Locale);
   assert.ok(fallbackDict);
   assert.strictEqual(fallbackDict.app.title, en.app.title);
-  assert.strictEqual(fallbackDict.landing.enterButton, en.landing.enterButton);
+  assert.strictEqual(fallbackDict.landing.welcomeTitle, en.landing.welcomeTitle);
 });
 
 test('Locales export parity: all 5 locales conform to English dictionary shape', () => {

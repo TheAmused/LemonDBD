@@ -28,6 +28,15 @@ export function normalizeMapSearch(s: string): string {
     .replace(/[^a-z0-9]/g, '');
 }
 
+/** Maps whose name or realm (in the page language or in English) contains the search text. */
+export function filterMapsBySearch(maps: MapRealm[], search: string): MapRealm[] {
+  const needle = normalizeMapSearch(search);
+  if (!needle) return maps;
+  return maps.filter((m) =>
+    [m.name, m.raw_name, m.realm, m.raw_realm].some((v) => !!v && normalizeMapSearch(v).includes(needle))
+  );
+}
+
 export function groupMapsByRealmSorted(maps: MapRealm[]): { realm: string; maps: MapRealm[] }[] {
   if (!maps || !Array.isArray(maps)) return [];
   const grouped: Record<string, MapRealm[]> = {};
@@ -207,7 +216,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
     // Prefer a direct id lookup (set by voice commands on non-English locales) over name matching.
     const directId = rawObj?.mapId as number | undefined;
     const match = directId ? maps.find((m) => m.id === directId) : findMapByName(maps, targetMapName ?? '');
-    if (match && !match.is_retired) {
+    if (match) {
       setHandledTargetKey(targetKey);
       if (openMapId !== match.id) {
         setOpenMapId(match.id);
@@ -222,13 +231,7 @@ export function useMapExplorerData(options: UseMapExplorerDataOptions = {}): Use
 
   const filteredMaps = useMemo(() => {
     if (!settledSearch || settledSearch.length < SEARCH_MIN_CHARS) return maps;
-    const needle = normalizeMapSearch(settledSearch);
-    if (!needle) return maps;
-    return maps.filter(
-      (m) =>
-        normalizeMapSearch(m.name).includes(needle) ||
-        (m.raw_name ? normalizeMapSearch(m.raw_name).includes(needle) : false)
-    );
+    return filterMapsBySearch(maps, settledSearch);
   }, [maps, settledSearch]);
 
   const groupedMapsByRealm = useMemo(() => groupMapsByRealmSorted(filteredMaps), [filteredMaps]);

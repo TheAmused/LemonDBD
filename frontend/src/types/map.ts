@@ -28,11 +28,31 @@ export interface MapLandmark {
   est?: boolean;
 }
 
-/** One floor of a drawn map: outline rings plus rings that are off-limits (not counted in its size). */
+/**
+ * A named room, drawn as a thin outline with its name. Without a `ring` the name is printed on
+ * its own at (x, y), over a zone that is drawn elsewhere. `\n` in a label breaks the line.
+ */
+export interface MapRoom {
+  ring?: MapPoint[];
+  label?: string;
+  /** Where the name is centred; the centre of the ring when absent. */
+  x?: number;
+  y?: number;
+  /** Size of the name's box when there is no `ring` (12 × 4 m when absent). */
+  w?: number;
+  h?: number;
+}
+
+/**
+ * One floor of a drawn map: outline rings, rings that are off-limits (grey, still part of the
+ * floor's size), holes (open space cut out of the floor, not part of its size) and named rooms.
+ */
 export interface MapLayoutFloor {
   label: 'upper' | 'lower' | null;
   outline: MapPoint[][];
   blocked?: MapPoint[][];
+  holes?: MapPoint[][];
+  rooms?: MapRoom[];
   area_m2: number;
   landmarks?: MapLandmark[];
 }

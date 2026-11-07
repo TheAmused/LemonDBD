@@ -80,6 +80,7 @@ class IdPleaseService(StreakRunService):
         earned = self._badge_earned(run.user_id, run.lane, run.difficulty)
         return {
             **run.to_dict(),
+            "attempt_started": run.attempt_started,
             "match": match_view(run.current_loadout, roster),
             "checkpoint": match_view(run.checkpoint_loadout, roster),
             "checkpoint_interval": checkpoint_interval(run.difficulty),
@@ -197,7 +198,7 @@ class IdPleaseService(StreakRunService):
     def submit_opening(
         self, user_id: int, run_id: int, side: str, perk_positions: object, fingerprint: str | None = None
     ) -> dict[str, Any]:
-        assert_challenge_mode_enabled(self.mode)
+        assert_challenge_mode_enabled(self.mode, user_id)
         run = self._load_run(user_id, run_id)
         if run.current_match != 0:
             raise IdPleaseConflict("This run has already started.", "already_started")
@@ -307,7 +308,7 @@ class IdPleaseService(StreakRunService):
     def submit_result(
         self, user_id: int, run_id: int, match_number: int, result: str, fingerprint: str | None = None
     ) -> dict[str, Any]:
-        assert_challenge_mode_enabled(self.mode)
+        assert_challenge_mode_enabled(self.mode, user_id)
         self._validate_result(result)
         run = self._load_run(user_id, run_id)
         if run.current_match == 0:

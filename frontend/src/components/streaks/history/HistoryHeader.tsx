@@ -63,6 +63,7 @@ export const HistoryHeader: React.FC<HistoryHeaderProps> = ({
           onOpenStats={onOpenStats}
           onOpenHistory={onOpenHistory}
           onOpenAbandon={onOpenAbandon}
+          hasDrawAnimations
           modeSelect={
             <ModeSelectButton
               label={modeLabel}

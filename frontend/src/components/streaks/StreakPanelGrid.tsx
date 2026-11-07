@@ -15,12 +15,12 @@ import type { HistoryMode } from '@/types/historyStreak';
 import type { GauntletGameMode } from '@/types/gauntletStreak';
 import { fetchChallengeModeStatus, type ChallengeModeStatusMap } from '@/services/challengeModesApi';
 import { useDictionary } from '@/context/DictionaryContext';
+import { useAuth } from '@/context/AuthContext';
 import { useChallengeCompletionStatus } from './useChallengeCompletionStatus';
 import {
   isHardestTierCompleted,
   CHAOS_DIFFICULTY_ORDER,
   HISTORY_MODE_ORDER,
-  ID_PLEASE_DIFFICULTY_ORDER,
 } from '@/utils/challengeTierCompletion';
 import { ID_PLEASE_MODE_BY_LANE, idPleaseLaneForRole, type IdPleaseDifficulty } from '@/types/idPleaseStreak';
 import { useIdPleaseEligibility } from './id-please/useIdPleaseEligibility';
@@ -74,6 +74,7 @@ interface StreakPanelGridProps {
 export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }) => {
   const router = useRouter();
   const dict = useDictionary();
+  const { isAdmin } = useAuth();
 
   const panels = useMemo(() => {
     if (role === 'killer') return getKillerStreakPanels(dict);
@@ -91,8 +92,6 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
   const gauntletCompletedVariants = completionStatus.completions.gauntlet ?? [];
   const chaosCompletedVariants = completionStatus.completions.chaos ?? [];
   const historyCompletedVariants = completionStatus.completions.history ?? [];
-  const chaosActiveRuns = completionStatus.active_runs.chaos ?? [];
-  const historyActiveRuns = completionStatus.active_runs.history ?? [];
   const gauntletCounts = completionStatus.completion_counts.gauntlet ?? {};
   const chaosCounts = completionStatus.completion_counts.chaos ?? {};
   const historyCounts = completionStatus.completion_counts.history ?? {};
@@ -115,12 +114,12 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
   const gauntletCardFullCount = gauntletFullRoster[gauntletVariant] ?? null;
   const chaosCardFullCount = chaosFullRoster[chaosHardestVariant] ?? null;
   const historyCardFullCount = historyFullRoster[historyHardestVariant] ?? null;
-  // ID, Please is endless: its badges are independent, the card's trophy stands for the hardest one, with no count.
+  // ID, Please is endless and its badges are independent: the card's trophy shows as soon as any of them is earned, with no count.
   // Each tab plays its own lane: its own runs, badges and kill switch.
   const idPleaseLane = idPleaseLaneForRole(role);
   const idPleaseMode = ID_PLEASE_MODE_BY_LANE[idPleaseLane];
   const idPleaseCompletedVariants = completionStatus.completions[idPleaseMode] ?? [];
-  const idPleaseCardCompleted = isHardestTierCompleted(ID_PLEASE_DIFFICULTY_ORDER, idPleaseCompletedVariants);
+  const idPleaseCardCompleted = idPleaseCompletedVariants.length > 0;
   const idPleaseEligibility = useIdPleaseEligibility(idPleaseLane, isIdPleaseModalOpen);
   const idPleaseHref = (difficulty: IdPleaseDifficulty) => `/${locale}/streaks/${role}/id-please?difficulty=${difficulty}`;
   const pageStreakCompletedVariants = completionStatus.completions.page_streak ?? [];
@@ -149,7 +148,8 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
 
         const modeKey = panel.id === 'id-please' ? idPleaseMode : PANEL_ID_TO_MODE[panel.id];
         const mode = modeKey ? modeStatus[modeKey] : undefined;
-        const isDisabled = mode ? !mode.is_enabled : false;
+        // The kill switch keeps players out; an admin still gets in to check the mode.
+        const isDisabled = mode ? !mode.is_enabled && !isAdmin : false;
 
         if (isDisabled) {
           return (
@@ -177,8 +177,12 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               completedFull={gauntletCardFullCount != null}
               completedFullCount={gauntletCardFullCount}
               prefetchHrefs={[`/${locale}/streaks/${role}/gauntlet-streak`]}
-              // Both roles have several modes, so they always get the picker.
-              onClick={() => setIsModeModalOpen(true)}
+              // The picker only opens until a mode was chosen once; the board switches modes afterwards.
+              onClick={() => {
+                const saved = getSavedGauntletMode(role as 'killer' | 'survivor');
+                if (saved) router.push(gauntletHref(saved));
+                else setIsModeModalOpen(true);
+              }}
             />
           );
         }
@@ -197,12 +201,8 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               prefetchHrefs={[`/${locale}/streaks/${role}/chaos-streak`]}
               onClick={() => {
                 const saved = getSavedChaosDifficulty();
-                const hasActiveRun = Boolean(saved) && chaosActiveRuns.includes(saved as string);
-                if (saved && (hasActiveRun || !chaosCompletedVariants.includes(saved))) {
-                  router.push(`/${locale}/streaks/${role}/chaos-streak?difficulty=${saved}`);
-                } else {
-                  setIsChaosModeModalOpen(true);
-                }
+                if (saved) router.push(`/${locale}/streaks/${role}/chaos-streak?difficulty=${saved}`);
+                else setIsChaosModeModalOpen(true);
               }}
             />
           );
@@ -222,12 +222,8 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               prefetchHrefs={[`/${locale}/streaks/${role}/history-streak`]}
               onClick={() => {
                 const saved = getSavedHistoryMode();
-                const hasActiveRun = Boolean(saved) && historyActiveRuns.includes(saved as string);
-                if (saved && (hasActiveRun || !historyCompletedVariants.includes(saved))) {
-                  router.push(`/${locale}/streaks/${role}/history-streak?mode=${saved}`);
-                } else {
-                  setIsHistoryModeModalOpen(true);
-                }
+                if (saved) router.push(`/${locale}/streaks/${role}/history-streak?mode=${saved}`);
+                else setIsHistoryModeModalOpen(true);
               }}
             />
           );

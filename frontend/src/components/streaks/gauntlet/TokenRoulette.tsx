@@ -11,14 +11,11 @@ const ROLL_AMOUNTS = [1, 2, 3, 5];
 /** Numbers that flash past before the rolled one comes to rest. */
 const FILLER_CELLS = 18;
 const SPIN_MS = 2400;
-const REDUCED_SPIN_MS = 220;
 /** Same ticking cadence and braking curve as the perk slot machine's reels. */
 const TICK_MS = 90;
 const EASE = 'cubic-bezier(0.13,0.82,0.22,1)';
 /** Beat spent on the landed number before the roll counts as done. */
 const HOLD_MS = 900;
-/** Shorter beat when the animations are off, just long enough to read the number. */
-const SKIPPED_HOLD_MS = 300;
 /** Lets the strip paint at rest once before it starts to move. */
 const START_DELAY_MS = 50;
 
@@ -32,7 +29,7 @@ function buildStrip(roll: number): number[] {
 interface TokenRouletteProps {
   /** What the server rolled; the reel only animates toward it. */
   roll: number;
-  /** Called once the reel has landed and held for a moment. */
+  /** Called once the reel has landed and held for a moment; at once when the animations are off. */
   onDone: () => void;
 }
 
@@ -40,35 +37,37 @@ export const TokenRoulette: React.FC<TokenRouletteProps> = ({ roll, onDone }) =>
   const reduceMotion = useReducedMotion();
   const [animations] = useChallengeAnimations();
   const animate = animations && !reduceMotion;
-  const strip = useMemo(() => buildStrip(roll), [roll]);
+  // Without the animation there is no reel to spin: just the number that was rolled.
+  const strip = useMemo(() => (animate ? buildStrip(roll) : [roll]), [roll, animate]);
   const [spinning, setSpinning] = useState(false);
   const [landed, setLanded] = useState(false);
   // The parent hands a fresh callback each render; the reel must run once per roll, not once per render.
   const finish = useEffectEvent(() => onDone());
-  const spinMs = animate ? SPIN_MS : REDUCED_SPIN_MS;
-  const holdMs = animate ? HOLD_MS : SKIPPED_HOLD_MS;
 
   useEffect(() => {
+    if (!animate) {
+      finish();
+      return;
+    }
     let ticks = 0;
     const ticker = setInterval(() => {
-      if (!animate) return;
       ticks += 1;
       playReelTick(1 + ticks * 0.03);
     }, TICK_MS);
     const start = setTimeout(() => setSpinning(true), START_DELAY_MS);
     const land = setTimeout(() => {
       clearInterval(ticker);
-      if (animate) playReelThud();
+      playReelThud();
       setLanded(true);
-    }, START_DELAY_MS + spinMs);
-    const done = setTimeout(() => finish(), START_DELAY_MS + spinMs + holdMs);
+    }, START_DELAY_MS + SPIN_MS);
+    const done = setTimeout(() => finish(), START_DELAY_MS + SPIN_MS + HOLD_MS);
     return () => {
       clearInterval(ticker);
       clearTimeout(start);
       clearTimeout(land);
       clearTimeout(done);
     };
-  }, [spinMs, holdMs, animate]);
+  }, [animate]);
 
   const restOffset = ((strip.length - 1) / strip.length) * 100;
 
@@ -85,7 +84,7 @@ export const TokenRoulette: React.FC<TokenRouletteProps> = ({ roll, onDone }) =>
         className="flex flex-col"
         style={{
           transform: spinning ? `translateY(-${restOffset}%)` : 'translateY(0)',
-          transition: spinning ? `transform ${spinMs}ms ${EASE}` : 'none',
+          transition: spinning ? `transform ${SPIN_MS}ms ${EASE}` : 'none',
         }}
       >
         {strip.map((amount, index) => (

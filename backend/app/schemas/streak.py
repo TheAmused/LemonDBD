@@ -23,6 +23,7 @@ class ChallengeCompletionDict(TypedDict):
     matches_played: int
     unlocked_characters_count: int
     full_roster: bool
+    pages_count: int | None
     completed_at: str | None
 
 

@@ -2,7 +2,6 @@
 // frontend/src/components/streaks/StreakStatsDrawer.tsx
 
 import React, { useState } from 'react';
-import { Percent } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Modal } from '@/components/common/Modal';
 import { StreakAttemptGroups, groupByAttempt, type StreakMatchLogBase } from './StreakAttemptGroups';
@@ -30,11 +29,25 @@ export interface StreakStatsDrawerProps<TLog extends StreakMatchLogBase> {
   attempts?: number;
   /** The main label for a match row: character/killer name, or the "Auto-loss" badge is handled for you. */
   renderLabel: (log: TLog) => React.ReactNode;
-  /** Secondary line under the label, e.g. "Streak: 4" or "Attempt 2, Page 3". */
+  /** Secondary line under the label, e.g. "Streak: 4" or "Attempt 2, Page 3". Return null for no line. A loss does not show the streak. */
   renderMeta: (log: TLog) => React.ReactNode;
   /** Extra text after "Attempt N" in an attempt's header, e.g. the killer when one drawer covers several runs. */
   renderGroupLabel?: (log: TLog) => React.ReactNode;
 }
+
+const STAT_CELL_TONES = {
+  neutral: 'text-text-primary',
+  green: 'text-accent-green',
+  red: 'text-accent-red',
+} as const;
+
+/** One count in the stats row: small label over a large value, centred. */
+const StatCell: React.FC<{ label: string; value: number; tone?: keyof typeof STAT_CELL_TONES }> = ({ label, value, tone = 'neutral' }) => (
+  <Surface tone="elevated" radius="control" padding="none" className={`px-2 py-2.5 text-center shadow-sm ${STAT_CELL_TONES[tone]}`}>
+    <div className="type-label-xs truncate opacity-80">{label}</div>
+    <div className="mt-0.5 text-2xl font-black tabular-nums">{value}</div>
+  </Surface>
+);
 
 /**
  * Shared "Recent Match History" drawer for every streak mode. Gauntlet,
@@ -51,6 +64,8 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onC
   const totalMatches = stats ? stats.total_matches : 0;
   const wins = stats ? stats.wins : 0;
   const losses = stats ? stats.losses : 0;
+  const winShare = totalMatches > 0 ? (wins / totalMatches) * 100 : 0;
+  const lossShare = totalMatches > 0 ? (losses / totalMatches) * 100 : 0;
   const recentLogs = stats ? stats.recent_logs || [] : [];
   const groups = groupByAttempt(recentLogs);
   const recentGroups = groups.slice(0, VISIBLE_ATTEMPTS);
@@ -67,50 +82,26 @@ export function StreakStatsDrawer<TLog extends StreakMatchLogBase>({ isOpen, onC
         closeButtonAriaLabel={dict.modal.close}
         bodyClassName="space-y-6 p-5 sm:p-6"
       >
-        <div className="grid grid-cols-2 gap-4">
-          <Surface tone="elevated" padding="none" className="col-span-2 p-5 flex items-center justify-between shadow-inner">
-            <div>
-              <span className="type-label-sm text-text-secondary">
-                {dict.streaks.winRate}
-              </span>
-              <div className="text-4xl font-extrabold text-text-primary mt-1">
-                {winRate.toFixed(1)}{dict.streaks.percentSign}
-              </div>
+        <div className="space-y-2">
+          <Surface tone="elevated" padding="none" className="p-4 shadow-inner">
+            <span className="type-label-sm text-text-secondary">{dict.streaks.winRate}</span>
+            <div className="mt-1 text-5xl font-extrabold tabular-nums text-text-primary">
+              {winRate.toFixed(1)}
+              <span className="ml-0.5 text-2xl text-text-secondary">{dict.streaks.percentSign}</span>
             </div>
-            <div className="relative w-16 h-16 flex items-center justify-center rounded-full bg-bg-elevated border-4 border-accent-red font-bold text-lg shadow-sm">
-              <Percent className="w-8 h-8 opacity-80" />
+            {/* The split of wins and losses; the counts themselves are in the tiles below. */}
+            <div className="mt-3 flex h-2 gap-0.5 overflow-hidden rounded-full bg-border-color" aria-hidden="true">
+              <div className="bg-accent-green" style={{ width: `${winShare}%` }} />
+              <div className="bg-accent-red" style={{ width: `${lossShare}%` }} />
             </div>
           </Surface>
 
-          <Surface tone="elevated" padding="none" className="p-4 shadow-sm">
-            <div className="type-label-sm text-text-secondary">
-              {dict.streaks.matches}
-            </div>
-            <div className="text-2xl font-black text-text-primary mt-1">{totalMatches}</div>
-          </Surface>
-
-          {attempts !== undefined && (
-            <Surface tone="elevated" padding="none" className="p-4 shadow-sm">
-              <div className="type-label-sm text-text-secondary">
-                {dict.streaks.attempts}
-              </div>
-              <div className="text-2xl font-black text-text-primary mt-1">{attempts}</div>
-            </Surface>
-          )}
-
-          <Surface tone="elevated" padding="none" className="p-4 shadow-sm">
-            <div className="type-label-sm text-accent-green">
-              {dict.streaks.wins}
-            </div>
-            <div className="text-2xl font-black text-accent-green mt-1">{wins}</div>
-          </Surface>
-
-          <Surface tone="elevated" padding="none" className="p-4 shadow-sm">
-            <div className="type-label-sm text-accent-red">
-              {dict.streaks.losses}
-            </div>
-            <div className="text-2xl font-black text-accent-red mt-1">{losses}</div>
-          </Surface>
+          <div className={`grid gap-2 ${attempts !== undefined ? 'grid-cols-4' : 'grid-cols-3'}`}>
+            <StatCell label={dict.streaks.matches} value={totalMatches} />
+            {attempts !== undefined && <StatCell label={dict.streaks.attempts} value={attempts} />}
+            <StatCell label={dict.streaks.wins} value={wins} tone="green" />
+            <StatCell label={dict.streaks.losses} value={losses} tone="red" />
+          </div>
         </div>
 
         <div>

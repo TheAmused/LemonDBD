@@ -11,6 +11,13 @@ export interface RosterEntry {
   avatar_local_path?: string | null;
   /** From the persistent completion history, not this run's own status -- survives a per-killer reset. */
   ever_completed: boolean;
+  /** The most pages of perks the killer was cleared on; null when it never was, or the clear predates the count. */
+  completed_pages: number | null;
+  /** The killer is in the player's roster. The others are listed too, but cannot be played. */
+  owned: boolean;
+  /** An admin switched the killer off: it stays listed, marked, and cannot be played. */
+  disabled: boolean;
+  disabled_reason: string | null;
 }
 
 /** Mode-wide "every owned killer cleared" trophy. `full_roster` means the
@@ -46,6 +53,8 @@ export interface PageStreakRun {
   attempts: number;
   /** Which attempt group the next match is filed under; only ever grows. */
   attempt: number;
+  /** Matches played in the current attempt; the attempt only counts once it has one. */
+  attempt_matches: number;
   current_page: number;
   best_page: number;
   pages: string[][];

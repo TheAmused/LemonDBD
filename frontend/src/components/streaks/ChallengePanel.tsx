@@ -12,6 +12,7 @@ import { Button } from '@/components/common/Button';
 import { Collapsible } from '@/components/common/Collapsible';
 import { cn } from '@/utils/cn';
 import { Surface } from '@/components/common/Surface';
+import { tip } from '@/components/common/Tooltip';
 interface ChallengePanelProps {
   /** Stats and actions strip, rendered as the top section of the card. */
   header: React.ReactNode;
@@ -69,7 +70,7 @@ export const ModeSelectButton: React.FC<ModeSelectButtonProps> = ({ label, tone,
   );
 
   return onClick ? (
-    <Button variant="secondary" onClick={onClick} aria-label={`${title}: ${label}`} className="h-11 min-w-0 gap-2 px-3">
+    <Button variant="secondary" onClick={onClick} aria-label={`${title}: ${label}`} {...tip(title, undefined, 'action')} className="h-11 min-w-0 gap-2 px-3">
       {content}
     </Button>
   ) : (
@@ -117,7 +118,7 @@ interface HeaderButtonProps {
   onClick: () => void;
   title: string;
   icon?: React.ReactNode;
-  /** With a label the button reads as text; without one it is a square icon button. */
+  /** With a label the button reads as text and has no tooltip; without one it is a square icon button. */
   label?: string;
   danger?: boolean;
   className?: string;
@@ -131,7 +132,9 @@ export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon
   <Button
     variant="secondary"
     onClick={onClick}
-    aria-label={title}
+    // A label already names the button, so only the icon-only ones need a tooltip and an aria-label.
+    aria-label={label ? undefined : title}
+    {...(label ? {} : tip(title, undefined, 'action'))}
     className={cn(
       'h-11 justify-center',
       label ? 'gap-1.5 px-3' : 'px-2 sm:w-10 sm:px-0 lg:w-11',
@@ -244,7 +247,8 @@ interface ChallengeVictoryCardProps {
   title: string;
   /** Optional line under the title, e.g. the killer the streak was won on. */
   subtitle?: string;
-  onRestart: () => void;
+  /** The "start again" button; a challenge that restarts some other way leaves it out. */
+  onRestart?: () => void;
   busy: boolean;
 }
 
@@ -257,14 +261,16 @@ export const ChallengeVictoryCard: React.FC<ChallengeVictoryCardProps> = ({ titl
     <p className={`mt-6 ${CELEBRATION_LABEL_CLASSES}`}>{dict.streaks.victoryCongrats}</p>
     <h2 className="mt-2 text-2xl font-black tracking-tight text-text-primary">{title}</h2>
     {subtitle && <p className="mt-1 type-card-title text-text-secondary">{subtitle}</p>}
-    <Button
-      type="button"
-      onClick={onRestart}
-      disabled={busy}
-      variant="amber" size="lg" className="mt-6"
-    >
-      {dict.streaks.startNewRun}
-    </Button>
+    {onRestart && (
+      <Button
+        type="button"
+        onClick={onRestart}
+        disabled={busy}
+        variant="amber" size="lg" className="mt-6"
+      >
+        {dict.streaks.startNewRun}
+      </Button>
+    )}
   </div>
 );
 };

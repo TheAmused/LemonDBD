@@ -78,7 +78,7 @@ export const RulesSection: React.FC<{ title: string; children: React.ReactNode }
 export interface RulesDifficultyRow {
   label: string;
   text: string;
-  badgeClassName: string;
+  labelClassName: string;
 }
 
 export const RulesDifficultyRows: React.FC<{ rows: RulesDifficultyRow[]; alignTextRight?: boolean }> = ({
@@ -89,21 +89,20 @@ export const RulesDifficultyRows: React.FC<{ rows: RulesDifficultyRow[]; alignTe
     {rows.map((row, i) => (
       <Surface
         key={i}
-        tone="elevated" padding="none" className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 gap-2 shadow-sm"
+        tone="elevated" padding="none" className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 gap-3 shadow-sm"
       >
-        <span className={`px-2.5 py-1 rounded-chip text-xs font-bold border ${row.badgeClassName} whitespace-nowrap w-fit`}>
-          {row.label}
-        </span>
+        <span className={`text-xs font-bold ${row.labelClassName} whitespace-nowrap`}>{row.label}</span>
         <p className={`text-xs text-text-secondary${alignTextRight ? ' sm:text-right sm:max-w-xs' : ''}`}>{row.text}</p>
       </Surface>
     ))}
   </div>
 );
 
-export const DIFFICULTY_BADGE = {
-  green: 'bg-accent-green/20 text-accent-green border-accent-green/30',
-  amber: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
-  red: 'bg-accent-red/20 text-accent-red border-accent-red/30',
+/** Colour of a difficulty label: plain bold text, the way the Gauntlet shows its tiers. */
+export const DIFFICULTY_TEXT = {
+  green: 'text-accent-green',
+  amber: 'text-accent-amber',
+  red: 'text-accent-red',
 } as const;
 
 /* ------------------------------------------------------------------ */
@@ -117,15 +116,15 @@ export interface RuleEntryDef {
   variantTextKeys?: Record<string, StreakTextKey>;
 }
 
-export const RULE_GAME_CANCELLED: RuleEntryDef = {
+const RULE_GAME_CANCELLED: RuleEntryDef = {
   labelKey: 'excGameCancelledLabel',
   textKey: 'excGameCancelledText',
 };
-export const RULE_HACKERS: RuleEntryDef = {
+const RULE_HACKERS: RuleEntryDef = {
   labelKey: 'excHackersLabel',
   textKey: 'excHackersText',
 };
-export const RULE_CRASH: RuleEntryDef = {
+const RULE_CRASH: RuleEntryDef = {
   labelKey: 'excCrashLabel',
   textKey: 'excCrashText',
 };
@@ -148,6 +147,26 @@ const DEFAULT_INACTIVITY_DAYS = 90;
 export const STANDARD_EXCEPTIONS: RuleEntryDef[] = [RULE_GAME_CANCELLED, RULE_HACKERS, RULE_CRASH];
 export const STANDARD_CLARIFICATIONS: RuleEntryDef[] = [RULE_SURVIVOR_DC, RULE_NO_DODGING];
 export const STANDARD_CLARIFICATIONS_WITH_ADDONS: RuleEntryDef[] = [...STANDARD_CLARIFICATIONS, RULE_ADDONS_ALLOWED];
+
+/** The survivor side's rules: an early disconnect voids the match too, and the killer's behaviour has its own clarifications. */
+export const SURVIVOR_EXCEPTIONS: RuleEntryDef[] = [
+  { labelKey: 'excEarlyDcLabel', textKey: 'excEarlyDcText' },
+  RULE_GAME_CANCELLED,
+  RULE_HACKERS,
+  RULE_CRASH,
+];
+const SURVIVOR_ONLY_CLARIFICATIONS: RuleEntryDef[] = [
+  { labelKey: 'clarRatOffLabel', textKey: 'clarRatOffText' },
+  { labelKey: 'clarDeathIsDeathLabel', textKey: 'clarDeathIsDeathText' },
+  {
+    labelKey: 'clarKillerDcLabel',
+    textKey: 'clarKillerDcText',
+    variantTextKeys: { solo: 'soloKillerDcText', duo: 'duoKillerDcText', squad: 'squadKillerDcText' },
+  },
+];
+export const SURVIVOR_CLARIFICATIONS: RuleEntryDef[] = [RULE_ADDONS_ALLOWED, ...SURVIVOR_ONLY_CLARIFICATIONS];
+/** Both sides in one list, for a challenge that alternates between them. */
+export const BOTH_SIDES_CLARIFICATIONS: RuleEntryDef[] = [...STANDARD_CLARIFICATIONS_WITH_ADDONS, ...SURVIVOR_ONLY_CLARIFICATIONS];
 
 /** Looks each def up in the copy bag and drops empty rows. */
 export function resolveRuleEntries(copy: StreakCopy, defs: RuleEntryDef[], variant?: string): RuleListEntry[] {

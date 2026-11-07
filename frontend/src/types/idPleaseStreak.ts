@@ -116,6 +116,10 @@ export interface IdPleaseRun {
   roster_fingerprint: string;
   attempts: number;
   attempt: number;
+  /** Matches played in the current attempt. */
+  attempt_matches: number;
+  /** The attempt counts from the moment Start is pressed, so a run in setup has none in play. */
+  attempt_started: boolean;
   total_wins: number;
   total_losses: number;
   created_at?: string;

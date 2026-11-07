@@ -3,7 +3,8 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { useDictionary } from "@/context/DictionaryContext";
-import { Flag } from 'lucide-react';
+import { Flag, Infinity as InfinityIcon } from 'lucide-react';
+import { TrophyIcon } from '@/components/icons/DbdIcons';
 
 const MAX_NODE_PX = 28;
 const MIN_NODE_PX = 14;
@@ -11,12 +12,20 @@ const MIN_NODE_PX = 14;
 const NODE_FILL_RATIO = 0.7;
 /** Free space kept between two neighbouring trophies; one that would leave less is dropped. */
 const MIN_NODE_GAP_PX = 6;
+/** Where the finish trophy sits on an endless run's track; the rest is the endless tail that follows it. */
+const ENDLESS_FINISH_PERCENT = 62;
 
 interface ChallengeProgressProps {
   current: number;
   total: number;
   /** Win counts that bank a checkpoint, each between 0 and `total`. The finish is always added as the last trophy. */
   checkpoints: number[];
+  /** Replaces the default heading. */
+  title?: string;
+  /** Replaces the default "completed: current / total" counter. */
+  counter?: React.ReactNode;
+  /** The finish is only the first part of a road that never ends: the trophy sits partway along the track and a dashed tail with an infinity sign carries on behind it. */
+  endless?: boolean;
 }
 
 /** Green at the start, amber halfway, red as the run nears its end. */
@@ -49,9 +58,9 @@ const fittingPositions = (positions: number[], total: number, trackPx: number, n
 
 /**
  * Progress through a challenge: a bar that warms from red to green as the run
- * advances, with a trophy at every checkpoint and one at the finish.
+ * advances, with a flag at every checkpoint and a trophy at the finish.
  */
-export const ChallengeProgress: React.FC<ChallengeProgressProps> = ({ current, total, checkpoints }) => {
+export const ChallengeProgress: React.FC<ChallengeProgressProps> = ({ current, total, checkpoints, title, counter, endless = false }) => {
   const dict = useDictionary();
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [trackPx, setTrackPx] = useState(0);
@@ -70,41 +79,67 @@ export const ChallengeProgress: React.FC<ChallengeProgressProps> = ({ current, t
 
   const cleared = Math.min(current, total);
   const ratio = cleared / total;
-  const percent = ratio * 100;
+  // The share of the track the run itself covers; an endless run leaves the rest for its tail.
+  const span = endless ? ENDLESS_FINISH_PERCENT : 100;
   const allPositions = [...checkpoints.filter((c) => c > 0 && c < total), total];
-  const nodeSize = nodeSizeFor(allPositions, total, trackPx);
-  const trophyPositions = fittingPositions(allPositions, total, trackPx, nodeSize);
+  const usablePx = (trackPx * span) / 100;
+  const nodeSize = nodeSizeFor(allPositions, total, usablePx);
+  const trophyPositions = fittingPositions(allPositions, total, usablePx, nodeSize);
+  const nodeIconStyle = { width: nodeSize * 0.5, height: nodeSize * 0.5 };
+  // The cup's glyph is lighter than the flag's, so at the same size it reads smaller.
+  const trophyIconStyle = { width: nodeSize * 0.62, height: nodeSize * 0.62 };
 
   const s = dict.streaks;
+  const heading = title ?? s.progressTitle;
 
   return (
     <div>
       <div className="mb-2 flex items-center justify-between gap-3 sm:mb-4">
         <h3 className="type-label-sm text-text-primary">
-          {s.progressTitle}
+          {heading}
         </h3>
-        <span className="type-strong text-text-secondary">
-          {dict.stats.completed}:{' '}
-          <span className="font-extrabold text-accent-green">{cleared}</span> / {total}
+        <span className="type-strong tabular-nums text-text-secondary">
+          {counter ?? (
+            <>
+              {dict.stats.completed}:{' '}
+              <span className="font-extrabold text-accent-green">{cleared}</span> / {total}
+            </>
+          )}
         </span>
       </div>
 
       <div className="pb-2.5 sm:pb-7">
         {/* The native control carries the value for assistive tech; the drawn track is decoration. */}
-        <progress className="sr-only" value={cleared} max={total} aria-label={s.progressTitle} />
+        <progress className="sr-only" value={cleared} max={total} aria-label={heading} />
         <div
           ref={trackRef}
           aria-hidden="true"
-          className="relative h-3 rounded-full border border-border-color bg-bg-primary/60"
+          className="relative h-3"
         >
+          {/* The bar ends at the finish; on an endless run the tail beyond it is a bare dashed line. */}
           <div
-            className="absolute inset-y-0 left-0 rounded-full transition-[width,background] duration-700 ease-out"
-            style={{
-              width: `${percent}%`,
-              background: `linear-gradient(90deg, ${fillColor(0)}, ${fillColor(ratio)})`,
-              minWidth: cleared > 0 ? `${nodeSize}px` : 0,
-            }}
-          />
+            className="absolute inset-y-0 left-0 rounded-full border border-border-color bg-bg-primary/60"
+            style={{ width: `${span}%` }}
+          >
+            <div
+              className="absolute inset-y-0 left-0 rounded-full transition-[width,background] duration-700 ease-out"
+              style={{
+                width: `${ratio * 100}%`,
+                background: `linear-gradient(90deg, ${fillColor(0)}, ${fillColor(ratio)})`,
+                minWidth: cleared > 0 ? `${nodeSize}px` : 0,
+              }}
+            />
+          </div>
+
+          {endless && (
+            <>
+              <span
+                className="absolute inset-y-1/2 right-6 border-t-2 border-dashed border-border-color"
+                style={{ left: `${span}%` }}
+              />
+              <InfinityIcon className="absolute right-0 top-1/2 icon-lg -translate-y-1/2 text-text-muted" />
+            </>
+          )}
 
           {trophyPositions.map((pos) => {
             const reached = pos <= cleared;
@@ -112,7 +147,7 @@ export const ChallengeProgress: React.FC<ChallengeProgressProps> = ({ current, t
               <div
                 key={pos}
                 className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
-                style={{ left: nodeLeft((pos / total) * 100, nodeSize) }}
+                style={{ left: nodeLeft((pos / total) * span, nodeSize) }}
               >
                 <div
                   className={`flex items-center justify-center rounded-full border transition-all duration-500 ${
@@ -122,7 +157,7 @@ export const ChallengeProgress: React.FC<ChallengeProgressProps> = ({ current, t
                   }`}
                   style={{ width: nodeSize, height: nodeSize }}
                 >
-                  <Flag style={{ width: nodeSize * 0.5, height: nodeSize * 0.5 }} aria-hidden="true" />
+                  {pos === total ? <TrophyIcon style={trophyIconStyle} /> : <Flag style={nodeIconStyle} aria-hidden="true" />}
                 </div>
                 <span
                   className={`absolute left-1/2 top-full mt-1 -translate-x-1/2 text-mini font-bold max-sm:hidden ${

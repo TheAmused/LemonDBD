@@ -1,5 +1,6 @@
 # backend/app/routes/gauntlet_streak.py
 from flask import g, jsonify, request
+from app.core.errors import value_error_status
 from app.core.security import login_required
 from app.core.service_registry import make_service_getter
 from app.core.streak_blueprint import make_streak_blueprint, make_value_cleaner
@@ -49,7 +50,7 @@ def submit_result():
             return jsonify({"run": updated_run, "previous_run": updated_run}), 200
         next_run = service.prepare_next_match(g.current_user.id, role, game_mode=updated_run["game_mode"])
     except ValueError as e:
-        status = 404 if "not found" in str(e).lower() else 400
+        status = value_error_status(e)
         return api_error(str(e), status)
     return jsonify({"run": next_run, "previous_run": updated_run}), 200
 
@@ -65,7 +66,7 @@ def select_target():
     try:
         run = get_gauntlet_service().select_target(g.current_user.id, dto.run_id, dto.character)
     except ValueError as e:
-        status = 404 if "not found" in str(e).lower() else 400
+        status = value_error_status(e)
         return api_error(str(e), status)
     return jsonify({"run": run}), 200
 
@@ -84,7 +85,7 @@ def buy_boost():
     try:
         run = get_gauntlet_service().buy_boost(g.current_user.id, dto.run_id, dto.boost, dto.character)
     except ValueError as e:
-        status = 404 if "not found" in str(e).lower() else 400
+        status = value_error_status(e)
         return api_error(str(e), status)
     return jsonify({"run": run}), 200
 

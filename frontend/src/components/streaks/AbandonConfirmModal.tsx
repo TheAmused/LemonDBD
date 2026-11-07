@@ -7,21 +7,22 @@ import { useDictionary } from "@/context/DictionaryContext";
 
 export interface AbandonConfirmModalProps {
   open: boolean;
-  message: string;
   busy?: boolean;
   onConfirm: () => void;
   onCancel: () => void;
 }
 
-export const AbandonConfirmModal: React.FC<AbandonConfirmModalProps> = ({ open, message, busy = false, onConfirm, onCancel }) => {
+export const AbandonConfirmModal: React.FC<AbandonConfirmModalProps> = ({ open, busy = false, onConfirm, onCancel }) => {
   const dict = useDictionary();
   return (
   <ConfirmModal
     open={open}
     title={dict.streaks.abandonRunTitle}
-    message={message}
+    message={dict.streaks.abandonConfirmPrompt}
     confirmLabel={dict.streaks.abandonConfirm}
-    cancelLabel={dict.streaks.cancel}
+    size="sm"
+    closeButton="header"
+    closeButtonAriaLabel={dict.modal.close}
     busy={busy}
     onConfirm={onConfirm}
     onCancel={onCancel}

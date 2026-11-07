@@ -4,7 +4,7 @@
 import React from 'react';
 import { RulesModalShell } from '../RulesModalShell';
 import {
-  DIFFICULTY_BADGE,
+  DIFFICULTY_TEXT,
   RulesDifficultyRows,
   RulesSection,
   RulesHowItWorks,
@@ -48,12 +48,12 @@ export const HistoryRulesModal: React.FC<HistoryRulesModalProps> = ({ isOpen, on
             {
               label: s.mediumMode,
               text: s.mediumModeDesc,
-              badgeClassName: DIFFICULTY_BADGE.amber,
+              labelClassName: DIFFICULTY_TEXT.amber,
             },
             {
               label: s.hellMode,
               text: s.hellModeDesc,
-              badgeClassName: DIFFICULTY_BADGE.red,
+              labelClassName: DIFFICULTY_TEXT.red,
             },
           ]}
         />

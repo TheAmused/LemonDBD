@@ -20,6 +20,8 @@ export interface HistoryRun {
   total_owned_killers: number;
   pool_frozen: boolean;
   attempts: number;
+  /** Matches played in the current attempt; the attempt only counts once it has one. */
+  attempt_matches: number;
   newly_unlocked_perks?: string[];
   row_cleared?: boolean;
   created_at?: string;

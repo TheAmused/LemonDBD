@@ -4,6 +4,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { backendBase } from '@/utils/staticUrl';
 import { logger } from '@/utils/logger';
+import { normalizeForComparison } from '@/utils/mapVoiceTextUtils';
 
 interface NamedRecord {
   description?: string;
@@ -36,9 +37,14 @@ interface DisplayMaps {
   byName: Map<string, LocalizedLabel>;
   /** Keyed by record id, which is stable where canonical names are not (a perk's lang=en name can differ from its stored one). */
   byId: Map<number, LocalizedLabel>;
+  /** Keyed by the canonical name without case, punctuation or spacing, for names stored with another casing or apostrophe ("Turn Back the Clock" vs "Turn Back The Clock"). */
+  byLooseName: Map<string, LocalizedLabel>;
 }
 
-const EMPTY_MAPS: DisplayMaps = { byName: new Map(), byId: new Map() };
+const EMPTY_MAPS: DisplayMaps = { byName: new Map(), byId: new Map(), byLooseName: new Map() };
+
+const lookupByName = (maps: DisplayMaps, name: string): LocalizedLabel | undefined =>
+  maps.byName.get(name) ?? maps.byLooseName.get(normalizeForComparison(name));
 
 /**
  * `canonicalUrl` must pass `lang=en` explicitly, not omit `lang` -- the
@@ -65,14 +71,18 @@ async function buildDisplayMap(
   }
   const byName = new Map<string, LocalizedLabel>();
   const byId = new Map<number, LocalizedLabel>();
+  const byLooseName = new Map<string, LocalizedLabel>();
   for (const item of (translatedData.data || []) as NamedRecord[]) {
     if (!item.name) continue;
     const label = { name: item.name, description: item.description };
     byId.set(item.id, label);
     const canonicalName = canonicalById.get(item.id);
-    if (canonicalName) byName.set(canonicalName, label);
+    if (canonicalName) {
+      byName.set(canonicalName, label);
+      byLooseName.set(normalizeForComparison(canonicalName), label);
+    }
   }
-  return { byName, byId };
+  return { byName, byId, byLooseName };
 }
 
 /**
@@ -126,9 +136,9 @@ export const DisplayNamesProvider: React.FC<{ locale: string; children: React.Re
   }, [locale]);
 
   const value: DisplayNamesValue = {
-    characterName: (name) => characterMap.byName.get(name)?.name || name,
-    perkName: (name) => perkMap.byName.get(name)?.name || name,
-    perkLabel: (perk) => (perk.id !== undefined ? perkMap.byId.get(perk.id) : undefined) ?? perkMap.byName.get(perk.name),
+    characterName: (name) => lookupByName(characterMap, name)?.name || name,
+    perkName: (name) => lookupByName(perkMap, name)?.name || name,
+    perkLabel: (perk) => (perk.id !== undefined ? perkMap.byId.get(perk.id) : undefined) ?? lookupByName(perkMap, perk.name),
   };
 
   return <DisplayNamesContext.Provider value={value}>{children}</DisplayNamesContext.Provider>;

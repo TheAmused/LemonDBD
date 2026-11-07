@@ -82,6 +82,7 @@ class GauntletService(StreakRunService):
         return {
             **data,
             "pool_frozen": pool_frozen,
+            "attempt_started": r.attempt_started,
             "owned_characters": resolve_character_names_by_ids(ids, role=r.role),
             "tier_info": tier_info,
             "boosts": get_boost_config(r.game_mode),
@@ -217,7 +218,7 @@ class GauntletService(StreakRunService):
         """Spend tokens on the match in play: a different killer, a chosen killer or one more free perk slot."""
         if boost not in ("reroll", "pick", "slot"):
             raise ValueError("Unknown boost")
-        assert_challenge_mode_enabled("gauntlet")
+        assert_challenge_mode_enabled("gauntlet", user_id)
         r = self._find_run_by_id(user_id, run_id)
         if not r:
             raise ValueError("Run not found")
@@ -273,7 +274,7 @@ class GauntletService(StreakRunService):
         if use_shield and result != "loss":
             raise ValueError("A shield only cancels a loss")
         if triggered_by != "inactivity":
-            assert_challenge_mode_enabled("gauntlet")
+            assert_challenge_mode_enabled("gauntlet", user_id)
 
         r = self._load_run_for_result(user_id, run_id)
         self._freeze_pool_if_needed(r)
@@ -335,6 +336,11 @@ class GauntletService(StreakRunService):
         else:
             r.last_token_roll = 0
         r.bonus_perk_slots = 0
+        if result == "loss" and streak_after == 0 and not shielding:
+            # Back to the very start: the next match is lined up but stays hidden until the player starts it, so
+            # the new attempt does not begin with a character rolled and shown on its own. A loss that lands on a
+            # checkpoint (or is shielded) carries on in the same run and keeps the next character on screen.
+            r.target_revealed = False
 
         r.current_streak = streak_after
         r.best_streak = best_after

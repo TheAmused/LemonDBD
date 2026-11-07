@@ -45,6 +45,36 @@ class TestGauntletResults:
         after_loss = self.service.submit_result(self.user_id, self.run["id"], "loss")
         assert after_loss["current_streak"] == 10
 
+    def test_a_loss_back_to_zero_hides_the_next_target_until_the_player_starts_it(self) -> None:
+        self.service.reveal_target(self.user_id, self.run["id"])
+        after_win = self.service.submit_result(self.user_id, self.run["id"], "win")
+        assert after_win["target_revealed"] is True
+        after_loss = self.service.submit_result(self.user_id, self.run["id"], "loss")
+        assert after_loss["target_revealed"] is False
+        assert self.service.reveal_target(self.user_id, self.run["id"])["target_revealed"] is True
+
+    def test_pressing_start_from_zero_counts_the_attempt_before_any_match(self) -> None:
+        assert (self.run["attempt_started"], self.run["attempts"]) == (False, 0)
+        started = self.service.reveal_target(self.user_id, self.run["id"])
+        assert (started["attempt_started"], started["attempt_matches"]) == (True, 0)
+        self.service.submit_result(self.user_id, self.run["id"], "loss")
+        after_loss = self.service.get_or_create_run(self.user_id, "killer")
+        # The failed attempt is counted and the next one waits for its own Start.
+        assert (after_loss["attempts"], after_loss["attempt_started"]) == (1, False)
+        assert self.service.reveal_target(self.user_id, self.run["id"])["attempt_started"] is True
+
+    def test_abandoning_a_started_attempt_counts_it_even_without_a_match(self) -> None:
+        self.service.reveal_target(self.user_id, self.run["id"])
+        abandoned = self.service.abandon_run(self.user_id, "killer")
+        assert (abandoned["attempts"], abandoned["attempt_started"]) == (1, False)
+
+    def test_a_loss_onto_a_checkpoint_keeps_the_next_target_on_screen(self) -> None:
+        self.service.reveal_target(self.user_id, self.run["id"])
+        for _ in range(10):
+            self.service.submit_result(self.user_id, self.run["id"], "win")
+        after_loss = self.service.submit_result(self.user_id, self.run["id"], "loss")
+        assert (after_loss["current_streak"], after_loss["target_revealed"]) == (10, True)
+
     def test_loss_before_any_checkpoint_resets_to_zero(self) -> None:
         for _ in range(3):
             self.service.submit_result(self.user_id, self.run["id"], "win")

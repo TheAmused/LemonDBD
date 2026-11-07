@@ -5,7 +5,6 @@ import React from 'react';
 import type { IdPleaseMatchLog, IdPleaseStats } from '@/types/idPleaseStreak';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { useDictionary } from '@/context/DictionaryContext';
-import { formatMessage } from '@/utils/i18nFormat';
 import { StreakStatsDrawer } from '../StreakStatsDrawer';
 
 export interface IdPleaseStatsDrawerProps {
@@ -25,11 +24,13 @@ export const IdPleaseStatsDrawer: React.FC<IdPleaseStatsDrawerProps> = ({ isOpen
       stats={stats}
       attempts={attempts}
       renderLabel={(log) => <div className="text-base font-bold text-text-primary">{characterDisplayName(log.character_name)}</div>}
-      renderMeta={(log) => (
-        <span>
-          {formatMessage(dict.streaks.idPleaseMatchLabel, { number: log.match_number })} {dict.streaks.middotSeparator} {log.streak_after}
-        </span>
-      )}
+      renderMeta={(log) =>
+        log.result === 'win' ? (
+          <span>
+            {dict.streaks.streakLabel} {log.streak_after}
+          </span>
+        ) : null
+      }
     />
   );
 };

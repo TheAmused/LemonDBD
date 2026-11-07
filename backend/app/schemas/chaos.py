@@ -37,6 +37,7 @@ class ChaosRunDict(TypedDict):
     perks_revealed: bool
     attempts: int
     attempt: int
+    attempt_matches: int
     total_wins: int
     total_losses: int
     playthrough_matches: int

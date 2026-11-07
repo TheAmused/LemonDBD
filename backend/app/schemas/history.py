@@ -29,6 +29,7 @@ class HistoryRunDict(TypedDict):
     checkpoint_row_index: int
     attempts: int
     attempt: int
+    attempt_matches: int
     total_wins: int
     total_losses: int
     playthrough_matches: int

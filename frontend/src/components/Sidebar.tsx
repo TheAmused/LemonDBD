@@ -57,6 +57,8 @@ interface NavItem {
   label: string;
   icon: React.ElementType;
   href?: string;
+  /** Off when the page redirects by cookie (see SidebarNavLink). */
+  prefetch?: false;
   onSelect?: () => void;
 }
 
@@ -113,11 +115,11 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
   ), [pathname]);
 
   const navEntries = useMemo((): NavEntry[] => {
-    const page = (id: string, label: string, icon: React.ElementType, segment: string): NavItem => ({
-      id, label, icon, href: `/${currentLocale}/${segment}`,
+    const page = (id: string, label: string, icon: React.ElementType, segment: string, prefetch?: false): NavItem => ({
+      id, label, icon, href: `/${currentLocale}/${segment}`, prefetch,
     });
     return [
-      page('streaks', dict.sidebar.challenges, TargetIcon, 'streaks'),
+      page('streaks', dict.sidebar.challenges, TargetIcon, 'streaks', false),
       page('maps', dict.sidebar.mapCallouts, MapIcon, 'maps'),
       page('generator', dict.filters.generatorTab, DiceIcon, 'randomizer'),
       {
@@ -175,6 +177,7 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
       href={item.href}
       isActive={!!item.href && checkIsActive(item.href)}
       hasPopup={item.onSelect ? 'dialog' : undefined}
+      prefetch={item.prefetch}
       onClick={item.onSelect ?? closeMobile}
     />
   );

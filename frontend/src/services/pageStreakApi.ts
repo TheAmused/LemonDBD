@@ -30,6 +30,12 @@ export async function startRun(token: string, killer: string): Promise<PageStrea
   return data.run;
 }
 
+/** The player locked in a build: the run keeps its perk pool from now on. */
+export async function lockPages(token: string, killer: string): Promise<PageStreakRun> {
+  const data = await postJson<{ run: PageStreakRun }>(token, '/run/lock', { killer });
+  return data.run;
+}
+
 export async function submitResult(
   token: string,
   killer: string,
@@ -51,12 +57,12 @@ export async function abandonRun(token: string, killer: string): Promise<PageStr
   return data.run;
 }
 
-export async function resetAllRuns(token: string): Promise<void> {
-  await postJson<{ success: boolean }>(token, '/run/reset-all', {});
+export async function abandonAllRuns(token: string): Promise<void> {
+  await postJson<{ success: boolean }>(token, '/run/abandon-all', {});
 }
 
-export async function fetchStats(token: string): Promise<PageStreakStats> {
-  const data = await getJson<{ stats: PageStreakStats }>(token, '/stats');
+export async function fetchStats(token: string, killer: string): Promise<PageStreakStats> {
+  const data = await getJson<{ stats: PageStreakStats }>(token, `/stats?killer=${encodeURIComponent(killer)}`);
   return data.stats;
 }
 

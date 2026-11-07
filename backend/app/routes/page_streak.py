@@ -1,5 +1,6 @@
 # backend/app/routes/page_streak.py
 from flask import g, jsonify, request
+from app.core.errors import value_error_status
 from app.core.security import login_required
 from app.core.service_registry import make_service_getter
 from app.core.streak_blueprint import make_streak_blueprint
@@ -17,7 +18,6 @@ page_streak_bp = make_streak_blueprint(
     invalid_value_hint="required",
     has_reveal=False,
     get_run_method="get_run",
-    stats_requires_param=False,
 )
 
 
@@ -70,6 +70,27 @@ def start_run():
     return jsonify({"run": run}), 201
 
 
+@page_streak_bp.route("/run/lock", methods=["POST"])
+@login_required
+def lock_pages():
+    """The player confirmed a build: freeze the run's perk pool."""
+    try:
+        dto = StreakRunStartDTO.model_validate(request.get_json(silent=True) or {})
+    except ValidationError as err:
+        return api_error("Field 'killer' is required", 400, details=err.errors())
+
+    killer = dto.killer.strip()
+    if not killer:
+        return api_error("Field 'killer' is required", 400)
+
+    try:
+        run = get_page_streak_service().lock_pages(g.current_user.id, killer)
+    except ValueError as err:
+        return api_error(str(err), value_error_status(err))
+
+    return jsonify({"run": run}), 200
+
+
 @page_streak_bp.route("/run/result", methods=["POST"])
 @login_required
 def submit_result():
@@ -96,13 +117,13 @@ def submit_result():
     return jsonify({"run": run}), 200
 
 
-@page_streak_bp.route("/run/reset-all", methods=["POST"])
+@page_streak_bp.route("/run/abandon-all", methods=["POST"])
 @login_required
-def reset_all_runs():
-    """Wipe every killer's Page Streak progress and completion badges."""
+def abandon_all_runs():
+    """Abandon every Page Streak run in play. Stats, match history and completions stay."""
     service = get_page_streak_service()
     try:
-        service.reset_all(g.current_user.id)
+        service.abandon_all(g.current_user.id)
     except ValueError as err:
         return api_error(str(err), 400)
 

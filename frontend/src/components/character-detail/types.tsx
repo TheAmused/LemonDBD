@@ -36,6 +36,7 @@ export interface PerkItem {
   id?: number;
   name: string;
   raw_name?: string;
+  alternate_name?: string;
   category: string;
   character: string;
   character_real_name?: string;
@@ -44,6 +45,8 @@ export interface PerkItem {
   description: string;
   icon_url?: string;
   icon_local_path?: string;
+  perk_types?: string[];
+  is_generic_counterpart?: boolean;
   is_teachable?: boolean;
   is_disabled?: boolean;
   disabled_reason?: string | null;

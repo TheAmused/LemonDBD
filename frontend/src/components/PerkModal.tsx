@@ -10,6 +10,7 @@ import {
   getCharacterAvatarUrl,
 } from '@/utils/perkUtils';
 import { PerkDescription } from '@/components/PerkDescription';
+import { PerkTypeBadges } from '@/components/perks/PerkTypeBadges';
 import { tip } from '@/components/common/Tooltip';
 import { Modal } from '@/components/common/Modal';
 import { ModalIconHeader } from '@/components/common/ModalIconHeader';
@@ -84,6 +85,8 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose }) => {
         <div id="perk-modal-description">
           <PerkDescription description={perk.description} variant="modal" />
         </div>
+        {/* The footer: this perk's own types under its description, with no heading of their own. */}
+        <PerkTypeBadges perk={perk} className="mt-4 border-t border-border-color pt-4" />
       </div>
     </Modal>
   );

@@ -10,13 +10,11 @@ import { getPerkIconUrl, getCharacterAvatarUrl } from '@/utils/perkUtils';
 import { DisabledBadge } from '@/components/DisabledBadge';
 
 import { tip } from '@/components/common/Tooltip';
-import { useDictionary, useLocale } from "@/context/DictionaryContext";
+import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
 import { LockIcon } from '@/components/icons/DbdIcons';
-import { PerkTypeBadges } from '@/components/perks/PerkTypeBadges';
-import { getKnownPerkTypes } from '@/utils/perkTypes';
 
 const DisabledReasonModal = dynamic(
   () => import('@/components/DisabledReasonModal').then((m) => m.DisabledReasonModal),
@@ -31,10 +29,8 @@ const GRID_SIZE_CLASSES: Record<'default' | 'large' | 'fill' | 'tarot' | 'compac
   wheelFlank: 'h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36 xl:h-36 xl:w-36 2xl:h-44 2xl:w-44 wide:h-52! wide:w-52! wide-2k:h-60! wide-2k:w-60! wide-4k:h-72! wide-4k:w-72!',
 };
 
-/** The icon of a named fill card: leaves the lower part of the cell for the name (and the perk types under it). */
+/** The icon of a named fill card: leaves the lower part of the cell for the name. */
 const NAMED_ICON_CLASS = 'h-[min(64cqh,88cqw)] w-[min(64cqh,88cqw)] max-h-40 max-w-40 shrink-0';
-// With the types the icon takes what the name (two lines) and the type row leave.
-const NAMED_TYPED_ICON_CLASS = 'h-perk-card-icon w-perk-card-icon max-h-44 max-w-44 shrink-0';
 
 interface PerkCardProps {
   perk: Perk;
@@ -44,15 +40,12 @@ interface PerkCardProps {
   isBlind?: boolean;
   /** Print the perk name under the icon. On a fixed-size card it is drawn inside the same square, so the card keeps its footprint. */
   showName?: boolean;
-  /** Print the perk types under the name (named fill cards only). */
-  showTypes?: boolean;
   /** Grey icon (colour comes back when the prop is dropped); a hover glow keeps its own colour. */
   muted?: boolean;
 }
 
-export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, size = 'default', isBlind = false, showName = false, showTypes = false, muted = false }) => {
+export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, size = 'default', isBlind = false, showName = false, muted = false }) => {
   const dict = useDictionary();
-  const locale = useLocale();
   const [avatarError, setAvatarError] = useState(false);
   const [showDisabledModal, setShowDisabledModal] = useState(false);
 
@@ -71,13 +64,8 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
   const named = showName && size === 'fill';
   // Fixed-size cards (every size but fill) print the name inside their square, under a smaller icon.
   const inlineName = showName && size !== 'fill';
-  const typed = named && showTypes;
   const generalLabel = dict.modal.generalPerk;
-  // The types joined the way the UI language writes a list. getKnownPerkTypes is never empty.
-  const typesLabel = typed
-    ? `, ${new Intl.ListFormat(locale, { style: 'narrow', type: 'unit' }).format(getKnownPerkTypes(perk).map((type) => dict.perkTypes.labels[type]))}`
-    : '';
-  const ariaLabel = `${perk.name}${isGeneral ? (generalLabel ? ` - ${generalLabel}` : '') : (perk.character ? ` - ${perk.character}` : '')}${typesLabel}`;
+  const ariaLabel = `${perk.name}${isGeneral ? (generalLabel ? ` - ${generalLabel}` : '') : (perk.character ? ` - ${perk.character}` : '')}`;
 
   const coordinateLabel = coordinate
     ? `${dict.generator.coordOpenPage}${coordinate.page}${dict.generator.coordSlot}${coordinate.slot}${dict.generator.coordClose}`
@@ -137,7 +125,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
 
         <div className={`relative flex items-center justify-center transition-transform duration-200 ${
           named
-            ? `${typed ? NAMED_TYPED_ICON_CLASS : NAMED_ICON_CLASS} group-hover:scale-105`
+            ? `${NAMED_ICON_CLASS} group-hover:scale-105`
             : inlineName ? 'min-h-0 w-full flex-1' : 'h-full w-full'
         }`}>
           <div
@@ -223,7 +211,6 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
           </span>
         )}
 
-        {typed && <PerkTypeBadges perk={perk} className="shrink-0" />}
       </TileButton>
 
       {perk.is_disabled && (

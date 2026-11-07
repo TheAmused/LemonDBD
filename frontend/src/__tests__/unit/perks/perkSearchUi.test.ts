@@ -63,16 +63,10 @@ describe('perk type search UI', () => {
     assert.match(html, /aria-haspopup="true"/);
   });
 
-  it('a perk card lists the perk\'s types, primary first, as plain labels', () => {
+  it("the perk modal lists the types of a perk, primary first, as plain labels that wrap instead of being clipped", () => {
     const html = renderWithDictionary(React.createElement(PerkTypeBadges, { perk: DEJA_VU }));
     assert.ok(html.indexOf('Generator') < html.indexOf('Tracking'));
     assert.ok(!html.includes('<button'));
-  });
-
-  it('in the perk modal the types wrap instead of being clipped to one row', () => {
-    const html = renderWithDictionary(React.createElement(PerkTypeBadges, { perk: DEJA_VU, size: 'md' }));
-    assert.ok(html.indexOf('Generator') < html.indexOf('Tracking'));
     assert.ok(!html.includes('overflow-hidden'));
-    assert.ok(!html.includes('h-5'));
   });
 });

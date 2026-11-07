@@ -3,12 +3,14 @@
 
 import React from 'react';
 import { RotateCcw, Users, Swords } from 'lucide-react';
+import { PagesIcon } from '@/components/icons/DbdIcons';
 import { Modal } from '@/components/common/Modal';
 import type { ChallengeCompletion } from '@/types/challengeCompletion';
 import { formatDate } from '@/utils/format';
 import { useLocale, useDictionary } from '@/context/DictionaryContext';
 import { Surface } from '@/components/common/Surface';
 import { IconLabel } from '@/components/common/IconLabel';
+import { formatMessage } from '@/utils/i18nFormat';
 
 export interface ChallengeCompletionHistoryDrawerProps {
   isOpen: boolean;
@@ -52,6 +54,9 @@ export const ChallengeCompletionHistoryDrawer: React.FC<ChallengeCompletionHisto
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5">
                 <IconLabel icon={Swords}>{entry.matches_played} {dict.streaks.matches}</IconLabel>
                 <IconLabel icon={RotateCcw}>{entry.attempts_taken} {dict.streaks.attempts}</IconLabel>
+                {typeof entry.pages_count === 'number' && (
+                  <IconLabel icon={PagesIcon}>{formatMessage(dict.streaks.pagesCompleted, { count: entry.pages_count })}</IconLabel>
+                )}
                 {subjectLabel && (
                   <IconLabel icon={Users}>{entry.unlocked_characters_count} {subjectLabel}</IconLabel>
                 )}

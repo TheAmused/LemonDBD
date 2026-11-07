@@ -12,7 +12,6 @@ import dynamic from 'next/dynamic';
 import { useSearchParams } from 'next/navigation';
 import { PerkFilters } from '@/components/PerkFilters';
 import { PerkCard } from '@/components/PerkCard';
-import type { PerkTypeCounts } from '@/components/perks/PerkFilterPanel';
 import { PerksGridSkeleton } from '@/components/PerksSkeleton';
 import { EmptyState } from '@/components/common/EmptyState';
 import { Pagination } from '@/components/common/Pagination';
@@ -32,9 +31,9 @@ import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useCatalogPerks } from '@/hooks/useCatalogPerks';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
 import { usePerkTypeVocabulary } from '@/hooks/usePerkTypeVocabulary';
-import { PERK_TYPES, isPerkType, perkTypesByRole, type PerkType } from '@/utils/perkTypes';
+import { isPerkType, perkTypesByRole, type PerkType } from '@/utils/perkTypes';
 import { parsePerkQuery } from '@/utils/perkSearch/parse';
-import { isGeneralPerk, roleOnlyConflict, searchPerks, typesForRole } from '@/utils/perkSearch/match';
+import { isGeneralPerk, roleOnlyConflict, searchPerks, typeCountsIfAdded, typesForRole } from '@/utils/perkSearch/match';
 import { sortPerks } from '@/utils/perkSearch/sort';
 import { formatMessage } from '@/utils/i18nFormat';
 import { roleLabel, roleOnlyMessage } from '@/components/perks/roleOnlyMessage';
@@ -109,13 +108,7 @@ function PerksContent() {
     return sortPerks(matched, order, locale);
   }, [scopedPerks, query, types, order, locale]);
   // Per type: how many perks stay if it is added to the current search and filters (types combine with AND).
-  const typeCounts = useMemo(() => {
-    const counts: PerkTypeCounts = {};
-    for (const type of PERK_TYPES) {
-      counts[type] = searchPerks(scopedPerks, query, types.includes(type) ? types : [...types, type]).length;
-    }
-    return counts;
-  }, [scopedPerks, query, types]);
+  const typeCounts = useMemo(() => typeCountsIfAdded(scopedPerks, query, types), [scopedPerks, query, types]);
 
   const totalResults = sortedPerks.length;
   const totalPages = Math.max(1, Math.ceil(totalResults / limit));

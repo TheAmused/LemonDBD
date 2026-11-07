@@ -6,7 +6,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import type { IdPleaseDifficulty, IdPleaseLane } from '@/types/idPleaseStreak';
 import { RulesModalShell } from '../RulesModalShell';
 import {
-  DIFFICULTY_BADGE,
+  DIFFICULTY_TEXT,
   RulesDifficultyRows,
   RulesHowItWorks,
   RulesModalFooterSections,
@@ -31,13 +31,13 @@ export interface IdPleaseRulesModalProps {
 
 /**
  * The same rules as every other challenge's modal: how it works, the difficulties side by side, exceptions and
- * clarifications. How the chain continues from match 3 is deliberately not explained: players work it out.
+ * clarifications. The chain arithmetic itself is not spelled out: the rules only say what it depends on.
  */
 export const IdPleaseRulesModal: React.FC<IdPleaseRulesModalProps> = ({ isOpen, onClose, lane, difficulty }) => {
   const dict = useDictionary();
   const s = dict.streaks;
   const solo = lane !== 'mixed';
-  // Hardcore+ reshuffles the perks at every start, so "the same opening gives the same chain" does not hold there.
+  // Hardcore+ reshuffles the perks at every start, so "the same start gives the same chain" does not hold there.
   const plus = difficulty === 'hardcore_plus';
   // The win condition is the one the other challenges use, for the side(s) this lane plays.
   // The same exceptions and clarifications the Gauntlet shows for the side(s) this lane plays.
@@ -54,7 +54,6 @@ export const IdPleaseRulesModal: React.FC<IdPleaseRulesModalProps> = ({ isOpen, 
           winCondition,
           solo ? s.idPleaseRuleOpeningSolo : s.idPleaseRuleOpening,
           s.idPleaseRulePlay,
-          solo ? s.idPleaseRuleShift : s.idPleaseRuleMirror,
           plus ? s.idPleaseRuleChainPlus : s.idPleaseRuleChain,
           s.idPleaseRuleLive,
           s.idPleaseRuleEndless,
@@ -67,17 +66,17 @@ export const IdPleaseRulesModal: React.FC<IdPleaseRulesModalProps> = ({ isOpen, 
             {
               label: s.idPleaseMilestonesLabel,
               text: solo ? s.idPleaseRuleMilestonesSolo : s.idPleaseRuleMilestones,
-              badgeClassName: DIFFICULTY_BADGE[ID_PLEASE_DIFFICULTY_TONE.milestones],
+              labelClassName: DIFFICULTY_TEXT[ID_PLEASE_DIFFICULTY_TONE.milestones],
             },
             {
               label: s.idPleaseHardcoreLabel,
-              text: solo ? s.idPleaseRuleHardcoreSolo : s.idPleaseRuleHardcore,
-              badgeClassName: DIFFICULTY_BADGE[ID_PLEASE_DIFFICULTY_TONE.hardcore],
+              text: s.idPleaseRuleHardcore,
+              labelClassName: DIFFICULTY_TEXT[ID_PLEASE_DIFFICULTY_TONE.hardcore],
             },
             {
               label: s.idPleaseHardcorePlusLabel,
               text: s.idPleaseRuleHardcorePlus,
-              badgeClassName: DIFFICULTY_BADGE[ID_PLEASE_DIFFICULTY_TONE.hardcore_plus],
+              labelClassName: DIFFICULTY_TEXT[ID_PLEASE_DIFFICULTY_TONE.hardcore_plus],
             },
           ]}
         />
@@ -88,11 +87,7 @@ export const IdPleaseRulesModal: React.FC<IdPleaseRulesModalProps> = ({ isOpen, 
         tone="neutral"
         showFreezeNotice={false}
         exceptions={resolveRuleEntries(s, exceptions)}
-        clarifications={[
-          ...resolveRuleEntries(s, clarifications),
-          { label: s.idPleaseRuleLockedLabel, text: s.idPleaseRuleRoster },
-          { label: s.idPleaseRuleBadgesLabel, text: solo ? s.idPleaseRuleBadgeSolo : s.idPleaseRuleBadge },
-        ]}
+        clarifications={resolveRuleEntries(s, clarifications)}
       />
     </RulesModalShell>
   );

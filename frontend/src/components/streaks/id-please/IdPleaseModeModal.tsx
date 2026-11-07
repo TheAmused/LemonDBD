@@ -65,7 +65,6 @@ export const IdPleaseModeModal: React.FC<IdPleaseModeModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={s.idPleaseModeSelectTitle}
-      intro={solo ? s.idPleaseIntroSolo : s.idPleaseIntro}
       tiles={tiles}
       onSelectTile={(value) => onSelectDifficulty(value as IdPleaseDifficulty)}
       tileGridClassName="grid-cols-1 sm:grid-cols-3"

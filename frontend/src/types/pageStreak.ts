@@ -11,6 +11,8 @@ export interface RosterEntry {
   avatar_local_path?: string | null;
   /** From the persistent completion history, not this run's own status -- survives a per-killer reset. */
   ever_completed: boolean;
+  /** The most pages of perks the killer was cleared on; null when it never was, or the clear predates the count. */
+  completed_pages: number | null;
   /** The killer is in the player's roster. The others are listed too, but cannot be played. */
   owned: boolean;
   /** An admin switched the killer off: it stays listed, marked, and cannot be played. */

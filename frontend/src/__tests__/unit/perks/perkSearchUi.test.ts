@@ -63,10 +63,17 @@ describe('perk type search UI', () => {
     assert.match(html, /aria-haspopup="true"/);
   });
 
-  it("the perk modal lists the types of a perk, primary first, as plain labels that wrap instead of being clipped", () => {
+  it("the type badges list the types of a perk, primary first, as plain labels that wrap", () => {
     const html = renderWithDictionary(React.createElement(PerkTypeBadges, { perk: DEJA_VU }));
     assert.ok(html.indexOf('Generator') < html.indexOf('Tracking'));
     assert.ok(!html.includes('<button'));
-    assert.ok(!html.includes('overflow-hidden'));
+    assert.ok(html.includes('flex-wrap'));
+  });
+
+  it("the type badges show nothing for a perk with no known type, not the fallback one", () => {
+    for (const perk_types of [undefined, [], ['unknownType']]) {
+      const html = renderWithDictionary(React.createElement(PerkTypeBadges, { perk: { perk_types } }));
+      assert.equal(html, '');
+    }
   });
 });

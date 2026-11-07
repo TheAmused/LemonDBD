@@ -12,6 +12,7 @@ from typing import Any
 
 from sqlalchemy import inspect as sa_inspect, select
 
+from app.core.errors import NotFoundError
 from app.core.extensions import db
 from app.core.transaction import end_transaction, lock_for_update, transaction
 from app.models.challenge_mixins import ChallengeRunMixin
@@ -96,7 +97,7 @@ class StreakRunService:
         assert_challenge_mode_enabled(self.mode, user_id)
         run = self._find_run(user_id, *variant, lock=True)
         if not run:
-            raise ValueError("Run not found")
+            raise NotFoundError("Run not found")
         with transaction():
             run.abandon_attempt()
             self._reset_to_fresh(run, user_id, *variant)
@@ -148,7 +149,7 @@ class StreakRunService:
     def _load_run_for_result(self, user_id: int, run_id: int):
         run = self._find_run_by_id(user_id, run_id)
         if not run:
-            raise ValueError("Run not found")
+            raise NotFoundError("Run not found")
         if run.status == "completed":
             raise ValueError("This run is already completed. Abandon it to play again.")
         return run

@@ -5,7 +5,7 @@ from sqlalchemy import Select, and_, or_, select
 from sqlalchemy.orm import selectinload
 
 from app.core.extensions import db
-from app.core.transaction import lock_for_update, transaction
+from app.core.transaction import end_transaction, lock_for_update, transaction
 from app.models import PageStreakPageLog, PageStreakRun, utcnow
 from app.schemas.page_streak import PageStreakHistoryEntry, PageStreakRunDict
 from app.services.challenge_completions import record_challenge_completion
@@ -173,6 +173,7 @@ def record_match_result(
                     attempts_taken=r.attempts + 1,
                     matches_played=r.playthrough_matches,
                     unlocked_characters_count=0,
+                    pages_count=run["page_count"],
                 )
                 r.finish_playthrough()
             else:
@@ -213,6 +214,15 @@ def _freeze_pages(r: PageStreakRun, pages: list[list[str]]) -> None:
     r.snapshot_at = utcnow()
 
 
+def _reset_to_first_page(r: PageStreakRun) -> None:
+    """What giving a run up does: a new attempt counted if it was played, back to page 1, no frozen pages."""
+    r.abandon_attempt()
+    r.status = "in_progress"
+    r.current_page = 1
+    r.pages = []
+    r.snapshot_at = utcnow()
+
+
 def lock_pages(
     user_id: int,
     killer: str,
@@ -228,6 +238,8 @@ def lock_pages(
             raise ValueError("No perks available: the pool is empty")
         with transaction():
             _freeze_pages(r, pages)
+    else:
+        end_transaction()  # nothing to lock: do not hold the row until the request ends
     return fetch_run(user_id, killer, build_pages_fn)
 
 
@@ -245,11 +257,7 @@ def abandon_active_run(
         raise ValueError("No perks available: the pool is empty")
 
     with transaction():
-        r.abandon_attempt()
-        r.status = "in_progress"
-        r.current_page = 1
-        r.pages = []
-        r.snapshot_at = utcnow()
+        _reset_to_first_page(r)
 
     return fetch_run(user_id, killer, build_pages_fn)
 
@@ -261,20 +269,16 @@ def abandon_all_runs(user_id: int) -> None:
     Match history, stats and completions stay.
     """
     runs = db.session.scalars(
-        select(PageStreakRun)
-        .where(
-            PageStreakRun.user_id == user_id,
-            or_(
-                PageStreakRun.status == "completed",
-                and_(PageStreakRun.status == "in_progress", PageStreakRun.attempt_matches > 0),
-            ),
+        lock_for_update(
+            select(PageStreakRun).where(
+                PageStreakRun.user_id == user_id,
+                or_(
+                    PageStreakRun.status == "completed",
+                    and_(PageStreakRun.status == "in_progress", PageStreakRun.attempt_matches > 0),
+                ),
+            )
         )
-        .with_for_update()
     ).all()
     with transaction():
         for r in runs:
-            r.abandon_attempt()
-            r.status = "in_progress"
-            r.current_page = 1
-            r.pages = []
-            r.snapshot_at = utcnow()
+            _reset_to_first_page(r)

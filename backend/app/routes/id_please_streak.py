@@ -5,6 +5,7 @@ from functools import partial
 from flask import Blueprint, g, jsonify, request
 from pydantic import ValidationError
 
+from app.core.errors import value_error_status
 from app.core.limiter import limiter
 from app.core.security import login_required
 from app.core.service_registry import make_service_getter
@@ -25,7 +26,7 @@ URL_PREFIX = {
 def _failure(err: ValueError):
     if isinstance(err, IdPleaseConflict):
         return api_error(str(err), 409, code=err.code, **err.details)
-    status = 404 if "not found" in str(err).lower() else 400
+    status = value_error_status(err)
     return api_error(str(err), status)
 
 

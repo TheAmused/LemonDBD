@@ -1,5 +1,5 @@
 # backend/app/services/challenge_completions.py
-from sqlalchemy import delete, select
+from sqlalchemy import delete, func, select
 
 from app.core.extensions import db
 from app.models import ChallengeCompletionRecord, ChaosRun, GauntletRun, HistoryRun, IdPleaseRun
@@ -15,6 +15,7 @@ def record_challenge_completion(
     matches_played: int,
     unlocked_characters_count: int,
     full_roster: bool = False,
+    pages_count: int | None = None,
 ) -> None:
     """Snapshot a fully-completed challenge run so it survives the run's own abandon.
 
@@ -30,6 +31,7 @@ def record_challenge_completion(
             matches_played=matches_played,
             unlocked_characters_count=unlocked_characters_count,
             full_roster=full_roster,
+            pages_count=pages_count,
         )
     )
 
@@ -62,6 +64,22 @@ def fetch_completed_variants(user_id: int, mode: str) -> set[str]:
         .distinct()
     ).all()
     return set(rows)
+
+
+def fetch_completed_pages(user_id: int, mode: str) -> dict[str, int | None]:
+    """Every variant this user has ever completed for one mode, with the most pages it was cleared on.
+
+    The value is None when no record of that variant carries a page count (older records, other modes).
+    """
+    rows = db.session.execute(
+        select(ChallengeCompletionRecord.variant, func.max(ChallengeCompletionRecord.pages_count))
+        .where(
+            ChallengeCompletionRecord.user_id == user_id,
+            ChallengeCompletionRecord.mode == mode,
+        )
+        .group_by(ChallengeCompletionRecord.variant)
+    ).all()
+    return {variant: pages for variant, pages in rows}
 
 
 def fetch_completed_variants_by_mode(user_id: int) -> dict[str, list[str]]:

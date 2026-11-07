@@ -3,7 +3,8 @@
 import pytest
 from sqlalchemy import select
 from sqlalchemy.orm import Session
-from app.models import Perk, PageStreakPageLog
+from app.core.errors import NotFoundError
+from app.models import Killer, Perk, PageStreakPageLog
 from app.services.ownership_service import OwnershipService
 from app.services.page_streak import PageStreakService
 from app.services.page_streak.runs import apply_inactivity_loss, run_query
@@ -126,6 +127,7 @@ class TestPageStreakResults:
         assert record.variant == "Nurse"
         assert record.attempts_taken == 1
         assert record.matches_played == 3
+        assert record.pages_count == 3
 
     def test_completion_survives_a_per_killer_reset(self) -> None:
         self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")
@@ -137,6 +139,7 @@ class TestPageStreakResults:
         roster = {entry["killer"]: entry for entry in self.service.get_roster(self.user_id)}
         assert roster["Nurse"]["status"] == "not_started"
         assert roster["Nurse"]["ever_completed"] is True
+        assert roster["Nurse"]["completed_pages"] == 3
 
     def test_resetting_an_untouched_attempt_does_not_count_it(self) -> None:
         self.service.abandon_run(self.user_id, "Nurse")
@@ -194,6 +197,7 @@ class TestPageStreakResults:
         assert (run["status"], run["current_page"], run["attempt_matches"]) == ("in_progress", 1, 0)
         roster = {entry["killer"]: entry for entry in self.service.get_roster(self.user_id)}
         assert roster["Nurse"]["ever_completed"] is True
+        assert roster["Nurse"]["completed_pages"] == 3
 
     def test_reset_restarts_with_fresh_snapshot_and_keeps_history(self, ownership_service: OwnershipService) -> None:
         from app.core.extensions import db
@@ -244,6 +248,25 @@ class TestPageStreakResults:
     def test_reset_without_a_run_is_rejected(self) -> None:
         with pytest.raises(ValueError):
             self.service.abandon_run(self.user_id, "Trapper")
+
+    def test_a_killer_the_player_lost_cannot_be_opened_but_its_run_can_still_be_given_up(
+        self, ownership_service: OwnershipService, db_session: Session
+    ) -> None:
+        trapper_perks = make_perks(8, character="Trapper", start=100)
+        seed_perks(trapper_perks)
+        # The pool follows the killers the player owns, so another killer's perks keep it from emptying.
+        self.service = PageStreakService(perk_service=FakePerkService(self.perks + trapper_perks))
+        self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")
+        nurse = db_session.scalars(select(Killer).where(Killer.name == "Nurse")).one()
+        ownership_service.set_character_ownership(self.user_id, nurse.id, False, "Killer")
+
+        with pytest.raises(NotFoundError):
+            self.service.get_run(self.user_id, "Nurse")
+        with pytest.raises(NotFoundError):
+            self.service.submit_result(self.user_id, "Nurse", 2, self.build_for(2), "win")
+
+        abandoned = self.service.abandon_run(self.user_id, "Nurse")
+        assert (abandoned["status"], abandoned["current_page"], abandoned["attempt"]) == ("in_progress", 1, 2)
 
     def test_apply_inactivity_loss_resets_page_and_increments_attempt(self) -> None:
         self.service.submit_result(self.user_id, "Nurse", 1, self.build_for(1), "win")

@@ -1,5 +1,6 @@
 # backend/app/routes/page_streak.py
 from flask import g, jsonify, request
+from app.core.errors import value_error_status
 from app.core.security import login_required
 from app.core.service_registry import make_service_getter
 from app.core.streak_blueprint import make_streak_blueprint
@@ -85,7 +86,7 @@ def lock_pages():
     try:
         run = get_page_streak_service().lock_pages(g.current_user.id, killer)
     except ValueError as err:
-        return api_error(str(err), 404 if "not found" in str(err).lower() else 400)
+        return api_error(str(err), value_error_status(err))
 
     return jsonify({"run": run}), 200
 

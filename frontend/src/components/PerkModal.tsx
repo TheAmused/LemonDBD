@@ -85,11 +85,8 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose }) => {
         <div id="perk-modal-description">
           <PerkDescription description={perk.description} variant="modal" />
         </div>
-        {/* The footer: this perk's own types under its description, with no heading of their own.
-            Left out when the perk came without them, rather than showing the fallback type. */}
-        {perk.perk_types && perk.perk_types.length > 0 && (
-          <PerkTypeBadges perk={perk} className="mt-4 border-t border-border-color pt-4" />
-        )}
+        {/* The footer: this perk's own types under its description, with no heading of their own. */}
+        <PerkTypeBadges perk={perk} className="mt-4 border-t border-border-color pt-4" />
       </div>
     </Modal>
   );

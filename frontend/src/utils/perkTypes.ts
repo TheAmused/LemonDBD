@@ -33,9 +33,14 @@ export function isPerkType(value: string): value is PerkType {
   return KNOWN.has(value);
 }
 
+/** The types the perk's list carries that this app knows, primary first. Empty when there is no list or none is known. */
+export function readKnownPerkTypes(perk: Pick<Perk, 'perk_types'>): readonly PerkType[] {
+  return upgradeLegacyPerkTypes(perk.perk_types ?? []).filter(isPerkType);
+}
+
 /** The perk's known types, primary first. A missing or empty list reads as ['entity']. */
 export function getKnownPerkTypes(perk: Pick<Perk, 'perk_types'>): readonly PerkType[] {
-  const known = upgradeLegacyPerkTypes(perk.perk_types ?? []).filter(isPerkType);
+  const known = readKnownPerkTypes(perk);
   return known.length > 0 ? known : ['entity'];
 }
 

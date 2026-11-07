@@ -46,6 +46,7 @@ export interface PerkItem {
   icon_url?: string;
   icon_local_path?: string;
   perk_types?: string[];
+  is_generic_counterpart?: boolean;
   is_teachable?: boolean;
   is_disabled?: boolean;
   disabled_reason?: string | null;

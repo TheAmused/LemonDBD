@@ -42,14 +42,9 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
             <TileButton
               onClick={() =>
                 onSelectPerk({
-                  id: perk.id,
-                  name: perk.name,
-                  alternate_name: perk.alternate_name,
-                  category: perk.category,
-                  perk_types: perk.perk_types,
+                  ...perk,
                   character: perk.character || character.name,
                   character_avatar_path: perk.character_avatar_path || character.avatar_local_path,
-                  description: perk.description,
                   icon_url: perk.icon_url || '',
                   icon_local_path: perk.icon_local_path || '',
                 })

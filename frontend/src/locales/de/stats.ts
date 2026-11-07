@@ -11,7 +11,5 @@ export default {
   ownedPerks: "Besessene Talente",
   active: "Aktiv",
   loss: "Niederlage",
-  current: "Aktuell",
-  best: "Bestwert",
   progress: 'Fortschritt',
 } as const;

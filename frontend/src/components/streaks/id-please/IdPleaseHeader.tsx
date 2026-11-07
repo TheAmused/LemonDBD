@@ -3,18 +3,15 @@
 
 import React from 'react';
 import { Flame } from 'lucide-react';
-import type { IdPleaseDifficulty, IdPleaseSide } from '@/types/idPleaseStreak';
-import { Img } from '@/components/common/Img';
+import type { IdPleaseDifficulty } from '@/types/idPleaseStreak';
 import { useDictionary } from '@/context/DictionaryContext';
 import { ChallengeHeaderLayout, ModeSelectButton, StandardHeaderActions } from '../ChallengePanel';
 import { StreakStatTiles } from '../StreakStatTiles';
-import { ID_PLEASE_DIFFICULTY_TONE, idPleaseDifficultyImage } from './idPleaseAssets';
+import { ID_PLEASE_DIFFICULTY_TONE } from './idPleaseAssets';
 import { TrophyIcon } from '@/components/icons/DbdIcons';
 
 export interface IdPleaseHeaderProps {
   difficulty: IdPleaseDifficulty;
-  /** The side of the match in play (or the side being set up); the artwork follows it. */
-  side: IdPleaseSide;
   streak: number;
   best: number;
   onOpenRules: () => void;
@@ -26,7 +23,6 @@ export interface IdPleaseHeaderProps {
 
 export const IdPleaseHeader: React.FC<IdPleaseHeaderProps> = ({
   difficulty,
-  side,
   streak,
   best,
   onOpenRules,
@@ -46,23 +42,14 @@ export const IdPleaseHeader: React.FC<IdPleaseHeaderProps> = ({
   return (
     <ChallengeHeaderLayout
       stats={
-        <>
-          <Img
-            src={idPleaseDifficultyImage(side, difficulty)}
-            alt={s.idPleaseTitle}
-            width={56}
-            height={56}
-            className="hidden h-14 w-14 rounded-control border border-border-color object-cover sm:block"
-          />
-          <StreakStatTiles
-            current={streak}
-            best={best}
-            currentLabel={s.current}
-            bestLabel={s.best}
-            currentIcon={<Flame className="icon-lg" />}
-            bestIcon={<TrophyIcon className="icon-lg" />}
-          />
-        </>
+        <StreakStatTiles
+          current={streak}
+          best={best}
+          currentLabel={s.current}
+          bestLabel={s.best}
+          currentIcon={<Flame className="icon-lg" />}
+          bestIcon={<TrophyIcon className="icon-lg" />}
+        />
       }
       actions={
         <StandardHeaderActions

@@ -6,11 +6,9 @@
 // Filters button carries the number of filters that are on. Below lg the row wraps. Centred and capped at the
 // width of the Smash or Pass hub header (max-w-6xl), not stretched across the whole page.
 
-import React, { useMemo } from 'react';
-import { SlidersHorizontal } from 'lucide-react';
+import React from 'react';
 import type { SegmentedControlOption } from '@/components/common/SegmentedControl';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
-import { CustomDropdown } from '@/components/common/CustomDropdown';
 import type {
   RoleCategory,
   ScopeFilter,
@@ -20,11 +18,10 @@ import type {
 } from '@/types/perks';
 import { useDictionary } from '@/context/DictionaryContext';
 import { Surface } from '@/components/common/Surface';
-import { Badge } from '@/components/common/Badge';
 import { PerkSearchBox, CONTROL_H, CONTROL_HEIGHT } from '@/components/perks/PerkSearchBox';
-import { PerkFilterPanel, type PerkTypeCounts } from '@/components/perks/PerkFilterPanel';
+import { PerkFilterMenu } from '@/components/perks/PerkFilterMenu';
 import { PerkSortMenu } from '@/components/perks/PerkSortMenu';
-import { PERK_TYPES, getKnownPerkTypes, type PerkType } from '@/utils/perkTypes';
+import type { PerkType, PerkTypeCounts } from '@/utils/perkTypes';
 
 const NO_PERKS: readonly Perk[] = [];
 const NO_TYPES: readonly PerkType[] = [];
@@ -84,17 +81,6 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     }) => {
   const dict = useDictionary();
 
-  // Only the types this role's perks actually have are offered (no "Hex 0" on the Survivor side).
-  const roleTypeCounts = useMemo(() => {
-    const counts: PerkTypeCounts = {};
-    for (const perk of rolePerks) for (const type of getKnownPerkTypes(perk)) counts[type] = (counts[type] ?? 0) + 1;
-    return counts;
-  }, [rolePerks]);
-  const roleTypes = useMemo(() => PERK_TYPES.filter((type) => (roleTypeCounts[type] ?? 0) > 0), [roleTypeCounts]);
-
-  // Owned and General are one choice in the popover, so together they count once.
-  const panelFilterCount = activeTypes.length + (ownershipFilter !== 'all' || scope !== 'all' ? 1 : 0);
-
   const roleOptions: readonly [SegmentedControlOption<RoleCategory>, SegmentedControlOption<RoleCategory>] = [
     { value: 'Survivor', activeClassName: 'bg-accent-green text-text-inverted', label: dict.filters.survivor },
     { value: 'Killer', activeClassName: 'bg-accent-red text-text-inverted', label: dict.filters.killer },
@@ -132,43 +118,13 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
             className="relative z-40 min-w-56 flex-1 lg:w-96 lg:flex-none"
           />
 
-          <CustomDropdown
-            ariaLabel={dict.filters.filtersTitle}
-            label={
-              <span className="inline-flex items-center gap-2">
-                {dict.filters.filtersTitle}
-                {panelFilterCount > 0 && (
-                  <Badge tone="red" size="xs" plain>
-                    {panelFilterCount}
-                  </Badge>
-                )}
-              </span>
-            }
-            icon={<SlidersHorizontal className="icon-sm" />}
-            accent="primary"
-            align="right"
-            minWidthClass=""
-            menuClassName="w-72 sm:w-96"
-            buttonClassName={CONTROL_HEIGHT}
-          >
-            <PerkFilterPanel
-              roleTypes={roleTypes}
-              activeTypes={activeTypes}
-              typeCounts={typeCounts ?? roleTypeCounts}
-              onTypesChange={onTypesChange}
-              ownershipFilter={ownershipFilter}
-              setOwnershipFilter={setOwnershipFilter}
-              isLoggedIn={isLoggedIn}
-              scope={scope}
-              setScope={setScope}
-              hasFilters={panelFilterCount > 0}
-              onClear={() => {
-                onTypesChange([]);
-                setOwnershipFilter('all');
-                setScope('all');
-              }}
-            />
-          </CustomDropdown>
+          <PerkFilterMenu
+            perks={rolePerks}
+            activeTypes={activeTypes}
+            onTypesChange={onTypesChange}
+            typeCounts={typeCounts}
+            scopeFilter={{ ownershipFilter, setOwnershipFilter, isLoggedIn, scope, setScope }}
+          />
 
           <PerkSortMenu
             order={order}

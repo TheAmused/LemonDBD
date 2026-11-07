@@ -32,6 +32,7 @@ class PageStreakRunDict(TypedDict):
     status: str
     attempts: int
     attempt: int
+    attempt_matches: int
     current_page: int
     best_page: int
     pages: list[list[str]]

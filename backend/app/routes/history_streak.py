@@ -1,5 +1,6 @@
 # backend/app/routes/history_streak.py
 from flask import g, jsonify, request
+from app.core.errors import value_error_status
 from app.core.security import login_required
 from app.core.service_registry import make_service_getter
 from app.core.streak_blueprint import make_streak_blueprint
@@ -40,7 +41,7 @@ def submit_result():
     try:
         run = service.submit_result(g.current_user.id, dto.run_id, dto.result, dto.killer_id)
     except ValueError as e:
-        status = 404 if "not found" in str(e).lower() else 400
+        status = value_error_status(e)
         return api_error(str(e), status)
     return jsonify({"run": run}), 200
 

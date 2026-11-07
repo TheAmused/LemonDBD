@@ -1,12 +1,12 @@
 # backend/app/services/page_streak/roster.py
 import logging
-from collections.abc import Callable
-from typing import Any
+from collections.abc import Callable, Collection, Mapping
+from typing import Any, TypedDict
 from sqlalchemy import func, select
 
 from app.core.extensions import db
 from app.models import Killer, PageStreakRun
-from app.services.challenge_completions import fetch_completed_variants
+from app.services.challenge_completions import fetch_completed_pages, fetch_completed_variants
 from app.services.ownership.characters import get_owned_killers
 from app.services.ownership_service import OwnershipService
 from app.services.perks import PerkService
@@ -41,10 +41,19 @@ def get_character_release_numbers(perk_service: PerkService) -> dict[str, int]:
     return numbers
 
 
-def get_owned_killers_ordered(user_id: int, perk_service: PerkService, ownership_service: OwnershipService) -> list[str]:
-    """Retrieve owned killer names sorted by release sequence."""
-    owned_characters = ownership_service.get_user_characters(user_id, role="Killer")
-    owned_names = {c["name"] for c in owned_characters if c["is_owned"] and not c.get("is_disabled")}
+class RosterKiller(TypedDict):
+    owned: bool
+    disabled: bool
+    disabled_reason: str | None
+
+
+def get_roster_killers(user_id: int, perk_service: PerkService, ownership_service: OwnershipService) -> dict[str, RosterKiller]:
+    """Every killer in the game, by release sequence, as name -> ownership and kill-switch state.
+
+    Killers an admin disabled stay listed, flagged `disabled`, so the roster can mark them; they cannot be played.
+    The roster also shows killers the user does not own.
+    """
+    characters = ownership_service.get_user_characters(user_id, role="Killer")
     release_numbers = get_character_release_numbers(perk_service)
 
     def sort_key(name: str):
@@ -53,13 +62,34 @@ def get_owned_killers_ordered(user_id: int, perk_service: PerkService, ownership
             return (1, 0, name)
         return (0, position, name)
 
-    return sorted(owned_names, key=sort_key)
+    by_name = {c["name"]: c for c in characters}
+    return {
+        name: {
+            "owned": bool(by_name[name]["is_owned"]),
+            "disabled": bool(by_name[name].get("is_disabled")),
+            "disabled_reason": by_name[name].get("disabled_reason"),
+        }
+        for name in sorted(by_name, key=sort_key)
+    }
+
+
+def get_owned_killers_ordered(user_id: int, perk_service: PerkService, ownership_service: OwnershipService) -> list[str]:
+    """Retrieve owned killer names sorted by release sequence."""
+    return [
+        name
+        for name, killer in get_roster_killers(user_id, perk_service, ownership_service).items()
+        if killer["owned"] and not killer["disabled"]
+    ]
+
+
+def killer_avatar_map(killers: list[dict[str, Any]]) -> dict[str, str]:
+    """Name -> avatar_local_path for these killers (the roster also shows the ones the user does not own)."""
+    return {c["name"]: c["avatar_local_path"] for c in killers if c.get("avatar_local_path")}
 
 
 def get_killer_avatar_map(user_id: int, ownership_service: OwnershipService) -> dict[str, str]:
-    """Name -> avatar_local_path for the user's owned killers."""
-    owned = ownership_service.get_user_characters(user_id, role="Killer")
-    return {c["name"]: c["avatar_local_path"] for c in owned if c["is_owned"] and c.get("avatar_local_path")}
+    """Name -> avatar_local_path for every killer the user's roster lists."""
+    return killer_avatar_map(ownership_service.get_user_characters(user_id, role="Killer"))
 
 
 def get_owned_killer_ids(user_id: int, ownership_service: OwnershipService) -> dict[str, int]:
@@ -78,7 +108,7 @@ def get_owned_killer_ids(user_id: int, ownership_service: OwnershipService) -> d
 def get_live_roster_badge(
     user_id: int,
     ownership_service: OwnershipService,
-    completed_killers: set[str] | None = None,
+    completed_killers: Collection[str] | None = None,
 ) -> dict[str, Any]:
     """Live "have you cleared literally everyone you currently own" check.
 
@@ -116,13 +146,13 @@ def build_roster_summary(
     perk_service: PerkService,
     ownership_service: OwnershipService,
     build_pages_fn: Callable[[int], list[list[str]]],
-    completed_killers: set[str] | None = None,
+    completed_pages: Mapping[str, int | None] | None = None,
 ) -> list[dict[str, Any]]:
     """Generate roster status overview with active streak checkpoints.
 
-    `completed_killers` lets a caller that already fetched this user's
-    page_streak completions (e.g. to also resolve the roster-wide milestone)
-    pass it in instead of this function querying it again.
+    `completed_pages` (killer -> most pages it was cleared on) lets a caller that already fetched this
+    user's page_streak completions (e.g. to also resolve the roster-wide milestone) pass it in instead
+    of this function querying it again.
     """
     page_count = len(build_pages_fn(user_id))
     runs_db = db.session.scalars(
@@ -133,34 +163,39 @@ def build_roster_summary(
     # Read from the persistent completion history, not the run's own status --
     # a per-killer abandon wipes the run's status back to "in_progress" but this
     # badge must survive it (that's the whole point of tracking it separately).
-    if completed_killers is None:
-        completed_killers = fetch_completed_variants(user_id, "page_streak")
+    if completed_pages is None:
+        completed_pages = fetch_completed_pages(user_id, "page_streak")
     roster: list[dict[str, Any]] = []
 
-    for killer in get_owned_killers_ordered(user_id, perk_service, ownership_service):
+    for killer, flags in get_roster_killers(user_id, perk_service, ownership_service).items():
         r = runs.get(killer)
-        avatar_local_path = avatar_map.get(killer)
-        ever_completed = killer in completed_killers
-        if r is None:
+        common = {
+            "killer": killer,
+            "avatar_local_path": avatar_map.get(killer),
+            "ever_completed": killer in completed_pages,
+            # The most pages the killer was cleared on; None when it never was or the clear predates the count.
+            "completed_pages": completed_pages.get(killer),
+            "owned": flags["owned"],
+            "disabled": flags["disabled"],
+            "disabled_reason": flags["disabled_reason"],
+        }
+        # Opening a killer creates its run, but nothing is started until the first match is played.
+        if r is None or (r.status == "in_progress" and r.attempt_matches == 0):
             roster.append({
-                "killer": killer,
+                **common,
                 "status": "not_started",
-                "attempt": 0,
+                "attempt": r.attempt if r else 0,
                 "current_page": 0,
-                "best_page": 0,
+                "best_page": r.best_page if r else 0,
                 "page_count": page_count,
-                "avatar_local_path": avatar_local_path,
-                "ever_completed": ever_completed,
             })
         else:
             roster.append({
-                "killer": killer,
+                **common,
                 "status": r.status,
                 "attempt": r.attempt,
                 "current_page": r.current_page,
                 "best_page": r.best_page,
-                "page_count": len(r.pages),
-                "avatar_local_path": avatar_local_path,
-                "ever_completed": ever_completed,
+                "page_count": len(r.pages) or page_count,
             })
     return roster

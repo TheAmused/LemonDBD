@@ -5,7 +5,7 @@ import React, { useCallback, useEffect, useEffectEvent, useMemo, useRef, useStat
 
 import type { Perk } from '@/types/gauntletStreak';
 import type { AddonRarity } from '@/types/chaosStreak';
-import { ADDON_RARITY_ICONS } from '@/constants/addonRarityIcons';
+import { ADDON_RARITY_ICONS, ADDON_RARITY_LABEL_KEYS } from '@/constants/addonRarityIcons';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import type { ReelDirection} from './useSlotReels';
 import { useSlotReels, REEL_SPIN_MS } from './useSlotReels';
@@ -146,6 +146,7 @@ const ReelStrip: React.FC<{
 };
 
 const RarityBadge: React.FC<{ rarity: AddonRarity; visible: boolean }> = ({ rarity, visible }) => {
+  const dict = useDictionary();
   if (!visible) return <div className="h-9 w-28 sm:h-10" />;
   return (
     <span className="chaos-badge-pop inline-flex items-center gap-1.5 rounded-chip border border-accent-red/30 bg-bg-surface/80 pl-1 pr-2.5 py-1 type-card-title text-text-primary sm:gap-2 sm:pr-3">
@@ -154,7 +155,7 @@ const RarityBadge: React.FC<{ rarity: AddonRarity; visible: boolean }> = ({ rari
         alt=""
         className="h-7 w-7 rounded-chip object-cover border border-border-color sm:h-9 sm:w-9"
       />
-      {rarity}
+      {dict.streaks[ADDON_RARITY_LABEL_KEYS[rarity]]}
     </span>
   );
 };

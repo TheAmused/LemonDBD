@@ -132,7 +132,7 @@ class HistoryService(StreakRunService):
         return self._abandon_run(user_id, mode)
 
     def submit_result(self, user_id: int, run_id: int, result: str, killer_id: str) -> HistoryRunState:
-        assert_challenge_mode_enabled("history")
+        assert_challenge_mode_enabled("history", user_id)
         self._validate_killer_submission(result, killer_id)
         run = self._load_run_for_result(user_id, run_id)
 

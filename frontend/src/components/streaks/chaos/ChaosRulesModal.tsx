@@ -4,7 +4,7 @@
 import React from 'react';
 import { RulesModalShell } from '../RulesModalShell';
 import {
-  DIFFICULTY_BADGE,
+  DIFFICULTY_TEXT,
   RulesDifficultyRows,
   RulesSection,
   RulesHowItWorks,
@@ -47,17 +47,17 @@ export const ChaosRulesModal: React.FC<ChaosRulesModalProps> = ({ isOpen, onClos
             {
               label: s.chaosEasyLabel,
               text: s.chaosEasyDesc,
-              badgeClassName: DIFFICULTY_BADGE.green,
+              labelClassName: DIFFICULTY_TEXT.green,
             },
             {
               label: s.chaosMediumLabel,
               text: s.chaosMediumDesc,
-              badgeClassName: DIFFICULTY_BADGE.amber,
+              labelClassName: DIFFICULTY_TEXT.amber,
             },
             {
               label: s.chaosHellLabel,
               text: s.chaosHellDesc,
-              badgeClassName: DIFFICULTY_BADGE.red,
+              labelClassName: DIFFICULTY_TEXT.red,
             },
           ]}
         />

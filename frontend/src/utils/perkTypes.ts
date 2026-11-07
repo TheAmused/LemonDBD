@@ -39,6 +39,20 @@ export function getKnownPerkTypes(perk: Pick<Perk, 'perk_types'>): readonly Perk
   return known.length > 0 ? known : ['entity'];
 }
 
+export type PerkTypeCounts = Partial<Record<PerkType, number>>;
+
+/** How many of the perks have each type (a type none has is absent). */
+export function countPerkTypes(perks: readonly Perk[]): PerkTypeCounts {
+  const counts: PerkTypeCounts = {};
+  for (const perk of perks) for (const type of getKnownPerkTypes(perk)) counts[type] = (counts[type] ?? 0) + 1;
+  return counts;
+}
+
+/** The types that have at least one perk, in display order: no "Hex 0" on a side without hexes. */
+export function typesWithPerks(counts: PerkTypeCounts): PerkType[] {
+  return PERK_TYPES.filter((type) => (counts[type] ?? 0) > 0);
+}
+
 /** The types the given perks of each role actually have. */
 export function perkTypesByRole(perks: readonly Perk[]): Record<RoleCategory, ReadonlySet<PerkType>> {
   const byRole: Record<RoleCategory, Set<PerkType>> = { Survivor: new Set(), Killer: new Set() };

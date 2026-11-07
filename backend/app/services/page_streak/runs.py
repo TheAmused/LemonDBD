@@ -1,14 +1,14 @@
 # backend/app/services/page_streak/runs.py
 from collections.abc import Callable
 from datetime import datetime
-from sqlalchemy import Select, delete, select
+from sqlalchemy import Select, and_, or_, select
 from sqlalchemy.orm import selectinload
 
 from app.core.extensions import db
-from app.core.transaction import lock_for_update, transaction
+from app.core.transaction import end_transaction, lock_for_update, transaction
 from app.models import PageStreakPageLog, PageStreakRun, utcnow
 from app.schemas.page_streak import PageStreakHistoryEntry, PageStreakRunDict
-from app.services.challenge_completions import delete_completions, record_challenge_completion
+from app.services.challenge_completions import record_challenge_completion
 from app.services.match_log_retention import add_match_log
 from app.services.streak_run import load_idle_run_locked
 from app.services.page_streak.helpers import BUILD_SIZE, to_utc_iso
@@ -30,6 +30,7 @@ def run_to_dict(
         "status": r.status,
         "attempts": r.attempts,
         "attempt": r.attempt,
+        "attempt_matches": r.attempt_matches,
         "current_page": r.current_page,
         "best_page": r.best_page,
         "pages": pages,
@@ -79,10 +80,10 @@ def create_new_run(
     if fetch_run(user_id, killer) is not None:
         raise ValueError(f"A run already exists for {killer}")
 
-    pages = build_pages_fn(user_id)
-    if not pages:
-        raise ValueError("No perks available — the pool is empty")
+    if not build_pages_fn(user_id):
+        raise ValueError("No perks available: the pool is empty")
 
+    # The pages are not saved yet: until the player locks in a build, the run follows the live perk pool.
     run = PageStreakRun(
         user_id=user_id,
         killer=killer,
@@ -91,7 +92,7 @@ def create_new_run(
         attempt=1,
         current_page=1,
         best_page=0,
-        pages=pages,
+        pages=[],
         snapshot_at=utcnow(),
     )
     with transaction():
@@ -151,7 +152,7 @@ def record_match_result(
 
     with transaction():
         if not r.pages:
-            r.pages = run["pages"]
+            _freeze_pages(r, run["pages"])
         log = PageStreakPageLog(
             run_id=r.id,
             attempt=r.attempt,
@@ -172,6 +173,7 @@ def record_match_result(
                     attempts_taken=r.attempts + 1,
                     matches_played=r.playthrough_matches,
                     unlocked_characters_count=0,
+                    pages_count=run["page_count"],
                 )
                 r.finish_playthrough()
             else:
@@ -206,6 +208,41 @@ def apply_inactivity_loss(run_id: int, idle_before: datetime | None = None) -> b
     return True
 
 
+def _freeze_pages(r: PageStreakRun, pages: list[list[str]]) -> None:
+    """Save the pages the run is played on, so later changes to the player's perks leave them alone."""
+    r.pages = pages
+    r.snapshot_at = utcnow()
+
+
+def _reset_to_first_page(r: PageStreakRun) -> None:
+    """What giving a run up does: a new attempt counted if it was played, back to page 1, no frozen pages."""
+    r.abandon_attempt()
+    r.status = "in_progress"
+    r.current_page = 1
+    r.pages = []
+    r.snapshot_at = utcnow()
+
+
+def lock_pages(
+    user_id: int,
+    killer: str,
+    build_pages_fn: Callable[[int], list[list[str]]],
+) -> PageStreakRunDict | None:
+    """The player locked in a build: from here the run keeps its pages. A run that already has them is left alone."""
+    r = db.session.scalars(run_query(user_id, killer, lock=True)).first()
+    if r is None:
+        raise ValueError(f"No run in progress for {killer}")
+    if r.status == "in_progress" and not r.pages:
+        pages = build_pages_fn(user_id)
+        if not pages:
+            raise ValueError("No perks available: the pool is empty")
+        with transaction():
+            _freeze_pages(r, pages)
+    else:
+        end_transaction()  # nothing to lock: do not hold the row until the request ends
+    return fetch_run(user_id, killer, build_pages_fn)
+
+
 def abandon_active_run(
     user_id: int,
     killer: str,
@@ -217,47 +254,31 @@ def abandon_active_run(
         raise ValueError(f"No run to abandon for {killer}")
 
     if not build_pages_fn(user_id):
-        raise ValueError("No perks available — the pool is empty")
+        raise ValueError("No perks available: the pool is empty")
 
     with transaction():
-        r.abandon_attempt()
-        r.status = "in_progress"
-        r.current_page = 1
-        r.pages = []
-        r.snapshot_at = utcnow()
+        _reset_to_first_page(r)
 
     return fetch_run(user_id, killer, build_pages_fn)
 
 
-def reset_all_runs(user_id: int) -> None:
-    """Wipe every killer's Page Streak run AND their "already won" badges.
+def abandon_all_runs(user_id: int) -> None:
+    """Abandon every started or finished run, killer by killer, like abandon_active_run does for one.
 
-    Deliberately more destructive than abandon_active_run: a per-killer abandon
-    leaves past completions alone (so the roster badge survives), but this
-    "start completely over" action clears both -- the whole point is a clean
-    slate across the entire roster.
+    A run nobody played a match in has nothing to give up and is left alone.
+    Match history, stats and completions stay.
     """
+    runs = db.session.scalars(
+        lock_for_update(
+            select(PageStreakRun).where(
+                PageStreakRun.user_id == user_id,
+                or_(
+                    PageStreakRun.status == "completed",
+                    and_(PageStreakRun.status == "in_progress", PageStreakRun.attempt_matches > 0),
+                ),
+            )
+        )
+    ).all()
     with transaction():
-        db.session.execute(delete(PageStreakRun).where(PageStreakRun.user_id == user_id))
-        delete_completions(user_id, "page_streak")
-
-
-def refresh_untouched_run(
-    user_id: int,
-    killer: str,
-    build_pages_fn: Callable[[int], list[list[str]]],
-) -> None:
-    """A run with no match played in its current attempt follows the live perk pool,
-    so unlocking killers or perks after it was created does not leave it on old pages."""
-    r = db.session.scalars(run_query(user_id, killer)).first()
-    if r is None or r.status != "in_progress" or r.current_page != 1:
-        return
-    if any(log.attempt == r.attempt for log in r.page_logs):
-        return
-    pages = build_pages_fn(user_id)
-    if not pages or pages == r.pages:
-        return
-    with transaction():
-        r.pages = pages
-        r.snapshot_at = utcnow()
-
+        for r in runs:
+            _reset_to_first_page(r)

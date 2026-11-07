@@ -6,6 +6,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react
 import type { ChallengeCompletion } from '@/types/challengeCompletion';
 import { useAuth } from '@/context/AuthContext';
 import { createRunRequestTracker } from './runRequestTracker';
+import { StreakApiError } from '@/services/streakApiClient';
 
 export interface ChallengeRunConfig<TRun, TStats> {
   /** Changes whenever the run being shown changes (role, mode, killer...), which reloads everything. */
@@ -16,6 +17,8 @@ export interface ChallengeRunConfig<TRun, TStats> {
   fetchStats: (token: string) => Promise<TStats>;
   fetchCompletions: (token: string) => Promise<ChallengeCompletion[]>;
 }
+
+const statusOf = (err: unknown): number | undefined => (err instanceof StreakApiError ? err.status : undefined);
 
 /**
  * The load/mutate state machine every challenge shares: the current run, its
@@ -44,8 +47,10 @@ export function useChallengeRun<TRun, TStats>(config: ChallengeRunConfig<TRun, T
   // Every run with a server action in flight; this run is busy while it is one of them.
   const [actingScopes, setActingScopes] = useState<readonly string[]>([]);
   // An error belongs to the run it happened on.
-  const [failure, setFailure] = useState<{ scope: string; message: string } | null>(null);
+  const [failure, setFailure] = useState<{ scope: string; message: string; status?: number } | null>(null);
   const error = failure && failure.scope === scope ? failure.message : null;
+  // The HTTP status of the failed request, when the server answered, so a board can tell "not found" from the rest.
+  const errorStatus = failure && failure.scope === scope ? failure.status : undefined;
 
   // Promise chains rather than async/await: the state they set is only ever set in their callbacks.
   const loadStats = useCallback((): Promise<void> => {
@@ -83,7 +88,7 @@ export function useChallengeRun<TRun, TStats>(config: ChallengeRunConfig<TRun, T
           setFailure(null);
         },
         (err: unknown) => {
-          if (isLatest()) setFailure({ scope, message: err instanceof Error ? err.message : 'Could not load this run' });
+          if (isLatest()) setFailure({ scope, message: err instanceof Error ? err.message : 'Could not load this run', status: statusOf(err) });
         }
       )
       .finally(() => {
@@ -124,7 +129,7 @@ export function useChallengeRun<TRun, TStats>(config: ChallengeRunConfig<TRun, T
         setLoadedFor(requestScope);
         return updated;
       } catch (err) {
-        if (tracker.currentScope() === requestScope) setFailure({ scope: requestScope, message: err instanceof Error ? err.message : failureMessage });
+        if (tracker.currentScope() === requestScope) setFailure({ scope: requestScope, message: err instanceof Error ? err.message : failureMessage, status: statusOf(err) });
         return undefined;
       } finally {
         tracker.finishAction(requestScope);
@@ -136,7 +141,7 @@ export function useChallengeRun<TRun, TStats>(config: ChallengeRunConfig<TRun, T
 
   const busy = actingScopes.includes(scope);
 
-  return { token, run, stats, completions, loading, busy, error, load, loadStats, loadCompletions, mutate };
+  return { token, run, stats, completions, loading, busy, error, errorStatus, load, loadStats, loadCompletions, mutate };
 }
 
 /** The one-off checkpoint celebration state shared by Gauntlet and Chaos. */

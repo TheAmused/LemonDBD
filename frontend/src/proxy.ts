@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { i18n, type Locale } from '@/i18n/config';
 import { adminOnlyPageFromPathname, adminPanelLocaleFromPathname } from '@/utils/adminOnlyPages';
+import { STREAK_ROLE_COOKIE, resolveStreakRole } from '@/utils/streakRole';
 
 function getPreferredLocale(request: NextRequest): Locale {
     const acceptLanguage = request.headers.get('accept-language');
@@ -109,6 +110,15 @@ export async function proxy(request: NextRequest) {
         );
     }
 
+    // A bare /streaks goes straight to the remembered role tab. Redirecting from the page instead arrives
+    // after the layout has streamed, so the tabs paint the wrong role (survivor) before jumping.
+    const streaksLocale = i18n.locales.find((l) => pathname === `/${l}/streaks` || pathname === `/${l}/streaks/`);
+    if (streaksLocale) {
+        const role = resolveStreakRole(request.cookies.get(STREAK_ROLE_COOKIE)?.value);
+        const response = NextResponse.redirect(new URL(`/${streaksLocale}/streaks/${role}`, request.url));
+        response.headers.set('Cache-Control', 'no-store');
+        return response;
+    }
 }
 
 export const config = {

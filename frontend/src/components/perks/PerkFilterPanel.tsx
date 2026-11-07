@@ -10,9 +10,19 @@ import { Button } from '@/components/common/Button';
 import { FieldLabel } from '@/components/common/Field';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import type { OwnershipFilter, ScopeFilter } from '@/types/perks';
-import type { PerkType } from '@/utils/perkTypes';
+import type { PerkType, PerkTypeCounts } from '@/utils/perkTypes';
 
-export type PerkTypeCounts = Partial<Record<PerkType, number>>;
+/** The All / Owned / General choice: two filters shown as one toggle. */
+export interface PerkScopeFilter {
+  ownershipFilter: OwnershipFilter;
+  setOwnershipFilter: (filter: OwnershipFilter) => void;
+  isLoggedIn: boolean;
+  scope: ScopeFilter;
+  setScope: (scope: ScopeFilter) => void;
+}
+
+/** Whether the All / Owned / General choice is on anything but All. */
+export const isScopeFilterOn = ({ ownershipFilter, scope }: PerkScopeFilter): boolean => ownershipFilter !== 'all' || scope !== 'all';
 
 interface PerkFilterPanelProps {
   /** The types this role's perks have, in display order. */
@@ -21,34 +31,18 @@ interface PerkFilterPanelProps {
   /** How many perks stay if the type is added to the current filters. */
   typeCounts: PerkTypeCounts;
   onTypesChange: (types: PerkType[]) => void;
-  ownershipFilter: OwnershipFilter;
-  setOwnershipFilter: (filter: OwnershipFilter) => void;
-  isLoggedIn: boolean;
-  scope: ScopeFilter;
-  setScope: (scope: ScopeFilter) => void;
+  /** Omit where the choice means nothing, e.g. a list that holds only owned perks. */
+  scopeFilter?: PerkScopeFilter;
   /** Whether anything this panel controls is on. */
   hasFilters: boolean;
   onClear: () => void;
 }
 
-export const PerkFilterPanel: React.FC<PerkFilterPanelProps> = ({
-  roleTypes,
-  activeTypes,
-  typeCounts,
-  onTypesChange,
-  ownershipFilter,
-  setOwnershipFilter,
-  isLoggedIn,
-  scope,
-  setScope,
-  hasFilters,
-  onClear,
-}) => {
-  const dict = useDictionary();
-  const locale = useLocale();
+type ScopeChoice = 'all' | 'owned' | 'general';
 
+const ScopeSection: React.FC<{ filter: PerkScopeFilter }> = ({ filter: { ownershipFilter, setOwnershipFilter, isLoggedIn, scope, setScope } }) => {
+  const dict = useDictionary();
   // One choice: "Owned" and "General" exclude each other, which is how the two filters read in a single toggle.
-  type ScopeChoice = 'all' | 'owned' | 'general';
   const choice: ScopeChoice = ownershipFilter === 'owned' ? 'owned' : scope === 'general' ? 'general' : 'all';
   const setChoice = (next: ScopeChoice) => {
     setOwnershipFilter(next === 'owned' ? 'owned' : 'all');
@@ -59,20 +53,36 @@ export const PerkFilterPanel: React.FC<PerkFilterPanelProps> = ({
     { value: 'owned', label: dict.filters.ownedOnly, disabled: !isLoggedIn },
     { value: 'general', label: dict.filters.generalShort },
   ];
+  return (
+    <div>
+      <FieldLabel as="span">{dict.filters.scopeTitle}</FieldLabel>
+      <SegmentedControl
+        ariaLabel={dict.filters.ownershipFilter}
+        value={choice}
+        onChange={setChoice}
+        options={scopeOptions}
+        size="sm"
+        className="flex w-full"
+      />
+    </div>
+  );
+};
+
+export const PerkFilterPanel: React.FC<PerkFilterPanelProps> = ({
+  roleTypes,
+  activeTypes,
+  typeCounts,
+  onTypesChange,
+  scopeFilter,
+  hasFilters,
+  onClear,
+}) => {
+  const dict = useDictionary();
+  const locale = useLocale();
 
   return (
     <div className="flex flex-col gap-4 p-1.5">
-      <div>
-        <FieldLabel as="span">{dict.filters.scopeTitle}</FieldLabel>
-        <SegmentedControl
-          ariaLabel={dict.filters.ownershipFilter}
-          value={choice}
-          onChange={setChoice}
-          options={scopeOptions}
-          size="sm"
-          className="flex w-full"
-        />
-      </div>
+      {scopeFilter && <ScopeSection filter={scopeFilter} />}
 
       <div>
         <FieldLabel as="span">{dict.perkTypes.typesHeading}</FieldLabel>

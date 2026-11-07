@@ -65,6 +65,8 @@ export { LockIcon } from './ui/LockIcon';
 export { SparkleIcon } from './ui/SparkleIcon';
 export { CardFlipIcon } from './ui/CardFlipIcon';
 export { MinusIcon } from './ui/MinusIcon';
+export { FiltersIcon } from './ui/FiltersIcon';
+export { PagesIcon } from './ui/PagesIcon';
 export { PlusIcon } from './ui/PlusIcon';
 export { FitIcon } from './ui/FitIcon';
 export { ImageIcon } from './ui/ImageIcon';

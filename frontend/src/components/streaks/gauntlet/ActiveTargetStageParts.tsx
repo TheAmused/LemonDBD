@@ -13,7 +13,9 @@ import { DiamondSlot } from '@/components/ui/DiamondSlot';
 import { useDictionary } from '@/context/DictionaryContext';
 import { baseSlots } from '@/utils/perkSlots';
 import { Img } from '@/components/common/Img';
-import { Tooltip } from '@/components/common/Tooltip';
+import { tip } from '@/components/common/Tooltip';
+import { DiamondCluster } from '@/components/ui/DiamondCluster';
+import { PerkTile } from '@/components/streaks/page-streak/PerkTile';
 
 const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[] = []) => {
   if (!name) return null;
@@ -111,7 +113,7 @@ const SlotChip: React.FC<{
         {badge}
       </div>
     )}
-    <DiamondSlot size={size} className={iconClassName}>
+    <DiamondSlot size={size} className={`rounded-chip ${iconClassName}`}>
       {children}
     </DiamondSlot>
     {caption && <span className={`${CAPTION_CLASS[size]} text-center text-xs font-bold leading-tight text-text-primary line-clamp-2`}>{caption}</span>}
@@ -129,40 +131,40 @@ const TEACHABLE_ACCENT = {
   red: 'bg-accent-red/10 border-accent-red/40 text-accent-red',
 };
 
-/** Hover body of the teachable slot: the character's own perks to pick from. */
-const TeachablePerkList: React.FC<{ perks: Perk[] }> = ({ perks }) => (
-  <ul className="flex items-center justify-center">
-    {perks.map((perk) => (
-      <li key={perk.id ?? perk.name} className="flex h-20 w-20 shrink-0 items-center justify-center">
-        <PerkArt perk={perk} size="h-20 w-20" />
-      </li>
-    ))}
-  </ul>
-);
+/** The character's own perks to pick the teachable slot from, packed beside its portrait like a profile build. */
+const TeachablePerkCluster: React.FC<{ perks: Perk[]; perkSize: string }> = ({ perks, perkSize }) => {
+  const perkDisplayName = usePerkDisplayName();
+  return (
+    <DiamondCluster
+      className={perkSize}
+      items={perks.map((perk) => (
+        <div key={perk.id ?? perk.name} {...tip(perkDisplayName(perk.name), undefined, 'item')}>
+          <PerkTile name={perk.name} iconSrc={perkIconFor(perk) ?? undefined} />
+        </div>
+      ))}
+    />
+  );
+};
 
 /** The "own unique perk goes here" slot, always paired with its badge.
- * `accent` lets squad color each player's slot differently; hovering it lists the character's own perks. */
-const TeachableSlot: React.FC<{ size: SlotSize; perks: Perk[]; accent?: 'amber' | 'red'; }> = ({ size, perks, accent = 'amber' }) => {
+ * `accent` lets squad color each player's slot differently. */
+const TeachableSlot: React.FC<{ size: SlotSize; accent?: 'amber' | 'red'; }> = ({ size, accent = 'amber' }) => {
   const dict = useDictionary();
   return (
-    <Tooltip variant="item" content={<TeachablePerkList perks={perks} />} disabled={perks.length === 0}>
-      <SlotChip
-        size={size}
-        iconClassName={TEACHABLE_ACCENT[accent]}
-        badge={dict.streaks.teachableBadge}
-        badgeColor={accent}
-      >
-        <Star className={SLOT_ICON_SIZE[size]} />
-      </SlotChip>
-    </Tooltip>
+    <SlotChip
+      size={size}
+      iconClassName={TEACHABLE_ACCENT[accent]}
+      badge={dict.streaks.teachableBadge}
+      badgeColor={accent}
+    >
+      <Star className={SLOT_ICON_SIZE[size]} />
+    </SlotChip>
   );
 };
 
 interface PerkSlotsRowProps {
   tierInfo: TierInfo;
   randomPerks: Perk[];
-  /** The character's own perks, listed when hovering the teachable slot. */
-  characterPerks: Perk[];
   displayName: string;
   size?: SlotSize;
   teachableAccent?: 'amber' | 'red';
@@ -171,7 +173,7 @@ interface PerkSlotsRowProps {
 }
 
 /** A single horizontal row of labelled slot chips. */
-const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, characterPerks, displayName, size = 'small', teachableAccent, bonusSlots = 0 }) => {
+const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, displayName, size = 'small', teachableAccent, bonusSlots = 0 }) => {
   const dict = useDictionary();
   const perkLimit = tierInfo.perk_limit;
   const charactersPerksOnly = tierInfo.character_perks_only;
@@ -238,7 +240,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, char
             // Every filled slot is one of the killer's own teachables, and which ones is the player's pick,
             // so it is drawn as the generic teachable slot rather than a specific perk that would look assigned.
             return <li key={`char-slot-${idx}`}>
-              <TeachableSlot size={size} perks={characterPerks} accent={teachableAccent} />
+              <TeachableSlot size={size} accent={teachableAccent} />
             </li>;
           }
 
@@ -246,7 +248,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, char
             // One of several choices, not a specific assigned perk -- a symbol
             // for "your character's own unique perk goes here", not a preview.
             return <li key="character-slot">
-              <TeachableSlot size={size} perks={characterPerks} accent={teachableAccent} />
+              <TeachableSlot size={size} accent={teachableAccent} />
             </li>;
           }
 
@@ -307,15 +309,17 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
   if (!isTeam) {
     return (
       <div className="flex w-full flex-col items-center gap-5 sm:flex-row sm:gap-8">
-        <div className="flex shrink-0 items-center gap-3 sm:w-1/3 sm:flex-col sm:border-r sm:border-border-color sm:pr-8">
-          {avatarBox('w-16 h-16 sm:w-28 sm:h-28', 'w-8 h-8 sm:w-12 sm:h-12')}
-          <span className="text-base font-bold text-text-primary text-center leading-tight">{displayName}</span>
+        <div className="flex shrink-0 items-center justify-center gap-4 sm:border-r sm:border-border-color sm:pr-8 lg:w-1/3 lg:gap-6 xl:gap-10">
+          <div className="flex flex-col items-center gap-2">
+            {avatarBox('w-16 h-16 sm:w-28 sm:h-28 xl:w-36 xl:h-36', 'w-8 h-8 sm:w-12 sm:h-12 xl:w-14 xl:h-14')}
+            <span className="max-w-36 text-base font-bold text-text-primary text-center leading-tight">{displayName}</span>
+          </div>
+          <TeachablePerkCluster perks={player.character_perks} perkSize="[--perk-size:2.75rem] sm:[--perk-size:3.5rem] xl:[--perk-size:5rem]" />
         </div>
         <div className="flex min-w-0 items-center justify-center sm:flex-1">
           <PerkSlotsRow
             tierInfo={tierInfo}
             randomPerks={player.random_perks ?? []}
-            characterPerks={player.character_perks}
             displayName={displayName}
             size="large"
             bonusSlots={bonusSlots}
@@ -326,12 +330,15 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
   }
 
   return (
-    <div className="flex w-full flex-col items-center gap-4 px-1 sm:min-h-44.5 sm:flex-row sm:px-4">
-      <div className="flex shrink-0 items-center gap-3 sm:w-1/3 sm:flex-col sm:gap-2 sm:border-r sm:border-border-color sm:pr-4">
-        {avatarBox('w-14 h-14 sm:w-24 sm:h-24', 'w-8 h-8 sm:w-10 sm:h-10')}
-        <span className="text-xs font-bold text-text-primary text-center leading-tight">{displayName}</span>
+    <div className="flex w-full flex-col items-center gap-4 px-1 sm:min-h-44.5 sm:flex-row sm:justify-center sm:gap-6 sm:px-4">
+      <div className="flex shrink-0 items-center gap-3 sm:border-r sm:border-border-color sm:pr-6 xl:gap-4">
+        <div className="flex flex-col items-center gap-1.5">
+          {avatarBox('w-14 h-14 sm:w-24 sm:h-24 xl:w-28 xl:h-28', 'w-8 h-8 sm:w-10 sm:h-10 xl:w-12 xl:h-12')}
+          <span className="max-w-28 text-xs font-bold text-text-primary text-center leading-tight">{displayName}</span>
+        </div>
+        <TeachablePerkCluster perks={player.character_perks} perkSize="[--perk-size:2.5rem] sm:[--perk-size:3rem] xl:[--perk-size:4rem]" />
       </div>
-      <div className="flex min-w-0 flex-col items-center justify-center gap-6 sm:flex-1 sm:gap-9">
+      <div className="flex min-w-0 flex-col items-center justify-center gap-6 sm:gap-9">
         {Array.from({ length: playersPerCharacter }, (_, n) => (
           <div key={n} className="flex items-center gap-2 sm:gap-4">
             {shared && (
@@ -342,7 +349,6 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
             <PerkSlotsRow
               tierInfo={tierInfo}
               randomPerks={player.random_perks ?? []}
-              characterPerks={player.character_perks}
               displayName={displayName}
               size={shared ? 'compact' : 'small'}
               teachableAccent={shared ? (n === 0 ? 'amber' : 'red') : undefined}

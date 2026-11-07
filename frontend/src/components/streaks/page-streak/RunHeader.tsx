@@ -32,8 +32,8 @@ export const RunHeader: React.FC<RunHeaderProps> = ({ run, onOpenAbandon, onOpen
           <StreakStatTiles
             current={cleared}
             best={run.best_page}
-            currentLabel={dict.stats.current}
-            bestLabel={dict.stats.best}
+            currentLabel={dict.streaks.current}
+            bestLabel={dict.streaks.best}
             currentIcon={<Flame className="icon-lg" aria-hidden="true" />}
             bestIcon={<TrophyIcon className="icon-lg" aria-hidden="true" />}
           />

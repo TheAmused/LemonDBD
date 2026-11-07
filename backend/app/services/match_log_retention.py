@@ -21,7 +21,7 @@ def add_match_log(run: StreakRun, log: StreakLog) -> None:
     match belongs to is never dropped; only if it alone is over the cap are its oldest matches.
     """
     db.session.add(log)
-    run.record_match(log.result)
+    run.record_match(log.result, log.attempt)
     db.session.flush()
 
     model = type(log)

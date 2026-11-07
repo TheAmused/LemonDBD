@@ -6,6 +6,7 @@ from app.models import ChallengeCompletionRecord, ChaosRun, GauntletRun, History
 from app.services.challenge_completions import (
     delete_completions,
     fetch_active_run_variants_by_mode,
+    fetch_completed_pages,
     fetch_completed_variants,
     fetch_completed_variants_by_mode,
     fetch_completion_counts_by_mode,
@@ -54,6 +55,27 @@ class TestChallengeCompletions:
         db_session.commit()
 
         assert fetch_completed_variants(sample_user.id, "history") == {"medium"}
+
+    def test_fetch_completed_pages_gives_the_most_pages_a_variant_was_cleared_on(
+        self, db_session: Session, sample_user: User
+    ) -> None:
+        for pages in (3, 8, 5):
+            record_challenge_completion(
+                user_id=sample_user.id, mode="page_streak", variant="The Nurse",
+                attempts_taken=1, matches_played=3, unlocked_characters_count=0, pages_count=pages,
+            )
+        record_challenge_completion(
+            user_id=sample_user.id, mode="page_streak", variant="The Hag",
+            attempts_taken=1, matches_played=3, unlocked_characters_count=0,
+        )
+        record_challenge_completion(
+            user_id=sample_user.id, mode="chaos", variant="hell",
+            attempts_taken=1, matches_played=3, unlocked_characters_count=2,
+        )
+        db_session.commit()
+
+        # A clear from before the count was kept has none; the variant is still listed.
+        assert fetch_completed_pages(sample_user.id, "page_streak") == {"The Nurse": 8, "The Hag": None}
 
     def test_completions_are_isolated_per_user(
         self, db_session: Session, sample_user: User

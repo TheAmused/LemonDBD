@@ -11,7 +11,5 @@ export default {
   ownedPerks: "Habilidades Adquiridas",
   active: "Activo",
   loss: "Derrota",
-  current: "Actual",
-  best: "Mejor",
   progress: 'Progreso',
 } as const;

@@ -4,6 +4,7 @@ from typing import Any
 
 from flask import Blueprint, g, jsonify, request
 
+from app.core.errors import value_error_status
 from app.core.security import get_current_user, login_required
 from app.utils.responses import api_error
 
@@ -37,7 +38,6 @@ def make_streak_blueprint(
     has_reveal: bool = True,
     reveal_method: str = "reveal",
     get_run_method: str = "get_or_create_run",
-    stats_requires_param: bool = True,
     game_modes: Sequence[str] | None = None,
 ) -> Blueprint:
     """Build the run/reveal/abandon/stats endpoints shared by every "pick a
@@ -96,7 +96,8 @@ def make_streak_blueprint(
             fn = getattr(service, get_run_method)
             run = fn(g.current_user.id, value, **mode_kwargs)
         except ValueError as e:
-            return api_error(str(e), 400)
+            status = value_error_status(e)
+            return api_error(str(e), status)
         return jsonify({"run": run}), 200
 
     if has_reveal:
@@ -111,7 +112,7 @@ def make_streak_blueprint(
             try:
                 run = getattr(service, reveal_method)(g.current_user.id, run_id)
             except ValueError as e:
-                status = 404 if "not found" in str(e).lower() else 400
+                status = value_error_status(e)
                 return api_error(str(e), status)
             return jsonify({"run": run}), 200
 
@@ -129,23 +130,20 @@ def make_streak_blueprint(
         try:
             run = service.abandon_run(g.current_user.id, value, **mode_kwargs)
         except ValueError as e:
-            status = 404 if "not found" in str(e).lower() else 400
+            status = value_error_status(e)
             return api_error(str(e), status)
         return jsonify({"run": run}), 200
 
     @bp.route("/stats", methods=["GET"])
     @login_required
     def get_stats():
-        service = get_service()
-        if not stats_requires_param:
-            stats = service.get_stats(g.current_user.id)
-            return jsonify({"stats": stats}), 200
         value = clean_value(request.args.get(param_name))
         if not value:
             return _param_error("query")
         mode_kwargs, mode_error = read_mode_kwargs(request.args)
         if mode_error:
             return mode_error
+        service = get_service()
         stats = service.get_stats(g.current_user.id, value, **mode_kwargs)
         return jsonify({"stats": stats}), 200
 

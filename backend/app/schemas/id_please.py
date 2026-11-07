@@ -46,6 +46,7 @@ class IdPleaseRunDict(TypedDict):
     checkpoint_loadout: dict[str, object]
     attempts: int
     attempt: int
+    attempt_matches: int
     total_wins: int
     total_losses: int
     playthrough_matches: int

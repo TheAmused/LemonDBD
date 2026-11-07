@@ -5,7 +5,7 @@ import React from 'react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { PerkHexIcon, PersonIcon } from '@/components/icons/DbdIcons';
 import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl';
-import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
+import { useCharacterDisplayName, usePerkLabel } from '@/context/DisplayNamesContext';
 import { useDictionary } from '@/context/DictionaryContext';
 import { cn } from '@/utils/cn';
 import type { IdPleaseCharacter, IdPleasePerk, IdPleaseSide } from '@/types/idPleaseStreak';
@@ -46,8 +46,9 @@ export const IdPleaseCharacterTile: React.FC<{ character: IdPleaseCharacter; sid
 };
 
 export const IdPleasePerkTile: React.FC<{ perk: IdPleasePerk; coordinate: PerkCoordinate | undefined; className?: string }> = ({ perk, coordinate, className }) => {
-  const displayName = usePerkDisplayName();
-  const name = displayName(perk.name);
+  const perkLabel = usePerkLabel();
+  // By id first: the stored name can differ from the catalog's in casing or apostrophe.
+  const name = perkLabel(perk)?.name ?? perk.name;
   return (
     <div className={cn(frame, className)}>
       <div className={artFrame}>

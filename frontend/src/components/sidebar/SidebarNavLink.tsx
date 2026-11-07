@@ -25,6 +25,8 @@ export interface SidebarNavLinkProps {
   badgeColor?: string;
   /** For a button that opens a dialog instead of going to a page. */
   hasPopup?: 'dialog';
+  /** Off for a link whose target depends on a cookie: a prefetched redirect would be reused stale. */
+  prefetch?: false;
   onClick?: () => void;
   /** Pointer or keyboard focus arrived: a chance to prefetch whatever the click will need. */
   onWarm?: () => void;
@@ -38,6 +40,7 @@ const SidebarNavLinkBase: React.FC<SidebarNavLinkProps> = ({
   badge,
   badgeColor = 'bg-accent-amber/10 text-accent-amber border-accent-amber/20',
   hasPopup,
+  prefetch,
   onClick,
   onWarm,
 }) => {
@@ -66,6 +69,7 @@ const SidebarNavLinkBase: React.FC<SidebarNavLinkProps> = ({
     return (
       <Link
         href={href}
+        prefetch={prefetch}
         aria-current={isActive ? 'page' : undefined}
         onClick={onClick}
         className={commonClasses}

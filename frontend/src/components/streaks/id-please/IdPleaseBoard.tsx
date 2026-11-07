@@ -10,6 +10,7 @@ import { TOAST_DURATION_MS } from '@/constants/timing';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import { saveIdPleaseDifficulty } from '@/utils/streakDifficultyPrefs';
+import { attemptsStarted } from '@/utils/challengeAttempts';
 import { ID_PLEASE_MODE_BY_LANE, idPleaseLaneForRole, idPleaseLaneSide, parseIdPleaseDifficulty } from '@/types/idPleaseStreak';
 import type { IdPleaseNotice } from './useIdPleaseRun';
 import { ChallengeErrorBanner, ChallengePanel } from '../ChallengePanel';
@@ -29,7 +30,6 @@ import { IdPleaseProgress } from './IdPleaseProgress';
 import { IdPleaseSetup } from './IdPleaseSetup';
 import { useIdPleaseEligibility } from './useIdPleaseEligibility';
 import { useIdPleaseRun } from './useIdPleaseRun';
-import { TrophyIcon } from '@/components/icons/DbdIcons';
 
 // Opened on demand, like the other challenge boards: none of them is needed to start playing.
 const IdPleaseStatsDrawer = dynamic(() => import('./IdPleaseStatsDrawer').then((m) => m.IdPleaseStatsDrawer), { ssr: false });
@@ -113,7 +113,6 @@ export const IdPleaseBoard: React.FC<IdPleaseBoardProps> = ({ role }) => {
         header={
           <IdPleaseHeader
             difficulty={difficulty}
-            side={side}
             streak={run?.current_streak ?? 0}
             best={run?.best_streak ?? 0}
             onOpenRules={() => setIsRulesOpen(true)}
@@ -142,6 +141,7 @@ export const IdPleaseBoard: React.FC<IdPleaseBoardProps> = ({ role }) => {
             lane={lane}
             difficulty={difficulty}
             startSide={role === 'killer' ? 'killer' : 'survivor'}
+            attemptKey={`${run.id}-${run.attempt}`}
             fingerprint={run.roster_fingerprint}
             busy={busy}
             onStart={(chosenSide, positions) => {
@@ -152,21 +152,6 @@ export const IdPleaseBoard: React.FC<IdPleaseBoardProps> = ({ role }) => {
           match && (
             <div className="space-y-3">
               <IdPleaseMatchCard match={match} />
-              <p className="text-center text-xs text-text-muted">{s.idPleaseRosterLive}</p>
-              {run.checkpoint_interval > 0 && (
-                <p className="text-center text-xs text-text-muted">
-                  {formatMessage(s.idPleaseNextCheckpoint, {
-                    wins: (Math.floor(run.current_streak / run.checkpoint_interval) + 1) * run.checkpoint_interval,
-                  })}
-                  {run.checkpoint && ` ${formatMessage(s.idPleaseCheckpointNote, { number: run.checkpoint.number })}`}
-                </p>
-              )}
-              {run.badge_earned && (
-                <p className="flex items-center justify-center gap-1 type-strong text-accent-amber">
-                  <TrophyIcon className="icon-sm" aria-hidden="true" />
-                  {s.idPleaseBadgeEarned}
-                </p>
-              )}
               <StreakActionBar>
                 <StreakActionButton variant="red" onClick={() => { void submitResult('loss'); }} disabled={busy}>
                   {s.loseMatch}
@@ -197,11 +182,10 @@ export const IdPleaseBoard: React.FC<IdPleaseBoardProps> = ({ role }) => {
       <AbandonConfirmModal
         open={confirmingAbandon}
         busy={busy}
-        message={s.idPleaseAbandonPrompt}
         onCancel={() => setConfirmingAbandon(false)}
         onConfirm={handleAbandon}
       />
-      <IdPleaseStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} attempts={run ? run.attempts + 1 : undefined} />
+      <IdPleaseStatsDrawer isOpen={isStatsOpen} onClose={() => setIsStatsOpen(false)} stats={stats} attempts={run ? attemptsStarted(run) : undefined} />
       <ChallengeCompletionHistoryDrawer
         isOpen={isHistoryOpen}
         onClose={() => setIsHistoryOpen(false)}

@@ -149,7 +149,7 @@ class ChaosService(StreakRunService):
         return self._abandon_run(user_id, difficulty)
 
     def submit_result(self, user_id: int, run_id: int, result: str, killer_id: str) -> ChaosRunState:
-        assert_challenge_mode_enabled("chaos")
+        assert_challenge_mode_enabled("chaos", user_id)
         self._validate_killer_submission(result, killer_id)
         r = self._load_run_for_result(user_id, run_id)
 

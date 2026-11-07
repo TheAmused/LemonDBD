@@ -68,4 +68,11 @@ describe('perk type search UI', () => {
     assert.ok(html.indexOf('Generator') < html.indexOf('Tracking'));
     assert.ok(!html.includes('<button'));
   });
+
+  it('in the perk modal the types wrap instead of being clipped to one row', () => {
+    const html = renderWithDictionary(React.createElement(PerkTypeBadges, { perk: DEJA_VU, size: 'md' }));
+    assert.ok(html.indexOf('Generator') < html.indexOf('Tracking'));
+    assert.ok(!html.includes('overflow-hidden'));
+    assert.ok(!html.includes('h-5'));
+  });
 });

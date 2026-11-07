@@ -1,6 +1,6 @@
 // frontend/src/utils/perkSearch/match.ts
 import type { Perk, RoleCategory } from '@/types/perks';
-import { getKnownPerkTypes, type PerkType } from '@/utils/perkTypes';
+import { PERK_TYPES, getKnownPerkTypes, type PerkType, type PerkTypeCounts } from '@/utils/perkTypes';
 import { compactSearchText, foldSearchText } from './normalize';
 import { isEmptyQuery, type ParsedPerkQuery } from './parse';
 
@@ -94,6 +94,15 @@ export function searchPerks<T extends Perk>(
     if (rank !== null) hits.push({ perk, rank });
   }
   return hits;
+}
+
+/** Per type: how many perks stay if it is added to the current search and filters (types combine with AND). */
+export function typeCountsIfAdded(perks: readonly Perk[], query: ParsedPerkQuery, types: readonly PerkType[]): PerkTypeCounts {
+  const counts: PerkTypeCounts = {};
+  for (const type of PERK_TYPES) {
+    counts[type] = searchPerks(perks, query, types.includes(type) ? types : [...types, type]).length;
+  }
+  return counts;
 }
 
 /**

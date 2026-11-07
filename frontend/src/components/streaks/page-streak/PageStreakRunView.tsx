@@ -237,6 +237,8 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
             onCancel={() => setConfirmingAbandon(false)}
             onConfirm={() => {
               setConfirmingAbandon(false);
+              // An abandon with no match played keeps the attempt number, so the saved build would otherwise outlive it.
+              saveBuild(null);
               void abandonRun();
             }}
           />

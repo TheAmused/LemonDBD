@@ -30,7 +30,6 @@ export const IdPleaseProgress: React.FC<IdPleaseProgressProps> = ({ unit, progre
       current={current}
       total={target}
       checkpoints={everyNthCheckpoint(checkpointInterval, target)}
-      title={s.idPleaseProgressTitle}
       counter={formatMessage(unit === 'wins' ? s.idPleaseProgressWins : s.idPleaseProgressCharacters, { current, target })}
       endless
     />

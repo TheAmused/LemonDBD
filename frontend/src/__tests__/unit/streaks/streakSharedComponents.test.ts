@@ -95,7 +95,7 @@ describe('rules sections static render', () => {
         el(RulesHowItWorks, { tone: 'neutral', title: 'How', items: ['one', 'two'], hint: 'hint!' }),
         el(RulesDifficultyRows, {
           alignTextRight: true,
-          rows: [{ label: 'Easy', text: 'desc', badgeClassName: 'badge-x' }],
+          rows: [{ label: 'Easy', text: 'desc', labelClassName: 'badge-x' }],
         }),
         el(RulesModalFooterSections, {
           copy,

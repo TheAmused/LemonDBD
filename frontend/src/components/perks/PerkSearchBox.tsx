@@ -15,7 +15,7 @@ import { Badge } from '@/components/common/Badge';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { usePerkTypeVocabulary } from '@/hooks/usePerkTypeVocabulary';
 import type { Perk } from '@/types/perks';
-import { PERK_TYPES, getKnownPerkTypes, type PerkType } from '@/utils/perkTypes';
+import { countPerkTypes, typesWithPerks, type PerkType } from '@/utils/perkTypes';
 import { parsePerkQuery } from '@/utils/perkSearch/parse';
 import { searchPerks } from '@/utils/perkSearch/match';
 import { sortByRelevance } from '@/utils/perkSearch/sort';
@@ -63,12 +63,8 @@ export const PerkSearchBox: React.FC<PerkSearchBoxProps> = ({
   const fieldRef = useRef<HTMLLabelElement>(null);
 
   // Only the types this role's perks actually have are offered (no "Hex 0" on the Survivor side).
-  const typeCounts = useMemo(() => {
-    const counts: Partial<Record<PerkType, number>> = {};
-    for (const perk of rolePerks) for (const type of getKnownPerkTypes(perk)) counts[type] = (counts[type] ?? 0) + 1;
-    return counts;
-  }, [rolePerks]);
-  const roleTypes = useMemo(() => PERK_TYPES.filter((type) => (typeCounts[type] ?? 0) > 0), [typeCounts]);
+  const typeCounts = useMemo(() => countPerkTypes(rolePerks), [rolePerks]);
+  const roleTypes = useMemo(() => typesWithPerks(typeCounts), [typeCounts]);
 
   const typeSuggestions = useMemo(
     () => suggestPerkTypes(search, vocab, roleTypes.filter((t) => !activeTypes.includes(t))),

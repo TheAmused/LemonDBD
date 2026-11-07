@@ -152,15 +152,6 @@ export const IdPleaseBoard: React.FC<IdPleaseBoardProps> = ({ role }) => {
           match && (
             <div className="space-y-3">
               <IdPleaseMatchCard match={match} />
-              <p className="text-center text-xs text-text-muted">{s.idPleaseRosterLive}</p>
-              {run.checkpoint_interval > 0 && (
-                <p className="text-center text-xs text-text-muted">
-                  {formatMessage(s.idPleaseNextCheckpoint, {
-                    wins: (Math.floor(run.current_streak / run.checkpoint_interval) + 1) * run.checkpoint_interval,
-                  })}
-                  {run.checkpoint && ` ${formatMessage(s.idPleaseCheckpointNote, { number: run.checkpoint.number })}`}
-                </p>
-              )}
               <StreakActionBar>
                 <StreakActionButton variant="red" onClick={() => { void submitResult('loss'); }} disabled={busy}>
                   {s.loseMatch}

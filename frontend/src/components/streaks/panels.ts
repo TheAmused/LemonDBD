@@ -46,7 +46,7 @@ export function getKillerStreakPanels(dict: Dictionary): StreakPanelDef[] {
       id: 'id-please',
       title: t.idPleaseTitle,
       image: idPleaseCardImage('killer'),
-      creator: 'TheAmused',
+      creator: 'LemonDBD',
     },
     {
       id: 'nice-guy-streak',
@@ -81,7 +81,7 @@ export function getSurvivorStreakPanels(dict: Dictionary): StreakPanelDef[] {
       id: 'id-please',
       title: t.idPleaseTitle,
       image: idPleaseCardImage('survivor'),
-      creator: 'TheAmused',
+      creator: 'LemonDBD',
     },
     {
       id: 'copycat-streak',
@@ -103,7 +103,7 @@ export function getChallengeStreakPanels(dict: Dictionary): StreakPanelDef[] {
       id: 'id-please',
       title: t.idPleaseTitle,
       image: idPleaseCardImage('challenge'),
-      creator: 'TheAmused',
+      creator: 'LemonDBD',
     },
     {
       id: 'copycat-streak',

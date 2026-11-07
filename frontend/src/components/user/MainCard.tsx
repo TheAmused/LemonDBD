@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
+import { DiamondCluster } from '@/components/ui/DiamondCluster';
 import { PerkDiamondSlot } from './PerkDiamondSlot';
 import type { MainLoadout } from '@/types/userShowcase';
 import type { RoleCategory } from '@/types/perks';
@@ -26,16 +27,8 @@ interface MainCardProps {
   locale?: string;
 }
 
-/** Slot centres in the build diamond, in diamond widths from its middle: top, right, bottom, left. */
-const SLOT_OFFSET = 0.57;
-const SLOT_POSITIONS = [
-  { slot: 0, x: 0, y: -SLOT_OFFSET },
-  { slot: 1, x: SLOT_OFFSET, y: 0 },
-  { slot: 2, x: 0, y: SLOT_OFFSET },
-  { slot: 3, x: -SLOT_OFFSET, y: 0 },
-] as const;
-/** One diamond plus the offset on each side. */
-const LOADOUT_SIZE = `calc(var(--perk-size) * ${1 + 2 * SLOT_OFFSET})`;
+/** The four loadout slots, in the cluster's order: top, right, bottom, left. */
+const LOADOUT_SLOTS = [0, 1, 2, 3] as const;
 
 export const MainCard: React.FC<MainCardProps> = ({
       characterRole: role,
@@ -105,31 +98,22 @@ export const MainCard: React.FC<MainCardProps> = ({
         </div>
 
         {/* Right: 4-Perk Signature Diamond Loadout */}
-        <div
+        <DiamondCluster
           aria-label={dict.user.signatureLoadout}
-          style={{ width: LOADOUT_SIZE, height: LOADOUT_SIZE }}
-          className="relative shrink-0 [--perk-size:6rem] sm:[--perk-size:7rem]"
-        >
-          {SLOT_POSITIONS.map(({ slot, x, y }) => (
-            <div
+          className="[--perk-size:6rem] sm:[--perk-size:7rem]"
+          items={LOADOUT_SLOTS.map((slot) => (
+            <PerkDiamondSlot
               key={slot}
-              className="absolute left-1/2 top-1/2"
-              style={{
-                transform: `translate(calc(-50% + var(--perk-size) * ${x}), calc(-50% + var(--perk-size) * ${y}))`,
-              }}
-            >
-              <PerkDiamondSlot
-                slotIndex={slot}
-                perk={perksBySlot[slot]}
-                perkId={loadout.perkIds[slot]}
-                onClick={onOpenPerkModal}
-                onClear={() => onPerkChange(slot, null)}
-                emptyLabel={dict.user.emptySlot}
-                clearLabel={dict.user.clearPerk}
-              />
-            </div>
+              slotIndex={slot}
+              perk={perksBySlot[slot]}
+              perkId={loadout.perkIds[slot]}
+              onClick={onOpenPerkModal}
+              onClear={() => onPerkChange(slot, null)}
+              emptyLabel={dict.user.emptySlot}
+              clearLabel={dict.user.clearPerk}
+            />
           ))}
-        </div>
+        />
       </div>
     </div>
   );

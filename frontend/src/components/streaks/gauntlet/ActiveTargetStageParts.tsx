@@ -13,7 +13,9 @@ import { DiamondSlot } from '@/components/ui/DiamondSlot';
 import { useDictionary } from '@/context/DictionaryContext';
 import { baseSlots } from '@/utils/perkSlots';
 import { Img } from '@/components/common/Img';
-import { Tooltip } from '@/components/common/Tooltip';
+import { tip } from '@/components/common/Tooltip';
+import { DiamondCluster } from '@/components/ui/DiamondCluster';
+import { PerkTile } from '@/components/streaks/page-streak/PerkTile';
 
 const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[] = []) => {
   if (!name) return null;
@@ -111,7 +113,7 @@ const SlotChip: React.FC<{
         {badge}
       </div>
     )}
-    <DiamondSlot size={size} className={iconClassName}>
+    <DiamondSlot size={size} className={`rounded-chip ${iconClassName}`}>
       {children}
     </DiamondSlot>
     {caption && <span className={`${CAPTION_CLASS[size]} text-center text-xs font-bold leading-tight text-text-primary line-clamp-2`}>{caption}</span>}
@@ -129,20 +131,18 @@ const TEACHABLE_ACCENT = {
   red: 'bg-accent-red/10 border-accent-red/40 text-accent-red',
 };
 
-/** The character's own perks to pick the teachable slot from, as small icons under its portrait. */
-const TeachablePerkIcons: React.FC<{ perks: Perk[]; size: string }> = ({ perks, size }) => {
+/** The character's own perks to pick the teachable slot from, packed beside its portrait like a profile build. */
+const TeachablePerkCluster: React.FC<{ perks: Perk[]; perkSize: string }> = ({ perks, perkSize }) => {
   const perkDisplayName = usePerkDisplayName();
-  if (perks.length === 0) return null;
   return (
-    <ul className="flex flex-wrap items-center justify-center gap-1">
-      {perks.map((perk) => (
-        <li key={perk.id ?? perk.name} className={`flex ${size} shrink-0 items-center justify-center`}>
-          <Tooltip title={perkDisplayName(perk.name)} className={`flex ${size} items-center justify-center`}>
-            <PerkArt perk={perk} size={size} />
-          </Tooltip>
-        </li>
+    <DiamondCluster
+      className={perkSize}
+      items={perks.map((perk) => (
+        <div key={perk.id ?? perk.name} {...tip(perkDisplayName(perk.name), undefined, 'item')}>
+          <PerkTile name={perk.name} iconSrc={perkIconFor(perk) ?? undefined} />
+        </div>
       ))}
-    </ul>
+    />
   );
 };
 
@@ -309,12 +309,12 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
   if (!isTeam) {
     return (
       <div className="flex w-full flex-col items-center gap-5 sm:flex-row sm:gap-8">
-        <div className="flex shrink-0 items-center gap-3 sm:w-1/3 sm:flex-col sm:border-r sm:border-border-color sm:pr-8">
-          {avatarBox('w-16 h-16 sm:w-28 sm:h-28', 'w-8 h-8 sm:w-12 sm:h-12')}
+        <div className="flex shrink-0 items-center justify-center gap-4 sm:border-r sm:border-border-color sm:pr-8 lg:w-1/3 lg:gap-6 xl:gap-10">
           <div className="flex flex-col items-center gap-2">
-            <span className="text-base font-bold text-text-primary text-center leading-tight">{displayName}</span>
-            <TeachablePerkIcons perks={player.character_perks} size="h-9 w-9" />
+            {avatarBox('w-16 h-16 sm:w-28 sm:h-28 xl:w-36 xl:h-36', 'w-8 h-8 sm:w-12 sm:h-12 xl:w-14 xl:h-14')}
+            <span className="max-w-36 text-base font-bold text-text-primary text-center leading-tight">{displayName}</span>
           </div>
+          <TeachablePerkCluster perks={player.character_perks} perkSize="[--perk-size:2.75rem] sm:[--perk-size:3.5rem] xl:[--perk-size:5rem]" />
         </div>
         <div className="flex min-w-0 items-center justify-center sm:flex-1">
           <PerkSlotsRow
@@ -330,15 +330,15 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
   }
 
   return (
-    <div className="flex w-full flex-col items-center gap-4 px-1 sm:min-h-44.5 sm:flex-row sm:px-4">
-      <div className="flex shrink-0 items-center gap-3 sm:w-1/3 sm:flex-col sm:gap-2 sm:border-r sm:border-border-color sm:pr-4">
-        {avatarBox('w-14 h-14 sm:w-24 sm:h-24', 'w-8 h-8 sm:w-10 sm:h-10')}
+    <div className="flex w-full flex-col items-center gap-4 px-1 sm:min-h-44.5 sm:flex-row sm:justify-center sm:gap-6 sm:px-4">
+      <div className="flex shrink-0 items-center gap-3 sm:border-r sm:border-border-color sm:pr-6 xl:gap-4">
         <div className="flex flex-col items-center gap-1.5">
-          <span className="text-xs font-bold text-text-primary text-center leading-tight">{displayName}</span>
-          <TeachablePerkIcons perks={player.character_perks} size="h-8 w-8" />
+          {avatarBox('w-14 h-14 sm:w-24 sm:h-24 xl:w-28 xl:h-28', 'w-8 h-8 sm:w-10 sm:h-10 xl:w-12 xl:h-12')}
+          <span className="max-w-28 text-xs font-bold text-text-primary text-center leading-tight">{displayName}</span>
         </div>
+        <TeachablePerkCluster perks={player.character_perks} perkSize="[--perk-size:2.5rem] sm:[--perk-size:3rem] xl:[--perk-size:4rem]" />
       </div>
-      <div className="flex min-w-0 flex-col items-center justify-center gap-6 sm:flex-1 sm:gap-9">
+      <div className="flex min-w-0 flex-col items-center justify-center gap-6 sm:gap-9">
         {Array.from({ length: playersPerCharacter }, (_, n) => (
           <div key={n} className="flex items-center gap-2 sm:gap-4">
             {shared && (

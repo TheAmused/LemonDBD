@@ -78,7 +78,7 @@ export const RulesSection: React.FC<{ title: string; children: React.ReactNode }
 export interface RulesDifficultyRow {
   label: string;
   text: string;
-  badgeClassName: string;
+  labelClassName: string;
 }
 
 export const RulesDifficultyRows: React.FC<{ rows: RulesDifficultyRow[]; alignTextRight?: boolean }> = ({
@@ -89,21 +89,20 @@ export const RulesDifficultyRows: React.FC<{ rows: RulesDifficultyRow[]; alignTe
     {rows.map((row, i) => (
       <Surface
         key={i}
-        tone="elevated" padding="none" className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 gap-2 shadow-sm"
+        tone="elevated" padding="none" className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 gap-3 shadow-sm"
       >
-        <span className={`px-2.5 py-1 rounded-chip text-xs font-bold border ${row.badgeClassName} whitespace-nowrap w-fit`}>
-          {row.label}
-        </span>
+        <span className={`text-xs font-bold ${row.labelClassName} whitespace-nowrap`}>{row.label}</span>
         <p className={`text-xs text-text-secondary${alignTextRight ? ' sm:text-right sm:max-w-xs' : ''}`}>{row.text}</p>
       </Surface>
     ))}
   </div>
 );
 
-export const DIFFICULTY_BADGE = {
-  green: 'bg-accent-green/20 text-accent-green border-accent-green/30',
-  amber: 'bg-accent-amber/20 text-accent-amber border-accent-amber/30',
-  red: 'bg-accent-red/20 text-accent-red border-accent-red/30',
+/** Colour of a difficulty label: plain bold text, the way the Gauntlet shows its tiers. */
+export const DIFFICULTY_TEXT = {
+  green: 'text-accent-green',
+  amber: 'text-accent-amber',
+  red: 'text-accent-red',
 } as const;
 
 /* ------------------------------------------------------------------ */

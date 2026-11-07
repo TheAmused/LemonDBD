@@ -5,13 +5,14 @@ import React, { useMemo, useState } from 'react';
 import { SelectableCard } from '@/components/common/SelectableCard';
 import { Button } from '@/components/common/Button';
 import { PerkSearchBox } from '@/components/perks/PerkSearchBox';
+import { PerkFilterMenu } from '@/components/perks/PerkFilterMenu';
 import { roleOnlyMessage } from '@/components/perks/roleOnlyMessage';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useCatalogPerks } from '@/hooks/useCatalogPerks';
 import { useProgressiveList } from '@/hooks/useProgressiveList';
 import { usePerkTypeVocabulary } from '@/hooks/usePerkTypeVocabulary';
 import { isEmptyQuery, parsePerkQuery } from '@/utils/perkSearch/parse';
-import { roleOnlyConflict, searchPerks } from '@/utils/perkSearch/match';
+import { roleOnlyConflict, searchPerks, typeCountsIfAdded } from '@/utils/perkSearch/match';
 import { sortByRelevance } from '@/utils/perkSearch/sort';
 import { perkTypesByRole, type PerkType } from '@/utils/perkTypes';
 import { cn } from '@/utils/cn';
@@ -105,6 +106,7 @@ export const IdPleaseSetup: React.FC<IdPleaseSetupProps> = ({ lane, difficulty, 
     return catalog.filter((perk) => perk.id !== undefined && owned.has(perk.id));
   }, [catalog, inventory]);
   const query = useMemo(() => parsePerkQuery(search, vocab), [search, vocab]);
+  const typeCounts = useMemo(() => typeCountsIfAdded(rolePerks, query, types), [rolePerks, query, types]);
   const filtering = !isEmptyQuery(query) || types.length > 0;
   const visible: IdPleasePerk[] = useMemo(() => {
     if (!filtering) return inventory;
@@ -121,13 +123,13 @@ export const IdPleaseSetup: React.FC<IdPleaseSetupProps> = ({ lane, difficulty, 
 
   return (
     <div className="space-y-6">
-      <div className="text-center">
-        <h2 className="type-card-title text-text-primary">{s.idPleaseSetupTitle}</h2>
-        <p className="mt-1 text-sm text-text-secondary">{laneSide === null ? s.idPleaseIntro : s.idPleaseIntroSolo}</p>
-      </div>
+      <header className="flex items-baseline justify-between gap-3">
+        <h2 className="type-label text-text-secondary">{s.idPleaseSetupTitle}</h2>
+        <p className="text-sm tabular-nums text-text-muted">{formatMessage(s.idPleasePerksChosen, { count: chosen.length })}</p>
+      </header>
 
       {laneSide === null && (
-        <fieldset className="flex flex-wrap items-center justify-center gap-2" aria-label={s.idPleaseChooseSide}>
+        <fieldset className="flex flex-wrap items-center gap-2" aria-label={s.idPleaseChooseSide}>
           {(['survivor', 'killer'] as const).map((option) => (
             <Button
               key={option}
@@ -143,13 +145,20 @@ export const IdPleaseSetup: React.FC<IdPleaseSetupProps> = ({ lane, difficulty, 
       )}
 
       <section>
-        <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-          <h3 className="type-label text-text-primary">{s.idPleasePickPerks}</h3>
-          <span className="text-sm tabular-nums text-text-muted">{formatMessage(s.idPleasePerksChosen, { count: chosen.length })}</span>
+        {/* The Perks page's search and Filters button: aliases and characters in the search, perk types in the popover. */}
+        <div className="mb-3 flex flex-wrap items-center gap-2 sm:flex-nowrap sm:gap-3">
+          <PerkSearchBox
+            rolePerks={rolePerks}
+            search={search}
+            setSearch={setSearch}
+            activeTypes={types}
+            onTypesChange={setTypes}
+            suggestPerks
+            typesInField={false}
+            className="relative z-40 min-w-48 flex-1 sm:max-w-72"
+          />
+          <PerkFilterMenu perks={rolePerks} activeTypes={types} onTypesChange={setTypes} typeCounts={typeCounts} />
         </div>
-
-        {/* The Perks page's search box: perk types as chips, the Types menu, aliases and characters. */}
-        <PerkSearchBox rolePerks={rolePerks} search={search} setSearch={setSearch} activeTypes={types} onTypesChange={setTypes} suggestPerks className="mb-3 max-w-xl" />
 
         {unplayable ? (
           <p className="py-6 text-center text-sm text-text-muted">{s.idPleaseSideEmpty}</p>
@@ -158,7 +167,7 @@ export const IdPleaseSetup: React.FC<IdPleaseSetupProps> = ({ lane, difficulty, 
         ) : visible.length === 0 ? (
           <p className="py-6 text-center text-sm text-text-muted">{conflict ? roleOnlyMessage(conflict, dict, locale) : s.idPleaseNoPerksFound}</p>
         ) : (
-          <div ref={rootRef} className="grid max-h-96 grid-cols-4 gap-2 overflow-y-auto pr-1 phone-md:grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 xl:grid-cols-12">
+          <div ref={rootRef} className="grid max-h-96 grid-cols-5 gap-2 overflow-y-auto pr-1 phone-md:grid-cols-6 sm:grid-cols-7 md:grid-cols-9 lg:grid-cols-11 xl:grid-cols-14">
             {shown.map((perk) => {
               const position = perk.position ?? 0;
               const picked = chosen.includes(position);
@@ -185,8 +194,6 @@ export const IdPleaseSetup: React.FC<IdPleaseSetupProps> = ({ lane, difficulty, 
           {preview.second && <IdPleaseMatchCard match={preview.second} title={s.idPleaseMatchTwoPreview} />}
         </div>
       )}
-
-      {shuffled && <p className="text-center text-sm text-text-secondary">{s.idPleaseShuffleNote}</p>}
 
       <StreakActionBar>
         <StreakActionButton variant="green" onClick={() => onStart(side, chosen)} disabled={busy || !full || (!shuffled && !preview)}>

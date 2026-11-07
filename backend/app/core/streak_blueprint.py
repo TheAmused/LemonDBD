@@ -4,6 +4,7 @@ from typing import Any
 
 from flask import Blueprint, g, jsonify, request
 
+from app.core.errors import value_error_status
 from app.core.security import get_current_user, login_required
 from app.utils.responses import api_error
 
@@ -95,7 +96,7 @@ def make_streak_blueprint(
             fn = getattr(service, get_run_method)
             run = fn(g.current_user.id, value, **mode_kwargs)
         except ValueError as e:
-            status = 404 if "not found" in str(e).lower() else 400
+            status = value_error_status(e)
             return api_error(str(e), status)
         return jsonify({"run": run}), 200
 
@@ -111,7 +112,7 @@ def make_streak_blueprint(
             try:
                 run = getattr(service, reveal_method)(g.current_user.id, run_id)
             except ValueError as e:
-                status = 404 if "not found" in str(e).lower() else 400
+                status = value_error_status(e)
                 return api_error(str(e), status)
             return jsonify({"run": run}), 200
 
@@ -129,7 +130,7 @@ def make_streak_blueprint(
         try:
             run = service.abandon_run(g.current_user.id, value, **mode_kwargs)
         except ValueError as e:
-            status = 404 if "not found" in str(e).lower() else 400
+            status = value_error_status(e)
             return api_error(str(e), status)
         return jsonify({"run": run}), 200
 

@@ -121,12 +121,13 @@ def assert_challenge_mode_enabled(mode: str, user_id: int) -> None:
 
     The switch keeps players out; an admin can still play a disabled mode (to check it before it reopens).
     """
-    if db.session.scalar(select(User.role).where(User.id == user_id)) == "admin":
-        return
     row = db.session.scalars(
         select(ChallengeModeSetting).where(ChallengeModeSetting.mode == mode)
     ).first()
     if row and not row.is_enabled:
+        # Looked up only here: an enabled mode (nearly every call) needs no role.
+        if db.session.scalar(select(User.role).where(User.id == user_id)) == "admin":
+            return
         reason = f" ({row.disabled_reason})" if row.disabled_reason else ""
         raise ValueError(f"This challenge is temporarily disabled{reason}. Please check back later.")
 

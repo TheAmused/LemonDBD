@@ -15,9 +15,10 @@ class ChallengeCompletionRecord(Base, ColumnDictMixin["ChallengeCompletionDict"]
     fully completed, so a player can look back at past wins after the run
     itself resets and its in-progress state (including match logs) is gone.
 
-    Page Streak does NOT write here for its mode-wide badge -- unlike these
-    three, it has no bounded run to freeze a pool against (the roster keeps
-    growing), so that badge is computed live instead; see
+    Page Streak writes one record per killer cleared, carrying how many pages
+    of perks the run was played on (`pages_count`: the pool grows as perks are
+    unlocked, so a later clear may be on more pages). Its mode-wide badge is
+    not stored; it is computed live, see
     app.services.page_streak.roster.get_live_roster_badge.
 
     ID, Please writes here too, but its runs never complete: a record is its
@@ -41,6 +42,8 @@ class ChallengeCompletionRecord(Base, ColumnDictMixin["ChallengeCompletionDict"]
     # every (role- and roster-limit-bounded) character in the game -- see
     # app.services.roster_milestone.get_full_roster_milestone.
     full_roster: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    # Page Streak only: the pages of perks the cleared run had. None elsewhere and on records from before it was kept.
+    pages_count: Mapped[int | None] = mapped_column(Integer, nullable=True)
     completed_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, index=True, nullable=False
     )

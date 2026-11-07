@@ -7,15 +7,10 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
 
-export type InfoChipSize = 'md' | 'xs';
-
-/** The height of one row of xs chips: a strip of that height shows only the chips that fit on one line. */
-export const INFO_CHIP_XS_ROW = 'h-5 sm:h-6 wide:h-7';
+export type InfoChipSize = 'md';
 
 const SIZES: Record<InfoChipSize, string> = {
-  md: 'gap-1.5 px-2.5 py-1.5 type-strong',
-  // One fixed line height per breakpoint (INFO_CHIP_XS_ROW), for tags packed under a tile (perk types on a perk card).
-  xs: `${INFO_CHIP_XS_ROW} gap-1 px-1.5 type-strong-xs sm:px-2 sm:text-xs wide:text-sm`
+  md: 'gap-1.5 px-2.5 py-1.5 type-strong'
 };
 
 interface InfoChipProps extends React.HTMLAttributes<HTMLSpanElement> {

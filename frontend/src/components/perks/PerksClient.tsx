@@ -326,7 +326,6 @@ function PerksContent() {
                   perk={perk}
                   size="fill"
                   showName
-                  showTypes
                   onSelect={setSelectedPerk}
                 />
               ))}

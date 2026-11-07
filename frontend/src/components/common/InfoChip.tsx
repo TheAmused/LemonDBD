@@ -7,26 +7,11 @@
 import React from 'react';
 import { cn } from '@/utils/cn';
 
-export type InfoChipSize = 'md' | 'xs';
+const CHIP_BASE = 'inline-flex items-center gap-1.5 rounded-chip bg-bg-elevated/60 px-2.5 py-1.5 text-text-secondary type-strong select-none';
 
-/** The height of one row of xs chips: a strip of that height shows only the chips that fit on one line. */
-export const INFO_CHIP_XS_ROW = 'h-5 sm:h-6 wide:h-7';
-
-const SIZES: Record<InfoChipSize, string> = {
-  md: 'gap-1.5 px-2.5 py-1.5 type-strong',
-  // One fixed line height per breakpoint (INFO_CHIP_XS_ROW), for tags packed under a tile (perk types on a perk card).
-  xs: `${INFO_CHIP_XS_ROW} gap-1 px-1.5 type-strong-xs sm:px-2 sm:text-xs wide:text-sm`
-};
-
-interface InfoChipProps extends React.HTMLAttributes<HTMLSpanElement> {
-  size?: InfoChipSize;
-}
-
-const CHIP_BASE = 'inline-flex items-center rounded-chip bg-bg-elevated/60 text-text-secondary select-none';
-
-export function InfoChip({ size = 'md', children, className, ...rest }: InfoChipProps) {
+export function InfoChip({ children, className, ...rest }: React.HTMLAttributes<HTMLSpanElement>) {
   return (
-    <span className={cn(CHIP_BASE, 'cursor-default', SIZES[size], className)} {...rest}>
+    <span className={cn(CHIP_BASE, 'cursor-default', className)} {...rest}>
       {children}
     </span>
   );
@@ -34,19 +19,17 @@ export function InfoChip({ size = 'md', children, className, ...rest }: InfoChip
 
 /** A chip that does something when pressed. Put a trailing arrow in `children` to say so. */
 export function InfoChipButton({
-  size = 'md',
   children,
   className,
   type = 'button',
   ...rest
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & { size?: InfoChipSize }) {
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
       type={type}
       className={cn(
         CHIP_BASE,
         'cursor-pointer transition-colors hover:bg-bg-elevated hover:text-text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-red pointer-coarse:min-h-11',
-        SIZES[size],
         className
       )}
       {...rest}

@@ -5,6 +5,8 @@ import { useCallback } from 'react';
 import type { HistoryMode, HistoryRun, HistoryStats } from '@/types/historyStreak';
 import * as api from '@/services/historyStreakApi';
 import { useChallengeRun } from '../useChallengeRun';
+import { reportAbandon, reportMatchResult } from '../challengeTracking';
+import { historyProgress } from '../challengeRunProgress';
 
 export function useHistoryRun(mode: HistoryMode) {
   const { token, run, stats, completions, loading, busy, error, load, loadStats, loadCompletions, mutate } =
@@ -24,17 +26,19 @@ export function useHistoryRun(mode: HistoryMode) {
         'Failed to record the result'
       );
       if (!updated) return undefined;
+      reportMatchResult({ challenge: 'history', role: 'killer', variant: mode }, historyProgress(run), historyProgress(updated), result);
       void loadStats();
       if (updated.status === 'completed') void loadCompletions();
       return updated;
     },
-    [token, run, mutate, loadStats, loadCompletions]
+    [token, run, mode, mutate, loadStats, loadCompletions]
   );
 
   const abandon = useCallback(async () => {
     if (!token) return;
-    await mutate(() => api.abandonHistoryRun(token, mode));
-  }, [token, mode, mutate]);
+    const updated = await mutate(() => api.abandonHistoryRun(token, mode));
+    if (updated && run) reportAbandon({ challenge: 'history', role: 'killer', variant: mode }, historyProgress(run));
+  }, [token, mode, run, mutate]);
 
   return { run, stats, completions, loading, busy, error, submitResult, abandon, reload: load };
 }

@@ -13,6 +13,11 @@ import {
 } from '@/types/gauntletStreak';
 import * as api from '@/services/gauntletStreakApi';
 import { useBankedCheckpoint, useChallengeRun } from '../useChallengeRun';
+import { reportAbandon, reportBoost, reportMatchResult, reportTokens } from '../challengeTracking';
+import { gauntletProgress } from '../challengeRunProgress';
+import type { ChallengeTag } from '@/utils/analytics';
+
+const tagOf = (role: Role, gameMode: GauntletGameMode): ChallengeTag => ({ challenge: 'gauntlet', role, variant: gameMode });
 
 /** A win's token roll waiting to be shown: what was rolled and the balance before it landed. A roll of 0 means the balance was already full, so nothing was rolled. */
 export interface TokenRollPlay {
@@ -45,6 +50,12 @@ export function useGauntletRun(role: Role, gameMode: GauntletGameMode = DEFAULT_
         return outcome.run;
       }, 'Failed to record the result');
       if (!updated || !outcome) return;
+      // `run` is the next match already; the match that was just played is `previous_run`.
+      const tag = tagOf(role, gameMode);
+      reportMatchResult(tag, gauntletProgress(run), gauntletProgress(outcome.previous_run), result);
+      if (result === 'win') reportTokens(tag, outcome.previous_run.tokens - tokensBefore);
+      // The shield is charged only when it kept the attempt alive (at a checkpoint there is nothing to protect and it is free).
+      else if (useShield && run.boosts && outcome.previous_run.attempts === run.attempts) reportBoost(tag, 'shield', run.boosts.prices.shield);
       void loadStats();
       const tokensFull = run.boosts != null && tokensBefore >= run.boosts.cap;
       if (result === 'win' && (outcome.previous_run.last_token_roll > 0 || tokensFull)) {
@@ -58,7 +69,7 @@ export function useGauntletRun(role: Role, gameMode: GauntletGameMode = DEFAULT_
         setJustBankedCheckpoint(outcome.previous_run.last_checkpoint_streak);
       }
     },
-    [token, role, run, mutate, loadStats, loadCompletions, setJustBankedCheckpoint]
+    [token, role, gameMode, run, mutate, loadStats, loadCompletions, setJustBankedCheckpoint]
   );
 
   const reveal = useCallback(() => {
@@ -75,19 +86,23 @@ export function useGauntletRun(role: Role, gameMode: GauntletGameMode = DEFAULT_
   );
 
   const buyBoost = useCallback(
-    (boost: BuyableBoost, character?: string) => {
-      if (!token || !run) return;
-      return mutate(() => api.buyBoost(token, run.id, boost, character), 'Could not buy that boost');
+    async (boost: BuyableBoost, character?: string) => {
+      if (!token || !run) return undefined;
+      const updated = await mutate(() => api.buyBoost(token, run.id, boost, character), 'Could not buy that boost');
+      if (updated && run.boosts) reportBoost(tagOf(role, gameMode), boost, run.boosts.prices[boost]);
+      return updated;
     },
-    [token, run, mutate]
+    [token, role, gameMode, run, mutate]
   );
 
-  const abandon = useCallback(() => {
-    if (!token) return;
+  const abandon = useCallback(async () => {
+    if (!token) return undefined;
     setJustBankedCheckpoint(null);
     setTokenRoll(null);
-    return mutate(() => api.abandonRun(token, role, gameMode));
-  }, [token, role, gameMode, mutate, setJustBankedCheckpoint]);
+    const updated = await mutate(() => api.abandonRun(token, role, gameMode));
+    if (updated && run) reportAbandon(tagOf(role, gameMode), gauntletProgress(run));
+    return updated;
+  }, [token, role, gameMode, run, mutate, setJustBankedCheckpoint]);
 
   return {
     run,

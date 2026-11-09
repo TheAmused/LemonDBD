@@ -3,7 +3,7 @@ export default {
   pageTitle: "LemonDBD - Polityka prywatności",
   heading: "Polityka prywatności",
   lastUpdatedLabel: "Ostatnia aktualizacja",
-  lastUpdated: "15 października 2026",
+  lastUpdated: "9 listopada 2026",
   intro:
     "Ta strona wyjaśnia, jakie dane osobowe zbiera <brand>LemonDBD</brand>, po co, kto ma do nich dostęp i co możesz z nimi zrobić. Celowo napisaliśmy ją krótko i prostym językiem.",
   translationNotice: "Jeśli przetłumaczone wersje tej strony różnią się od angielskiej, pierwszeństwo ma wersja angielska.",
@@ -78,6 +78,7 @@ export default {
       paragraphs: [
         "Korzystamy z <b>Umami</b>, otwartoźródłowego narzędzia analitycznego, które hostujemy sami. Nie używa plików cookie, nie śledzi Cię na innych stronach i nie zapisuje Twojego adresu IP.",
         "Zapisuje anonimowe dane o wizytach, takie jak odwiedzona podstrona, źródło wejścia, przeglądarka, system operacyjny, typ urządzenia, rozmiar ekranu, przybliżony kraj oraz kliknięcia w wybrane elementy strony. Dane analityczne są anonimowe.",
+        "Na stronie Perków zapisuje też wpisywane w wyszukiwarce hasło, jako krótki tekst małymi literami (do 40 znaków), razem z liczbą znalezionych perków. Dzięki temu możemy dodawać brakujące nazwy i skróty perków. Hasło nie jest powiązane z Twoim kontem, dlatego prosimy nie wpisywać w wyszukiwarkę danych osobowych.",
       ],
       items: [],
     },

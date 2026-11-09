@@ -4,11 +4,33 @@
 // throw, block or change the UI, and it does nothing when the Umami script is missing
 // (ad blocker, not loaded yet, server render).
 import { safeGetItem, safeSetItem } from '@/utils/safeStorage';
+import type { PerkType } from '@/utils/perkTypes';
 
 /** What Umami accepts as event data: flat primitives only. */
 export type EventProps = Record<string, string | number | boolean>;
 
 type Role = 'survivor' | 'killer';
+
+export type ChallengeId = 'gauntlet' | 'chaos' | 'history' | 'page_streak' | 'id_please';
+/** Who plays: the side, or `mixed` for ID, Please's combined lane. */
+export type ChallengeRole = Role | 'mixed';
+/** What Gauntlet Lemon's tokens buy: a different target, a chosen one, a free perk slot, or a shield for a lost match. */
+export type ChallengeBoost = 'reroll' | 'pick' | 'slot' | 'shield';
+export type SettingName = 'campfire' | 'gifs' | 'nsfw' | 'sounds' | 'music' | 'animations';
+export type ChallengeUiAction =
+  | 'rules'
+  | 'stats'
+  | 'past_wins'
+  | 'animations_on'
+  | 'animations_off'
+  | 'abandon_open'
+  | 'abandon_cancel';
+/** What every challenge event says about the run: which challenge, on which side, in which mode (difficulty; Page Streak: the killer). */
+export interface ChallengeTag {
+  challenge: ChallengeId;
+  role: ChallengeRole;
+  variant: string;
+}
 
 /** Every event the site sends, with its exact props. `undefined` means "no props". */
 export interface AnalyticsEvents {
@@ -58,6 +80,38 @@ export interface AnalyticsEvents {
   ownership_mode_enter: undefined;
   ownership_save: { characters_changed: number; perks_changed: number };
   ownership_blocked: { reason: 'login' | 'verify' };
+  // Perks page
+  /** `perk` is the English name (stable across site languages), `via` is `search` while a search text is active. */
+  perk_open: { perk_id: number; perk: string; role: Role; via: 'grid' | 'search' };
+  /** One per settled search text: `query` is the typed term (lower case, max 40 chars). `perk_id` and `perk` are only there when it narrowed to a single perk. */
+  perk_search: { role: Role; query: string; results: number; perk_id?: number; perk?: string };
+  perk_type_filter: { type: PerkType; role: Role };
+  perk_scope_filter: { scope: 'owned' | 'general' };
+  perk_sort: { order: 'asc' | 'desc' };
+  perk_page_size: { limit: number };
+  // Challenges (every streak mode): one run moves through start, checkpoints and loss until it completes or is abandoned
+  /** The first match of an attempt. `attempt` counts from 1 within the run, `roster` is how many characters (pages) the run is made of. */
+  challenge_start: ChallengeTag & { attempt: number; roster?: number };
+  /** A won match; `streak` is how far the attempt is with it. With `challenge_loss` it gives the win rate (a loss spared by a shield is not counted). */
+  challenge_win: ChallengeTag & { streak: number };
+  challenge_checkpoint: ChallengeTag & { streak: number };
+  /** `attempts` is how many attempts it took, the winning one included. */
+  challenge_complete: ChallengeTag & { attempts: number };
+  /** The attempt ended with a lost match; `streak` is how far it got. */
+  challenge_loss: ChallengeTag & { streak: number };
+  /** A confirmed reset of an attempt that had a match played in it; `streak` is how far it got. */
+  challenge_abandon: ChallengeTag & { streak: number };
+  /** Page Streak's "abandon all killers": how many runs it gave up, split into attempts in progress and finished runs. */
+  challenge_abandon_all: { challenge: ChallengeId; in_progress: number; completed: number };
+  /** Tokens that really landed in the balance after a win (a roll cut short by the cap counts only what fitted). Summed, it is every token players collected. */
+  challenge_tokens: ChallengeTag & { earned: number };
+  /** A boost bought with tokens; `price` is what it cost. The shield counts only when it was charged, i.e. it saved the attempt. */
+  challenge_boost: ChallengeTag & { boost: ChallengeBoost; price: number };
+  challenge_mode_change: { challenge: ChallengeId; role: ChallengeRole; from: string; to: string };
+  challenge_ui: { challenge: ChallengeId; action: ChallengeUiAction };
+  // Settings page
+  /** A setting the visitor changed on the Settings page; `value` is where it went (`eco` only for the campfire). */
+  setting_change: { setting: SettingName; value: 'on' | 'off' | 'eco' };
   // Auth
   signup: { method: 'password' | 'google' };
   login: { method: 'password' | 'google' | 'two_factor' };

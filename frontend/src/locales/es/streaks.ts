@@ -139,7 +139,6 @@ export default {
   activeGauntletTarget: "Objetivo Activo del Guantelete",
   yourBuildForMatch: "Tu configuración para esta partida",
   gauntletComplete: "Ganaste The Gauntlet",
-  startNewRun: "Iniciar nuevo intento",
   gauntlet: "Guantelete",
   best: "Récord",
   progressiveTierRestrictions: "Restricciones Progresivas de Nivel",

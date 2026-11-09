@@ -18,6 +18,8 @@ export type SortOrder = 'asc' | 'desc';
 export interface Perk {
   id?: number;
   name: string;
+  /** The English name whatever the page language (analytics only); missing on stale cached data. */
+  raw_name?: string;
   alternate_name?: string;
   is_generic_counterpart?: boolean;
   character: string;

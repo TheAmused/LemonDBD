@@ -1,14 +1,16 @@
 'use client';
 // frontend/src/components/sidebar/BuyCoffeeModal.tsx
 
-import React from 'react';
+import React, { useState } from 'react';
 import { ExternalLink } from 'lucide-react';
-import { BuyMeACoffeeIcon, KofiIcon } from '@/components/icons/DbdIcons';
+import { BuyMeACoffeeIcon, HeartIcon, KofiIcon } from '@/components/icons/DbdIcons';
 
 import { Modal } from '@/components/common/Modal';
+import { SuccessState } from '@/components/common/SuccessState';
 import { useDictionary } from "@/context/DictionaryContext";
 import { useSiteConfig } from '@/context/SiteConfigContext';
-import { Surface } from '@/components/common/Surface';
+import { RewardedAdSection } from '@/components/sidebar/RewardedAdSection';
+import { SupportTile } from '@/components/sidebar/SupportTile';
 import { trackEvent } from '@/utils/analytics';
 
 export interface BuyCoffeeModalProps {
@@ -18,6 +20,8 @@ export interface BuyCoffeeModalProps {
 
 export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose }) => {
   const dict = useDictionary();
+  // An ad that ran to the end turns the dialog into a thank-you, like the bug report modal after a report.
+  const [thanked, setThanked] = useState(false);
 
   const t = dict.sidebar;
 
@@ -32,9 +36,6 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
       name: 'Buy Me a Coffee',
       url: links.donationBmc,
       tagline: t.coffeeBuyMeCoffeeTagline,
-      accentColor:
-        'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
-      buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-text-inverted',
       icon: BuyMeACoffeeIcon,
     },
     {
@@ -42,9 +43,6 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
       name: 'Ko-fi',
       url: links.donationKofi,
       tagline: t.coffeeKofiTagline,
-      accentColor:
-        'border-border-color bg-bg-elevated text-text-secondary hover:border-accent-red/40 hover:bg-accent-red/10',
-      buttonBg: 'bg-accent-red hover:bg-accent-red-hover text-text-inverted',
       icon: KofiIcon,
     },
   ].flatMap(({ url, ...gateway }) => (url ? [{ ...gateway, url }] : []));
@@ -53,57 +51,53 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
     <Modal
       isOpen={isOpen}
       onClose={onClose}
+      onAfterClose={() => setThanked(false)}
       variant="dialog"
-      size="lg"
-      title={t.coffeeTitle}
+      size={thanked ? 'sm' : 'lg'}
+      title={thanked ? undefined : t.coffeeTitle}
+      ariaLabel={thanked ? t.coffeeAdThanksTitle : t.coffeeTitle}
+      closeButton={thanked ? 'floating' : 'header'}
       closeButtonAriaLabel={t.coffeeClose}
       padded
       bodyClassName="space-y-6"
     >
-    <p className="type-body text-text-secondary">{donationMessage}</p>
+    {thanked ? (
+      <SuccessState
+        icon={HeartIcon}
+        iconClassName="text-accent-red"
+        title={t.coffeeAdThanksTitle}
+        description={
+          <>
+            {t.coffeeAdThanksMessage}
+            <br />
+            {t.coffeeAdThanksNote}
+          </>
+        }
+      />
+    ) : (
+      <>
+      <p className="type-body text-text-secondary">{donationMessage}</p>
 
-    <div className="space-y-3">
-      {supportGateways.length === 0 && (
-        <p className="type-body text-text-muted">{t.coffeeNoLinks}</p>
-      )}
-      {supportGateways.map((gateway) => {
-        const Icon = gateway.icon;
-        return (
-          <a
+      <div className="space-y-3">
+        {supportGateways.length === 0 && (
+          <p className="type-body text-text-muted">{t.coffeeNoLinks}</p>
+        )}
+        {supportGateways.map((gateway) => (
+          <SupportTile
             key={gateway.name}
+            icon={gateway.icon}
+            name={gateway.name}
+            tagline={gateway.tagline}
+            actionLabel={t.coffeeVisit}
+            actionIcon={ExternalLink}
             href={gateway.url}
-            target="_blank"
-            rel="noopener noreferrer"
             onClick={() => trackEvent('coffee_link_click', { provider: gateway.provider })}
-            className={`group flex items-center justify-between p-3.5 rounded-control border transition-all duration-200 cursor-pointer ${gateway.accentColor}`}
-          >
-            <div className="flex items-center gap-3">
-              <Surface tone="elevated" padding="none" className="flex h-10 w-10 shrink-0 items-center justify-center shadow-sm group-hover:scale-105 transition-transform">
-                <Icon className="icon-lg" />
-              </Surface>
-              <div>
-                <h3 className="text-xs font-black tracking-wide text-text-primary">
-                  {gateway.name}
-                </h3>
-                <p className="type-caption text-text-muted">
-                  {gateway.tagline}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span
-                className={`hidden sm:inline-flex items-center gap-1 px-3 py-1.5 rounded-control text-mini font-black uppercase tracking-wider shadow-md group-hover:scale-105 transition-all ${gateway.buttonBg}`}
-              >
-                <span>{t.coffeeVisit}</span>
-                <ExternalLink className="icon-xs" />
-              </span>
-              <ExternalLink className="sm:hidden icon-md text-text-muted group-hover:text-accent-red transition-colors" />
-            </div>
-          </a>
-        );
-      })}
-    </div>
+          />
+        ))}
+        <RewardedAdSection onRewarded={() => setThanked(true)} />
+      </div>
+      </>
+    )}
     </Modal>
   );
 };

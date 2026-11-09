@@ -14,6 +14,7 @@ import { attemptsStarted } from '@/utils/challengeAttempts';
 import { ID_PLEASE_MODE_BY_LANE, idPleaseLaneForRole, idPleaseLaneSide, parseIdPleaseDifficulty } from '@/types/idPleaseStreak';
 import type { IdPleaseNotice } from './useIdPleaseRun';
 import { ChallengeErrorBanner, ChallengePanel } from '../ChallengePanel';
+import { reportModeChange } from '../challengeTracking';
 import {
   AbandonConfirmModal,
   ChallengeCompletionHistoryDrawer,
@@ -202,6 +203,7 @@ export const IdPleaseBoard: React.FC<IdPleaseBoardProps> = ({ role }) => {
         eligibility={eligibility}
         completedVariants={completionStatus.completions[ID_PLEASE_MODE_BY_LANE[lane]] ?? []}
         onSelectDifficulty={(next) => {
+          reportModeChange('id_please', lane, difficulty, next);
           saveIdPleaseDifficulty(lane, next);
           setIsChangeModeOpen(false);
           router.push(`${pathname}?difficulty=${next}`);

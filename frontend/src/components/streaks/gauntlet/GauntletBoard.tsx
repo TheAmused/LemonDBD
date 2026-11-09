@@ -11,6 +11,7 @@ import { useGauntletRun } from './useGauntletRun';
 import { useOwnedCharacters, type OwnedCharacterItem } from '../useOwnedRoster';
 import { sortByReleaseNumber } from '@/utils/characterUtils';
 import { ChallengeErrorBanner, ChallengePanel, ChallengeVictoryCard } from '../ChallengePanel';
+import { reportModeChange } from '../challengeTracking';
 import { ChallengeProgress } from '../ChallengeProgress';
 import { gauntletCheckpoints, gauntletRunLength } from '@/utils/challengeCheckpoints';
 import {
@@ -202,11 +203,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           }
         >
         {isCompleted ? (
-          <ChallengeVictoryCard
-            title={dict.streaks.gauntletComplete}
-            onRestart={() => { void abandon(); }}
-            busy={busy}
-          />
+          <ChallengeVictoryCard title={dict.streaks.gauntletComplete} />
         ) : (
           <>
           <ActiveTargetStage
@@ -339,6 +336,7 @@ export const GauntletBoard: React.FC<GauntletBoardProps> = ({
           originalCompletedFull={completionStatus.full_roster.gauntlet?.[`${role}_original`] != null}
           originalCompletedFullCount={completionStatus.full_roster.gauntlet?.[`${role}_original`] ?? null}
           onSelectMode={(mode) => {
+            reportModeChange('gauntlet', role, gameMode, mode);
             saveGauntletMode(role, mode);
             setIsChangeModeOpen(false);
             router.push(mode === 'original' ? pathname : `${pathname}?mode=${mode}`);

@@ -399,6 +399,118 @@ Screenshots: `screenshots` on `bug_report_submit` answers whether people attach
 pictures. Attempts that are abandoned are NOT tracked (no signal worth a
 separate event). Not tracked: validation errors, server errors, cancel.
 
+## Page 8: Perks (`/perks`) [DONE]
+
+Branch `feature/umami-perks-challenges-tracking`. All events fire from `PerksClient.tsx`
+(not from `PerkSearchBox` / `PerkFilterMenu`, which the profile loadout picker and the
+ID, Please picker share). Helpers and tests: `components/perks/perkTracking.ts`,
+`__tests__/unit/analytics/analyticsPerks.test.ts`.
+
+| Event | Props | Where |
+|-------|-------|-------|
+| `perk_open` | `perk_id`, `perk` (English name), `role`, `via`: `grid` / `search` | `handleSelectPerk`; `via=search` while a search text is active |
+| `perk_search` | `role`, `query` (the typed term), `results`, and `perk_id` + `perk` only when the search narrowed to exactly one perk | `useSettledPerkSearch` |
+| `perk_type_filter` | `type`, `role` | `handleTypesChange` (Filters popover, suggestions, Enter) and `#chase` / `type:chase` written in the search text |
+| `perk_scope_filter` | `scope`: `owned` / `general` | `setOwnershipFilter` / `setScope`; going back to All is not an event |
+| `perk_sort` | `order`: `asc` / `desc` | `setOrder`, only on a real change |
+| `perk_page_size` | `limit` | `onLimitChange`, only on a real change |
+
+Decisions:
+
+- The typed search term IS sent, as `query`: lower case, single spaces, at most 40 characters
+  (`normalizeSearchTerm`). A search is reported once the text stayed put for 3 s and has at
+  least 3 characters, once per distinct text. "What do people type to find a perk" is read from
+  `query`; "which perks" from `perk` (searches that ended on one perk) and `perk_open` with
+  `via=search`. Searches with `results=0` show missing aliases.
+- Free text can in theory hold anything, so the privacy policy line about collected data
+  (`locales/*/privacy.ts`, section analytics) should mention search terms.
+- Needs a backend field: `Perk.to_dict()` now returns `raw_name` (the English name), same
+  pattern as maps. All perk catalog, ownership and character paths go through `to_dict`.
+  Cached catalogs from before the change have no `raw_name`; the frontend falls back to `name`.
+- Not tracked: role switch, Reset, `?type=` links, the pager's page changes, the owned / general
+  toggle going back to All.
+
+## Page 9: Challenges (`/streaks/...`, five challenges) [DONE]
+
+The picker hubs (`/streaks`, `/streaks/[role]`) are NOT tracked: they sit behind the login
+and there is nothing on them but the cards (the path is already a page view). Everything is
+measured on the boards. Gauntlet, Chaos, History, Page Streak and ID, Please share one set of
+events; the rules live in `components/streaks/challengeTracking.ts` and each run hook maps its
+run to a `RunProgress` with the mappers in `challengeRunProgress.ts` (tested in
+`analyticsChallengeRunProgress.test.ts`) and calls the reporters from `useGauntletRun`, `useChaosRun`,
+`useHistoryRun`, `usePageStreakRun` and `useIdPleaseRun`. Tests: `__tests__/unit/analytics/analyticsChallenges.test.ts`.
+
+Every challenge event carries `challenge` (`gauntlet`, `chaos`, `history`, `page_streak`,
+`id_please`), `role` (`survivor`, `killer`; ID, Please's combined lane is `mixed`) and `variant`
+(game mode or difficulty; Page Streak: the killer).
+
+| Event | Props | When |
+|-------|-------|------|
+| `challenge_start` | `attempt`, `roster` (when the challenge has one) | the first match of an attempt |
+| `challenge_win` | `streak` (with this win) | every won match; with `challenge_loss` it gives the win rate |
+| `challenge_checkpoint` | `streak` | a win banks a new checkpoint (not the winning match of a completion) |
+| `challenge_complete` | `attempts` | the run is completed (ID, Please: the badge is earned) |
+| `challenge_loss` | `streak` | a lost match ended the attempt |
+| `challenge_abandon` | `streak` | a confirmed reset of an attempt that had a match in it |
+| `challenge_abandon_all` | `challenge` (`page_streak`), `in_progress`, `completed` | Page Streak roster page: the confirmed "abandon all killers"; counts the runs it gave up, nothing to give up is not reported |
+| `challenge_tokens` | `earned` | Gauntlet Lemon (`lemon_killer`): tokens a win really added to the balance; sum it for every token collected |
+| `challenge_boost` | `boost`: `reroll` / `pick` / `slot` / `shield`, `price` | Gauntlet Lemon: a boost bought with tokens |
+| `challenge_mode_change` | `challenge`, `role`, `from`, `to` | the player picked another mode or difficulty on the board |
+| `challenge_ui` | `challenge`, `action`: `rules`, `stats`, `past_wins`, `animations_on`, `animations_off`, `abandon_open`, `abandon_cancel` | the buttons every challenge shares (`StandardHeaderActions`, `AbandonConfirmModal`) |
+
+Decisions and gotchas:
+
+- Runs are created by the server as soon as the page is opened (`get_or_create_run`), so "run
+  exists" says nothing. A start is the first match of an attempt (the app's own `attempt_matches`).
+  Every lost match begins the next attempt, also when it falls back to a checkpoint, so count the
+  players that began a challenge with `attempt = 1`.
+- A first match that is lost both starts and ends its attempt, so the start is read from the run
+  BEFORE the match, not from the change.
+- `attempt` is the run's failed attempts plus one (the backend's `attempts_taken`). Finishing a
+  run resets `attempts` to 0, so `challenge_complete.attempts` also comes from before the match.
+- A Gauntlet shield cancels a loss without touching the run: the attempt number does not move,
+  so it is not a `challenge_loss`.
+- `streak` is the win streak; History counts killers beaten (checkpoints only in Medium, counted
+  in killers like the progress bar), Page Streak counts pages cleared (no checkpoints).
+- ID, Please never ends: after the badge the run goes on, so a reset after it is still an abandon.
+  Its 409 answers (`stale_match`) return a run without taking the result in; only a changed
+  `total_wins + total_losses` is reported.
+- Gauntlet answers with `run` (the next match already prepared) and `previous_run` (the match just
+  played); the second is the "after" state.
+- Page Streak: `variant` is the killer's canonical key (the page derives the localized name from it), so
+  every event above is already per killer. Most completed killers = `challenge_complete` by `variant`, most
+  played = `challenge_start` by `variant`. The roster page (`PageStreakBoard`) has no other events.
+- Gauntlet Lemon tokens: the database keeps only the current balance (`tokens`) and the last roll, no history
+  of tokens earned or boosts bought, so these two events are the only record. `earned` is the balance after
+  the win minus the balance before, so a roll cut short by the cap of 20 counts only what fitted and a win on
+  a full balance sends nothing. Tokens thrown away when an attempt falls back to zero are not subtracted.
+  The shield is a boost only when it was charged, i.e. it saved the attempt (the same rule that keeps a shielded
+  loss out of `challenge_loss`); at a checkpoint it is free and not counted. Popularity = counts of
+  `challenge_boost` by `boost`, tokens spent = sum of `price`.
+- Wins are counted (`challenge_win`); losses only when they ended the attempt, so a Gauntlet shield
+  loss is in neither and the Umami win rate is slightly optimistic there. The backend keeps every
+  match exactly, so which killer or perk was played is read from the database, not from events.
+- Removed the "Start a new run" button of the victory card (Gauntlet, Chaos, History; Page Streak
+  and ID, Please never had it): it was a bug. Resetting stays in the header. Its `startNewRun`
+  dictionary key went with it.
+
+## Page 10: Settings (`/settings`) [DONE]
+
+One event for the six switches of the page (`SettingsClient.tsx`):
+
+| Event | Props | When |
+|-------|-------|------|
+| `setting_change` | `setting`: `campfire`, `gifs`, `nsfw`, `sounds`, `music`, `animations`; `value`: `on`, `off`, `eco` (campfire only) | the visitor changes a setting |
+
+Notes:
+
+- Only changes are seen, not the state: someone who never touches a switch keeps the default
+  (`defaultPreferences`: animations and music follow reduced motion, NSFW is off, the rest on).
+- The same preferences are changed elsewhere and reported there: the animations switch in the
+  challenge header is `challenge_ui` (`animations_on` / `animations_off`), the Smash or Pass choice is
+  `smash_effects_choice`. Those are not `setting_change`.
+- A click on the campfire mode that is already selected is not reported.
+
 ## Out of scope (user visible pages only)
 
 welcome (almost empty), admin, minigames, achievements.
@@ -406,5 +518,5 @@ Home is skipped for now (may still be redesigned).
 
 ## Pages still to go through
 
-perks and tier-lists (on hold, may still change), streaks, rules.
+tier-lists (on hold, may still change), rules.
 (Rules is mostly covered by `contact_click`; check what else it has.)

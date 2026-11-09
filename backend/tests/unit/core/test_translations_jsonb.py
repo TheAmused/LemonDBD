@@ -73,6 +73,9 @@ class TestTranslationsJSONB:
             pl_dict = loaded.to_dict(lang="pl")
             assert pl_dict["name"] == "Zdecydowany Cios"
             assert pl_dict["description"] == "Polski opis Zdecydowanego Ciosu."
+            # The English name stays whatever the language, so analytics can group one perk.
+            assert pl_dict["raw_name"] == "Decisive Strike"
+            assert default_dict["raw_name"] == "Decisive Strike"
 
             de_dict = loaded.to_dict(lang="de")
             assert de_dict["name"] == "Entscheidungsschlag"

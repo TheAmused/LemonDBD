@@ -10,6 +10,7 @@ import { useChaosRun } from './useChaosRun';
 import { useOwnedKillers } from '../useOwnedRoster';
 import { useKillerPerkPool } from './useKillerPerkPool';
 import { ChallengeErrorBanner, ChallengePanel, ChallengeVictoryCard } from '../ChallengePanel';
+import { reportModeChange } from '../challengeTracking';
 import { ChallengeProgress } from '../ChallengeProgress';
 import { everyNthCheckpoint } from '@/utils/challengeCheckpoints';
 import {
@@ -184,7 +185,7 @@ export const ChaosBoard: React.FC = () => {
         >
 
         {isCompleted ? (
-          <ChallengeVictoryCard title={completionTitle} onRestart={() => { void abandon(); }} busy={busy} />
+          <ChallengeVictoryCard title={completionTitle} />
         ) : (
           <SlotMachineStage
             perks={run?.current_perks || []}
@@ -291,6 +292,7 @@ export const ChaosBoard: React.FC = () => {
           completedCounts={completionStatus.completion_counts.chaos ?? {}}
           completedFullCounts={completionStatus.full_roster.chaos ?? {}}
           onSelectDifficulty={(newDifficulty) => {
+            reportModeChange('chaos', 'killer', difficulty, newDifficulty);
             saveChaosDifficulty(newDifficulty);
             setIsChangeDifficultyOpen(false);
             router.push(`${pathname}?difficulty=${newDifficulty}`);

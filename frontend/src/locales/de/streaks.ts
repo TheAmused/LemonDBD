@@ -139,7 +139,6 @@ export default {
   activeGauntletTarget: "Aktives Gauntlet-Ziel",
   yourBuildForMatch: "Dein Build für dieses Match",
   gauntletComplete: "Du hast The Gauntlet gewonnen",
-  startNewRun: "Neuen Lauf starten",
   gauntlet: "Gauntlet",
   best: "Bestwert",
   progressiveTierRestrictions: "Progressive Stufen-Einschränkungen",

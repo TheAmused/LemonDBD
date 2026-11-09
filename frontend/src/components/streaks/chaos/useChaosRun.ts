@@ -5,6 +5,8 @@ import { useCallback } from 'react';
 import type { ChaosRun, ChaosStats, Difficulty } from '@/types/chaosStreak';
 import * as api from '@/services/chaosStreakApi';
 import { useBankedCheckpoint, useChallengeRun } from '../useChallengeRun';
+import { reportAbandon, reportMatchResult } from '../challengeTracking';
+import { chaosProgress } from '../challengeRunProgress';
 
 export function useChaosRun(difficulty: Difficulty) {
   const { token, run, stats, completions, loading, busy, error, load, loadStats, loadCompletions, mutate } =
@@ -26,6 +28,7 @@ export function useChaosRun(difficulty: Difficulty) {
         'Failed to record the result'
       );
       if (!updated) return undefined;
+      reportMatchResult({ challenge: 'chaos', role: 'killer', variant: difficulty }, chaosProgress(run), chaosProgress(updated), result);
       const justFinished = updated.status === 'completed';
       void loadStats();
       if (justFinished) void loadCompletions();
@@ -34,7 +37,7 @@ export function useChaosRun(difficulty: Difficulty) {
       }
       return updated;
     },
-    [token, run, mutate, loadStats, loadCompletions, setJustBankedCheckpoint]
+    [token, run, difficulty, mutate, loadStats, loadCompletions, setJustBankedCheckpoint]
   );
 
   const reveal = useCallback(() => {
@@ -42,11 +45,13 @@ export function useChaosRun(difficulty: Difficulty) {
     return mutate(() => api.revealChaosBuild(token, run.id));
   }, [token, run, mutate]);
 
-  const abandon = useCallback(() => {
-    if (!token) return;
+  const abandon = useCallback(async () => {
+    if (!token) return undefined;
     setJustBankedCheckpoint(null);
-    return mutate(() => api.abandonChaosRun(token, difficulty));
-  }, [token, difficulty, mutate, setJustBankedCheckpoint]);
+    const updated = await mutate(() => api.abandonChaosRun(token, difficulty));
+    if (updated && run) reportAbandon({ challenge: 'chaos', role: 'killer', variant: difficulty }, chaosProgress(run));
+    return updated;
+  }, [token, difficulty, run, mutate, setJustBankedCheckpoint]);
 
   return {
     run,

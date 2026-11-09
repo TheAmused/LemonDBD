@@ -6,6 +6,8 @@ import type { IdPleaseDifficulty, IdPleaseLane, IdPleaseRun, IdPleaseSide, IdPle
 import * as api from '@/services/idPleaseStreakApi';
 import { StreakApiError } from '@/services/streakApiClient';
 import { useBankedCheckpoint, useChallengeRun } from '../useChallengeRun';
+import { reportAbandon, reportMatchResult } from '../challengeTracking';
+import { idPleaseProgress } from '../challengeRunProgress';
 
 /** Conflicts the board explains to the player instead of showing as a failure. */
 export type IdPleaseNotice = 'roster_changed' | 'roster_below_minimum' | 'stale_match';
@@ -67,6 +69,10 @@ export function useIdPleaseRun(lane: IdPleaseLane, difficulty: IdPleaseDifficult
         'Failed to record the result'
       );
       if (!updated) return undefined;
+      // A conflict answers with the run as it is without taking this result in: only a changed count of results was recorded.
+      if (updated.total_wins + updated.total_losses > before.total_wins + before.total_losses) {
+        reportMatchResult({ challenge: 'id_please', role: lane, variant: difficulty }, idPleaseProgress(before), idPleaseProgress(updated), result);
+      }
       void loadStats();
       if (result === 'win' && updated.current_streak > before.current_streak) {
         if (updated.badge_earned && !before.badge_earned) {
@@ -78,15 +84,18 @@ export function useIdPleaseRun(lane: IdPleaseLane, difficulty: IdPleaseDifficult
       }
       return updated;
     },
-    [run, lane, mutate, recovering, loadStats, loadCompletions, setJustBankedCheckpoint]
+    [run, lane, difficulty, mutate, recovering, loadStats, loadCompletions, setJustBankedCheckpoint]
   );
 
-  const abandon = useCallback(() => {
-    if (!token) return;
+  const abandon = useCallback(async () => {
+    if (!token) return undefined;
     setJustBankedCheckpoint(null);
     setNotice(null);
-    return mutate(() => api.abandonIdPleaseRun(lane, token, difficulty));
-  }, [token, lane, difficulty, mutate, setJustBankedCheckpoint]);
+    const updated = await mutate(() => api.abandonIdPleaseRun(lane, token, difficulty));
+    // The badge does not end this run, so a reset after it still gives an attempt up.
+    if (updated && run) reportAbandon({ challenge: 'id_please', role: lane, variant: difficulty }, { ...idPleaseProgress(run), completed: false });
+    return updated;
+  }, [token, lane, difficulty, run, mutate, setJustBankedCheckpoint]);
 
   return {
     run,

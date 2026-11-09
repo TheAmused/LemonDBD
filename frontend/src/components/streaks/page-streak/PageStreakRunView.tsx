@@ -149,7 +149,6 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
             <ChallengeVictoryCard
               title={dict.streaks.pageStreakVictoryTitle}
               subtitle={`${dict.streaks.pageStreakVictoryPrefix} ${killerDisplayName}`}
-              busy={busy}
             />
           ) : (
             <>

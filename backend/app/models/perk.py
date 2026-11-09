@@ -141,6 +141,8 @@ class Perk(Base, TranslatableModelMixin):
         res: dict[str, Any] = {
             "id": self.id,
             "name": name,
+            # The English name whatever the request language, so analytics can group one perk across languages.
+            "raw_name": self.name,
             "alternate_name": self.alternate_name or "",
             "is_generic_counterpart": self.is_generic_counterpart,
             "is_teachable": self.is_teachable,

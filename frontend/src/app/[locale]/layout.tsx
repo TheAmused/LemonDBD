@@ -75,6 +75,8 @@ export default async function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: SIDEBAR_INIT_SCRIPT }} />
         {/* schema.org WebSite + Organization for search engines; built from the dictionary, `<` escaped. */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: siteJsonLd(locale, dict) }} />
+        {/* Google AdSense site code; the account is verified by finding this tag in the page source. */}
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5904457564707145" crossOrigin="anonymous" />
       </head>
       <body>
         <UmamiScript />

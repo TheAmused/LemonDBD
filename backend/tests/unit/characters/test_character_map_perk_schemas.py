@@ -418,6 +418,12 @@ class TestPerkSchemas:
         assert resp.character_real_name == "General"
         assert resp.character_id is None
 
+    def test_perk_response_carries_the_english_name(self) -> None:
+        resp = PerkResponse.model_validate(
+            {"id": 5, "name": "Zdecydowany Cios", "raw_name": "Decisive Strike", "category": "Survivor", "role": "Survivor"}
+        )
+        assert resp.raw_name == "Decisive Strike"
+
 
 @pytest.mark.unit
 class TestUserCharacterOwnershipSchemaAudit:

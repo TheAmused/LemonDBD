@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { RotateCcw } from 'lucide-react';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { PageStreakRoster } from './page-streak/PageStreakRoster';
+import { reportAbandonAllKillers } from './challengeTracking';
 import { abandonAllRuns, fetchRoster } from '@/services/pageStreakApi';
 import type { RosterEntry } from '@/types/pageStreak';
 import { useAuth } from '@/context/AuthContext';
@@ -64,6 +65,7 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
     setAbandoningAll(true);
     try {
       await abandonAllRuns(token);
+      reportAbandonAllKillers(roster);
       setConfirmingAbandonAll(false);
       await load();
     } catch (err) {

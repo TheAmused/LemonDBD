@@ -15,10 +15,16 @@ import { Switch } from '@/components/common/Switch';
 import { Button } from '@/components/common/Button';
 import { usePreferences, type BackgroundAnimationMode } from '@/hooks/usePreferences';
 import { useDictionary } from '@/context/DictionaryContext';
+import { trackEvent, type SettingName } from '@/utils/analytics';
+
+const onOff = (checked: boolean): 'on' | 'off' => (checked ? 'on' : 'off');
 
 export function SettingsClient() {
   const dict = useDictionary();
   const { preferences, updatePreferences } = usePreferences();
+
+  /** Reports a setting the visitor changed. The campfire buttons skip a click on the mode already selected. */
+  const reportChange = (setting: SettingName, value: 'on' | 'off' | 'eco') => trackEvent('setting_change', { setting, value });
 
   const campfireModes: Array<{ mode: BackgroundAnimationMode; label: string }> = [
     { mode: 'on', label: dict.settings.campfireOn },
@@ -40,7 +46,10 @@ export function SettingsClient() {
                 variant={preferences.backgroundAnimation === mode ? 'primary' : 'secondary'}
                 size="sm"
                 aria-pressed={preferences.backgroundAnimation === mode}
-                onClick={() => void updatePreferences({ backgroundAnimation: mode })}
+                onClick={() => {
+                  if (mode !== preferences.backgroundAnimation) reportChange('campfire', mode);
+                  void updatePreferences({ backgroundAnimation: mode });
+                }}
                 className="min-h-11 min-w-18"
               >
                 {label}
@@ -52,7 +61,10 @@ export function SettingsClient() {
         <SettingRow icon={ImageIcon} title={dict.settings.gifs} description={dict.settings.gifsDesc}>
           <Switch
             checked={preferences.gifs}
-            onChange={(checked) => void updatePreferences({ gifs: checked })}
+            onChange={(checked) => {
+              reportChange('gifs', onOff(checked));
+              void updatePreferences({ gifs: checked });
+            }}
             ariaLabel={dict.settings.gifs}
           />
         </SettingRow>
@@ -60,7 +72,10 @@ export function SettingsClient() {
         <SettingRow icon={MatureIcon} title={dict.settings.nsfw} description={dict.settings.nsfwDesc}>
           <Switch
             checked={preferences.nsfw}
-            onChange={(checked) => void updatePreferences({ nsfw: checked })}
+            onChange={(checked) => {
+              reportChange('nsfw', onOff(checked));
+              void updatePreferences({ nsfw: checked });
+            }}
             ariaLabel={dict.settings.nsfw}
           />
         </SettingRow>
@@ -68,7 +83,10 @@ export function SettingsClient() {
         <SettingRow icon={VolumeIcon} title={dict.settings.soundEffects} description={dict.settings.soundEffectsDesc}>
           <Switch
             checked={preferences.sounds}
-            onChange={(checked) => void updatePreferences({ sounds: checked })}
+            onChange={(checked) => {
+              reportChange('sounds', onOff(checked));
+              void updatePreferences({ sounds: checked });
+            }}
             ariaLabel={dict.settings.soundEffects}
           />
         </SettingRow>
@@ -76,7 +94,10 @@ export function SettingsClient() {
         <SettingRow icon={MusicIcon} title={dict.settings.music} description={dict.settings.musicDesc}>
           <Switch
             checked={preferences.music}
-            onChange={(checked) => void updatePreferences({ music: checked })}
+            onChange={(checked) => {
+              reportChange('music', onOff(checked));
+              void updatePreferences({ music: checked });
+            }}
             ariaLabel={dict.settings.music}
           />
         </SettingRow>
@@ -84,7 +105,10 @@ export function SettingsClient() {
         <SettingRow icon={ClapperboardIcon} title={dict.settings.animations} description={dict.settings.animationsDesc}>
           <Switch
             checked={preferences.effects}
-            onChange={(checked) => void updatePreferences({ effects: checked })}
+            onChange={(checked) => {
+              reportChange('animations', onOff(checked));
+              void updatePreferences({ effects: checked });
+            }}
             ariaLabel={dict.settings.animations}
           />
         </SettingRow>

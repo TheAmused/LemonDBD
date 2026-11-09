@@ -3,7 +3,7 @@ export default {
   pageTitle: "LemonDBD - Privacy Policy",
   heading: "Privacy Policy",
   lastUpdatedLabel: "Last updated",
-  lastUpdated: "October 15, 2026",
+  lastUpdated: "November 9, 2026",
   intro:
     "This page explains what personal data <brand>LemonDBD</brand> collects, why, who sees it and what you can do about it. We kept it short and plain on purpose.",
   translationNotice: "If the translated versions of this page differ from the English one, the English version prevails.",
@@ -78,6 +78,7 @@ export default {
       paragraphs: [
         "We use <b>Umami</b>, an open-source analytics tool that we host ourselves. It does not use cookies, does not follow you across other websites and does not store your IP address.",
         "It records anonymous visit data such as the page viewed, referrer, browser, operating system, device type, screen size, approximate country and clicks on selected page elements. Analytics data is anonymous.",
+        "On the Perks page it also records what you type into the search, as a short lowercase term (up to 40 characters), together with how many perks it found, so we can add missing perk names and abbreviations. It is not linked to your account, so please do not type personal information into the search.",
       ],
       items: [],
     },

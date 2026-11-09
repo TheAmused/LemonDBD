@@ -37,6 +37,8 @@ import { isGeneralPerk, roleOnlyConflict, searchPerks, typeCountsIfAdded, typesF
 import { sortPerks } from '@/utils/perkSearch/sort';
 import { formatMessage } from '@/utils/i18nFormat';
 import { roleLabel, roleOnlyMessage } from '@/components/perks/roleOnlyMessage';
+import { buildPerkOpenProps, buildPerkSearchProps, roleTag, useSettledPerkSearch } from '@/components/perks/perkTracking';
+import { trackEvent } from '@/utils/analytics';
 
 const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
 
@@ -245,6 +247,25 @@ function PerksContent() {
 
   const fetchError = Boolean(error) && allPerksList.length === 0;
 
+  // Analytics. Each handler reports a change the visitor made, never a reset or a link; see perkTracking.ts.
+  const handleSelectPerk = (perk: Perk) => {
+    const props = buildPerkOpenProps(perk, role, search.trim() !== '');
+    if (props) trackEvent('perk_open', props);
+    setSelectedPerk(perk);
+  };
+  const handleTypesChange = (next: readonly PerkType[]) => {
+    for (const type of next) {
+      if (!types.includes(type)) trackEvent('perk_type_filter', { type, role: roleTag(role) });
+    }
+    setTypes(next);
+  };
+  // Types written into the text (`#chase`) count as filters too.
+  useSettledPerkSearch(search, () => {
+    if (allPerksList.length === 0) return;
+    trackEvent('perk_search', buildPerkSearchProps(role, sortedPerks, search));
+    for (const type of query.explicitTypes) trackEvent('perk_type_filter', { type, role: roleTag(role) });
+  });
+
   return (
     <div data-perks-column className="relative z-10 flex flex-1 flex-col gap-3 sm:gap-4">
       <div ref={headerRef} className="shrink-0">
@@ -257,20 +278,25 @@ function PerksContent() {
           role={role}
           setRole={handleRoleChange}
           order={order}
-          setOrder={(o) => setOrder(o)}
+          setOrder={(o) => {
+            if (o !== order) trackEvent('perk_sort', { order: o });
+            setOrder(o);
+          }}
           scope={scope}
           setScope={(s) => {
+            if (s === 'general' && scope !== 'general') trackEvent('perk_scope_filter', { scope: 'general' });
             setScope(s);
             setPage(1);
           }}
           ownershipFilter={ownershipFilter}
           setOwnershipFilter={(o) => {
+            if (o === 'owned' && ownershipFilter !== 'owned') trackEvent('perk_scope_filter', { scope: 'owned' });
             setOwnershipFilter(o);
             setPage(1);
           }}
           rolePerks={rolePerks}
           activeTypes={types}
-          onTypesChange={setTypes}
+          onTypesChange={handleTypesChange}
           typeCounts={typeCounts}
           isLoggedIn={Boolean(user)}
         />
@@ -326,7 +352,7 @@ function PerksContent() {
                   perk={perk}
                   size="fill"
                   showName
-                  onSelect={setSelectedPerk}
+                  onSelect={handleSelectPerk}
                 />
               ))}
             </div>
@@ -344,6 +370,7 @@ function PerksContent() {
             limit={limit}
             onPageChange={setPage}
             onLimitChange={(newLimit) => {
+              if (newLimit !== limit) trackEvent('perk_page_size', { limit: newLimit });
               setLimit(newLimit);
               setPage(1);
             }}

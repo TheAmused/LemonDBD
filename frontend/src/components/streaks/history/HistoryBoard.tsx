@@ -10,6 +10,7 @@ import { useHistoryRun } from './useHistoryRun';
 import { useKillerPerkPool } from '../chaos/useKillerPerkPool';
 import { KillerPickerGrid } from '../chaos/KillerPickerGrid';
 import { ChallengeErrorBanner, ChallengePanel, ChallengeVictoryCard } from '../ChallengePanel';
+import { reportModeChange } from '../challengeTracking';
 import { ChallengeProgress } from '../ChallengeProgress';
 import { everyNthCheckpoint } from '@/utils/challengeCheckpoints';
 import { ChallengeCompletionHistoryDrawer, Confetti, AbandonConfirmModal } from '../lazyChallengeParts';
@@ -144,11 +145,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
         >
 
         {isCompleted ? (
-          <ChallengeVictoryCard
-            title={dict.streaks.historyStreakComplete}
-            onRestart={() => { void abandon(); }}
-            busy={busy}
-          />
+          <ChallengeVictoryCard title={dict.streaks.historyStreakComplete} />
         ) : (
           <div>
             <h3 className="mb-3 text-center type-label text-text-secondary sm:text-left">
@@ -235,6 +232,7 @@ export const HistoryBoard: React.FC<HistoryBoardProps> = ({ locale }) => {
           completedCounts={completionStatus.completion_counts.history ?? {}}
           completedFullCounts={completionStatus.full_roster.history ?? {}}
           onSelectMode={(newMode) => {
+            reportModeChange('history', 'killer', mode, newMode);
             saveHistoryMode(newMode);
             setIsChangeModeOpen(false);
             router.push(`${pathname}?mode=${newMode}`);

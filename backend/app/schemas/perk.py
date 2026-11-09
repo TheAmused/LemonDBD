@@ -96,6 +96,7 @@ class PerkResponse(PerkTypeSpec):
 
     id: int
     name: str
+    raw_name: str = ""
     alternate_name: str = ""
     is_generic_counterpart: bool = False
     is_teachable: bool = True

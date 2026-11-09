@@ -2,11 +2,13 @@
 // frontend/src/components/streaks/ChallengePanel.tsx
 
 import React, { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { BarChart2, ChevronDown, History, RotateCcw, ScrollText } from 'lucide-react';
 import { ClapperboardIcon } from '@/components/icons/DbdIcons';
 import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge } from './CelebrationBadge';
 import { useDictionary } from "@/context/DictionaryContext";
 import { useChallengeAnimations } from './useChallengeAnimations';
+import { reportChallengeUi } from './challengeTracking';
 
 import { Button } from '@/components/common/Button';
 import { Collapsible } from '@/components/common/Collapsible';
@@ -151,9 +153,13 @@ export const HeaderButton: React.FC<HeaderButtonProps> = ({ onClick, title, icon
 const DrawAnimationButton: React.FC = () => {
   const dict = useDictionary();
   const [enabled, setEnabled] = useChallengeAnimations();
+  const pathname = usePathname();
   return (
     <HeaderButton
-      onClick={() => setEnabled(!enabled)}
+      onClick={() => {
+        reportChallengeUi(pathname, enabled ? 'animations_off' : 'animations_on');
+        setEnabled(!enabled);
+      }}
       title={dict.streaks.drawAnimations}
       icon={
         <span className="relative flex">
@@ -190,6 +196,7 @@ interface StandardHeaderActionsProps {
 /** The action row every challenge header shares, so they cannot drift apart. */
 export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ onOpenRules, onOpenStats, onOpenHistory, onOpenAbandon, modeSelect, extra, hasDrawAnimations = false }) => {
   const dict = useDictionary();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   return (
   <>
@@ -198,23 +205,35 @@ export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ on
     {extra}
     {hasDrawAnimations && <DrawAnimationButton />}
     <HeaderButton
-      onClick={onOpenRules}
+      onClick={() => {
+        reportChallengeUi(pathname, 'rules');
+        onOpenRules();
+      }}
       title={dict.streaks.rules}
       icon={<ScrollText className="icon-lg" aria-hidden="true" />}
     />
     <HeaderButton
-      onClick={onOpenStats}
+      onClick={() => {
+        reportChallengeUi(pathname, 'stats');
+        onOpenStats();
+      }}
       title={dict.streaks.stats}
       icon={<BarChart2 className="icon-lg" aria-hidden="true" />}
     />
     <HeaderButton
-      onClick={onOpenHistory}
+      onClick={() => {
+        reportChallengeUi(pathname, 'past_wins');
+        onOpenHistory();
+      }}
       title={dict.streaks.pastWins}
       icon={<History className="icon-lg" aria-hidden="true" />}
     />
     <HeaderButton
       danger
-      onClick={onOpenAbandon}
+      onClick={() => {
+        reportChallengeUi(pathname, 'abandon_open');
+        onOpenAbandon();
+      }}
       title={dict.streaks.abandonRun}
       icon={<RotateCcw className="icon-lg" aria-hidden="true" />}
     />
@@ -247,13 +266,10 @@ interface ChallengeVictoryCardProps {
   title: string;
   /** Optional line under the title, e.g. the killer the streak was won on. */
   subtitle?: string;
-  /** The "start again" button; a challenge that restarts some other way leaves it out. */
-  onRestart?: () => void;
-  busy: boolean;
 }
 
 /** The win screen every challenge shows once its run is completed. */
-export const ChallengeVictoryCard: React.FC<ChallengeVictoryCardProps> = ({ title, subtitle, onRestart, busy }) => {
+export const ChallengeVictoryCard: React.FC<ChallengeVictoryCardProps> = ({ title, subtitle }) => {
   const dict = useDictionary();
   return (
   <div className={`${CELEBRATION_CARD_CLASSES} px-6 py-10`}>
@@ -261,16 +277,6 @@ export const ChallengeVictoryCard: React.FC<ChallengeVictoryCardProps> = ({ titl
     <p className={`mt-6 ${CELEBRATION_LABEL_CLASSES}`}>{dict.streaks.victoryCongrats}</p>
     <h2 className="mt-2 text-2xl font-black tracking-tight text-text-primary">{title}</h2>
     {subtitle && <p className="mt-1 type-card-title text-text-secondary">{subtitle}</p>}
-    {onRestart && (
-      <Button
-        type="button"
-        onClick={onRestart}
-        disabled={busy}
-        variant="amber" size="lg" className="mt-6"
-      >
-        {dict.streaks.startNewRun}
-      </Button>
-    )}
   </div>
 );
 };

@@ -139,7 +139,6 @@ export default {
   activeGauntletTarget: "現在のガントレット対象",
   yourBuildForMatch: "この試合の指定構成",
   gauntletComplete: "The Gauntlet に勝利しました",
-  startNewRun: "新しい挑戦を始める",
   gauntlet: "ガントレット",
   best: "最高記録",
   progressiveTierRestrictions: "段階的なティア制限",

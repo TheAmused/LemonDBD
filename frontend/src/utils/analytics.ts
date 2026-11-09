@@ -72,6 +72,9 @@ export interface AnalyticsEvents {
   // Support (Buy me a coffee modal)
   coffee_modal_open: undefined;
   coffee_link_click: { provider: 'buy_me_a_coffee' | 'ko_fi' };
+  coffee_ad_start: undefined;
+  /** How a rewarded ad ended: `rewarded` ran to the end, `dismissed` was closed early, `failed` is an ad network error. */
+  coffee_ad_result: { result: 'rewarded' | 'dismissed' | 'failed' };
   // Bug report modal
   bug_report_open: { source: 'sidebar' | 'profile'; access: 'member' | 'guest' | 'guest_blocked' };
   bug_report_start: { access: 'member' | 'guest' };

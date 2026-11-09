@@ -249,6 +249,7 @@ export function UserProfileClient() {
       {bugModalOpen && (
         <BugReportModal
           isOpen={bugModalOpen}
+          source="profile"
           onSubmitted={() => setReportSubmitted(true)}
           onClose={() => {
             setBugModalOpen(false);

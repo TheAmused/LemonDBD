@@ -13,6 +13,7 @@ from app.models.smash_or_pass import (
     Roster,
     clean_media_display,
 )
+from app.utils.thumbnails import warm_all_thumbs_async
 
 logger = logging.getLogger(__name__)
 
@@ -231,6 +232,10 @@ def _seed_smash_rosters_impl():
         # Rosters and entities feed catalog responses in every worker; the seed
         # just changed what those would return.
         bump_catalog_version()
+        try:
+            warm_all_thumbs_async()
+        except Exception:
+            logger.warning("Failed to trigger background thumbnail warming after smash roster seed", exc_info=True)
         logger.info(f"Successfully seeded all {len(rosters_list)} rosters from JSON files into the database.")
     except Exception as e:
         db.session.rollback()

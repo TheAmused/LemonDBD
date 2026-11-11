@@ -11,6 +11,7 @@ import type {
   OfferingItem,
   CharacterDetailDictionary} from '../types';
 import {
+  getAssetThumbUrl,
   getAssetUrl,
   getRarityTileStyle,
   getRarityRank
@@ -26,6 +27,7 @@ import { isKiller as isKillerRole } from '@/utils/characterUtils';
 import { AccordionSection } from '@/components/common/AccordionSection';
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
+import { fallbackThroughSources } from '@/utils/thumbUrl';
 const KILLER_OFFERING_KEYS = ['special', 'mori', 'bloodpoint', 'map', 'shroud', 'ward'] as const;
 const SURVIVOR_OFFERING_KEYS = ['special', 'bloodpoint', 'luck', 'map', 'shroud', 'blueprint', 'chest', 'ward'] as const;
 
@@ -346,12 +348,10 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
                     aria-label={`${t.inspectOfferingPrefix} ${offering.name}`}
                   >
                     <Img
-                      src={getAssetUrl(backendBase, offering.icon_local_path, offering.icon_url)}
+                      src={getAssetThumbUrl(backendBase, offering.icon_local_path, offering.icon_url)}
                       alt={offering.name}
                       className="h-full w-full object-contain"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                      }}
+                      onError={fallbackThroughSources(getAssetUrl(backendBase, offering.icon_local_path, offering.icon_url))}
                     />
                   </TileButton>
                 </li>

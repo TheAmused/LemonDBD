@@ -2,6 +2,7 @@
 import type { Perk, RoleCategory } from '@/types/perks';
 
 import { getBackendBaseUrl } from './api';
+import { getIconThumbUrl } from './thumbUrl';
 import { isSurvivor } from '@/utils/characterUtils';
 export { getBackendBaseUrl, apiUrl } from './api';
 
@@ -29,6 +30,16 @@ export function getPerkIconUrl(
     return `${backendBase}/static/${cleanPath}`;
   }
   return perk.icon_url || null;
+}
+
+/** `getPerkIconUrl` as a small WebP copy for tiles and grids; the full icon is for detail views. */
+export function getPerkIconThumbUrl(
+  perk?: Partial<Pick<Perk, 'icon_local_path' | 'icon_url'>> | null,
+  width = 128,
+  backendBase: string = getBackendBaseUrl()
+): string | null {
+  const raw = getPerkIconUrl(perk, backendBase);
+  return raw ? getIconThumbUrl(raw, width, backendBase) || raw : null;
 }
 
 const CHARACTER_AVATAR_NAME_MAP: Record<string, string> = {

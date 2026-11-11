@@ -5,8 +5,7 @@ import { Ban, Check, Plus } from 'lucide-react';
 import { useDictionary } from '@/context/DictionaryContext';
 import { Tooltip } from '@/components/common/Tooltip';
 import { cn } from '@/utils/cn';
-import { getPerkIconUrl } from '@/utils/perkUtils';
-import { getIconThumbUrl } from '@/utils/thumbUrl';
+import { getPerkIconThumbUrl } from '@/utils/perkUtils';
 import type { MachinePhase, Reel } from './slotMachineTypes';
 import { TileButton } from "@/components/common/TileButton";
 import { Img } from '@/components/common/Img';
@@ -86,7 +85,7 @@ export function SlotReelRowMobile({
                 <Ban className="text-accent-red" style={{ height: cellPx * 0.65, width: cellPx * 0.65 }} />
               ) : cell.perk ? (
                 <Img
-                  src={getIconThumbUrl(getPerkIconUrl(cell.perk, backendBase), 128, backendBase) || ''}
+                  src={getPerkIconThumbUrl(cell.perk, 128, backendBase) ?? ''}
                   alt=""
                   className="object-contain drop-shadow-md"
                   style={{ height: cellPx * 0.72, width: cellPx * 0.72 }}

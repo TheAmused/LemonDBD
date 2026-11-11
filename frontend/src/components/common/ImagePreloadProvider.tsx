@@ -2,8 +2,8 @@
 'use client';
 
 import React, { useEffect, createContext, useContext, useCallback } from 'react';
-import { getPerkIconUrl, getCharacterAvatarUrl, getBackendBaseUrl } from '@/utils/perkUtils';
-import { avatarThumbFromPath, getIconThumbUrl } from '@/utils/thumbUrl';
+import { getPerkIconThumbUrl, getCharacterAvatarUrl, getBackendBaseUrl } from '@/utils/perkUtils';
+import { avatarThumbFromPath } from '@/utils/thumbUrl';
 import type { Perk } from '@/types/perks';
 
 interface ImagePreloadContextType {
@@ -64,8 +64,7 @@ export const ImagePreloadProvider: React.FC<{ children?: React.ReactNode }> = ({
       const urls: string[] = [];
 
       for (const perk of perks) {
-        const rawIconUrl = getPerkIconUrl(perk, backendBase);
-        const iconUrl = (rawIconUrl && getIconThumbUrl(rawIconUrl, 128, backendBase)) || rawIconUrl;
+        const iconUrl = getPerkIconThumbUrl(perk, 128, backendBase);
         if (iconUrl) urls.push(iconUrl);
 
         const rawAvatarUrl = getCharacterAvatarUrl(

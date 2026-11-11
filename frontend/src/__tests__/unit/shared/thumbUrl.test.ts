@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
   avatarThumbFromPath,
+  fallbackThroughSources,
   getChapterThumbSrc,
   getCommunityCoverThumbUrl,
   getIconThumbUrl,
@@ -217,4 +218,50 @@ test('resolveSmashPortraitUrls preserves data:, blob:, community, and official a
   );
   assert.equal(fromCommunity.fullSrc, `${BASE}/static/uploads/community/abc123.webp`);
   assert.equal(fromCommunity.thumbSrc, `${BASE}/api/v1/thumbs/community/128/abc123.webp`);
+});
+
+test('getThumbUrl: icons snap to the closest allowed width, 256 being the largest', () => {
+  assert.equal(getThumbUrl('icons', 'icons/perks/a.png', 200, ''), '/api/v1/thumbs/icons/256/perks/a.png');
+  assert.equal(getThumbUrl('icons', 'icons/perks/a.png', 1000, ''), '/api/v1/thumbs/icons/256/perks/a.png');
+  assert.equal(getThumbUrl('icons', 'icons/perks/a.png', 100, ''), '/api/v1/thumbs/icons/128/perks/a.png');
+});
+
+test('getThumbUrl: a query or hash suffix survives the rewrite', () => {
+  assert.equal(
+    getThumbUrl('icons', '/static/icons/perks/a.png?v=3#x', 128, ''),
+    '/api/v1/thumbs/icons/128/perks/a.png?v=3#x'
+  );
+});
+
+function fakeImg() {
+  const img = { src: 'thumb', style: { display: '' }, dataset: {} as Record<string, string> };
+  return { img, event: { currentTarget: img } as never };
+}
+
+test('fallbackThroughSources: retries each original once, in order, then hides the image', () => {
+  const handler = fallbackThroughSources('/static/a.png', 'https://cdn.example.com/a.png');
+  const { img, event } = fakeImg();
+  handler(event);
+  assert.equal(img.src, '/static/a.png');
+  handler(event);
+  assert.equal(img.src, 'https://cdn.example.com/a.png');
+  assert.equal(img.style.display, '');
+  handler(event);
+  assert.equal(img.style.display, 'none');
+});
+
+test('fallbackThroughSources: skips empty and repeated sources', () => {
+  const handler = fallbackThroughSources('/static/a.png', undefined, '', '/static/a.png');
+  const { img, event } = fakeImg();
+  handler(event);
+  assert.equal(img.src, '/static/a.png');
+  handler(event);
+  assert.equal(img.style.display, 'none');
+});
+
+test('fallbackThroughSources: without sources it only hides the image', () => {
+  const { img, event } = fakeImg();
+  fallbackThroughSources(null)(event);
+  assert.equal(img.style.display, 'none');
+  assert.equal(img.src, 'thumb');
 });

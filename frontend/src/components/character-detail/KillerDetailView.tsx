@@ -10,6 +10,7 @@ import type {
   EquipmentItem,
   OfferingItem} from './types';
 import {
+  getAssetThumbUrl,
   getAssetUrl,
   formatLocalizedReleaseDate,
   formatKillerHeight,
@@ -30,6 +31,7 @@ import { InfoChip, InfoChipButton } from '@/components/common/InfoChip';
 import { TileButton } from '@/components/common/TileButton';
 import { WrapRow } from '@/components/common/WrapRow';
 import { Img } from '@/components/common/Img';
+import { fallbackThroughSources } from '@/utils/thumbUrl';
 
 const LoreModal = dynamic(() => import('./modals/LoreModal').then((m) => m.LoreModal), { ssr: false });
 const Model3DModal = dynamic(() => import('./modals/Model3DModal').then((m) => m.Model3DModal), { ssr: false });
@@ -104,15 +106,13 @@ export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLoca
                 >
                   {killerPower.icon_url || killerPower.icon_local_path ? (
                     <Img
-                      src={getAssetUrl(backendBase, killerPower.icon_local_path, killerPower.icon_url)}
+                      src={getAssetThumbUrl(backendBase, killerPower.icon_local_path, killerPower.icon_url)}
                       alt={killerPower.name}
                       className="h-full w-full object-contain group-hover:scale-105 transition-transform"
-                      onError={(e) => {
-                        const img = e.target as HTMLImageElement;
-                        if (killerPower.icon_url && img.src !== killerPower.icon_url) {
-                          img.src = killerPower.icon_url;
-                        }
-                      }}
+                      onError={fallbackThroughSources(
+                        getAssetUrl(backendBase, killerPower.icon_local_path, killerPower.icon_url),
+                        killerPower.icon_url
+                      )}
                     />
                   ) : (
                     <Zap className="h-10 w-10 text-accent-red animate-pulse" aria-hidden="true" />

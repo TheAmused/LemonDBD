@@ -33,7 +33,7 @@ Generalize `serve_thumb` and add a strict category/size registry so arbitrary wi
 | `maps` | `320` | `2.0` | `callouts/` (up to 2000x2200 -> ~15–25 KB WebP) |
 | `chapters` | `480` | `1.0` | `chapters/*.webp` (up to 3840x2160 / 2.17 MB -> ~15–25 KB WebP) |
 | `realms` | `320` | `1.5` | `realms/*.webp` (526x350 / up to 297 KB -> ~10–15 KB WebP) |
-| `icons` | `96`, `128` | `1.0` | `addons/`, `items/`, `killers/`, `offerings/`, `powers/`, `survivors/` (256x256 -> 4x–7x less decoded RGBA memory in 300+ item grids) |
+| `icons` | `96`, `128`, `256` | `1.0` | `addons/`, `items/`, `killers/`, `offerings/`, `powers/`, `survivors/` (256x256 -> 4x–7x less decoded RGBA memory in 300+ item grids) |
 | `smash-or-pass` | `256`, `480` | `2.0` | `covers/`, placeholders |
 | `tier-lists` | `480` | `1.0` | banners |
 | `community` | `128`, `256`, `480` | `2.0` | maps to `static/uploads/community/` for admin-ingested community assets |

@@ -4,7 +4,8 @@ import { RARITY_TILE_IMAGES } from '@/constants/addonRarityIcons';
 import { localeMetaFor } from '@/i18n/config';
 import type { Dictionary } from '@/locales/types';
 import { characterSlug, getCharacterSlug } from '@/lib/slug';
-import { avatarThumbFromPath } from '@/utils/thumbUrl';
+import { avatarThumbFromPath, getIconThumbUrl } from '@/utils/thumbUrl';
+import { sanitizePath } from '@/utils/perkUtils';
 
 export interface CharacterItem {
   id?: number;
@@ -192,12 +193,13 @@ export function localizeTerrorRadiusText(raw: string, locale: string): string {
 export { getCharacterSlug, characterSlug };
 
 export function getAssetUrl(backendBase: string, path?: string, url?: string): string {
-  if (path) {
-    let cleanPath = path.replace(/^\/?(static\/)?/, '');
-    cleanPath = cleanPath.replace(/%+/g, '');
-    return `${backendBase}/static/${cleanPath}`;
-  }
+  if (path) return `${backendBase}/static/${sanitizePath(path)}`;
   return url || '';
+}
+
+/** Small WebP copy of a static icon for grids and lists; detail modals keep `getAssetUrl`. */
+export function getAssetThumbUrl(backendBase: string, path?: string, url?: string, width = 128): string {
+  return getIconThumbUrl(getAssetUrl(backendBase, path, url), width, backendBase);
 }
 
 export function getAvatarUrl(

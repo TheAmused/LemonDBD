@@ -1,8 +1,4 @@
 # backend/app/routes/tier_lists.py
-import logging
-from pathlib import Path
-from typing import Any
-
 from flask import Blueprint, current_app, g, jsonify, request
 from pydantic import ValidationError
 
@@ -11,11 +7,12 @@ from app.core.security import admin_required, get_current_user
 from app.schemas.tier_list import TierListAdminCreate, TierListAdminUpdate
 from app.services import tier_list_service
 from app.services.admin_control_service import log_admin_action
-from app.services.community_media import ingest_community_image
+from app.services.community_media import (
+    ingest_cover_image,
+    ingest_dict_media_urls,
+    warm_community_thumbs_async,
+)
 from app.utils.lang import extract_lang
-from app.utils.thumbnails import warm_all_thumbs_async
-
-logger = logging.getLogger(__name__)
 
 tier_lists_bp = Blueprint("tier_lists", __name__, url_prefix="/api/v1/tier-lists")
 
@@ -25,33 +22,6 @@ def _cover_rejected(body: dict, cleaned: str | None) -> bool:
     (An explicit empty string or null still means "remove the cover".)"""
     raw = body.get("cover_image_url")
     return isinstance(raw, str) and bool(raw.strip()) and cleaned is None
-
-
-def _is_ingested_community_url(original: str, normalized: str) -> bool:
-    return original.strip().startswith("data:") and normalized.startswith("/static/uploads/community/")
-
-
-def _ingest_custom_items(items: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], bool]:
-    ingested = False
-    for item in items:
-        orig_url = item.get("image_url")
-        if isinstance(orig_url, str) and orig_url.strip():
-            normalized = ingest_community_image(orig_url, max_side=512)
-            if normalized is None:
-                item.pop("image_url", None)
-            else:
-                item["image_url"] = normalized
-                if _is_ingested_community_url(orig_url, normalized):
-                    ingested = True
-    return items, ingested
-
-
-def _warm_community_thumbs() -> None:
-    try:
-        static_root = Path(current_app.static_folder) if current_app.static_folder else None
-        warm_all_thumbs_async(static_root)
-    except Exception:
-        logger.warning("Failed to trigger thumbnail warming after tier list ingest", exc_info=True)
 
 
 @tier_lists_bp.route("", methods=["GET"])
@@ -99,20 +69,13 @@ def create_tier_list():
     if _cover_rejected(body, payload.cover_image_url):
         return jsonify({"error": "Invalid cover image URL", "status": 400}), 400
 
-    ingested = False
-    cover_image_url = payload.cover_image_url
-    if cover_image_url:
-        normalized_cover = ingest_community_image(cover_image_url, max_side=800)
-        if normalized_cover is None:
-            return jsonify({"error": "Invalid cover image URL", "status": 400}), 400
-        if _is_ingested_community_url(cover_image_url, normalized_cover):
-            ingested = True
-        cover_image_url = normalized_cover
+    cover_image_url, cover_invalid, cover_ingested = ingest_cover_image(payload.cover_image_url, max_side=800)
+    if cover_invalid:
+        return jsonify({"error": "Invalid cover image URL", "status": 400}), 400
 
-    custom_items, items_ingested = _ingest_custom_items(
-        [i.model_dump(exclude_none=True) for i in payload.items]
-    )
-    ingested = ingested or items_ingested
+    custom_items = [i.model_dump(exclude_none=True) for i in payload.items]
+    items_ingested = ingest_dict_media_urls(custom_items, "image_url", max_side=512)
+    ingested = cover_ingested or items_ingested
 
     try:
         row = tier_list_service.create_tier_list(
@@ -128,7 +91,7 @@ def create_tier_list():
         return jsonify({"error": str(err)}), 400
 
     if ingested:
-        _warm_community_thumbs()
+        warm_community_thumbs_async(current_app.static_folder)
 
     log_admin_action(
         g.current_user.id,
@@ -180,17 +143,16 @@ def update_tier_list(slug: str):
     fields_set = payload.model_fields_set
     kwargs = _update_kwargs(payload)
     ingested = False
-    if "cover_image_url" in fields_set and kwargs.get("cover_image_url"):
-        orig_cover = str(kwargs["cover_image_url"])
-        normalized_cover = ingest_community_image(orig_cover, max_side=800)
-        if normalized_cover is None:
+    if "cover_image_url" in fields_set:
+        normalized_cover, cover_invalid, cover_ingested = ingest_cover_image(
+            kwargs.get("cover_image_url"), max_side=800  # type: ignore[arg-type]
+        )
+        if cover_invalid:
             return jsonify({"error": "Invalid cover image URL", "status": 400}), 400
-        if _is_ingested_community_url(orig_cover, normalized_cover):
-            ingested = True
         kwargs["cover_image_url"] = normalized_cover
+        ingested = cover_ingested
     if "custom_items" in kwargs and isinstance(kwargs["custom_items"], list):
-        kwargs["custom_items"], items_ingested = _ingest_custom_items(kwargs["custom_items"])
-        ingested = ingested or items_ingested
+        ingested = ingest_dict_media_urls(kwargs["custom_items"], "image_url", max_side=512) or ingested
 
     try:
         row = tier_list_service.update_tier_list(slug, **kwargs)
@@ -201,7 +163,7 @@ def update_tier_list(slug: str):
         return jsonify({"error": "Tier list not found", "status": 404}), 404
 
     if ingested:
-        _warm_community_thumbs()
+        warm_community_thumbs_async(current_app.static_folder)
 
     log_admin_action(
         g.current_user.id,

@@ -1,6 +1,5 @@
 # backend/app/routes/others/smash_or_pass.py
 import logging
-from pathlib import Path
 from typing import Any
 from flask import Blueprint, current_app, g, jsonify, request
 from pydantic import ValidationError
@@ -13,12 +12,15 @@ from app.models.smash_or_pass import Roster
 from app.schemas.smash_or_pass import MAX_SMASH_KEY_LENGTH, SmashRosterAdminCreate, SmashSessionRequest
 from app.services import site_settings
 from app.services.admin_control_service import log_admin_action
-from app.services.community_media import ingest_community_image
+from app.services.community_media import (
+    ingest_cover_image,
+    ingest_dict_media_urls,
+    warm_community_thumbs_async,
+)
 from app.services.smash_or_pass_service import SmashOrPassService
 from app.utils.lang import extract_lang as _extract_lang
 from app.utils.pagination import paginate_args
 from app.utils.responses import api_error
-from app.utils.thumbnails import warm_all_thumbs_async
 
 logger = logging.getLogger(__name__)
 
@@ -111,27 +113,13 @@ def create_roster():
     except ValidationError as err:
         return api_error("Invalid roster", 400, details=err.errors())
 
-    ingested = False
-    cover_image_url = payload.cover_image_url
-    if cover_image_url:
-        normalized_cover = ingest_community_image(cover_image_url, max_side=800)
-        if normalized_cover is None:
-            return api_error("Invalid cover image URL", 400)
-        if cover_image_url.strip().startswith("data:") and normalized_cover.startswith("/static/uploads/community/"):
-            ingested = True
-        cover_image_url = normalized_cover
+    cover_image_url, cover_invalid, cover_ingested = ingest_cover_image(payload.cover_image_url, max_side=800)
+    if cover_invalid:
+        return api_error("Invalid cover image URL", 400)
 
     entities = _roster_entities(payload)
-    for entity in entities:
-        orig_media = entity.get("media_url")
-        if isinstance(orig_media, str) and orig_media.strip():
-            normalized_media = ingest_community_image(orig_media, max_side=512)
-            if normalized_media is None:
-                entity.pop("media_url", None)
-            else:
-                entity["media_url"] = normalized_media
-                if orig_media.strip().startswith("data:") and normalized_media.startswith("/static/uploads/community/"):
-                    ingested = True
+    entities_ingested = ingest_dict_media_urls(entities, "media_url", max_side=512)
+    ingested = cover_ingested or entities_ingested
 
     try:
         row = smash_service.create_roster(
@@ -149,11 +137,7 @@ def create_roster():
         return api_error(str(err), 400)
 
     if ingested:
-        try:
-            static_root = Path(current_app.static_folder) if current_app.static_folder else None
-            warm_all_thumbs_async(static_root)
-        except Exception:
-            logger.warning("Failed to trigger thumbnail warming after roster ingest", exc_info=True)
+        warm_community_thumbs_async(current_app.static_folder)
 
     log_admin_action(
         g.current_user.id,

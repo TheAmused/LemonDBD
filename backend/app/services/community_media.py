@@ -11,10 +11,11 @@ import re
 import threading
 from io import BytesIO
 from pathlib import Path
+from typing import Any
 
 from PIL import Image, UnidentifiedImageError
 
-from app.utils.thumbnails import _lock_for, _normalize_for_webp, _resolve_static_root
+from app.utils.thumbnails import _lock_for, _normalize_for_webp, _resolve_static_root, warm_all_thumbs_async
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +24,14 @@ _DATA_IMAGE_RE = re.compile(
     r"^data:image/(png|jpe?g|webp|gif|avif);base64,([A-Za-z0-9+/=]+)$",
     re.IGNORECASE,
 )
+
+
+def _is_data_uri(value: str) -> bool:
+    return value.strip().lower().startswith("data:")
+
+
+def _is_ingested_community_url(original: str, normalized: str) -> bool:
+    return _is_data_uri(original) and normalized.startswith("/static/uploads/community/")
 
 
 def ingest_community_image(
@@ -40,7 +49,7 @@ def ingest_community_image(
     stripped = value.strip()
     if not stripped:
         return None
-    if not stripped.startswith("data:"):
+    if not _is_data_uri(stripped):
         return stripped
 
     match = _DATA_IMAGE_RE.match(stripped)
@@ -92,3 +101,47 @@ def ingest_community_image(
         return None
 
     return public_url
+
+
+def ingest_cover_image(
+    value: str | None,
+    max_side: int = 800,
+    static_root: Path | None = None,
+) -> tuple[str | None, bool, bool]:
+    """Normalize a cover image URL; return ``(normalized_url, invalid_non_empty, ingested)``."""
+    if not isinstance(value, str) or not value.strip():
+        return value, False, False
+    normalized = ingest_community_image(value, max_side=max_side, static_root=static_root)
+    if normalized is None:
+        return None, True, False
+    return normalized, False, _is_ingested_community_url(value, normalized)
+
+
+def ingest_dict_media_urls(
+    items: list[dict[str, Any]],
+    key: str,
+    max_side: int = 512,
+    static_root: Path | None = None,
+) -> bool:
+    """Normalize ``item[key]`` in place across item/entity dicts; return True if any was ingested."""
+    ingested = False
+    for item in items:
+        orig_url = item.get(key)
+        if isinstance(orig_url, str) and orig_url.strip():
+            normalized = ingest_community_image(orig_url, max_side=max_side, static_root=static_root)
+            if normalized is None:
+                item.pop(key, None)
+            else:
+                item[key] = normalized
+                if _is_ingested_community_url(orig_url, normalized):
+                    ingested = True
+    return ingested
+
+
+def warm_community_thumbs_async(static_folder: str | Path | None) -> None:
+    """Best-effort trigger for background thumbnail warming after community media ingest."""
+    try:
+        static_root = Path(static_folder) if static_folder else None
+        warm_all_thumbs_async(static_root)
+    except Exception:
+        logger.warning("Failed to trigger thumbnail warming after community media ingest", exc_info=True)

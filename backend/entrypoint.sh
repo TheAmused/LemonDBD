@@ -27,5 +27,11 @@ until python3 scripts/sync_db_schema.py; do
 done
 
 echo "[entrypoint] Database schema is up to date."
+case "$*" in
+  *gunicorn*)
+    echo "[entrypoint] Warming static thumbnails in background..."
+    python3 scripts/warm_thumbnails.py --prune --quiet >/dev/null 2>&1 &
+    ;;
+esac
 echo "[entrypoint] Starting: $*"
 exec "$@"

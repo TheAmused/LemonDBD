@@ -1,0 +1,167 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {
+  avatarThumbFromPath,
+  getChapterThumbSrc,
+  getCommunityCoverThumbUrl,
+  getIconThumbUrl,
+  getRealmThumbSrc,
+  getThumbUrl,
+} from '@/utils/thumbUrl';
+
+const BASE = 'https://api.example.com';
+
+test('getThumbUrl converts static and relative paths to /api/v1/thumbs/<cat>/<width>/<rel>', () => {
+  assert.equal(
+    getThumbUrl('avatars', '/static/avatars/killers/trapper.png', 256, ''),
+    '/api/v1/thumbs/avatars/256/killers/trapper.png',
+  );
+  assert.equal(
+    getThumbUrl('avatars', 'avatars/killers/trapper.webp', 128, BASE),
+    `${BASE}/api/v1/thumbs/avatars/128/killers/trapper.webp`,
+  );
+  assert.equal(
+    getThumbUrl('avatars', `${BASE}/static/avatars/survivors/meg_thomas.webp`, 256, BASE),
+    `${BASE}/api/v1/thumbs/avatars/256/survivors/meg_thomas.webp`,
+  );
+  assert.equal(
+    getThumbUrl('maps', 'maps/callouts/lemondbd/macmillan/coal_tower.webp', 320, BASE),
+    `${BASE}/api/v1/thumbs/maps/320/callouts/lemondbd/macmillan/coal_tower.webp`,
+  );
+  assert.equal(
+    getThumbUrl('maps', 'callouts/lemondbd/macmillan/coal_tower.webp', 320, ''),
+    '/api/v1/thumbs/maps/320/callouts/lemondbd/macmillan/coal_tower.webp',
+  );
+});
+
+test('getThumbUrl maps community uploads subdir uploads/community/ to community thumbs', () => {
+  assert.equal(
+    getThumbUrl('community', '/static/uploads/community/abc.webp', 480, ''),
+    '/api/v1/thumbs/community/480/abc.webp',
+  );
+  assert.equal(
+    getThumbUrl('community', 'uploads/community/nested/abc.png', 256, BASE),
+    `${BASE}/api/v1/thumbs/community/256/nested/abc.png`,
+  );
+  assert.equal(
+    getThumbUrl('community', 'abc.jpg', 128, ''),
+    '/api/v1/thumbs/community/128/abc.jpg',
+  );
+});
+
+test('getThumbUrl leaves empty, external, data, blob, already-thumbnailed, and non-raster paths safe', () => {
+  assert.equal(getThumbUrl('avatars', null, 256, BASE), '');
+  assert.equal(getThumbUrl('avatars', undefined, 256, BASE), '');
+  assert.equal(getThumbUrl('avatars', '   ', 256, BASE), '');
+
+  assert.equal(
+    getThumbUrl('avatars', 'https://cdn.example.com/static/avatars/a.png', 256, BASE),
+    'https://cdn.example.com/static/avatars/a.png',
+  );
+  assert.equal(
+    getThumbUrl('community', 'https://example.com/cover.webp', 480, ''),
+    'https://example.com/cover.webp',
+  );
+  assert.equal(
+    getThumbUrl('community', 'data:image/png;base64,AAAA', 480, ''),
+    'data:image/png;base64,AAAA',
+  );
+  assert.equal(
+    getThumbUrl('community', 'blob:https://lemondbd.com/1234', 480, ''),
+    'blob:https://lemondbd.com/1234',
+  );
+  assert.equal(
+    getThumbUrl('icons', '/static/icons/perks/icon.svg', 128, BASE),
+    `${BASE}/static/icons/perks/icon.svg`,
+  );
+  assert.equal(
+    getThumbUrl('icons', 'icons/audio/clip.ogg', 128, ''),
+    '/static/icons/audio/clip.ogg',
+  );
+  assert.equal(
+    getThumbUrl('avatars', '/api/v1/thumbs/avatars/128/killers/trapper.webp', 128, BASE),
+    `${BASE}/api/v1/thumbs/avatars/128/killers/trapper.webp`,
+  );
+  assert.equal(
+    getThumbUrl('avatars', '/static/other/banner.webp', 256, ''),
+    '/static/other/banner.webp',
+  );
+  assert.equal(
+    getThumbUrl('community', '/images/banners/banner_account.webp', 480, ''),
+    '/images/banners/banner_account.webp',
+  );
+});
+
+test('specialized thumbnail helpers handle local paths, objects, remote URLs, and nulls', () => {
+  assert.equal(avatarThumbFromPath(null, 256, BASE), '');
+  assert.equal(
+    avatarThumbFromPath('avatars/survivors/meg_thomas.webp', 128, ''),
+    '/api/v1/thumbs/avatars/128/survivors/meg_thomas.webp',
+  );
+
+  assert.equal(getChapterThumbSrc(null, 480, BASE), '');
+  assert.equal(
+    getChapterThumbSrc({ banner_path: 'chapters/chapter_1.png', banner_url: 'https://wiki.gg/c1.png' }, 480, ''),
+    '/api/v1/thumbs/chapters/480/chapter_1.png',
+  );
+  assert.equal(
+    getChapterThumbSrc({ banner_local_path: 'chapters/chapter_2.webp', banner_url: 'https://wiki.gg/c2.webp' }, 480, BASE),
+    `${BASE}/api/v1/thumbs/chapters/480/chapter_2.webp`,
+  );
+  assert.equal(
+    getChapterThumbSrc({ banner_url: 'https://wiki.gg/c3.png' }, 480, BASE),
+    'https://wiki.gg/c3.png',
+  );
+  assert.equal(
+    getChapterThumbSrc('/static/chapters/chapter_4.jpg', 480, ''),
+    '/api/v1/thumbs/chapters/480/chapter_4.jpg',
+  );
+
+  assert.equal(getRealmThumbSrc(undefined, 320, BASE), '');
+  assert.equal(
+    getRealmThumbSrc('realms/autohaven_wreckers.webp', 320, ''),
+    '/api/v1/thumbs/realms/320/autohaven_wreckers.webp',
+  );
+
+  assert.equal(getIconThumbUrl(null, 128, BASE), '');
+  assert.equal(
+    getIconThumbUrl('icons/perks/sprint_burst.png', 96, ''),
+    '/api/v1/thumbs/icons/96/perks/sprint_burst.png',
+  );
+  assert.equal(
+    getIconThumbUrl('https://wiki.dbd/icon.png', 128, BASE),
+    'https://wiki.dbd/icon.png',
+  );
+});
+
+test('getCommunityCoverThumbUrl routes community, smash-or-pass, and tier-lists covers and leaves others untouched', () => {
+  assert.equal(getCommunityCoverThumbUrl(null, 480, ''), '');
+  assert.equal(
+    getCommunityCoverThumbUrl('/static/uploads/community/cover.webp', 480, ''),
+    '/api/v1/thumbs/community/480/cover.webp',
+  );
+  assert.equal(
+    getCommunityCoverThumbUrl('/static/smash-or-pass/cover_placeholder_1.webp', 480, BASE),
+    `${BASE}/api/v1/thumbs/smash-or-pass/480/cover_placeholder_1.webp`,
+  );
+  assert.equal(
+    getCommunityCoverThumbUrl('/static/tier-lists/banner_survivors.webp', 480, ''),
+    '/api/v1/thumbs/tier-lists/480/banner_survivors.webp',
+  );
+  assert.equal(
+    getCommunityCoverThumbUrl('https://cdn.example.com/custom.webp', 480, BASE),
+    'https://cdn.example.com/custom.webp',
+  );
+  assert.equal(
+    getCommunityCoverThumbUrl('data:image/webp;base64,BBB', 480, BASE),
+    'data:image/webp;base64,BBB',
+  );
+  assert.equal(
+    getCommunityCoverThumbUrl('/images/banners/default.webp', 480, BASE),
+    '/images/banners/default.webp',
+  );
+  assert.equal(
+    getCommunityCoverThumbUrl('/static/unknown/cover.webp', 480, BASE),
+    '/static/unknown/cover.webp',
+  );
+});

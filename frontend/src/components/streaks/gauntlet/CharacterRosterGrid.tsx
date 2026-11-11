@@ -6,6 +6,7 @@ import type { Role } from '@/types/gauntletStreak';
 import type { OwnedCharacterItem } from '../useOwnedRoster';
 import { Check, Flag } from 'lucide-react';
 import { avatarUrlForCharacter, staticUrl } from '@/utils/staticUrl';
+import { avatarThumbFromPath } from '@/utils/thumbUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { PersonIcon } from '@/components/icons/DbdIcons';
 
@@ -56,8 +57,11 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
     activeCharacterIds.some((c) => c.toLowerCase().trim() === charName.toLowerCase().trim());
 
   const getAvatarUrl = (char: OwnedCharacterItem) =>
-    staticUrl(char.avatar_local_path) ||
-    avatarUrlForCharacter(char.name, role === 'survivor' ? 'survivors' : 'killers');
+    avatarThumbFromPath(
+      staticUrl(char.avatar_local_path) ||
+        avatarUrlForCharacter(char.name, role === 'survivor' ? 'survivors' : 'killers'),
+      128
+    );
 
   const completedText = dict.stats.completed;
   const activeTargetText = dict.streaks.activeGauntletTarget;

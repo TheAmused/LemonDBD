@@ -12,6 +12,7 @@ import { useCardFlip } from './card/useCardFlip';
 import { SmashSounds } from './SmashSoundEffects';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
+import { avatarThumbFromPath, getCommunityCoverThumbUrl } from '@/utils/thumbUrl';
 import type { EntityItem, RosterCustomLabels } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { sampleFlags } from '@/utils/smashWatermarks';
@@ -123,6 +124,10 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
         },
         isSurvivor
       );
+
+  const avatarThumbSrc = avatarSrc.includes('/static/avatars/')
+    ? avatarThumbFromPath(avatarSrc, 256, backendBase) || avatarSrc
+    : getCommunityCoverThumbUrl(avatarSrc, 256, backendBase) || avatarSrc;
 
   const dragDistance = Math.abs(dragOffset.x);
   const swipeProgress = Math.min(1, Math.max(0, dragDistance / 100));
@@ -246,7 +251,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             <div className="absolute inset-0 z-0 bg-bg-primary overflow-hidden">
               <div className="h-full w-full" style={portraitOffsetY ? { transform: `translateY(${portraitOffsetY}px)` } : undefined}>
                 <CardAvatarImage
-                  src={avatarSrc}
+                  src={avatarThumbSrc}
                   name={character.name}
                   slug={character.slug}
                   isSurvivor={isSurvivor}

@@ -7,6 +7,7 @@ import { PerkIcon } from '@/components/ui/PerkIcon';
 import { HelpCircle } from 'lucide-react';
 import type { Perk } from '@/types/perks';
 import { getPerkIconUrl, getCharacterAvatarUrl } from '@/utils/perkUtils';
+import { avatarThumbFromPath, getIconThumbUrl } from '@/utils/thumbUrl';
 import { DisabledBadge } from '@/components/DisabledBadge';
 
 import { tip } from '@/components/common/Tooltip';
@@ -49,11 +50,13 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
   const [avatarError, setAvatarError] = useState(false);
   const [showDisabledModal, setShowDisabledModal] = useState(false);
 
-  const iconSrc = getPerkIconUrl(perk);
-  const avatarSrc = getCharacterAvatarUrl(
+  const rawIconSrc = getPerkIconUrl(perk);
+  const iconSrc = (rawIconSrc && getIconThumbUrl(rawIconSrc, 128)) || rawIconSrc;
+  const rawAvatarSrc = getCharacterAvatarUrl(
     perk,
     perk.category === 'Killer' ? 'Killer' : 'Survivor'
   );
+  const avatarSrc = (rawAvatarSrc && avatarThumbFromPath(rawAvatarSrc, 128)) || rawAvatarSrc;
 
   const isGeneral =
     !perk.character ||

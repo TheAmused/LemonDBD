@@ -17,6 +17,7 @@ import { playFanfare, playCardFlip } from '@/utils/perkAudio';
 import { useDictionary } from "@/context/DictionaryContext";
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
+import { publicImageThumb } from '@/utils/publicThumb';
 
 export interface TarotDeckStageProps {
   role: RoleCategory;
@@ -43,7 +44,7 @@ interface TarotCard {
 /** Warm the browser/SW cache so a card flips onto an already-loaded face. */
 const preloadTarotFace = (slug: string): void => {
   if (typeof Image === 'undefined') return;
-  new Image().src = tarotImageUrl(slug, 'face');
+  new Image().src = publicImageThumb(tarotImageUrl(slug, 'face'));
 };
 
 /**
@@ -57,7 +58,7 @@ const CardImage: React.FC<{ slug: string; side: TarotSide }> = ({ slug, side }) 
 
   return (
     <Img
-      src={tarotImageUrl(slug, side)}
+      src={publicImageThumb(tarotImageUrl(slug, side))}
       alt=""
       aria-hidden="true"
       draggable={false}
@@ -215,7 +216,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
           disabled={activePlayablePerks.length === 0}
           className="group"
         >
-          <StageProp src="/images/randomizer/tarot.webp" />
+          <StageProp src={publicImageThumb('/images/randomizer/tarot.webp')} />
         </TileButton>
       )}
 

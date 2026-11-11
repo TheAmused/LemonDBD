@@ -4,6 +4,12 @@
 import React from 'react';
 import Image from 'next/image';
 import { cn } from '@/utils/cn';
+import {
+  avatarThumbFromPath,
+  getIconThumbUrl,
+  getRealmThumbSrc,
+  getThumbUrl,
+} from '@/utils/thumbUrl';
 
 export type ThumbSize = 'sm' | 'md' | 'lg' | 'xl';
 
@@ -24,13 +30,31 @@ export interface ThumbProps {
   className?: string;
 }
 
+function resolveThumbSrc(src: string | null | undefined, size: ThumbSize): string | null | undefined {
+  if (!src) return src;
+  if (src.includes('/static/icons/')) {
+    return getIconThumbUrl(src, size === 'sm' || size === 'md' ? 96 : 128) || src;
+  }
+  if (src.includes('/static/avatars/')) {
+    return avatarThumbFromPath(src, 128) || src;
+  }
+  if (src.includes('/static/realms/')) {
+    return getRealmThumbSrc(src, 320) || src;
+  }
+  if (src.includes('/static/maps/')) {
+    return getThumbUrl('maps', src, 320) || src;
+  }
+  return src;
+}
+
 export function Thumb({ src, alt, size = 'md', fit = 'cover', fallback, className }: ThumbProps) {
   const { box, px } = SIZES[size];
+  const resolvedSrc = resolveThumbSrc(src, size);
   return (
     <div className={cn('relative flex shrink-0 items-center justify-center overflow-hidden rounded-chip border border-border-color bg-bg-elevated', box, className)}>
-      {src ? (
+      {resolvedSrc ? (
         <Image
-          src={src}
+          src={resolvedSrc}
           alt={alt}
           width={px}
           height={px}

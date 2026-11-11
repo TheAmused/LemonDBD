@@ -12,6 +12,7 @@ import type { TierItem, TierListApiCustomItem, TierListDocumentItem } from '@/ty
 import { getMapImageSrc, getMapThumbSrc } from '@/utils/mapUtils';
 import { perkIconUrl } from '@/utils/staticUrl';
 import { staticUrl } from '@/utils/api';
+import { avatarThumbFromPath, getIconThumbUrl } from '@/utils/thumbUrl';
 import { sanitizeImageUrl } from './codec';
 
 type Role = 'Survivor' | 'Killer';
@@ -36,7 +37,7 @@ export function perksToItems(perks: readonly Perk[], role: Role, itemIds?: reado
         items.push({
           key,
           name: p.name,
-          image: perkIconUrl(p) ?? null,
+          image: getIconThumbUrl(perkIconUrl(p), 128) || null,
           subtitle: p.character && p.character !== 'General' ? p.character : undefined,
           description: p.description,
         });
@@ -68,7 +69,7 @@ export function charactersToItems(
         items.push({
           key,
           name: c.name,
-          image: staticUrl(c.avatar_local_path) ?? (c.portrait_url || null),
+          image: avatarThumbFromPath(c.avatar_local_path, 128) || (c.portrait_url || null),
           subtitle: c.chapter_name || undefined,
         });
       }

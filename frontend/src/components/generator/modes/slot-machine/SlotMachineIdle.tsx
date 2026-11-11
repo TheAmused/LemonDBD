@@ -6,6 +6,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { DbdButton } from '@/components/common/Button';
 import { TileButton } from '@/components/common/TileButton';
 import { StageIdleColumn, StagePrompt, StageProp } from '../../shared/StageIdle';
+import { publicImageThumb } from '@/utils/publicThumb';
 
 interface SlotMachineIdleProps {
   role: RoleCategory;
@@ -29,7 +30,7 @@ export function SlotMachineIdle({ role, disabled, onPull }: SlotMachineIdleProps
         disabled={disabled}
         className="group"
       >
-        <StageProp src="/images/randomizer/lever.webp" />
+        <StageProp src={publicImageThumb('/images/randomizer/lever.webp')} />
       </TileButton>
       <DbdButton
         role={role}

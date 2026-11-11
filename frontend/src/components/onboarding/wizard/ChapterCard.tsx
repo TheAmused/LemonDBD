@@ -5,7 +5,7 @@ import { ChevronDown } from 'lucide-react';
 import { OwnershipClipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
 import { SwitchTrack } from '@/components/common/Switch';
 import { useDictionary } from '@/context/DictionaryContext';
-import { getChapterBannerSrc } from '@/utils/mapUtils';
+import { getChapterThumbSrc } from '@/utils/thumbUrl';
 import {
   type ChapterGroup,
   type OnboardingCharacter,
@@ -42,7 +42,7 @@ export function ChapterCard({
 }: ChapterCardProps) {
   const t = useDictionary().onboarding;
   const banner = chapterBanners[normalizeChapterKey(group.chapterName)];
-  const bannerSrc = getChapterBannerSrc(banner, backendBase);
+  const bannerSrc = getChapterThumbSrc(banner, 480, backendBase);
   const ownedCharacterCount = group.characters.filter(isCharacterOwned).length;
   const chapterOwned = ownedCharacterCount === group.characters.length;
   const chapterHasPartialSignal =

@@ -1,5 +1,6 @@
 // frontend/src/components/streaks/panels.ts
 import type { Dictionary } from '@/locales/types';
+import { publicImageThumb } from '@/utils/publicThumb';
 import { idPleaseCardImage } from './id-please/idPleaseAssets';
 
 export interface StreakPanelDef {
@@ -21,45 +22,45 @@ export function getKillerStreakPanels(dict: Dictionary): StreakPanelDef[] {
     {
       id: 'gauntlet-streak',
       title: t.gauntletStreakTitle,
-      image: '/images/streaks/gauntlet-streak.webp',
+      image: publicImageThumb('/images/streaks/gauntlet-streak.webp'),
       creator: 'Zerbs',
     },
     {
       id: 'page-streak',
       title: t.pageStreakPanelTitle,
-      image: '/images/streaks/page-streak.webp',
+      image: publicImageThumb('/images/streaks/page-streak.webp'),
       creator: 'LemonDBD',
     },
     {
       id: 'history-streak',
       title: t.historyStreakPanelTitle,
-      image: '/images/streaks/history-streak.webp',
+      image: publicImageThumb('/images/streaks/history-streak.webp'),
       creator: 'LemonDBD',
     },
     {
       id: 'chaos-streak',
       title: t.chaosStreakPanelTitle,
-      image: '/images/streaks/chaos-streak.webp',
+      image: publicImageThumb('/images/streaks/chaos-streak.webp'),
       creator: 'Otzdarva',
     },
     {
       id: 'id-please',
       title: t.idPleaseTitle,
-      image: idPleaseCardImage('killer'),
+      image: publicImageThumb(idPleaseCardImage('killer')),
       creator: 'LemonDBD',
     },
     {
       id: 'nice-guy-streak',
       title: t.niceGuyStreakTitle,
       comingSoon: true,
-      image: '/images/streaks/nice-guy-streak.webp',
+      image: publicImageThumb('/images/streaks/nice-guy-streak.webp'),
       creator: 'Otzdarva',
     },
     {
       id: 'blood-money-streak',
       title: t.bloodMoneyStreakTitle,
       comingSoon: true,
-      image: '/images/streaks/blood-money-streak.webp',
+      image: publicImageThumb('/images/streaks/blood-money-streak.webp'),
       creator: 'SpookyLoopz',
     },
   ];
@@ -74,20 +75,20 @@ export function getSurvivorStreakPanels(dict: Dictionary): StreakPanelDef[] {
     {
       id: 'gauntlet-streak',
       title: t.gauntletStreakTitle,
-      image: '/images/streaks/gauntlet-streak.webp',
+      image: publicImageThumb('/images/streaks/gauntlet-streak.webp'),
       creator: 'Zerbs',
     },
     {
       id: 'id-please',
       title: t.idPleaseTitle,
-      image: idPleaseCardImage('survivor'),
+      image: publicImageThumb(idPleaseCardImage('survivor')),
       creator: 'LemonDBD',
     },
     {
       id: 'copycat-streak',
       title: t.copycatStreakTitle,
       comingSoon: true,
-      image: '/images/streaks/copycat-streak.webp',
+      image: publicImageThumb('/images/streaks/copycat-streak.webp'),
       creator: 'KnightLight',
     },
   ];
@@ -102,14 +103,14 @@ export function getChallengeStreakPanels(dict: Dictionary): StreakPanelDef[] {
     {
       id: 'id-please',
       title: t.idPleaseTitle,
-      image: idPleaseCardImage('challenge'),
+      image: publicImageThumb(idPleaseCardImage('challenge')),
       creator: 'LemonDBD',
     },
     {
       id: 'copycat-streak',
       title: t.copycatStreakTitle,
       comingSoon: true,
-      image: '/images/streaks/copycat-streak.webp',
+      image: publicImageThumb('/images/streaks/copycat-streak.webp'),
       creator: 'KnightLight',
     },
   ];

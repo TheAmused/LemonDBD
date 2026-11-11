@@ -6,6 +6,7 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { Tooltip } from '@/components/common/Tooltip';
 import { cn } from '@/utils/cn';
 import { getPerkIconUrl } from '@/utils/perkUtils';
+import { getIconThumbUrl } from '@/utils/thumbUrl';
 import type { MachinePhase, Reel } from './slotMachineTypes';
 import { Img } from '@/components/common/Img';
 import { LockIcon } from '@/components/icons/DbdIcons';
@@ -83,7 +84,7 @@ export function SlotReelColumnDesktop({
                 <Ban className="text-accent-red" style={{ height: cellPx * 0.58, width: cellPx * 0.58 }} />
               ) : cell.perk ? (
                 <Img
-                  src={getPerkIconUrl(cell.perk, backendBase) || ''}
+                  src={getIconThumbUrl(getPerkIconUrl(cell.perk, backendBase), 128, backendBase) || ''}
                   alt=""
                   className="object-contain drop-shadow-md"
                   style={{ height: cellPx * 0.62, width: cellPx * 0.62 }}

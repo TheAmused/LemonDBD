@@ -7,6 +7,7 @@ import { ChallengeModeModal, buildCompletionTiles } from '../ChallengeModeModal'
 import { ChaosRulesModal } from './ChaosRulesModal';
 import { CHAOS_DIFFICULTY_ORDER } from '@/utils/challengeTierCompletion';
 import { useDictionary } from "@/context/DictionaryContext";
+import { publicImageThumb } from '@/utils/publicThumb';
 
 export interface ChaosModeModalProps {
   isOpen: boolean;
@@ -39,19 +40,19 @@ export const ChaosModeModal: React.FC<ChaosModeModalProps> = ({
         value: 'easy',
         label: s.chaosEasyLabel,
         description: s.chaosEasyDesc,
-        image: '/images/streaks/modes/chaos-easy.webp',
+        image: publicImageThumb('/images/streaks/modes/chaos-easy.webp'),
       },
       {
         value: 'medium',
         label: s.chaosMediumLabel,
         description: s.chaosMediumDesc,
-        image: '/images/streaks/modes/chaos-medium.webp',
+        image: publicImageThumb('/images/streaks/modes/chaos-medium.webp'),
       },
       {
         value: 'hell',
         label: s.chaosHellLabel,
         description: s.chaosHellDesc,
-        image: '/images/streaks/modes/chaos-hell.webp',
+        image: publicImageThumb('/images/streaks/modes/chaos-hell.webp'),
       },
     ],
     completedCounts,

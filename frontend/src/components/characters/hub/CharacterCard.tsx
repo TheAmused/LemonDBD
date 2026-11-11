@@ -111,7 +111,7 @@ export function CharacterCard({
           }}
         />
         {/* Grey/dim only: owned and locked read from the colour, so no lock or tick badge. */}
-        {ownershipMode && <OwnershipClipOverlay isOwned={isOwned} isPartial={hasPartialPerks} imageSrc={avatarSrc} imageClassName={PORTRAIT_CROP} />}
+        {ownershipMode && <OwnershipClipOverlay isOwned={isOwned} isPartial={hasPartialPerks} imageSrc={avatarThumbSrc} imageClassName={PORTRAIT_CROP} />}
 
         {ownershipMode && !isOwned && (
           <div className="pointer-events-none absolute inset-x-0 bottom-1.5 z-20 flex justify-center sm:bottom-2">

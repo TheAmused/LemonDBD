@@ -3,6 +3,7 @@ import type { MapRealm } from '@/types/map';
 import type { AnalyticsEvents } from '@/utils/analytics';
 import type { Dictionary } from '@/locales/types';
 import { getBackendBaseUrl } from '@/utils/api';
+import { getThumbUrl } from '@/utils/thumbUrl';
 
 const DEFAULT_BACKEND_BASE = getBackendBaseUrl();
 
@@ -45,9 +46,7 @@ export function getMapThumbSrc(
 ): string {
   const local = map?.callout_image_local_path;
   if (!local) return getMapImageSrc(map, backendBase);
-  const clean = local.replace(/^\/?(static\/)?(maps\/)?/, '');
-  const cleanBase = (backendBase || DEFAULT_BACKEND_BASE).replace(/\/+$/, '');
-  return `${cleanBase}/api/v1/maps/thumb/${clean}`;
+  return getThumbUrl('maps', local, 320, backendBase || DEFAULT_BACKEND_BASE);
 }
 
 export interface ChapterBannerImage {

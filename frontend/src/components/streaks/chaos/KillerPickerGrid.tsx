@@ -4,6 +4,7 @@
 import React from 'react';
 import { Check } from 'lucide-react';
 import { avatarUrlForCharacter } from '@/utils/staticUrl';
+import { avatarThumbFromPath } from '@/utils/thumbUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { PersonIcon } from '@/components/icons/DbdIcons';
@@ -11,7 +12,8 @@ import { PersonIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from "@/context/DictionaryContext";
 import { TileButton } from '@/components/common/TileButton';
 
-export const avatarUrlFor = (name: string) => avatarUrlForCharacter(name, 'killers');
+export const avatarUrlFor = (name: string) =>
+  avatarThumbFromPath(avatarUrlForCharacter(name, 'killers'), 128) || undefined;
 
 const KillerTile: React.FC<{
   name: string;

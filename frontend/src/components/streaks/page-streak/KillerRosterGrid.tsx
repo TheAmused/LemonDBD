@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Check } from 'lucide-react';
 import type { RosterEntry } from '@/types/pageStreak';
-import { staticUrl } from '@/utils/staticUrl';
+import { avatarThumbFromPath } from '@/utils/thumbUrl';
 import { useCharacterDisplayName } from '@/context/DisplayNamesContext';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { PersonIcon } from '@/components/icons/DbdIcons';
@@ -87,7 +87,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({ locale, rost
               )}
               <KillerPortrait
                 name={displayName}
-                src={staticUrl(entry.avatar_local_path)}
+                src={avatarThumbFromPath(entry.avatar_local_path, 128) || undefined}
                 done={done}
               />
               <div className="mt-2 px-3 text-center type-strong text-text-secondary truncate">

@@ -8,6 +8,7 @@ import { useProgressiveList } from '@/hooks/useProgressiveList';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import type { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
+import { getIconThumbUrl } from '@/utils/thumbUrl';
 import { Modal } from '@/components/common/Modal';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -18,7 +19,7 @@ const PerkTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, display
       <div className="relative w-full aspect-square overflow-hidden bg-bg-primary flex items-center justify-center">
         <PerkIcon
           perk={perk}
-          src={perkIconFor(perk)}
+          src={getIconThumbUrl(perkIconFor(perk), 128) || undefined}
           alt={displayName}
           imageClassName="w-full h-full object-cover"
           fallbackIcon={<PerkHexIcon className="icon-xl text-text-muted" aria-hidden="true" />}

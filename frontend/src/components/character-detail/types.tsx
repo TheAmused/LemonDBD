@@ -4,6 +4,7 @@ import { RARITY_TILE_IMAGES } from '@/constants/addonRarityIcons';
 import { localeMetaFor } from '@/i18n/config';
 import type { Dictionary } from '@/locales/types';
 import { characterSlug, getCharacterSlug } from '@/lib/slug';
+import { avatarThumbFromPath } from '@/utils/thumbUrl';
 
 export interface CharacterItem {
   id?: number;
@@ -228,19 +229,17 @@ export const PORTRAIT_CROP = 'origin-top scale-112 -translate-y-1/32';
 
 /**
  * Small WebP copy of a character avatar for grids/lists (served by
- * `/api/v1/avatars/thumb/...`). Detail pages keep using `getAvatarUrl` (full image).
+ * `/api/v1/thumbs/avatars/<width>/...`). Detail pages keep using `getAvatarUrl` (full image).
  * Falls back to the full avatar when the character has no local file.
  */
 export function getAvatarThumbUrl(
   backendBase: string,
   char: CharacterItem,
-  isSurvivor: boolean
+  isSurvivor: boolean,
+  width = 256
 ): string {
   const full = getAvatarUrl(backendBase, char, isSurvivor);
-  if (!full.startsWith(`${backendBase}/static/avatars/`)) return full;
-  const rel = full.slice(`${backendBase}/static/avatars/`.length);
-  if (!/\.(webp|png|jpe?g)$/i.test(rel)) return full;
-  return `${backendBase}/api/v1/avatars/thumb/${rel}`;
+  return full ? avatarThumbFromPath(full, width, backendBase) : '';
 }
 
 function rarityImageTile(rarity: keyof typeof RARITY_TILE_IMAGES): Pick<RarityTileStyle, 'bg' | 'style'> {

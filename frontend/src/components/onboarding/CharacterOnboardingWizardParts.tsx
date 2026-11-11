@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { ownsPerk, isSurvivor } from '@/utils/characterUtils';
-import { getAvatarUrl } from '@/components/character-detail/types';
+import { getAvatarThumbUrl } from '@/components/character-detail/types';
 
 export const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
@@ -180,7 +180,7 @@ export function normalizeChapterKey(chapterName: string): string {
 }
 
 export function resolveOnboardingAvatar(backendBase: string, c: OnboardingCharacter): string {
-  return getAvatarUrl(
+  return getAvatarThumbUrl(
     backendBase,
     {
       name: c.name,
@@ -188,6 +188,7 @@ export function resolveOnboardingAvatar(backendBase: string, c: OnboardingCharac
       avatar_url: c.avatar_url,
       avatar_local_path: c.avatar_local_path,
     },
-    isSurvivor(c.role)
+    isSurvivor(c.role),
+    128
   );
 }

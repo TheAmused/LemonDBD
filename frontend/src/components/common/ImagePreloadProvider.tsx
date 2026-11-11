@@ -3,6 +3,7 @@
 
 import React, { useEffect, createContext, useContext, useCallback } from 'react';
 import { getPerkIconUrl, getCharacterAvatarUrl, getBackendBaseUrl } from '@/utils/perkUtils';
+import { avatarThumbFromPath, getIconThumbUrl } from '@/utils/thumbUrl';
 import type { Perk } from '@/types/perks';
 
 interface ImagePreloadContextType {
@@ -63,14 +64,16 @@ export const ImagePreloadProvider: React.FC<{ children?: React.ReactNode }> = ({
       const urls: string[] = [];
 
       for (const perk of perks) {
-        const iconUrl = getPerkIconUrl(perk, backendBase);
+        const rawIconUrl = getPerkIconUrl(perk, backendBase);
+        const iconUrl = (rawIconUrl && getIconThumbUrl(rawIconUrl, 128, backendBase)) || rawIconUrl;
         if (iconUrl) urls.push(iconUrl);
 
-        const avatarUrl = getCharacterAvatarUrl(
+        const rawAvatarUrl = getCharacterAvatarUrl(
           perk,
           (perk.category === 'Killer' || perk.category === 'Survivor' ? perk.category : undefined),
           backendBase
         );
+        const avatarUrl = (rawAvatarUrl && avatarThumbFromPath(rawAvatarUrl, 128, backendBase)) || rawAvatarUrl;
         if (avatarUrl) urls.push(avatarUrl);
       }
 

@@ -8,6 +8,7 @@ import { ID_PLEASE_DIFFICULTIES, idPleaseLaneSide, parseIdPleaseDifficulty } fro
 import { ChallengeModeModal } from '../ChallengeModeModal';
 import type { ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { idPleaseDifficultyImage } from './idPleaseAssets';
+import { publicImageThumb } from '@/utils/publicThumb';
 import { idPleaseNeeds } from './idPleaseNeeds';
 import { IdPleaseRulesModal } from './IdPleaseRulesModal';
 
@@ -53,7 +54,7 @@ export const IdPleaseModeModal: React.FC<IdPleaseModeModalProps> = ({
       value,
       label: text[value].label,
       description: [text[value].description, ...needs].join(' '),
-      image: idPleaseDifficultyImage(artSide, value),
+      image: publicImageThumb(idPleaseDifficultyImage(artSide, value)),
       disabled: locked,
       disabledBadge: locked ? s.idPleaseLockedBadge : undefined,
       completed: completedVariants.includes(value),

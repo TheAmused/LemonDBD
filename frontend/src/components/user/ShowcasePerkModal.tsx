@@ -21,6 +21,8 @@ import { EmptyState } from '@/components/common/EmptyState';
 import { useDictionary } from "@/context/DictionaryContext";
 import { SelectableCard } from '@/components/common/SelectableCard';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
+import { getPerkIconUrl } from '@/utils/perkUtils';
+import { getIconThumbUrl } from '@/utils/thumbUrl';
 
 /** The slots sit clockwise from the top (top, right, bottom, left); the build fills them the other way round. */
 const FILL_ORDER = [0, 3, 2, 1] as const;
@@ -51,6 +53,7 @@ const PerkGridItem = React.memo<{
       <div className="relative w-21 h-21 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform pointer-events-none">
         <PerkIcon
           perk={perk}
+          src={getIconThumbUrl(getPerkIconUrl(perk), 128) || undefined}
           size={84}
           alt={perk.name}
           fallbackIcon={<PerkHexIcon className="h-8 w-8 text-accent-red" />}

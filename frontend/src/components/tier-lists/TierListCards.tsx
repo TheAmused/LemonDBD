@@ -7,6 +7,7 @@ import { ChevronRight, Info, Trash2 } from 'lucide-react';
 import type { StoredCustomList, TierListSummary } from '@/types/tierList';
 import { sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { staticUrl } from '@/utils/api';
+import { getCommunityCoverThumbUrl } from '@/utils/thumbUrl';
 
 import { tip } from '@/components/common/Tooltip';
 import { formatDate } from '@/utils/format';
@@ -54,9 +55,13 @@ function defaultCustomCover(id: string): string {
 function coverSrc(url: string): string | null {
   if (!url) return null;
   if (url.startsWith('/images/')) return url;
-  if (url.startsWith('/static/')) return url;
-  if (!/^[a-z]+:/i.test(url)) return staticUrl(url) ?? null;
-  return sanitizeImageUrl(url);
+  if (url.startsWith('/static/')) return getCommunityCoverThumbUrl(url, 480) || url;
+  if (!/^[a-z]+:/i.test(url)) {
+    const resolved = staticUrl(url);
+    return resolved ? getCommunityCoverThumbUrl(resolved, 480) || resolved : null;
+  }
+  const safe = sanitizeImageUrl(url);
+  return safe ? getCommunityCoverThumbUrl(safe, 480) || safe : null;
 }
 
 /** True while the one-line clamped text is actually cut off (re-measured on resize). */

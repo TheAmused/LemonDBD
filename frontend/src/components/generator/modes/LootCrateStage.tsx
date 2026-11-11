@@ -15,6 +15,7 @@ import { playFanfare, playReelThud, playCardFlip } from '@/utils/perkAudio';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Surface } from '@/components/common/Surface';
+import { publicImageThumb } from '@/utils/publicThumb';
 
 export interface LootCrateStageProps {
   role: RoleCategory;
@@ -259,7 +260,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
             whileTap={!reduceMotion && phase === 'closed' ? { scale: 0.95 } : undefined}
             className="group cursor-pointer disabled:cursor-default"
           >
-            <StageProp src="/images/randomizer/crate.webp" />
+            <StageProp src={publicImageThumb('/images/randomizer/crate.webp')} />
           </motion.button>
           {phase === 'closed' && (
             <DbdButton

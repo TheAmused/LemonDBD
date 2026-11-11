@@ -6,6 +6,7 @@ import type { LeaderboardItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { tip } from '@/components/common/Tooltip';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
+import { avatarThumbFromPath, getCommunityCoverThumbUrl, getThumbUrl } from '@/utils/thumbUrl';
 import { SmashSounds } from '@/components/smash-or-pass/SmashSoundEffects';
 import { RankFirstIcon, RankPlacedIcon, HeartIcon, PassIcon } from '@/components/icons/DbdIcons';
 
@@ -79,7 +80,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
   const passCount = item.pass_count ?? item.stat?.pass_count ?? 0;
   const hasVotes = totalVotes > 0;
 
-  const avatarSrc =
+  const rawAvatarSrc =
     item.media_url?.startsWith('http') || item.media_url?.startsWith('/static')
       ? `${item.media_url.startsWith('http') ? '' : backendBase}${item.media_url}`
       : resolveAvatarUrl(
@@ -91,6 +92,12 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
           },
           isSurvivor
         );
+
+  const avatarSrc = rawAvatarSrc.includes('/static/uploads/community/')
+    ? getThumbUrl('community', rawAvatarSrc, 128, backendBase) || rawAvatarSrc
+    : rawAvatarSrc.includes('/static/avatars/')
+      ? avatarThumbFromPath(rawAvatarSrc, 128, backendBase) || rawAvatarSrc
+      : getCommunityCoverThumbUrl(rawAvatarSrc, 256, backendBase) || rawAvatarSrc;
 
   const profile = localizedProfile(item.metadata, locale || 'en');
   // `|| item.role` is the render-level default for an entity with no archetype yet.

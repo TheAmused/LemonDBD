@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
+import { avatarThumbFromPath, getCommunityCoverThumbUrl, getThumbUrl } from '@/utils/thumbUrl';
 import type { EntityItem, EntityStatItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { Modal } from '@/components/common/Modal';
@@ -63,7 +64,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
   const quote = profile.quote;
   const dealbreaker = profile.dealbreaker;
 
-  const avatarSrc =
+  const rawAvatarSrc =
     rawCharacter?.media_url?.startsWith('http') || rawCharacter?.media_url?.startsWith('/static')
       ? `${rawCharacter.media_url.startsWith('http') ? '' : backendBase}${rawCharacter.media_url}`
       : resolveAvatarUrl(
@@ -75,6 +76,12 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
           },
           isSurvivor
         );
+
+  const avatarThumbSrc = rawAvatarSrc.includes('/static/uploads/community/')
+    ? getThumbUrl('community', rawAvatarSrc, 128, backendBase) || rawAvatarSrc
+    : rawAvatarSrc.includes('/static/avatars/')
+      ? avatarThumbFromPath(rawAvatarSrc, 128, backendBase) || rawAvatarSrc
+      : getCommunityCoverThumbUrl(rawAvatarSrc, 256, backendBase) || rawAvatarSrc;
 
   const totalVotes = stats?.total_votes ?? rawCharacter?.total_votes ?? 0;
   const smashCount = stats?.smash_count ?? rawCharacter?.smash_count ?? 0;
@@ -144,7 +151,7 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
   const portrait = (
     <div className="relative h-20 w-20 rounded-card overflow-hidden border border-accent-red/40 shrink-0 bg-bg-primary shadow-md">
       <MotionImg
-        src={avatarSrc}
+        src={avatarThumbSrc}
         alt={name}
         loading="lazy"
         decoding="async"

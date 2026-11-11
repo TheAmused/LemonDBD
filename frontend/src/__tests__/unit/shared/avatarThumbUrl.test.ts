@@ -6,7 +6,7 @@ const BASE = 'https://api.example.com';
 
 test('getAvatarThumbUrl: local avatars route through the thumbnail endpoint', () => {
   const char = { name: 'Meg Thomas', avatar_local_path: 'avatars/survivors/meg_thomas.webp' } as never;
-  assert.equal(getAvatarThumbUrl(BASE, char, true), `${BASE}/api/v1/avatars/thumb/survivors/meg_thomas.webp`);
+  assert.equal(getAvatarThumbUrl(BASE, char, true), `${BASE}/api/v1/thumbs/avatars/256/survivors/meg_thomas.webp`);
   assert.equal(getAvatarUrl(BASE, char, true), `${BASE}/static/avatars/survivors/meg_thomas.webp`);
 });
 

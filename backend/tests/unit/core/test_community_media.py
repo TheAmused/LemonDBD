@@ -160,6 +160,36 @@ class TestIngestCommunityImage:
         assert result is None
         assert not (static_root / "uploads" / "community").exists()
 
+    def test_uppercase_data_prefix_is_handled_case_insensitively(self, tmp_path: Path) -> None:
+        static_root = tmp_path / "static"
+        raw = _make_png_bytes(size=(40, 40))
+        digest = hashlib.sha256(raw).hexdigest()[:16]
+        b64 = base64.b64encode(raw).decode("ascii")
+
+        ok_result = community_media.ingest_community_image(
+            f"DATA:image/png;base64,{b64}", static_root=static_root
+        )
+        assert ok_result == f"/static/uploads/community/{digest}.webp"
+        assert (static_root / "uploads" / "community" / f"{digest}.webp").is_file()
+
+        svg_b64 = base64.b64encode(b"<svg xmlns='http://www.w3.org/2000/svg'></svg>").decode("ascii")
+        bad_result = community_media.ingest_community_image(
+            f"DATA:image/svg+xml;base64,{svg_b64}", static_root=static_root
+        )
+        assert bad_result is None
+
+        # Shared helpers recognize uppercase DATA: URIs as ingested community assets too
+        cover_url, cover_invalid, cover_ingested = community_media.ingest_cover_image(
+            f"DATA:image/png;base64,{b64}", static_root=static_root
+        )
+        assert cover_url == f"/static/uploads/community/{digest}.webp"
+        assert cover_invalid is False
+        assert cover_ingested is True
+
+        items = [{"id": "1", "image_url": f"DATA:image/png;base64,{b64}"}]
+        assert community_media.ingest_dict_media_urls(items, "image_url", static_root=static_root) is True
+        assert items[0]["image_url"] == f"/static/uploads/community/{digest}.webp"
+
     def test_uses_current_app_static_folder_when_static_root_omitted(self, tmp_path: Path) -> None:
         app = Flask(__name__, static_folder=str(tmp_path / "app_static"))
         raw = _make_png_bytes(size=(30, 30))
@@ -203,11 +233,7 @@ class TestCommunityMediaRouteIngest:
 
         self.warm_calls: list[Path | None] = []
         monkeypatch.setattr(
-            "app.routes.tier_lists.warm_all_thumbs_async",
-            lambda static_root=None: self.warm_calls.append(static_root) or True,
-        )
-        monkeypatch.setattr(
-            "app.routes.smash_or_pass.warm_all_thumbs_async",
+            "app.services.community_media.warm_all_thumbs_async",
             lambda static_root=None: self.warm_calls.append(static_root) or True,
         )
 
@@ -411,8 +437,7 @@ class TestCommunityMediaRouteIngest:
         def _boom(_static_root=None):
             raise RuntimeError("warmer failed")
 
-        monkeypatch.setattr("app.routes.tier_lists.warm_all_thumbs_async", _boom)
-        monkeypatch.setattr("app.routes.smash_or_pass.warm_all_thumbs_async", _boom)
+        monkeypatch.setattr("app.services.community_media.warm_all_thumbs_async", _boom)
 
         tl_res = client.post(
             "/api/v1/tier-lists",

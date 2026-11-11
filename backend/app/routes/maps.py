@@ -9,7 +9,7 @@ from app.schemas.map import MapLayoutDetailResponse
 from app.services.map_service import MapService
 from app.utils.lang import extract_lang
 from app.utils.pagination import paginate_args
-from app.utils.thumbnails import serve_thumb
+from app.utils.thumbnails import serve_category_thumb
 
 maps_bp = Blueprint("maps", __name__, url_prefix="/api/v1/maps")
 service = MapService()
@@ -66,7 +66,7 @@ def get_map_thumb(rel: str):
     The source callouts are ~2000x2200 px; a tier list tile shows them at ~100 px,
     and decoding dozens of full-size bitmaps is what made that page lag.
     """
-    return serve_thumb("maps", rel, THUMB_WIDTH)
+    return serve_category_thumb("maps", THUMB_WIDTH, rel)
 
 
 @maps_bp.route("/<int:map_id>/layout", methods=["GET"])

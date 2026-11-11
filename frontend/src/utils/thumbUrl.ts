@@ -166,7 +166,8 @@ export function getThumbUrl(
   if (!rel) return '';
 
   if (!RASTER_EXT_RE.test(rel)) {
-    return base ? `${base}/static/${cleanPath}${suffix}` : `/static/${cleanPath}${suffix}`;
+    const staticRel = fromStaticPrefix || matchesSubdir ? cleanPath : `${subdir}/${rel}`;
+    return base ? `${base}/static/${staticRel}${suffix}` : `/static/${staticRel}${suffix}`;
   }
 
   const snappedWidth = snapCategoryWidth(category, width);

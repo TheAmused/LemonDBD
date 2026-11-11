@@ -39,10 +39,14 @@ export function resolveSmashPortraitUrls(
     Boolean(item.media_url) || !useLocalPlaceholder || !item.roster_id || !isLocalRosterSlug(item.roster_id);
 
   let fullSrc: string;
+  const mediaUrl = item.media_url?.trim();
+  const isInlineOrExternal = Boolean(mediaUrl && /^(https?:\/\/|data:|blob:)/i.test(mediaUrl));
   if (!hasPortrait) {
     fullSrc = `${backendBase}${candidatePlaceholderPath(item.name || item.slug || String(item.id ?? ''))}`;
-  } else if (item.media_url?.startsWith('http') || item.media_url?.startsWith('/static')) {
-    fullSrc = `${item.media_url.startsWith('http') ? '' : backendBase}${item.media_url}`;
+  } else if (isInlineOrExternal && mediaUrl) {
+    fullSrc = mediaUrl;
+  } else if (mediaUrl?.startsWith('/static')) {
+    fullSrc = `${backendBase}${mediaUrl}`;
   } else {
     fullSrc = resolveAvatarUrl(
       backendBase,

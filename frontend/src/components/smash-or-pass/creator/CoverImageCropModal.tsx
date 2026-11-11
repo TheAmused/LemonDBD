@@ -15,6 +15,7 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { paletteColor } from '@/utils/themeColor';
 import { Img } from '@/components/common/Img';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
+import { MAX_DATA_IMAGE_CHARS, encodeCanvasWithinBudget } from '@/utils/imageResize';
 
 interface CoverImageCropModalProps {
   isOpen: boolean;
@@ -202,8 +203,8 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
     if (!containerRef.current || !imgRef.current) return;
 
     try {
-      const targetWidth = 960;
-      const targetHeight = 540; // 16:9 banner
+      const targetWidth = 800;
+      const targetHeight = 450; // 16:9 banner
       const canvas = document.createElement('canvas');
       canvas.width = targetWidth;
       canvas.height = targetHeight;
@@ -232,10 +233,18 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
 
       const exportImg = new Image();
 
-      const performDraw = () => {
+      const drawAndApply = (sourceImg: HTMLImageElement) => {
         try {
-          ctx.drawImage(exportImg, destX, destY, destW, destH);
-          const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+          ctx.drawImage(sourceImg, destX, destY, destW, destH);
+          const croppedDataUrl = encodeCanvasWithinBudget(canvas, MAX_DATA_IMAGE_CHARS, 0.86, {
+            allowPngFallback: false,
+            fallbackToJpegIfOversized: true,
+          });
+          if (!croppedDataUrl) {
+            logger.warn('Cropped cover image exceeded max data URL budget');
+            setCorsError(true);
+            return;
+          }
           onApplyCrop(croppedDataUrl);
           onClose();
         } catch (err) {
@@ -246,29 +255,20 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
 
       if (currentUrl.startsWith('data:') || currentUrl.startsWith('blob:')) {
         exportImg.src = currentUrl;
-        if (exportImg.complete) performDraw();
-        else exportImg.onload = performDraw;
+        if (exportImg.complete) drawAndApply(exportImg);
+        else exportImg.onload = () => drawAndApply(exportImg);
       } else {
         // Route through our image proxy with CORS headers so canvas can safely read and crop pixels
         const proxiedUrl = `/api/v1/smash-or-pass/proxy-image?url=${encodeURIComponent(currentUrl)}`;
         exportImg.crossOrigin = 'anonymous';
         exportImg.src = proxiedUrl;
-        exportImg.onload = performDraw;
+        exportImg.onload = () => drawAndApply(exportImg);
         exportImg.onerror = () => {
           // Fallback to direct load if proxy fails
           const directImg = new Image();
           directImg.crossOrigin = 'anonymous';
           directImg.src = currentUrl;
-          directImg.onload = () => {
-            try {
-              ctx.drawImage(directImg, destX, destY, destW, destH);
-              const croppedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
-              onApplyCrop(croppedDataUrl);
-              onClose();
-            } catch {
-              setCorsError(true);
-            }
-          };
+          directImg.onload = () => drawAndApply(directImg);
           directImg.onerror = () => {
             setCorsError(true);
           };

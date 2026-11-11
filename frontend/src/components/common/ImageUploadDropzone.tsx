@@ -7,97 +7,26 @@ import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { cn } from '@/utils/cn';
 import { useDictionary } from '@/context/DictionaryContext';
-import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
 import { Img } from '@/components/common/Img';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
-
-/** Reads a file's raw bytes back out as a `data:...;base64,...` URL. */
-async function fileToDataUrl(file: File): Promise<string | null> {
-  try {
-    if (typeof file.arrayBuffer === 'function') {
-      const bytes = new Uint8Array(await file.arrayBuffer());
-      if (typeof Buffer !== 'undefined') {
-        return `data:${file.type};base64,${Buffer.from(bytes).toString('base64')}`;
-      }
-      let binary = '';
-      for (let i = 0; i < bytes.byteLength; i++) {
-        binary += String.fromCharCode(bytes[i]);
-      }
-      return `data:${file.type};base64,${btoa(binary)}`;
-    }
-  } catch {
-    // fallback to FileReader
-  }
-  if (typeof FileReader !== 'undefined') {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(typeof reader.result === 'string' ? reader.result : null);
-      reader.onerror = () => resolve(null);
-      reader.readAsDataURL(file);
-    });
-  }
-  return null;
-}
+import { formatMessage } from '@/utils/i18nFormat';
+import { IMAGE_SIZE_PRESETS, MAX_DATA_IMAGE_CHARS, resizeImageToDataUrl } from '@/utils/imageResize';
 
 /**
- * Reads local image file, resizes raster images (png, jpeg, webp) to max 1200px width/height
- * and quality 0.85 webp/png so base64 data URL fits within 131,072 characters
- * (TIER_LIST_LIMITS.maxDataImageChars), or preserves gif if under cap. Returns data URL.
+ * Reads local image file, resizes raster images (png, jpeg, webp) to max 800px width/height
+ * (with `[800, 600, 400]` banner fallback tiers) so base64 data URL fits within 131,072 characters
+ * (`MAX_DATA_IMAGE_CHARS`), or preserves gif if under cap. Returns data URL.
  */
 export async function processImageFile(
   file: File,
-  maxDimension: number = 1200,
-  maxChars: number = TIER_LIST_LIMITS.maxDataImageChars
+  maxDimension: number = IMAGE_SIZE_PRESETS.banner[0],
+  maxChars: number = MAX_DATA_IMAGE_CHARS,
 ): Promise<string | null> {
-  if (!file.type.startsWith('image/') || file.type === 'image/svg+xml') {
-    return null;
-  }
-
-  if (file.type === 'image/gif') {
-    const url = await fileToDataUrl(file);
-    return url && url.length <= maxChars ? url : null;
-  }
-
-  if (typeof createImageBitmap === 'undefined' || typeof document === 'undefined') {
-    const url = await fileToDataUrl(file);
-    return url && url.length <= maxChars ? url : null;
-  }
-
-  let bitmap: ImageBitmap;
-  try {
-    bitmap = await createImageBitmap(file);
-  } catch {
-    return null;
-  }
-
-  try {
-    const targetSizes = [maxDimension, 900, 600, 400];
-    for (const size of targetSizes) {
-      const maxSide = Math.max(bitmap.width, bitmap.height);
-      const scale = Math.min(1, size / maxSide);
-      const width = Math.max(1, Math.round(bitmap.width * scale));
-      const height = Math.max(1, Math.round(bitmap.height * scale));
-
-      const canvas = document.createElement('canvas');
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return null;
-      ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(bitmap, 0, 0, width, height);
-
-      let url = canvas.toDataURL('image/webp', 0.85);
-      if (!url.startsWith('data:image/webp')) {
-        url = canvas.toDataURL('image/png');
-      }
-      if (url.length <= maxChars) return url;
-    }
-    return null;
-  } finally {
-    if (typeof bitmap.close === 'function') {
-      bitmap.close();
-    }
-  }
+  const sizes =
+    maxDimension === IMAGE_SIZE_PRESETS.banner[0]
+      ? IMAGE_SIZE_PRESETS.banner
+      : [maxDimension, ...IMAGE_SIZE_PRESETS.banner.filter((size) => size < maxDimension)];
+  return resizeImageToDataUrl(file, sizes, maxChars);
 }
 
 export interface ImageUploadDropzoneProps {
@@ -145,13 +74,18 @@ export function ImageUploadDropzone({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [processing, setProcessing] = useState<boolean>(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [urlInput, setUrlInput] = useState<string>(value || '');
 
-  useOnValueChange(value, (next) => setUrlInput(next || ''));
+  useOnValueChange(value, (next) => {
+    setUrlInput(next || '');
+    setUploadError(null);
+  });
 
   const commitUrl = () => {
     const trimmed = urlInput.trim();
     if (trimmed && trimmed !== (value || '').trim()) {
+      setUploadError(null);
       onChange(trimmed);
     }
   };
@@ -164,10 +98,13 @@ export function ImageUploadDropzone({
     if (!fileList || fileList.length === 0 || disabled) return;
     const file = fileList[0];
     setProcessing(true);
+    setUploadError(null);
     try {
       const dataUrl = await processImageFile(file);
       if (dataUrl) {
         onChange(dataUrl);
+      } else {
+        setUploadError(formatMessage(dict.tierLists.creator.uploadSkipped, { count: 1 }));
       }
     } finally {
       setProcessing(false);
@@ -324,6 +261,10 @@ export function ImageUploadDropzone({
       {invalid && invalidMessage ? (
         <p role="alert" className="mt-1 type-caption font-medium text-accent-red">
           {invalidMessage}
+        </p>
+      ) : uploadError ? (
+        <p role="alert" className="mt-1 type-caption font-medium text-accent-red">
+          {uploadError}
         </p>
       ) : hint ? (
         <p className="mt-1 type-caption text-text-muted">

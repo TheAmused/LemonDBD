@@ -8,6 +8,7 @@ import { PerkIcon } from '@/components/ui/PerkIcon';
 import { Modal } from '@/components/common/Modal';
 import type { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
+import { getIconThumbUrl } from '@/utils/thumbUrl';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { CELEBRATION_CARD_CLASSES, CELEBRATION_LABEL_CLASSES, CelebrationBadge } from '../CelebrationBadge';
 import { formatMessage } from '@/utils/i18nFormat';
@@ -29,7 +30,8 @@ const LOCK_UNLOCKED_DELAY_MS = 1560;
 
 const PerkTile: React.FC<{ perk: Perk; index: number; phase: LockPhase }> = ({ perk, index, phase }) => {
   const displayName = usePerkDisplayName()(perk.name);
-  const src = perkIconFor(perk);
+  const rawSrc = perkIconFor(perk);
+  const src = rawSrc ? getIconThumbUrl(rawSrc, 128) || rawSrc : undefined;
   const isUnlocked = phase === 'unlocked';
   const isRevealed = phase === 'breaking' || phase === 'unlocked';
   const delay = { transitionDelay: `${index * 150}ms` };

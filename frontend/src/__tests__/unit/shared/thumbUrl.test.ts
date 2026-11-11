@@ -8,6 +8,7 @@ import {
   getRealmThumbSrc,
   getThumbUrl,
 } from '@/utils/thumbUrl';
+import { resolveSmashPortraitUrls } from '@/components/smash-or-pass/smashAvatarUrl';
 
 const BASE = 'https://api.example.com';
 
@@ -187,4 +188,33 @@ test('getThumbUrl and getCommunityCoverThumbUrl snap requested widths to backend
     getThumbUrl('maps', '/static/maps/coal.webp', 100, ''),
     '/api/v1/thumbs/maps/320/coal.webp',
   );
+  assert.equal(
+    getThumbUrl('icons', 'perk.svg', 128, ''),
+    '/static/icons/perk.svg',
+  );
+});
+
+test('resolveSmashPortraitUrls preserves data:, blob:, community, and official avatar URLs', () => {
+  const uploadedData = 'data:image/webp;base64,UklGRh4AAABXRUJQVlA4TBEAAAAvAAAAAAfQ//73v/+BiOh/AAA=';
+  const fromData = resolveSmashPortraitUrls(
+    { name: 'Custom Upload', slug: 'custom-upload', media_url: uploadedData, roster_id: 'local-1' },
+    { backendBase: BASE, thumbWidth: 256, useLocalPlaceholder: true },
+  );
+  assert.equal(fromData.hasPortrait, true);
+  assert.equal(fromData.fullSrc, uploadedData);
+  assert.equal(fromData.thumbSrc, uploadedData);
+
+  const fromBlob = resolveSmashPortraitUrls(
+    { name: 'Blob Upload', slug: 'blob-upload', media_url: 'blob:https://lemondbd.test/123', roster_id: 'local-1' },
+    { backendBase: BASE, thumbWidth: 256, useLocalPlaceholder: true },
+  );
+  assert.equal(fromBlob.fullSrc, 'blob:https://lemondbd.test/123');
+  assert.equal(fromBlob.thumbSrc, 'blob:https://lemondbd.test/123');
+
+  const fromCommunity = resolveSmashPortraitUrls(
+    { name: 'Official Upload', slug: 'official-upload', media_url: '/static/uploads/community/abc123.webp' },
+    { backendBase: BASE, thumbWidth: 128 },
+  );
+  assert.equal(fromCommunity.fullSrc, `${BASE}/static/uploads/community/abc123.webp`);
+  assert.equal(fromCommunity.thumbSrc, `${BASE}/api/v1/thumbs/community/128/abc123.webp`);
 });

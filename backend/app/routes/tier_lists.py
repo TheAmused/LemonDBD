@@ -73,16 +73,18 @@ def create_tier_list():
     if cover_invalid:
         return jsonify({"error": "Invalid cover image URL", "status": 400}), 400
 
+    tiers = [t.model_dump(exclude_none=True) for t in payload.tiers]
+    tiers_ingested = ingest_dict_media_urls(tiers, "backgroundImage", max_side=800)
     custom_items = [i.model_dump(exclude_none=True) for i in payload.items]
     items_ingested = ingest_dict_media_urls(custom_items, "image_url", max_side=512)
-    ingested = cover_ingested or items_ingested
+    ingested = cover_ingested or tiers_ingested or items_ingested
 
     try:
         row = tier_list_service.create_tier_list(
             title=payload.title,
             description=payload.description,
             cover_image_url=cover_image_url,
-            tiers=[t.model_dump(exclude_none=True) for t in payload.tiers],
+            tiers=tiers,
             custom_items=custom_items,
             is_nsfw=payload.is_nsfw,
             is_active=payload.is_active,
@@ -151,6 +153,8 @@ def update_tier_list(slug: str):
             return jsonify({"error": "Invalid cover image URL", "status": 400}), 400
         kwargs["cover_image_url"] = normalized_cover
         ingested = cover_ingested
+    if "tiers" in kwargs and isinstance(kwargs["tiers"], list):
+        ingested = ingest_dict_media_urls(kwargs["tiers"], "backgroundImage", max_side=800) or ingested
     if "custom_items" in kwargs and isinstance(kwargs["custom_items"], list):
         ingested = ingest_dict_media_urls(kwargs["custom_items"], "image_url", max_side=512) or ingested
 

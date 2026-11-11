@@ -461,3 +461,37 @@ class TestCommunityMediaRouteIngest:
             headers=admin_headers,
         )
         assert roster_res.status_code == 201
+
+    def test_uppercase_data_uri_and_tier_background_ingest_through_routes(
+        self, client: FlaskClient, admin_headers: dict[str, str]
+    ) -> None:
+        bg_data_url = _encode_data_url(_make_png_bytes((1200, 600), color=(140, 40, 200)))
+        uppercase_bg = "DATA:" + bg_data_url[5:]
+
+        create_res = client.post(
+            "/api/v1/tier-lists",
+            json={
+                "title": "Tier BG Ingest",
+                "tiers": [{"id": "s", "label": "S", "color": "s", "backgroundImage": uppercase_bg}],
+                "items": [{"id": "i1", "name": "Item 1"}],
+            },
+            headers=admin_headers,
+        )
+        assert create_res.status_code == 201
+        created = create_res.get_json()["data"]
+        tier_bg = created["tiers"][0]["backgroundImage"]
+        assert tier_bg.startswith("/static/uploads/community/")
+        assert (self.static_dir / tier_bg.removeprefix("/static/")).is_file()
+        assert len(self.warm_calls) == 1
+
+        patch_bg = _encode_data_url(_make_png_bytes((1000, 500), color=(230, 120, 20)))
+        patch_res = client.patch(
+            f"/api/v1/tier-lists/{created['slug']}",
+            json={"tiers": [{"id": "s", "label": "S", "color": "s", "backgroundImage": patch_bg}]},
+            headers=admin_headers,
+        )
+        assert patch_res.status_code == 200
+        updated_bg = patch_res.get_json()["data"]["tiers"][0]["backgroundImage"]
+        assert updated_bg.startswith("/static/uploads/community/")
+        assert updated_bg != tier_bg
+        assert len(self.warm_calls) == 2

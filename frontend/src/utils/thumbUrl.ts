@@ -22,6 +22,26 @@ const CATEGORY_SUBDIR: Record<ThumbCategory, string> = {
   community: 'uploads/community',
 };
 
+/** Mirrors backend `THUMB_SPECS` allow-listed widths so frontend requests never 404. */
+const CATEGORY_ALLOWED_WIDTHS: Record<ThumbCategory, readonly number[]> = {
+  avatars: [128, 256],
+  maps: [320],
+  chapters: [480],
+  realms: [320],
+  icons: [96, 128],
+  'smash-or-pass': [256, 480],
+  'tier-lists': [480],
+  community: [128, 256, 480],
+};
+
+function snapCategoryWidth(category: ThumbCategory, width: number): number {
+  const allowed = CATEGORY_ALLOWED_WIDTHS[category];
+  for (const candidate of allowed) {
+    if (candidate >= width) return candidate;
+  }
+  return allowed[allowed.length - 1];
+}
+
 const COMMUNITY_COVER_CATEGORIES: readonly { prefix: string; category: ThumbCategory }[] = [
   { prefix: 'uploads/community/', category: 'community' },
   { prefix: 'smash-or-pass/', category: 'smash-or-pass' },
@@ -74,6 +94,52 @@ function extractStaticPath(
   return { staticPath: trimmed, fromStaticPrefix: false };
 }
 
+type PreparedStaticInput =
+  | { kind: 'passthrough'; url: string }
+  | {
+      kind: 'static';
+      trimmed: string;
+      base: string;
+      cleanPath: string;
+      suffix: string;
+      fromStaticPrefix: boolean;
+    };
+
+function prepareStaticInput(
+  rawPathOrUrl: string | null | undefined,
+  backendBase?: string
+): PreparedStaticInput {
+  if (!rawPathOrUrl) return { kind: 'passthrough', url: '' };
+  const trimmed = rawPathOrUrl.trim();
+  if (!trimmed) return { kind: 'passthrough', url: '' };
+
+  const base = normalizeBase(backendBase);
+
+  if (/^(?:data|blob):/i.test(trimmed)) return { kind: 'passthrough', url: trimmed };
+  if (trimmed.startsWith(THUMB_ROUTE_PREFIX)) {
+    return { kind: 'passthrough', url: base ? `${base}${trimmed}` : trimmed };
+  }
+  if (base && trimmed.startsWith(`${base}${THUMB_ROUTE_PREFIX}`)) {
+    return { kind: 'passthrough', url: trimmed };
+  }
+
+  const extracted = extractStaticPath(trimmed, base);
+  if (!extracted) return { kind: 'passthrough', url: trimmed };
+
+  const [rawPath, suffix] = splitQueryHash(extracted.staticPath);
+  const cleanPath = rawPath.replace(/^\/+/, '');
+  if (!cleanPath) return { kind: 'passthrough', url: '' };
+
+  return {
+    kind: 'static',
+    trimmed,
+    base,
+    cleanPath,
+    suffix,
+    fromStaticPrefix: extracted.fromStaticPrefix,
+  };
+}
+
 /**
  * Rewrites a backend static raster asset path into `/api/v1/thumbs/<category>/<width>/<rel>`.
  * External URLs, `data:`/`blob:` URIs, app-relative non-static paths, and non-raster assets
@@ -85,27 +151,14 @@ export function getThumbUrl(
   width: number,
   backendBase?: string
 ): string {
-  if (!rawPathOrUrl) return '';
-  const trimmed = rawPathOrUrl.trim();
-  if (!trimmed) return '';
+  const prepared = prepareStaticInput(rawPathOrUrl, backendBase);
+  if (prepared.kind === 'passthrough') return prepared.url;
 
-  const base = normalizeBase(backendBase);
-
-  if (/^(?:data|blob):/i.test(trimmed)) return trimmed;
-  if (trimmed.startsWith(THUMB_ROUTE_PREFIX)) return base ? `${base}${trimmed}` : trimmed;
-  if (base && trimmed.startsWith(`${base}${THUMB_ROUTE_PREFIX}`)) return trimmed;
-
-  const extracted = extractStaticPath(trimmed, base);
-  if (!extracted) return trimmed;
-
-  const [rawPath, suffix] = splitQueryHash(extracted.staticPath);
-  const cleanPath = rawPath.replace(/^\/+/, '');
-  if (!cleanPath) return '';
-
+  const { base, cleanPath, suffix, fromStaticPrefix } = prepared;
   const subdir = CATEGORY_SUBDIR[category];
   const matchesSubdir = cleanPath.startsWith(`${subdir}/`);
 
-  if (extracted.fromStaticPrefix && !matchesSubdir) {
+  if (fromStaticPrefix && !matchesSubdir) {
     return base ? `${base}/static/${cleanPath}${suffix}` : `/static/${cleanPath}${suffix}`;
   }
 
@@ -116,7 +169,8 @@ export function getThumbUrl(
     return base ? `${base}/static/${cleanPath}${suffix}` : `/static/${cleanPath}${suffix}`;
   }
 
-  return `${base}${THUMB_ROUTE_PREFIX}${category}/${width}/${rel}${suffix}`;
+  const snappedWidth = snapCategoryWidth(category, width);
+  return `${base}${THUMB_ROUTE_PREFIX}${category}/${snappedWidth}/${rel}${suffix}`;
 }
 
 /** Resolves a character avatar path or static URL into a resized WebP thumbnail URL. */
@@ -178,23 +232,13 @@ export function getCommunityCoverThumbUrl(
   width = 480,
   backendBase?: string
 ): string {
-  if (!url) return '';
-  const trimmed = url.trim();
-  if (!trimmed) return '';
+  const prepared = prepareStaticInput(url, backendBase);
+  if (prepared.kind === 'passthrough') return prepared.url;
 
-  const base = normalizeBase(backendBase);
+  const match = COMMUNITY_COVER_CATEGORIES.find((entry) =>
+    prepared.cleanPath.startsWith(entry.prefix)
+  );
+  if (!match) return prepared.trimmed;
 
-  if (/^(?:data|blob):/i.test(trimmed)) return trimmed;
-  if (trimmed.startsWith(THUMB_ROUTE_PREFIX)) return base ? `${base}${trimmed}` : trimmed;
-  if (base && trimmed.startsWith(`${base}${THUMB_ROUTE_PREFIX}`)) return trimmed;
-
-  const extracted = extractStaticPath(trimmed, base);
-  if (!extracted) return trimmed;
-
-  const [rawPath] = splitQueryHash(extracted.staticPath);
-  const cleanPath = rawPath.replace(/^\/+/, '');
-  const match = COMMUNITY_COVER_CATEGORIES.find((entry) => cleanPath.startsWith(entry.prefix));
-  if (!match) return trimmed;
-
-  return getThumbUrl(match.category, trimmed, width, backendBase);
+  return getThumbUrl(match.category, prepared.trimmed, width, backendBase);
 }

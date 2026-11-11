@@ -165,3 +165,26 @@ test('getCommunityCoverThumbUrl routes community, smash-or-pass, and tier-lists 
     '/static/unknown/cover.webp',
   );
 });
+
+test('getThumbUrl and getCommunityCoverThumbUrl snap requested widths to backend THUMB_SPECS', () => {
+  assert.equal(
+    getCommunityCoverThumbUrl('/static/tier-lists/banner.webp', 256, ''),
+    '/api/v1/thumbs/tier-lists/480/banner.webp',
+  );
+  assert.equal(
+    getThumbUrl('smash-or-pass', '/static/smash-or-pass/card.webp', 128, ''),
+    '/api/v1/thumbs/smash-or-pass/256/card.webp',
+  );
+  assert.equal(
+    getThumbUrl('avatars', '/static/avatars/killers/trapper.webp', 999, ''),
+    '/api/v1/thumbs/avatars/256/killers/trapper.webp',
+  );
+  assert.equal(
+    getThumbUrl('icons', '/static/icons/perks/sprint.png', 100, ''),
+    '/api/v1/thumbs/icons/128/perks/sprint.png',
+  );
+  assert.equal(
+    getThumbUrl('maps', '/static/maps/coal.webp', 100, ''),
+    '/api/v1/thumbs/maps/320/coal.webp',
+  );
+});

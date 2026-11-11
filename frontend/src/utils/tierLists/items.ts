@@ -12,7 +12,7 @@ import type { TierItem, TierListApiCustomItem, TierListDocumentItem } from '@/ty
 import { getMapImageSrc, getMapThumbSrc } from '@/utils/mapUtils';
 import { perkIconUrl } from '@/utils/staticUrl';
 import { staticUrl } from '@/utils/api';
-import { avatarThumbFromPath, getIconThumbUrl } from '@/utils/thumbUrl';
+import { avatarThumbFromPath, getCommunityCoverThumbUrl, getIconThumbUrl } from '@/utils/thumbUrl';
 import { sanitizeImageUrl } from './codec';
 
 type Role = 'Survivor' | 'Killer';
@@ -102,11 +102,14 @@ export function mapsToItems(maps: readonly MapRealm[], itemIds?: readonly number
 
 /** Items authored on an official `custom` template. */
 export function templateCustomItemsToItems(items: readonly TierListApiCustomItem[]): TierItem[] {
-  return items.map((item) => ({
-    key: item.id,
-    name: item.name,
-    image: staticUrl(item.image_local_path) ?? sanitizeImageUrl(item.image_url),
-  }));
+  return items.map((item) => {
+    const raw = staticUrl(item.image_local_path) ?? sanitizeImageUrl(item.image_url);
+    return {
+      key: item.id,
+      name: item.name,
+      image: raw ? getCommunityCoverThumbUrl(raw, 128) || raw : null,
+    };
+  });
 }
 
 /** Items of a user's own custom list (already sanitized when imported). */

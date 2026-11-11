@@ -7,15 +7,13 @@ import {
   Quote,
 } from 'lucide-react';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
-import { avatarThumbFromPath, getCommunityCoverThumbUrl, getThumbUrl } from '@/utils/thumbUrl';
+import { resolveSmashPortraitUrls } from './smashAvatarUrl';
 import type { EntityItem, EntityStatItem } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { Modal } from '@/components/common/Modal';
 import { EldritchVoidIcon, FriendzoneIcon, RankFirstIcon, HeartIcon, PassIcon } from '@/components/icons/DbdIcons';
 import { Surface } from '@/components/common/Surface';
 import { formatNumber } from '@/utils/format';
-import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 import { roleBadge as getRoleBadge } from '@/utils/smashOrPass/terms';
 import { useDictionary } from "@/context/DictionaryContext";
 import { Badge } from '@/components/common/Badge';
@@ -56,7 +54,6 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
 
   const name = rawCharacter?.name || rawCharacter?.character_name || 'Candidate';
   const role = rawCharacter?.role || 'Survivor';
-  const isSurvivor = isSurvivorRole(role);
   // The old `title` chain (locMeta.title || meta.title || meta.archetype || ...tagline) is
   // dropped entirely: it was never rendered here — the modal header shows `name`.
 
@@ -64,24 +61,16 @@ export const CharacterStatsModal: React.FC<CharacterStatsModalProps> = ({ isOpen
   const quote = profile.quote;
   const dealbreaker = profile.dealbreaker;
 
-  const rawAvatarSrc =
-    rawCharacter?.media_url?.startsWith('http') || rawCharacter?.media_url?.startsWith('/static')
-      ? `${rawCharacter.media_url.startsWith('http') ? '' : backendBase}${rawCharacter.media_url}`
-      : resolveAvatarUrl(
-          backendBase,
-          {
-            name,
-            category: role,
-            avatar_local_path: `avatars/${isSurvivor ? 'survivors' : 'killers'}/${slug}.png`,
-          },
-          isSurvivor
-        );
-
-  const avatarThumbSrc = rawAvatarSrc.includes('/static/uploads/community/')
-    ? getThumbUrl('community', rawAvatarSrc, 128, backendBase) || rawAvatarSrc
-    : rawAvatarSrc.includes('/static/avatars/')
-      ? avatarThumbFromPath(rawAvatarSrc, 128, backendBase) || rawAvatarSrc
-      : getCommunityCoverThumbUrl(rawAvatarSrc, 256, backendBase) || rawAvatarSrc;
+  const { thumbSrc: avatarThumbSrc } = resolveSmashPortraitUrls(
+    {
+      id: rawCharacter?.id,
+      slug,
+      name,
+      role,
+      media_url: rawCharacter?.media_url,
+    },
+    { backendBase, thumbWidth: 128, fallbackExt: 'png' }
+  );
 
   const totalVotes = stats?.total_votes ?? rawCharacter?.total_votes ?? 0;
   const smashCount = stats?.smash_count ?? rawCharacter?.smash_count ?? 0;

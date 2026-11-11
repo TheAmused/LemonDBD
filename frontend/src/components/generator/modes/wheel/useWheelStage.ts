@@ -6,8 +6,7 @@ import { playFanfare } from '@/utils/perkAudio';
 import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import type { ChaosMutator } from '@/types/chaos';
 import { useDictionary } from '@/context/DictionaryContext';
-import { getPerkIconUrl } from '@/utils/perkUtils';
-import { getIconThumbUrl } from '@/utils/thumbUrl';
+import { getPerkIconThumbUrl } from '@/utils/perkUtils';
 import { formatMessage } from '@/utils/i18nFormat';
 import { drawWheel } from './wheelDrawing';
 
@@ -69,7 +68,7 @@ export function useWheelStage({
   const effectiveTotalPages = Math.max(1, totalPages);
 
   const getIconSrc = useCallback(
-    (perk?: Perk) => getIconThumbUrl(getPerkIconUrl(perk, backendBase), 128, backendBase) || '',
+    (perk?: Perk) => getPerkIconThumbUrl(perk, 128, backendBase) ?? '',
     [backendBase]
   );
 

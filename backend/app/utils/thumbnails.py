@@ -33,7 +33,7 @@ THUMB_SPECS: dict[str, ThumbSpec] = {
     "maps": ThumbSpec("maps", (320,), 2.0),
     "chapters": ThumbSpec("chapters", (480,), 1.0),
     "realms": ThumbSpec("realms", (320,), 1.5),
-    "icons": ThumbSpec("icons", (96, 128), 1.0),
+    "icons": ThumbSpec("icons", (96, 128, 256), 1.0),
     "smash-or-pass": ThumbSpec("smash-or-pass", (256, 480), 2.0),
     "tier-lists": ThumbSpec("tier-lists", (480,), 1.0),
     "community": ThumbSpec("uploads/community", (128, 256, 480), 2.0),

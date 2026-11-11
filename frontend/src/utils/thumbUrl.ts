@@ -1,4 +1,5 @@
 // frontend/src/utils/thumbUrl.ts
+import type { SyntheticEvent } from 'react';
 import { getBackendBaseUrl } from '@/utils/api';
 
 export type ThumbCategory =
@@ -28,7 +29,7 @@ const CATEGORY_ALLOWED_WIDTHS: Record<ThumbCategory, readonly number[]> = {
   maps: [320],
   chapters: [480],
   realms: [320],
-  icons: [96, 128],
+  icons: [96, 128, 256],
   'smash-or-pass': [256, 480],
   'tier-lists': [480],
   community: [128, 256, 480],
@@ -242,4 +243,25 @@ export function getCommunityCoverThumbUrl(
   if (!match) return prepared.trimmed;
 
   return getThumbUrl(match.category, prepared.trimmed, width, backendBase);
+}
+
+/**
+ * `onError` handler for an <img> showing a thumbnail: retries each original source in turn, then
+ * hides the image, so a failed thumbnail request never removes a picture the original still serves.
+ */
+export function fallbackThroughSources(
+  ...sources: ReadonlyArray<string | null | undefined>
+): (event: SyntheticEvent<HTMLImageElement>) => void {
+  const chain = sources.filter((source, index): source is string => !!source && sources.indexOf(source) === index);
+  return (event) => {
+    const img = event.currentTarget;
+    const step = Number(img.dataset.fallbackStep ?? 0);
+    const next = chain[step];
+    if (next === undefined) {
+      img.style.display = 'none';
+      return;
+    }
+    img.dataset.fallbackStep = String(step + 1);
+    img.src = next;
+  };
 }

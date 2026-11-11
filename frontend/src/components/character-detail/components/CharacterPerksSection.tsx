@@ -3,12 +3,13 @@
 
 import React, { useState } from 'react';
 import type { CharacterItem, PerkItem, CharacterDetailDictionary } from '../types';
-import { getAssetUrl } from '../types';
+import { getAssetThumbUrl, getAssetUrl } from '../types';
 import type { Perk } from '@/types/perks';
 import { DisabledBadge } from '@/components/DisabledBadge';
 import { DisabledReasonModal } from '@/components/DisabledReasonModal';
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
+import { fallbackThroughSources } from '@/utils/thumbUrl';
 
 interface CharacterPerksSectionProps {
   perks: PerkItem[];
@@ -32,7 +33,7 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
   return (
     <div className="my-auto grid w-full grid-cols-fit-perk gap-4 pt-2 sm:gap-6">
       {perks.map((perk, idx) => {
-        const iconSrc = getAssetUrl(backendBase, perk.icon_local_path, perk.icon_url);
+        const iconSrc = getAssetThumbUrl(backendBase, perk.icon_local_path, perk.icon_url, 256);
 
         return (
           <div
@@ -59,9 +60,7 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
                   perk.is_disabled ? 'grayscale opacity-50' : ''
                 }`}
                 loading="lazy"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                }}
+                onError={fallbackThroughSources(getAssetUrl(backendBase, perk.icon_local_path, perk.icon_url))}
               />
               <span className="line-clamp-2 min-h-10 text-center type-card-title text-text-primary">{perk.name}</span>
             </TileButton>

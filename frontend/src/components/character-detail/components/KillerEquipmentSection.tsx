@@ -6,6 +6,7 @@ import type {
   EquipmentItem,
   CharacterDetailDictionary} from '../types';
 import {
+  getAssetThumbUrl,
   getAssetUrl,
   getRarityTileStyle,
   getRarityRank
@@ -16,6 +17,7 @@ import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { AccordionSection } from '@/components/common/AccordionSection';
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
+import { fallbackThroughSources } from '@/utils/thumbUrl';
 
 interface KillerEquipmentSectionProps {
   addons?: (AddonItem | EquipmentItem)[];
@@ -57,7 +59,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
       ) : (
         <div className="flex flex-wrap items-center justify-center gap-3">
           {sortedAddons.map((item, idx) => {
-            const iconSrc = getAssetUrl(backendBase, item.icon_local_path, item.icon_url);
+            const iconSrc = getAssetThumbUrl(backendBase, item.icon_local_path, item.icon_url);
             const rarityStyle = getRarityTileStyle(item.rarity);
             const displayItem = { ...item, name: toTitleCase(item.name) };
 
@@ -73,9 +75,7 @@ export const KillerEquipmentSection: React.FC<KillerEquipmentSectionProps> = ({
                   src={iconSrc}
                   alt={displayItem.name}
                   className="h-full w-full object-contain filter drop-shadow-lg"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }}
+                  onError={fallbackThroughSources(getAssetUrl(backendBase, item.icon_local_path, item.icon_url))}
                 />
               </TileButton>
             );

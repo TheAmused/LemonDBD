@@ -9,6 +9,7 @@ import type {
   EquipmentItem,
   CharacterDetailDictionary} from '../types';
 import {
+  getAssetThumbUrl,
   getAssetUrl,
   getRarityTileStyle,
   getRarityRank
@@ -29,6 +30,7 @@ import { EmptyState } from '@/components/common/EmptyState';
 import { AccordionSection } from '@/components/common/AccordionSection';
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
+import { fallbackThroughSources } from '@/utils/thumbUrl';
 interface SurvivorEquipmentSectionProps {
   items?: EquipmentItem[];
   addons?: (AddonItem | EquipmentItem)[];
@@ -168,12 +170,10 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                         aria-label={`${t.inspectItemPrefix} ${item.name}`}
                       >
                         <Img
-                          src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
+                          src={getAssetThumbUrl(backendBase, item.icon_local_path, item.icon_url)}
                           alt={item.name}
                           className="h-full w-full object-contain"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).style.display = 'none';
-                          }}
+                          onError={fallbackThroughSources(getAssetUrl(backendBase, item.icon_local_path, item.icon_url))}
                         />
                       </TileButton>
                     </li>
@@ -224,12 +224,10 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
                         aria-label={`${t.inspectAddonPrefix} ${displayItem.name}`}
                       >
                         <Img
-                          src={getAssetUrl(backendBase, item.icon_local_path, item.icon_url)}
+                          src={getAssetThumbUrl(backendBase, item.icon_local_path, item.icon_url)}
                           alt={displayItem.name}
                           className="h-full w-full object-contain filter drop-shadow-md"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).style.display = 'none';
-                          }}
+                          onError={fallbackThroughSources(getAssetUrl(backendBase, item.icon_local_path, item.icon_url))}
                         />
                       </TileButton>
                     </li>

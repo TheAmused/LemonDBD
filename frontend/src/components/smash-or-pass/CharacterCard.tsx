@@ -11,7 +11,7 @@ import { useCardDrag } from './card/useCardDrag';
 import { useCardFlip } from './card/useCardFlip';
 import { SmashSounds } from './SmashSoundEffects';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
-import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
+import { resolveSmashPortraitUrls } from './smashAvatarUrl';
 import type { EntityItem, RosterCustomLabels } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { sampleFlags } from '@/utils/smashWatermarks';
@@ -23,8 +23,6 @@ import { isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
 import { useDictionary } from "@/context/DictionaryContext";
 import { withAlpha } from '@/utils/themeColor';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
-import { isLocalRosterSlug } from '@/utils/smashOrPass/rosterSlug';
-import { candidatePlaceholderPath } from '@/utils/smashOrPass/placeholderArt';
 import { themedEdgeStyle } from '@/utils/smashOrPass/badgeGradient';
 
 const ZoomCloseButton: React.FC<{ label: string }> = ({ label }) => {
@@ -108,21 +106,16 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
 
   // A custom roster's candidate may have no picture at all: it gets one of the stand-in pictures
   // (the same one every time), and no zoom, since that is not their own art.
-  const hasPortrait = Boolean(character.media_url) || !isLocalRosterSlug(character.roster_id);
-
-  const avatarSrc = !hasPortrait
-    ? `${backendBase}${candidatePlaceholderPath(character.name || character.slug || character.id)}`
-    : character.media_url?.startsWith('http') || character.media_url?.startsWith('/static')
-      ? `${character.media_url.startsWith('http') ? '' : backendBase}${character.media_url}`
-      : resolveAvatarUrl(
-        backendBase,
-        {
-          name: character.name,
-          category: character.role,
-          avatar_local_path: `avatars/${isSurvivor ? 'survivors' : 'killers'}/${character.slug}.webp`,
-        },
-        isSurvivor
-      );
+  const {
+    fullSrc: avatarSrc,
+    thumbSrc: avatarThumbSrc,
+    hasPortrait,
+  } = resolveSmashPortraitUrls(character, {
+    backendBase,
+    thumbWidth: 256,
+    useLocalPlaceholder: true,
+    fallbackExt: 'webp',
+  });
 
   const dragDistance = Math.abs(dragOffset.x);
   const swipeProgress = Math.min(1, Math.max(0, dragDistance / 100));
@@ -246,7 +239,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             <div className="absolute inset-0 z-0 bg-bg-primary overflow-hidden">
               <div className="h-full w-full" style={portraitOffsetY ? { transform: `translateY(${portraitOffsetY}px)` } : undefined}>
                 <CardAvatarImage
-                  src={avatarSrc}
+                  src={avatarThumbSrc}
                   name={character.name}
                   slug={character.slug}
                   isSurvivor={isSurvivor}

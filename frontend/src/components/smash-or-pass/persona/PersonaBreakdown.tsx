@@ -3,10 +3,9 @@
 import { RotateCcw, Share2 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { tip } from '@/components/common/Tooltip';
-import { getAvatarUrl as resolveAvatarUrl } from '@/components/character-detail/types';
+import { resolveSmashPortraitUrls } from '../smashAvatarUrl';
 import { HeartIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
-import { isSurvivor } from '@/utils/characterUtils';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { sanitizeImageUrl } from '@/utils/smashOrPass/codec';
 import type { RomancePersonaResult } from '@/utils/smashPersona';
@@ -28,17 +27,11 @@ export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onRe
   const backendBase = getBackendBaseUrl();
 
   const favoriteCharAvatar = persona.favoriteChar
-    ? persona.favoriteChar.media_url?.startsWith('http') || persona.favoriteChar.media_url?.startsWith('/static')
-      ? `${persona.favoriteChar.media_url.startsWith('http') ? '' : backendBase}${persona.favoriteChar.media_url}`
-      : resolveAvatarUrl(
-          backendBase,
-          {
-            name: persona.favoriteChar.name,
-            category: isSurvivor(persona.favoriteChar.role) ? 'Survivor' : 'Killer',
-            avatar_local_path: `avatars/${isSurvivor(persona.favoriteChar.role) ? 'survivors' : 'killers'}/${persona.favoriteChar.slug || 'unknown'}.png`,
-          },
-          isSurvivor(persona.favoriteChar.role)
-        )
+    ? resolveSmashPortraitUrls(persona.favoriteChar, {
+        backendBase,
+        thumbWidth: 128,
+        fallbackExt: 'png',
+      }).thumbSrc
     : null;
 
   const safeBadgeUrl = persona.badgeImageUrl ? sanitizeImageUrl(persona.badgeImageUrl) : null;

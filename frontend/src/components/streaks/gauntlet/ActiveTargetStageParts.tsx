@@ -6,6 +6,7 @@ import type { OwnedCharacterItem } from '@/components/streaks/useOwnedRoster';
 import type { DrawPhase } from '@/components/streaks/gauntlet/useTargetDraw';
 import { Star, HelpCircle } from 'lucide-react';
 import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl';
+import { avatarThumbFromPath, getIconThumbUrl } from '@/utils/thumbUrl';
 import { useCharacterDisplayName, usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { PerkHexIcon, LockIcon, PersonIcon } from '@/components/icons/DbdIcons';
 import { PerkIcon } from '@/components/ui/PerkIcon';
@@ -20,10 +21,14 @@ import { PerkTile } from '@/components/streaks/page-streak/PerkTile';
 const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[] = []) => {
   if (!name) return null;
   const owned = characters.find((c) => c.name === name)?.avatar_local_path;
-  return staticUrl(owned) || avatarUrlForCharacter(name, role === 'survivor' ? 'survivors' : 'killers') || null;
+  const resolved = staticUrl(owned) || avatarUrlForCharacter(name, role === 'survivor' ? 'survivors' : 'killers');
+  return resolved ? avatarThumbFromPath(resolved, 128) || null : null;
 };
 
-const perkIconFor = (perk: Perk) => perkIconUrl(perk);
+const perkIconFor = (perk: Perk) => {
+  const resolved = perkIconUrl(perk);
+  return resolved ? getIconThumbUrl(resolved, 128) || null : null;
+};
 
 export const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPhase; characters: OwnedCharacterItem[] }> = ({
   name,

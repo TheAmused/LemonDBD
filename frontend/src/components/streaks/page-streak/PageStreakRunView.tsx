@@ -17,7 +17,7 @@ import { ChallengeErrorBanner, ChallengePanel, ChallengeVictoryCard } from '../C
 import { ChallengeProgress } from '../ChallengeProgress';
 import { ChallengeCompletionHistoryDrawer, Confetti, AbandonConfirmModal } from '../lazyChallengeParts';
 import { useCelebrateOnRise, useCelebration } from '../useCelebration';
-import { staticUrl } from '@/utils/staticUrl';
+import { avatarThumbFromPath, getIconThumbUrl } from '@/utils/thumbUrl';
 import { attemptsStarted } from '@/utils/challengeAttempts';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useStoredItem } from '@/hooks/useStoredItem';
@@ -51,7 +51,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
   const iconByPerk = React.useMemo(() => {
     const entries = Object.entries(run?.perk_icons ?? {});
     return Object.fromEntries(
-      entries.map(([name, path]) => [name, staticUrl(path)]).filter(([, url]) => url)
+      entries.map(([name, path]) => [name, getIconThumbUrl(path, 128)]).filter(([, url]) => url)
     ) as Record<string, string>;
   }, [run?.perk_icons]);
   // The page the preview tab was opened on, so moving to the next page drops back to the current page tab.
@@ -222,7 +222,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
                     slots={build.slots}
                     iconByPerk={iconByPerk}
                     killerName={killerDisplayName}
-                    avatarSrc={staticUrl(run.killer_avatar)}
+                    avatarSrc={avatarThumbFromPath(run.killer_avatar, 128) || undefined}
                   />
                 </aside>
               </div>

@@ -7,6 +7,7 @@ import { CheckCircle2, X } from 'lucide-react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import type { Perk } from '@/types/gauntletStreak';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
+import { getIconThumbUrl } from '@/utils/thumbUrl';
 import { usePerkDisplayName, usePerkLabel } from '@/context/DisplayNamesContext';
 import { normalizeSearchText } from '@/utils/perkUtils';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -23,7 +24,7 @@ const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: bo
   displayName,
   justUnlocked,
 }) => {
-  const src = perkIconFor(perk);
+  const src = getIconThumbUrl(perkIconFor(perk), 128) || undefined;
   return (
     <div
       className={`flex flex-col items-center gap-1 p-1.5 sm:gap-1.5 sm:p-2 rounded-chip bg-bg-elevated border border-border-color ${
@@ -46,7 +47,7 @@ const UnlockedTile: React.FC<{ perk: Perk; displayName: string; justUnlocked: bo
 };
 
 const LockedTile: React.FC<{ perk: Perk; displayName: string }> = ({ perk, displayName }) => {
-  const src = perkIconFor(perk);
+  const src = getIconThumbUrl(perkIconFor(perk), 128) || undefined;
   return (
     <div className="relative flex flex-col items-center gap-1 p-1.5 sm:gap-1.5 sm:p-2 rounded-chip bg-bg-elevated border border-dashed border-2 border-border-color overflow-hidden">
       <div className="w-full aspect-square rounded-chip overflow-hidden bg-bg-elevated flex items-center justify-center grayscale opacity-40 p-0.5 sm:p-1">

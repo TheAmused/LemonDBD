@@ -87,7 +87,7 @@ describe('Tier lists: OfficialTierListCard', () => {
         locale: 'en',
       })
     );
-    assert.ok(html.includes('/static/tier-lists/banner_survivor_perks.webp'), 'Must fallback to default official banner');
+    assert.ok(html.includes('/api/v1/thumbs/tier-lists/480/banner_survivor_perks.webp'), 'Must fallback to default official banner');
     assert.ok(html.includes('Survivor Perks'), 'Must render title');
     assert.ok(html.includes('Rank every survivor perk'), 'Must render description snippet');
     assert.ok(html.includes('Ranked: 15/240'), 'Must render ranked X/Y chip');
@@ -115,7 +115,10 @@ describe('Tier lists: OfficialTierListCard', () => {
         locale: 'en',
       })
     );
-    assert.ok(html.includes('src="/static/tier-lists/banner_survivor_perks.webp"'), 'Must serve the banner from backend static');
+    assert.ok(
+      /src="[^"]*\/api\/v1\/thumbs\/tier-lists\/480\/banner_survivor_perks\.webp"/.test(html),
+      'Must serve the banner thumbnail from backend thumbs endpoint'
+    );
     assert.ok(!html.includes('/static/static/'), 'Must not double-prefix /static/');
   });
 });

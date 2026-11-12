@@ -10,6 +10,7 @@ import type { GauntletGameMode } from '@/types/gauntletStreak';
 import { GAUNTLET_GAME_MODES } from '@/types/gauntletStreak';
 import { useDictionary } from "@/context/DictionaryContext";
 import { useOnValueChange } from '@/hooks/useOnValueChange';
+import { publicImageThumb } from '@/utils/publicThumb';
 
 export interface GauntletModeModalProps {
   isOpen: boolean;
@@ -34,7 +35,7 @@ function lemonRootTile(role: 'killer' | 'survivor', dict: Dictionary): Challenge
     value: 'lemon',
     label: role === 'killer' ? dict.streaks.lemonMode : dict.streaks.lemonVersion,
     description: role === 'killer' ? dict.streaks.gauntletLemonDesc : dict.streaks.gauntletLemonPlayersDesc,
-    image: '/images/streaks/modes/gauntlet-lemon.webp',
+    image: publicImageThumb('/images/streaks/modes/gauntlet-lemon.webp'),
   };
 }
 
@@ -44,19 +45,19 @@ function lemonPlayerTiles(dict: Dictionary): ChallengeIntroTile[] {
       value: 'lemon_solo',
       label: dict.streaks.lemonSolo,
       description: dict.streaks.lemonSoloDesc,
-      image: '/images/streaks/modes/gauntlet-1-player.webp',
+      image: publicImageThumb('/images/streaks/modes/gauntlet-1-player.webp'),
     },
     {
       value: 'lemon_duo',
       label: dict.streaks.lemonDuo,
       description: dict.streaks.lemonDuoDesc,
-      image: '/images/streaks/modes/gauntlet-2-players.webp',
+      image: publicImageThumb('/images/streaks/modes/gauntlet-2-players.webp'),
     },
     {
       value: 'lemon_squad',
       label: dict.streaks.lemonSquad,
       description: dict.streaks.lemonSquadDesc,
-      image: '/images/streaks/modes/gauntlet-4-players.webp',
+      image: publicImageThumb('/images/streaks/modes/gauntlet-4-players.webp'),
     },
   ];
 }
@@ -120,7 +121,7 @@ export const GauntletModeModal: React.FC<GauntletModeModalProps> = ({
       label: dict.streaks.original,
       description:
         dict.streaks.gauntletOriginalDesc,
-      image: '/images/streaks/modes/gauntlet-original.webp',
+      image: publicImageThumb('/images/streaks/modes/gauntlet-original.webp'),
       completed: originalCompleted,
       completedCount: originalCompletedCount,
       completedFull: originalCompletedFull,

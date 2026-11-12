@@ -7,6 +7,7 @@ import { ChallengeModeModal, buildCompletionTiles } from '../ChallengeModeModal'
 import { HistoryRulesModal } from './HistoryRulesModal';
 import { HISTORY_MODE_ORDER } from '@/utils/challengeTierCompletion';
 import { useDictionary } from "@/context/DictionaryContext";
+import { publicImageThumb } from '@/utils/publicThumb';
 
 export interface HistoryModeModalProps {
   isOpen: boolean;
@@ -39,13 +40,13 @@ export const HistoryModeModal: React.FC<HistoryModeModalProps> = ({
         value: 'medium',
         label: s.historyMediumLabel,
         description: s.historyMediumDesc,
-        image: '/images/streaks/modes/history-default.webp',
+        image: publicImageThumb('/images/streaks/modes/history-default.webp'),
       },
       {
         value: 'hell',
         label: s.historyHellLabel,
         description: s.historyHellDesc,
-        image: '/images/streaks/modes/history-hell.webp',
+        image: publicImageThumb('/images/streaks/modes/history-hell.webp'),
       },
     ],
     completedCounts,

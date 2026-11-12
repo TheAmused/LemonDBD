@@ -1,7 +1,7 @@
 # backend/app/routes/others/smash_or_pass.py
 import logging
 from typing import Any
-from flask import Blueprint, g, jsonify, request
+from flask import Blueprint, current_app, g, jsonify, request
 from pydantic import ValidationError
 from sqlalchemy import select
 
@@ -12,6 +12,11 @@ from app.models.smash_or_pass import Roster
 from app.schemas.smash_or_pass import MAX_SMASH_KEY_LENGTH, SmashRosterAdminCreate, SmashSessionRequest
 from app.services import site_settings
 from app.services.admin_control_service import log_admin_action
+from app.services.community_media import (
+    ingest_cover_image,
+    ingest_dict_media_urls,
+    warm_community_thumbs_async,
+)
 from app.services.smash_or_pass_service import SmashOrPassService
 from app.utils.lang import extract_lang as _extract_lang
 from app.utils.pagination import paginate_args
@@ -108,20 +113,31 @@ def create_roster():
     except ValidationError as err:
         return api_error("Invalid roster", 400, details=err.errors())
 
+    cover_image_url, cover_invalid, cover_ingested = ingest_cover_image(payload.cover_image_url, max_side=800)
+    if cover_invalid:
+        return api_error("Invalid cover image URL", 400)
+
+    entities = _roster_entities(payload)
+    entities_ingested = ingest_dict_media_urls(entities, "media_url", max_side=512)
+    ingested = cover_ingested or entities_ingested
+
     try:
         row = smash_service.create_roster(
             name=payload.name,
             description=payload.description,
-            cover_image_url=payload.cover_image_url,
+            cover_image_url=cover_image_url,
             theme_color=payload.theme_color,
             category=payload.category,
             is_nsfw=payload.is_nsfw,
             is_active=payload.is_active,
             translations={k: v.model_dump(exclude_none=True) for k, v in payload.translations.items()},
-            entities=_roster_entities(payload),
+            entities=entities,
         )
     except ValueError as err:
         return api_error(str(err), 400)
+
+    if ingested:
+        warm_community_thumbs_async(current_app.static_folder)
 
     log_admin_action(
         g.current_user.id,

@@ -4,6 +4,8 @@ import { RARITY_TILE_IMAGES } from '@/constants/addonRarityIcons';
 import { localeMetaFor } from '@/i18n/config';
 import type { Dictionary } from '@/locales/types';
 import { characterSlug, getCharacterSlug } from '@/lib/slug';
+import { avatarThumbFromPath, getIconThumbUrl } from '@/utils/thumbUrl';
+import { sanitizePath } from '@/utils/perkUtils';
 
 export interface CharacterItem {
   id?: number;
@@ -191,12 +193,13 @@ export function localizeTerrorRadiusText(raw: string, locale: string): string {
 export { getCharacterSlug, characterSlug };
 
 export function getAssetUrl(backendBase: string, path?: string, url?: string): string {
-  if (path) {
-    let cleanPath = path.replace(/^\/?(static\/)?/, '');
-    cleanPath = cleanPath.replace(/%+/g, '');
-    return `${backendBase}/static/${cleanPath}`;
-  }
+  if (path) return `${backendBase}/static/${sanitizePath(path)}`;
   return url || '';
+}
+
+/** Small WebP copy of a static icon for grids and lists; detail modals keep `getAssetUrl`. */
+export function getAssetThumbUrl(backendBase: string, path?: string, url?: string, width = 128): string {
+  return getIconThumbUrl(getAssetUrl(backendBase, path, url), width, backendBase);
 }
 
 export function getAvatarUrl(
@@ -228,19 +231,17 @@ export const PORTRAIT_CROP = 'origin-top scale-112 -translate-y-1/32';
 
 /**
  * Small WebP copy of a character avatar for grids/lists (served by
- * `/api/v1/avatars/thumb/...`). Detail pages keep using `getAvatarUrl` (full image).
+ * `/api/v1/thumbs/avatars/<width>/...`). Detail pages keep using `getAvatarUrl` (full image).
  * Falls back to the full avatar when the character has no local file.
  */
 export function getAvatarThumbUrl(
   backendBase: string,
   char: CharacterItem,
-  isSurvivor: boolean
+  isSurvivor: boolean,
+  width = 256
 ): string {
   const full = getAvatarUrl(backendBase, char, isSurvivor);
-  if (!full.startsWith(`${backendBase}/static/avatars/`)) return full;
-  const rel = full.slice(`${backendBase}/static/avatars/`.length);
-  if (!/\.(webp|png|jpe?g)$/i.test(rel)) return full;
-  return `${backendBase}/api/v1/avatars/thumb/${rel}`;
+  return full ? avatarThumbFromPath(full, width, backendBase) : '';
 }
 
 function rarityImageTile(rarity: keyof typeof RARITY_TILE_IMAGES): Pick<RarityTileStyle, 'bg' | 'style'> {

@@ -8,6 +8,7 @@ import { PerkDiamondSlot } from './PerkDiamondSlot';
 import type { MainLoadout } from '@/types/userShowcase';
 import type { RoleCategory } from '@/types/perks';
 import { getCharacterAvatarUrl } from '@/utils/perkUtils';
+import { avatarThumbFromPath } from '@/utils/thumbUrl';
 import { useCatalogPerks } from '@/hooks/useCatalogPerks';
 
 import { tip } from '@/components/common/Tooltip';
@@ -48,10 +49,11 @@ export const MainCard: React.FC<MainCardProps> = ({
     id !== null ? allPerks.find((p) => p.id === id) || null : null
   );
 
-  const avatarSrc = getCharacterAvatarUrl(
+  const rawAvatarSrc = getCharacterAvatarUrl(
     { character: loadout.characterName, category: role },
     role
   );
+  const avatarSrc = avatarThumbFromPath(rawAvatarSrc, 128) || rawAvatarSrc;
 
   return (
     <div

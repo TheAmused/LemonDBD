@@ -2,7 +2,7 @@
 import React from 'react';
 import { Plus, X } from 'lucide-react';
 import type { Perk } from '@/types/perks';
-import { getPerkIconUrl } from '@/utils/perkUtils';
+import { getPerkIconThumbUrl } from '@/utils/perkUtils';
 import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from '@/context/DictionaryContext';
 import { DiamondSlot } from '@/components/ui/DiamondSlot';
@@ -36,7 +36,7 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
   const emptyLabel = emptyLabelProp ?? dict.user.emptySlot;
   const clearLabel = clearLabelProp ?? dict.user.clearPerk;
 
-  const iconUrl = perk ? getPerkIconUrl(perk) : null;
+  const iconUrl = perk ? getPerkIconThumbUrl(perk, 96) : null;
 
   return (
     <div className="relative group h-[var(--perk-size)] w-[var(--perk-size)]">

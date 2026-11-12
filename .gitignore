@@ -131,7 +131,8 @@ frontend/CLAUDE.md
 playwright/
 
 legacy
-backend/app/static/avatars/_thumbs/
+backend/app/static/**/_thumbs/
+frontend/public/images/_thumbs/
 
 additions/*
 !additions/lucide-icons.md

@@ -7,6 +7,7 @@ import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { shuffleArray } from '@/utils/shuffleArray';
 import { customEntityToEntityItem, isLocalRosterSlug, localRosterIdFromSlug } from '@/utils/smashOrPass/localRoster';
 import { SmashSounds } from '../SmashSoundEffects';
+import { resolveSmashPortraitUrls } from '../smashAvatarUrl';
 
 const NO_LEADERBOARD: LeaderboardItem[] = [];
 
@@ -123,16 +124,21 @@ export function useSmashDeck({ selectedRosterSlug, customRosterStore, onFeedSett
   const nextCharacter = deck[currentIndex + 1] || null;
   const thirdCharacter = deck[currentIndex + 2] || null;
 
-  // Preload next 3 images in queue
+  // Preload next 3 images in queue using the same 256px portrait thumbnail CharacterCard renders
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    const backendBase = getBackendBaseUrl();
     const preloads = deck.slice(currentIndex + 1, currentIndex + 4);
     preloads.forEach((item) => {
-      if (item.media_url) {
+      const { thumbSrc } = resolveSmashPortraitUrls(item, {
+        backendBase,
+        thumbWidth: 256,
+        useLocalPlaceholder: true,
+        fallbackExt: 'webp',
+      });
+      if (thumbSrc) {
         const img = new Image();
-        img.src = item.media_url.startsWith('http')
-          ? item.media_url
-          : `${getBackendBaseUrl()}${item.media_url}`;
+        img.src = thumbSrc;
       }
     });
   }, [currentIndex, deck]);

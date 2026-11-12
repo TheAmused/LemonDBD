@@ -2,6 +2,7 @@
 """Admin backup routes: the target list, export, import and purge (on the admin_control blueprint)."""
 import logging
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
 
 from flask import Response, current_app, g, jsonify, request
@@ -27,6 +28,7 @@ from app.services.db.export_registry import (
 )
 from app.services.user.admin import fetch_admin_metrics
 from app.utils.responses import api_error
+from app.utils.thumbnails import warm_all_thumbs_async
 
 logger = logging.getLogger(__name__)
 
@@ -215,6 +217,11 @@ def import_database():
     except Exception as e:
         logger.error(f"Database import error: {e}", exc_info=True)
         return api_error("The import failed and nothing was changed. Details are in the server log.", 500)
+
+    try:
+        warm_all_thumbs_async(Path(current_app.static_folder) if current_app.static_folder else None)
+    except Exception:
+        logger.warning("Failed to trigger background thumbnail warming after import", exc_info=True)
 
     logger.info(f"Admin {g.current_user.login} imported database (mode={mode}): {result.get('summary')}")
     log_admin_action(

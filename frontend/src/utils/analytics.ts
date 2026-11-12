@@ -88,6 +88,8 @@ export interface AnalyticsEvents {
   // Bard Insults modal (sidebar)
   /** The "Bard insults" button in the sidebar was clicked (the only entry point). */
   bard_insults_open: undefined;
+  /** An insult was copied from the modal (only when the copy worked); `role` is the side whose list was shown. */
+  bard_insult_copy: { role: Role };
   // Bug report modal
   bug_report_open: { source: 'sidebar' | 'profile'; access: 'member' | 'guest' | 'guest_blocked' };
   bug_report_start: { access: 'member' | 'guest' };

@@ -18,11 +18,9 @@ interface ModalIconHeaderProps {
   subtitle?: React.ReactNode;
   /** What it belongs to. Leave out for an empty slot that still keeps the title centred. */
   trailing?: React.ReactNode;
-  /** Attributes for the right slot, e.g. `tip(...)`. */
-  trailingProps?: Record<string, string | undefined>;
 }
 
-export function ModalIconHeader({ leading, title, titleId, subtitle, trailing, trailingProps }: ModalIconHeaderProps) {
+export function ModalIconHeader({ leading, title, titleId, subtitle, trailing }: ModalIconHeaderProps) {
   return (
     <div className="grid shrink-0 grid-cols-[auto_1fr_auto] items-center gap-3 px-4 pb-0 pt-12 phone-lg:gap-4 phone-lg:px-6 md:gap-6 md:px-8">
       <div className={`flex ${MODAL_ICON_SLOT} shrink-0 items-center justify-center`}>{leading}</div>
@@ -38,7 +36,7 @@ export function ModalIconHeader({ leading, title, titleId, subtitle, trailing, t
       </div>
 
       {trailing ? (
-        <div className={`flex ${MODAL_ICON_SLOT} shrink-0 items-center justify-center`} {...trailingProps}>
+        <div className={`flex ${MODAL_ICON_SLOT} shrink-0 items-center justify-center`}>
           {trailing}
         </div>
       ) : (

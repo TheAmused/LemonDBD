@@ -5,6 +5,8 @@
 // (ad blocker, not loaded yet, server render).
 import { safeGetItem, safeSetItem } from '@/utils/safeStorage';
 import type { PerkType } from '@/utils/perkTypes';
+import type { TierListKind } from '@/types/tierList';
+import type { LadderPresetId } from '@/utils/tierLists/creator';
 
 /** What Umami accepts as event data: flat primitives only. */
 export type EventProps = Record<string, string | number | boolean>;
@@ -16,6 +18,8 @@ export type ChallengeId = 'gauntlet' | 'chaos' | 'history' | 'page_streak' | 'id
 export type ChallengeRole = Role | 'mixed';
 /** What Gauntlet Lemon's tokens buy: a different target, a chosen one, a free perk slot, or a shield for a lost match. */
 export type ChallengeBoost = 'reroll' | 'pick' | 'slot' | 'shield';
+/** The themes of the sidebar picker; `system` follows the device. */
+export type ThemeName = 'light' | 'light-lemon' | 'dark' | 'system';
 export type SettingName = 'campfire' | 'gifs' | 'nsfw' | 'sounds' | 'music' | 'animations';
 export type ChallengeUiAction =
   | 'rules'
@@ -30,6 +34,12 @@ export interface ChallengeTag {
   challenge: ChallengeId;
   role: ChallengeRole;
   variant: string;
+}
+
+/** What the tier list events say about a list: the slug of an official one (never a title), or `custom` for one the visitor made, and its kind. */
+export interface TierListTag {
+  list: string;
+  kind: TierListKind;
 }
 
 /** Every event the site sends, with its exact props. `undefined` means "no props". */
@@ -112,9 +122,32 @@ export interface AnalyticsEvents {
   challenge_boost: ChallengeTag & { boost: ChallengeBoost; price: number };
   challenge_mode_change: { challenge: ChallengeId; role: ChallengeRole; from: string; to: string };
   challenge_ui: { challenge: ChallengeId; action: ChallengeUiAction };
+  // Tier lists
+  /** The first move on a list in a visit. Official lists count by slug, so `list` also says which one is ranked the most. */
+  tier_list_rank: TierListTag;
+  /** Every item of the list is out of the unranked pool, reached by a move (a list opened already ranked sends nothing). Once per list per visit. */
+  tier_list_complete: TierListTag & { items: number };
+  /** A confirmed reset of the ranking. */
+  tier_list_reset: TierListTag;
+  /** `into` is where the import was started: the hub, an official list (a ranking) or an open custom list (replaces it). Only imports that were saved. */
+  tier_list_import: { into: 'hub' | 'official' | 'custom'; via: 'link' | 'manual' };
+  tier_list_export: { method: 'link' | 'json_copy' | 'file' };
+  /** The report dialog of a custom list was opened. */
+  tier_list_report_open: undefined;
+  /** A new list saved in this browser: `own_items` are the ones added by link or upload (not picked from the catalog), `cover_image` is a background image set, `ladder` is the preset used or `custom` once the tiers were edited. */
+  tier_list_create: { items: number; own_items: number; tiers: number; ladder: LadderPresetId | 'custom'; cover_image: boolean; nsfw: boolean };
+  /** The creator's Preview button. */
+  tier_list_preview: undefined;
   // Settings page
   /** A setting the visitor changed on the Settings page; `value` is where it went (`eco` only for the campfire). */
   setting_change: { setting: SettingName; value: 'on' | 'off' | 'eco' };
+  // Language and theme pickers, welcome wizard
+  /** A real switch of the site language: `via` is where it was picked, the sidebar menu or the language step of the welcome wizard. */
+  language_change: { from: string; to: string; via: 'sidebar' | 'onboarding' };
+  /** A real change of the theme in the sidebar picker (picking the current one is not reported). */
+  theme_change: { theme: ThemeName };
+  /** The welcome wizard was finished and saved. With `signup` and `/welcome` page views it gives the onboarding funnel. `characters_owned` are the non free characters marked as owned. */
+  onboarding_complete: { characters_owned: number };
   // Auth
   signup: { method: 'password' | 'google' };
   login: { method: 'password' | 'google' | 'two_factor' };

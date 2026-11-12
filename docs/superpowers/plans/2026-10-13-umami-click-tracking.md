@@ -207,6 +207,7 @@ Logged in only. Events measure adoption of account features.
 | `showcase_complete` | `role`: `survivor` / `killer` | `hooks/useUserShowcase.ts` (see below) |
 | `avatar_upload` | none | `handleAvatarFileChange` in `user/page.tsx`, after `uploadAvatar` succeeds |
 | `data_download` | none | `DownloadDataSection.tsx`, after `downloadAccountData` succeeds |
+| `sign_out_everywhere` | none | `SignOutEverywhereSection.tsx`, after the sign out of all devices succeeded |
 | `account_delete` | none | `DeleteAccountSection.tsx`, after `deleteAccount` succeeds |
 | `two_factor_change` | `action`: `enabled` / `disabled` | `TwoFactorSetupModal.tsx` (after `enableTwoFactor`) and the disable flow in `TwoFactorSection.tsx` |
 
@@ -376,6 +377,9 @@ Notes:
 | `coffee_modal_open` | none | `Sidebar.tsx`, `onOpenCoffeeModal` handler (the only entry point) |
 | `coffee_link_click` | `provider`: `buy_me_a_coffee` / `ko_fi` | `sidebar/BuyCoffeeModal.tsx`, `onClick` of each gateway link |
 
+| `coffee_ad_start` | none | `sidebar/RewardedAdSection.tsx`, the rewarded ad was started |
+| `coffee_ad_result` | `result`: `rewarded` / `dismissed` / `failed` | `RewardedAdSection.tsx`, how the ad ended (`rewarded` ran to the end, `dismissed` was closed early, `failed` is an ad network error) |
+
 Reading the data: open count vs click count per provider gives the conversion
 and which platform people prefer. Only gateways the admin left enabled are
 rendered, so a provider with no link simply has no clicks.
@@ -398,6 +402,24 @@ the "sign in first" message when guest reports are off.
 Screenshots: `screenshots` on `bug_report_submit` answers whether people attach
 pictures. Attempts that are abandoned are NOT tracked (no signal worth a
 separate event). Not tracked: validation errors, server errors, cancel.
+
+## Language, theme and welcome wizard [DONE]
+
+Added after the review of the whole list: the sidebar pickers and the onboarding that follows a signup had
+no event, so the funnel (signup, `/welcome` page views, finished wizard) and the audience language were blind.
+
+| Event | Props | Where |
+|-------|-------|-------|
+| `language_change` | `from`, `to` (locale codes), `via`: `sidebar` / `onboarding` | `SidebarBottomControls` language menu and `useOnboardingLanguage.handleLanguageSelect`; only a real switch (picking the current language is not reported) |
+| `theme_change` | `theme`: `light`, `light-lemon`, `dark`, `system` | `SidebarBottomControls` theme menu; only a real change |
+| `onboarding_complete` | `characters_owned` | `useOnboardingCompletion.handleContinue`, after `markOnboardingComplete` succeeded |
+
+Notes:
+
+- `characters_owned` counts non free characters marked as owned (free ones are owned by everyone), see `components/onboarding/onboardingTracking.ts`.
+- Onboarding funnel: `signup` count, then `/welcome` page views, then `onboarding_complete`. The wizard's steps are not events.
+- A visitor who flips through several languages in a row sends one `language_change` per switch.
+- Default theme is `dark`; someone who never opens the menu sends nothing, so read `theme_change` as "who changed it", not as the split of all visitors.
 
 ## Page 8: Perks (`/perks`) [DONE]
 
@@ -511,6 +533,41 @@ Notes:
   `smash_effects_choice`. Those are not `setting_change`.
 - A click on the campfire mode that is already selected is not reported.
 
+## Page 11: Tier lists (`/tier-lists`, `/tier-lists/[slug]`, `/tier-lists/custom/[id]`, `/tier-lists/new`) [DONE]
+
+Branch `feature/umami-tier-lists-tracking`. Helpers and tests: `components/tier-lists/tierListTracking.ts`,
+`__tests__/unit/analytics/analyticsTierLists.test.ts`.
+
+Which official list is opened needs no event: `/tier-lists/<slug>` is already a page view. The two
+ranking events carry `list` (the slug of an official list, or `custom` for one the visitor made, never a
+title) and `kind`.
+
+| Event | Props | Where |
+|-------|-------|-------|
+| `tier_list_rank` | `list`, `kind` | `TierListEditor` `handleBoardChange`: the first move on a list in a visit |
+| `tier_list_complete` | `list`, `kind`, `items` | the move that takes the last item out of the unranked pool; once per list per visit |
+| `tier_list_reset` | `list`, `kind` | confirmed reset in `TierListEditor`, when the save worked |
+| `tier_list_import` | `into`: `hub` / `official` / `custom`, `via`: `link` / `manual` | `TierListHub.handleImport` (a `#import=` share link is `via=link`) and the import in `TierListEditor`; only imports that were saved |
+| `tier_list_export` | `method`: `link` / `json_copy` / `file` | `TierListExportModal`, through the shared `ExportModal` `onExport` (same as Smash) |
+| `tier_list_report_open` | none | `CustomTierListView`, the report button |
+| `tier_list_create` | `items`, `own_items`, `tiers`, `ladder`, `cover_image`, `nsfw` | `TierListCreator.submit`, only the branch that saves a NEW list in this browser |
+| `tier_list_preview` | none | the creator's Preview button |
+
+Notes:
+
+- `tier_list_complete` fires only for a move that finishes the list. A list opened already fully
+  ranked (an official one with the LemonDBD default ranking) sends nothing, and a move on it is only
+  a `tier_list_rank`. Both events are remembered per list for the visit, so undo and redo does not count twice.
+- `tier_list_rank` is "started ranking", not every drag, so the count does not depend on how many items a list has.
+  An official list that starts from the default ranking also counts on its first move.
+- `own_items` are the items added by link or upload. Catalog picks keep a `survivor:7` style id and made up ids
+  never contain a colon, so the two are told apart by that. Answers "how often do people add their own characters".
+- `ladder` is the preset (`classic`, `short`, `numbers`, `feelings`) or `custom` once the tiers were edited by hand.
+- `cover_image` is true only for a background image that passed the image check.
+- Not tracked: edits of an existing list, deleting a list, the admin's publish, update and delete of official
+  lists, card clicks, scale and names toggles, item preview, single moves, clearing a row, the NSFW reveal.
+- No free text is sent, so the privacy policy needs no change.
+
 ## Out of scope (user visible pages only)
 
 welcome (almost empty), admin, minigames, achievements.
@@ -518,5 +575,5 @@ Home is skipped for now (may still be redesigned).
 
 ## Pages still to go through
 
-tier-lists (on hold, may still change), rules.
+rules.
 (Rules is mostly covered by `contact_click`; check what else it has.)

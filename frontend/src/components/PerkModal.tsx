@@ -11,7 +11,6 @@ import {
 } from '@/utils/perkUtils';
 import { PerkDescription } from '@/components/PerkDescription';
 import { PerkTypeBadges } from '@/components/perks/PerkTypeBadges';
-import { tip } from '@/components/common/Tooltip';
 import { Modal } from '@/components/common/Modal';
 import { ModalIconHeader } from '@/components/common/ModalIconHeader';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -65,7 +64,6 @@ export const PerkModal: React.FC<PerkModalProps> = ({ perk, onClose }) => {
           />
         ) : undefined
       }
-      trailingProps={tip(perk.character, undefined, 'character')}
     />
   );
 

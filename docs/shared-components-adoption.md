@@ -510,11 +510,10 @@ Sprawdzić szerokości około 360 i 390 px oraz tablet około 768 px w obszarach
 
 ## 16. Tooltipy: tylko warianty z TOOLTIP_CONFIG (PRZEJRZANE)
 
-Stan po przeglądzie (2026-10-15): jeden renderer (`common/Tooltip.tsx`), trzy wejścia (`<Tooltip>`, `{...tip()}`, `<TooltipBubble>`), siedem wariantów w `TOOLTIP_CONFIG.variants`: `default`, `item`, `action`, `character`, `status`, `error`, `rarity`. Warianty zostają bez scalania (ręczny przegląd jest osobnym zadaniem).
+Stan po przeglądzie (2026-10-15): jeden renderer (`common/Tooltip.tsx`), trzy wejścia (`<Tooltip>`, `{...tip()}`, `<TooltipBubble>`), pięć wariantów w `TOOLTIP_CONFIG.variants`: `default`, `item`, `action`, `status`, `error` (`character` i `rarity` usunięte, nie miały już użycia poza tooltipem avatara w `PerkModal`). Warianty zostają bez scalania (ręczny przegląd jest osobnym zadaniem).
 
-- [x] Każdy tooltip w aplikacji należy do wariantu: typ `TooltipVariant` wymusza wartość z konfiguracji w `tip()`, `<Tooltip>` i `<TooltipBubble>`. Wszystkie 7 wariantów ma realne użycie: `action` (80+), `status`, `item`, `default` (3), `rarity` (`ChaosStatsDrawer`), `character` (`PerkModal`, breadcrumbs postaci), `error` (`FormValidation`).
+- [x] Każdy tooltip w aplikacji należy do wariantu: typ `TooltipVariant` wymusza wartość z konfiguracji w `tip()`, `<Tooltip>` i `<TooltipBubble>`. Wszystkie 5 wariantów ma realne użycie: `action` (80+), `status`, `item`, `default` (3), `error` (`FormValidation`).
 - [x] Brak duplikatów: dodatkowych systemów tooltipów nie ma. `onMouseEnter` w `CharacterCard`, `CharacterAutocomplete`, `FloatingLoreScattered`, `SmashLeaderboardParts` i `StreakPanel` to prefetch, podświetlenie i efekty, a nie dymki. `DescriptionPeek` w `TierListCards` to nakładka z opisem działająca też na dotyk (tap), więc zostaje osobna.
-- [x] Wywołania `tip()` z wariantem warunkowym (`VoiceBannerHeader`, `PerkModal`) mają poprawne gałęzie (`action`, `character`).
 - [x] Guard w `check:styles` blokuje natywny `title` i ręczne `data-tooltip`.
 - [ ] Ikony bez tooltipa: `HeaderButton` i `ModeSelectButton` w `ChallengePanel` (reguły, statystyki, wygrane, porzuć bieg, animacje, pula perków) mają tylko `aria-label`, bez tooltipa na desktopie. Do decyzji, czy dodać `tip(title, undefined, 'action')`.
 - [ ] Dotyk: `Tooltip` nie pokazuje się na telefonie (`Tooltip.tsx:352`). Informacje, które mają być dostępne na mobile, nie mogą zależeć wyłącznie od tooltipa.

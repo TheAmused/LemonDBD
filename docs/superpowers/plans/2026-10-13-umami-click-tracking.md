@@ -384,6 +384,16 @@ Reading the data: open count vs click count per provider gives the conversion
 and which platform people prefer. Only gateways the admin left enabled are
 rendered, so a provider with no link simply has no clicks.
 
+## Bard Insults modal (sidebar) [DONE]
+
+| Event | Props | Where |
+|-------|-------|-------|
+| `bard_insults_open` | none | `Sidebar.tsx`, `onOpenInsults` handler (the only entry point, the button in `SidebarUserSection`) |
+
+Counts clicks on the button, so the same visitor opening it twice counts twice (Umami's unique visitors
+view gives the number of people). Not tracked: the Survivor / Killer switch and copying an insult
+inside the modal.
+
 ## Bug report modal [DONE]
 
 Shared modal (`sidebar/BugReportModal.tsx`), opened from the sidebar and from the

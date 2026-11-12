@@ -11,6 +11,7 @@ import {
   serializeTierListDocument,
 } from '@/utils/tierLists/codec';
 import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
+import { trackEvent } from '@/utils/analytics';
 import { LABEL, TOUCH_BTN, TOUCH_FIELD } from './styles';
 import { useDictionary } from "@/context/DictionaryContext";
 
@@ -29,6 +30,7 @@ export function TierListExportModal({ doc, onClose, locale }: TierListExportModa
       doc={doc}
       onClose={onClose}
       locale={locale}
+      onExport={(method) => trackEvent('tier_list_export', { method })}
       idPrefix="tier-list"
       serialize={serializeTierListDocument}
       fileName={exportFileName}

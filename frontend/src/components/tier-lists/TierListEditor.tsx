@@ -36,6 +36,8 @@ import { Popover, popoverTriggerProps } from '@/components/common/Popover';
 import { tip } from '@/components/common/Tooltip';
 import { formatMessage } from '@/utils/i18nFormat';
 import { Surface } from '@/components/common/Surface';
+import { type TierListTag, trackEvent } from '@/utils/analytics';
+import { useTierListRankingTracking } from './tierListTracking';
 
 export interface TierListEditorProps {
   mode: 'official' | 'custom';
@@ -62,6 +64,10 @@ export interface TierListEditorProps {
   onDelete?: () => void;
   onReport?: () => void;
   locale: string;
+  /** What the list is called in analytics: its slug (or `custom`) and kind. */
+  tag: TierListTag;
+  /** Tells lists apart for "once per visit" counting: the slug of an official list, the id of a custom one. */
+  listId: string;
 }
 
 const TOOLBAR_BTN = 'min-h-9 shrink-0 whitespace-nowrap px-2.5 text-xs cursor-pointer';
@@ -102,9 +108,12 @@ export function TierListEditor(props: TierListEditorProps) {
     onDelete,
     onReport,
     locale,
+    tag,
+    listId,
   } = props;
   const dict = useDictionary();
   const t = dict.tierLists;
+  const trackRanking = useTierListRankingTracking(tag, listId, items.length);
 
   const [dialog, setDialog] = useState<Dialog>(null);
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -149,14 +158,22 @@ export function TierListEditor(props: TierListEditorProps) {
     setSaveError(result.ok ? null : result.reason);
   }, []);
 
+  /** Saves the board; true when it was saved. */
   const commit = useCallback(
-    (nextTiers: TierDefinition[], nextBoard: BoardContainers) => {
-      report(onSave(nextTiers, placementsFromBoard(nextBoard, nextTiers, placements, visibleKeys)));
+    (nextTiers: TierDefinition[], nextBoard: BoardContainers): boolean => {
+      const result = onSave(nextTiers, placementsFromBoard(nextBoard, nextTiers, placements, visibleKeys));
+      report(result);
+      return result.ok;
     },
     [onSave, placements, visibleKeys, report]
   );
 
-  const handleBoardChange = useCallback((next: BoardContainers) => commit(tiers, next), [commit, tiers]);
+  const handleBoardChange = useCallback(
+    (next: BoardContainers) => {
+      if (commit(tiers, next)) trackRanking(board, next);
+    },
+    [board, commit, tiers, trackRanking]
+  );
 
   const selectedItem = selectedKey ? itemsByKey.get(selectedKey) : undefined;
 
@@ -378,7 +395,9 @@ export function TierListEditor(props: TierListEditorProps) {
         cancelLabel={t.cancel}
         onCancel={() => setDialog(null)}
         onConfirm={() => {
-          report(onReset());
+          const reset = onReset();
+          report(reset);
+          if (reset.ok) trackEvent('tier_list_reset', tag);
           setSelectedKey(null);
           setDialog(null);
         }}
@@ -407,7 +426,9 @@ export function TierListEditor(props: TierListEditorProps) {
         target={importTarget}
         onClose={() => setDialog(null)}
         onImport={(doc) => {
-          report(onImport(doc));
+          const imported = onImport(doc);
+          report(imported);
+          if (imported.ok) trackEvent('tier_list_import', { into: mode, via: 'manual' });
           setSelectedKey(null);
           setDialog(null);
         }}

@@ -21,6 +21,8 @@ function editor(onDelete?: () => void) {
   render(
     <TierListEditor
       mode="custom"
+      tag={{ list: 'custom', kind: 'custom' }}
+      listId="test-list"
       preferenceKey="custom"
       title="Mine"
       items={[{ key: 'a', name: 'Alpha', image: null }]}

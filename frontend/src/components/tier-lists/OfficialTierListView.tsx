@@ -173,6 +173,9 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
       </Alert>
     )}
     <TierListEditor
+      key={slug}
+      tag={{ list: slug, kind: template.kind }}
+      listId={slug}
       mode="official"
       preferenceKey={template.kind}
       title={template.title}

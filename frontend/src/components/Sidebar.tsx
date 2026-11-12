@@ -238,6 +238,7 @@ const { isCollapsed, toggleSidebar } = useSidebarState();
           }}
           onLogout={logout}
           onOpenInsults={() => {
+            trackEvent('bard_insults_open');
             preloadBardInsults();
             setInsultsModalOpen(true);
             setMobileOpen(false);

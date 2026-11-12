@@ -24,6 +24,8 @@ import { documentItemsToItems } from '@/utils/tierLists/items';
 import { deleteCustomList, saveCustomList, type SaveResult } from '@/utils/tierLists/storage';
 import { TierListEditor } from './TierListEditor';
 import { TierListSkeleton } from './TierListSkeleton';
+import { CUSTOM_LIST_TAG } from './tierListTracking';
+import { trackEvent } from '@/utils/analytics';
 import { useDictionary } from "@/context/DictionaryContext";
 
 interface CustomTierListViewProps {
@@ -129,6 +131,9 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
   return (
     <>
       <TierListEditor
+        key={id}
+        tag={CUSTOM_LIST_TAG}
+        listId={id}
         mode="custom"
         preferenceKey="custom"
         title={list.title}
@@ -148,7 +153,10 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
         onImport={onImport}
         editHref={`/${locale}/tier-lists/new?edit=${id}`}
         onDelete={onDelete}
-        onReport={() => setReportModalOpen(true)}
+        onReport={() => {
+          trackEvent('tier_list_report_open');
+          setReportModalOpen(true);
+        }}
         locale={locale}
       />
       <ReportContentModal

@@ -29,6 +29,7 @@ import { Tooltip } from '@/components/common/Tooltip';
 import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
 import { PreferencesPromptModal } from '@/components/common/PreferencesPromptModal';
 import { usePreferences } from '@/hooks/usePreferences';
+import { trackEvent } from '@/utils/analytics';
 
 const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
 
@@ -102,16 +103,20 @@ export function TierListHub({ locale }: TierListHubProps) {
   const handleOpenImport = () => signIn.run(() => setImportOpen(true));
 
   const handleImport = (doc: TierListDocument) => {
+    const via = sharePayload ? 'link' : 'manual';
+    const finish = (result: SaveResult) => {
+      if (result.ok) trackEvent('tier_list_import', { into: 'hub', via });
+      else setSaveError(result);
+    };
     setImportOpen(false);
     setSharePayload(null);
     if (doc.template) {
-      const result = saveRanking(doc.template, { tiers: doc.tiers, placements: doc.placements });
-      if (!result.ok) setSaveError(result);
+      finish(saveRanking(doc.template, { tiers: doc.tiers, placements: doc.placements }));
       router.push(`/${locale}/tier-lists/${doc.template}`);
       return;
     }
     const id = createCustomListId();
-    const result = saveCustomList({
+    finish(saveCustomList({
       id,
       title: doc.title,
       description: doc.description ?? '',
@@ -122,8 +127,7 @@ export function TierListHub({ locale }: TierListHubProps) {
       ...(doc.backgroundImage ? { backgroundImage: doc.backgroundImage } : {}),
       ...(doc.is_nsfw ? { is_nsfw: true } : {}),
       ...(doc._manifest ? { _manifest: doc._manifest } : {}),
-    });
-    if (!result.ok) setSaveError(result);
+    }));
     router.push(`/${locale}/tier-lists/custom/${id}`);
   };
 

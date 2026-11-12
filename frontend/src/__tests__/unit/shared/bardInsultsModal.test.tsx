@@ -62,6 +62,28 @@ describe('BardInsultsModal', () => {
     }
   });
 
+  it('reports a copied insult with the side that was shown', async () => {
+    const sent: { name: string; data?: unknown }[] = [];
+    window.umami = { track: (name, data) => { sent.push({ name, data }); } };
+    const original = Object.getOwnPropertyDescriptor(globalThis.navigator, 'clipboard');
+    try {
+      Object.defineProperty(globalThis.navigator, 'clipboard', { configurable: true, value: { writeText: async () => {} } });
+      render(<BardInsultsModal isOpen onClose={() => {}} />, { wrapper: withNextApp().wrapper });
+      const dialog = screen.getByRole('dialog');
+      fireEvent.click(within(dialog).getByRole('button', { name: 'A fine battle, indeed' }));
+      await waitFor(() => assert.deepEqual(sent, [{ name: 'bard_insult_copy', data: { role: 'survivor' } }]));
+
+      fireEvent.click(within(dialog).getByRole('radio', { name: en.sidebar.insultsSideKiller }));
+      fireEvent.click(within(dialog).getByRole('button', { name: 'A fine battle, indeed' }));
+      await waitFor(() => assert.equal(sent.length, 2));
+      assert.deepEqual(sent[1], { name: 'bard_insult_copy', data: { role: 'killer' } });
+    } finally {
+      delete window.umami;
+      if (original) Object.defineProperty(globalThis.navigator, 'clipboard', original);
+      else delete (globalThis.navigator as unknown as Record<string, unknown>).clipboard;
+    }
+  });
+
   it('the header X calls onClose', () => {
     let closed = 0;
     render(<BardInsultsModal isOpen onClose={() => { closed += 1; }} />, { wrapper: withNextApp().wrapper });

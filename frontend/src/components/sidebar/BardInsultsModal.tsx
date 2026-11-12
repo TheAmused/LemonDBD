@@ -12,6 +12,7 @@ import { SegmentedControl } from '@/components/common/SegmentedControl';
 import { Table, TableHead, TableBody, TableRow, Th, Td } from '@/components/common/Table';
 import { useDictionary } from '@/context/DictionaryContext';
 import { copyTextWithFallback } from '@/utils/clipboard';
+import { trackEvent } from '@/utils/analytics';
 
 type Side = 'survivor' | 'killer';
 
@@ -31,6 +32,7 @@ export const BardInsultsModal: React.FC<BardInsultsModalProps> = ({ isOpen, onCl
   const copyInsult = async (text: string) => {
     try {
       if (!(await copyTextWithFallback(text))) return;
+      trackEvent('bard_insult_copy', { role: side });
       setCopiedBard(text);
       if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
       resetTimerRef.current = setTimeout(() => setCopiedBard(null), 1500);

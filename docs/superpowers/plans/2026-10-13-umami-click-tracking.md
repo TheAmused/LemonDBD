@@ -389,10 +389,11 @@ rendered, so a provider with no link simply has no clicks.
 | Event | Props | Where |
 |-------|-------|-------|
 | `bard_insults_open` | none | `Sidebar.tsx`, `onOpenInsults` handler (the only entry point, the button in `SidebarUserSection`) |
+| `bard_insult_copy` | `role`: `survivor` / `killer` | `BardInsultsModal.copyInsult`, only when the copy worked; `role` is the side whose list was shown |
 
-Counts clicks on the button, so the same visitor opening it twice counts twice (Umami's unique visitors
-view gives the number of people). Not tracked: the Survivor / Killer switch and copying an insult
-inside the modal.
+Both count clicks, so the same visitor doing it twice counts twice (Umami's unique visitors view gives the
+number of people). Compare `bard_insult_copy` with `bard_insults_open` to see how many openings end in a copy.
+Which insult was copied is not sent. Not tracked: the Survivor / Killer switch.
 
 ## Bug report modal [DONE]
 

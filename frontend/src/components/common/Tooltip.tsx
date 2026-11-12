@@ -48,12 +48,6 @@ export const TOOLTIP_CONFIG = {
       title: 'normal-case tracking-normal text-xs',
       arrowBorder: 'var(--border-color)',
     },
-    /** Character / killer names. */
-    character: {
-      content: 'border-accent-red/40',
-      title: 'tracking-wide',
-      arrowBorder: 'color-mix(in srgb, var(--accent-red) 40%, transparent)',
-    },
     /** State badges: trophies, ownership, admin, completion. */
     status: {
       content: 'border-accent-red/40',
@@ -65,12 +59,6 @@ export const TOOLTIP_CONFIG = {
       content: 'border-accent-red/60',
       title: 'normal-case tracking-normal text-accent-red',
       arrowBorder: 'color-mix(in srgb, var(--accent-red) 60%, transparent)',
-    },
-    /** Add-on / item rarity labels. */
-    rarity: {
-      content: 'border-accent-amber/50',
-      title: 'tracking-widest text-accent-amber',
-      arrowBorder: 'color-mix(in srgb, var(--accent-amber) 50%, transparent)',
     },
   },
 } as const;

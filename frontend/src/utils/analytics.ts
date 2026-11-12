@@ -85,6 +85,9 @@ export interface AnalyticsEvents {
   coffee_ad_start: undefined;
   /** How a rewarded ad ended: `rewarded` ran to the end, `dismissed` was closed early, `failed` is an ad network error. */
   coffee_ad_result: { result: 'rewarded' | 'dismissed' | 'failed' };
+  // Bard Insults modal (sidebar)
+  /** The "Bard insults" button in the sidebar was clicked (the only entry point). */
+  bard_insults_open: undefined;
   // Bug report modal
   bug_report_open: { source: 'sidebar' | 'profile'; access: 'member' | 'guest' | 'guest_blocked' };
   bug_report_start: { access: 'member' | 'guest' };

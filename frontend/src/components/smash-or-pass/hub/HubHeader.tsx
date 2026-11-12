@@ -15,6 +15,7 @@ import type { RosterItem } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { isLocalRosterSlug } from '@/utils/smashOrPass/rosterSlug';
 import { rosterCoverUrl } from '../roster-select/rosterDisplay';
+import { getCommunityCoverThumbUrl } from '@/utils/thumbUrl';
 import { Badge } from '@/components/common/Badge';
 import { MenuItem } from '@/components/common/MenuItem';
 import { MotionImg } from '@/components/common/MotionImg';
@@ -129,7 +130,7 @@ export function HubHeader({
           >
             <span className="relative flex h-6 w-6 items-center justify-center rounded-chip overflow-hidden border border-accent-red/60 shrink-0">
               <MotionImg
-                src={rosterCoverUrl(activeRoster)}
+                src={getCommunityCoverThumbUrl(rosterCoverUrl(activeRoster), 256) || rosterCoverUrl(activeRoster)}
                 alt=""
                 onError={(e) => {
                   (e.target as HTMLImageElement).src = `${getBackendBaseUrl()}/static/avatars/survivors/sable_ward.webp`;

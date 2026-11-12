@@ -12,6 +12,7 @@ import type { RosterItem } from '@/types/smashOrPass';
 import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { SmashSounds } from '../SmashSoundEffects';
 import { rosterCoverUrl, rosterDisplayName } from './rosterDisplay';
+import { getCommunityCoverThumbUrl } from '@/utils/thumbUrl';
 import { coverPlaceholderPath } from '@/utils/smashOrPass/placeholderArt';
 import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
 import { Badge } from '@/components/common/Badge';
@@ -58,7 +59,8 @@ export function RosterCarouselCard({
   const isCenter = absOffset < 0.5;
   const isRosterEnabled = r.is_active !== false;
   const count = r.entity_count ?? r.character_count ?? 0;
-  const coverUrl = rosterCoverUrl(r);
+  const rawCoverUrl = rosterCoverUrl(r);
+  const coverUrl = getCommunityCoverThumbUrl(rawCoverUrl, 480) || rawCoverUrl;
 
   const translateX = visualOffset * spreadUnitForViewport();
   const rotateY = Math.max(-55, Math.min(55, -visualOffset * 30));

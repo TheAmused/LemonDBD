@@ -32,9 +32,9 @@ describe('Streaks: Panel Definitions & Role Configurations', () => {
       assert.equal(panel.creator, 'LemonDBD');
       assert.equal(panel.comingSoon, undefined);
     }
-    assert.equal(killer?.image, '/images/streaks/id-please/k0.webp');
-    assert.equal(survivor?.image, '/images/streaks/id-please/s0.webp');
-    assert.equal(combined?.image, '/images/streaks/id-please/s0.webp');
+    assert.equal(killer?.image, '/images/_thumbs/streaks/id-please/k0.webp');
+    assert.equal(survivor?.image, '/images/_thumbs/streaks/id-please/s0.webp');
+    assert.equal(combined?.image, '/images/_thumbs/streaks/id-please/s0.webp');
   });
 
   it('survivor streak panels provide gauntlet streak', () => {

@@ -3,11 +3,12 @@
 import React from 'react';
 import { Check } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
-import { getAssetUrl } from '@/components/character-detail/types';
+import { getAssetThumbUrl, getAssetUrl } from '@/components/character-detail/types';
 import { ownsPerk } from '@/utils/characterUtils';
 import { useDictionary } from "@/context/DictionaryContext";
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
+import { fallbackThroughSources } from '@/utils/thumbUrl';
 import { LockIcon } from '@/components/icons/DbdIcons';
 
 export interface PerksTogglePopupPerk {
@@ -115,9 +116,10 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
             >
               <div className="relative h-20 w-20 sm:h-24 sm:w-24">
                 <Img
-                  src={getAssetUrl(backendBase, perk.icon_local_path, perk.icon_url)}
+                  src={getAssetThumbUrl(backendBase, perk.icon_local_path, perk.icon_url)}
                   alt={perk.name}
                   className={`h-full w-full object-contain ${isUnlocked ? '' : 'grayscale opacity-50'}`}
+                  onError={fallbackThroughSources(getAssetUrl(backendBase, perk.icon_local_path, perk.icon_url))}
                 />
                 <div
                   className={`absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border backdrop-blur-md ${

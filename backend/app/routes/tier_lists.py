@@ -1,5 +1,5 @@
 # backend/app/routes/tier_lists.py
-from flask import Blueprint, g, jsonify, request
+from flask import Blueprint, current_app, g, jsonify, request
 from pydantic import ValidationError
 
 from app.core.http_cache import cache_catalog
@@ -7,6 +7,11 @@ from app.core.security import admin_required, get_current_user
 from app.schemas.tier_list import TierListAdminCreate, TierListAdminUpdate
 from app.services import tier_list_service
 from app.services.admin_control_service import log_admin_action
+from app.services.community_media import (
+    ingest_cover_image,
+    ingest_dict_media_urls,
+    warm_community_thumbs_async,
+)
 from app.utils.lang import extract_lang
 
 tier_lists_bp = Blueprint("tier_lists", __name__, url_prefix="/api/v1/tier-lists")
@@ -64,18 +69,31 @@ def create_tier_list():
     if _cover_rejected(body, payload.cover_image_url):
         return jsonify({"error": "Invalid cover image URL", "status": 400}), 400
 
+    cover_image_url, cover_invalid, cover_ingested = ingest_cover_image(payload.cover_image_url, max_side=800)
+    if cover_invalid:
+        return jsonify({"error": "Invalid cover image URL", "status": 400}), 400
+
+    tiers = [t.model_dump(exclude_none=True) for t in payload.tiers]
+    tiers_ingested = ingest_dict_media_urls(tiers, "backgroundImage", max_side=800)
+    custom_items = [i.model_dump(exclude_none=True) for i in payload.items]
+    items_ingested = ingest_dict_media_urls(custom_items, "image_url", max_side=512)
+    ingested = cover_ingested or tiers_ingested or items_ingested
+
     try:
         row = tier_list_service.create_tier_list(
             title=payload.title,
             description=payload.description,
-            cover_image_url=payload.cover_image_url,
-            tiers=[t.model_dump(exclude_none=True) for t in payload.tiers],
-            custom_items=[i.model_dump(exclude_none=True) for i in payload.items],
+            cover_image_url=cover_image_url,
+            tiers=tiers,
+            custom_items=custom_items,
             is_nsfw=payload.is_nsfw,
             is_active=payload.is_active,
         )
     except ValueError as err:
         return jsonify({"error": str(err)}), 400
+
+    if ingested:
+        warm_community_thumbs_async(current_app.static_folder)
 
     log_admin_action(
         g.current_user.id,
@@ -125,13 +143,31 @@ def update_tier_list(slug: str):
         return jsonify({"error": "Invalid cover image URL", "status": 400}), 400
 
     fields_set = payload.model_fields_set
+    kwargs = _update_kwargs(payload)
+    ingested = False
+    if "cover_image_url" in fields_set:
+        normalized_cover, cover_invalid, cover_ingested = ingest_cover_image(
+            kwargs.get("cover_image_url"), max_side=800  # type: ignore[arg-type]
+        )
+        if cover_invalid:
+            return jsonify({"error": "Invalid cover image URL", "status": 400}), 400
+        kwargs["cover_image_url"] = normalized_cover
+        ingested = cover_ingested
+    if "tiers" in kwargs and isinstance(kwargs["tiers"], list):
+        ingested = ingest_dict_media_urls(kwargs["tiers"], "backgroundImage", max_side=800) or ingested
+    if "custom_items" in kwargs and isinstance(kwargs["custom_items"], list):
+        ingested = ingest_dict_media_urls(kwargs["custom_items"], "image_url", max_side=512) or ingested
+
     try:
-        row = tier_list_service.update_tier_list(slug, **_update_kwargs(payload))
+        row = tier_list_service.update_tier_list(slug, **kwargs)
     except ValueError as err:
         return jsonify({"error": str(err)}), 400
 
     if row is None:
         return jsonify({"error": "Tier list not found", "status": 404}), 404
+
+    if ingested:
+        warm_community_thumbs_async(current_app.static_folder)
 
     log_admin_action(
         g.current_user.id,

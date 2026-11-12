@@ -7,6 +7,7 @@ import { type ChallengeIntroTile } from '../ChallengeIntroModalShell';
 import { ChallengeModeModal } from '../ChallengeModeModal';
 import { PageStreakRulesModal } from './PageStreakRulesModal';
 import { useDictionary } from "@/context/DictionaryContext";
+import { publicImageThumb } from '@/utils/publicThumb';
 
 export interface PageStreakModeModalProps {
   isOpen: boolean;
@@ -20,7 +21,7 @@ export const PageStreakModeModal: React.FC<PageStreakModeModalProps> = ({ isOpen
     {
       value: 'normal',
       label: dict.streaks.normal,
-      image: '/images/streaks/page-streak.webp',
+      image: publicImageThumb('/images/streaks/page-streak.webp'),
     },
   ];
 

@@ -5,6 +5,7 @@ import React from 'react';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { PerkHexIcon, PersonIcon } from '@/components/icons/DbdIcons';
 import { avatarUrlForCharacter, perkIconUrl, staticUrl } from '@/utils/staticUrl';
+import { avatarThumbFromPath, getIconThumbUrl } from '@/utils/thumbUrl';
 import { useCharacterDisplayName, usePerkLabel } from '@/context/DisplayNamesContext';
 import { useDictionary } from '@/context/DictionaryContext';
 import { cn } from '@/utils/cn';
@@ -34,7 +35,12 @@ export const IdPleaseCharacterTile: React.FC<{ character: IdPleaseCharacter; sid
       <div className={cn(artFrame, 'aspect-auto min-h-0 flex-1 basis-0')}>
         <PerkIcon
           // The stored path first: a name like "The Onryō" is saved as the_onryo, which the name alone would not find.
-          src={staticUrl(character.avatar_local_path) || avatarUrlForCharacter(character.name, avatarFolder(side))}
+          src={
+            avatarThumbFromPath(
+              staticUrl(character.avatar_local_path) || avatarUrlForCharacter(character.name, avatarFolder(side)),
+              128
+            ) || undefined
+          }
           alt=""
           imageClassName="h-full w-full object-cover"
           fallbackIcon={<PersonIcon className="h-8 w-8 text-text-muted" aria-hidden="true" />}
@@ -54,7 +60,7 @@ export const IdPleasePerkTile: React.FC<{ perk: IdPleasePerk; coordinate: PerkCo
       <div className={artFrame}>
         <PerkIcon
           perk={perk}
-          src={perkIconUrl(perk)}
+          src={getIconThumbUrl(perkIconUrl(perk), 128) || undefined}
           alt=""
           imageClassName="h-full w-full object-cover"
           fallbackIcon={<PerkHexIcon className="icon-xl text-text-muted" aria-hidden="true" />}

@@ -6,10 +6,12 @@
  * - CandidateTiles: Squished grid of candidates (avatar + name caption) matching the tier list items pattern.
  */
 import { Tabs } from '@/components/common/Tabs';
-import { useState } from 'react';
-import { ChevronDown, Trash2, Image as ImageIcon } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { ChevronDown, Trash2, Upload, Image as ImageIcon } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { sanitizeImageUrl } from '@/utils/smashOrPass/codec';
+import { IMAGE_SIZE_PRESETS, MAX_DATA_IMAGE_CHARS, resizeImageToDataUrl } from '@/utils/imageResize';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 import { SMASH_ROSTER_LIMITS, TRANSLATABLE_FIELDS, TRANSLATABLE_LOCALES,GENDER_QUICK_PICKS,ROLE_QUICK_PICKS } from '@/utils/smashOrPass/constants';
 import type { RosterCustomLabels } from '@/types/smashOrPass';
 import { LABEL } from './styles';
@@ -57,8 +59,29 @@ export function CandidateFormInputs({
     }: CandidateFormInputsProps) {
   const dict = useDictionary();
   const c = dict.smashOrPass.creator || {};
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const [activeLocale, setActiveLocale] = useState<string>(TRANSLATABLE_LOCALES[0]);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  useOnValueChange(entity.key, () => setUploadError(null));
+
+  const handlePortraitUpload = async (file: File | undefined) => {
+    if (!file) return;
+    setUploading(true);
+    setUploadError(null);
+    try {
+      const dataUrl = await resizeImageToDataUrl(file, IMAGE_SIZE_PRESETS.portrait, MAX_DATA_IMAGE_CHARS);
+      if (dataUrl) {
+        onChange({ media_url: dataUrl });
+      } else {
+        setUploadError(formatMessage(dict.tierLists.creator.uploadSkipped, { count: 1 }));
+      }
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const trimmedMedia = entity.media_url.trim();
   const safeMedia = trimmedMedia ? sanitizeImageUrl(trimmedMedia) : null;
@@ -145,18 +168,53 @@ export function CandidateFormInputs({
               />
             </label>
 
-            <label className="block">
-              <span className="mb-1 block type-label-xs text-text-secondary">
+            <div className="block">
+              <label htmlFor={`entity-media-${entity.key}`} className="mb-1 block type-label-xs text-text-secondary">
                 {c.entityMediaLabel}
-              </span>
-              <Input
-                fieldSize="md" invalid={mediaInvalid}
-                value={entity.media_url}
-                onChange={(e) => onChange({ media_url: e.target.value })}
-                placeholder={c.coverImagePlaceholder}
-                inputMode="url"
-              />
-            </label>
+              </label>
+              <div className="flex items-center gap-1.5">
+                <Input
+                  id={`entity-media-${entity.key}`}
+                  fieldSize="md" invalid={mediaInvalid || Boolean(uploadError)}
+                  value={entity.media_url}
+                  onChange={(e) => {
+                    setUploadError(null);
+                    onChange({ media_url: e.target.value });
+                  }}
+                  placeholder={c.coverImagePlaceholder}
+                  inputMode="url"
+                />
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="md"
+                  loading={uploading}
+                  disabled={uploading}
+                  onClick={() => fileInputRef.current?.click()}
+                  className="shrink-0"
+                >
+                  <Upload className="icon-sm" aria-hidden="true" />
+                  <span>{dict.smashOrPass.cropModal.uploadFile}</span>
+                </Button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,image/gif"
+                  className="sr-only"
+                  tabIndex={-1}
+                  aria-hidden="true"
+                  onChange={(e) => {
+                    void handlePortraitUpload(e.target.files?.[0]);
+                    e.target.value = '';
+                  }}
+                />
+              </div>
+              {uploadError && (
+                <p role="alert" className="mt-1 type-caption font-medium text-accent-red">
+                  {uploadError}
+                </p>
+              )}
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {/* Dynamic Role Input + Quick Chips */}

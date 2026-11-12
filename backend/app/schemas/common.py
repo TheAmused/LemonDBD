@@ -11,7 +11,10 @@ from __future__ import annotations
 
 import re
 
-_DATA_IMAGE_PATTERN = re.compile(r"^data:image/(png|jpe?g|webp|gif|avif);base64,[A-Za-z0-9+/]+={0,2}$")
+_DATA_IMAGE_PATTERN = re.compile(
+    r"^data:image/(png|jpe?g|webp|gif|avif);base64,[A-Za-z0-9+/]+={0,2}$",
+    re.IGNORECASE,
+)
 _MAX_DATA_IMAGE_CHARS = 131_072
 
 
@@ -24,7 +27,7 @@ def clean_image_url(value: str | None) -> str | None:
     value = value.strip()
     if not value:
         return None
-    if value.startswith("data:"):
+    if value.lower().startswith("data:"):
         return value if len(value) <= _MAX_DATA_IMAGE_CHARS and _DATA_IMAGE_PATTERN.match(value) else None
     if any(c in value for c in ('"', "'", "\\", "<", ">")) or any(ord(c) <= 32 or ord(c) == 127 for c in value):
         return None

@@ -34,5 +34,5 @@ test('getMapThumbSrc resolves the callout thumbnail path without relying on layo
   };
 
   const src = getMapThumbSrc(map, 'http://localhost:5000');
-  assert.equal(src, 'http://localhost:5000/api/v1/maps/thumb/callouts/lemondbd/autohaven_wreckers/azarovs_resting_place.webp');
+  assert.equal(src, 'http://localhost:5000/api/v1/thumbs/maps/320/callouts/lemondbd/autohaven_wreckers/azarovs_resting_place.webp');
 });

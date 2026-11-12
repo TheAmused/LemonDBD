@@ -10,6 +10,7 @@ import { PerkIcon } from '@/components/ui/PerkIcon';
 import type { ReelDirection} from './useSlotReels';
 import { useSlotReels, REEL_SPIN_MS } from './useSlotReels';
 import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
+import { getIconThumbUrl } from '@/utils/thumbUrl';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { Button } from '@/components/common/Button';
 import { Spinner } from '@/components/common/Spinner';
@@ -25,7 +26,7 @@ const STRIP_LENGTH = 16;
 
 const PerkImg: React.FC<{ perk: Perk | null; className: string }> = ({ perk, className }) => {
   const displayName = usePerkDisplayName()(perk?.name || '');
-  const src = perk ? perkIconFor(perk) : undefined;
+  const src = perk ? getIconThumbUrl(perkIconFor(perk), 128) || undefined : undefined;
   return (
     <PerkIcon
       perk={perk}

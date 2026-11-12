@@ -7,6 +7,7 @@ import { SearchInput } from '@/components/common/Field';
 import Image from 'next/image';
 import type { RoleCategory, CharacterItem } from '@/types/perks';
 import { getBackendBaseUrl, getCharacterAvatarUrl, normalizeSearchText } from '@/utils/perkUtils';
+import { avatarThumbFromPath } from '@/utils/thumbUrl';
 import { CATALOG_TTL_MS, catalogKey, fetchCached, fetchJson, unwrapList, type ListPayload } from '@/services/dataCache';
 import { Modal } from '@/components/common/Modal';
 import { Spinner } from '@/components/common/Spinner';
@@ -36,7 +37,7 @@ const CharacterGridItem: React.FC<{
   const [imgError, setImgError] = useState(false);
   const [useFallback, setUseFallback] = useState(false);
 
-  const primaryAvatarSrc = char.avatar_local_path
+  const rawAvatarSrc = char.avatar_local_path
     ? `${getBackendBaseUrl()}/static/${char.avatar_local_path.replace(/^\/?(static\/)?/, '')}`
     : getCharacterAvatarUrl(
         {
@@ -46,6 +47,7 @@ const CharacterGridItem: React.FC<{
         },
         role
       );
+  const primaryAvatarSrc = avatarThumbFromPath(rawAvatarSrc, 128) || rawAvatarSrc;
 
   const activeSrc = useFallback
     ? char.portrait_url || null

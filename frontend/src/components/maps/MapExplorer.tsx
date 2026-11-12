@@ -14,13 +14,13 @@ import {
   filterAndSortRealmGroups,
   getLayoutTypeLabel,
   getLayoutTypeOptions,
-  getMapImageSrc,
   hasActiveMapFilters,
   mapOpenProps,
   type MapAttributeFilters,
   type MapSizeBucket,
   type MapSortOrder,
 } from '@/utils/mapUtils';
+import { getRealmThumbSrc } from '@/utils/thumbUrl';
 import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
 import { MapCard } from './MapCard';
 import { EmptyState } from '@/components/common/EmptyState';
@@ -435,7 +435,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
             const realmImage = realmImages[realm];
             const realmIdentifier = realmImage?.id ? `id-${realmImage.id}` : realm.toLowerCase().replace(/[^a-z0-9_-]/g, '-');
             const bannerSrc = realmImage
-              ? getMapImageSrc({ callout_image_local_path: realmImage.image_local_path, callout_image_url: realmImage.image_url }, backendBase)
+              ? getRealmThumbSrc(realmImage.image_local_path || realmImage.image_url, 320, backendBase)
               : '';
             const expanded = isRealmExpanded(realm);
             const panelGroups = rowPanels.get(index);

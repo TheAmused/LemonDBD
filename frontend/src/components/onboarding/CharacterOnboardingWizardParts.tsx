@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { ownsPerk, isSurvivor } from '@/utils/characterUtils';
+import { ownsPerk, isSurvivor, ownershipKey } from '@/utils/characterUtils';
 import { getAvatarThumbUrl } from '@/components/character-detail/types';
 
 export const AuthModal = dynamic(() => import('@/components/AuthModal').then((m) => m.AuthModal), { ssr: false });
@@ -76,6 +76,14 @@ export function isDefaultUnlockedPerk(
   }
   const char = characters.find((c) => ownsPerk(perk, c.id, c.category));
   return Boolean(char?.is_free);
+}
+
+/** Whether the visitor has the character: what they ticked in the wizard, else what is saved. Free characters are the callers' business (always owned). */
+export function isOwnedInDraft(
+  character: Pick<OnboardingCharacter, 'id' | 'category' | 'is_owned'>,
+  ownershipDraft: Readonly<Record<string, boolean>>
+): boolean {
+  return ownershipDraft[ownershipKey(character.id, character.category)] ?? character.is_owned;
 }
 
 export interface ChapterGroup {

@@ -39,6 +39,8 @@ import dynamic from 'next/dynamic';
 import { useDictionary } from '@/context/DictionaryContext';
 import { Toast } from '@/components/common/Toast';
 import { useIsClient } from '@/hooks/useIsClient';
+import { trackEvent } from '@/utils/analytics';
+import { buildListCreateProps } from '../tierListTracking';
 
 const ImageUploadDropzone = dynamic(
   () => import('@/components/common/ImageUploadDropzone').then((m) => m.ImageUploadDropzone),
@@ -343,6 +345,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
     } catch {
       // ignore
     }
+    trackEvent('tier_list_create', buildListCreateProps({ ...draft, nsfw: draft.is_nsfw, coverImage: Boolean(safeBackground) }));
     if (draft.is_nsfw) acknowledgeNsfwContent('tier_list', id);
     router.push(`/${locale}/tier-lists/custom/${id}`);
   };
@@ -511,7 +514,10 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       <div className="flex flex-wrap items-center justify-center gap-3 2xl:gap-4">
         <Button
           variant="secondary"
-          onClick={() => setPreviewOpen(true)}
+          onClick={() => {
+            trackEvent('tier_list_preview');
+            setPreviewOpen(true);
+          }}
           className="min-h-11 2xl:min-h-hit-xl px-6 2xl:px-8 uppercase tracking-wider"
         >
           {c.previewHeading}

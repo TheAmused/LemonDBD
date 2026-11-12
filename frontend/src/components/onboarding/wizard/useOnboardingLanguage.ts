@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { loadOnboardingStep, saveOnboardingStep } from '@/utils/onboardingStorage';
+import { trackEvent } from '@/utils/analytics';
 import { type OnboardingView, resolveOnboardingView } from '../CharacterOnboardingWizardParts';
 
 /** The wizard's step (intro / language / roster) and the language picker behind the middle step.
@@ -35,6 +36,7 @@ export function useOnboardingLanguage(locale: string) {
   const handleLanguageSelect = (language: string) => {
     setSelectedLanguage(language);
     if (language !== locale) {
+      trackEvent('language_change', { from: locale, to: language, via: 'onboarding' });
       saveOnboardingStep(userId, 'language');
       router.push(`/${language}/welcome`);
     }

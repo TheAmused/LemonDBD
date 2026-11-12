@@ -1,14 +1,16 @@
 'use client';
 // frontend/src/components/onboarding/wizard/useOnboardingCompletion.ts
 import { useState } from 'react';
-import { ownershipKey } from '@/utils/characterUtils';
 import { useAuth } from '@/context/AuthContext';
 import { catalogKey, invalidate } from '@/services/dataCache';
 import { clearOnboardingDraft } from '@/utils/onboardingStorage';
+import { trackEvent } from '@/utils/analytics';
+import { buildOnboardingCompleteProps } from '../onboardingTracking';
 import {
   type OnboardingCharacter,
   type OnboardingPerk,
   isDefaultUnlockedPerk,
+  isOwnedInDraft,
 } from '../CharacterOnboardingWizardParts';
 
 interface OnboardingCompletionInput {
@@ -36,7 +38,7 @@ export function useOnboardingCompletion({
       const characterUpdates = characters.map((c) => ({
         character_id: c.id,
         role: c.category,
-        is_owned: c.is_free ? true : (ownershipDraft[ownershipKey(c.id, c.category)] ?? c.is_owned),
+        is_owned: c.is_free ? true : isOwnedInDraft(c, ownershipDraft),
       }));
       const perkUpdates = allPerks.map((p) => ({
         perk_id: p.perk_id,
@@ -49,6 +51,7 @@ export function useOnboardingCompletion({
       invalidate(catalogKey('perks'));
       invalidate(catalogKey('characters'));
       await markOnboardingComplete();
+      trackEvent('onboarding_complete', buildOnboardingCompleteProps(characters, ownershipDraft));
       clearOnboardingDraft(user?.id);
       setSaving(false);
       onFinished();

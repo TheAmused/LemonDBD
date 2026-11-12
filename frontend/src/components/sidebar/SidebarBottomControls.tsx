@@ -16,6 +16,7 @@ import { useIsClient } from '@/hooks/useIsClient';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
 import { MenuItem } from '@/components/common/MenuItem';
+import { type ThemeName, trackEvent } from '@/utils/analytics';
 // Keep in sync with the backend's own locale list -- SUPPORTED_LOCALES in
 // backend/app/utils/lang.py. No shared
 // source of truth across the Python/TypeScript boundary; a locale added to
@@ -29,7 +30,7 @@ export const LANGUAGES: { code: string; label: string }[] = [
   { code: 'ja', label: '日本語' },
 ];
 
-type ThemeOptionId = 'light' | 'light-lemon' | 'dark' | 'system';
+type ThemeOptionId = ThemeName;
 
 export interface SidebarBottomControlsProps {
   currentLocale: string;
@@ -173,7 +174,10 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
                       e.preventDefault();
                       return;
                     }
-                    if (lang.code !== currentLocale) onLanguageSelect?.(lang.code);
+                    if (lang.code !== currentLocale) {
+                      trackEvent('language_change', { from: currentLocale, to: lang.code, via: 'sidebar' });
+                      onLanguageSelect?.(lang.code);
+                    }
                     setSwitchingFrom(pathname);
                     setIsLangMenuOpen(false);
                   }}
@@ -220,6 +224,7 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
                 <MenuItem selected={isMounted && theme === opt.id} flush
                   key={opt.id}
                   onClick={() => {
+                    if (opt.id !== theme) trackEvent('theme_change', { theme: opt.id });
                     setTheme(opt.id);
                     setIsThemeMenuOpen(false);
                   }}

@@ -40,8 +40,8 @@ graph TD
 - Modify: `frontend/src/locales/es/smashOrPass.ts`
 - Modify: `frontend/src/locales/ja/smashOrPass.ts`
 
-- [ ] Add `editingLanguageLabel`, `baseLanguageLabel`, and `sharedFieldNotice` to `dict.smashOrPass.creator` in all 5 locales.
-- [ ] Verify dictionary key consistency with `npx tsc --noEmit`.
+- [x] Add `editingLanguageLabel`, `baseLanguageLabel`, and `sharedFieldNotice` to `dict.smashOrPass.creator` in all 5 locales.
+- [x] Verify dictionary key consistency with `npx tsc --noEmit`.
 
 ---
 
@@ -50,14 +50,14 @@ graph TD
 **Files:**
 - Modify: `frontend/src/components/smash-or-pass/creator/EntityEditor.tsx`
 
-- [ ] In `CandidateFormInputs`, add `activeLocale` state defaulting to `'en'`.
-- [ ] In the candidate editor header, render `CustomDropdown` with language options (`en`, `pl`, `de`, `es`, `ja`).
-- [ ] Bind translatable fields (`name`, `archetype`, `tagline`, `quote`, `bio`, `meme`, `turn_on`, `dealbreaker`, `dating_vibe`, `red_flags`, `green_flags`) dynamically:
+- [x] In `CandidateFormInputs`, add `activeLocale` state defaulting to `'en'`.
+- [x] In the candidate editor header, render `CustomDropdown` with language options (`en`, `pl`, `de`, `es`, `ja`).
+- [x] Bind translatable fields (`name`, `archetype`, `tagline`, `quote`, `bio`, `meme`, `turn_on`, `dealbreaker`, `dating_vibe`, `red_flags`, `green_flags`) dynamically:
   - If `activeLocale === 'en'`: edit `entity.*`.
   - If `activeLocale !== 'en'`: edit `translations[activeLocale]?.*`, with `entity.*` as placeholder.
-- [ ] Remove the bottom duplicate `showTranslations` amber block with its `Tabs` and 10 duplicate fields.
-- [ ] Keep file size under 600 lines (currently 484 lines, will shrink to ~390 lines).
-- [ ] Verify with `npx tsc --noEmit` and `npm run lint`.
+- [x] Remove the bottom duplicate `showTranslations` amber block with its `Tabs` and 10 duplicate fields.
+- [x] Keep file size under 600 lines (currently 484 lines, will shrink to ~390 lines).
+- [x] Verify with `npx tsc --noEmit` and `npm run lint`.
 
 ---
 
@@ -67,12 +67,12 @@ graph TD
 - Modify: `frontend/src/components/smash-or-pass/creator/RosterBasicsSection.tsx`
 - Modify: `frontend/src/components/smash-or-pass/creator/SmashRosterCreator.tsx`
 
-- [ ] In `RosterBasicsSection`, add `activeLocale` state defaulting to `'en'` and render `CustomDropdown` above Name/Description.
-- [ ] Dynamically bind `name` and `description` to `draft.*` (for `en`) or `rosterTranslations[activeLocale].*` (for other locales), using base text as placeholder.
-- [ ] In `SmashRosterCreator.tsx`, pass `rosterTranslations` and `setRosterTranslations` to `RosterBasicsSection`.
-- [ ] Remove the duplicate `<RosterTranslationsPanel>` block from `SmashRosterCreator.tsx`.
-- [ ] Verify file lengths under 600 lines.
-- [ ] Verify with `npx tsc --noEmit` and `npm run lint`.
+- [x] In `RosterBasicsSection`, add `activeLocale` state defaulting to `'en'` and render `CustomDropdown` above Name/Description.
+- [x] Dynamically bind `name` and `description` to `draft.*` (for `en`) or `rosterTranslations[activeLocale].*` (for other locales), using base text as placeholder.
+- [x] In `SmashRosterCreator.tsx`, pass `rosterTranslations` and `setRosterTranslations` to `RosterBasicsSection`.
+- [x] Remove the duplicate `<RosterTranslationsPanel>` block from `SmashRosterCreator.tsx`.
+- [x] Verify file lengths under 600 lines.
+- [x] Verify with `npx tsc --noEmit` and `npm run lint`.
 
 ---
 
@@ -81,9 +81,9 @@ graph TD
 **Files:**
 - Create/Modify: `frontend/src/__tests__/unit/smash/rosterLanguageDropdowns.test.tsx`
 
-- [ ] Add unit test verifying that selecting a non-English locale in `EntityEditor` edits translations rather than base fields, and falls back to base placeholders.
-- [ ] Add unit test verifying that `RosterBasicsSection` edits `rosterTranslations` when non-English locale is active.
-- [ ] Run `cd frontend && npm run test:guards`
-- [ ] Run `cd frontend && npm run test:unit`
-- [ ] Run `cd frontend && npm run lint`
-- [ ] Copy changes to `dbd_backend` / `dbd_frontend` docker containers and verify containers are healthy.
+- [x] Add unit test verifying that selecting a non-English locale in `EntityEditor` edits translations rather than base fields, and falls back to base placeholders.
+- [x] Add unit test verifying that `RosterBasicsSection` edits `rosterTranslations` when non-English locale is active.
+- [x] Run `cd frontend && npm run test:guards`
+- [x] Run `cd frontend && npm run test:unit`
+- [x] Run `cd frontend && npm run lint`
+- [x] Copy changes to `dbd_backend` / `dbd_frontend` docker containers and verify containers are healthy.

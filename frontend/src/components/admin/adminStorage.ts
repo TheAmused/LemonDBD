@@ -25,8 +25,6 @@ export const ADMIN_STORAGE = {
   availabilityDisabledOnly: 'lemondbd_admin_availability_disabled_only',
   availabilityModesOpen: 'lemondbd_admin_availability_modes_open',
   availabilityRosterOpen: 'lemondbd_admin_availability_roster_open',
-  moderationHistoryOpen: 'lemondbd_moderation_history_open',
-  moderationPreviewOpen: 'lemondbd_moderation_preview_open',
   moderationPreviewTab: 'lemondbd_moderation_preview_tab',
 } as const;
 

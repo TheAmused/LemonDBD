@@ -11,6 +11,7 @@ import { tip } from '@/components/common/Tooltip';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { SandboxedContentPreview } from '@/components/admin/SandboxedContentPreview';
 import { SanctionForm } from '@/components/admin/SanctionForm';
+import { SanctionPreviewModal } from '@/components/admin/SanctionPreviewPanel';
 import { contentReasonLabel, contentStatusLabel, contentStatusTone, contentTypeLabel } from '@/components/admin/reportLabels';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { cn } from '@/utils/cn';
@@ -44,6 +45,7 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
   const [authorKind, setAuthorKind] = useState<SanctionKind | 'none'>('none');
   const [authorDraft, setAuthorDraft] = useState<SanctionDraft>(EMPTY_SANCTION_DRAFT);
   const [confirmBan, setConfirmBan] = useState<boolean>(false);
+  const [previewOpen, setPreviewOpen] = useState<boolean>(false);
 
   const moderation = dict.moderation.admin;
   const authorConsequence =
@@ -61,7 +63,7 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
   const canActOnAuthor = detail.attributed && standing !== 'banned' && !detail.author_is_admin;
   const authorDecision: AuthorDecision | null =
     canActOnAuthor && authorKind !== 'none' ? authorDecisionFromDraft({ ...authorDraft, kind: authorKind }) : null;
-  const authorValid = authorKind === 'none' || !canActOnAuthor || isSanctionDraftValid({ ...authorDraft, kind: authorKind });
+  const authorValid = authorKind === 'none' || !canActOnAuthor || isSanctionDraftValid({ ...authorDraft, kind: authorKind }, { reasonRequired: false });
   const reasons = Object.entries(detail.reason_breakdown).sort((a, b) => b[1] - a[1]);
   const reporterNotes = detail.reports.filter((r) => r.notes);
 
@@ -211,14 +213,13 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
                   kinds={[authorKind]}
                   showReason={false}
                   showInternal={false}
-                  previewTarget={{ reportId: detail.id }}
                   onChange={(patch) => setAuthorDraft((d) => ({ ...d, ...patch }))}
                 />
               )}
             </Surface>
           )}
           <div className="flex flex-wrap gap-2">
-            <Button variant="danger" size="sm" disabled={resolving || !authorValid} onClick={() => setConfirmBan(true)}>
+            <Button variant="primary" size="sm" disabled={resolving || !authorValid} onClick={() => setConfirmBan(true)}>
               {authorDecision ? <UserX className="icon-md" /> : <Ban className="icon-md" />}
               {dict.admin.contentReportBanAction}
             </Button>
@@ -226,6 +227,11 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
               <CheckCircle2 className="icon-md" />
               {dict.admin.contentReportDismissAction}
             </Button>
+            {authorDecision && (
+              <Button size="sm" onClick={() => setPreviewOpen(true)}>
+                {moderation.previewTitle}
+              </Button>
+            )}
           </div>
         </div>
       ) : (
@@ -235,6 +241,15 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
             <p className="type-body text-text-primary break-words whitespace-pre-wrap">{detail.admin_notes}</p>
           </div>
         )
+      )}
+
+      {authorKind !== 'none' && (
+        <SanctionPreviewModal
+          open={previewOpen}
+          onClose={() => setPreviewOpen(false)}
+          draft={{ ...authorDraft, kind: authorKind }}
+          target={{ reportId: detail.id }}
+        />
       )}
 
       <ConfirmModal

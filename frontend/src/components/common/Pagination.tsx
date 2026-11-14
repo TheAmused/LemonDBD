@@ -19,15 +19,19 @@ interface PaginationProps {
   onPageChange: (newPage: number) => void;
   /** Omit for a fixed page size: the per-page picker is not shown. */
   onLimitChange?: (newLimit: number) => void;
-  /** page: a footer below the page content (default). embedded: the last row of a panel, ruled off from the list above. compact: a footer with only < [page] / total >, the per-page picker and the range on the left. */
-  variant?: 'page' | 'embedded' | 'compact';
+  /** page: a footer below the page content (default). embedded: the last row of a panel, ruled off from the list above. compact: a footer with only < [page] / total >, the per-page picker and the range on the left. embeddedCompact: the compact pager as the last row of a panel. */
+  variant?: 'page' | 'embedded' | 'compact' | 'embeddedCompact';
   className?: string;
 }
+
+/** The row at the foot of a panel, ruled off from the list above (both embedded variants). */
+const PANEL_FOOT = 'border-t border-border-color px-3 py-2.5 sm:px-4';
 
 const NAV_VARIANTS = {
   page: 'mt-4 pt-2 sm:mt-8 sm:pt-4 lg:pt-5 wide:pt-6',
   compact: 'mt-4 pt-2 sm:mt-6 sm:pt-3',
-  embedded: 'border-t border-border-color px-3 py-2.5 sm:px-4',
+  embedded: PANEL_FOOT,
+  embeddedCompact: PANEL_FOOT,
 } as const;
 
 // The arrow buttons and the per-page picker share one height.
@@ -118,7 +122,7 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
     </span>
   );
 
-  const compact = variant === 'compact';
+  const compact = variant === 'compact' || variant === 'embeddedCompact';
   // The site's dropdown, not a native select: same trigger and menu as every other picker.
   const limitSelect = onLimitChange && (
     <CustomDropdown<string>

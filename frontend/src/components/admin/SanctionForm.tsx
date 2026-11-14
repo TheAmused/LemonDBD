@@ -7,8 +7,7 @@
 
 import React, { useId } from 'react';
 import { CustomDropdown, type DropdownOption } from '@/components/common/CustomDropdown';
-import { FieldLabel, Input, Textarea } from '@/components/common/Field';
-import { SanctionPreviewPanel } from '@/components/admin/SanctionPreviewPanel';
+import { FieldLabel, FormField, Input, Textarea } from '@/components/common/Field';
 import { reasonLabel, ruleLabel } from '@/components/moderation/moderationLabels';
 import { useDictionary } from '@/context/DictionaryContext';
 import { cn } from '@/utils/cn';
@@ -21,7 +20,6 @@ import {
   type RuleRef,
   type SanctionDraft,
   type SanctionKind,
-  type SanctionTarget,
 } from '@/types/moderation';
 
 /** The red asterisk after a required field's label; fields without it are optional. */
@@ -36,8 +34,6 @@ interface SanctionFormProps {
   showReason?: boolean;
   /** Internal notes belong to the drawer, not to a report. */
   showInternal?: boolean;
-  /** Whom the decision is about; when given, a preview of what they will be told closes the form. */
-  previewTarget?: SanctionTarget;
   /** Shown right under the decision (the drawer puts its suggested next step there). */
   afterDecision?: React.ReactNode;
 }
@@ -48,7 +44,6 @@ export function SanctionForm({
   kinds,
   showReason = true,
   showInternal = true,
-  previewTarget,
   afterDecision,
 }: SanctionFormProps) {
   const dict = useDictionary();
@@ -62,12 +57,13 @@ export function SanctionForm({
   const hint = 'mt-1 type-micro text-text-muted';
   const trigger = 'w-full justify-between py-2.5';
   const kindOptions: DropdownOption<SanctionKind>[] = kinds.map((kind) => ({ value: kind, label: kindLabel[kind] }));
-  const reasonOptions: DropdownOption<SanctionDraft['reason_code']>[] = SANCTION_REASONS.map((code) => ({
-    value: code,
-    label: reasonLabel(dict, code),
-  }));
+  // Once something is picked, the first row takes it back to the "Select ..." state.
+  const reasonOptions: DropdownOption<SanctionDraft['reason_code']>[] = [
+    ...(draft.reason_code ? [{ value: '' as const, label: t.formReasonPlaceholder }] : []),
+    ...SANCTION_REASONS.map((code) => ({ value: code, label: reasonLabel(dict, code) })),
+  ];
   const ruleOptions: DropdownOption<RuleRef | ''>[] = [
-    { value: '', label: t.formRuleNone },
+    ...(draft.rule_ref ? [{ value: '' as const, label: t.formRulePlaceholder }] : []),
     ...RULE_REFS.map((ref) => ({ value: ref, label: ruleLabel(dict, ref) })),
   ];
   const isSuspension = draft.kind === 'suspension';
@@ -129,6 +125,7 @@ export function SanctionForm({
               value={draft.reason_code}
               options={reasonOptions}
               onChange={(reason_code) => onChange({ reason_code })}
+              label={draft.reason_code ? undefined : t.formReasonPlaceholder}
               ariaLabel={t.formReason}
               accent="primary"
               className="w-full"
@@ -143,6 +140,7 @@ export function SanctionForm({
             value={draft.rule_ref}
             options={ruleOptions}
             onChange={(rule_ref) => onChange({ rule_ref })}
+            label={draft.rule_ref ? undefined : t.formRulePlaceholder}
             ariaLabel={t.formRule}
             accent="primary"
             className="w-full"
@@ -154,8 +152,12 @@ export function SanctionForm({
         </div>
       </div>
 
-      <div>
-        <FieldLabel htmlFor={`${id}-facts`}>{t.formFacts}{REQUIRED_MARK}</FieldLabel>
+      <FormField
+        label={t.formFacts}
+        htmlFor={`${id}-facts`}
+        required
+        hint={t.formFactsRequired}
+      >
         <Textarea
           id={`${id}-facts`}
           fieldSize="sm"
@@ -163,11 +165,9 @@ export function SanctionForm({
           maxLength={MAX_SANCTION_TEXT_LENGTH}
           value={draft.facts}
           onChange={(e) => onChange({ facts: e.target.value })}
-          invalid={draft.facts.trim().length === 0}
           className="resize-none"
         />
-        <p className={hint}>{t.formFactsRequired}</p>
-      </div>
+      </FormField>
 
       {showInternal && (
         <div>
@@ -183,10 +183,6 @@ export function SanctionForm({
           />
           <p className={hint}>{t.formInternalHint}</p>
         </div>
-      )}
-
-      {previewTarget && (
-        <SanctionPreviewPanel draft={draft} target={previewTarget} />
       )}
     </div>
   );

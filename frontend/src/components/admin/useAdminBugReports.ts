@@ -26,7 +26,7 @@ export function useAdminBugReports({ enabled, refreshKey, notify, onChanged }: B
   const [stats, setStats] = useState<QueueStats<BugReportStatus> | null>(null);
   const [total, setTotal] = useState(0);
   const [status,
- setStatusState] = usePersistentString<BugReportStatus | 'all'>(ADMIN_STORAGE.bugsStatus, 'pending', oneOf(BUG_REPORT_FILTERS));
+ setStatusState] = usePersistentString<BugReportStatus | 'all'>(ADMIN_STORAGE.bugsStatus, 'all',oneOf(BUG_REPORT_FILTERS));
   const [search, setSearchState] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [page, setPage] = useState(1);

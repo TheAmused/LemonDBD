@@ -64,7 +64,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
     refreshChallenge,
     honeypotValue,
     honeypotProps,
-  } = useAltcha(!isAuthenticated && isOpen && !guestsClosed);
+  } = useAltcha(!isAuthenticated && isOpen && !guestsClosed, features.altchaEnforced);
 
   const [title, setTitle] = useState<string>('');
   const [message, setMessage] = useState<string>('');

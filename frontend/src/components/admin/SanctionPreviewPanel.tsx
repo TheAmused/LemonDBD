@@ -3,10 +3,11 @@
 //
 // What a moderation decision will say to the account holder, before it is taken: the notice they see
 // in the app and the email they get. The email comes from the server (the same text builder that sends
-// it, in the account holder's language); nothing is saved.
+// it, in the account holder's language); nothing is saved. It opens from a Preview button next to the
+// decision's submit button, so the form itself stays short.
 
 import React, { useEffect, useEffectEvent, useMemo, useState } from 'react';
-import { AccordionSection } from '@/components/common/AccordionSection';
+import { Modal } from '@/components/common/Modal';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
 import { Surface } from '@/components/common/Surface';
 import { AccountBlockedNotice } from '@/components/moderation/AccountBlockedNotice';
@@ -15,7 +16,6 @@ import { PREVIEW_DEBOUNCE_MS } from '@/constants/timing';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { ADMIN_STORAGE, oneOf } from '@/components/admin/adminStorage';
 import { usePersistentString } from '@/hooks/usePersistentString';
-import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { previewSanction } from '@/services/moderationApi';
 import {
   isSanctionDraftValid,
@@ -75,17 +75,15 @@ function EmailPreview({ preview }: { preview: SanctionPreview }) {
   );
 }
 
-export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProps) {
+function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProps) {
   const dict = useDictionary();
   const locale = useLocale();
   const t = dict.moderation.admin;
   const [tab, setTab] = usePersistentString<PreviewTab>(ADMIN_STORAGE.moderationPreviewTab, 'app', oneOf(PREVIEW_TABS));
   // The server's last answer, for the request it answered; anything newer is still loading.
   const [answer, setAnswer] = useState<{ key: string; status: 'ready' | 'error'; data: SanctionPreview | null } | null>(null);
-  // Folded away by default and remembered; a folded preview asks the server for nothing.
-  const [isOpen, toggleOpen] = usePersistentDrawer(ADMIN_STORAGE.moderationPreviewOpen, false);
 
-  const valid = isSanctionDraftValid(draft);
+  const valid = isSanctionDraftValid(draft, { reasonRequired: 'userId' in target });
   /** Only a warning may go unmailed. */
   const sendsEmail = draft.kind !== 'warning' || draft.send_email;
   // Only what the preview depends on: typing in the internal notes must not ask the server again.
@@ -101,7 +99,7 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
       : { status: 'loading', data: answer?.data ?? null };
 
   useEffect(() => {
-    if (!isOpen || !valid) return;
+    if (!valid) return;
     let stale = false;
     const timer = setTimeout(() => {
       requestPreview().then(
@@ -117,7 +115,7 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
       stale = true;
       clearTimeout(timer);
     };
-  }, [isOpen, valid, requestKey]);
+  }, [valid, requestKey]);
 
   const { data } = state;
   const options = [
@@ -175,13 +173,37 @@ export function SanctionPreviewPanel({ draft, target }: SanctionPreviewPanelProp
   }
 
   return (
-    <AccordionSection as="div" title={t.previewTitle} open={isOpen} onToggle={toggleOpen} bodyClassName="space-y-4 p-4">
+    <div className="space-y-4">
       <div className="flex justify-center">
         <SegmentedControl value={tab} options={options} onChange={setTab} ariaLabel={t.previewTitle} size="sm" />
       </div>
       <div aria-busy={state.status === 'loading'} className={state.status === 'loading' && data ? 'opacity-60 transition-opacity' : 'transition-opacity'}>
         {content}
       </div>
-    </AccordionSection>
+    </div>
+  );
+}
+
+interface SanctionPreviewModalProps extends SanctionPreviewPanelProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+/** The preview in a dialog over the moderation drawer or the report case; it asks the server only while open. */
+export function SanctionPreviewModal({ open, onClose, draft, target }: SanctionPreviewModalProps) {
+  const dict = useDictionary();
+  return (
+    <Modal
+      isOpen={open}
+      onClose={onClose}
+      variant="dialog"
+      size="lg"
+      layer="top"
+      title={dict.moderation.admin.previewTitle}
+      closeButtonAriaLabel={dict.admin.close}
+      padded
+    >
+      <SanctionPreviewPanel draft={draft} target={target} />
+    </Modal>
   );
 }

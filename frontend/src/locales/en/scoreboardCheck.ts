@@ -1,7 +1,6 @@
 // frontend/src/locales/en/scoreboardCheck.ts
 const scoreboardCheck = {
   "title": "OCR check",
-  "close": "Close",
   "privacyNote": "The image is analysed in memory and discarded. Nothing is stored.",
   "chooseImage": "Choose a screenshot",
   "dropHint": "Drop an image here or click to browse",

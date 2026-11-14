@@ -12,7 +12,7 @@ const FULL = {
     discord_invite: 'https://discord.gg/abc',
     donation_bmc: 'javascript:alert(1)',
     donation_kofi: 'https://ko-fi.com/x',
-    donation_message: '  Thanks!  ',
+    donation_message: { en: '  Thanks!  ', pl: ' Dzięki ', de: '' },
   },
   features: { registration_open: false, email_verification_required: true, google_sign_in: true, content_reports_open: false, scoreboard_ocr: true },
   limits: { resend_cooldown_seconds: 120, password_min_length: 10, scoreboard_upload_max_bytes: 2097152, bug_report_max_images: 4, bug_report_image_max_bytes: 1048576 },
@@ -25,7 +25,7 @@ describe('parseSiteConfig', () => {
     assert.deepEqual(config.banner, { active: true, level: 'warning', until: null, text: { en: 'Maintenance tonight', pl: 'Prace serwisowe' } });
     assert.equal(config.links.discordInvite, 'https://discord.gg/abc');
     assert.equal(config.links.donationBmc, null);
-    assert.equal(config.links.donationMessage, 'Thanks!');
+    assert.deepEqual(config.links.donationMessage, { en: 'Thanks!', pl: 'Dzięki' });
     assert.equal(config.features.registrationOpen, false);
     assert.equal(config.features.contentReportsOpen, false);
     assert.equal(config.features.guestBugReports, true); // missing from the answer: the default

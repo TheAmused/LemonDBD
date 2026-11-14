@@ -16,7 +16,7 @@ export function ScraperConfigTabs({ activeTab, onChange }: ScraperConfigTabsProp
   const tabs = [
     { id: 'export' as const, Icon: Download, iconClass: 'text-accent-red', label: dict.admin.exportJson },
     { id: 'import' as const, Icon: Upload, iconClass: 'text-accent-green', label: dict.admin.importJson },
-    { id: 'purge' as const, Icon: Trash2, iconClass: 'text-accent-red', label: dict.admin.purgeReset },
+    { id: 'purge' as const, Icon: Trash2, iconClass: 'text-accent-red', label: dict.admin.purge },
   ];
 
   return (

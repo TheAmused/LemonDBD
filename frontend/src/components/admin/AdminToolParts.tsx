@@ -1,13 +1,12 @@
 'use client';
 // frontend/src/components/admin/AdminToolParts.tsx
 //
-// The two building blocks of the Tools tab: a card (a fold-away drawer whose open state is remembered)
-// and a row inside it (what it is on the left, its state or button on the right).
+// The two building blocks of the Tools tab: a card (a fold-away drawer whose open state is remembered; each
+// card is as tall as its own content, so folding one never changes its neighbour) and a row inside it (what it is on the left, its state or button on the right).
 import React from 'react';
 import { AccordionSection } from '@/components/common/AccordionSection';
 import { adminToolDrawerKey } from '@/components/admin/adminStorage';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
-import { cn } from '@/utils/cn';
 
 /** One drawer; its rows are separated by rules. Open or closed is remembered per card. */
 export function ToolCard({
@@ -33,7 +32,7 @@ export function ToolCard({
       open={open}
       onToggle={toggle}
       headerAction={action}
-      className={cn('h-full', className)}
+      className={className}
       bodyClassName="p-0"
     >
       {subtitle && <p className="border-b border-border-color p-4 text-center type-body text-text-muted sm:px-5">{subtitle}</p>}

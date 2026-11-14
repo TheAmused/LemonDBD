@@ -71,7 +71,8 @@ export const ROUTE_SHELLS: ReadonlyArray<ShellRoute> = [
   { prefix: [], shell: CENTERED_PAGE },  // home  /
   { prefix: ['about'], shell: { padding: 'spacious', mainClassName: 'flex flex-col items-center justify-center min-h-screen-nav lg:min-h-screen overflow-y-auto relative' } },
   { prefix: ['achievements'], shell: { padding: 'spacious' } },
-  { prefix: ['admin'], shell: { mainId: 'main-admin-content', mainClassName: 'overflow-y-auto' } },
+  // overflow-x-clip, not overflow-y-auto: an auto-scrolling <main> as tall as its content never scrolls, and a sticky bar inside it (Settings' save bar) then never sticks to the screen.
+  { prefix: ['admin'], shell: { mainId: 'main-admin-content', mainClassName: 'overflow-x-clip' } },
   { prefix: ['blocked'], shell: ERROR_SHELL },
   { prefix: ['characters'], shell: { mainClassName: 'relative overflow-y-auto' } },  // list + [slug] detail
   { prefix: ['forbidden'], shell: ERROR_SHELL },

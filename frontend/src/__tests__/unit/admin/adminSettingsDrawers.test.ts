@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
 import { renderWithDictionary } from '@/__tests__/helpers/renderWithDictionary';
-import { SettingGroupDrawer } from '@/components/admin/AdminSettingsSection';
+import { SettingGroupDrawer } from '@/components/admin/SettingGroupDrawer';
 import { adminSettingDrawerKey } from '@/components/admin/adminStorage';
 import { SETTING_GROUP_ORDER } from '@/components/admin/settingsForm';
 import type { AdminSiteSetting } from '@/types/admin';
@@ -54,6 +54,8 @@ test('SettingGroupDrawer renders clean accordion header with no unsaved badge wh
   const html = renderWithDictionary(
     React.createElement(SettingGroupDrawer, {
       group: 'notices',
+      icon: null,
+      resetIcon: null,
       rows,
       t: mockDict,
       text: (k: string) => k,
@@ -64,7 +66,7 @@ test('SettingGroupDrawer renders clean accordion header with no unsaved badge wh
       problemText: () => '',
       defaultLabel: () => '–',
       send: async () => {},
-      setRiskyReset: () => {},
+      onResetDefault: () => {},
       saving: false,
     })
   );
@@ -110,6 +112,8 @@ test('SettingGroupDrawer displays unsaved badge with correct count when draft is
   const html = renderWithDictionary(
     React.createElement(SettingGroupDrawer, {
       group: 'notices',
+      icon: null,
+      resetIcon: null,
       rows,
       t: mockDict,
       text: (k: string) => k,
@@ -120,7 +124,7 @@ test('SettingGroupDrawer displays unsaved badge with correct count when draft is
       problemText: () => '',
       defaultLabel: () => '–',
       send: async () => {},
-      setRiskyReset: () => {},
+      onResetDefault: () => {},
       saving: false,
     })
   );

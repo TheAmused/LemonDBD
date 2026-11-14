@@ -86,7 +86,7 @@ export function RosterBasicsSection({
             className="2xl:text-base"
           />
         </label>
-        <div className="md:col-span-1">
+        <div className="md:col-span-1 flex flex-col gap-1.5 justify-start">
           <ImageUploadDropzone
             value={draft.cover_image_url}
             onChange={(val) => patch({ cover_image_url: val })}
@@ -134,9 +134,9 @@ export function RosterBasicsSection({
           <GradientEditor
             value={themeGradientOf(draft.theme_color || defaultRosterThemeColor())}
             title={draft.name || c.namePlaceholder}
+            hint={c.themeColorHint}
             onChange={(gradient) => patch({ theme_color: encodeThemeColor(gradient) })}
           />
-          <p className="mt-2 text-center type-caption text-text-muted">{c.themeColorHint}</p>
         </div>
 
         {/* Toggles Row: Simple Version, NSFW, and Official (Admin) */}

@@ -86,10 +86,14 @@ export function ImageUploadDropzone({
     setUploadError(null);
   });
 
+  const blobUnsupportedMessage = allowFileUpload
+    ? dict.tierLists.creator.blobUrlUnsupportedAdmin
+    : dict.tierLists.creator.blobUrlUnsupportedUser;
+
   const commitUrl = () => {
     const trimmed = urlInput.trim();
     if (trimmed.startsWith('blob:')) {
-      setUploadError(dict.tierLists.creator.blobUrlUnsupported);
+      setUploadError(blobUnsupportedMessage);
       return;
     }
     if (trimmed && trimmed !== (value || '').trim()) {
@@ -111,7 +115,7 @@ export function ImageUploadDropzone({
     const text = e.clipboardData?.getData('text')?.trim();
     if (text && text.startsWith('blob:')) {
       e.preventDefault();
-      setUploadError(dict.tierLists.creator.blobUrlUnsupported);
+      setUploadError(blobUnsupportedMessage);
     }
   };
 

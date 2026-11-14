@@ -17,9 +17,11 @@ interface GradientEditorProps {
   onChange: (gradient: CustomGradient) => void;
   /** The text shown on the preview badge. */
   title: string;
+  hint?: string;
+  className?: string;
 }
 
-export function GradientEditor({ value, onChange, title }: GradientEditorProps) {
+export function GradientEditor({ value, onChange, title, hint, className }: GradientEditorProps) {
   const dict = useDictionary();
   const ab = dict.smashOrPass.archetypeBuilder;
   const [active, setActive] = useState<End>('from');
@@ -60,37 +62,39 @@ export function GradientEditor({ value, onChange, title }: GradientEditorProps) 
   );
 
   return (
-    <div className="space-y-2 h-96 flex flex-col">
-      <div
-        className="relative flex h-16 shrink-0 items-center justify-center rounded-card border border-border-color px-14"
-        style={preview.style}
-      >
-        {handle('from', 'left-3')}
-        <span className="type-strong truncate text-text-inverted drop-shadow">{title}</span>
-        {handle('to', 'right-3')}
-      </div>
-
-      <div className="flex shrink-0 items-center justify-between gap-2">
-        {code('from', 'items-start')}
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          icon
-          onClick={() => onChange({ from: value.to, to: value.from })}
-          aria-label={ab.gradientSwap}
+    <div className={cn('h-96 flex flex-col justify-between', className)}>
+      <div className="space-y-2">
+        <div
+          className="relative flex h-16 shrink-0 items-center justify-center rounded-card border border-border-color px-14"
+          style={preview.style}
         >
-          <span aria-hidden="true" className="text-base leading-none">⇄</span>
-        </Button>
-        {code('to', 'items-end')}
+          {handle('from', 'left-3')}
+          <span className="type-strong truncate text-text-inverted drop-shadow">{title}</span>
+          {handle('to', 'right-3')}
+        </div>
+
+        <div className="flex shrink-0 items-center justify-between gap-2">
+          {code('from', 'items-start')}
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            icon
+            onClick={() => onChange({ from: value.to, to: value.from })}
+            aria-label={ab.gradientSwap}
+          >
+            <span aria-hidden="true" className="text-base leading-none">⇄</span>
+          </Button>
+          {code('to', 'items-end')}
+        </div>
       </div>
 
       <div
         className={cn(
-          'mx-auto flex flex-1 flex-col items-center justify-center gap-2.5 rounded-card border border-border-color bg-bg-elevated/60 p-3 w-full',
+          'mx-auto flex flex-1 flex-col items-center justify-center gap-2 w-full py-1',
           '[&_.react-colorful]:h-36 [&_.react-colorful]:w-full [&_.react-colorful]:max-w-72',
           '[&_.react-colorful__saturation]:rounded-card [&_.react-colorful__saturation]:border-b-0',
-          '[&_.react-colorful__hue]:mt-2.5 [&_.react-colorful__hue]:h-3.5 [&_.react-colorful__hue]:rounded-full',
+          '[&_.react-colorful__hue]:mt-2 [&_.react-colorful__hue]:h-3.5 [&_.react-colorful__hue]:rounded-full',
           '[&_.react-colorful__pointer]:h-5 [&_.react-colorful__pointer]:w-5'
         )}
       >
@@ -100,9 +104,13 @@ export function GradientEditor({ value, onChange, title }: GradientEditorProps) 
           onChange={pick}
           prefixed
           aria-label={labels[active]}
-          className="min-h-11 w-full max-w-72 min-w-0 rounded-control border border-border-color bg-bg-primary px-3 text-center type-label uppercase text-text-primary focus:border-accent-red focus:outline-hidden"
+          className="min-h-10 w-full max-w-72 min-w-0 rounded-control border border-border-color bg-bg-primary px-3 text-center type-label uppercase text-text-primary focus:border-accent-red focus:outline-hidden"
         />
       </div>
+
+      {hint && (
+        <p className="text-center type-caption text-text-muted shrink-0">{hint}</p>
+      )}
     </div>
   );
 }

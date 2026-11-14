@@ -14,6 +14,7 @@ import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { paletteColor } from '@/utils/themeColor';
 import { Img } from '@/components/common/Img';
+import { cn } from '@/utils/cn';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
 import { MAX_DATA_IMAGE_CHARS, encodeCanvasWithinBudget } from '@/utils/imageResize';
 
@@ -24,9 +25,10 @@ interface CoverImageCropModalProps {
   onApplyCrop: (croppedDataUrl: string) => void;
   themeColor?: string;
   isAdmin?: boolean;
+  aspectRatio?: 'roster' | 'banner';
 }
 
-export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen, onClose, imageUrl, onApplyCrop, isAdmin = false }) => {
+export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen, onClose, imageUrl, onApplyCrop, isAdmin = false, aspectRatio = 'banner' }) => {
   const dict = useDictionary();
   const cm = dict.smashOrPass.cropModal || {
     title: 'Crop & Frame Cover Image',
@@ -203,8 +205,9 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
     if (!containerRef.current || !imgRef.current) return;
 
     try {
-      const targetWidth = 800;
-      const targetHeight = 450; // 16:9 banner
+      const isRoster = aspectRatio === 'roster';
+      const targetWidth = isRoster ? 620 : 800;
+      const targetHeight = isRoster ? 1000 : 450;
       const canvas = document.createElement('canvas');
       canvas.width = targetWidth;
       canvas.height = targetHeight;
@@ -279,21 +282,24 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
     }
   };
 
-  // Determine if image aspect ratio is taller than 16:9 (e.g. portrait or square)
-  const isTallerThan16x9 = naturalSize.width && naturalSize.height
-    ? (naturalSize.width / naturalSize.height) < (16 / 9)
+  const isRoster = aspectRatio === 'roster';
+  const targetRatio = isRoster ? (620 / 1000) : (16 / 9);
+
+  // Determine if image aspect ratio is taller than target aspect ratio
+  const isTallerThanTarget = naturalSize.width && naturalSize.height
+    ? (naturalSize.width / naturalSize.height) < targetRatio
     : false;
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      size="3xl"
+      size={isRoster ? "xl" : "3xl"}
       title={cm.title}
     >
       <div className="space-y-4 p-4 sm:p-6 select-none">
         <p className="text-center type-body text-text-secondary">{cm.subtitle}</p>
-        {/* Interactive Crop Viewport (16:9 Aspect Ratio) */}
+        {/* Interactive Crop Viewport */}
         <div className="relative rounded-card border-2 border-accent-red/40 bg-bg-primary overflow-hidden shadow-2xl">
           <div
             ref={containerRef}
@@ -304,7 +310,10 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
             onWheel={handleWheel}
-            className="relative w-full aspect-[16/9] flex items-center justify-center overflow-hidden cursor-grab active:cursor-grabbing bg-bg-surface"
+            className={cn(
+              "relative flex items-center justify-center overflow-hidden cursor-grab active:cursor-grabbing bg-bg-surface",
+              isRoster ? "w-full max-w-xs mx-auto aspect-[31/50]" : "w-full aspect-[16/9]"
+            )}
             style={{ touchAction: 'none' }}
           >
             {currentUrl && !imageError ? (
@@ -318,10 +327,10 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
                 draggable={false}
                 className="max-w-none pointer-events-none transition-transform duration-75 select-none"
                 style={{
-                  width: isTallerThan16x9 ? `${100 * zoom}%` : 'auto',
-                  height: isTallerThan16x9 ? 'auto' : `${100 * zoom}%`,
-                  minWidth: isTallerThan16x9 ? `${100 * zoom}%` : undefined,
-                  minHeight: !isTallerThan16x9 ? `${100 * zoom}%` : undefined,
+                  width: isTallerThanTarget ? `${100 * zoom}%` : 'auto',
+                  height: isTallerThanTarget ? 'auto' : `${100 * zoom}%`,
+                  minWidth: isTallerThanTarget ? `${100 * zoom}%` : undefined,
+                  minHeight: !isTallerThanTarget ? `${100 * zoom}%` : undefined,
                   transform: `translate(${offset.x}px, ${offset.y}px)`,
                 }}
               />

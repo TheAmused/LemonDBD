@@ -424,5 +424,33 @@ describe('EntityEditor & CoverImageCropModal integration', () => {
     assert.equal(applied[1], 'data:image/jpeg;base64,CROPPED_JPG');
     assert.equal(jpegFallbackMock.canvasCalls[0].width, 800);
     assert.equal(jpegFallbackMock.canvasCalls[0].height, 450);
+
+    view2.unmount();
+
+    const rosterMock = mockCanvasEnvironment({
+      toDataURL: () => 'data:image/webp;base64,ROSTER_WEBP',
+    });
+    const rosterApplied: string[] = [];
+    const view3 = render(
+      h(CoverImageCropModal, {
+        isOpen: true,
+        onClose: () => {},
+        imageUrl: 'data:image/png;base64,SRC',
+        aspectRatio: 'roster',
+        onApplyCrop: (url) => rosterApplied.push(url),
+      }),
+      { wrapper: withDictionary() },
+    );
+    const previewImg3 = view3.getByAltText(enDict.smashOrPass.cropModal.previewAlt);
+    Object.defineProperty(previewImg3, 'naturalWidth', { value: 620, configurable: true });
+    Object.defineProperty(previewImg3, 'naturalHeight', { value: 1000, configurable: true });
+    fireEvent.load(previewImg3);
+    fireEvent.click(view3.getByText(enDict.smashOrPass.cropModal.applyCrop));
+
+    await waitFor(() => {
+      assert.equal(rosterApplied.length, 1);
+    });
+    assert.equal(rosterMock.canvasCalls[0].width, 620);
+    assert.equal(rosterMock.canvasCalls[0].height, 1000);
   });
 });

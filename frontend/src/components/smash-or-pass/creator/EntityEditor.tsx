@@ -26,7 +26,6 @@ import { useDictionary } from "@/context/DictionaryContext";
 import { tip } from '@/components/common/Tooltip';
 
 import { Badge } from '@/components/common/Badge';
-import { ToggleChip } from '@/components/common/ToggleChip';
 import { Img } from '@/components/common/Img';
 
 const FOCAL_POINTS: Array<{ label: string; value: string }> = [
@@ -283,28 +282,21 @@ export function CandidateFormInputs({
                   {c.entityRoleLabel}
                   <RequiredMark />
                 </span>
-                {availableRoles.length <= 4 ? (
-                  <div className="flex flex-wrap items-center gap-1.5 pt-0.5" role="radiogroup" aria-label={c.entityRoleLabel}>
-                    {availableRoles.map((r) => (
-                      <ToggleChip
-                        key={r}
-                        pressed={entity.role.toLowerCase() === termLabel(r).toLowerCase()}
-                        size="xs"
-                        tone="red"
-                        onClick={() => onChange({ role: termLabel(r) })}
-                      >
-                        {termLabel(r)}
-                      </ToggleChip>
-                    ))}
-                  </div>
-                ) : (
-                  <CustomDropdown<string>
-                    value={entity.role}
-                    onChange={(role) => onChange({ role })}
-                    options={availableRoles.map((r) => ({ value: termLabel(r), label: termLabel(r) }))}
-                    ariaLabel={c.entityRoleLabel}
-                  />
-                )}
+                <CustomDropdown<string>
+                  value={
+                    availableRoles.find((r) => termLabel(r).toLowerCase() === entity.role.toLowerCase())
+                      ? termLabel(availableRoles.find((r) => termLabel(r).toLowerCase() === entity.role.toLowerCase())!)
+                      : entity.role
+                  }
+                  onChange={(role) => onChange({ role })}
+                  options={availableRoles.map((r) => ({ value: termLabel(r), label: termLabel(r) }))}
+                  ariaLabel={c.entityRoleLabel}
+                  label={!entity.role ? <span className="text-text-muted">{c.entityRoleLabel}</span> : undefined}
+                  className="w-full"
+                  buttonClassName="w-full"
+                  minWidthClass="min-w-full"
+                  accent="primary"
+                />
               </div>
 
               {/* Dynamic Gender Selection */}
@@ -313,31 +305,24 @@ export function CandidateFormInputs({
                   {c.entityGenderLabel}
                   <RequiredMark />
                 </span>
-                {availableGenders.length <= 4 ? (
-                  <div className="flex flex-wrap items-center gap-1.5 pt-0.5" role="radiogroup" aria-label={c.entityGenderLabel}>
-                    {availableGenders.map((g) => (
-                      <ToggleChip
-                        key={g}
-                        pressed={canonicalGender(entity.gender) === canonicalGender(g)}
-                        size="xs"
-                        tone="amber"
-                        onClick={() => onChange({ gender: canonicalGender(g) })}
-                      >
-                        {genderLabel(g, dict.smashOrPass.filters)}
-                      </ToggleChip>
-                    ))}
-                  </div>
-                ) : (
-                  <CustomDropdown<string>
-                    value={canonicalGender(entity.gender)}
-                    onChange={(gender) => onChange({ gender: canonicalGender(gender) })}
-                    options={availableGenders.map((g) => ({
-                      value: canonicalGender(g),
-                      label: genderLabel(g, dict.smashOrPass.filters),
-                    }))}
-                    ariaLabel={c.entityGenderLabel}
-                  />
-                )}
+                <CustomDropdown<string>
+                  value={
+                    availableGenders.find((g) => canonicalGender(g) === canonicalGender(entity.gender))
+                      ? canonicalGender(availableGenders.find((g) => canonicalGender(g) === canonicalGender(entity.gender))!)
+                      : canonicalGender(entity.gender)
+                  }
+                  onChange={(gender) => onChange({ gender: canonicalGender(gender) })}
+                  options={availableGenders.map((g) => ({
+                    value: canonicalGender(g),
+                    label: genderLabel(g, dict.smashOrPass.filters),
+                  }))}
+                  ariaLabel={c.entityGenderLabel}
+                  label={!entity.gender ? <span className="text-text-muted">{c.entityGenderLabel}</span> : undefined}
+                  className="w-full"
+                  buttonClassName="w-full"
+                  minWidthClass="min-w-full"
+                  accent="primary"
+                />
               </div>
             </div>
           </div>

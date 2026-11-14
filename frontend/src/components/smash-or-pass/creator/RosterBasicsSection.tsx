@@ -18,7 +18,6 @@ import { type Draft, Section } from './SmashRosterCreatorParts';
 import { LABEL } from './styles';
 import { RequiredMark } from './RequiredMark';
 import { GradientEditor } from './GradientEditor';
-import { cn } from '@/utils/cn';
 import { encodeThemeColor, themeGradientOf } from '@/utils/smashOrPass/badgeGradient';
 
 /** A checkbox row whose whole line is the click target. */
@@ -87,7 +86,7 @@ export function RosterBasicsSection({
             className="2xl:text-base"
           />
         </label>
-        <div className="md:col-span-2">
+        <div className="md:col-span-1">
           <ImageUploadDropzone
             value={draft.cover_image_url}
             onChange={(val) => patch({ cover_image_url: val })}
@@ -144,8 +143,8 @@ export function RosterBasicsSection({
           />
         </div>
 
-        <div className="md:col-span-2 mx-auto w-full max-w-2xl">
-          <span className={cn(LABEL, 'block text-center')}>{c.themeColorLabel}</span>
+        <div className="md:col-span-1 flex flex-col justify-start">
+          <span className={LABEL}>{c.themeColorLabel}</span>
           <GradientEditor
             value={themeGradientOf(draft.theme_color || defaultRosterThemeColor())}
             title={draft.name || c.namePlaceholder}

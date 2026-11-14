@@ -52,7 +52,6 @@ export default {
   dealbreaker: 'Ausschlusskriterium:',
   datingPsychology: 'Dating-Psychologie-Analyse',
   roleAffinity: 'Rollen-Affinitätsbalance',
-  noSmashesRecorded: 'Noch keine Smashes aufgezeichnet',
   totalEvaluated: 'Insgesamt bewertet:',
   copiedToClipboard: 'In die Zwischenablage kopiert!',
   shareArchetype: 'Archetyp teilen',
@@ -133,7 +132,6 @@ export default {
     smashCount: 'Smashes',
     passCount: 'Pässe',
     rank: 'Globaler Rang',
-    firstSmash: 'Erster Smash',
     totalSmashes: 'Smashes gesamt',
   },
   filters: {

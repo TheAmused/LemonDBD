@@ -52,7 +52,6 @@ export default {
   dealbreaker: 'Puntos en contra:',
   datingPsychology: 'Análisis Psicológico de Citas',
   roleAffinity: 'Balance de Afinidad de Roles',
-  noSmashesRecorded: 'Aún no hay smashes registrados',
   totalEvaluated: 'Evaluados en total:',
   copiedToClipboard: '¡Copiado al portapapeles!',
   shareArchetype: 'Compartir Arquetipo',
@@ -133,7 +132,6 @@ export default {
     smashCount: 'Smashes',
     passCount: 'Pases',
     rank: 'Rango Global',
-    firstSmash: 'Primer Smash',
     totalSmashes: 'Smashes totales',
   },
   filters: {

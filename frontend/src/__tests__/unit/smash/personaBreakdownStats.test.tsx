@@ -57,7 +57,7 @@ describe('PersonaBreakdown stats and role affinity', () => {
     assert.ok(view.getByText(`75${text.percentSign}`));
 
     // Old firstSmash metric should NOT be rendered
-    assert.equal(view.queryByText(text.statsDetail.firstSmash), null);
+    assert.equal(view.queryByText('First Smash'), null);
     assert.equal(view.queryByText('Feng Min'), null);
   });
 

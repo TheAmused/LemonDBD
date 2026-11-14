@@ -35,7 +35,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 }) => (
   <label
     className={cn(
-      'inline-flex items-center gap-2 select-none',
+      'inline-flex items-center gap-2',
       disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer',
       className
     )}

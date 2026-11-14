@@ -6,6 +6,7 @@ import { tip } from '@/components/common/Tooltip';
 import { useDictionary } from '@/context/DictionaryContext';
 import type { RosterItem } from '@/types/smashOrPass';
 import { LockIcon, UploadIcon } from '@/components/icons/DbdIcons';
+import { useOptionalAuth } from '@/context/AuthContext';
 
 export interface RosterHeaderActionsProps {
   activeRosterInCenter?: RosterItem | null;
@@ -27,6 +28,8 @@ export function RosterHeaderActions({
   onReportRoster,
 }: RosterHeaderActionsProps) {
   const dict = useDictionary();
+  const auth = useOptionalAuth();
+  const isAdmin = Boolean(auth?.user?.role === 'admin');
 
   return (
     <div className="flex flex-wrap items-center justify-center gap-2 pt-0.5">
@@ -55,7 +58,6 @@ export function RosterHeaderActions({
 
       {activeRosterInCenter?.is_local && (
         <>
-          <div className="h-4 w-px bg-border-color mx-1 self-center" aria-hidden="true" />
           {onEditRoster && (
             <Button
               type="button"
@@ -94,6 +96,33 @@ export function RosterHeaderActions({
               type="button"
               variant="danger" size="sm" icon
               onClick={() => onDeleteRoster(activeRosterInCenter.id)}
+              {...tip(dict.smashOrPass.picker.deleteRoster, undefined, 'action')}
+              aria-label={dict.smashOrPass.picker.deleteRoster}
+            >
+              <Trash2 className="icon-md" aria-hidden="true" />
+            </Button>
+          )}
+        </>
+      )}
+
+      {!activeRosterInCenter?.is_local && isAdmin && activeRosterInCenter && (
+        <>
+          {onEditRoster && (
+            <Button
+              type="button"
+              variant="secondary" size="sm" icon
+              onClick={() => onEditRoster(activeRosterInCenter.slug)}
+              {...tip(dict.smashOrPass.picker.editRoster, undefined, 'action')}
+              aria-label={dict.smashOrPass.picker.editRoster}
+            >
+              <Pencil className="icon-md" aria-hidden="true" />
+            </Button>
+          )}
+          {onDeleteRoster && (
+            <Button
+              type="button"
+              variant="danger" size="sm" icon
+              onClick={() => onDeleteRoster(activeRosterInCenter.slug)}
               {...tip(dict.smashOrPass.picker.deleteRoster, undefined, 'action')}
               aria-label={dict.smashOrPass.picker.deleteRoster}
             >

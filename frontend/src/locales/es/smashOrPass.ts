@@ -367,7 +367,6 @@ export default {
     entityMediaLabel: 'URL de imagen de retrato',
     entityRoleLabel: 'Rol',
     entityGenderLabel: 'Género',
-    entityProfileToggle: 'Detalles del perfil',
     entityRealNameLabel: 'Nombre real',
     entityArchetypeLabel: 'Arquetipo',
     entityTaglineLabel: 'Subtítulo / Lema',
@@ -402,6 +401,7 @@ export default {
     blobUrlUnsupportedAdmin: 'Las URL blob: (p. ej. de Gemini) están bloqueadas por la seguridad del navegador. Descarga el archivo o copia la imagen (clic derecho -> Copiar imagen) y pégala aquí.',
     blobUrlUnsupportedUser: 'Las URL blob: (p. ej. de Gemini) son temporales y están bloqueadas por el navegador. Proporciona un enlace público directo a la imagen (https://) desde un alojamiento (p. ej. Imgur).',
     officialPublicHub: 'Publicar como lista oficial (Pública en el centro)',
+    isActiveOfficialDesc: 'Controla si esta lista oficial está activa y disponible para jugar para los visitantes.',
     simpleVersion: 'Versión simple',
     simpleVersionDesc: 'Simple: Tarjetas rápidas + atractivos y límites opcionales',
     modeLockedHint: 'El modo solo se puede elegir antes de añadir candidatos.',
@@ -428,8 +428,8 @@ export default {
     startOver: 'Empezar de nuevo',
     closeToast: 'Cerrar',
     unnamedCandidate: 'Candidato sin nombre',
-    rolesGendersCount: '{roles} roles · {genders} géneros',
     focalPointLabel: 'Punto focal',
+    focalPointHint: 'Define qué parte del retrato permanece centrada en el marco de la tarjeta.',
   },
   cropModal: {
     title: 'Recortar y encuadrar imagen de portada',
@@ -451,6 +451,7 @@ export default {
     cancel: 'Cancelar',
     applyCrop: 'Aplicar recorte',
     dragHint: 'Arrastra para mover • Rueda para zoom ({zoom}%) • Banner 16:9',
+    dragHintRoster: 'Arrastra para mover • Rueda para zoom ({zoom}%) • Portada de lista (31:50)',
   },
   taxonomies: {
     rolesTitle: 'Roles de la lista',
@@ -494,7 +495,7 @@ export default {
     gradientSwap: 'Intercambiar colores',
     rulesHintAffinity: 'La afinidad es la proporción de tus smashes (%); el recuento es el número de smashes.',
     rulesHintPriority: 'Si coinciden varios arquetipos, gana el que tiene más condiciones y, en caso de empate, el que está más arriba en la lista.',
-    done: 'Listo',
+    done: 'Guardar',
   },
   sharing: {
     backToBreakdownTitle: 'Volver al resumen',

@@ -383,7 +383,6 @@ export default {
     entityMediaLabel: 'URL obrazu portretu',
     entityRoleLabel: 'Rola',
     entityGenderLabel: 'Płeć',
-    entityProfileToggle: 'Szczegóły profilu',
     entityRealNameLabel: 'Prawdziwe imię',
     entityArchetypeLabel: 'Archetyp',
     entityTaglineLabel: 'Podtytuł / Hasło postaci',
@@ -418,6 +417,7 @@ export default {
     blobUrlUnsupportedAdmin: 'Adresy blob: (np. z Gemini) są blokowane przez zabezpieczenia przeglądarki. Pobierz plik na dysk lub skopiuj sam obraz (PPM -> Kopiuj obraz) i wklej go tutaj.',
     blobUrlUnsupportedUser: 'Adresy blob: (np. z Gemini) są tymczasowe i zablokowane przez przeglądarkę. Wklej bezpośredni publiczny link internetowy do obrazu (https://) z hostingu (np. Imgur).',
     officialPublicHub: 'Opublikuj jako oficjalną listę (Publiczna w hubie)',
+    isActiveOfficialDesc: 'Przełącz, czy ta oficjalna lista jest aktywna i dostępna do gry dla odwiedzających.',
     simpleVersion: 'Wersja prosta',
     simpleVersionDesc: 'Prosta: Szybkie karty + opcjonalne zalety i wady',
     modeLockedHint: 'Tryb można wybrać tylko przed dodaniem kandydatów.',
@@ -444,8 +444,8 @@ export default {
     startOver: 'Zacznij od nowa',
     closeToast: 'Zamknij',
     unnamedCandidate: 'Kandydat bez nazwy',
-    rolesGendersCount: 'Role: {roles} · Płcie: {genders}',
     focalPointLabel: 'Punkt skupienia kadru',
+    focalPointHint: 'Wybierz, która część portretu pozostaje wyśrodkowana w kadrze karty.',
   },
   cropModal: {
     title: 'Przytnij i wykadruj obraz okładki',
@@ -467,6 +467,7 @@ export default {
     cancel: 'Anuluj',
     applyCrop: 'Zastosuj przycięcie',
     dragHint: 'Przeciągnij, aby przesunąć • Kółko myszy, aby przybliżyć ({zoom}%) • Baner 16:9',
+    dragHintRoster: 'Przeciągnij, aby przesunąć • Kółko myszy, aby przybliżyć ({zoom}%) • Okładka rosteru (31:50)',
   },
   taxonomies: {
     rolesTitle: 'Role w liście',
@@ -510,7 +511,7 @@ export default {
     gradientSwap: 'Zamień kolory',
     rulesHintAffinity: 'Powinowactwo to udział Twoich smashów (%), a liczba to łączna ilość smashów.',
     rulesHintPriority: 'Gdy pasuje kilka archetypów, wygrywa ten z największą liczbą warunków, a przy remisie ten wyżej na liście.',
-    done: 'Gotowe',
+    done: 'Zapisz',
   },
   sharing: {
     backToBreakdownTitle: 'Wróć do opisu',

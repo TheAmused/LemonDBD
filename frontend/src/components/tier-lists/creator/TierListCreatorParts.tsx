@@ -9,6 +9,7 @@ import { type LadderPresetId } from '@/utils/tierLists/creator';
 import { migrateTierListState } from '@/utils/tierLists/storage';
 import { useDictionary } from '@/context/DictionaryContext';
 import { AccordionSection } from '@/components/common/AccordionSection';
+import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { NsfwSwitch } from '@/components/common/NsfwSwitch';
 import { LabeledSwitch } from '@/components/common/Switch';
 import { Input } from '@/components/common/Field';
@@ -75,14 +76,31 @@ export function formatBytes(bytes: number, locale: string): string {
     : `${Math.max(1, Math.round(bytes / 1024)).toLocaleString(locale)} KB`;
 }
 
-export function Section({ title, defaultOpen = true, children }: { title: string; defaultOpen?: boolean; children: React.ReactNode }) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+export function Section({
+  title,
+  defaultOpen = true,
+  storageKey,
+  children,
+}: {
+  title: string;
+  defaultOpen?: boolean;
+  storageKey?: string;
+  children: React.ReactNode;
+}) {
+  const [persistedOpen, togglePersisted] = usePersistentDrawer(
+    storageKey || 'lemondbd_tierlist_creator_section_default',
+    defaultOpen
+  );
+  const [localOpen, setLocalOpen] = useState(defaultOpen);
+
+  const isOpen = storageKey ? persistedOpen : localOpen;
+  const onToggle = storageKey ? togglePersisted : () => setLocalOpen((prev) => !prev);
 
   return (
     <AccordionSection
       title={title}
       open={isOpen}
-      onToggle={() => setIsOpen((prev) => !prev)}
+      onToggle={onToggle}
       as="section"
     >
       {children}
@@ -154,7 +172,7 @@ export function TierListBasicsSection({
   const c = t.creator;
 
   return (
-    <Section title={c.stepBasics}>
+    <Section title={c.stepBasics} storageKey="lemondbd_tierlist_creator_section_basics">
       <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
         <div className="flex flex-wrap items-center gap-x-8 gap-y-3 md:col-span-2">
           <NsfwSwitch

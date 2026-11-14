@@ -72,6 +72,24 @@ describe('Phase 2: Roster Management Polish', () => {
       assert.equal(localBadge.textContent?.trim(), 'Imported');
     });
 
+    it('displays "@author_login" badge when imported roster has author_login', () => {
+      const roster = mockRoster({ is_local: true, is_imported: true, author_id: 999, author_login: 'dwight' });
+      const view = render(
+        <RosterCarouselCard
+          roster={roster}
+          visualOffset={0}
+          isDragging={false}
+          isCurrentlyActive={false}
+          onJump={() => {}}
+          onCommit={() => {}}
+        />,
+        { wrapper: withDictionary() }
+      );
+      const localBadge = view.container.querySelector('[data-testid="roster-local-badge"]');
+      assert.ok(localBadge);
+      assert.equal(localBadge.textContent?.trim(), '@dwight');
+    });
+
     it('groups NSFW and Active badges in the top right container', () => {
       const roster = mockRoster({ is_nsfw: true });
       const view = render(

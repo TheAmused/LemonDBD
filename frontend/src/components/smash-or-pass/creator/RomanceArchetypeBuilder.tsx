@@ -47,6 +47,10 @@ const isPercentTarget = (target: ArchetypeRule['target']) => target === 'smash_r
 /** A rule value as its target allows it: 0-100 for a percentage, any whole number otherwise. */
 const capRuleValue = (target: ArchetypeRule['target'], value: number) => (isPercentTarget(target) ? Math.min(100, value) : value);
 
+/** Title is required; non-fallback archetypes must have at least one evaluation rule. */
+const isArchetypeComplete = (a: CustomRomanceArchetype): boolean =>
+  Boolean(a.title.trim() && (a.is_fallback || a.rules.length > 0));
+
 interface RomanceArchetypeBuilderProps {
   archetypes: CustomRomanceArchetype[];
   onChange: (archetypes: CustomRomanceArchetype[]) => void;
@@ -200,7 +204,10 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                   <div className="p-4 sm:p-5 border-t border-border-color/60 space-y-5 bg-bg-surface/50">
                     <div className="grid gap-3 sm:grid-cols-2">
                       <div>
-                        <label className={LABEL}>{ab.titleLabel}</label>
+                        <label className={LABEL}>
+                          {ab.titleLabel}
+                          <span className="ml-0.5 text-accent-red" aria-hidden="true">*</span>
+                        </label>
                         <Input
                           fieldSize="md"
                           value={arch.title}
@@ -222,7 +229,9 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                     </div>
 
                     <div>
-                      <label className={LABEL}>{ab.descriptionLabel}</label>
+                      <label className={LABEL}>
+                        {ab.descriptionLabel}
+                      </label>
                       <Textarea
                         fieldSize="md"
                         value={arch.description}
@@ -410,9 +419,14 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                     </div>
 
                     <div className="flex justify-end pt-3 border-t border-border-color/60">
-                      <Button variant="secondary" size="sm" onClick={() => setExpandedId(null)}>
+                      <Button
+                        variant={isArchetypeComplete(arch) ? 'primary' : 'secondary'}
+                        size="sm"
+                        onClick={() => setExpandedId(null)}
+                        disabled={!isArchetypeComplete(arch)}
+                      >
                         <Check className="icon-sm" />
-                        <span>{ab.done || dict.modal?.done || 'Done'}</span>
+                        <span>{ab.done || dict.modal?.done || 'Save'}</span>
                       </Button>
                     </div>
                   </div>
@@ -424,7 +438,12 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
       )}
 
       <div className="flex justify-center pt-1">
-        <Button variant="secondary" size="md" onClick={addArchetype}>
+        <Button
+          variant="secondary"
+          size="md"
+          onClick={addArchetype}
+          disabled={archetypes.some((a) => !isArchetypeComplete(a))}
+        >
           <Plus />
           <span>{ab.addArchetype}</span>
         </Button>

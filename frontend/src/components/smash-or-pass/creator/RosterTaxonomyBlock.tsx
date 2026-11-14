@@ -7,7 +7,7 @@ import { Plus, X, User } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
-import { GENDER_QUICK_PICKS, SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
+import { GENDER_QUICK_PICKS, ROLE_QUICK_PICKS, SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
 import { canonicalGender, genderLabel } from '@/utils/smashOrPass/terms';
 import { Badge } from '@/components/common/Badge';
 import { MaskIcon } from '@/components/icons/DbdIcons';
@@ -94,7 +94,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
 
         {/* Quick Suggestion Chips */}
         <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1">
-          {['Survivor', 'Killer', 'Hero', 'Villain', 'Neutral'].map((preset) => {
+          {[...ROLE_QUICK_PICKS, 'Hero', 'Villain', 'Neutral'].map((preset) => {
             const isAdded = roles.some((r) => r.toLowerCase() === preset.toLowerCase());
             if (isAdded) return null;
             return (

@@ -7,12 +7,12 @@
  */
 import { Tabs } from '@/components/common/Tabs';
 import { useRef, useState } from 'react';
-import { ChevronDown, Trash2, Upload, Image as ImageIcon } from 'lucide-react';
+import { Trash2, Upload, Image as ImageIcon } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { sanitizeImageUrl } from '@/utils/smashOrPass/codec';
 import { IMAGE_SIZE_PRESETS, MAX_DATA_IMAGE_CHARS, resizeImageToDataUrl } from '@/utils/imageResize';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
-import { SMASH_ROSTER_LIMITS, TRANSLATABLE_FIELDS, TRANSLATABLE_LOCALES,GENDER_QUICK_PICKS,ROLE_QUICK_PICKS } from '@/utils/smashOrPass/constants';
+import { SMASH_ROSTER_LIMITS, TRANSLATABLE_FIELDS, TRANSLATABLE_LOCALES } from '@/utils/smashOrPass/constants';
 import type { RosterCustomLabels } from '@/types/smashOrPass';
 import { LABEL } from './styles';
 import { RequiredMark } from './RequiredMark';
@@ -66,13 +66,12 @@ export function CandidateFormInputs({
       onTranslationChange,
       isSimpleMode = false,
       customLabels = {},
-      availableRoles = [...ROLE_QUICK_PICKS],
-      availableGenders = [...GENDER_QUICK_PICKS],
+      availableRoles = [],
+      availableGenders = [],
     }: CandidateFormInputsProps) {
   const dict = useDictionary();
   const c = dict.smashOrPass.creator || {};
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [profileOpen, setProfileOpen] = useState(false);
   const [activeLocale, setActiveLocale] = useState<string>(TRANSLATABLE_LOCALES[0]);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -191,7 +190,10 @@ export function CandidateFormInputs({
             {/* 9-point focal point selector when candidate has media */}
             {Boolean(safeMedia || entity.media_url.trim()) && (
               <div className="flex flex-col items-center gap-1.5 pt-1">
-                <span className="type-micro text-text-muted font-medium">
+                <span
+                  className={cn("type-micro text-text-muted font-medium", c.focalPointHint && "cursor-help underline decoration-dotted underline-offset-2")}
+                  {...(c.focalPointHint ? tip(c.focalPointHint, undefined, 'default') : {})}
+                >
                   {c.focalPointLabel}
                 </span>
                 <div
@@ -322,6 +324,7 @@ export function CandidateFormInputs({
                   className="w-full"
                   buttonClassName="w-full"
                   minWidthClass="min-w-full"
+                  matchWidth
                   accent="primary"
                 />
               </div>
@@ -348,6 +351,7 @@ export function CandidateFormInputs({
                   className="w-full"
                   buttonClassName="w-full"
                   minWidthClass="min-w-full"
+                  matchWidth
                   accent="primary"
                 />
               </div>
@@ -402,22 +406,8 @@ export function CandidateFormInputs({
           </div>
         )}
 
-        {/* Full Mode: Collapsible Profile Details Toggle */}
+        {/* Full Mode: Profile Details directly visible */}
         {!isSimpleMode && (
-          <div className="pt-2 border-t border-border-color/60 flex justify-center">
-            <Button
-              variant="secondary" size="sm"
-              onClick={() => setProfileOpen((v) => !v)}
-              aria-expanded={profileOpen}
-              className="uppercase tracking-wider"
-            >
-              <ChevronDown className={cn('icon-sm text-accent-red transition-transform', profileOpen && 'rotate-180')} aria-hidden="true" />
-              <span>{c.entityProfileToggle}</span>
-            </Button>
-          </div>
-        )}
-
-        {!isSimpleMode && profileOpen && (
           <div className="grid gap-3 sm:grid-cols-2 pt-2 border-t border-border-color/40 max-w-3xl 2xl:max-wide-2k:max-w-4xl wide-2k:max-w-6xl mx-auto w-full">
             <TextField label={c.entityRealNameLabel} value={entity.real_name} max={SMASH_ROSTER_LIMITS.maxRealName} onChange={(v) => onChange({ real_name: v })} />
             <TextField label={customLabels.archetype || c.entityArchetypeLabel} value={entity.archetype} max={SMASH_ROSTER_LIMITS.maxArchetype} onChange={(v) => onChange({ archetype: v })} />

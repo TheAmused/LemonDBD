@@ -62,7 +62,7 @@ export function RosterCarouselCard({
   const absOffset = Math.abs(visualOffset);
   const isCenter = absOffset < 0.5;
   const isRosterEnabled = r.is_active !== false;
-  const isYours = !r.is_imported || Boolean(r.author_id && user?.id && r.author_id === user.id);
+  const isYours = !r.is_imported || Boolean(r.author_id && user?.id && r.author_id === user.id) || Boolean(r.author_login && user?.username && r.author_login === user.username);
   const count = r.entity_count ?? r.character_count ?? 0;
   const rawCoverUrl = rosterCoverUrl(r);
   const thumbCoverUrl = getCommunityCoverThumbUrl(rawCoverUrl, 480) || rawCoverUrl;
@@ -238,7 +238,7 @@ export function RosterCarouselCard({
               isYours ? "border-accent-amber/40 text-accent-amber" : "border-border-color text-text-secondary"
             )}
           >
-            <span>{isYours ? dict.smashOrPass.picker.yours : dict.smashOrPass.picker.imported}</span>
+            <span>{isYours ? dict.smashOrPass.picker.yours : (r.author_login ? `@${r.author_login}` : dict.smashOrPass.picker.imported)}</span>
           </div>
         )}
 

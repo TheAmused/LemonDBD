@@ -367,7 +367,6 @@ export default {
     entityMediaLabel: 'Porträtbild-URL',
     entityRoleLabel: 'Rolle',
     entityGenderLabel: 'Geschlecht',
-    entityProfileToggle: 'Profildetails',
     entityRealNameLabel: 'Echter Name',
     entityArchetypeLabel: 'Archetyp',
     entityTaglineLabel: 'Untertitel / Motto',
@@ -402,6 +401,7 @@ export default {
     blobUrlUnsupportedAdmin: 'Blob-URLs (z. B. von Gemini) werden durch Browser-Sicherheit blockiert. Lade die Datei herunter oder kopiere das Bild (Rechtsklick -> Bild kopieren) und füge es hier ein.',
     blobUrlUnsupportedUser: 'Blob-URLs (z. B. von Gemini) sind temporär und werden durch Browser-Sicherheit blockiert. Bitte gib einen direkten öffentlichen Bildlink (https://) von einem Hoster (z. B. Imgur) an.',
     officialPublicHub: 'Als offizielle Liste veröffentlichen (Öffentlich im Hub)',
+    isActiveOfficialDesc: 'Schalte um, ob diese offizielle Liste aktiv und für Besucher spielbar ist.',
     simpleVersion: 'Einfache Version',
     simpleVersionDesc: 'Einfach: Schnelle Karten + optionale Vorlieben & Ausschlusskriterien',
     modeLockedHint: 'Der Modus kann nur vor dem Hinzufügen von Kandidaten gewählt werden.',
@@ -428,8 +428,8 @@ export default {
     startOver: 'Neu beginnen',
     closeToast: 'Schließen',
     unnamedCandidate: 'Unbenannter Kandidat',
-    rolesGendersCount: '{roles} Rollen · {genders} Geschlechter',
     focalPointLabel: 'Fokuspunkt',
+    focalPointHint: 'Legt fest, welcher Bereich des Porträts im Kartenausschnitt zentriert bleibt.',
   },
   cropModal: {
     title: 'Titelbild zuschneiden & anpassen',
@@ -451,6 +451,7 @@ export default {
     cancel: 'Abbrechen',
     applyCrop: 'Zuschnitt anwenden',
     dragHint: 'Ziehen zum Verschieben • Mausrad zum Zoomen ({zoom}%) • 16:9-Banner',
+    dragHintRoster: 'Ziehen zum Verschieben • Mausrad zum Zoomen ({zoom}%) • Roster-Cover (31:50)',
   },
   taxonomies: {
     rolesTitle: 'Listen-Rollen',
@@ -494,7 +495,7 @@ export default {
     gradientSwap: 'Farben tauschen',
     rulesHintAffinity: 'Affinität ist der Anteil deiner Smashes (%), Anzahl ist die Zahl der Smashes.',
     rulesHintPriority: 'Passen mehrere Archetypen, gewinnt der mit den meisten Bedingungen, danach der weiter oben in der Liste.',
-    done: 'Fertig',
+    done: 'Speichern',
   },
   sharing: {
     backToBreakdownTitle: 'Zurück zur Übersicht',

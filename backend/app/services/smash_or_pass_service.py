@@ -318,6 +318,7 @@ class SmashOrPassService(SmashVotesMixin, SmashRosterAdminMixin):
             "is_nsfw": roster.is_nsfw,
             "is_active": roster.is_active,
             "portrait_offset_y": roster.portrait_offset_y,
+            "romance_archetypes": roster.romance_archetypes or [],
             "entities": [],
         }
         for e in entities:

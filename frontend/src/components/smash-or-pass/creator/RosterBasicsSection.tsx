@@ -32,6 +32,7 @@ interface RosterBasicsSectionProps {
   isUserAdmin: boolean;
   official: boolean;
   onOfficialChange: (official: boolean) => void;
+  officialSlug?: string;
   onOpenCrop: () => void;
   /** Extra content under the form, e.g. the translations panel. */
   children?: ReactNode;
@@ -47,6 +48,7 @@ export function RosterBasicsSection({
   isUserAdmin,
   official,
   onOfficialChange,
+  officialSlug,
   onOpenCrop,
   children,
 }: RosterBasicsSectionProps) {
@@ -57,7 +59,7 @@ export function RosterBasicsSection({
     draft.entities.some((e) => Boolean(e.name.trim() || e.media_url.trim())) || draft.entities.length > 1;
 
   return (
-    <Section title={c.stepBasics}>
+    <Section title={c.stepBasics} storageKey="lemondbd_smash_creator_section_basics">
       <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-5xl wide-2k:max-w-7xl mx-auto grid gap-4 2xl:gap-6 md:grid-cols-2">
         <label className="md:col-span-2">
           <span className={LABEL}>
@@ -94,9 +96,9 @@ export function RosterBasicsSection({
             placeholder={c.coverImagePlaceholder}
             invalid={attempted && coverInvalid}
             invalidMessage={c.invalidImage || dict.tierLists.invalidImage}
-            aspectRatio="banner"
-            previewClassName="h-96 w-full"
-            dropzoneClassName="h-96 w-full"
+            aspectRatio="portrait"
+            previewClassName="h-96 w-auto aspect-[31/50] mx-auto rounded-card overflow-hidden"
+            dropzoneClassName="h-96 w-full max-w-xs mx-auto"
             allowFileUpload={isUserAdmin}
             onPreviewClick={isUserAdmin ? () => onOpenCrop() : undefined}
             previewOverlay={
@@ -166,8 +168,8 @@ export function RosterBasicsSection({
             />
           </Tooltip>
 
-          {/* Official Roster Switch (Admin only) */}
-          {isUserAdmin && (
+          {/* Official Roster Switch (Admin only, only for new rosters) */}
+          {isUserAdmin && !officialSlug && (
             <Tooltip variant="action"
               title={c.officialPublicHub}
               description="Publish directly to the public Hub directory for all visitors."
@@ -177,6 +179,21 @@ export function RosterBasicsSection({
                 onChange={onOfficialChange}
                 label={c.officialPublicHub}
                 labelClassName="type-strong-fluid text-accent-red group-hover:underline transition-colors"
+              />
+            </Tooltip>
+          )}
+
+          {/* Active / Remote Toggle (Admin only, for official rosters) */}
+          {isUserAdmin && (official || Boolean(officialSlug)) && (
+            <Tooltip variant="action"
+              title={dict.tierLists.creator.publishedLabel}
+              description={c.isActiveOfficialDesc}
+            >
+              <LabeledSwitch
+                checked={draft.is_active !== false}
+                onChange={(checked) => patch({ is_active: checked })}
+                label={dict.tierLists.creator.publishedLabel}
+                labelClassName="type-strong-fluid text-accent-green group-hover:underline transition-colors"
               />
             </Tooltip>
           )}

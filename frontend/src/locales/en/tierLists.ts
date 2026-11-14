@@ -160,7 +160,6 @@ export default {
     backgroundImagePlaceholder: "https://...",
     backgroundImageHint: "An https:// link or a data:image URI. Shown behind the card in My Custom Lists.",
     cropCoverTitle: "Crop / Reframe cover image",
-    cropCoverBadge: "Crop 16:9",
     cropClickPrompt: "Click to Crop / Reframe (16:9)",
     publishedLabel: "Published (visible to public)",
     cardPreviewHeading: "How it'll look in My Custom Lists",

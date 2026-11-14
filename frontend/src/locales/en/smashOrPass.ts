@@ -404,7 +404,6 @@ export default {
     simpleVersionDesc: 'Simple: Fast cards + optional turn-on & dealbreaker',
     modeLockedHint: 'Mode can only be chosen before adding candidates.',
     cropCoverTitle: 'Crop / Reframe cover image',
-    cropCoverBadge: 'Crop 16:9',
     cropClickPrompt: 'Click to Crop / Reframe (16:9)',
     rolesGendersTitle: 'Roles & Genders',
     customArchetypesTitle: 'Custom Romance Archetypes',

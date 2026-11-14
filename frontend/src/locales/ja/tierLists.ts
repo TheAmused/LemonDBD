@@ -160,7 +160,6 @@ export default {
     backgroundImagePlaceholder: "https://...",
     backgroundImageHint: "https:// のリンク、または data:image URI。「マイカスタムリスト」のカード背景に表示されます。",
     cropCoverTitle: "カバー画像をトリミング / 調整",
-    cropCoverBadge: "16:9 でトリミング",
     cropClickPrompt: "クリックしてトリミング / 調整 (16:9)",
     publishedLabel: "公開（ユーザーに表示）",
     cardPreviewHeading: "マイカスタムリストでの見え方",

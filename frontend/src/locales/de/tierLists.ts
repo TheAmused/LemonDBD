@@ -160,7 +160,6 @@ export default {
     backgroundImagePlaceholder: "https://...",
     backgroundImageHint: "Ein https://-Link oder eine data:image-URI. Wird hinter der Karte in „Meine eigenen Listen“ angezeigt.",
     cropCoverTitle: "Titelbild zuschneiden / anpassen",
-    cropCoverBadge: "Zuschneiden 16:9",
     cropClickPrompt: "Klicken zum Zuschneiden / Anpassen (16:9)",
     publishedLabel: "Veröffentlicht (für Benutzer sichtbar)",
     cardPreviewHeading: "So sieht es in „Meine eigenen Listen“ aus",

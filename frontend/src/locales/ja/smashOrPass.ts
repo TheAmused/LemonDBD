@@ -398,6 +398,8 @@ export default {
     saveError: 'このリストの保存中に問題が発生しました。もう一度お試しください。',
     validationNameRequired: 'このリストに名前を付けてください。',
     validationEntityRequired: '候補者を少なくとも1人追加してください。',
+    addCandidateDisabledHint: '次の候補者を追加する前に、現在の候補者の名前、役割、性別を入力してください。',
+    incompleteCandidatesError: '保存する前に、すべての候補者の名前、役割、性別を入力してください。',
     invalidImage: 'そのカバー画像のリンクは無効です。',
     officialPublicHub: '公式名簿として公開（ハブで全体公開）',
     simpleVersion: 'シンプル版',

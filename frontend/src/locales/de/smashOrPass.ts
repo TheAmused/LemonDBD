@@ -398,6 +398,8 @@ export default {
     saveError: 'Beim Speichern dieser Liste ist etwas schiefgelaufen. Bitte versuche es erneut.',
     validationNameRequired: 'Gib dieser Liste einen Namen.',
     validationEntityRequired: 'Füge mindestens einen Kandidaten hinzu.',
+    addCandidateDisabledHint: 'Füllen Sie Name, Rolle und Geschlecht des aktuellen Kandidaten aus, bevor Sie einen weiteren hinzufügen.',
+    incompleteCandidatesError: 'Alle Kandidaten müssen vor dem Speichern Name, Rolle und Geschlecht haben.',
     invalidImage: 'Dieser Titelbild-Link ist ungültig.',
     officialPublicHub: 'Als offizielle Liste veröffentlichen (Öffentlich im Hub)',
     simpleVersion: 'Einfache Version',

@@ -398,6 +398,8 @@ export default {
     saveError: 'Something went wrong saving this roster. Please try again.',
     validationNameRequired: 'Give this roster a name.',
     validationEntityRequired: 'Add at least one candidate.',
+    addCandidateDisabledHint: 'Fill in name, role, and gender for the current candidate before adding another.',
+    incompleteCandidatesError: 'All candidates must have a name, role, and gender before saving.',
     invalidImage: 'That cover image link is invalid.',
     officialPublicHub: 'Publish as Official Roster (Public on Hub)',
     simpleVersion: 'Simple Version',

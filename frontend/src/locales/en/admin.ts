@@ -29,7 +29,6 @@ export default {
   refresh: "Refresh",
   analyticsTitle: "Open the Umami analytics dashboard (page views, feature usage)",
   analytics: "Analytics",
-  enabledLabel: "Enabled",
   disabledLabel: "Disabled",
   searchGenericPlaceholder: "Search by name",
   disable: "Disable",

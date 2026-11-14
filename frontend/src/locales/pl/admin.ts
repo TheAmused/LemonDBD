@@ -29,7 +29,6 @@ export default {
   refresh: "Odśwież",
   analyticsTitle: "Otwórz panel analityki Umami (wyświetlenia, funkcje)",
   analytics: "Analityka",
-  enabledLabel: "Włączone",
   disabledLabel: "Wyłączone",
   searchGenericPlaceholder: "Szukaj po nazwie",
   disable: "Wyłącz",

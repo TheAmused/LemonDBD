@@ -55,7 +55,6 @@ export default {
   passwordResetSuccess: "Your password has been reset successfully!",
   goToHome: "Go to Home",
   resetPassword: "Reset Password",
-  adminPanel: "Admin Control Center",
   streaks: "Challenges & Streaks",
   generator: "Perk Randomizer",
   maps: "Map Explorer",

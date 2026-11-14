@@ -29,7 +29,6 @@ export default {
   refresh: "更新",
   analyticsTitle: "Umamiアナリティクスダッシュボードを開く（PV・機能利用状況）",
   analytics: "アナリティクス",
-  enabledLabel: "有効",
   disabledLabel: "無効",
   searchGenericPlaceholder: "名前で検索",
   disable: "無効化",

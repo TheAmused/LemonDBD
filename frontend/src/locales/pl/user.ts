@@ -55,7 +55,6 @@ export default {
   passwordResetSuccess: "Twoje hasło zostało pomyślnie zresetowane!",
   goToHome: "Przejdź do Strony Głównej",
   resetPassword: "Zresetuj Hasło",
-  adminPanel: "Panel Administracyjny",
   streaks: "Wyzwania i Streaki",
   generator: "Losownik Umiejętności",
   maps: "Eksplorator Map",

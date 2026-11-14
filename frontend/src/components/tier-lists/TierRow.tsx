@@ -134,20 +134,23 @@ export const TierRow = React.memo(function TierRow({
       {onClearRow && (
         <div className="flex shrink-0 items-stretch border-l border-border-color/80 group-data-[fit-mode]/board:hidden">
           {keys.length > 0 ? (
-            <button
+            <Button
               type="button"
+              variant="dangerSoft"
+              size="sm"
+              icon
               onClick={(e) => {
                 e.stopPropagation();
                 onClearRow(tier.id);
               }}
               {...tip(formatMessage(t.clearTierAria, { label: tier.label }), undefined, 'action')}
               aria-label={formatMessage(t.clearTierAria, { label: tier.label })}
-              className="flex w-10 sm:w-12 h-full items-center justify-center bg-accent-red/15 text-accent-red hover:bg-accent-red hover:text-text-inverted cursor-pointer transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red"
+              className="w-11 sm:w-12 h-full"
             >
               <Eraser className="icon-lg sm:icon-xl shrink-0 transition-transform hover:scale-110" aria-hidden="true" />
-            </button>
+            </Button>
           ) : (
-            <span aria-hidden="true" className="w-10 sm:w-12" />
+            <span aria-hidden="true" className="w-11 sm:w-12" />
           )}
         </div>
       )}

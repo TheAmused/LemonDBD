@@ -2,14 +2,14 @@
 // frontend/src/components/smash-or-pass/RosterSelectModal.tsx
 
 import React from 'react';
-import { CardStackIcon, UploadIcon, ChevronIcon } from '@/components/icons/DbdIcons';
+import { CardStackIcon, ChevronIcon } from '@/components/icons/DbdIcons';
 import type { RosterItem } from '@/types/smashOrPass';
 import { Modal } from '@/components/common/Modal';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
 import { useAuth } from '@/context/AuthContext';
 import { useDictionary } from "@/context/DictionaryContext";
 import { RosterCarouselCard } from './roster-select/RosterCarouselCard';
-import { RosterPickerFooter } from './roster-select/RosterPickerFooter';
+import { RosterHeaderActions, RosterPickerFooter } from './roster-select/RosterPickerFooter';
 import { useRosterCarousel } from './roster-select/useRosterCarousel';
 
 import { Button } from '@/components/common/Button';
@@ -112,29 +112,15 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
             {selectRosterTitle}
           </h2>
 
-          {(onCreateRoster || onImportRoster) && (
-            <div className="flex flex-wrap items-center justify-center gap-2 pt-0.5">
-              {onCreateRoster && (
-                <Button
-                  type="button"
-                  onClick={onCreateRoster}
-                  variant="soft" size="sm"
-                >
-                  {dict.smashOrPass.picker.createRoster}
-                </Button>
-              )}
-              {onImportRoster && (
-                <Button
-                  type="button"
-                  onClick={onImportRoster}
-                  variant="secondary" size="sm"
-                >
-                  <UploadIcon className="icon-md" aria-hidden="true" />
-                  {dict.smashOrPass.picker.importRoster}
-                </Button>
-              )}
-            </div>
-          )}
+          <RosterHeaderActions
+            activeRosterInCenter={activeRosterInCenter}
+            onCreateRoster={onCreateRoster}
+            onImportRoster={onImportRoster}
+            onEditRoster={onEditRoster}
+            onExportRoster={onExportRoster}
+            onDeleteRoster={onDeleteRoster}
+            onReportRoster={onReportRoster}
+          />
         </div>
 
         <section

@@ -257,9 +257,7 @@ export default {
     button: 'エフェクト・効果音・音楽',
     buttonDesc: 'どのエフェクト、効果音、音楽を再生するかを変更します。',
     promptTitle: '体験と雰囲気の設定',
-    promptMessage: '旅に合わせた効果音、視覚アニメーション、成人向けコンテンツフィルターをカスタマイズできます。',
     smashPromptTitle: 'マッチの安全性と雰囲気設定',
-    smashPromptDesc: '霧に入る前に、マッチの体験方法を設定してください。',
     epilepsyWarningTitle: '光感受性に関する警告',
     epilepsyWarningBody: '急なアニメーション、点滅、効果音が含まれ、発作や不快感を引き起こす可能性があります。設定で無効にできます。',
     goToSettings: '設定',
@@ -288,6 +286,7 @@ export default {
   picker: {
     confirm: '決定',
     yours: 'マイリスト',
+    imported: 'インポート済み',
     createRoster: 'リストを作成',
     importRoster: 'インポート',
     editRoster: '編集',

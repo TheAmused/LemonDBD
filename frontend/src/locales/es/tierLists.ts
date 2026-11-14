@@ -55,8 +55,6 @@ export default {
   showPool: "Mostrar sin clasificar",
   hidePool: "Ocultar sin clasificar",
   moveHere: "Mover aquí",
-  selectedHint: "Toca un nivel para mover {name}",
-  cancelSelection: "Cancelar",
   dragHint: "Arrastra elementos a los niveles, o toca un elemento y luego un nivel.",
 
   reset: "Restablecer",

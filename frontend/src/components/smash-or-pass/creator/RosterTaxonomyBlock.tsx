@@ -7,7 +7,7 @@ import { Plus, X, User } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
-import { GENDER_QUICK_PICKS } from '@/utils/smashOrPass/constants';
+import { GENDER_QUICK_PICKS, SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
 import { canonicalGender, genderLabel } from '@/utils/smashOrPass/terms';
 import { Badge } from '@/components/common/Badge';
 import { MaskIcon } from '@/components/icons/DbdIcons';
@@ -71,6 +71,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
           <Input
             fieldSize="md"
             type="text"
+            maxLength={SMASH_ROSTER_LIMITS.maxRoleOrGender}
             value={newRoleInput}
             onChange={(e) => setNewRoleInput(e.target.value)}
             onKeyDown={(e) => {
@@ -146,6 +147,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
           <Input
             fieldSize="md"
             type="text"
+            maxLength={SMASH_ROSTER_LIMITS.maxRoleOrGender}
             value={newGenderInput}
             onChange={(e) => setNewGenderInput(e.target.value)}
             onKeyDown={(e) => {

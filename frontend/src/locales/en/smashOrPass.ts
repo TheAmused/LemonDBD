@@ -257,9 +257,7 @@ export default {
     button: 'Effects, sounds and music',
     buttonDesc: 'Change which effects, sounds and music play.',
     promptTitle: 'Experience & Atmosphere',
-    promptMessage: 'Fine-tune sound effects, visual animations, and mature content filters for your journey.',
     smashPromptTitle: 'Trial Safety & Atmosphere',
-    smashPromptDesc: 'Configure how you experience trials before stepping into the fog.',
     epilepsyWarningTitle: 'Photosensitivity Warning',
     epilepsyWarningBody: 'Features rapid animations, flashes, and sudden sounds that may trigger seizures or discomfort. You can disable effects in Settings.',
     goToSettings: 'Settings',
@@ -288,6 +286,7 @@ export default {
   picker: {
     confirm: 'Confirm',
     yours: 'Yours',
+    imported: 'Imported',
     createRoster: 'Create Roster',
     importRoster: 'Import',
     editRoster: 'Edit',

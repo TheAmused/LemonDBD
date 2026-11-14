@@ -257,9 +257,7 @@ export default {
     button: 'Efectos, sonidos y música',
     buttonDesc: 'Cambia qué efectos, sonidos y música se reproducen.',
     promptTitle: 'Experiencia y atmósfera',
-    promptMessage: 'Personaliza efectos de sonido, animaciones visuales y filtros de contenido para adultos en tu viaje.',
     smashPromptTitle: 'Seguridad y atmósfera de la prueba',
-    smashPromptDesc: 'Configura cómo quieres vivir las pruebas antes de adentrarte en la niebla.',
     epilepsyWarningTitle: 'Aviso de fotosensibilidad',
     epilepsyWarningBody: 'Incluye animaciones rápidas, destellos y sonidos que pueden provocar convulsiones o molestias. Puedes desactivarlos en Ajustes.',
     goToSettings: 'Ajustes',
@@ -288,6 +286,7 @@ export default {
   picker: {
     confirm: 'Confirmar',
     yours: 'Tuyos',
+    imported: 'Importado',
     createRoster: 'Crear Lista',
     importRoster: 'Importar',
     editRoster: 'Editar',

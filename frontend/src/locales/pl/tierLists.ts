@@ -55,8 +55,6 @@ export default {
   showPool: "Pokaż nieocenione",
   hidePool: "Ukryj nieocenione",
   moveHere: "Przenieś tutaj",
-  selectedHint: "Dotknij tieru, aby przenieść: {name}",
-  cancelSelection: "Anuluj",
   dragHint: "Przeciągaj elementy do tierów albo dotknij elementu, a potem tieru.",
 
   reset: "Resetuj",

@@ -1,10 +1,11 @@
 'use client';
 // frontend/src/components/smash-or-pass/creator/RosterBasicsSection.tsx
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Crop } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { Button } from '@/components/common/Button';
 import { Input, Textarea } from '@/components/common/Field';
+import { CustomDropdown } from '@/components/common/CustomDropdown';
 
 const ImageUploadDropzone = dynamic(
   () => import('@/components/common/ImageUploadDropzone').then((m) => m.ImageUploadDropzone),
@@ -14,7 +15,7 @@ import { LabeledSwitch } from '@/components/common/Switch';
 import { Tooltip, tip } from '@/components/common/Tooltip';
 import { useDictionary } from '@/context/DictionaryContext';
 import { defaultRosterThemeColor, SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
-import { type Draft, Section } from './SmashRosterCreatorParts';
+import { type Draft, type RosterTranslations, Section } from './SmashRosterCreatorParts';
 import { LABEL } from './styles';
 import { RequiredMark } from './RequiredMark';
 import { GradientEditor } from './GradientEditor';
@@ -34,6 +35,8 @@ interface RosterBasicsSectionProps {
   onOfficialChange: (official: boolean) => void;
   officialSlug?: string;
   onOpenCrop: () => void;
+  rosterTranslations?: RosterTranslations;
+  onRosterTranslationChange?: (locale: string, field: 'name' | 'description', value: string) => void;
   /** Extra content under the form, e.g. the translations panel. */
   children?: ReactNode;
 }
@@ -50,10 +53,18 @@ export function RosterBasicsSection({
   onOfficialChange,
   officialSlug,
   onOpenCrop,
+  rosterTranslations,
+  onRosterTranslationChange,
   children,
 }: RosterBasicsSectionProps) {
   const dict = useDictionary();
   const c = dict.smashOrPass.creator;
+  const [activeLocale, setActiveLocale] = useState<string>('en');
+
+  const isBaseLocale = activeLocale === 'en';
+  const sharedNotice = !isBaseLocale ? (
+    <span className="type-micro text-text-muted/70 font-normal ml-1">({c.sharedFieldNotice})</span>
+  ) : null;
 
   const hasCandidates =
     draft.entities.some((e) => Boolean(e.name.trim() || e.media_url.trim())) || draft.entities.length > 1;
@@ -61,6 +72,28 @@ export function RosterBasicsSection({
   return (
     <Section title={c.stepBasics} storageKey="lemondbd_smash_creator_section_basics">
       <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-5xl wide-2k:max-w-7xl mx-auto grid gap-4 2xl:gap-6 md:grid-cols-2">
+        <div className="md:col-span-2 flex flex-wrap items-center justify-between gap-2 pb-1 border-b border-border-color/40">
+          <span className="type-label-sm text-text-secondary font-medium">
+            {activeLocale === 'en' ? c.rosterDetailsLabel || 'Roster Details' : `${c.rosterDetailsLabel || 'Roster Details'} (${activeLocale.toUpperCase()})`}
+          </span>
+          <div className="flex items-center gap-2">
+            <span className="type-micro text-text-muted">{c.editingLanguageLabel}:</span>
+            <CustomDropdown<string>
+              value={activeLocale}
+              onChange={(loc) => setActiveLocale(loc)}
+              options={[
+                { value: 'en', label: c.baseLanguageLabel },
+                { value: 'pl', label: 'Polski (PL)' },
+                { value: 'de', label: 'Deutsch (DE)' },
+                { value: 'es', label: 'Español (ES)' },
+                { value: 'ja', label: '日本語 (JA)' },
+              ]}
+              ariaLabel={c.editingLanguageLabel}
+              accent="primary"
+            />
+          </div>
+        </div>
+
         <label className="md:col-span-2">
           <span className={LABEL}>
             {c.nameLabel}
@@ -68,11 +101,17 @@ export function RosterBasicsSection({
           </span>
           <Input
             fieldSize="md"
-            invalid={attempted && nameMissing}
-            value={draft.name}
+            invalid={attempted && nameMissing && isBaseLocale}
+            value={isBaseLocale ? draft.name : rosterTranslations?.[activeLocale]?.name || ''}
             maxLength={SMASH_ROSTER_LIMITS.maxRosterName}
-            onChange={(e) => patch({ name: e.target.value })}
-            placeholder={c.namePlaceholder}
+            onChange={(e) => {
+              if (isBaseLocale) {
+                patch({ name: e.target.value });
+              } else {
+                onRosterTranslationChange?.(activeLocale, 'name', e.target.value);
+              }
+            }}
+            placeholder={isBaseLocale ? c.namePlaceholder : (draft.name || c.rosterNamePlaceholder || c.namePlaceholder)}
             className="2xl:min-h-hit-xl 2xl:text-base"
           />
         </label>
@@ -80,10 +119,16 @@ export function RosterBasicsSection({
           <span className={LABEL}>{c.descriptionLabel}</span>
           <Textarea
             fieldSize="md"
-            value={draft.description}
+            value={isBaseLocale ? draft.description : rosterTranslations?.[activeLocale]?.description || ''}
             maxLength={SMASH_ROSTER_LIMITS.maxRosterDescription}
-            onChange={(e) => patch({ description: e.target.value })}
-            placeholder={c.descriptionPlaceholder}
+            onChange={(e) => {
+              if (isBaseLocale) {
+                patch({ description: e.target.value });
+              } else {
+                onRosterTranslationChange?.(activeLocale, 'description', e.target.value);
+              }
+            }}
+            placeholder={isBaseLocale ? c.descriptionPlaceholder : (draft.description || c.rosterDescriptionPlaceholder || c.descriptionPlaceholder)}
             rows={2}
             className="2xl:text-base"
           />
@@ -92,7 +137,7 @@ export function RosterBasicsSection({
           <ImageUploadDropzone
             value={draft.cover_image_url}
             onChange={(val) => patch({ cover_image_url: val })}
-            label={c.coverImageLabel}
+            label={isBaseLocale ? c.coverImageLabel : `${c.coverImageLabel} (${c.sharedFieldNotice})`}
             placeholder={c.coverImagePlaceholder}
             invalid={attempted && coverInvalid}
             invalidMessage={c.invalidImage || dict.tierLists.invalidImage}
@@ -132,7 +177,10 @@ export function RosterBasicsSection({
         </div>
 
         <div className="md:col-span-1 flex flex-col gap-1.5 justify-start">
-          <span className="block type-label-sm text-text-secondary">{c.themeColorLabel}</span>
+          <span className="block type-label-sm text-text-secondary">
+            {c.themeColorLabel}
+            {sharedNotice}
+          </span>
           <GradientEditor
             value={themeGradientOf(draft.theme_color || defaultRosterThemeColor())}
             title={draft.name || c.namePlaceholder}
@@ -151,7 +199,7 @@ export function RosterBasicsSection({
             <LabeledSwitch
               checked={draft.roster_mode === 'simple'}
               onChange={(checked) => patch({ roster_mode: checked ? 'simple' : 'full' })}
-              label={c.simpleVersion}
+              label={<>{c.simpleVersion}{sharedNotice}</>}
               disabled={hasCandidates}
             />
           </Tooltip>
@@ -164,7 +212,7 @@ export function RosterBasicsSection({
             <LabeledSwitch
               checked={draft.is_nsfw}
               onChange={(checked) => patch({ is_nsfw: checked })}
-              label={c.nsfwLabel}
+              label={<>{c.nsfwLabel}{sharedNotice}</>}
             />
           </Tooltip>
 
@@ -177,7 +225,7 @@ export function RosterBasicsSection({
               <LabeledSwitch
                 checked={official}
                 onChange={onOfficialChange}
-                label={c.officialPublicHub}
+                label={<>{c.officialPublicHub}{sharedNotice}</>}
                 labelClassName="type-strong-fluid text-accent-red group-hover:underline transition-colors"
               />
             </Tooltip>
@@ -192,7 +240,7 @@ export function RosterBasicsSection({
               <LabeledSwitch
                 checked={draft.is_active !== false}
                 onChange={(checked) => patch({ is_active: checked })}
-                label={dict.tierLists.creator.publishedLabel}
+                label={<>{dict.tierLists.creator.publishedLabel}{sharedNotice}</>}
                 labelClassName="type-strong-fluid text-accent-green group-hover:underline transition-colors"
               />
             </Tooltip>

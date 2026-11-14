@@ -52,7 +52,6 @@ export default {
   dealbreaker: 'マイナス要素:',
   datingPsychology: '恋愛心理分析',
   roleAffinity: '陣営の好みのバランス',
-  noSmashesRecorded: 'スマッシュの記録がまだありません',
   totalEvaluated: '評価済み総数:',
   copiedToClipboard: 'クリップボードにコピーしました！',
   shareArchetype: 'アーキタイプを共有',
@@ -133,7 +132,6 @@ export default {
     smashCount: 'スマッシュ数',
     passCount: 'パス数',
     rank: '世界ランク',
-    firstSmash: '最初のスマッシュ',
     totalSmashes: '総スマッシュ数',
   },
   filters: {

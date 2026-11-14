@@ -52,7 +52,6 @@ export default {
   dealbreaker: 'Na Minus:',
   datingPsychology: 'Analiza Psychologiczna Randki',
   roleAffinity: 'Balans Preferencji Ról',
-  noSmashesRecorded: 'Brak zarejestrowanych polubień',
   totalEvaluated: 'Oceniono łącznie:',
   copiedToClipboard: 'Skopiowano do schowka!',
   shareArchetype: 'Udostępnij Archetyp',
@@ -133,7 +132,6 @@ export default {
     smashCount: 'Smashe',
     passCount: 'Passy',
     rank: 'Pozycja w Rankingu',
-    firstSmash: 'Pierwszy Smash',
     totalSmashes: 'Łącznie smashe',
   },
   filters: {

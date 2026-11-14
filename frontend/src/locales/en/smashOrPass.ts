@@ -52,7 +52,6 @@ export default {
   dealbreaker: 'Dealbreaker:',
   datingPsychology: 'Dating Psychology Breakdown',
   roleAffinity: 'Faction Affinity Balance',
-  noSmashesRecorded: 'No smashes recorded yet',
   totalEvaluated: 'Total Evaluated:',
   copiedToClipboard: 'Copied to Clipboard!',
   shareArchetype: 'Share Archetype',
@@ -133,7 +132,6 @@ export default {
     smashCount: 'Smashes',
     passCount: 'Passes',
     rank: 'Global Rank',
-    firstSmash: 'First Smash',
     totalSmashes: 'Total Smashes',
   },
   filters: {

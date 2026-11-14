@@ -98,6 +98,7 @@ describe('PersonaBreakdown stats and role affinity', () => {
       survivorAffinity: 60,
       smashRate: 75,
       totalVotes: 20,
+      favoriteChar: null,
     };
 
     const view = render(

@@ -401,6 +401,7 @@ export default {
     officialPublicHub: '公式名簿として公開（ハブで全体公開）',
     simpleVersion: 'シンプル版',
     simpleVersionDesc: 'シンプル: クイックカード ＋ 好み・地雷設定（任意）',
+    modeLockedHint: 'モードは候補者を追加する前にのみ選択できます。',
     cropCoverTitle: 'カバー画像をトリミング / 調整',
     cropCoverBadge: '16:9 でトリミング',
     cropClickPrompt: 'クリックしてトリミング / 調整 (16:9)',

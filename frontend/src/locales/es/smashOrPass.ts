@@ -401,6 +401,7 @@ export default {
     officialPublicHub: 'Publicar como lista oficial (Pública en el centro)',
     simpleVersion: 'Versión simple',
     simpleVersionDesc: 'Simple: Tarjetas rápidas + atractivos y límites opcionales',
+    modeLockedHint: 'El modo solo se puede elegir antes de añadir candidatos.',
     cropCoverTitle: 'Recortar / reencuadrar imagen de portada',
     cropCoverBadge: 'Recortar 16:9',
     cropClickPrompt: 'Haz clic para recortar / reencuadrar (16:9)',

@@ -401,6 +401,7 @@ export default {
     officialPublicHub: 'Publish as Official Roster (Public on Hub)',
     simpleVersion: 'Simple Version',
     simpleVersionDesc: 'Simple: Fast cards + optional turn-on & dealbreaker',
+    modeLockedHint: 'Mode can only be chosen before adding candidates.',
     cropCoverTitle: 'Crop / Reframe cover image',
     cropCoverBadge: 'Crop 16:9',
     cropClickPrompt: 'Click to Crop / Reframe (16:9)',

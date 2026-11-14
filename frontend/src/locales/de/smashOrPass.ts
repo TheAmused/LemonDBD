@@ -401,6 +401,7 @@ export default {
     officialPublicHub: 'Als offizielle Liste veröffentlichen (Öffentlich im Hub)',
     simpleVersion: 'Einfache Version',
     simpleVersionDesc: 'Einfach: Schnelle Karten + optionale Vorlieben & Ausschlusskriterien',
+    modeLockedHint: 'Der Modus kann nur vor dem Hinzufügen von Kandidaten gewählt werden.',
     cropCoverTitle: 'Titelbild zuschneiden / anpassen',
     cropCoverBadge: 'Zuschneiden 16:9',
     cropClickPrompt: 'Klicken zum Zuschneiden / Anpassen (16:9)',

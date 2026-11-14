@@ -429,6 +429,7 @@ export default {
     closeToast: 'Dismiss',
     unnamedCandidate: 'Unnamed Candidate',
     rolesGendersCount: '{roles} roles · {genders} genders',
+    focalPointLabel: 'Focal point',
   },
   cropModal: {
     title: 'Crop & Frame Cover Image',

@@ -429,6 +429,7 @@ export default {
     closeToast: 'Schließen',
     unnamedCandidate: 'Unbenannter Kandidat',
     rolesGendersCount: '{roles} Rollen · {genders} Geschlechter',
+    focalPointLabel: 'Fokuspunkt',
   },
   cropModal: {
     title: 'Titelbild zuschneiden & anpassen',

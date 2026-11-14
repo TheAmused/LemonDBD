@@ -429,6 +429,7 @@ export default {
     closeToast: '閉じる',
     unnamedCandidate: '名前のない候補',
     rolesGendersCount: 'ロール {roles}件 · 性別 {genders}件',
+    focalPointLabel: 'フォーカスポイント',
   },
   cropModal: {
     title: 'カバー画像のトリミングと調整',

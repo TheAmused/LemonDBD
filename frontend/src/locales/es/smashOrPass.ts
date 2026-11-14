@@ -429,6 +429,7 @@ export default {
     closeToast: 'Cerrar',
     unnamedCandidate: 'Candidato sin nombre',
     rolesGendersCount: '{roles} roles · {genders} géneros',
+    focalPointLabel: 'Punto focal',
   },
   cropModal: {
     title: 'Recortar y encuadrar imagen de portada',

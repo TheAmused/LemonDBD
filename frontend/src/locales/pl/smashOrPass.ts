@@ -445,6 +445,7 @@ export default {
     closeToast: 'Zamknij',
     unnamedCandidate: 'Kandydat bez nazwy',
     rolesGendersCount: 'Role: {roles} · Płcie: {genders}',
+    focalPointLabel: 'Punkt skupienia kadru',
   },
   cropModal: {
     title: 'Przytnij i wykadruj obraz okładki',

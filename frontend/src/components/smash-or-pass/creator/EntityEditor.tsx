@@ -99,6 +99,7 @@ export function CandidateFormInputs({
   const trimmedMedia = entity.media_url.trim();
   const safeMedia = trimmedMedia ? sanitizeImageUrl(trimmedMedia) : null;
   const mediaInvalid = Boolean(trimmedMedia) && !safeMedia;
+  const fit = entity.media_display?.fit ?? 'cover';
 
   const displayIndex = String(index + 1).padStart(2, '0');
 
@@ -147,7 +148,7 @@ export function CandidateFormInputs({
                   className="h-full w-full object-cover transition-transform duration-300 hover:scale-105 select-none"
                   style={{
                     objectPosition: entity.media_display?.position || 'center center',
-                    objectFit: (entity.media_display?.fit as any) || 'cover',
+                    objectFit: fit,
                   }}
                 />
               ) : (
@@ -166,12 +167,11 @@ export function CandidateFormInputs({
             {Boolean(safeMedia || entity.media_url.trim()) && (
               <div className="flex flex-col items-center gap-1.5 pt-1">
                 <span className="type-micro text-text-muted font-medium">
-                  Focal Point
+                  {c.focalPointLabel}
                 </span>
                 <div
                   className="grid grid-cols-3 gap-1 p-1 rounded-card bg-bg-surface/80 border border-border-color/60"
-                  role="group"
-                  aria-label="Focal Point"
+                  aria-label={c.focalPointLabel}
                 >
                   {FOCAL_POINTS.map((pt) => {
                     const isSelected = (entity.media_display?.position || 'center center') === pt.value;
@@ -181,7 +181,6 @@ export function CandidateFormInputs({
                         type="button"
                         aria-label={pt.label}
                         aria-pressed={isSelected}
-                        title={pt.label}
                         onClick={() =>
                           onChange({
                             media_display: {
@@ -192,16 +191,16 @@ export function CandidateFormInputs({
                           })
                         }
                         className={cn(
-                          'w-6 h-6 rounded flex items-center justify-center transition-all focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red',
+                          'min-h-11 min-w-11 rounded flex items-center justify-center transition-all focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red touch-manipulation',
                           isSelected
-                            ? 'bg-accent-red text-white shadow-sm ring-1 ring-accent-red'
+                            ? 'bg-accent-red text-text-inverted shadow-sm ring-1 ring-accent-red'
                             : 'bg-bg-elevated hover:bg-bg-hover text-text-muted hover:text-text-primary'
                         )}
                       >
                         <span
                           className={cn(
-                            'w-1.5 h-1.5 rounded-full transition-transform',
-                            isSelected ? 'bg-white scale-125' : 'bg-current opacity-60'
+                            'w-2 h-2 rounded-full transition-transform',
+                            isSelected ? 'bg-text-primary scale-125' : 'bg-current opacity-60'
                           )}
                         />
                       </button>

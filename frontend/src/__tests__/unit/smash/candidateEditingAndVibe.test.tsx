@@ -9,6 +9,7 @@ import { CandidateFormInputs, emptyDraftEntity } from '@/components/smash-or-pas
 import { CardBackFace } from '@/components/smash-or-pass/card/CardBackFace';
 import { FloatingLoreScattered } from '@/components/smash-or-pass/FloatingLoreScattered';
 import type { EntityItem, EntityProfile } from '@/types/smashOrPass';
+import { OFFICIAL_GENDERS } from '@/utils/smashOrPass/terms';
 
 const c = enDict.smashOrPass.creator;
 
@@ -50,6 +51,10 @@ const baseProfile: EntityProfile = {
 
 describe('Candidate Editing and Dating Vibe', () => {
   describe('EntityEditor Role and Gender taxonomy restriction', () => {
+    it('verifies OFFICIAL_GENDERS taxonomy constants', () => {
+      assert.deepEqual(OFFICIAL_GENDERS, ['female', 'male', 'monster_other']);
+    });
+
     it('renders RequiredMark for Role and Gender labels', () => {
       const entity = emptyDraftEntity('k1');
       const view = render(

@@ -32,10 +32,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
 
   const isSurvivor = isSurvivorRole(character.role);
   const isKiller = isKillerRole(character.role);
-  const isCustom =
-    character.id.startsWith('local:') ||
-    character.roster_id?.startsWith('local:') ||
-    (Boolean(character.roster_id) && character.roster_id !== 'canon');
+  const isCustom = character.roster_id !== 'canon';
 
   // `metadata_json` is gone from the wire (it was a duplicate of `metadata`), and so is
   // the `i18n` blob that sat next to `translations`. One profile, one locale overlay.
@@ -45,7 +42,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
   // Defaults for an entity: custom rosters never receive DBD canon fallbacks
   const charTitle =
     profile.archetype ||
-    (isCustom ? character.role : isSurvivor ? t.loreTitleSurvivor : isKiller ? t.loreTitleKiller : character.role);
+    (isCustom ? '' : isSurvivor ? t.loreTitleSurvivor : isKiller ? t.loreTitleKiller : '');
   const charTagline =
     profile.tagline || (isCustom ? '' : isSurvivor ? t.loreTaglineSurvivor : isKiller ? t.loreTaglineKiller : '');
 
@@ -59,7 +56,8 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
 
   // Localized Labels
   const loreLabels = dict.smashOrPass.loreLabels;
-  const datingArchetypeLabel = customLabels?.dating_vibe || loreLabels.datingArchetype;
+  const datingArchetypeLabel =
+    customLabels?.dating_vibe || (profile.dating_vibe ? loreLabels.datingVibe : loreLabels.datingArchetype);
   const signatureQuoteLabel = customLabels?.quote || loreLabels.signatureQuote;
   const turnOnLabel = customLabels?.turn_on || loreLabels.turn_on;
   const dealbreakerLabel = customLabels?.dealbreaker || loreLabels.dealbreaker;
@@ -115,32 +113,34 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
         {/* Left Item 1: Trial Classification - Hidden for now */}
 
         {/* Left Item 2: Dating Archetype (Tilt Right +2deg & Crimson Flare) */}
-        <div
-          key={`title-${character.slug}`}
-          data-lore-card=""
-          className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-[1.02] @hub-2xl/hub:hover:scale-105 @hub-2xl/hub:hover:rotate-2 cursor-pointer group"
-          style={{ animationDelay: '80ms' }}
-          onMouseEnter={handleCardHover}
-        >
-          <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center">
-            <div
-              data-lore-label=""
-              className="sr-only @hub-2xl/hub:not-sr-only @hub-2xl/hub:absolute @hub-2xl/hub:top-0 @hub-2xl/hub:-translate-y-1/2 @hub-2xl/hub:left-1/2 @hub-2xl/hub:-translate-x-1/2 @hub-2xl/hub:inline-flex @hub-2xl/hub:items-center @hub-2xl/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-gutter text-accent-red"
-            >
-              <span className="type-label-2xs truncate whitespace-nowrap">
-                {datingArchetypeLabel}
-              </span>
-            </div>
-            <p className="text-sm font-black tracking-tight text-text-primary group-hover:text-accent-red transition-colors">
-              {profile.dating_vibe || charTitle}
-            </p>
-            {Boolean(charTagline) && (
-              <p className="text-xs text-text-muted line-clamp-2 leading-snug group-hover:text-text-secondary transition-colors mt-0.5">
-                {charTagline}
+        {Boolean(profile.dating_vibe || charTitle) && (
+          <div
+            key={`title-${character.slug}`}
+            data-lore-card=""
+            className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-[1.02] @hub-2xl/hub:hover:scale-105 @hub-2xl/hub:hover:rotate-2 cursor-pointer group"
+            style={{ animationDelay: '80ms' }}
+            onMouseEnter={handleCardHover}
+          >
+            <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center">
+              <div
+                data-lore-label=""
+                className="sr-only @hub-2xl/hub:not-sr-only @hub-2xl/hub:absolute @hub-2xl/hub:top-0 @hub-2xl/hub:-translate-y-1/2 @hub-2xl/hub:left-1/2 @hub-2xl/hub:-translate-x-1/2 @hub-2xl/hub:inline-flex @hub-2xl/hub:items-center @hub-2xl/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-gutter text-accent-red"
+              >
+                <span className="type-label-2xs truncate whitespace-nowrap">
+                  {datingArchetypeLabel}
+                </span>
+              </div>
+              <p className="text-sm font-black tracking-tight text-text-primary group-hover:text-accent-red transition-colors">
+                {profile.dating_vibe || charTitle}
               </p>
-            )}
+              {Boolean(charTagline) && (
+                <p className="text-xs text-text-muted line-clamp-2 leading-snug group-hover:text-text-secondary transition-colors mt-0.5">
+                  {charTagline}
+                </p>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Left Item 3: Turn On (Tilt Left -1deg & Emerald Glow) */}
         {profile.turn_on && (

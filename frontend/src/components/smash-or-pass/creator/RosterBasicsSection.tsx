@@ -95,6 +95,8 @@ export function RosterBasicsSection({
             invalid={attempted && coverInvalid}
             invalidMessage={c.invalidImage || dict.tierLists.invalidImage}
             aspectRatio="banner"
+            previewClassName="h-96 w-full"
+            dropzoneClassName="h-96 w-full"
             allowFileUpload={isUserAdmin}
             onPreviewClick={isUserAdmin ? () => onOpenCrop() : undefined}
             previewOverlay={
@@ -143,8 +145,8 @@ export function RosterBasicsSection({
           />
         </div>
 
-        <div className="md:col-span-1 flex flex-col justify-start">
-          <span className={LABEL}>{c.themeColorLabel}</span>
+        <div className="md:col-span-1 flex flex-col gap-1.5 justify-start">
+          <span className="block type-label-sm text-text-secondary">{c.themeColorLabel}</span>
           <GradientEditor
             value={themeGradientOf(draft.theme_color || defaultRosterThemeColor())}
             title={draft.name || c.namePlaceholder}

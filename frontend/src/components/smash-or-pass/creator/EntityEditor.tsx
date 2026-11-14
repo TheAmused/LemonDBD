@@ -346,11 +346,10 @@ export function CandidateFormInputs({
               placeholder={c.watermarkRightPlaceholder}
             />
             <TextField
-              label={customLabels.archetype || c.entityArchetypeLabel}
-              value={entity.archetype}
-              max={SMASH_ROSTER_LIMITS.maxArchetype}
-              onChange={(v) => onChange({ archetype: v })}
-              placeholder={c.archetypePlaceholder}
+              label={customLabels.dating_vibe || c.entityDatingVibeLabel}
+              value={entity.dating_vibe}
+              max={SMASH_ROSTER_LIMITS.maxDatingVibe}
+              onChange={(v) => onChange({ dating_vibe: v })}
             />
             <TextField
               label={customLabels.quote || c.entityQuoteLabel}

@@ -48,6 +48,8 @@ export interface ImageUploadDropzoneProps {
   removeAriaLabel?: string;
   onPreviewClick?: () => void;
   previewOverlay?: React.ReactNode;
+  previewClassName?: string;
+  dropzoneClassName?: string;
 }
 
 export function ImageUploadDropzone({
@@ -69,6 +71,8 @@ export function ImageUploadDropzone({
   removeAriaLabel,
   onPreviewClick,
   previewOverlay,
+  previewClassName,
+  dropzoneClassName,
 }: ImageUploadDropzoneProps) {
   const dict = useDictionary();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -124,8 +128,8 @@ export function ImageUploadDropzone({
       {hasValue ? (
         <div
           className={cn(
-            'relative group overflow-hidden rounded-card border border-border-color bg-bg-elevated w-full mx-auto shadow-xs',
-            aspectRatio === 'square' ? 'aspect-square max-w-xs' : 'aspect-video max-w-md 2xl:max-w-lg',
+            'relative group overflow-hidden rounded-card border border-border-color bg-bg-elevated w-full shadow-xs',
+            previewClassName ? previewClassName : (aspectRatio === 'square' ? 'aspect-square max-w-xs mx-auto' : 'aspect-video max-w-md 2xl:max-w-lg mx-auto'),
             invalid && 'border-accent-red'
           )}
         >
@@ -179,6 +183,7 @@ export function ImageUploadDropzone({
           }}
           className={cn(
             'flex flex-col items-center justify-center gap-3 rounded-card border-2 border-dashed p-4 sm:p-6 text-center transition-colors',
+            dropzoneClassName,
             isDragging && allowFileUpload ? 'border-accent-red bg-accent-red/5' : 'border-border-color bg-bg-primary/20',
             invalid && 'border-accent-red',
             disabled && 'opacity-50 cursor-not-allowed'

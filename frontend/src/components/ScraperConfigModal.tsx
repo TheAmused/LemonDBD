@@ -71,7 +71,6 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess, initialTab
           </div>
         }
         confirmLabel={importTab.importMode === 'replace' ? dict.admin.wipeReplace : dict.admin.executeImport}
-        cancelLabel={dict.admin.cancel}
         busy={importTab.isImporting}
         confirmDisabled={!importReady}
         onConfirm={() => { void importTab.runImport(); }}
@@ -89,7 +88,6 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess, initialTab
           </div>
         }
         confirmLabel={dict.admin.purgeReset}
-        cancelLabel={dict.admin.cancel}
         busy={purgeTab.isPurging}
         confirmDisabled={!purgeReady}
         onConfirm={() => { void purgeTab.runPurge(); }}

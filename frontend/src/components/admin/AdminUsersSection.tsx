@@ -270,7 +270,6 @@ export function AdminUsersSection({ directory, counts, currentUserId, notify, on
           </>
         }
         confirmLabel={pending?.kind === 'delete' ? t.delete : t.resetTwoFactorConfirm}
-        cancelLabel={t.cancel}
         busy={busy}
         confirmDisabled={needsOwnPassword && !reauthReady}
         onConfirm={() => { void confirm(); }}

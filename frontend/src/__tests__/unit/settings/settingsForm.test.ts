@@ -151,7 +151,9 @@ function backendSettings(source: string): { key: string; group: string }[] {
   const locales = /BANNER_LOCALES = \(([^)]*)\)/.exec(source)?.[1].match(/"(\w+)"/g)?.map((s) => s.replace(/"/g, '')) ?? [];
   const generated = /SettingSpec\(f"(\w+)_\{code\}",\s*"\w+",\s*"(\w+)"/.exec(source);
   if (generated) for (const code of locales) found.push({ key: `${generated[1]}_${code}`, group: generated[2] });
-  return found;
+  // Groups with a panel of their own (maintenance mode, in Tools) are not part of this tab.
+  const dedicated = /DEDICATED_GROUPS = frozenset\(\{([^}]*)\}\)/.exec(source)?.[1].match(/"(\w+)"/g)?.map((s) => s.replace(/"/g, '')) ?? [];
+  return found.filter((setting) => !dedicated.includes(setting.group));
 }
 
 describe('the tab covers every backend setting', { skip: spec === null ? 'backend not present' : false }, () => {

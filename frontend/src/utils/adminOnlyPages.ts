@@ -8,7 +8,7 @@ export const ADMIN_ONLY_SEGMENTS: readonly string[] = ['minigames', 'achievement
 
 /**
  * The admin panel itself. The panel's API is admin-only anyway; gating the page on the server too
- * means non-admins are not even served its HTML (they get the Forbidden page).
+ * means non-admins are not even served its HTML (they get the admin sign-in instead, see ADMIN_ENTRY_PAGE).
  */
 const ADMIN_PANEL_SEGMENTS: readonly string[] = ['admin'];
 
@@ -32,6 +32,9 @@ export function adminOnlyPageFromPathname(
   if (!locale || !segment || !locales.includes(locale) || !ADMIN_ONLY_SEGMENTS.includes(segment)) return null;
   return { locale, segment };
 }
+
+/** The page that stands in for the admin panel when the visitor is not a signed-in admin: the admin sign-in. */
+export const ADMIN_ENTRY_PAGE = 'admin-entry';
 
 /** The locale of an admin-panel URL (`/en/admin`, `/pl/admin/...`), or null. */
 export function adminPanelLocaleFromPathname(pathname: string, locales: readonly string[]): string | null {

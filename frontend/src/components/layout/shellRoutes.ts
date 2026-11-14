@@ -75,6 +75,7 @@ export const ROUTE_SHELLS: ReadonlyArray<ShellRoute> = [
   { prefix: ['blocked'], shell: ERROR_SHELL },
   { prefix: ['characters'], shell: { mainClassName: 'relative overflow-y-auto' } },  // list + [slug] detail
   { prefix: ['forbidden'], shell: ERROR_SHELL },
+  { prefix: ['maintenance'], shell: false },  // the closed-for-maintenance page: no sidebar, nothing to click through to
   { prefix: ['maps'], shell: { customPadding: 'p-4 sm:p-6 lg:p-7', mainClassName: 'relative min-h-screen flex flex-col gap-4' } },
   { prefix: ['minigames'], shell: { mainClassName: 'relative flex flex-col' } },  // hub
   { prefix: ['minigames', 'creator'], shell: MINIGAME_CENTERED },

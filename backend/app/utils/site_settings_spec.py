@@ -24,6 +24,8 @@ DISCORD_WEBHOOK_HOSTS = ("discord.com", "discordapp.com", "canary.discord.com", 
 DISCORD_INVITE_HOSTS = ("discord.gg", "discord.com", "discordapp.com")
 BANNER_LEVELS = ("info", "warning", "critical")
 BANNER_LOCALES = ("pl", "de", "es", "ja")
+# Groups with a panel of their own: left out of the Settings tab listing.
+DEDICATED_GROUPS = frozenset({"maintenance"})
 
 
 @dataclass(frozen=True)
@@ -71,6 +73,11 @@ SETTING_SPECS: tuple[SettingSpec, ...] = (
         SettingSpec(f"site_banner_text_{code}", "text", "notices", max_length=240, allow_empty=True, public=True)
         for code in BANNER_LOCALES
     ),
+    # Maintenance mode (see services/maintenance_mode.py): a switch plus an optional window. Edited from
+    # Tools > Maintenance mode, not from the Settings tab, and never sent to visitors as raw settings.
+    SettingSpec("maintenance_enabled", "bool", "maintenance"),
+    SettingSpec("maintenance_starts_at", "datetime", "maintenance", allow_empty=True),
+    SettingSpec("maintenance_until", "datetime", "maintenance", allow_empty=True),
     # Outbound links. https only, no credentials in the URL; empty hides the link.
     SettingSpec("discord_invite_url", "url", "links", max_length=200, allow_empty=True, public=True,
                 allowed_hosts=DISCORD_INVITE_HOSTS),

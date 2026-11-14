@@ -97,4 +97,6 @@ export interface MapRealm {
   image_url?: string;
   callout_image_url?: string;
   callout_image_local_path?: string;
+  /** In-game photo of the map (static path); variants of one map share it. Empty: the callout image is shown. */
+  photo_local_path?: string;
 }

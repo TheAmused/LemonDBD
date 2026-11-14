@@ -32,7 +32,8 @@
         "pl": {
           "name": "Miejsce Spoczynku Azarova"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/autohaven_wreckers/azarovs_resting_place.webp"
     },
     {
       "id": 2,
@@ -62,7 +63,8 @@
         "pl": {
           "name": "Krwawa Stróżówka"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/autohaven_wreckers/blood_lodge.webp"
     },
     {
       "id": 3,
@@ -92,7 +94,8 @@
         "pl": {
           "name": "Stacja Paliw"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/autohaven_wreckers/gas_heaven.webp"
     },
     {
       "id": 4,
@@ -122,7 +125,8 @@
         "pl": {
           "name": "Podwórze Złomowiska"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/autohaven_wreckers/wreckers_yard.webp"
     },
     {
       "id": 5,
@@ -152,7 +156,8 @@
         "pl": {
           "name": "Sklep Nędzy"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/autohaven_wreckers/wretched_shop.webp"
     },
     {
       "id": 6,
@@ -182,7 +187,8 @@
         "pl": {
           "name": "Przedszkole w Badham I"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/springwood/badham_preschool.webp"
     },
     {
       "id": 7,
@@ -212,7 +218,8 @@
         "pl": {
           "name": "Przedszkole w Badham II"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/springwood/badham_preschool.webp"
     },
     {
       "id": 8,
@@ -242,7 +249,8 @@
         "pl": {
           "name": "Przedszkole w Badham III"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/springwood/badham_preschool.webp"
     },
     {
       "id": 9,
@@ -272,7 +280,8 @@
         "pl": {
           "name": "Przedszkole w Badham IV"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/springwood/badham_preschool.webp"
     },
     {
       "id": 10,
@@ -302,7 +311,8 @@
         "pl": {
           "name": "Przedszkole w Badham V"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/springwood/badham_preschool.webp"
     },
     {
       "id": 11,
@@ -332,7 +342,8 @@
         "pl": {
           "name": "Spękana Obora"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/coldwind_farm/fractured_cowshed.webp"
     },
     {
       "id": 12,
@@ -362,7 +373,8 @@
         "pl": {
           "name": "Zjęłczała Rzeźnia"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/coldwind_farm/rancid_abattoir.webp"
     },
     {
       "id": 13,
@@ -392,7 +404,8 @@
         "pl": {
           "name": "Zbutwiałe Pola"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/coldwind_farm/rotten_fields.webp"
     },
     {
       "id": 14,
@@ -422,7 +435,8 @@
         "pl": {
           "name": "Dom Thompsona"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/coldwind_farm/the_thompson_house.webp"
     },
     {
       "id": 15,
@@ -452,7 +466,8 @@
         "pl": {
           "name": "Przełęcz Udręki"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/coldwind_farm/torment_creek.webp"
     },
     {
       "id": 16,
@@ -482,7 +497,8 @@
         "pl": {
           "name": "Niespokojny Oddział"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/crotus_prenn_asylum/disturbed_ward.webp"
     },
     {
       "id": 17,
@@ -512,7 +528,8 @@
         "pl": {
           "name": "Kaplica Ojca Campbella"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/crotus_prenn_asylum/father_campbells_chapel.webp"
     },
     {
       "id": 18,
@@ -542,7 +559,8 @@
         "pl": {
           "name": "Roztrzaskany Plac"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/the_decimated_borgo/the_shattered_square.webp"
     },
     {
       "id": 19,
@@ -572,7 +590,8 @@
         "pl": {
           "name": "Zapomniane Ruiny"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/the_decimated_borgo/forgotten_ruins.webp"
     },
     {
       "id": 20,
@@ -602,7 +621,8 @@
         "pl": {
           "name": "Gniazdo Kruków"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/forsaken_boneyard/eyrie_of_crows.webp"
     },
     {
       "id": 21,
@@ -632,7 +652,8 @@
         "pl": {
           "name": "Martwe Piaski"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/forsaken_boneyard/dead_sands.webp"
     },
     {
       "id": 22,
@@ -662,7 +683,8 @@
         "pl": {
           "name": "Podziemny Kompleks"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/hawkins_national_laboratory/the_underground_complex.webp"
     },
     {
       "id": 23,
@@ -692,7 +714,8 @@
         "pl": {
           "name": "Wieża Węglowa"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/the_macmillan_estate/coal_tower.webp"
     },
     {
       "id": 24,
@@ -722,7 +745,8 @@
         "pl": {
           "name": "Jęczący Magazyn"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/the_macmillan_estate/groaning_storehouse.webp"
     },
     {
       "id": 25,
@@ -752,7 +776,8 @@
         "pl": {
           "name": "Huta Niedoli"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/the_macmillan_estate/ironworks_of_misery.webp"
     },
     {
       "id": 26,
@@ -782,7 +807,8 @@
         "pl": {
           "name": "Leśne Schronisko"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/the_macmillan_estate/shelter_woods.webp"
     },
     {
       "id": 27,
@@ -812,7 +838,8 @@
         "pl": {
           "name": "Duszna Kopalnia"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/the_macmillan_estate/suffocation_pit.webp"
     },
     {
       "id": 28,
@@ -842,7 +869,8 @@
         "pl": {
           "name": "Dom Matki"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/red_forest/mothers_dwelling.webp"
     },
     {
       "id": 29,
@@ -872,7 +900,8 @@
         "pl": {
           "name": "Świątynia Oczyszczenia"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/red_forest/the_temple_of_purgation.webp"
     },
     {
       "id": 30,
@@ -902,7 +931,8 @@
         "pl": {
           "name": "Ponura Spiżarnia"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/backwater_swamp/grim_pantry.webp"
     },
     {
       "id": 31,
@@ -932,7 +962,8 @@
         "pl": {
           "name": "Blada Róża"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/backwater_swamp/the_pale_rose.webp"
     },
     {
       "id": 32,
@@ -962,7 +993,8 @@
         "pl": {
           "name": "Rezydencja Rodzinna I"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/yamaoka_estate/family_residence.webp"
     },
     {
       "id": 33,
@@ -992,7 +1024,8 @@
         "pl": {
           "name": "Rezydencja Rodzinna II"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/yamaoka_estate/family_residence.webp"
     },
     {
       "id": 34,
@@ -1022,7 +1055,8 @@
         "pl": {
           "name": "Sanktuarium Gniewu I"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/yamaoka_estate/sanctum_of_wrath.webp"
     },
     {
       "id": 35,
@@ -1052,7 +1086,8 @@
         "pl": {
           "name": "Sanktuarium Gniewu II"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/yamaoka_estate/sanctum_of_wrath.webp"
     },
     {
       "id": 36,
@@ -1082,7 +1117,8 @@
         "pl": {
           "name": "Posterunek Policji Raccoon City – Wschodnie Skrzydło"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/raccoon_city/raccoon_city_police_station_east_wing.webp"
     },
     {
       "id": 37,
@@ -1112,7 +1148,8 @@
         "pl": {
           "name": "Posterunek Policji Raccoon City – Zachodnie Skrzydło"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/raccoon_city/raccoon_city_police_station_west_wing.webp"
     },
     {
       "id": 38,
@@ -1139,7 +1176,8 @@
         "pl": {
           "name": "Knajpa pod Martwym Ziomkiem"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/grave_of_glenvale/dead_dawg_saloon.webp"
     },
     {
       "id": 39,
@@ -1169,7 +1207,8 @@
         "pl": {
           "name": "Ogród Radości"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/withered_isle/garden_of_joy.webp"
     },
     {
       "id": 40,
@@ -1199,7 +1238,8 @@
         "pl": {
           "name": "Plac Greenville"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/withered_isle/greenville_square.webp"
     },
     {
       "id": 41,
@@ -1229,7 +1269,8 @@
         "pl": {
           "name": "Upadły Azyl"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/withered_isle/fallen_refuge.webp"
     },
     {
       "id": 42,
@@ -1259,7 +1300,8 @@
         "pl": {
           "name": "Pizzeria Freddy Fazbear"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/withered_isle/freddy_fazbears_pizza.webp"
     },
     {
       "id": 43,
@@ -1289,7 +1331,8 @@
         "pl": {
           "name": "Rozgrywka"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/gideon_meat_plant/the_game.webp"
     },
     {
       "id": 44,
@@ -1317,7 +1360,8 @@
         "pl": {
           "name": "Alejka Lampkin"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/haddonfield/lampkin_lane.webp"
     },
     {
       "id": 45,
@@ -1344,7 +1388,8 @@
         "pl": {
           "name": "Szkoła Podstawowa Midwich"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/silent_hill/midwich_elementary_school.webp"
     },
     {
       "id": 46,
@@ -1374,7 +1419,8 @@
         "pl": {
           "name": "Ośrodek Mount Ormond I"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/ormond/mount_ormond_resort.webp"
     },
     {
       "id": 47,
@@ -1404,7 +1450,8 @@
         "pl": {
           "name": "Ośrodek Mount Ormond II"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/ormond/mount_ormond_resort.webp"
     },
     {
       "id": 48,
@@ -1434,7 +1481,8 @@
         "pl": {
           "name": "Ośrodek Mount Ormond III"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/ormond/mount_ormond_resort.webp"
     },
     {
       "id": 49,
@@ -1464,7 +1512,8 @@
         "pl": {
           "name": "Kopalnia nad Jeziorem Ormond"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/ormond/ormond_lake_mine.webp"
     },
     {
       "id": 50,
@@ -1494,7 +1543,8 @@
         "pl": {
           "name": "Placówka Medyczna"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/lerys_memorial_institute/treatment_theatre.webp"
     },
     {
       "id": 51,
@@ -1524,7 +1574,8 @@
         "pl": {
           "name": "Ziemie Toba"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/dvarka_deepwood/toba_landing.webp"
     },
     {
       "id": 52,
@@ -1554,7 +1605,8 @@
         "pl": {
           "name": "Wrak Nostromo"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/dvarka_deepwood/nostromo_wreckage.webp"
     },
     {
       "id": 53,
@@ -1584,7 +1636,8 @@
         "pl": {
           "name": "Urojenia Magika"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/sleepless_district/tricksters_delusion.webp"
     },
     {
       "id": 54,
@@ -1614,7 +1667,8 @@
         "pl": {
           "name": "Wieża Węglowa II"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/the_macmillan_estate/coal_tower.webp"
     },
     {
       "id": 55,
@@ -1644,7 +1698,8 @@
         "pl": {
           "name": "Jęczący Magazyn II"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/the_macmillan_estate/groaning_storehouse.webp"
     },
     {
       "id": 56,
@@ -1674,7 +1729,8 @@
         "pl": {
           "name": "Huta Niedoli II"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/the_macmillan_estate/ironworks_of_misery.webp"
     },
     {
       "id": 57,
@@ -1704,7 +1760,8 @@
         "pl": {
           "name": "Leśne Schronisko II"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/the_macmillan_estate/shelter_woods.webp"
     },
     {
       "id": 58,
@@ -1734,7 +1791,8 @@
         "pl": {
           "name": "Duszna Kopalnia II"
         }
-      }
+      },
+      "photo_local_path": "maps/photos/the_macmillan_estate/suffocation_pit.webp"
     }
   ]
 }

@@ -92,6 +92,8 @@ class MapRealm(Base, TranslatableModelMixin):
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     callout_image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
     callout_image_local_path: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    # In-game photo of the map (static path). Variants of one map share a file; empty falls back to the callout.
+    photo_local_path: Mapped[str | None] = mapped_column(String(255), nullable=True)
 
     # Specific DbD Map Layout Parameters
     layout_type: Mapped[str] = mapped_column(
@@ -143,6 +145,7 @@ class MapRealm(Base, TranslatableModelMixin):
             "source_label": self.source.label if self.source else DEFAULT_SOURCE_LABEL,
             "callout_image_url": self.callout_image_url or "",
             "callout_image_local_path": self.callout_image_local_path or "",
+            "photo_local_path": self.photo_local_path or "",
             "image_url": self.callout_image_url or "",
             "layout_type": self.layout_type or DEFAULT_LAYOUT_TYPE,
             "jungle_gyms_count": (

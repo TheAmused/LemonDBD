@@ -9,7 +9,7 @@
 import type { MapRealm } from '@/types/map';
 import type { CharacterItem, Perk } from '@/types/perks';
 import type { TierItem, TierListApiCustomItem, TierListDocumentItem } from '@/types/tierList';
-import { getMapImageSrc, getMapThumbSrc } from '@/utils/mapUtils';
+import { getMapImageSrc, getMapPhotoSrc, getMapThumbSrc, isRemovedMapVariation, stripMapVariationNumeral } from '@/utils/mapUtils';
 import { perkIconUrl } from '@/utils/staticUrl';
 import { staticUrl } from '@/utils/api';
 import { avatarThumbFromPath, getCommunityCoverThumbUrl, getIconThumbUrl } from '@/utils/thumbUrl';
@@ -78,20 +78,22 @@ export function charactersToItems(
   return items;
 }
 
+/** A map is ranked once, not per variation: only the first stays, and its name loses the numeral. */
 export function mapsToItems(maps: readonly MapRealm[], itemIds?: readonly number[] | null): TierItem[] {
   const inSubset = subsetFilter(itemIds);
   const seenKeys = new Set<string>();
   const items: TierItem[] = [];
   for (const m of maps) {
+    if (isRemovedMapVariation(m)) continue;
     if (inSubset(m.id)) {
       const key = `map:${m.id}`;
       if (!seenKeys.has(key)) {
         seenKeys.add(key);
         items.push({
           key,
-          name: m.name,
+          name: stripMapVariationNumeral(m.name),
           image: getMapThumbSrc(m) || null,
-          fullImage: getMapImageSrc(m) || null,
+          fullImage: getMapPhotoSrc(m) || getMapImageSrc(m) || null,
           subtitle: m.realm || undefined,
         });
       }

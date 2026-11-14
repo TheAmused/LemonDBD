@@ -35,16 +35,25 @@ export function getMapImageSrc(
   return resolveLocalOrRemoteImage(map.callout_image_local_path, map.callout_image_url || map.image_url, backendBase);
 }
 
+/** The in-game photo of a map (about 1000 px wide), or '' when the map has none. */
+export function getMapPhotoSrc(
+  map: Partial<MapRealm> | null | undefined,
+  backendBase: string = DEFAULT_BACKEND_BASE
+): string {
+  return resolveLocalOrRemoteImage(map?.photo_local_path, '', backendBase);
+}
+
 /**
- * A small (~320 px) copy of a map's callout image for thumbnails. The full
- * images are ~2000x2200 px, and a grid of tiny tiles must not decode dozens
- * of them. Falls back to the full source when the map has no local file.
+ * A small (~320 px) copy of a map's picture for thumbnails: its in-game photo,
+ * or the callout image when it has none. The callout images are ~2000x2200 px,
+ * and a grid of tiny tiles must not decode dozens of them. Falls back to the
+ * full source when the map has no local file.
  */
 export function getMapThumbSrc(
   map: Partial<MapRealm> | null | undefined,
   backendBase: string = DEFAULT_BACKEND_BASE
 ): string {
-  const local = map?.callout_image_local_path;
+  const local = map?.photo_local_path || map?.callout_image_local_path;
   if (!local) return getMapImageSrc(map, backendBase);
   return getThumbUrl('maps', local, 320, backendBase || DEFAULT_BACKEND_BASE);
 }
@@ -65,6 +74,27 @@ export function getChapterBannerSrc(
 ): string {
   if (!chapter) return '';
   return resolveLocalOrRemoteImage(chapter.banner_local_path, chapter.banner_url, backendBase);
+}
+
+/** A map's variation number ("Preschool III", "Coal Tower II"), in the English name and in every translation. */
+const MAP_VARIATION_SUFFIX_RE = /\s+(I|II|III|IV|V)$/;
+
+type MapNameFields = Pick<MapRealm, 'name'> & Partial<Pick<MapRealm, 'raw_name'>>;
+
+/** The numeral a map's name ends with, or null for a map without variations. Read from the English name. */
+export function getMapVariationNumeral(map: MapNameFields): string | null {
+  return (map.raw_name ?? map.name).match(MAP_VARIATION_SUFFIX_RE)?.[1] ?? null;
+}
+
+/** Variations after the first are no longer in the game; the first one is the map itself. */
+export function isRemovedMapVariation(map: MapNameFields): boolean {
+  const numeral = getMapVariationNumeral(map);
+  return numeral !== null && numeral !== 'I';
+}
+
+/** The map's name without its variation numeral. */
+export function stripMapVariationNumeral(name: string): string {
+  return name.replace(MAP_VARIATION_SUFFIX_RE, '');
 }
 
 export type MapSizeBucket = 'small' | 'medium' | 'large';

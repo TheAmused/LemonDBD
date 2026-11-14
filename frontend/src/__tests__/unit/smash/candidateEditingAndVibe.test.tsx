@@ -74,13 +74,13 @@ describe('Candidate Editing and Dating Vibe', () => {
       );
 
       // Verify role and gender labels are present
-      const roleLabel = view.getByText(c.entityRoleLabel);
-      assert.ok(roleLabel);
-      assert.ok(roleLabel.parentElement?.textContent?.includes('*'), 'Role label should have RequiredMark');
+      const roleLabels = view.getAllByText(c.entityRoleLabel);
+      const requiredRoleLabel = roleLabels.find((l) => l.parentElement?.textContent?.includes('*'));
+      assert.ok(requiredRoleLabel, 'Role label should have RequiredMark');
 
-      const genderLabel = view.getByText(c.entityGenderLabel);
-      assert.ok(genderLabel);
-      assert.ok(genderLabel.parentElement?.textContent?.includes('*'), 'Gender label should have RequiredMark');
+      const genderLabels = view.getAllByText(c.entityGenderLabel);
+      const requiredGenderLabel = genderLabels.find((l) => l.parentElement?.textContent?.includes('*'));
+      assert.ok(requiredGenderLabel, 'Gender label should have RequiredMark');
 
       // Verify no raw text input exists for role or gender
       const inputs = view.container.querySelectorAll('input:not([type="hidden"]):not([type="file"])');
@@ -89,7 +89,7 @@ describe('Candidate Editing and Dating Vibe', () => {
       assert.ok(!inputPlaceholders.includes(c.genderPlaceholder), 'Raw gender input should not exist');
     });
 
-    it('restricts role and gender selection to available options and fires onChange', () => {
+    it('restricts role and gender selection to available options and fires onChange via CustomDropdown', () => {
       const patches: Array<Record<string, unknown>> = [];
       const entity = { ...emptyDraftEntity('k1'), role: 'Survivor', gender: 'female' };
       const view = render(
@@ -108,20 +108,32 @@ describe('Candidate Editing and Dating Vibe', () => {
         { wrapper: withDictionary() }
       );
 
-      // Click on Killer chip
-      const killerChip = view.getByText('Killer');
-      assert.ok(killerChip);
-      fireEvent.click(killerChip);
+      // Open Role dropdown
+      const roleDropdown = view.getByRole('button', { name: c.entityRoleLabel });
+      assert.ok(roleDropdown, 'Role dropdown trigger should be present');
+      assert.ok(roleDropdown.textContent?.includes('Survivor'));
+      fireEvent.click(roleDropdown);
+
+      // Select Killer
+      const killerOption = view.getByText('Killer');
+      assert.ok(killerOption);
+      fireEvent.click(killerOption);
       assert.deepEqual(patches[patches.length - 1], { role: 'Killer' });
 
-      // Click on Male chip (exact text 'Male')
-      const maleChip = view.getByRole('button', { name: 'Male' });
-      assert.ok(maleChip);
-      fireEvent.click(maleChip);
+      // Open Gender dropdown
+      const genderDropdown = view.getByRole('button', { name: c.entityGenderLabel });
+      assert.ok(genderDropdown, 'Gender dropdown trigger should be present');
+      assert.ok(genderDropdown.textContent?.includes('Female'));
+      fireEvent.click(genderDropdown);
+
+      // Select Male
+      const maleOption = view.getByText('Male');
+      assert.ok(maleOption);
+      fireEvent.click(maleOption);
       assert.deepEqual(patches[patches.length - 1], { gender: 'male' });
     });
 
-    it('uses CustomDropdown when available options exceed 4', () => {
+    it('uses CustomDropdown for role and gender selection across few and many options', () => {
       const patches: Array<Record<string, unknown>> = [];
       const entity = { ...emptyDraftEntity('k1'), role: 'Role A', gender: 'male' };
       const view = render(
@@ -135,15 +147,20 @@ describe('Candidate Editing and Dating Vibe', () => {
           onTranslationChange={() => {}}
           locale="en"
           availableRoles={['Role A', 'Role B', 'Role C', 'Role D', 'Role E']}
-          availableGenders={['female', 'male']}
+          availableGenders={['female', 'male', 'monster_other', 'custom_gender']}
         />,
         { wrapper: withDictionary() }
       );
 
       // Verify CustomDropdown button for role is rendered with current value
       const roleDropdown = view.getByRole('button', { name: c.entityRoleLabel });
-      assert.ok(roleDropdown, 'CustomDropdown trigger should be present');
+      assert.ok(roleDropdown, 'CustomDropdown trigger for role should be present');
       assert.ok(roleDropdown.textContent?.includes('Role A'));
+
+      // Verify CustomDropdown button for gender is rendered with current value
+      const genderDropdown = view.getByRole('button', { name: c.entityGenderLabel });
+      assert.ok(genderDropdown, 'CustomDropdown trigger for gender should be present');
+      assert.ok(genderDropdown.textContent?.includes('Male'));
     });
   });
 

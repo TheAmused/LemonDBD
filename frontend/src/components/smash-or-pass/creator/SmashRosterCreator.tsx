@@ -28,7 +28,6 @@ import { CandidateFormInputs, CandidateTiles } from './EntityEditor';
 import { CoverImageCropModal } from './CoverImageCropModal';
 import { RosterBasicsSection } from './RosterBasicsSection';
 import { RosterTaxonomyBlock } from './RosterTaxonomyBlock';
-import { RosterTranslationsPanel } from './RosterTranslationsPanel';
 import { RomanceArchetypeBuilder } from './RomanceArchetypeBuilder';
 import { Button } from '@/components/common/Button';
 import { Section, Feedback } from "./SmashRosterCreatorParts";
@@ -121,8 +120,6 @@ export function SmashRosterCreator({ locale, editId, officialSlug }: SmashRoster
     setRosterTranslations,
     entityTranslations,
     setEntityTranslation,
-    activeTranslationLocale,
-    setActiveTranslationLocale,
     setIsSubmitting,
   } = useRosterDraft({ editId, editingRoster, storeHydrated, officialSlug, officialRoster });
 
@@ -284,16 +281,20 @@ export function SmashRosterCreator({ locale, editId, officialSlug }: SmashRoster
           onOfficialChange={setOfficial}
           officialSlug={officialSlug}
           onOpenCrop={() => setIsCropModalOpen(true)}
-        >
-          {showTranslations && (
-            <RosterTranslationsPanel
-              activeLocale={activeTranslationLocale}
-              onLocaleChange={setActiveTranslationLocale}
-              translations={rosterTranslations}
-              setTranslations={setRosterTranslations}
-            />
-          )}
-        </RosterBasicsSection>
+          rosterTranslations={rosterTranslations}
+          onRosterTranslationChange={(locale, field, value) =>
+            setRosterTranslations((prev) => {
+              const current = prev[locale];
+              return {
+                ...prev,
+                [locale]: {
+                  name: field === 'name' ? value : current?.name || '',
+                  description: field === 'description' ? value : current?.description || '',
+                },
+              };
+            })
+          }
+        />
       </div>
 
       {/* BLOCK 2: ROLES & GENDERS */}

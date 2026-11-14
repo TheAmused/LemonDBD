@@ -399,6 +399,7 @@ export default {
     addCandidateDisabledHint: '次の候補者を追加する前に、現在の候補者の名前、役割、性別を入力してください。',
     incompleteCandidatesError: '保存する前に、すべての候補者の名前、役割、性別を入力してください。',
     invalidImage: 'そのカバー画像のリンクは無効です。',
+    blobUrlUnsupported: 'blob: URL（Gemini など）はブラウザのセキュリティによりブロックされます。ファイルを保存するか、画像自体をコピー（右クリック -> 画像をコピー）して貼り付けてください。',
     officialPublicHub: '公式名簿として公開（ハブで全体公開）',
     simpleVersion: 'シンプル版',
     simpleVersionDesc: 'シンプル: クイックカード ＋ 好み・地雷設定（任意）',

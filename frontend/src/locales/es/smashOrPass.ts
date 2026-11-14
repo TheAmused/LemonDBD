@@ -399,6 +399,7 @@ export default {
     addCandidateDisabledHint: 'Completa nombre, rol y género del candidato actual antes de añadir otro.',
     incompleteCandidatesError: 'Todos los candidatos deben tener nombre, rol y género antes de guardar.',
     invalidImage: 'Ese enlace de imagen de portada no es válido.',
+    blobUrlUnsupported: 'Las URL blob: (p. ej. de Gemini) están bloqueadas por la seguridad del navegador. Descarga el archivo o copia la imagen (clic derecho -> Copiar imagen) y pégala.',
     officialPublicHub: 'Publicar como lista oficial (Pública en el centro)',
     simpleVersion: 'Versión simple',
     simpleVersionDesc: 'Simple: Tarjetas rápidas + atractivos y límites opcionales',

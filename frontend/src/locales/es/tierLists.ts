@@ -159,6 +159,7 @@ export default {
     backgroundImageLabel: "URL de imagen de fondo",
     backgroundImagePlaceholder: "https://...",
     backgroundImageHint: "Un enlace https:// o una URI data:image. Se muestra detrás de la tarjeta en Mis listas personalizadas.",
+    blobUrlUnsupported: "Las URL blob: (p. ej. de Gemini) están bloqueadas por la seguridad del navegador. Descarga el archivo o copia la imagen (clic derecho -> Copiar imagen) y pégala.",
     cropCoverTitle: "Recortar / reencuadrar imagen de portada",
     cropClickPrompt: "Haz clic para recortar / reencuadrar (16:9)",
     publishedLabel: "Publicado (visible para los usuarios)",

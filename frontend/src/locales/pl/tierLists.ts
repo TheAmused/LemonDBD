@@ -159,6 +159,7 @@ export default {
     backgroundImageLabel: "URL obrazka tła",
     backgroundImagePlaceholder: "https://...",
     backgroundImageHint: "Link https:// albo URI data:image. Wyświetlany za kartą w sekcji Moje własne listy.",
+    blobUrlUnsupported: "Adresy blob: (np. z Gemini) są blokowane przez zabezpieczenia przeglądarki. Pobierz plik na dysk lub skopiuj sam obraz (PPM -> Kopiuj obraz) i wklej go.",
     cropCoverTitle: "Przytnij / zmień kadr okładki",
     cropClickPrompt: "Kliknij, aby przyciąć / zmienić kadr (16:9)",
     publishedLabel: "Opublikowana (widoczna dla użytkowników)",

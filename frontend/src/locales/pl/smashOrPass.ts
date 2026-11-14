@@ -415,6 +415,7 @@ export default {
     addCandidateDisabledHint: 'Uzupełnij imię, rolę i płeć bieżącego kandydata przed dodaniem kolejnego.',
     incompleteCandidatesError: 'Wszyscy kandydaci muszą mieć uzupełnione imię, rolę i płeć przed zapisaniem.',
     invalidImage: 'Ten link do obrazu okładki jest nieprawidłowy.',
+    blobUrlUnsupported: 'Adresy blob: (np. z Gemini) są blokowane przez zabezpieczenia przeglądarki. Pobierz plik na dysk lub skopiuj sam obraz (PPM -> Kopiuj obraz) i wklej go.',
     officialPublicHub: 'Opublikuj jako oficjalną listę (Publiczna w hubie)',
     simpleVersion: 'Wersja prosta',
     simpleVersionDesc: 'Prosta: Szybkie karty + opcjonalne zalety i wady',

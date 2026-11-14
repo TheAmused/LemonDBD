@@ -96,9 +96,27 @@ export function CandidateFormInputs({
   };
 
   const trimmedMedia = entity.media_url.trim();
-  const safeMedia = trimmedMedia ? sanitizeImageUrl(trimmedMedia) : null;
+  const isBlobMedia = trimmedMedia.startsWith('blob:');
+  const safeMedia = trimmedMedia && !isBlobMedia ? sanitizeImageUrl(trimmedMedia) : null;
   const mediaInvalid = Boolean(trimmedMedia) && !safeMedia;
   const fit = entity.media_display?.fit ?? 'cover';
+
+  const handlePortraitPaste = (e: React.ClipboardEvent) => {
+    const files = e.clipboardData?.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (file.type.startsWith('image/')) {
+        e.preventDefault();
+        void handlePortraitUpload(file);
+        return;
+      }
+    }
+    const text = e.clipboardData?.getData('text')?.trim();
+    if (text && text.startsWith('blob:')) {
+      e.preventDefault();
+      setUploadError(c.blobUrlUnsupported);
+    }
+  };
 
   const displayIndex = String(index + 1).padStart(2, '0');
 
@@ -134,7 +152,15 @@ export function CandidateFormInputs({
         <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center gap-6 2xl:gap-8 max-w-3xl 2xl:max-wide-2k:max-w-4xl wide-2k:max-w-6xl mx-auto w-full">
           {/* Visual Portrait Box - prominent and large */}
           <div className="flex flex-col items-center gap-2 shrink-0">
-            <div className="relative w-48 sm:w-56 md:w-60 2xl:max-wide-2k:w-68 wide-2k:w-80 aspect-[3/4] rounded-card border-2 border-dashed border-border-color bg-bg-primary overflow-hidden flex items-center justify-center shadow-md">
+            <div
+              onPaste={handlePortraitPaste}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={(e) => {
+                e.preventDefault();
+                if (e.dataTransfer.files?.[0]) void handlePortraitUpload(e.dataTransfer.files[0]);
+              }}
+              className="relative w-48 sm:w-56 md:w-60 2xl:max-wide-2k:w-68 wide-2k:w-80 aspect-[3/4] rounded-card border-2 border-dashed border-border-color bg-bg-primary overflow-hidden flex items-center justify-center shadow-md"
+            >
               {safeMedia ? (
                 <Img
                   src={safeMedia}
@@ -234,12 +260,13 @@ export function CandidateFormInputs({
               <div className="flex items-center gap-1.5">
                 <Input
                   id={`entity-media-${entity.key}`}
-                  fieldSize="md" invalid={mediaInvalid || Boolean(uploadError)}
+                  fieldSize="md" invalid={mediaInvalid || Boolean(uploadError) || isBlobMedia}
                   value={entity.media_url}
                   onChange={(e) => {
                     setUploadError(null);
                     onChange({ media_url: e.target.value });
                   }}
+                  onPaste={handlePortraitPaste}
                   placeholder={c.coverImagePlaceholder}
                   inputMode="url"
                 />
@@ -268,9 +295,9 @@ export function CandidateFormInputs({
                   }}
                 />
               </div>
-              {uploadError && (
+              {(uploadError || isBlobMedia) && (
                 <p role="alert" className="mt-1 type-caption font-medium text-accent-red">
-                  {uploadError}
+                  {uploadError || c.blobUrlUnsupported}
                 </p>
               )}
             </div>

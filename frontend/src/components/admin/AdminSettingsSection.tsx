@@ -3,25 +3,28 @@
 //
 // Site settings an admin may change without a rebuild or a deploy: the notice banner, outbound links,
 // sign-up and security switches, abuse limits, lifetimes, retention periods, integrations (write-only
-// secrets) and the moderation thresholds. A saved value overrides the config/env default; "Use default"
-// removes the override. Every save is audited; a change that lowers a protection also needs a
-// confirmation and a reason. The server validates and bounds every value again.
+// secrets) and the moderation thresholds. A saved value overrides the config/env default; putting a field
+// back to its default (one field, or all of them) and saving removes the override. Every save is audited;
+// a change that lowers a protection also needs a confirmation and a reason. The server validates and bounds every value again.
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { DoorOpen, Gauge, Hourglass, KeyRound, Link2, Megaphone, Plug, Scale, ShieldCheck, type LucideIcon } from 'lucide-react';
-import { AccordionSection } from '@/components/common/AccordionSection';
+import { DoorOpen, Gauge, Hourglass, KeyRound, Link2, Megaphone, Plug, RotateCcw, Scale, ShieldCheck, type LucideIcon } from 'lucide-react';
 import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { EmptyState } from '@/components/common/EmptyState';
 import { FieldLabel, Input, Select } from '@/components/common/Field';
-import { Surface } from '@/components/common/Surface';
 import { Switch } from '@/components/common/Switch';
 import { FogReportIcon } from '@/components/icons/DbdIcons';
-import { SiteBannerView } from '@/components/layout/SiteBanner';
+import { LocalizedTextControl } from '@/components/admin/LocalizedTextControl';
+import { SettingGroupDrawer } from '@/components/admin/SettingGroupDrawer';
 import {
+  LOCKED_SETTING_KEYS,
   SETTING_GROUP_ORDER,
+  TRANSLATED_TEXT_KEYS,
+  defaultDraftOf,
   draftOf,
   draftProblem,
+  isDraftDefault,
   isDraftDirty,
   isRiskyDraft,
   isoToLocalInput,
@@ -31,8 +34,6 @@ import {
   type DraftProblem,
 } from '@/components/admin/settingsForm';
 import { AdminTabContentSkeleton } from '@/components/admin/AdminTabContentSkeleton';
-import { adminSettingDrawerKey } from '@/components/admin/adminStorage';
-import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useAdminSettingsDict } from '@/hooks/useAdminSettingsDict';
 import type { AdminSettingsDict } from '@/locales/adminSettings';
@@ -40,7 +41,6 @@ import { listSettings, saveSettings } from '@/services/adminApi';
 import { getErrorMessage } from '@/utils/api';
 import { cn } from '@/utils/cn';
 import { formatMessage } from '@/utils/i18nFormat';
-import type { BannerLevel } from '@/types/siteConfig';
 import type { ActionMessage, AdminSiteSetting, SiteSettingGroup } from '@/types/admin';
 
 const GROUP_ICONS: Record<SiteSettingGroup, LucideIcon | typeof FogReportIcon> = {
@@ -58,143 +58,6 @@ const GROUP_ICONS: Record<SiteSettingGroup, LucideIcon | typeof FogReportIcon> =
 
 const MIN_REASON_LENGTH = 5;
 const REASON_MAX_LENGTH = 300;
-const BANNER_LEVEL_VALUES: readonly BannerLevel[] = ['info', 'warning', 'critical'];
-
-const asBannerLevel = (value: string): BannerLevel => BANNER_LEVEL_VALUES.find((level) => level === value) ?? 'info';
-
-export interface SettingGroupDrawerProps {
-  group: SiteSettingGroup;
-  rows: AdminSiteSetting[];
-  t: AdminSettingsDict;
-  text: (key: string) => string;
-  renderControl: (row: AdminSiteSetting, problem: DraftProblem | null) => React.ReactNode;
-  draftFor: (row: AdminSiteSetting) => string;
-  isDraftDirty: (row: AdminSiteSetting, draft: string) => boolean;
-  draftProblem: (row: AdminSiteSetting, draft: string) => DraftProblem | null;
-  problemText: (row: AdminSiteSetting, problem: DraftProblem) => string;
-  defaultLabel: (row: AdminSiteSetting) => string;
-  send: (
-    payload: Record<string, string | number | boolean | null>,
-    options?: { confirmRisky: boolean; reason: string },
-    resetKey?: string
-  ) => Promise<void>;
-  setRiskyReset: (row: AdminSiteSetting) => void;
-  saving: boolean;
-  bannerText?: string;
-  bannerLevelRow?: AdminSiteSetting;
-}
-
-export function SettingGroupDrawer({
-  group,
-  rows,
-  t,
-  text,
-  renderControl,
-  draftFor,
-  isDraftDirty,
-  draftProblem,
-  problemText,
-  defaultLabel,
-  send,
-  setRiskyReset,
-  saving,
-  bannerText,
-  bannerLevelRow,
-}: SettingGroupDrawerProps) {
-  const [open, toggle] = usePersistentDrawer(adminSettingDrawerKey(group), true);
-  const Icon = GROUP_ICONS[group];
-  const dirtyCount = rows.filter((row) => isDraftDirty(row, draftFor(row))).length;
-
-  return (
-    <AccordionSection
-      as="section"
-      title={
-        <span className="inline-flex items-center gap-2.5">
-          <Icon className="icon-sm text-text-muted" aria-hidden="true" />
-          <span>{text(`configGroup_${group}`)}</span>
-        </span>
-      }
-      open={open}
-      onToggle={toggle}
-      headerAction={
-        dirtyCount > 0 ? (
-          <Badge tone="amber" size="xs">
-            {formatMessage(t.configUnsaved, { count: dirtyCount })}
-          </Badge>
-        ) : null
-      }
-      className="rounded-card border border-border-color bg-bg-surface"
-      bodyClassName="p-0"
-    >
-      <p className="border-b border-border-color p-3 text-center type-caption text-text-muted sm:px-5">
-        {text(`configGroupDesc_${group}`)}
-      </p>
-
-      {group === 'notices' && bannerText && bannerLevelRow && (
-        <div className="border-b border-border-color p-4 sm:p-6">
-          <FieldLabel as="span">{t.configBannerPreview}</FieldLabel>
-          <Surface tone="well" padding="none" className="overflow-hidden">
-            <SiteBannerView level={asBannerLevel(draftFor(bannerLevelRow))} text={bannerText} />
-          </Surface>
-        </div>
-      )}
-
-      <div className="min-w-0 divide-y divide-border-color">
-        {rows.map((row) => {
-          const dirty = isDraftDirty(row, draftFor(row));
-          const problem = dirty ? draftProblem(row, draftFor(row)) : null;
-          const label = text(`config_${row.key}`) || row.key;
-          return (
-            <div
-              key={row.key}
-              className={cn('grid gap-3 p-4 sm:grid-cols-label-control sm:items-start sm:gap-6', dirty && 'bg-accent-amber/5')}
-            >
-              <div className="min-w-0">
-                <label htmlFor={row.kind === 'bool' ? undefined : `cfg-${row.key}`} className="flex flex-wrap items-center gap-2 type-strong text-text-primary">
-                  <span>{label}</span>
-                  {dirty ? (
-                    <Badge tone="amber" size="xs" square>{t.configModified}</Badge>
-                  ) : row.overridden && row.kind !== 'secret' ? (
-                    <Badge tone="neutral" size="xs" square>{t.configCustom}</Badge>
-                  ) : null}
-                  {row.risky_when !== null && (
-                    <Badge tone="red" size="xs" square>{t.configSecuritySwitch}</Badge>
-                  )}
-                </label>
-                <p className="mt-1 type-body text-text-muted">{text(`config_${row.key}_desc`)}</p>
-              </div>
-
-              <div className="flex flex-col gap-1.5 sm:items-end">
-                {renderControl(row, problem)}
-                {problem && (
-                  <p role="alert" className="type-caption font-medium text-accent-red">{problemText(row, problem)}</p>
-                )}
-                <div className="flex flex-wrap items-center gap-x-3 type-caption text-text-muted">
-                  <span className="min-w-0 break-all">{formatMessage(t.configDefaultValue, { value: defaultLabel(row) })}</span>
-                  {row.overridden && (
-                    <Button
-                      type="button"
-                      disabled={saving}
-                      onClick={() =>
-                        { void (row.kind === 'bool' && row.risky_when !== null && row.default === row.risky_when && row.value !== row.default
-                          ? setRiskyReset(row)
-                          : send({ [row.key]: null }, undefined, row.key)); }
-                      }
-                      variant="linkDanger"
-                      size="sm"
-                    >
-                      {row.kind === 'secret' ? t.configSecretRemove : t.configResetDefault}
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </AccordionSection>
-  );
-}
 
 interface SettingsSectionProps {
   notify: (message: ActionMessage) => void;
@@ -218,15 +81,13 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
-  /** "Use default" on a security switch whose default is the unsafe value: confirmed like any risky save. */
-  const [riskyReset, setRiskyReset] = useState<AdminSiteSetting | null>(null);
   const [reason, setReason] = useState('');
 
   const settingsRef = useRef<AdminSiteSetting[]>([]);
   /**
    * Show the server's values. `keepDirty` keeps every field the admin has changed but not saved
-   * (except `savedKey`, the one just reset): the header's Refresh used to remount this tab, and
-   * "Use default" on one row used to reload them all, both silently throwing those edits away.
+   * (except `savedKey`, the secret just removed): the header's Refresh used to remount this tab, and
+   * removing one secret used to reload them all, both silently throwing those edits away.
    */
   const applyServerRows = useCallback((rows: AdminSiteSetting[], keepDirty = false, savedKey?: string) => {
     const previous = new Map(settingsRef.current.map((row) => [row.key, row]));
@@ -254,7 +115,7 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
   const send = async (
     payload: Record<string, string | number | boolean | null>,
     options?: { confirmRisky: boolean; reason: string },
-    /** A one-row "Use default": every other unsaved field stays as typed. */
+    /** Removing one secret: every other unsaved field stays as typed. */
     resetKey?: string
   ) => {
     setSaving(true);
@@ -262,7 +123,6 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
       applyServerRows((await saveSettings(payload, options)).settings ?? [], resetKey !== undefined, resetKey);
       notify({ type: 'success', text: t.configSaved });
       setConfirmOpen(false);
-      setRiskyReset(null);
       setReason('');
     } catch (err: unknown) {
       notify({ type: 'error', text: getErrorMessage(err, t.configSaveFailed) });
@@ -277,6 +137,18 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
   const risky = changed.filter((row) => isRiskyDraft(row, draftFor(row)));
   const payload = () => Object.fromEntries(changed.map((row) => [row.key, payloadValue(row, draftFor(row))]));
   const setDraft = (key: string, value: string) => setDrafts((prev) => ({ ...prev, [key]: value }));
+  /** Every field with a default goes back to it, unsaved; secrets have none and stay as they are. */
+  const resetAll = () =>
+    setDrafts((prev) => ({
+      ...prev,
+      ...Object.fromEntries(
+        settings.flatMap((row) => {
+          const base = defaultDraftOf(row);
+          return base === null || LOCKED_SETTING_KEYS.includes(row.key) ? [] : [[row.key, base]];
+        })
+      ),
+    }));
+  const allAtDefault = settings.every((row) => defaultDraftOf(row) === null || LOCKED_SETTING_KEYS.includes(row.key) || isDraftDefault(row, draftFor(row)));
   const reasonOk = reason.trim().length >= MIN_REASON_LENGTH;
 
   // The panel asks before its tab is left (AdminPanelClient), the browser before the page is.
@@ -305,13 +177,28 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
     const draft = draftFor(row);
     const label = text(`config_${row.key}`) || row.key;
     const invalid = problem !== null;
+    /** Saving, or a setting nothing uses at the moment (see LOCKED_SETTING_KEYS). */
+    const frozen = saving || LOCKED_SETTING_KEYS.includes(row.key);
+
+    if (TRANSLATED_TEXT_KEYS.includes(row.key)) {
+      return (
+        <LocalizedTextControl
+          baseKey={row.key}
+          maxLength={row.max_length}
+          ariaLabel={label}
+          valueOf={(key) => drafts[key] ?? ''}
+          onChange={setDraft}
+          disabled={frozen}
+        />
+      );
+    }
 
     switch (row.kind) {
       case 'bool':
         return (
           <span className="inline-flex items-center gap-2.5">
             <span className="type-strong-xs text-text-secondary">{draft === 'true' ? t.configOn : t.configOff}</span>
-            <Switch checked={draft === 'true'} onChange={(on) => setDraft(row.key, String(on))} ariaLabel={label} />
+            <Switch checked={draft === 'true'} onChange={(on) => setDraft(row.key, String(on))} ariaLabel={label} disabled={frozen} />
           </span>
         );
       case 'choice':
@@ -321,7 +208,7 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
             fieldSize="sm"
             value={draft}
             onChange={(e) => setDraft(row.key, e.target.value)}
-            disabled={saving}
+            disabled={frozen}
           >
             {row.choices.map((choice) => (
               <option key={choice} value={choice}>
@@ -339,10 +226,10 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
               fieldSize="sm"
               value={isoToLocalInput(draft)}
               onChange={(e) => setDraft(row.key, localInputToIso(e.target.value))}
-              disabled={saving}
+              disabled={frozen}
             />
             {draft && (
-              <Button type="button" variant="linkMuted" size="sm" disabled={saving} onClick={() => setDraft(row.key, '')}>
+              <Button type="button" variant="linkMuted" size="sm" disabled={frozen} onClick={() => setDraft(row.key, '')}>
                 {t.configClearTime}
               </Button>
             )}
@@ -366,7 +253,7 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
               value={draft}
               invalid={invalid}
               onChange={(e) => setDraft(row.key, e.target.value)}
-              disabled={saving}
+              disabled={frozen}
             />
           </div>
         );
@@ -382,12 +269,12 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
               inputMode={row.kind === 'email' ? 'email' : row.kind === 'url' ? 'url' : 'text'}
               fieldSize="sm"
               maxLength={row.kind === 'email' ? undefined : row.max_length}
-              placeholder={row.kind === 'url' ? t.configLinkPlaceholder : undefined}
+              placeholder={defaultDraftOf(row) || (row.kind === 'url' ? t.configLinkPlaceholder : undefined)}
               spellCheck={row.kind === 'text'}
               value={draft}
               invalid={invalid}
               onChange={(e) => setDraft(row.key, e.target.value)}
-              disabled={saving}
+              disabled={frozen}
             />
             {row.kind === 'text' && (
               <span className="type-caption text-text-muted sm:text-right">
@@ -399,7 +286,7 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
       default: {
         const unit = unitOf(row.key);
         return (
-          <div className="relative w-full">
+          <div className="relative ml-auto w-28">
             <Input
               id={`cfg-${row.key}`}
               type="number"
@@ -407,14 +294,14 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
               min={row.min ?? undefined}
               max={row.max ?? undefined}
               fieldSize="sm"
-              className={unit ? 'pr-24' : undefined}
+              className={cn('no-spinner', unit && 'pr-11')}
               value={draft}
               invalid={invalid}
               onChange={(e) => setDraft(row.key, e.target.value)}
-              disabled={saving}
+              disabled={frozen}
             />
             {unit && (
-              <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 type-caption text-text-muted">
+              <span aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 type-caption text-text-muted">
                 {text(`configUnit_${unit}`)}
               </span>
             )}
@@ -428,7 +315,10 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
     if (row.kind === 'secret') return row.env_set ? t.configSecretServer : t.configSecretNone;
     if (row.kind === 'bool') return row.default ? t.configOn : t.configOff;
     if (row.kind === 'choice') return text(`configChoice_${String(row.default)}`) || String(row.default);
-    return String(row.default ?? '') || '–';
+    const value = String(row.default ?? '') || '–';
+    const unit = row.kind === 'int' ? unitOf(row.key) : null;
+    if (!unit || row.default === null) return value;
+    return unit === 'perMinute' ? `${value}${text('configUnit_perMinute')}` : `${value} ${text(`configUnit_${unit}`)}`;
   };
 
   // The banner as visitors would see it, from what is typed right now.
@@ -438,18 +328,17 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
 
   return (
     <div className="space-y-4">
-      <Surface padding="none" className="p-4 sm:p-5">
-        <p className="type-body text-text-muted">{t.configSubtitle}</p>
-      </Surface>
-
       <div className="space-y-4">
         {SETTING_GROUP_ORDER.map((group) => {
           const rows = settings.filter((row) => row.group === group);
           if (rows.length === 0) return null;
+          const GroupIcon = GROUP_ICONS[group];
           return (
             <SettingGroupDrawer
               key={group}
               group={group}
+              icon={<GroupIcon className="icon-sm text-text-muted" aria-hidden="true" />}
+              resetIcon={<RotateCcw aria-hidden="true" />}
               rows={rows}
               t={t}
               text={text}
@@ -460,7 +349,7 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
               problemText={problemText}
               defaultLabel={defaultLabel}
               send={send}
-              setRiskyReset={setRiskyReset}
+              onResetDefault={(row) => setDraft(row.key, defaultDraftOf(row) ?? '')}
               saving={saving}
               bannerText={group === 'notices' ? bannerText : undefined}
               bannerLevelRow={group === 'notices' ? bannerLevelRow : undefined}
@@ -474,7 +363,16 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
         <output className={cn('block type-strong', changed.length > 0 ? 'text-accent-amber' : 'text-text-muted')}>
           {changed.length > 0 ? formatMessage(t.configUnsaved, { count: changed.length }) : t.configAllSaved}
         </output>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <Button
+            variant="secondary"
+            size="sm"
+            disabled={saving || allAtDefault}
+            onClick={resetAll}
+            leftIcon={<RotateCcw aria-hidden="true" />}
+          >
+            {t.configResetAll}
+          </Button>
           <Button
             variant="secondary"
             size="sm"
@@ -496,14 +394,14 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
       </div>
 
       <ConfirmModal
-        open={confirmOpen || riskyReset !== null}
+        open={confirmOpen}
         size="md"
         title={t.configRiskTitle}
         message={
           <div className="space-y-3 text-left">
             <p>{t.configRiskBody}</p>
             <ul className="list-disc space-y-1 pl-5 type-strong text-text-primary">
-              {(riskyReset ? [riskyReset] : risky).map((row) => (
+              {risky.map((row) => (
                 <li key={row.key}>{text(`config_${row.key}`) || row.key}</li>
               ))}
             </ul>
@@ -526,14 +424,9 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
         busyLabel={t.configRiskConfirm}
         busy={saving}
         confirmDisabled={!reasonOk}
-        onConfirm={() =>
-          { void (riskyReset
-            ? send({ [riskyReset.key]: null }, { confirmRisky: true, reason: reason.trim() }, riskyReset.key)
-            : send(payload(), { confirmRisky: true, reason: reason.trim() })); }
-        }
+        onConfirm={() => { void send(payload(), { confirmRisky: true, reason: reason.trim() }); }}
         onCancel={() => {
           setConfirmOpen(false);
-          setRiskyReset(null);
           setReason('');
         }}
       />

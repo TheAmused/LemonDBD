@@ -77,8 +77,9 @@ export function AdminQueue<S extends string, T extends { id: number }>({
     }
   };
 
-  // Equal heights only while both drawers are open: a stretched drawer can never look collapsed.
-  const bothOpen = isListOpen && isCaseOpen;
+  // Equal heights only while both drawers are open and a case is on show: a stretched drawer can never look collapsed,
+  // and an empty case prompt is not stretched to the height of the list beside it.
+  const bothOpen = isListOpen && isCaseOpen && detail !== null;
 
   return (
     <div className="grid w-full grid-cols-1 items-start gap-4 lg:grid-cols-12 lg:gap-5">
@@ -101,8 +102,8 @@ export function AdminQueue<S extends string, T extends { id: number }>({
             wrap
             className="w-full"
             tabs={[
-              ...statuses.map((s) => ({ value: s, label: statusLabel(s), count: stats?.[s] })),
               { value: 'all' as const, label: t.statusAll, count: stats?.total },
+              ...statuses.map((s) => ({ value: s, label: statusLabel(s), count: stats?.[s] })),
             ]}
           />
           {search && (

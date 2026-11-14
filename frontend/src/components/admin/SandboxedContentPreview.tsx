@@ -64,48 +64,44 @@ export function SandboxedContentPreview({ evidence }: { evidence: string }) {
         </div>
       )}
 
-      {preview.images.length > 0 && (
-        <div className="space-y-2">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="type-label-sm text-text-secondary">
-              {formatMessage(dict.admin.contentReportImageCount, { count: String(preview.images.length) })}
-            </p>
-            <Button size="xs" onClick={() => setShowImages((v) => !v)} aria-pressed={showImages}>
-              {showImages ? <EyeOff /> : <Eye />}
-              {showImages ? dict.admin.contentReportHideImages : dict.admin.contentReportShowImages}
-            </Button>
-          </div>
-          {showImages ? (
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-              {loadable.map((src, index) => (
-                <Img
-                  key={index}
-                  src={src}
-                  alt=""
-                  loading="lazy"
-                  referrerPolicy="no-referrer"
-                  className={cn(surfaceClassName('well', 'none', 'chip'), 'aspect-square w-full object-cover')}
-                />
-              ))}
-            </div>
-          ) : (
-            <p className="type-body text-text-muted">{dict.admin.contentReportImagesHidden}</p>
-          )}
-          {showImages && blocked > 0 && (
-            <p className="type-body text-text-muted">
-              {formatMessage(dict.admin.contentReportImagesBlocked, { count: String(blocked) })}
-            </p>
-          )}
-        </div>
-      )}
-
       {preview.truncated && <p className="type-body text-accent-amber">{dict.admin.contentReportTruncated}</p>}
 
       <div className="space-y-2">
-        <Button size="xs" onClick={() => setShowRaw((v) => !v)} aria-expanded={showRaw}>
-          <FileJson />
-          {showRaw ? dict.admin.contentReportHideRaw : dict.admin.contentReportShowRaw}
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          {preview.images.length > 0 && (
+            <Button
+              size="xs"
+              onClick={() => setShowImages((v) => !v)}
+              aria-pressed={showImages}
+            >
+              {showImages ? <EyeOff /> : <Eye />}
+              {showImages ? dict.admin.contentReportHideImages : `${dict.admin.contentReportShowImages} (${preview.images.length})`}
+            </Button>
+          )}
+          <Button size="xs" onClick={() => setShowRaw((v) => !v)} aria-expanded={showRaw}>
+            <FileJson />
+            {showRaw ? dict.admin.contentReportHideRaw : dict.admin.contentReportShowRaw}
+          </Button>
+        </div>
+        {showImages && (
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+            {loadable.map((src, index) => (
+              <Img
+                key={index}
+                src={src}
+                alt=""
+                loading="lazy"
+                referrerPolicy="no-referrer"
+                className={cn(surfaceClassName('well', 'none', 'chip'), 'aspect-square w-full object-cover')}
+              />
+            ))}
+          </div>
+        )}
+        {showImages && blocked > 0 && (
+          <p className="type-body text-text-muted">
+            {formatMessage(dict.admin.contentReportImagesBlocked, { count: String(blocked) })}
+          </p>
+        )}
         {showRaw && (
           <pre className={cn(surfaceClassName('well', 'sm'), 'max-h-80 overflow-auto type-caption text-text-secondary whitespace-pre-wrap break-all')}>
             {raw}

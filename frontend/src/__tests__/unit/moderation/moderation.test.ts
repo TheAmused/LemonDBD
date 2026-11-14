@@ -59,16 +59,19 @@ test('warnings are read from moderation.warnings and anything malformed counts a
   assert.deepEqual(warningsFromResponse(null), []);
 });
 
-test('a suspension or ban needs the facts; a warning does not', () => {
-  assert.equal(isSanctionDraftValid(draft({ kind: 'warning' })), false);
-  assert.equal(isSanctionDraftValid(draft({ kind: 'warning', facts: 'Rude comments.' })), true);
-  assert.equal(isSanctionDraftValid(draft({ kind: 'ban', facts: '   ' })), false);
-  assert.equal(isSanctionDraftValid(draft({ kind: 'ban', facts: 'Posted slurs.' })), true);
-  assert.equal(isSanctionDraftValid(draft({ kind: 'suspension', facts: 'x', duration_days: 7 })), true);
+test('every decision needs its facts and a picked reason, unless a report supplies the reason', () => {
+  const reason = { reason_code: 'spam' as const };
+  assert.equal(isSanctionDraftValid(draft({ kind: 'warning', ...reason })), false);
+  assert.equal(isSanctionDraftValid(draft({ kind: 'warning', facts: 'Rude comments.', ...reason })), true);
+  assert.equal(isSanctionDraftValid(draft({ kind: 'ban', facts: '   ', ...reason })), false);
+  assert.equal(isSanctionDraftValid(draft({ kind: 'ban', facts: 'Posted slurs.', ...reason })), true);
+  assert.equal(isSanctionDraftValid(draft({ kind: 'suspension', facts: 'x', duration_days: 7, ...reason })), true);
+  assert.equal(isSanctionDraftValid(draft({ kind: 'ban', facts: 'Posted slurs.' })), false, 'no reason picked yet');
+  assert.equal(isSanctionDraftValid(draft({ kind: 'ban', facts: 'Posted slurs.' }), { reasonRequired: false }), true);
 });
 
 test('a suspension needs a whole number of days from 1 to 365', () => {
-  const base = { kind: 'suspension' as const, facts: 'x' };
+  const base = { kind: 'suspension' as const, facts: 'x', reason_code: 'spam' as const };
   for (const days of [0, -1, 366, 1.5, NaN]) {
     assert.equal(isSanctionDraftValid(draft({ ...base, duration_days: days })), false, String(days));
   }

@@ -149,9 +149,11 @@ export function AdminMaintenanceModeCard({ notify, refreshKey, className }: Main
             </div>
           </div>
           {!locked && startsLater() && (
-            <Button variant="primary" size="sm" loading={busy} onClick={() => { void apply(); }}>
-              {t.mmSave}
-            </Button>
+            <div className="flex justify-end">
+              <Button variant="primary" size="sm" loading={busy} onClick={() => { void apply(); }}>
+                {t.mmSave}
+              </Button>
+            </div>
           )}
         </ToolFormRow>
       </ToolCard>

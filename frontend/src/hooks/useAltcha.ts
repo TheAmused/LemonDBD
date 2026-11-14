@@ -77,7 +77,12 @@ export async function solveAltchaPoW(
   return null;
 }
 
-export function useAltcha(autoSolve: boolean = true) {
+/**
+ * `enforced` is the admin switch (Settings > Access): when the server does not ask for the security
+ * check, no challenge is fetched or solved and the form may be sent at once.
+ */
+export function useAltcha(autoSolve: boolean = true, enforced: boolean = true) {
+  const solving = autoSolve && enforced;
   const [altchaPayload, setAltchaPayload] = useState<AltchaPayload | null>(null);
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [isVerified, setIsVerified] = useState<boolean>(false);
@@ -138,14 +143,15 @@ export function useAltcha(autoSolve: boolean = true) {
   }, [fetchChallenge, solveChallenge]);
 
   const refreshChallenge = useCallback(async () => {
+    if (!enforced) return;
     setIsVerified(false);
     setAltchaPayload(null);
     setError(null);
     await startChallenge();
-  }, [startChallenge]);
+  }, [enforced, startChallenge]);
 
   // Switching auto-solve off drops the solution; switching it on starts from a clean slate.
-  useOnValueChange(autoSolve, () => {
+  useOnValueChange(solving, () => {
     setIsVerifying(false);
     setIsVerified(false);
     setAltchaPayload(null);
@@ -153,7 +159,7 @@ export function useAltcha(autoSolve: boolean = true) {
   });
 
   useEffect(() => {
-    if (autoSolve) {
+    if (solving) {
       void startChallenge();
     } else if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -166,12 +172,12 @@ export function useAltcha(autoSolve: boolean = true) {
         abortControllerRef.current = null;
       }
     };
-  }, [autoSolve, startChallenge]);
+  }, [solving, startChallenge]);
 
   return {
     altchaPayload,
     isVerifying,
-    isVerified,
+    isVerified: isVerified || !enforced,
     error,
     refreshChallenge,
     honeypotValue,

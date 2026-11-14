@@ -320,6 +320,12 @@ class TestPublicConfig:
         assert links["donation_kofi"] == "https://ko-fi.com/new"
         assert links["donation_bmc"] is None  # an empty link is hidden
 
+    def test_the_support_message_is_served_per_language(self, client: FlaskClient) -> None:
+        """English first, then the languages the admin wrote; an empty one is left out so the client falls back."""
+        assert client.get(self.URL).get_json()["links"]["donation_message"] == {}
+        site_settings.update_settings({"donation_message": "Thanks!", "donation_message_pl": "Dzięki!", "donation_message_de": ""})
+        assert client.get(self.URL).get_json()["links"]["donation_message"] == {"en": "Thanks!", "pl": "Dzięki!"}
+
     def test_feature_flags_follow_the_switches(self, client: FlaskClient, app: Flask, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setitem(app.config, "GOOGLE_CLIENT_ID", "client.apps.googleusercontent.com")
         features = client.get(self.URL).get_json()["features"]
@@ -333,6 +339,13 @@ class TestPublicConfig:
         assert client.get(self.URL).get_json()["features"]["guest_bug_reports"] is True
         site_settings.update_settings({"guest_bug_reports": False})
         assert client.get(self.URL).get_json()["features"]["guest_bug_reports"] is False
+
+    def test_the_security_check_switch_is_public(self, client: FlaskClient, app: Flask, monkeypatch: pytest.MonkeyPatch) -> None:
+        """The sign-in form must not fetch and solve a challenge the server no longer asks for."""
+        monkeypatch.setitem(app.config, "ALTCHA_ENFORCED", True)
+        assert client.get(self.URL).get_json()["features"]["altcha_enforced"] is True
+        site_settings.update_settings({"altcha_enforced": False}, confirm_risky=True, reason="for the test")
+        assert client.get(self.URL).get_json()["features"]["altcha_enforced"] is False
 
     def test_google_is_unavailable_without_a_client_id(self, client: FlaskClient, app: Flask, monkeypatch: pytest.MonkeyPatch) -> None:
         monkeypatch.setitem(app.config, "GOOGLE_CLIENT_ID", "")

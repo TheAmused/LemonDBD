@@ -93,8 +93,9 @@ describe('SanctionForm', () => {
 
   it('shows the chosen reason and rule in their dropdowns, the rule as "Section N: heading"', () => {
     const none = render({});
-    assert.ok(none.includes(en.moderation.reasons.other));
-    assert.ok(none.includes(en.moderation.admin.formRuleNone));
+    assert.ok(none.includes(en.moderation.admin.formReasonPlaceholder), 'nothing picked yet');
+    assert.ok(none.includes(en.moderation.admin.formRulePlaceholder));
+    assert.ok(render({ reason_code: 'spam' }).includes(en.moderation.reasons.spam));
     const cited = render({ rule_ref: 'fairPlay' });
     assert.ok(cited.includes(`Section 2: ${en.rules.sections.fairPlay.heading}`.replace("'", '&#x27;')));
   });
@@ -124,7 +125,7 @@ describe('ModerationProfileCard', () => {
   });
   const render = (patch: Partial<ModerationSummary> | null) =>
     renderWithDictionary(
-      React.createElement(ModerationProfileCard, { user, summary: patch === null ? null : summary(patch), busy: false, onRestore: noop })
+      React.createElement(ModerationProfileCard, { user, summary: patch === null ? null : summary(patch), busy: false, onRestore: noop, onShowHistory: noop })
     );
 
   it('rings the avatar green, yellow, orange or red by where the account stands', () => {

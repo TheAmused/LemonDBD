@@ -1,27 +1,24 @@
 'use client';
 // frontend/src/components/admin/AdminModerationDrawer.tsx
 //
-// Everything an admin can do about one account's conduct, in foldable sections under the profile card:
-// the next decision (with a preview of what the user will be told) and the history of warnings,
-// suspensions and bans. Every decision is confirmed first.
+// Everything an admin can do about one account's conduct: the profile card (with a button to its history
+// of warnings, suspensions and bans) and the next decision, whose Preview button shows what the user
+// will be told. Every decision is confirmed first.
 
 import React, { useState } from 'react';
-import { AccordionSection } from '@/components/common/AccordionSection';
-import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { Modal } from '@/components/common/Modal';
 import { Spinner } from '@/components/common/Spinner';
 import { Surface } from '@/components/common/Surface';
 import { Switch } from '@/components/common/Switch';
-import { ADMIN_STORAGE } from '@/components/admin/adminStorage';
 import { ModerationProfileCard } from '@/components/admin/ModerationProfileCard';
 import { ModerationReasonModal } from '@/components/admin/ModerationReasonModal';
 import { SanctionForm } from '@/components/admin/SanctionForm';
-import { SanctionHistory } from '@/components/admin/SanctionHistory';
+import { SanctionHistoryModal } from '@/components/admin/SanctionHistoryModal';
+import { SanctionPreviewModal } from '@/components/admin/SanctionPreviewPanel';
 import { useUserModeration } from '@/components/admin/useUserModeration';
 import { useDictionary } from '@/context/DictionaryContext';
-import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 import { formatMessage } from '@/utils/i18nFormat';
 import {
   EMPTY_SANCTION_DRAFT,
@@ -60,8 +57,8 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
   const [confirmingDraft, setConfirmingDraft] = useState(false);
   const [revoking, setRevoking] = useState<AdminSanction | null>(null);
   const [restoring, setRestoring] = useState(false);
-  // Each section folds away like the profile page's drawers, and is remembered.
-  const [isHistoryOpen, toggleHistory] = usePersistentDrawer(ADMIN_STORAGE.moderationHistoryOpen, false);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   // Another user's drawer starts from an empty sanction.
   useOnValueChange(user?.id, () => setDraft(EMPTY_SANCTION_DRAFT));
@@ -117,7 +114,13 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
         bodyClassName="space-y-5"
       >
         {user && (
-          <ModerationProfileCard user={user} summary={summary ?? null} busy={saving} onRestore={() => setRestoring(true)} />
+          <ModerationProfileCard
+            user={user}
+            summary={summary ?? null}
+            busy={saving}
+            onRestore={() => setRestoring(true)}
+            onShowHistory={() => setHistoryOpen(true)}
+          />
         )}
 
         {loading && !data && (
@@ -171,34 +174,37 @@ export function AdminModerationDrawer({ user, onClose, onChanged, onActionMessag
             <SanctionForm
               draft={draft}
               kinds={SANCTION_KINDS}
-              previewTarget={{ userId: user.id }}
               onChange={(patch) => setDraft((d) => withEmailRule(d, patchDraft(d, patch, summary?.next_suspension_days)))}
             />
 
-            <Button
-              variant="primary"
-              className="w-full"
-              disabled={saving || !isSanctionDraftValid(draft)}
-              onClick={() => setConfirmingDraft(true)}
-            >
-              {submitLabel}
-            </Button>
+            <div className="flex gap-2">
+              <Button className="shrink-0" onClick={() => setPreviewOpen(true)}>
+                {t.previewTitle}
+              </Button>
+              <Button
+                variant="primary"
+                className="min-w-0 flex-1"
+                disabled={saving || !isSanctionDraftValid(draft)}
+                onClick={() => setConfirmingDraft(true)}
+              >
+                {submitLabel}
+              </Button>
+            </div>
           </>
         )}
-
-        {data && (
-          <AccordionSection
-            as="div"
-            title={t.historyTitle}
-            badge={<Badge tone="neutral" size="sm">{data.sanctions.length}</Badge>}
-            open={isHistoryOpen}
-            onToggle={toggleHistory}
-            bodyClassName="p-4"
-          >
-            <SanctionHistory sanctions={data.sanctions} busy={saving} onRevoke={setRevoking} />
-          </AccordionSection>
-        )}
       </Modal>
+
+      <SanctionHistoryModal
+        open={historyOpen && data !== null}
+        onClose={() => setHistoryOpen(false)}
+        sanctions={data?.sanctions ?? []}
+        busy={saving}
+        onRevoke={setRevoking}
+      />
+
+      {user && (
+        <SanctionPreviewModal open={previewOpen} onClose={() => setPreviewOpen(false)} draft={draft} target={{ userId: user.id }} />
+      )}
 
       <ConfirmModal
         open={confirmingDraft}

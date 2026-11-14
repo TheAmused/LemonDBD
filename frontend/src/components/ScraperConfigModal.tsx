@@ -57,7 +57,7 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess, initialTab
 
           {activeTab === 'export' && <ExportTab tab={exportTab} />}
           {activeTab === 'import' && <ImportTab tab={importTab} />}
-          {activeTab === 'purge' && <PurgeTab tab={purgeTab} onClose={onClose} />}
+          {activeTab === 'purge' && <PurgeTab tab={purgeTab} />}
         </div>
       </Modal>
 
@@ -79,7 +79,7 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess, initialTab
 
       <ConfirmModal
         open={purgeTab.showPurgeConfirm}
-        title={dict.admin.purgeReset}
+        title={dict.admin.purge}
         message={
           <div className="space-y-3">
             <p>{formatMessage(dict.admin.purgeConfirm, { count: purgeTab.purgeTargets.length }, locale)}</p>
@@ -87,7 +87,7 @@ export function ScraperConfigModal({ isOpen, onClose, onPurgeSuccess, initialTab
             <ReauthFields value={purgeTab.reauth} onChange={purgeTab.setReauth} hint={dict.admin.reauthDatabaseHint} disabled={purgeTab.isPurging} />
           </div>
         }
-        confirmLabel={dict.admin.purgeReset}
+        confirmLabel={dict.admin.purge}
         busy={purgeTab.isPurging}
         confirmDisabled={!purgeReady}
         onConfirm={() => { void purgeTab.runPurge(); }}

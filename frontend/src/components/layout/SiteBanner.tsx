@@ -18,7 +18,7 @@ const BANNER_DISMISSED_STORAGE_KEY = 'lemondbd_site_banner_dismissed';
 const CLOCK_MS = 60_000;
 
 const LEVELS: Record<BannerLevel, { Icon: typeof Info; box: string; icon: string }> = {
-  info: { Icon: Info, box: 'border-accent-blue/40', icon: 'text-accent-blue' },
+  info: { Icon: Info, box: 'border-border-color', icon: 'text-text-secondary' },
   warning: { Icon: TriangleAlert, box: 'border-accent-amber/50', icon: 'text-accent-amber' },
   critical: { Icon: OctagonAlert, box: 'border-accent-red/50', icon: 'text-accent-red' },
 };

@@ -67,7 +67,7 @@ export function emptyDraftEntity(key: string): DraftEntity {
 }
 
 /** One locale's overrides for this entity's translatable fields. */
-export type EntityTranslationDraft = Partial<Record<(typeof TRANSLATABLE_FIELDS)[number], string>>;
+export type EntityTranslationDraft = Partial<Record<(typeof TRANSLATABLE_FIELDS)[number] | 'name', string>>;
 
 export interface CandidateTilesProps {
   entities: DraftEntity[];
@@ -253,7 +253,7 @@ export function TextField({
   placeholder,
   full,
 }: {
-  label: string;
+  label: React.ReactNode;
   value: string;
   max: number;
   onChange: (v: string) => void;
@@ -282,7 +282,7 @@ export function TextAreaField({
   placeholder,
   full,
 }: {
-  label: string;
+  label: React.ReactNode;
   value: string;
   max: number;
   onChange: (v: string) => void;

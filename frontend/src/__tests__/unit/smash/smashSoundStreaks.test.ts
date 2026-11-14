@@ -70,7 +70,7 @@ describe('smash sound streaks', () => {
 
   it('answers a smash soon after another with a lighter chime', () => {
     const full = started(() => SmashSounds.playSmashSound());
-    clock += 0.6;
+    clock += 0.3;
     const light = started(() => SmashSounds.playSmashSound());
     assert.ok(light > 0, 'still heard');
     assert.ok(light < full / 2, `light (${light}) is much smaller than full (${full})`);
@@ -78,9 +78,9 @@ describe('smash sound streaks', () => {
 
   it('stays silent for a button mash and recovers afterwards', () => {
     started(() => SmashSounds.playSmashSound());
-    clock += 0.2;
+    clock += 0.1;
     assert.equal(started(() => SmashSounds.playSmashSound()), 0);
-    clock += 0.2;
+    clock += 0.1;
     assert.equal(started(() => SmashSounds.playSmashSound()), 0, 'the mash is measured from the last vote');
     clock += 5;
     assert.ok(started(() => SmashSounds.playSmashSound()) >= 6);

@@ -202,7 +202,6 @@ export function CardBackFace({
             const rect = e.currentTarget.getBoundingClientRect();
             onVote('pass', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
           }}
-          {...tip(text.pass, undefined, 'action')}
           aria-label={text.pass}
           variant="secondary" size="lg" icon className="h-13 w-13 shadow-2xl backdrop-blur-md hover:scale-110 active:scale-95 touch-manipulation sm:h-14 sm:w-14"
         >
@@ -217,7 +216,6 @@ export function CardBackFace({
             const rect = e.currentTarget.getBoundingClientRect();
             onVote('smash', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
           }}
-          {...tip(text.smash, undefined, 'action')}
           aria-label={text.smash}
           variant="primary" size="lg" icon className="h-13 w-13 hover:scale-110 active:scale-95 touch-manipulation sm:h-14 sm:w-14"
         >

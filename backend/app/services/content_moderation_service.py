@@ -188,6 +188,24 @@ def _join_pending_report(report: ContentReport, reporter: User, reason: str, not
     return True
 
 
+def _adopt_author(report: ContentReport, author_id: int | None, author_login: str) -> None:
+    """Give a pending report without an author the one a later report proves with a valid stamp.
+
+    The first report of a document may come from a copy that carries no stamp; a later report of the
+    same document from a signed copy (the exported file, imported again) then names the author. The
+    stamp was verified against the document's hash before this is called, so nobody can be framed by it.
+    """
+    if author_id is None or report.author_id is not None:
+        return
+    db.session.execute(
+        update(ContentReport)
+        .where(ContentReport.id == report.id, ContentReport.author_id.is_(None))
+        .values(author_id=author_id, author_login=author_login)
+    )
+    db.session.commit()
+    db.session.refresh(report)
+
+
 def _queued_response(report: ContentReport, joined: bool) -> tuple[dict[str, Any], int]:
     return {
         "status": "queued",
@@ -276,6 +294,7 @@ def report_content(
 
     existing_report = _find_pending_report(computed_hash)
     if existing_report is not None:
+        _adopt_author(existing_report, persisted_author_id, persisted_author_login)
         return _queued_response(existing_report, _join_pending_report(existing_report, reporter, reason, notes))
 
     try:
@@ -308,6 +327,7 @@ def report_content(
         raced_report = _find_pending_report(computed_hash)
         if raced_report is None:
             raise
+        _adopt_author(raced_report, persisted_author_id, persisted_author_login)
         return _queued_response(raced_report, _join_pending_report(raced_report, reporter, reason, notes))
 
     db.session.commit()

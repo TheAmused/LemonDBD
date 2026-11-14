@@ -225,7 +225,7 @@ export function AdminAuditSection({ refreshKey, notify }: { refreshKey: number; 
 
       {total > 0 && (
         <Pagination
-          variant="embedded"
+          variant="embeddedCompact"
           page={page}
           totalPages={Math.ceil(total / perPage)}
           totalResults={total}

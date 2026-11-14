@@ -23,11 +23,14 @@ export interface SiteConfig {
     discordInvite: string | null;
     donationBmc: string | null;
     donationKofi: string | null;
-    donationMessage: string | null;
+    /** The support window's message in the languages the admin wrote (English first); empty when there is none. */
+    donationMessage: Partial<Record<Locale, string>>;
   };
   features: {
     registrationOpen: boolean;
     emailVerificationRequired: boolean;
+    /** Whether sign-in, sign-up, password reset and guest bug reports need the security check (ALTCHA). */
+    altchaEnforced: boolean;
     googleSignIn: boolean;
     contentReportsOpen: boolean;
     /** Whether signed-out visitors may send bug reports. */

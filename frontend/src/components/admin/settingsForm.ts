@@ -3,6 +3,7 @@
 // The pure parts of the Settings tab: how a setting becomes the text in its field, when the field
 // counts as changed, which changes lower a protection, and the local-time <-> UTC conversion for the
 // banner's end time. The server validates everything again; these checks only spare a round trip.
+import { i18n } from '@/i18n/config';
 import type { AdminSiteSetting, SiteSettingGroup, SiteSettingValue } from '@/types/admin';
 
 /** Top to bottom: what an admin reaches for in an incident first, then the everyday tuning. */
@@ -19,6 +20,26 @@ export const SETTING_GROUP_ORDER: readonly SiteSettingGroup[] = [
   'privacy',
 ];
 
+/** Settings that hold one text per language: English under the key itself, every other language under `<key>_<code>`. */
+export const TRANSLATED_TEXT_KEYS: readonly string[] = ['site_banner_text', 'donation_message'];
+const TRANSLATION_CODES: readonly string[] = i18n.locales.filter((locale) => locale !== i18n.defaultLocale);
+
+/** The keys holding the other languages of a translated text (none for any other setting). */
+export function translationKeys(key: string): string[] {
+  return TRANSLATED_TEXT_KEYS.includes(key) ? TRANSLATION_CODES.map((code) => `${key}_${code}`) : [];
+}
+
+/** A setting that is one language of a translated text: shown inside the text's own field, not as a row. */
+export function isTranslationKey(key: string): boolean {
+  return TRANSLATED_TEXT_KEYS.some((base) => translationKeys(base).includes(key));
+}
+
+/**
+ * Settings of a feature the site does not offer at the moment (the scoreboard screenshot check, OCR). They stay
+ * in the list so they are there when the feature comes back, but cannot be edited or reset from this tab.
+ */
+export const LOCKED_SETTING_KEYS: readonly string[] = ['scoreboard_ocr_enabled', 'rate_scoreboard_per_minute', 'scoreboard_upload_max_mb'];
+
 /** The text a field starts with. A secret never has any: the server does not send it back. */
 export function draftOf(row: AdminSiteSetting): string {
   if (row.kind === 'secret' || row.value === null) return '';
@@ -29,7 +50,21 @@ export function isDraftDirty(row: AdminSiteSetting, draft: string): boolean {
   return row.kind === 'secret' ? draft.trim() !== '' : draft.trim() !== draftOf(row);
 }
 
-export function payloadValue(row: AdminSiteSetting, draft: string): SiteSettingValue {
+/** The text a field holds at its default value; null for a secret, which has no default to compare with. */
+export function defaultDraftOf(row: AdminSiteSetting): string | null {
+  if (row.kind === 'secret') return null;
+  return row.default === null ? '' : String(row.default);
+}
+
+/** The field holds the default value, however it got there (typed, or put back with the reset button). */
+export function isDraftDefault(row: AdminSiteSetting, draft: string): boolean {
+  const base = defaultDraftOf(row);
+  return base !== null && draft.trim() === base;
+}
+
+/** What to send for a changed field. The default is sent as null, which removes the override, so a value that is back to the default is no longer "custom". */
+export function payloadValue(row: AdminSiteSetting, draft: string): SiteSettingValue | null {
+  if (isDraftDefault(row, draft)) return null;
   return row.kind === 'bool' ? draft === 'true' : draft.trim();
 }
 

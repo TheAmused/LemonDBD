@@ -4,6 +4,7 @@ import React from 'react';
 import { renderWithDictionary } from '@/__tests__/helpers/renderWithDictionary';
 import { AdminToolsSection } from '@/components/admin/AdminToolsSection';
 import { VectorMapTestModal, VectorMapTestBody } from '@/components/admin/VectorMapTestModal';
+import en from '@/locales/en';
 import type { MapLayout, MapRealm } from '@/types/map';
 
 test('AdminToolsSection renders the Vector Map Engine tool row in the Testing card', () => {
@@ -16,7 +17,7 @@ test('AdminToolsSection renders the Vector Map Engine tool row in the Testing ca
   );
 
   assert.ok(html.includes('Vector Map Engine'));
-  assert.ok(html.includes('Inspect interactive SVG vector layouts'));
+  assert.ok(html.includes(en.admin.vectorMapTestDesc));
 });
 
 test('VectorMapTestModal renders without throwing', () => {
@@ -87,7 +88,6 @@ test('VectorMapTestBody renders with title, selector, and controls', () => {
     })
   );
 
-  assert.ok(html.includes('Inspect interactive SVG vector layouts'));
   assert.ok(html.includes('data-testid="vector-map-test-modal"'));
   assert.ok(html.includes('Coal Tower'));
   assert.ok(html.includes('Select a map'));

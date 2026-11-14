@@ -59,6 +59,7 @@ _FALLBACK_DEFAULTS: dict[str, str | int | bool] = {
     "donation_bmc_url": "",
     "donation_kofi_url": "",
     "donation_message": "",
+    **{f"donation_message_{code}": "" for code in BANNER_LOCALES},
     "verification_code_hours": 24,
     "reset_token_minutes": 60,
     "session_hours": 24,
@@ -400,17 +401,28 @@ def public_config() -> dict[str, Any]:
     def link(key: str) -> str | None:
         return str(get_setting(key)) or None
 
+    # Like the banner text: the languages the admin wrote, English first; the client falls back to English.
+    donation_message = {
+        code: value
+        for code, value in (
+            ("en", str(get_setting("donation_message"))),
+            *((code, str(get_setting(f"donation_message_{code}"))) for code in BANNER_LOCALES),
+        )
+        if value
+    }
+
     return {
         "banner": banner,
         "links": {
             "discord_invite": link("discord_invite_url"),
             "donation_bmc": link("donation_bmc_url"),
             "donation_kofi": link("donation_kofi_url"),
-            "donation_message": link("donation_message"),
+            "donation_message": donation_message,
         },
         "features": {
             "registration_open": registration_open(),
             "email_verification_required": email_verification_required(),
+            "altcha_enforced": altcha_enforced(),
             "google_sign_in": google_sign_in_available(),
             "content_reports_open": content_reports_open(),
             # The bug-report form needs it up front: with guest reports off it asks a signed-out

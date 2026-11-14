@@ -5,7 +5,7 @@
 // and restore, and the tests that prove a feature works end to end (OCR, email, Discord).
 import React, { useCallback, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Download, ExternalLink, LineChart, Mail, MapPin, MessageSquare, Play, RefreshCw, ScanText, Trash2, Upload } from 'lucide-react';
+import { Download, ExternalLink, LineChart, Mail, MapPin, MessageSquare, Play, ScanText, Trash2, Upload } from 'lucide-react';
 import { Badge, type BadgeTone } from '@/components/common/Badge';
 import { Button, buttonClassName } from '@/components/common/Button';
 import { AdminMaintenanceModeCard } from '@/components/admin/AdminMaintenanceModeCard';
@@ -67,10 +67,6 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
   const locale = useLocale();
   const t = dict.admin;
   const [checks, setChecks] = useState<SystemCheck[] | null>(null);
-  const [rechecking, setRechecking] = useState(false);
-  // The checks load with the section and on every refresh; the button re-runs them on demand.
-  const [checkedFor, setCheckedFor] = useState<number | null>(null);
-  const checking = rechecking || checkedFor !== refreshKey;
   const [jobs, setJobs] = useState<MaintenanceJob[]>([]);
   const [running, setRunning] = useState<string | null>(null);
   const [backupTab, setBackupTab] = useState<ScraperTab | null>(null);
@@ -79,23 +75,12 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
 
   const fail = useCallback((err: unknown) => notify({ type: 'error', text: getErrorMessage(err, t.networkError) }), [notify, t.networkError]);
 
-  const loadChecks = useCallback(async () => {
-    setRechecking(true);
-    try {
-      setChecks((await fetchSystemChecks()).checks ?? []);
-    } catch (err: unknown) {
-      fail(err);
-    } finally {
-      setRechecking(false);
-    }
-  }, [fail]);
-
+  // The checks load with the section and again on every refresh (the button in the panel's header).
   useEffect(() => {
     let cancelled = false;
     fetchSystemChecks()
       .then((data) => !cancelled && setChecks(data.checks ?? []))
-      .catch((err: unknown) => !cancelled && fail(err))
-      .finally(() => !cancelled && setCheckedFor(refreshKey));
+      .catch((err: unknown) => !cancelled && fail(err));
     listMaintenanceJobs()
       .then((data) => !cancelled && setJobs(data.jobs ?? []))
       .catch((err: unknown) => !cancelled && fail(err));
@@ -124,19 +109,10 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
       : formatMessage(last.last_trigger === 'schedule' ? t.lastRunScheduled : t.lastRunManual, { date: when(last.last_run_at) });
 
   return (
-    <div className="grid grid-cols-1 items-stretch gap-5 xl:grid-cols-2">
+    <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-2">
       <AdminMaintenanceModeCard notify={notify} refreshKey={refreshKey} className="xl:col-span-2" />
 
-      <ToolCard
-        id="system"
-        title={t.systemTitle}
-        subtitle={t.systemSubtitle}
-        action={
-          <Button size="sm" icon onClick={() => void loadChecks()} aria-label={t.systemRecheck} loading={checking}>
-            <RefreshCw aria-hidden="true" />
-          </Button>
-        }
-      >
+      <ToolCard id="system" title={t.systemTitle} subtitle={t.systemSubtitle}>
         {(checks ?? []).map((check) => {
           const keys = CHECK_KEYS[check.key as keyof typeof CHECK_KEYS];
           const details = [
@@ -193,7 +169,7 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
             {t.import}
           </Button>
         </ToolRow>
-        <ToolRow title={t.purgeReset} description={t.purgeDesc}>
+        <ToolRow title={t.purge} description={t.purgeDesc}>
           <Button size="sm" variant="danger" leftIcon={<Trash2 aria-hidden="true" />} onClick={() => setBackupTab('purge')}>
             {t.purge}
           </Button>

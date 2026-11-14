@@ -59,8 +59,8 @@ const BUG_TONES: Record<BugReportStatus, BadgeTone> = {
 };
 
 const CONTENT_TONES: Record<ContentReportStatus, BadgeTone> = {
-  pending: 'red',
-  resolved_banned: 'amber',
+  pending: 'amber',
+  resolved_banned: 'red',
   dismissed: 'green',
   expired: 'neutral',
 };

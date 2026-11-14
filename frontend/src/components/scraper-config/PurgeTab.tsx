@@ -10,12 +10,7 @@ import { TargetPicker } from './TargetPicker';
 import { PURGEABLE_TARGET_IDS } from './scraperTargets';
 import type { usePurgeTab } from './usePurgeTab';
 
-interface PurgeTabProps {
-  tab: ReturnType<typeof usePurgeTab>;
-  onClose: () => void;
-}
-
-export function PurgeTab({ tab, onClose }: PurgeTabProps) {
+export function PurgeTab({ tab }: { tab: ReturnType<typeof usePurgeTab> }) {
   const dict = useDictionary();
   const {
     purgeTargets,
@@ -44,11 +39,7 @@ export function PurgeTab({ tab, onClose }: PurgeTabProps) {
         available={PURGEABLE_TARGET_IDS}
       />
 
-      <div className="flex items-center justify-between pt-3 border-t border-border-color">
-        <Button variant="secondary" size="sm" onClick={onClose} disabled={isPurging}>
-          {dict.admin.close}
-        </Button>
-
+      <div className="flex items-center justify-end pt-3">
         <Button
           variant="primary"
           size="sm"

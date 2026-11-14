@@ -181,7 +181,8 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
       <AccordionSection as="section" title={t.rosterTitle} open={isRosterOpen} onToggle={toggleRoster} bodyClassName="p-0">
         <div className="space-y-3 border-b border-border-color p-4 sm:px-5">
           <p className="text-center type-body text-text-muted">{t.rosterSubtitle}</p>
-          <div className="flex flex-wrap items-center gap-2">
+          {/* Stretched, so the chip and the search box are as tall as the switches next to them. */}
+          <div className="flex flex-wrap items-stretch gap-2">
             <SegmentedControl<Kind>
               ariaLabel={t.rosterTitle}
               size="sm"
@@ -209,6 +210,7 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
             <SearchInput
               fieldSize="sm"
               wrapperClassName="min-w-field-sm flex-1 sm:max-w-xs sm:ml-auto"
+              className="h-full"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t.searchGenericPlaceholder}
@@ -221,7 +223,7 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
           {shown.length === 0 ? (
             <EmptyState variant="inline" title={loading ? t.loading : t.rosterEmpty} />
           ) : (
-            <ul className="grid max-h-roster grid-cols-3 gap-3 overflow-y-auto pr-1 sm:grid-cols-5 lg:grid-cols-7 xl:grid-cols-8">
+            <ul className="grid max-h-roster grid-cols-3 gap-3 overflow-y-auto pr-1 sm:grid-cols-5 lg:grid-cols-8 xl:grid-cols-10">
               {shown.map((item) => {
                 const isCharacter = 'role' in item;
                 const image = isCharacter ? (item as AdminCharacterRow).avatar_local_path : (item as AdminPerkRow).icon_local_path;
@@ -260,7 +262,7 @@ export function AdminAvailabilitySection({ refreshKey, notify }: AdminAvailabili
                           </span>
                         )}
                       </span>
-                      <span className={cn('line-clamp-2 w-full text-center type-micro', item.is_disabled ? 'text-accent-red' : 'text-text-secondary')}>
+                      <span className={cn('line-clamp-2 w-full text-center type-body', item.is_disabled ? 'text-accent-red' : 'text-text-secondary')}>
                         {item.name}
                       </span>
                     </TileButton>

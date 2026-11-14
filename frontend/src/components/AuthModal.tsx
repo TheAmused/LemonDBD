@@ -51,7 +51,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
     refreshChallenge,
     honeypotValue,
     honeypotProps,
-  } = useAltcha(isOpen);
+  } = useAltcha(isOpen, features.altchaEnforced);
 
   const [mode, setMode] = useState<AuthMode>(initialMode);
   const [loginName, setLoginName] = useState<string>('');

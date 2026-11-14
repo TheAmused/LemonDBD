@@ -12,6 +12,9 @@ import {
   draftOf,
   draftProblem,
   isDraftDirty,
+  isTranslationKey,
+  isDraftDefault,
+  defaultDraftOf,
   isRiskyDraft,
   isoToLocalInput,
   localInputToIso,
@@ -60,6 +63,18 @@ describe('drafts', () => {
   it('send booleans as booleans and everything else trimmed', () => {
     assert.equal(payloadValue(row({ kind: 'bool', value: true }), 'false'), false);
     assert.equal(payloadValue(row({ kind: 'text', value: '' }), '  hi '), 'hi');
+  });
+
+  it('send the default as null, so the override is removed and the field is no longer custom', () => {
+    const limit = row({ kind: 'int', value: 20, default: 10, overridden: true });
+    assert.equal(isDraftDefault(limit, '10'), true);
+    assert.equal(isDraftDefault(limit, ' 10 '), true);
+    assert.equal(isDraftDefault(limit, '20'), false);
+    assert.equal(payloadValue(limit, '10'), null);
+    assert.equal(payloadValue(limit, '15'), '15');
+    assert.equal(payloadValue(row({ kind: 'bool', value: false, default: true }), 'true'), null);
+    assert.equal(defaultDraftOf(row({ kind: 'secret', value: null, default: null })), null);
+    assert.equal(isDraftDefault(row({ kind: 'secret', value: null, default: null }), ''), false);
   });
 });
 
@@ -149,8 +164,9 @@ function backendSettings(source: string): { key: string; group: string }[] {
   for (const m of source.matchAll(/SettingSpec\(\s*"(\w+)",\s*"\w+",\s*"(\w+)"/g)) found.push({ key: m[1], group: m[2] });
   for (const m of source.matchAll(/_int_spec\(\s*"(\w+)",\s*"(\w+)"/g)) found.push({ key: m[1], group: m[2] });
   const locales = /BANNER_LOCALES = \(([^)]*)\)/.exec(source)?.[1].match(/"(\w+)"/g)?.map((s) => s.replace(/"/g, '')) ?? [];
-  const generated = /SettingSpec\(f"(\w+)_\{code\}",\s*"\w+",\s*"(\w+)"/.exec(source);
-  if (generated) for (const code of locales) found.push({ key: `${generated[1]}_${code}`, group: generated[2] });
+  for (const generated of source.matchAll(/SettingSpec\(f"(\w+)_\{code\}",\s*"\w+",\s*"(\w+)"/g)) {
+    for (const code of locales) found.push({ key: `${generated[1]}_${code}`, group: generated[2] });
+  }
   // Groups with a panel of their own (maintenance mode, in Tools) are not part of this tab.
   const dedicated = /DEDICATED_GROUPS = frozenset\(\{([^}]*)\}\)/.exec(source)?.[1].match(/"(\w+)"/g)?.map((s) => s.replace(/"/g, '')) ?? [];
   return found.filter((setting) => !dedicated.includes(setting.group));
@@ -170,7 +186,8 @@ describe('the tab covers every backend setting', { skip: spec === null ? 'backen
     it(`${locale}: every setting and group has its label and description`, () => {
       const admin = dict as Record<string, string | undefined>;
       const missing: string[] = [];
-      for (const { key, group } of settings) {
+      // A language of a translated text lives inside the text's own field and has no row, so no label of its own.
+      for (const { key, group } of settings.filter((setting) => !isTranslationKey(setting.key))) {
         for (const name of [`config_${key}`, `config_${key}_desc`, `configGroup_${group}`, `configGroupDesc_${group}`]) {
           if (!admin[name]) missing.push(name);
         }

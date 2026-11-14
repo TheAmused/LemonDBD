@@ -78,11 +78,8 @@ export function VectorMapTestBody({
 
   return (
     <div className="space-y-4" data-testid="vector-map-test-modal">
-      {/* Intro description */}
-      <p className="type-body text-text-muted">{t.vectorMapTestDesc}</p>
-
       {/* Map Selector & Stats Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-card border border-border-color bg-bg-surface p-3 sm:p-4">
+      <div className="flex flex-wrap items-end justify-between gap-3">
         <div className="min-w-0 flex-1 sm:max-w-xs">
           <FieldLabel htmlFor="admin-vector-map-select">{t.vectorMapSelect}</FieldLabel>
           <Select
@@ -281,6 +278,7 @@ export function VectorMapTestModal({ isOpen, onClose }: VectorMapTestModalProps)
       size="5xl"
       title={t.vectorMapTest}
       testId="vector-map-test-modal"
+      padded
     >
       <VectorMapTestBody
         maps={maps}

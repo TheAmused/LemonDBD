@@ -299,6 +299,47 @@ def test_create_report_deduplication_bumps_count_and_adds_subscriber(
     assert len(report.subscribers) == 2
 
 
+def test_later_signed_report_gives_an_unattributed_pending_report_its_author(
+    client: FlaskClient,
+    author_user: User,
+    reporter_user: User,
+    second_reporter_user: User,
+    app,
+    db_session: Session,
+) -> None:
+    payload = {"title": "Copy without a stamp"}
+    content_hash = compute_content_hash(canonicalize_payload(payload))
+    signature = sign_content(author_user.id, content_hash, app.config["SECRET_KEY"])
+    unsigned = {"content_type": "tier_list", "payload": payload, "reason": "spam"}
+    signed = {
+        **unsigned,
+        "content_hash": content_hash,
+        "author_id": author_user.id,
+        "author_login": author_user.login,
+        "signature": signature,
+    }
+
+    assert client.post("/api/v1/content/reports", headers=_auth_headers(reporter_user), json=unsigned).status_code == 201
+    report = db_session.query(ContentReport).filter_by(content_hash=content_hash).one()
+    assert report.author_id is None
+
+    # The same person reporting the signed copy changes no count, but the report learns its author.
+    again = client.post("/api/v1/content/reports", headers=_auth_headers(reporter_user), json=signed)
+    assert again.get_json()["already_reported"] is True
+    db_session.expire_all()
+    report = db_session.query(ContentReport).filter_by(content_hash=content_hash).one()
+    assert report.author_id == author_user.id
+    assert report.author_login == author_user.login
+    assert report.report_count == 1
+
+    # An unsigned report afterwards never takes the author away.
+    client.post("/api/v1/content/reports", headers=_auth_headers(second_reporter_user), json=unsigned)
+    db_session.expire_all()
+    report = db_session.query(ContentReport).filter_by(content_hash=content_hash).one()
+    assert report.author_id == author_user.id
+    assert report.report_count == 2
+
+
 def test_create_report_already_banned_revoked_content(
     client: FlaskClient, author_user: User, reporter_user: User, app, db_session: Session
 ) -> None:

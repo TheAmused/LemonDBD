@@ -83,7 +83,12 @@ SETTING_SPECS: tuple[SettingSpec, ...] = (
                 allowed_hosts=DISCORD_INVITE_HOSTS),
     SettingSpec("donation_bmc_url", "url", "links", max_length=300, allow_empty=True, public=True),
     SettingSpec("donation_kofi_url", "url", "links", max_length=300, allow_empty=True, public=True),
+    # The support window's message: English under the base key, the other languages like the banner's text.
     SettingSpec("donation_message", "text", "links", max_length=200, allow_empty=True, public=True),
+    *(
+        SettingSpec(f"donation_message_{code}", "text", "links", max_length=200, allow_empty=True, public=True)
+        for code in BANNER_LOCALES
+    ),
     _int_spec("verification_code_hours", "tokens", 1, 168),
     _int_spec("reset_token_minutes", "tokens", 5, 1440),
     _int_spec("session_hours", "tokens", 1, 720),

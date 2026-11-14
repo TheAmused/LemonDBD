@@ -8,7 +8,7 @@ import type { RosterItem } from '@/types/smashOrPass';
 import { LockIcon, UploadIcon } from '@/components/icons/DbdIcons';
 
 export interface RosterHeaderActionsProps {
-  activeRosterInCenter?: RosterItem;
+  activeRosterInCenter?: RosterItem | null;
   onCreateRoster?: () => void;
   onImportRoster?: () => void;
   onEditRoster?: (id: string) => void;

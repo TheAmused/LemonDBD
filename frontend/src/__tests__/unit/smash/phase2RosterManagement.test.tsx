@@ -16,9 +16,12 @@ const mockRoster = (overrides?: Partial<RosterItem>): RosterItem => ({
   name: 'Test Roster',
   description: 'Test Description',
   theme_color: '#ff4444',
+  category: 'Custom',
   is_local: true,
   is_active: true,
+  is_nsfw: false,
   entity_count: 5,
+  total_votes: 0,
   ...overrides,
 });
 

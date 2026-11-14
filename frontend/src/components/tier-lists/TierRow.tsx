@@ -136,7 +136,7 @@ export const TierRow = React.memo(function TierRow({
           {keys.length > 0 ? (
             <Button
               type="button"
-              variant="dangerSoft"
+              variant="danger"
               size="sm"
               icon
               onClick={(e) => {

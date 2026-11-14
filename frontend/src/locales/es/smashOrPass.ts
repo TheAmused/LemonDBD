@@ -404,7 +404,6 @@ export default {
     simpleVersionDesc: 'Simple: Tarjetas rápidas + atractivos y límites opcionales',
     modeLockedHint: 'El modo solo se puede elegir antes de añadir candidatos.',
     cropCoverTitle: 'Recortar / reencuadrar imagen de portada',
-    cropCoverBadge: 'Recortar 16:9',
     cropClickPrompt: 'Haz clic para recortar / reencuadrar (16:9)',
     rolesGendersTitle: 'Roles y géneros',
     customArchetypesTitle: 'Arquetipos románticos personalizados',

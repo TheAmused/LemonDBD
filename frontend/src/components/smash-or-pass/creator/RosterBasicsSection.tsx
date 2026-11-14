@@ -126,22 +126,6 @@ export function RosterBasicsSection({
                 </Button>
               ) : undefined
             }
-            emptyActions={
-              isUserAdmin ? (
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => onOpenCrop()}
-                  {...tip(c.cropCoverTitle, undefined, 'action')}
-                  aria-label={c.cropCoverTitle}
-                  className="shrink-0 px-3"
-                >
-                  <Crop className="icon-md text-accent-red" />
-                  <span className="hidden sm:inline">{c.cropCoverBadge}</span>
-                </Button>
-              ) : undefined
-            }
           />
         </div>
 

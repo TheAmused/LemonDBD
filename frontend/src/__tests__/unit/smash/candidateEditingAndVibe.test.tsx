@@ -197,7 +197,7 @@ describe('Candidate Editing and Dating Vibe', () => {
   });
 
   describe('CardBackFace dating_vibe rendering', () => {
-    it('displays charTitle when dating_vibe is empty', () => {
+    it('omits dating_vibe block when dating_vibe is empty', () => {
       const view = render(
         <CardBackFace
           character={baseEntityItem}
@@ -209,10 +209,10 @@ describe('Candidate Editing and Dating Vibe', () => {
         { wrapper: withDictionary() }
       );
 
-      assert.ok(view.getByText('Lone Wolf'));
+      assert.strictEqual(view.queryByText(enDict.smashOrPass.loreLabels.datingVibe), null);
     });
 
-    it('displays profile.dating_vibe when present', () => {
+    it('displays profile.dating_vibe with proper datingVibe label when present', () => {
       const view = render(
         <CardBackFace
           character={baseEntityItem}
@@ -224,6 +224,7 @@ describe('Candidate Editing and Dating Vibe', () => {
         { wrapper: withDictionary() }
       );
 
+      assert.ok(view.getByText(enDict.smashOrPass.loreLabels.datingVibe));
       assert.ok(view.getByText('Spooky Hopeless Romantic'));
     });
 

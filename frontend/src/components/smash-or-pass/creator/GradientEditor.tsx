@@ -60,9 +60,9 @@ export function GradientEditor({ value, onChange, title }: GradientEditorProps) 
   );
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 h-96 flex flex-col">
       <div
-        className="relative flex h-16 items-center justify-center rounded-card border border-border-color px-14"
+        className="relative flex h-16 shrink-0 items-center justify-center rounded-card border border-border-color px-14"
         style={preview.style}
       >
         {handle('from', 'left-3')}
@@ -70,7 +70,7 @@ export function GradientEditor({ value, onChange, title }: GradientEditorProps) 
         {handle('to', 'right-3')}
       </div>
 
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex shrink-0 items-center justify-between gap-2">
         {code('from', 'items-start')}
         <Button
           type="button"
@@ -87,10 +87,10 @@ export function GradientEditor({ value, onChange, title }: GradientEditorProps) 
 
       <div
         className={cn(
-          'mx-auto flex flex-col items-center gap-3 rounded-card border border-border-color bg-bg-elevated/60 p-3',
-          '[&_.react-colorful]:h-40 [&_.react-colorful]:w-full [&_.react-colorful]:max-w-72',
+          'mx-auto flex flex-1 flex-col items-center justify-center gap-2.5 rounded-card border border-border-color bg-bg-elevated/60 p-3 w-full',
+          '[&_.react-colorful]:h-36 [&_.react-colorful]:w-full [&_.react-colorful]:max-w-72',
           '[&_.react-colorful__saturation]:rounded-card [&_.react-colorful__saturation]:border-b-0',
-          '[&_.react-colorful__hue]:mt-3 [&_.react-colorful__hue]:h-4 [&_.react-colorful__hue]:rounded-full',
+          '[&_.react-colorful__hue]:mt-2.5 [&_.react-colorful__hue]:h-3.5 [&_.react-colorful__hue]:rounded-full',
           '[&_.react-colorful__pointer]:h-5 [&_.react-colorful__pointer]:w-5'
         )}
       >

@@ -125,15 +125,13 @@ describe('Phase 2: Roster Management Polish', () => {
         { wrapper: withDictionary() }
       );
 
-      // Quote block should not be rendered
-      const quoteLabel = view.container.querySelector('[data-lore-label] span');
-      // The only label should be dating archetype or turn on/dealbreaker, never a fake quote
+      // Quote block and archetype block should not be rendered when optional fields are empty
       const allText = view.container.textContent || '';
       assert.ok(!allText.includes('watching from the shadows'));
       assert.ok(!allText.includes('Survivor in the Fog'));
       assert.ok(!allText.includes('Ocalały we Mgle'));
-      // The displayed role should be "Plane"
-      assert.ok(allText.includes('Plane'));
+      // Neither fake archetype nor fake quote is rendered
+      assert.strictEqual(view.container.querySelector('[data-lore-label]'), null);
     });
 
     it('renders author-provided quote when present on custom roster entity', () => {

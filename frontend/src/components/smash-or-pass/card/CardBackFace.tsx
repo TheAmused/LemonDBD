@@ -42,9 +42,6 @@ export function CardBackFace({
   const dict = useDictionary();
   const text = dict.smashOrPass;
   const role = roleBadge(character.role, text.filters);
-  // `|| character.role` is a render-level default for an entity with no archetype yet,
-  // not a data fallback — localizedProfile already resolved locale vs. English.
-  const charTitle = profile.archetype || character.role;
   const charTagline = profile.tagline;
   const charBio = profile.bio;
   const charQuote = profile.quote;
@@ -103,13 +100,15 @@ export function CardBackFace({
         data-card-lore=""
         className="space-y-2 h-full pr-1 overflow-y-auto select-text pointer-events-auto scrollbar-thin scrollbar-thumb-border-color"
       >
-        {/* Dating Vibe (always visible on card back) */}
-        <Surface tone="elevated" padding="none" className="p-2.5 border-accent-red/30 space-y-0.5">
-          <span className="type-label-2xs text-accent-red block">
-            {customLabels?.dating_vibe || text.loreLabels.datingArchetype}
-          </span>
-          <p className="type-strong text-text-primary leading-snug">{profile.dating_vibe || charTitle}</p>
-        </Surface>
+        {/* Dating Vibe (always visible on card back if defined) */}
+        {Boolean(profile.dating_vibe) && (
+          <Surface tone="elevated" padding="none" className="p-2.5 border-accent-red/30 space-y-0.5">
+            <span className="type-label-2xs text-accent-red block">
+              {customLabels?.dating_vibe || text.loreLabels.datingVibe}
+            </span>
+            <p className="type-strong text-text-primary leading-snug">{profile.dating_vibe}</p>
+          </Surface>
+        )}
 
         {/* Mobile-only fallback (<880px): show Turn On & Dealbreaker only when floating lore fragments are hidden */}
         {(Boolean(profile.turn_on) || Boolean(profile.dealbreaker)) && (

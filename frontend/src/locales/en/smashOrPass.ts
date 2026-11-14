@@ -406,7 +406,7 @@ export default {
     cropCoverBadge: 'Crop 16:9',
     cropClickPrompt: 'Click to Crop / Reframe (16:9)',
     rolesGendersTitle: 'Roles & Genders',
-    customArchetypesTitle: 'Custom Romance Archetypes & Personality Rules',
+    customArchetypesTitle: 'Custom Romance Archetypes',
     editingCandidate: 'Editing Candidate',
     allCandidatesHeading: 'Roster Candidates',
     renameCandidateAria: 'Rename {name}',

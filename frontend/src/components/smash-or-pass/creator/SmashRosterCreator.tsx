@@ -326,7 +326,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
         </Section>
       </div>
 
-      {/* BLOCK 4: CUSTOM ROMANCE ARCHETYPES & PERSONALITY RULES */}
+      {/* BLOCK 4: CUSTOM ROMANCE ARCHETYPES */}
       <div className={CREATOR_COLUMN}>
         <Section
           title={c.customArchetypesTitle}

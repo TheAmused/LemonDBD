@@ -406,7 +406,7 @@ export default {
     cropCoverBadge: '16:9 でトリミング',
     cropClickPrompt: 'クリックしてトリミング / 調整 (16:9)',
     rolesGendersTitle: '役割と性別',
-    customArchetypesTitle: 'カスタム恋愛アーキタイプと性格診断ルール',
+    customArchetypesTitle: 'カスタム恋愛アーキタイプ',
     editingCandidate: '候補者を編集',
     allCandidatesHeading: '名簿の候補者',
     renameCandidateAria: '{name}の名前を変更',

@@ -102,10 +102,9 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
   const trimmedCover = draft.cover_image_url.trim();
   const safeCover = trimmedCover ? sanitizeImageUrl(trimmedCover) : null;
   const coverInvalid = Boolean(trimmedCover) && !safeCover;
-  const validEntityCount = draft.entities.filter((e) => e.name.trim()).length;
-  const entitiesMissing = validEntityCount === 0;
+  const entitiesMissing = draft.entities.length === 0;
 
-  const isCurrentCandidateComplete = Boolean(activeEntity?.name.trim() && activeEntity?.role && activeEntity?.gender);
+  const isCurrentCandidateComplete = Boolean(activeEntity?.name.trim() && activeEntity?.role?.trim() && activeEntity?.gender?.trim());
   const canAddCandidate = draft.entities.length < SMASH_ROSTER_LIMITS.maxEntities && (draft.entities.length === 0 || isCurrentCandidateComplete);
 
   const isSimpleMode = draft.roster_mode === 'simple';
@@ -312,8 +311,9 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
                   disabledHint={c.addCandidateDisabledHint}
                 />
 
-                {!isCurrentCandidateComplete && activeEntity && (
+                {!isCurrentCandidateComplete && draft.entities.length > 0 && draft.entities.length < SMASH_ROSTER_LIMITS.maxEntities && (
                   <p
+                    id="add-candidate-disabled-hint"
                     data-testid="add-candidate-disabled-hint"
                     className="text-xs text-center text-text-muted italic -mt-3"
                   >

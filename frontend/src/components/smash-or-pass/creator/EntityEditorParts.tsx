@@ -204,6 +204,7 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
                 onClick={canAdd ? onAdd : undefined}
                 disabled={!canAdd}
                 aria-disabled={!canAdd}
+                aria-describedby={!canAdd ? 'add-candidate-disabled-hint' : undefined}
                 data-testid="add-candidate-tile"
                 variant="secondary"
                 size="md"

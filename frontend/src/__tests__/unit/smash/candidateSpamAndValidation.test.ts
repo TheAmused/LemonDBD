@@ -47,7 +47,8 @@ describe('Candidate Spam Prevention & Validation', () => {
       fireEvent.click(addBtn);
       assert.equal(addCalled, false, 'onAdd must not be called when disabled');
 
-      // Verify tooltip or hint attribute
+      // Verify tooltip or hint attribute and aria-describedby
+      assert.equal(addBtn.getAttribute('aria-describedby'), 'add-candidate-disabled-hint');
       assert.ok(
         addBtn.getAttribute('data-tooltip')?.includes('Fill in name, role, and gender') ||
         addBtn.getAttribute('aria-label')?.includes('Fill in name, role, and gender') ||
@@ -84,6 +85,7 @@ describe('Candidate Spam Prevention & Validation', () => {
       const addBtn = view.getByTestId('add-candidate-tile');
       assert.ok(addBtn);
       assert.equal(addBtn.hasAttribute('disabled'), false, 'Button should not be disabled');
+      assert.equal(addBtn.getAttribute('aria-describedby'), null, 'aria-describedby should not be present when enabled');
 
       fireEvent.click(addBtn);
       assert.equal(addCalled, true, 'onAdd should be called when clicked and canAdd is true');

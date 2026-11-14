@@ -87,23 +87,11 @@ export function HubModals({
         variant="confirm"
         layer="top"
         title={dict.smashOrPass.modals.resetConfirmTitle}
-        closeButton="none"
         footerClassName="flex-col-reverse sm:flex-row sm:justify-center gap-2.5"
         footer={
-          <>
-            <Button
-              variant="secondary"
-              size="md"
-              data-autofocus
-              onClick={() => setIsResetConfirmOpen(false)}
-              className="w-full sm:flex-1"
-            >
-              {dict.smashOrPass.modals.cancel}
-            </Button>
-            <Button variant="primary" size="md" onClick={onResetAllVotes} className="w-full sm:flex-1">
-              {dict.smashOrPass.modals.confirm}
-            </Button>
-          </>
+          <Button variant="danger" size="md" onClick={onResetAllVotes} className="w-full sm:flex-1">
+            {dict.smashOrPass.modals.confirm}
+          </Button>
         }
       >
         <p className="px-6 py-5 text-center type-body text-text-muted">{dict.smashOrPass.modals.resetConfirmDesc}</p>

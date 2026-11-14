@@ -15,7 +15,6 @@ import { rosterCoverUrl, rosterDisplayName } from './rosterDisplay';
 import { getCommunityCoverThumbUrl } from '@/utils/thumbUrl';
 import { coverPlaceholderPath } from '@/utils/smashOrPass/placeholderArt';
 import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
-import { Badge } from '@/components/common/Badge';
 import { Button } from '@/components/common/Button';
 import { cn } from '@/utils/cn';
 import { MotionImg } from '@/components/common/MotionImg';
@@ -70,7 +69,7 @@ export function RosterCarouselCard({
   const brightness = Math.max(0.3, 1 - absOffset * 0.35);
   const zIndex = Math.round(40 - absOffset * 10);
 
-  const rosterLabel = `${rosterDisplayName(r)}${count ? `, ${count} ${dict.smashOrPass.candidates}` : ''}${r.is_active === false ? ` (${dict.tierLists.draft})` : ''}${r.is_nsfw ? ' (NSFW)' : ''}`;
+  const rosterLabel = `${rosterDisplayName(r)}${count ? `, ${count} ${dict.smashOrPass.candidates}` : ''}${r.is_nsfw ? ' (NSFW)' : ''}`;
 
   return (
     <div
@@ -192,13 +191,6 @@ export function RosterCarouselCard({
         </div>
       )}
 
-      {r.is_active === false && (
-        <div className="absolute top-4 right-4 sm:top-5 sm:right-5 z-20 pointer-events-none">
-          <Badge tone="amber" size="sm">
-            {dict.tierLists.draft}
-          </Badge>
-        </div>
-      )}
 
       {isCenter && (!r.is_nsfw || globalNsfw) && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">

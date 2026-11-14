@@ -2,7 +2,6 @@
 'use client';
 
 import React from 'react';
-import { PerkHexIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from "@/context/DictionaryContext";
 
 interface MetricItem {
@@ -34,8 +33,6 @@ interface DialProps {
   total: number;
   percentage: number;
   strokeClass: string;
-  accentClass: string;
-  icon?: React.ReactNode;
   compact?: boolean;
 }
 
@@ -45,8 +42,6 @@ const RadialDial: React.FC<DialProps> = ({
   total,
   percentage,
   strokeClass,
-  accentClass,
-  icon,
   compact = false,
 }) => {
   const radius = compact ? 34 : 40;
@@ -117,13 +112,8 @@ const RadialDial: React.FC<DialProps> = ({
         </div>
       </div>
 
-      {/* Title & Icon below */}
-      <div className="flex items-center gap-1 sm:gap-1.5 shrink-0 mt-auto max-w-full">
-        {icon && (
-          <div className={`rounded-chip ${compact ? 'p-0.5 sm:p-1' : 'p-0.5 sm:p-1 lg:p-1.5 2xl:p-2'} ${accentClass} shrink-0`}>
-            {icon}
-          </div>
-        )}
+      {/* Title below */}
+      <div className="flex items-center shrink-0 mt-auto max-w-full">
         <span
           className={`${
             compact ? 'text-micro sm:text-tiny' : 'text-micro xs:text-tiny sm:text-xs 2xl:text-sm'
@@ -174,7 +164,6 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({ ownership,
           total={survTotal}
           percentage={survPercent}
           strokeClass="stroke-accent-green"
-          accentClass="bg-accent-green/15 text-accent-green"
           compact={compact}
         />
 
@@ -185,7 +174,6 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({ ownership,
           total={killerTotal}
           percentage={killerPercent}
           strokeClass="stroke-accent-red"
-          accentClass="bg-accent-red/15 text-accent-red"
           compact={compact}
         />
 
@@ -196,8 +184,6 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({ ownership,
           total={perkTotal}
           percentage={perkPercent}
           strokeClass="stroke-accent-amber"
-          accentClass="bg-accent-amber/15 text-accent-amber"
-          icon={<PerkHexIcon className={compact ? 'icon-xs' : 'icon-sm'} />}
           compact={compact}
         />
       </div>

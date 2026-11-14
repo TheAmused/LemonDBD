@@ -152,8 +152,6 @@ export function AdminUserChallengesModal({ user, notify, onClose }: AdminUserCha
           </FormField>
         }
         confirmLabel={t.resetChallenge}
-        closeButton="header"
-        closeButtonAriaLabel={dict.modal.close}
         size="sm"
         busy={busy}
         onConfirm={() => void confirmReset()}

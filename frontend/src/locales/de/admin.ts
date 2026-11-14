@@ -357,6 +357,8 @@ export default {
   auditTargetMaintenance: "Wartungsaufgabe",
   auditTargetDatabase: "Datenbank",
   auditActionMaintenanceRun: "Wartungsaufgabe ausgeführt",
+  auditTargetMaintenanceMode: "Wartungsmodus",
+  auditActionMaintenanceModeUpdated: "Wartungsmodus geändert",
   auditActionTierListCreated: "Tier-Liste veröffentlicht",
   auditActionTierListUpdated: "Tier-Liste aktualisiert",
   auditActionRosterCreated: "Kader veröffentlicht",

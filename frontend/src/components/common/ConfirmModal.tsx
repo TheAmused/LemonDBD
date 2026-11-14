@@ -4,7 +4,8 @@
 import React from 'react';
 import { Modal } from '@/components/common/Modal';
 import { Spinner } from '@/components/common/Spinner';
-import type { ModalCloseButton, ModalSize } from '@/components/common/modalConfig';
+import { useDictionary } from '@/context/DictionaryContext';
+import type { ModalSize } from '@/components/common/modalConfig';
 
 export interface ConfirmModalProps {
   open: boolean;
@@ -12,7 +13,11 @@ export interface ConfirmModalProps {
   message?: React.ReactNode;
   confirmLabel?: React.ReactNode;
   confirmIcon?: React.ReactNode;
-  cancelLabel?: React.ReactNode;
+  /**
+   * A second button for a real alternative to confirming ("Keep editing", "Discard"). Never a plain Cancel:
+   * the dialog always has the X in its header, and Escape or a click outside does the same (`onCancel`).
+   */
+  alternativeLabel?: React.ReactNode;
   /** Text shown on the confirm button while `busy`; without it the button shows a spinner. */
   busyLabel?: React.ReactNode;
   busy?: boolean;
@@ -20,9 +25,6 @@ export interface ConfirmModalProps {
   confirmDisabled?: boolean;
   /** Dialog width; the default is narrow, fine for a short title and one line of text. */
   size?: ModalSize;
-  /** Show an X in the header (use it instead of a cancel button). */
-  closeButton?: ModalCloseButton;
-  closeButtonAriaLabel?: string;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -33,16 +35,16 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   message,
   confirmLabel,
   confirmIcon,
-  cancelLabel,
+  alternativeLabel,
   busyLabel,
   busy = false,
   confirmDisabled = false,
   size = 'xs',
-  closeButton = 'none',
-  closeButtonAriaLabel,
   onConfirm,
   onCancel,
-}) => (
+}) => {
+  const dict = useDictionary();
+  return (
   <Modal
     isOpen={open}
     onClose={onCancel}
@@ -51,22 +53,22 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
     layer="top"
     title={title}
     ariaLabel="Confirm"
-    closeButton={closeButton}
-    closeButtonAriaLabel={closeButtonAriaLabel}
+    closeButton="header"
+    closeButtonAriaLabel={dict.modal.close}
     busy={busy}
     padded
     bodyClassName="text-center"
     footerClassName="flex-row items-stretch justify-stretch gap-2 p-4 sm:px-6"
     footer={
       <>
-        {cancelLabel && (
+        {alternativeLabel && (
           <button
             type="button"
             onClick={onCancel}
             disabled={busy}
             className="min-w-0 flex-1 inline-flex items-center justify-center rounded-control px-3 border border-border-color bg-bg-surface py-3 type-card-title text-text-secondary transition-colors hover:bg-bg-elevated hover:text-text-primary disabled:opacity-50 cursor-pointer shadow-xs"
           >
-            {cancelLabel}
+            {alternativeLabel}
           </button>
         )}
         <button
@@ -92,4 +94,5 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   >
     {message && <div className="type-body-lg text-text-secondary">{message}</div>}
   </Modal>
-);
+  );
+};

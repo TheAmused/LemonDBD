@@ -165,7 +165,6 @@ export function BugReportDetail({ report, onStatusChange, onReply, onDelete, onS
         title={t.deleteBugReportTitle}
         message={formatMessage(t.confirmDeleteBugReport, { id: report.id })}
         confirmLabel={t.delete}
-        cancelLabel={t.cancel}
         busy={busy}
         onConfirm={() =>
           { void run(async () => {

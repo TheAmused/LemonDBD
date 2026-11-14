@@ -8,12 +8,10 @@ import dynamic from 'next/dynamic';
 import { Download, ExternalLink, LineChart, Mail, MapPin, MessageSquare, Play, RefreshCw, ScanText, Trash2, Upload } from 'lucide-react';
 import { Badge, type BadgeTone } from '@/components/common/Badge';
 import { Button, buttonClassName } from '@/components/common/Button';
-import { AccordionSection } from '@/components/common/AccordionSection';
+import { AdminMaintenanceModeCard } from '@/components/admin/AdminMaintenanceModeCard';
+import { ToolCard, ToolRow } from '@/components/admin/AdminToolParts';
 import { analyticsUrl } from '@/components/admin/adminLinks';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
-import { adminToolDrawerKey } from '@/components/admin/adminStorage';
-import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
-import { cn } from '@/utils/cn';
 import {
   fetchSystemChecks,
   listMaintenanceJobs,
@@ -62,53 +60,6 @@ interface ToolsProps {
   notify: (message: ActionMessage) => void;
   /** A purge or restore changed the data every other section shows. */
   onDataChanged: () => void;
-}
-
-/** One drawer; its rows are separated by rules. Open or closed is remembered per card. */
-function ToolCard({
-  id,
-  title,
-  subtitle,
-  children,
-  action,
-  className,
-}: {
-  id: string;
-  title: string;
-  subtitle?: string;
-  children: React.ReactNode;
-  action?: React.ReactNode;
-  className?: string;
-}) {
-  const [open, toggle] = usePersistentDrawer(adminToolDrawerKey(id), true);
-  return (
-    <AccordionSection
-      as="section"
-      title={title}
-      open={open}
-      onToggle={toggle}
-      headerAction={action}
-      className={cn('h-full', className)}
-      bodyClassName="p-0"
-    >
-      {subtitle && <p className="border-b border-border-color p-4 text-center type-body text-text-muted sm:px-5">{subtitle}</p>}
-      <ul className="divide-y divide-border-subtle">{children}</ul>
-    </AccordionSection>
-  );
-}
-
-/** A row: what it is on the left, its state or its button on the right. */
-function ToolRow({ title, description, meta, children }: { title: React.ReactNode; description: string; meta?: string; children: React.ReactNode }) {
-  return (
-    <li className="flex items-center justify-between gap-4 px-4 py-3 sm:px-5">
-      <div className="min-w-0">
-        <p className="type-strong text-text-primary">{title}</p>
-        <p className="type-caption text-text-muted">{description}</p>
-        {meta && <p className="mt-0.5 type-micro text-text-secondary">{meta}</p>}
-      </div>
-      <div className="flex shrink-0 items-center gap-2">{children}</div>
-    </li>
-  );
 }
 
 export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsProps) {
@@ -174,6 +125,8 @@ export function AdminToolsSection({ refreshKey, notify, onDataChanged }: ToolsPr
 
   return (
     <div className="grid grid-cols-1 items-stretch gap-5 xl:grid-cols-2">
+      <AdminMaintenanceModeCard notify={notify} refreshKey={refreshKey} className="xl:col-span-2" />
+
       <ToolCard
         id="system"
         title={t.systemTitle}

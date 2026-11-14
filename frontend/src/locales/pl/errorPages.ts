@@ -17,6 +17,10 @@ export default {
     title: 'Strona zablokowana',
     text: 'Ta strona nie jest teraz dostępna dla odwiedzających.',
   },
+  maintenance: {
+    title: "Wkrótce wracamy",
+    text: "Trwają prace konserwacyjne. Dziękujemy za cierpliwość.",
+  },
   error: {
     code: 'Błąd',
     title: 'Coś poszło nie tak',

@@ -357,6 +357,8 @@ export default {
   auditTargetMaintenance: "Tarea de mantenimiento",
   auditTargetDatabase: "Base de datos",
   auditActionMaintenanceRun: "Tarea de mantenimiento ejecutada",
+  auditTargetMaintenanceMode: "Modo de mantenimiento",
+  auditActionMaintenanceModeUpdated: "Modo de mantenimiento cambiado",
   auditActionTierListCreated: "Tier list publicada",
   auditActionTierListUpdated: "Tier list actualizada",
   auditActionRosterCreated: "Lista publicada",

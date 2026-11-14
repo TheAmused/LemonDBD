@@ -48,6 +48,22 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(function Inp
   );
 });
 
+export type FieldButtonProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'size'> & CommonFieldProps;
+/** A button that looks like a field: it opens a picker (a date, a time) instead of taking typed text. */
+export const FieldButton = React.forwardRef<HTMLButtonElement, FieldButtonProps>(function FieldButton(
+  { fieldSize = 'md', invalid, pill = false, type = 'button', className, ...rest },
+  ref
+) {
+  return (
+    <button
+      ref={ref}
+      type={type}
+      className={cn(FIELD_BASE, FIELD_SIZES[fieldSize], pill ? FIELD_RADIUS_PILL : FIELD_RADIUS, invalid && FIELD_ERROR, 'flex cursor-pointer items-center justify-between gap-2 text-left', className)}
+      {...rest}
+    />
+  );
+});
+
 export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & CommonFieldProps;
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
   { fieldSize = 'md', invalid, pill = false, className, ...rest },

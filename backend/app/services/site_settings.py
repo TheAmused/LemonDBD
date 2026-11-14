@@ -25,6 +25,7 @@ from app.core.transaction import transaction
 from app.models.admin import SiteSetting
 from app.utils.site_settings_spec import (
     BANNER_LOCALES,
+    DEDICATED_GROUPS,
     SETTING_SPECS,
     SPEC_BY_KEY,
     is_risky_change,
@@ -51,6 +52,9 @@ _FALLBACK_DEFAULTS: dict[str, str | int | bool] = {
     "site_banner_until": "",
     "site_banner_text": "",
     **{f"site_banner_text_{code}": "" for code in BANNER_LOCALES},
+    "maintenance_enabled": False,
+    "maintenance_starts_at": "",
+    "maintenance_until": "",
     "discord_invite_url": "",
     "donation_bmc_url": "",
     "donation_kofi_url": "",
@@ -443,6 +447,8 @@ def list_settings() -> list[dict[str, Any]]:
         overrides = {}
     rows: list[dict[str, Any]] = []
     for spec in SETTING_SPECS:
+        if spec.group in DEDICATED_GROUPS:
+            continue
         row: dict[str, Any] = {
             "key": spec.key,
             "kind": spec.kind,

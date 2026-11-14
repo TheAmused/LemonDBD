@@ -49,6 +49,13 @@ class UpdateSiteSettingsDTO(BaseModel):
     reason: str = Field(default="", max_length=300)
 
 
+class UpdateMaintenanceModeDTO(BaseModel):
+    enabled: bool
+    # ISO 8601; empty or missing means "right now" (start) and "until an admin switches it off" (end).
+    starts_at: str | None = Field(None, max_length=40)
+    until: str | None = Field(None, max_length=40)
+
+
 class PurgeDatabaseDTO(BaseModel):
     targets: list[str] = Field(..., min_length=1)
     # Re-authentication (checked by the route, see core/reauth.py).

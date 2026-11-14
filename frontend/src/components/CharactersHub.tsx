@@ -219,7 +219,7 @@ export const CharactersHub: React.FC = () => {
         title={dict.characterDetail.discardOwnershipTitle}
         message={dict.characterDetail.discardOwnershipMessage}
         confirmLabel={dict.characterDetail.discardOwnershipConfirm}
-        cancelLabel={dict.characterDetail.keepEditingOwnership}
+        alternativeLabel={dict.characterDetail.keepEditingOwnership}
         onConfirm={handleCancelOwnershipMode}
         onCancel={keepEditing}
       />

@@ -2,7 +2,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { i18n, type Locale } from '@/i18n/config';
-import { adminOnlyPageFromPathname, adminPanelLocaleFromPathname } from '@/utils/adminOnlyPages';
+import { ADMIN_ENTRY_PAGE, adminOnlyPageFromPathname, adminPanelLocaleFromPathname } from '@/utils/adminOnlyPages';
+import { checkMaintenance, isMaintenancePage, retryAfterSeconds } from '@/utils/maintenanceProxy';
 import { STREAK_ROLE_COOKIE, resolveStreakRole } from '@/utils/streakRole';
 
 function getPreferredLocale(request: NextRequest): Locale {
@@ -33,6 +34,14 @@ function getPreferredLocale(request: NextRequest): Locale {
 /** Where the Next server reaches the backend. NEXT_PUBLIC_API_URL is the browser-facing address
  * (https://localhost inside a container points back at the frontend itself), so it is not used. */
 const BACKEND_URL = (process.env.INTERNAL_API_URL || 'http://backend:5000').replace(/\/+$/, '');
+
+/** Serve `target` in place of the requested page: never cached, never indexed. */
+function quietRewrite(request: NextRequest, target: string, status?: number): NextResponse {
+    const response = NextResponse.rewrite(new URL(target, request.url), status ? { status } : undefined);
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+    response.headers.set('Cache-Control', 'no-store');
+    return response;
+}
 
 /**
  * Is the visitor a signed-in admin? A visitor without a session cookie is answered without
@@ -75,17 +84,18 @@ async function viewerPreferredLocale(cookie: string): Promise<Locale | null> {
 export async function proxy(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
 
+    const cookie = request.headers.get('cookie') ?? '';
+
     // Gated pages are checked before the "has a dot, so it's a static file" shortcut below: a path
     // like `/en/minigames/x.y` used to skip the gate entirely.
     const adminOnly = adminOnlyPageFromPathname(pathname, i18n.locales);
     const adminPanelLocale = adminPanelLocaleFromPathname(pathname, i18n.locales);
-    if ((adminOnly || adminPanelLocale) && !(await viewerIsAdmin(request.headers.get('cookie') ?? ''))) {
-        // Admin-only pages show Blocked (still in development); the admin panel shows Forbidden.
-        const target = adminOnly ? `/${adminOnly.locale}/blocked` : `/${adminPanelLocale}/forbidden`;
-        const response = NextResponse.rewrite(new URL(target, request.url));
-        response.headers.set('X-Robots-Tag', 'noindex, nofollow');
-        response.headers.set('Cache-Control', 'no-store');
-        return response;
+    if ((adminOnly || adminPanelLocale) && !(await viewerIsAdmin(cookie))) {
+        // Admin-only pages show Blocked (still in development). The admin panel shows the admin sign-in, which
+        // is answered here, before the maintenance check below, so an admin can always get in and switch it off.
+        return adminOnly
+            ? quietRewrite(request, `/${adminOnly.locale}/blocked`)
+            : quietRewrite(request, `/${adminPanelLocale}/${ADMIN_ENTRY_PAGE}`);
     }
 
     // Skip static files, API calls, and Next.js internal routes
@@ -104,10 +114,26 @@ export async function proxy(request: NextRequest) {
     if (pathnameIsMissingLocale) {
         // A signed-in user's saved language wins over the browser's Accept-Language.
         const preferredLocale =
-            (await viewerPreferredLocale(request.headers.get('cookie') ?? '')) ?? getPreferredLocale(request);
+            (await viewerPreferredLocale(cookie)) ?? getPreferredLocale(request);
         return NextResponse.redirect(
             new URL(`/${preferredLocale}${pathname}`, request.url)
         );
+    }
+
+    // Maintenance mode: a visitor the backend says is blocked gets the maintenance page (503) in place of
+    // whatever page they asked for. (The admin panel, and its sign-in, are answered above.)
+    if (!adminPanelLocale && !isMaintenancePage(pathname, i18n.locales)) {
+        const verdict = await checkMaintenance({
+            backendUrl: BACKEND_URL,
+            cookie,
+            clientIp: request.headers.get('x-real-ip') ?? '',
+        });
+        if (verdict.blocked) {
+            const response = quietRewrite(request, `/${pathname.split('/')[1]}/maintenance`, 503);
+            const retryAfter = retryAfterSeconds(verdict.until);
+            if (retryAfter !== null) response.headers.set('Retry-After', String(retryAfter));
+            return response;
+        }
     }
 
     // A bare /streaks goes straight to the remembered role tab. Redirecting from the page instead arrives

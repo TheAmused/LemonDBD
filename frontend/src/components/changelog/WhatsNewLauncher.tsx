@@ -235,7 +235,6 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
         size="2xl"
         fullscreenOnMobile
         title={t.modalTitle}
-        closeButtonAriaLabel={t.close}
         headerRight={
           isAdmin ? (
             <Button
@@ -328,8 +327,6 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
             </>
           }
           confirmLabel={pendingDiscord.kind === 'announce' ? t.discordConfirmSend : t.discordUpdateConfirmSend}
-          closeButton="header"
-          closeButtonAriaLabel={t.cancel}
           busy={announcing}
           busyLabel={pendingDiscord.kind === 'announce' ? t.discordConfirmSend : t.discordUpdateConfirmSend}
           onConfirm={() => { void runDiscordAction(pendingDiscord); }}
@@ -344,8 +341,6 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
           title={t.draftConfirmTitle}
           message={<p>{t.draftConfirmMessage}</p>}
           confirmLabel={t.save}
-          closeButton="header"
-          closeButtonAriaLabel={t.cancel}
           onConfirm={() => {
             const draft = pendingDraft;
             setPendingDraft(null);
@@ -362,7 +357,6 @@ export const WhatsNewLauncher: React.FC<WhatsNewLauncherProps> = ({ feed, classN
         size="sm"
         layer="top"
         closeButton="floating"
-        closeButtonAriaLabel={t.close}
         ariaLabel={discordNotice?.title}
         padded
       >

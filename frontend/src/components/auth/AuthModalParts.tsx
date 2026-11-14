@@ -189,21 +189,23 @@ export const GoogleSignInSection: React.FC<{ clientId: string; onCredential: (cr
   );
 };
 
-/** Development-only quick-fill buttons for the demo logins. */
-export const DemoAccountButtons: React.FC<{ onFill: (role: DemoAccount['role']) => void }> = ({ onFill }) => {
+/** Development-only quick-fill buttons for the demo logins (`adminOnly`: just the admin one). */
+export const DemoAccountButtons: React.FC<{ onFill: (role: DemoAccount['role']) => void; adminOnly?: boolean }> = ({ onFill, adminOnly = false }) => {
   const dict = useDictionary();
   return (
     <div className="mt-4 pt-4 border-t border-border-color">
       {dict.user.quickDemoAccounts && (
         <p className="type-label-2xs text-text-muted mb-2 text-center">{dict.user.quickDemoAccounts}</p>
       )}
-      <div className="grid grid-cols-2 gap-2">
+      <div className={adminOnly ? 'grid grid-cols-1 gap-2' : 'grid grid-cols-2 gap-2'}>
         <Button variant="soft" size="xs" onClick={() => onFill('admin')} leftIcon={<ShieldAlert className="icon-xs" />}>
           <span>{dict.user.adminDemo}</span>
         </Button>
-        <Button type="button" onClick={() => onFill('player')} variant="amberSoft" size="sm">
-          <span>{dict.user.userDemo}</span>
-        </Button>
+        {!adminOnly && (
+          <Button type="button" onClick={() => onFill('player')} variant="amberSoft" size="sm">
+            <span>{dict.user.userDemo}</span>
+          </Button>
+        )}
       </div>
     </div>
   );

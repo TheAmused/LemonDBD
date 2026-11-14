@@ -94,8 +94,6 @@ export const PageStreakBoard: React.FC<PageStreakBoardProps> = ({ locale }) => {
         message={dict.streaks.abandonAllRunsPrompt}
         confirmLabel={dict.streaks.abandonConfirm}
         size="sm"
-        closeButton="header"
-        closeButtonAriaLabel={dict.modal.close}
         busy={abandoningAll}
         onConfirm={() => { void handleAbandonAll(); }}
         onCancel={() => setConfirmingAbandonAll(false)}

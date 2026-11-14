@@ -14,6 +14,7 @@ import { Badge } from '@/components/common/Badge';
 
 import { Button } from '@/components/common/Button';
 import { Img } from '@/components/common/Img';
+import { tip } from '@/components/common/Tooltip';
 import type { MediaDisplay } from '@/types/smashOrPass';
 
 export interface DraftEntity {
@@ -75,11 +76,12 @@ export interface CandidateTilesProps {
   onRemove: (key: string) => void;
   onAdd: () => void;
   canAdd: boolean;
+  disabledHint?: string;
 }
 
 const CANDIDATE_CHUNK_SIZE = 40;
 
-export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRemove, onAdd, canAdd }: CandidateTilesProps) {
+export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRemove, onAdd, canAdd, disabledHint }: CandidateTilesProps) {
   const dict = useDictionary();
   const c = dict.smashOrPass.creator || {};
   const [visibleCount, setVisibleCount] = useState<number>(CANDIDATE_CHUNK_SIZE);
@@ -195,13 +197,19 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
           })}
 
           {/* Trailing '+ Add' tile if under limit */}
-          {canAdd && (
+          {entities.length < SMASH_ROSTER_LIMITS.maxEntities && (
             <li className="flex flex-col items-center">
               <Button
                 type="button"
-                onClick={onAdd}
+                onClick={canAdd ? onAdd : undefined}
+                disabled={!canAdd}
+                aria-disabled={!canAdd}
                 data-testid="add-candidate-tile"
-                variant="secondary" size="md" dashed className="group aspect-square h-auto w-full flex-col"
+                variant="secondary"
+                size="md"
+                dashed
+                className="group aspect-square h-auto w-full flex-col"
+                {...(!canAdd ? tip(disabledHint || c.addCandidateDisabledHint, undefined, 'action') : {})}
               >
                 <div className="flex flex-col items-center gap-1">
                   <Plus className="icon-lg transition-transform group-hover:scale-110" />

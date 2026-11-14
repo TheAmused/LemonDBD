@@ -414,6 +414,8 @@ export default {
     saveError: 'Coś poszło nie tak podczas zapisywania tej listy. Spróbuj ponownie.',
     validationNameRequired: 'Nadaj tej liście nazwę.',
     validationEntityRequired: 'Dodaj co najmniej jednego kandydata.',
+    addCandidateDisabledHint: 'Uzupełnij imię, rolę i płeć bieżącego kandydata przed dodaniem kolejnego.',
+    incompleteCandidatesError: 'Wszyscy kandydaci muszą mieć uzupełnione imię, rolę i płeć przed zapisaniem.',
     invalidImage: 'Ten link do obrazu okładki jest nieprawidłowy.',
     officialPublicHub: 'Opublikuj jako oficjalną listę (Publiczna w hubie)',
     simpleVersion: 'Wersja prosta',

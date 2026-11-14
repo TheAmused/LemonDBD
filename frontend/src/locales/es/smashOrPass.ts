@@ -398,6 +398,8 @@ export default {
     saveError: 'Algo salió mal al guardar esta lista. Inténtalo de nuevo.',
     validationNameRequired: 'Ponle un nombre a esta lista.',
     validationEntityRequired: 'Añade al menos un candidato.',
+    addCandidateDisabledHint: 'Completa nombre, rol y género del candidato actual antes de añadir otro.',
+    incompleteCandidatesError: 'Todos los candidatos deben tener nombre, rol y género antes de guardar.',
     invalidImage: 'Ese enlace de imagen de portada no es válido.',
     officialPublicHub: 'Publicar como lista oficial (Pública en el centro)',
     simpleVersion: 'Versión simple',

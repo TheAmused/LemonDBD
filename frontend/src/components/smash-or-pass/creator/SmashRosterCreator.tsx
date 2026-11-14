@@ -105,6 +105,9 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
   const validEntityCount = draft.entities.filter((e) => e.name.trim()).length;
   const entitiesMissing = validEntityCount === 0;
 
+  const isCurrentCandidateComplete = Boolean(activeEntity?.name.trim() && activeEntity?.role && activeEntity?.gender);
+  const canAddCandidate = draft.entities.length < SMASH_ROSTER_LIMITS.maxEntities && (draft.entities.length === 0 || isCurrentCandidateComplete);
+
   const isSimpleMode = draft.roster_mode === 'simple';
   const showTranslations = isUserAdmin && official;
 
@@ -262,7 +265,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
               <EmptyState
                 variant="compact"
                 title={c.noEntitiesYet}
-                action={{
+                action={canAddCandidate ? {
                   label: (
                     <>
                       <Plus className="icon-md" aria-hidden="true" />
@@ -270,7 +273,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
                     </>
                   ),
                   onClick: addEntity,
-                }}
+                } : undefined}
               />
             ) : (
               <>
@@ -305,8 +308,18 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
                   onRename={(k, name) => patchEntity(k, { name })}
                   onRemove={(k) => removeEntity(k)}
                   onAdd={addEntity}
-                  canAdd={draft.entities.length < SMASH_ROSTER_LIMITS.maxEntities}
+                  canAdd={canAddCandidate}
+                  disabledHint={c.addCandidateDisabledHint}
                 />
+
+                {!isCurrentCandidateComplete && activeEntity && (
+                  <p
+                    data-testid="add-candidate-disabled-hint"
+                    className="text-xs text-center text-text-muted italic -mt-3"
+                  >
+                    {c.addCandidateDisabledHint}
+                  </p>
+                )}
               </>
             )}
           </div>

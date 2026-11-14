@@ -134,6 +134,7 @@ export default {
     passCount: 'パス数',
     rank: '世界ランク',
     firstSmash: '最初のスマッシュ',
+    totalSmashes: '総スマッシュ数',
   },
   filters: {
     allRoles: 'すべての役割',

@@ -114,7 +114,7 @@ export function CandidateFormInputs({
     const text = e.clipboardData?.getData('text')?.trim();
     if (text && text.startsWith('blob:')) {
       e.preventDefault();
-      setUploadError(c.blobUrlUnsupported);
+      setUploadError(c.blobUrlUnsupportedAdmin);
     }
   };
 
@@ -297,7 +297,7 @@ export function CandidateFormInputs({
               </div>
               {(uploadError || isBlobMedia) && (
                 <p role="alert" className="mt-1 type-caption font-medium text-accent-red">
-                  {uploadError || c.blobUrlUnsupported}
+                  {uploadError || c.blobUrlUnsupportedAdmin}
                 </p>
               )}
             </div>

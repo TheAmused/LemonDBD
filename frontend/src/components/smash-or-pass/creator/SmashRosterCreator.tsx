@@ -353,13 +353,14 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
         {submitButton}
       </div>
 
-      {/* Cover Image 16:9 Viewport Crop Modal */}
+      {/* Cover Image Viewport Crop Modal (Roster card 31:50 aspect ratio) */}
       <CoverImageCropModal
         isOpen={isCropModalOpen}
         onClose={() => setIsCropModalOpen(false)}
         imageUrl={draft.cover_image_url}
         themeColor={draft.theme_color}
         isAdmin={isUserAdmin}
+        aspectRatio="roster"
         onApplyCrop={(croppedUrl) => {
           patch({ cover_image_url: croppedUrl });
           setIsCropModalOpen(false);

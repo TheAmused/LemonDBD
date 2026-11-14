@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Pencil, X, Plus } from 'lucide-react';
+import { Pencil, X, Plus, Image as ImageIcon, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { sanitizeImageUrl } from '@/utils/smashOrPass/codec';
 import type { TRANSLATABLE_FIELDS } from '@/utils/smashOrPass/constants';
@@ -15,6 +15,7 @@ import { Button } from '@/components/common/Button';
 import { Img } from '@/components/common/Img';
 import { tip } from '@/components/common/Tooltip';
 import type { MediaDisplay } from '@/types/smashOrPass';
+import { mediaDisplayStyle } from '@/components/smash-or-pass/card/CardAvatarImage';
 
 export interface DraftEntity {
   /** Stable client-only key -- never sent anywhere, just for React lists and
@@ -259,13 +260,14 @@ export function TextField({
   );
 }
 
-export function TextAreaField({
+export function AutoExpandingTextField({
   label,
   value,
   max,
   onChange,
   placeholder,
   full,
+  minRows = 1,
 }: {
   label: React.ReactNode;
   value: string;
@@ -273,18 +275,265 @@ export function TextAreaField({
   onChange: (v: string) => void;
   placeholder?: string;
   full?: boolean;
+  minRows?: number;
 }) {
   return (
     <label className={full ? 'sm:col-span-2 block' : 'block'}>
       <span className="mb-1 block type-label-xs text-text-secondary">{label}</span>
       <Textarea
         fieldSize="md"
+        autoResize
         value={value}
         maxLength={max}
-        rows={3}
+        rows={minRows}
+        placeholder={placeholder}
+        onChange={(e) => onChange(e.target.value)}
+        className="min-h-11 leading-normal"
+      />
+    </label>
+  );
+}
+
+export function TextAreaField({
+  label,
+  value,
+  max,
+  onChange,
+  placeholder,
+  full,
+  rows = 3,
+}: {
+  label: React.ReactNode;
+  value: string;
+  max: number;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  full?: boolean;
+  rows?: number;
+}) {
+  return (
+    <label className={full ? 'sm:col-span-2 block' : 'block'}>
+      <span className="mb-1 block type-label-xs text-text-secondary">{label}</span>
+      <Textarea
+        fieldSize="md"
+        autoResize
+        value={value}
+        maxLength={max}
+        rows={rows}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
       />
     </label>
+  );
+}
+
+const FOCAL_POINTS: Array<{ label: string; value: string }> = [
+  { label: 'Top Left', value: 'left top' },
+  { label: 'Top Center', value: 'center top' },
+  { label: 'Top Right', value: 'right top' },
+  { label: 'Center Left', value: 'left center' },
+  { label: 'Center', value: 'center center' },
+  { label: 'Center Right', value: 'right center' },
+  { label: 'Bottom Left', value: 'left bottom' },
+  { label: 'Bottom Center', value: 'center bottom' },
+  { label: 'Bottom Right', value: 'right bottom' },
+];
+
+export interface CandidatePortraitFocalPickerProps {
+  safeMedia?: string | null;
+  mediaUrl: string;
+  name: string;
+  displayIndex: string;
+  mediaDisplay?: MediaDisplay | null;
+  onChangeDisplay: (display: MediaDisplay | null) => void;
+  onPaste: (e: React.ClipboardEvent) => void;
+  onDropFile: (file: File) => void;
+  c: Record<string, string>;
+  sharedNotice?: React.ReactNode;
+}
+
+export function CandidatePortraitFocalPicker({
+  safeMedia,
+  mediaUrl,
+  name,
+  displayIndex,
+  mediaDisplay,
+  onChangeDisplay,
+  onPaste,
+  onDropFile,
+  c,
+  sharedNotice,
+}: CandidatePortraitFocalPickerProps) {
+  const dict = useDictionary();
+  const currentPos = mediaDisplay?.position || 'center center';
+  const currentScale = mediaDisplay?.scale ?? 1.0;
+  const fit = mediaDisplay?.fit ?? 'cover';
+
+  const updatePosition = (pos: string) => {
+    onChangeDisplay({
+      ...mediaDisplay,
+      position: pos,
+      fit: 'cover',
+      ...(currentScale !== 1.0 ? { scale: currentScale } : {}),
+    });
+  };
+
+  const updateScale = (newScale: number) => {
+    const clamped = Math.min(2.0, Math.max(1.0, Number(newScale.toFixed(2))));
+    onChangeDisplay({
+      ...mediaDisplay,
+      position: currentPos,
+      fit: 'cover',
+      ...(clamped > 1.0 ? { scale: clamped } : {}),
+    });
+  };
+
+  const previewStyle = mediaDisplayStyle({
+    fit,
+    position: currentPos,
+    scale: currentScale,
+  });
+
+  return (
+    <div className="flex flex-col items-center gap-2 shrink-0">
+      <div
+        onPaste={onPaste}
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => {
+          e.preventDefault();
+          if (e.dataTransfer.files?.[0]) onDropFile(e.dataTransfer.files[0]);
+        }}
+        className="relative w-48 sm:w-56 md:w-60 2xl:max-wide-2k:w-68 wide-2k:w-80 aspect-[3/4] rounded-card border-2 border-dashed border-border-color bg-bg-primary overflow-hidden flex items-center justify-center shadow-md"
+      >
+        {safeMedia ? (
+          <Img
+            src={safeMedia}
+            alt={name}
+            loading="lazy"
+            decoding="async"
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
+            referrerPolicy="no-referrer"
+            className="h-full w-full object-cover transition-transform duration-150 select-none"
+            style={previewStyle}
+          />
+        ) : (
+          <div className="flex flex-col items-center gap-2 p-3 text-center text-text-muted select-none">
+            <ImageIcon className="h-10 w-10 opacity-30 text-accent-red" />
+            <span className="type-label-sm">{c.preview}</span>
+            <span className="type-micro text-text-muted/60">#{displayIndex}</span>
+          </div>
+        )}
+        <Badge tone="overlay" size="sm" plain className="absolute top-2 left-2 text-accent-red">
+          #{displayIndex}
+        </Badge>
+      </div>
+
+      {/* 9-point focal selector & zoom controls when candidate has media */}
+      {Boolean(safeMedia || mediaUrl.trim()) && (
+        <div className="flex flex-col items-center gap-2 pt-1 max-w-xs">
+          <span
+            className={cn('type-micro text-text-muted font-medium', c.focalPointHint && 'cursor-help underline decoration-dotted underline-offset-2')}
+            {...(c.focalPointHint ? tip(c.focalPointHint, undefined, 'default') : {})}
+          >
+            {c.focalPointLabel}
+            {sharedNotice}
+          </span>
+
+          <div
+            className="grid grid-cols-3 gap-1 p-1 rounded-card bg-bg-surface/80 border border-border-color/60"
+            aria-label={c.focalPointLabel}
+          >
+            {FOCAL_POINTS.map((pt) => {
+              const isSelected = currentPos === pt.value;
+              return (
+                <button
+                  key={pt.value}
+                  type="button"
+                  aria-label={pt.label}
+                  aria-pressed={isSelected}
+                  onClick={() => updatePosition(pt.value)}
+                  className={cn(
+                    'min-h-11 min-w-11 rounded flex items-center justify-center transition-all focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red touch-manipulation',
+                    isSelected
+                      ? 'bg-accent-red text-text-inverted shadow-sm ring-1 ring-accent-red'
+                      : 'bg-bg-elevated hover:bg-bg-hover text-text-muted hover:text-text-primary'
+                  )}
+                >
+                  <span
+                    className={cn(
+                      'w-2 h-2 rounded-full transition-transform',
+                      isSelected ? 'bg-text-primary scale-125' : 'bg-current opacity-60'
+                    )}
+                  />
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Zoom controls for portrait framing */}
+          <div className="flex items-center gap-1.5 p-1 px-2 rounded-control bg-bg-surface/60 border border-border-color/40 text-xs">
+            <Button
+              type="button"
+              variant="ghost"
+              size="xs"
+              icon
+              disabled={currentScale <= 1.0}
+              onClick={() => updateScale(currentScale - 0.1)}
+              {...tip(dict.smashOrPass.cropModal.zoomOut, undefined, 'action')}
+              aria-label={dict.smashOrPass.cropModal.zoomOut}
+            >
+              <ZoomOut className="icon-xs" />
+            </Button>
+
+            <span className="type-micro font-bold text-text-muted min-w-9 text-center">
+              {Math.round(currentScale * 100)}%
+            </span>
+
+            <input
+              type="range"
+              min="1"
+              max="2"
+              step="0.05"
+              value={currentScale}
+              onChange={(e) => updateScale(parseFloat(e.target.value))}
+              className="w-20 accent-accent-red cursor-pointer"
+              aria-label={c.focalPointLabel}
+            />
+
+            <Button
+              type="button"
+              variant="ghost"
+              size="xs"
+              icon
+              disabled={currentScale >= 2.0}
+              onClick={() => updateScale(currentScale + 0.1)}
+              {...tip(dict.smashOrPass.cropModal.zoomIn, undefined, 'action')}
+              aria-label={dict.smashOrPass.cropModal.zoomIn}
+            >
+              <ZoomIn className="icon-xs" />
+            </Button>
+
+            {currentScale > 1.0 && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="xs"
+                icon
+                onClick={() => updateScale(1.0)}
+                {...tip(dict.smashOrPass.cropModal.reset, undefined, 'action')}
+                aria-label={dict.smashOrPass.cropModal.reset}
+              >
+                <RotateCcw className="icon-xs" />
+              </Button>
+            )}
+          </div>
+
+          <p className="type-micro text-text-muted/60 text-center leading-tight px-1">
+            {c.focalPointZoomHint}
+          </p>
+        </div>
+      )}
+    </div>
   );
 }

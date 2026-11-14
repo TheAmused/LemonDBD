@@ -6,8 +6,7 @@
  * - CandidateTiles: Squished grid of candidates (avatar + name caption) matching the tier list items pattern.
  */
 import { useRef, useState } from 'react';
-import { Trash2, Upload, Image as ImageIcon } from 'lucide-react';
-import { cn } from '@/utils/cn';
+import { Trash2, Upload } from 'lucide-react';
 import { sanitizeImageUrl } from '@/utils/smashOrPass/codec';
 import { IMAGE_SIZE_PRESETS, MAX_DATA_IMAGE_CHARS, resizeImageToDataUrl } from '@/utils/imageResize';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
@@ -18,24 +17,18 @@ import { canonicalGender, genderLabel, termLabel } from '@/utils/smashOrPass/ter
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
-import { type DraftEntity, type EntityTranslationDraft, TextField, TextAreaField } from "./EntityEditorParts";
+import {
+  type DraftEntity,
+  type EntityTranslationDraft,
+  TextField,
+  TextAreaField,
+  AutoExpandingTextField,
+  CandidatePortraitFocalPicker,
+} from "./EntityEditorParts";
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { tip } from '@/components/common/Tooltip';
 import { Badge } from '@/components/common/Badge';
-import { Img } from '@/components/common/Img';
-
-const FOCAL_POINTS: Array<{ label: string; value: string }> = [
-  { label: 'Top Left', value: 'left top' },
-  { label: 'Top Center', value: 'center top' },
-  { label: 'Top Right', value: 'right top' },
-  { label: 'Center Left', value: 'left center' },
-  { label: 'Center', value: 'center center' },
-  { label: 'Center Right', value: 'right center' },
-  { label: 'Bottom Left', value: 'left bottom' },
-  { label: 'Bottom Center', value: 'center bottom' },
-  { label: 'Bottom Right', value: 'right bottom' },
-];
 
 export interface CandidateFormInputsProps {
   entity: DraftEntity;
@@ -133,7 +126,6 @@ export function CandidateFormInputs({
   const isBlobMedia = trimmedMedia.startsWith('blob:');
   const safeMedia = trimmedMedia && !isBlobMedia ? sanitizeImageUrl(trimmedMedia) : null;
   const mediaInvalid = Boolean(trimmedMedia) && !safeMedia;
-  const fit = entity.media_display?.fit ?? 'cover';
 
   const handlePortraitPaste = (e: React.ClipboardEvent) => {
     const files = e.clipboardData?.files;
@@ -203,95 +195,18 @@ export function CandidateFormInputs({
       <div className="space-y-4">
         {/* Top Row: Avatar preview (prominent) & Primary identifiers (compact) */}
         <div className="flex flex-col sm:flex-row items-center sm:items-start justify-center gap-6 2xl:gap-8 max-w-3xl 2xl:max-wide-2k:max-w-4xl wide-2k:max-w-6xl mx-auto w-full">
-          {/* Visual Portrait Box - prominent and large */}
-          <div className="flex flex-col items-center gap-2 shrink-0">
-            <div
-              onPaste={handlePortraitPaste}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                e.preventDefault();
-                if (e.dataTransfer.files?.[0]) void handlePortraitUpload(e.dataTransfer.files[0]);
-              }}
-              className="relative w-48 sm:w-56 md:w-60 2xl:max-wide-2k:w-68 wide-2k:w-80 aspect-[3/4] rounded-card border-2 border-dashed border-border-color bg-bg-primary overflow-hidden flex items-center justify-center shadow-md"
-            >
-              {safeMedia ? (
-                <Img
-                  src={safeMedia}
-                  alt={entity.name}
-                  loading="lazy"
-                  decoding="async"
-                  draggable={false}
-                  onContextMenu={(e) => e.preventDefault()}
-                  referrerPolicy="no-referrer"
-                  className="h-full w-full object-cover transition-transform duration-300 hover:scale-105 select-none"
-                  style={{
-                    objectPosition: entity.media_display?.position || 'center center',
-                    objectFit: fit,
-                  }}
-                />
-              ) : (
-                <div className="flex flex-col items-center gap-2 p-3 text-center text-text-muted select-none">
-                  <ImageIcon className="h-10 w-10 opacity-30 text-accent-red" />
-                  <span className="type-label-sm">{c.preview}</span>
-                  <span className="type-micro text-text-muted/60">#{displayIndex}</span>
-                </div>
-              )}
-              <Badge tone="overlay" size="sm" plain className="absolute top-2 left-2 text-accent-red">
-                #{displayIndex}
-              </Badge>
-            </div>
-
-            {/* 9-point focal point selector when candidate has media */}
-            {Boolean(safeMedia || entity.media_url.trim()) && (
-              <div className="flex flex-col items-center gap-1.5 pt-1">
-                <span
-                  className={cn("type-micro text-text-muted font-medium", c.focalPointHint && "cursor-help underline decoration-dotted underline-offset-2")}
-                  {...(c.focalPointHint ? tip(c.focalPointHint, undefined, 'default') : {})}
-                >
-                  {c.focalPointLabel}
-                  {sharedNotice}
-                </span>
-                <div
-                  className="grid grid-cols-3 gap-1 p-1 rounded-card bg-bg-surface/80 border border-border-color/60"
-                  aria-label={c.focalPointLabel}
-                >
-                  {FOCAL_POINTS.map((pt) => {
-                    const isSelected = (entity.media_display?.position || 'center center') === pt.value;
-                    return (
-                      <button
-                        key={pt.value}
-                        type="button"
-                        aria-label={pt.label}
-                        aria-pressed={isSelected}
-                        onClick={() =>
-                          onChange({
-                            media_display: {
-                              ...entity.media_display,
-                              position: pt.value,
-                              fit: 'cover',
-                            },
-                          })
-                        }
-                        className={cn(
-                          'min-h-11 min-w-11 rounded flex items-center justify-center transition-all focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red touch-manipulation',
-                          isSelected
-                            ? 'bg-accent-red text-text-inverted shadow-sm ring-1 ring-accent-red'
-                            : 'bg-bg-elevated hover:bg-bg-hover text-text-muted hover:text-text-primary'
-                        )}
-                      >
-                        <span
-                          className={cn(
-                            'w-2 h-2 rounded-full transition-transform',
-                            isSelected ? 'bg-text-primary scale-125' : 'bg-current opacity-60'
-                          )}
-                        />
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </div>
+          <CandidatePortraitFocalPicker
+            safeMedia={safeMedia}
+            mediaUrl={entity.media_url}
+            name={entity.name}
+            displayIndex={displayIndex}
+            mediaDisplay={entity.media_display}
+            onChangeDisplay={(media_display) => onChange({ media_display })}
+            onPaste={handlePortraitPaste}
+            onDropFile={(file) => void handlePortraitUpload(file)}
+            c={c}
+            sharedNotice={sharedNotice}
+          />
 
           {/* Inputs column: compact inputs taking focused space */}
           <div className="flex-1 max-w-md sm:max-w-lg 2xl:max-wide-2k:max-w-xl wide-2k:max-w-3xl w-full flex flex-col gap-2.5">
@@ -435,22 +350,22 @@ export function CandidateFormInputs({
               onChange={(v) => onChange({ watermark_right: v })}
               placeholder={c.watermarkRightPlaceholder}
             />
-            <TextField
+            <AutoExpandingTextField
               label={customLabels.dating_vibe || c.entityDatingVibeLabel}
               max={SMASH_ROSTER_LIMITS.maxDatingVibe}
               {...getFieldProps('dating_vibe', entity.dating_vibe)}
             />
-            <TextField
+            <AutoExpandingTextField
               label={customLabels.quote || c.entityQuoteLabel}
               max={SMASH_ROSTER_LIMITS.maxQuote}
               {...getFieldProps('quote', entity.quote, c.quotePlaceholder)}
             />
-            <TextField
+            <AutoExpandingTextField
               label={customLabels.turn_on || c.entityTurnOnLabel}
               max={SMASH_ROSTER_LIMITS.maxTurnOn}
               {...getFieldProps('turn_on', entity.turn_on, c.turnOnPlaceholder)}
             />
-            <TextField
+            <AutoExpandingTextField
               label={customLabels.dealbreaker || c.entityDealbreakerLabel}
               max={SMASH_ROSTER_LIMITS.maxDealbreaker}
               {...getFieldProps('dealbreaker', entity.dealbreaker, c.dealbreakerPlaceholder)}
@@ -472,12 +387,12 @@ export function CandidateFormInputs({
               max={SMASH_ROSTER_LIMITS.maxArchetype}
               {...getFieldProps('archetype', entity.archetype)}
             />
-            <TextField
+            <AutoExpandingTextField
               label={c.entityTaglineLabel}
               max={SMASH_ROSTER_LIMITS.maxTagline}
               {...getFieldProps('tagline', entity.tagline, c.entityTaglinePlaceholder)}
             />
-            <TextField
+            <AutoExpandingTextField
               label={customLabels.quote || c.entityQuoteLabel}
               max={SMASH_ROSTER_LIMITS.maxQuote}
               {...getFieldProps('quote', entity.quote, c.quotePlaceholder)}
@@ -494,17 +409,17 @@ export function CandidateFormInputs({
               {...getFieldProps('meme', entity.meme)}
               full
             />
-            <TextField
+            <AutoExpandingTextField
               label={customLabels.turn_on || c.entityTurnOnLabel}
               max={SMASH_ROSTER_LIMITS.maxTurnOn}
               {...getFieldProps('turn_on', entity.turn_on, c.turnOnPlaceholder)}
             />
-            <TextField
+            <AutoExpandingTextField
               label={customLabels.dealbreaker || c.entityDealbreakerLabel}
               max={SMASH_ROSTER_LIMITS.maxDealbreaker}
               {...getFieldProps('dealbreaker', entity.dealbreaker, c.dealbreakerPlaceholder)}
             />
-            <TextField
+            <AutoExpandingTextField
               label={customLabels.dating_vibe || c.entityDatingVibeLabel}
               max={SMASH_ROSTER_LIMITS.maxDatingVibe}
               {...getFieldProps('dating_vibe', entity.dating_vibe)}

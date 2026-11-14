@@ -432,6 +432,7 @@ export default {
     unnamedCandidate: '名前のない候補',
     focalPointLabel: 'フォーカスポイント',
     focalPointHint: 'カードのフレーム内でポートレートのどの部分を中心にするかを設定します。',
+    focalPointZoomHint: '正方形の画像は高さを100%満たします。垂直方向のフレーミングにはズームを使用してください。',
   },
   cropModal: {
     title: 'カバー画像のトリミングと調整',

@@ -1,6 +1,6 @@
 'use client';
 // frontend/src/components/smash-or-pass/creator/useRosterDraft.ts
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { defaultRosterThemeColor, SMASH_ROSTER_LIMITS, TRANSLATABLE_LOCALES } from '@/utils/smashOrPass/constants';
 import type { StoredCustomRoster } from '@/types/smashOrPass';
 import type { DraftEntity} from './EntityEditor';
@@ -24,7 +24,6 @@ function draftHasContent(d: Draft): boolean {
     d.name.trim() ||
       d.description.trim() ||
       d.cover_image_url.trim() ||
-      d.category.trim() ||
       d.entities.length > 1 ||
       d.entities.some(
         (e) =>
@@ -60,6 +59,10 @@ export function useRosterDraft({ editId, editingRoster, storeHydrated }: UseRost
   const [rosterTranslations, setRosterTranslations] = useState<RosterTranslations>({});
   const [entityTranslations, setEntityTranslations] = useState<EntityTranslations>({});
   const [activeTranslationLocale, setActiveTranslationLocale] = useState<string>(TRANSLATABLE_LOCALES[0]);
+  const isSubmittingRef = useRef<boolean>(false);
+  const setIsSubmitting = (submitting: boolean) => {
+    isSubmittingRef.current = submitting;
+  };
 
   // Restore once running in the browser (localStorage is client-only, so the server and the
   // hydrating render show the empty draft), while rendering; then autosave -- new rosters only.
@@ -98,8 +101,9 @@ export function useRosterDraft({ editId, editingRoster, storeHydrated }: UseRost
   }, [restored]);
 
   useEffect(() => {
-    if (!draftLoaded || editId || typeof window === 'undefined' || typeof localStorage === 'undefined') return;
+    if (!draftLoaded || editId || isSubmittingRef.current || typeof window === 'undefined' || typeof localStorage === 'undefined') return;
     const timer = window.setTimeout(() => {
+      if (isSubmittingRef.current) return;
       try {
         const hasContent = draftHasContent(draft);
         if (hasContent) {
@@ -136,7 +140,6 @@ export function useRosterDraft({ editId, editingRoster, storeHydrated }: UseRost
       description: editingRoster.description || '',
       cover_image_url: editingRoster.cover_image_url || '',
       theme_color: editingRoster.theme_color || defaultRosterThemeColor(),
-      category: editingRoster.category || '',
       is_nsfw: editingRoster.is_nsfw || false,
       roster_mode: editingRoster.roster_mode || 'simple',
       custom_labels: editingRoster.custom_labels || {},
@@ -224,5 +227,7 @@ export function useRosterDraft({ editId, editingRoster, storeHydrated }: UseRost
     setEntityTranslation,
     activeTranslationLocale,
     setActiveTranslationLocale,
+    isSubmittingRef,
+    setIsSubmitting,
   };
 }

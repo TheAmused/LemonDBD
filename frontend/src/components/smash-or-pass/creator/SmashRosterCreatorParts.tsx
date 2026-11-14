@@ -21,7 +21,6 @@ export interface Draft {
   description: string;
   cover_image_url: string;
   theme_color: string;
-  category: string;
   is_nsfw: boolean;
   roster_mode: 'simple' | 'full';
   custom_labels: RosterCustomLabels;
@@ -37,7 +36,6 @@ export function freshDraft(): Draft {
     description: '',
     cover_image_url: '',
     theme_color: defaultRosterThemeColor(),
-    category: '',
     is_nsfw: false,
     roster_mode: 'simple',
     custom_labels: {},
@@ -183,7 +181,6 @@ export function readDraft(): StoredDraft | null {
       description: typeof parsed.description === 'string' ? parsed.description : '',
       cover_image_url: typeof parsed.cover_image_url === 'string' ? parsed.cover_image_url : '',
       theme_color: typeof parsed.theme_color === 'string' && parsed.theme_color ? parsed.theme_color : defaultRosterThemeColor(),
-      category: typeof parsed.category === 'string' ? parsed.category : '',
       is_nsfw: Boolean(parsed.is_nsfw),
       roster_mode: parsed.roster_mode === 'full' ? 'full' : 'simple',
       custom_labels: (parsed.custom_labels && typeof parsed.custom_labels === 'object') ? parsed.custom_labels : {},

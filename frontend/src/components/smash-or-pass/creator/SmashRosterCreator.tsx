@@ -84,6 +84,8 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
     setEntityTranslation,
     activeTranslationLocale,
     setActiveTranslationLocale,
+    isSubmittingRef,
+    setIsSubmitting,
   } = useRosterDraft({ editId, editingRoster, storeHydrated });
 
   // The roster's own roles and genders, or the standard ones until it defines any.
@@ -127,6 +129,9 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
     nameMissing,
     entitiesMissing,
     coverInvalid,
+    resetDraft,
+    isSubmittingRef,
+    setIsSubmitting,
   });
 
   if (authLoading) {
@@ -157,6 +162,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
   const startOver = () => {
     resetDraft();
     resetSubmitState();
+    setIsSubmitting(false);
   };
 
   const publishingNow = publishing && official && isUserAdmin;

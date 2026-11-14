@@ -134,7 +134,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
       <div className="flex flex-col gap-3 pt-6 md:pt-0 md:pl-6">
         <div className="flex flex-col items-center justify-center text-center gap-1">
           <div className="flex items-center justify-center gap-2">
-            <User className="icon-md text-accent-green" />
+            <User className="icon-md text-accent-red" />
             <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-text-primary">
               {tx.gendersTitle}
             </h3>
@@ -157,7 +157,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
             placeholder={tx.addGenderPlaceholder}
           />
           <Button
-            variant="success" size="md"
+            variant="primary" size="md"
             onClick={() => handleAddGender()}
             className="shrink-0"
           >
@@ -189,7 +189,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
           {genders.map((gender) => (
               <Badge
                 key={gender}
-                tone="green" size="md" plain square
+                tone="red" size="md" plain square
               >
                 <span>{genderLabel(gender, dict.smashOrPass.filters)}</span>
                 <Button

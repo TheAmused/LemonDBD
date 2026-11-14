@@ -432,6 +432,7 @@ export default {
     unnamedCandidate: 'Candidato sin nombre',
     focalPointLabel: 'Punto focal',
     focalPointHint: 'Define qué parte del retrato permanece centrada en el marco de la tarjeta.',
+    focalPointZoomHint: 'Los retratos cuadrados llenan el 100% de la altura. Haz zoom para encuadrar verticalmente.',
   },
   cropModal: {
     title: 'Recortar y encuadrar imagen de portada',

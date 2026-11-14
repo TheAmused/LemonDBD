@@ -432,6 +432,7 @@ export default {
     unnamedCandidate: 'Unnamed Candidate',
     focalPointLabel: 'Focal point',
     focalPointHint: 'Sets which part of the portrait remains in frame when cropped by cards.',
+    focalPointZoomHint: 'Square portraits fill 100% of height. Zoom in to enable vertical framing.',
   },
   cropModal: {
     title: 'Crop & Frame Cover Image',

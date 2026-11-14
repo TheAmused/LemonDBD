@@ -448,6 +448,7 @@ export default {
     unnamedCandidate: 'Kandydat bez nazwy',
     focalPointLabel: 'Punkt skupienia kadru',
     focalPointHint: 'Wybierz, która część portretu pozostaje wyśrodkowana w kadrze karty.',
+    focalPointZoomHint: 'Kwadratowe grafiki wypełniają 100% wysokości. Użyj przybliżenia, aby kadrować w pionie.',
   },
   cropModal: {
     title: 'Przytnij i wykadruj obraz okładki',

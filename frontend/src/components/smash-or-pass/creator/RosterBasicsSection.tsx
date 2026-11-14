@@ -124,6 +124,7 @@ export function RosterBasicsSection({
           <span className={LABEL}>{c.descriptionLabel}</span>
           <Textarea
             fieldSize="md"
+            autoResize
             value={isBaseLocale ? draft.description : rosterTranslations?.[effectiveLocale]?.description || ''}
             maxLength={SMASH_ROSTER_LIMITS.maxRosterDescription}
             onChange={(e) => {

@@ -377,8 +377,8 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
         </div>
 
         {/* Controls Bar: Zoom Slider & Quick Actions */}
-        <Surface tone="elevated" padding="none" className="flex flex-wrap items-center justify-between gap-3 p-3">
-          <div className="flex items-center gap-2 flex-1 min-w-48">
+        <Surface tone="elevated" padding="none" className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 overflow-hidden">
+          <div className="flex items-center gap-2 flex-1 min-w-0">
             <Button
               variant="secondary" size="sm" icon
               onClick={() => setZoom((z) => Math.max(1, Math.min(5, Number((z - 0.25).toFixed(2)))))}
@@ -387,7 +387,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
               <ZoomOut />
             </Button>
 
-            <span className="type-strong text-text-muted flex items-center gap-1 shrink-0 min-w-14 text-xs">
+            <span className="type-strong text-text-muted flex items-center gap-1 shrink-0 min-w-12 text-xs">
               <ZoomIn className="icon-sm text-accent-red" />
               {Math.round(zoom * 100)}%
             </span>
@@ -399,7 +399,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
               step="0.05"
               value={zoom}
               onChange={(e) => setZoom(parseFloat(e.target.value))}
-              className="w-full min-w-16 max-w-40 accent-accent-red cursor-pointer"
+              className="w-full min-w-12 max-w-40 accent-accent-red cursor-pointer"
             />
 
             <Button
@@ -411,7 +411,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
             </Button>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center justify-end gap-2 shrink-0 flex-wrap">
             <Button
               variant="secondary" size="sm"
               onClick={handleReset}

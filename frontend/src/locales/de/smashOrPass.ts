@@ -432,6 +432,7 @@ export default {
     unnamedCandidate: 'Unbenannter Kandidat',
     focalPointLabel: 'Fokuspunkt',
     focalPointHint: 'Legt fest, welcher Bereich des Porträts im Kartenausschnitt zentriert bleibt.',
+    focalPointZoomHint: 'Quadratische Porträts füllen 100% der Höhe. Zoomen Sie heran, um die vertikale Ausrichtung zu aktivieren.',
   },
   cropModal: {
     title: 'Titelbild zuschneiden & anpassen',

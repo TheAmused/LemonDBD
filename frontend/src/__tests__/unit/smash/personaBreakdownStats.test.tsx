@@ -48,7 +48,7 @@ describe('PersonaBreakdown stats and role affinity', () => {
     assert.ok(view.getByText('20'));
 
     // Total Smashes metric should be present
-    const totalSmashesLabel = (text.statsDetail as any).totalSmashes ?? text.statsDetail.smashCount;
+    const totalSmashesLabel = text.statsDetail.totalSmashes ?? text.statsDetail.smashCount;
     assert.ok(view.getByText(totalSmashesLabel));
     assert.ok(view.getByText('15'));
 
@@ -84,5 +84,42 @@ describe('PersonaBreakdown stats and role affinity', () => {
     assert.ok(view.getByText(text.filters.killers));
     assert.ok(view.getByText('6'));
     assert.ok(view.getByText(`(40${text.percentSign})`));
+  });
+
+  it('gracefully handles shared persona without raw counts by calculating total smashes and omitting false 0 for survivor/killer counts', () => {
+    const sharedPersona: RomancePersonaResult = {
+      archKey: 'fogRomantic',
+      title: 'Hopeless Romantic',
+      subtitle: 'A lover of all things Fog',
+      description: 'You fall easily and hard.',
+      badgeColor: 'from-accent-red to-accent-green',
+      borderColor: 'border-border-color',
+      killerAffinity: 40,
+      survivorAffinity: 60,
+      smashRate: 75,
+      totalVotes: 20,
+    };
+
+    const view = render(
+      <PersonaBreakdown
+        persona={sharedPersona}
+        isSharedView={true}
+        onShare={() => {}}
+        onClose={() => {}}
+      />,
+      { wrapper: withDictionary() }
+    );
+
+    // Calculated fallback total smashes: round((75 / 100) * 20) = 15
+    const totalSmashesLabel = text.statsDetail.totalSmashes ?? text.statsDetail.smashCount;
+    assert.ok(view.getByText(totalSmashesLabel));
+    assert.ok(view.getByText('15'));
+
+    // Percentages are displayed
+    assert.ok(view.getByText(`(60${text.percentSign})`));
+    assert.ok(view.getByText(`(40${text.percentSign})`));
+
+    // False 0 counts should NOT be rendered for survivor/killer counts
+    assert.equal(view.queryByText('0'), null);
   });
 });

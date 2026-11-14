@@ -22,6 +22,8 @@ export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onRe
   const dict = useDictionary();
   const text = dict.smashOrPass;
   const safeBadgeUrl = persona.badgeImageUrl ? sanitizeImageUrl(persona.badgeImageUrl) : null;
+  const displayTotalSmashes =
+    persona.totalSmashes ?? (persona.totalVotes > 0 ? Math.round((persona.smashRate / 100) * persona.totalVotes) : 0);
 
   return (
     <div className="flex flex-col divide-y divide-border-color/50 [&>*]:py-4 [&>*:first-child]:pt-0 [&>*:last-child]:pb-0">
@@ -65,7 +67,7 @@ export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onRe
           <span className="text-text-muted type-caption">{text.statsDetail.totalSmashes ?? text.statsDetail.smashCount}</span>
           <span className="text-lg font-black text-accent-red flex items-center gap-1">
             <HeartIcon className="icon-md fill-accent-red" />
-            {persona.totalSmashes ?? 0}
+            {displayTotalSmashes}
           </span>
         </div>
 
@@ -79,9 +81,7 @@ export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onRe
 
       {/* Role affinity (survivor vs killer) */}
       <section className="space-y-2.5">
-        <div className="flex items-center justify-between">
-          <span className="type-label-xs text-text-secondary">{text.roleAffinity}</span>
-        </div>
+        <span className="type-label-xs text-text-secondary block">{text.roleAffinity}</span>
 
         <div className="grid grid-cols-2 gap-2 sm:gap-3">
           <div className="rounded-card bg-bg-surface/50 border border-border-color/40 p-2.5 flex flex-col gap-0.5">
@@ -89,9 +89,11 @@ export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onRe
               {text.filters.survivors}
             </span>
             <div className="flex items-baseline gap-1.5">
-              <span className="text-lg font-black text-text-primary">
-                {persona.smashedSurvivors ?? 0}
-              </span>
+              {persona.smashedSurvivors !== undefined && (
+                <span className="text-sm sm:text-base font-black text-text-primary mr-1">
+                  {persona.smashedSurvivors}
+                </span>
+              )}
               <span className="text-xs text-text-muted">
                 ({persona.survivorAffinity}{text.percentSign})
               </span>
@@ -103,9 +105,11 @@ export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onRe
               {text.filters.killers}
             </span>
             <div className="flex items-baseline gap-1.5">
-              <span className="text-lg font-black text-text-primary">
-                {persona.smashedKillers ?? 0}
-              </span>
+              {persona.smashedKillers !== undefined && (
+                <span className="text-sm sm:text-base font-black text-text-primary mr-1">
+                  {persona.smashedKillers}
+                </span>
+              )}
               <span className="text-xs text-text-muted">
                 ({persona.killerAffinity}{text.percentSign})
               </span>

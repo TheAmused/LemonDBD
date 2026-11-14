@@ -436,7 +436,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
 
       {/* TIERS BLOCK */}
       <div className={WORKSPACE_COLUMN}>
-        <Section title={c.stepTiers}>
+        <Section title={c.stepTiers} storageKey="lemondbd_tierlist_creator_section_tiers">
           <LadderEditor
             tiers={draft.tiers}
             activePreset={draft.preset}
@@ -449,7 +449,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       {/* ITEMS BLOCK */}
       {!isCatalogOfficial && (
         <div className={WORKSPACE_COLUMN}>
-          <Section title={c.stepItems}>
+          <Section title={c.stepItems} storageKey="lemondbd_tierlist_creator_section_items">
             <div className="flex flex-col gap-6 2xl:gap-8">
               <ItemSources onAdd={addItems} existingIds={existingIds} locale={locale} />
               {skipped > 0 && (

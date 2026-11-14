@@ -161,6 +161,7 @@ def _filter_known_locales(value: dict[str, Any] | None) -> dict[str, Any]:
 
 class SmashEntityAdminCreate(BaseModel):
     name: str = Field(..., min_length=1, max_length=128)
+    slug: str | None = Field(default=None, max_length=128)
     real_name: str | None = Field(default=None, max_length=128)
     role: str = Field(default="Survivor", min_length=1, max_length=32)
     gender: str = Field(default="female", min_length=1, max_length=32)
@@ -205,6 +206,7 @@ class SmashRosterAdminCreate(BaseModel):
     category: str = Field(default="DBD", min_length=1, max_length=64)
     is_nsfw: bool = False
     is_active: bool = True
+    romance_archetypes: list[dict[str, Any]] = Field(default_factory=list)
     #: Admin translation authoring for the roster's own name/description.
     translations: dict[str, SmashRosterTranslationAdmin] = Field(default_factory=dict)
     entities: list[SmashEntityAdminCreate] = Field(..., min_length=1, max_length=200)

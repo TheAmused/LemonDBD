@@ -367,7 +367,6 @@ export default {
     entityMediaLabel: 'Portrait image URL',
     entityRoleLabel: 'Role',
     entityGenderLabel: 'Gender',
-    entityProfileToggle: 'Profile details',
     entityRealNameLabel: 'Real name',
     entityArchetypeLabel: 'Archetype',
     entityTaglineLabel: 'Subtitle / Motto',
@@ -402,6 +401,7 @@ export default {
     blobUrlUnsupportedAdmin: 'Blob URLs (e.g. from Gemini) are blocked by browser security. Download the image file or copy the image itself (right-click -> Copy image) and paste it here.',
     blobUrlUnsupportedUser: 'Blob URLs (e.g. from Gemini) are temporary and blocked by browser security. Please provide a direct public image link (https://) from an image host (e.g. Imgur).',
     officialPublicHub: 'Publish as Official Roster (Public on Hub)',
+    isActiveOfficialDesc: 'Toggle whether this official roster is live and playable by visitors.',
     simpleVersion: 'Simple Version',
     simpleVersionDesc: 'Simple: Fast cards + optional turn-on & dealbreaker',
     modeLockedHint: 'Mode can only be chosen before adding candidates.',
@@ -428,8 +428,8 @@ export default {
     startOver: 'Start over',
     closeToast: 'Dismiss',
     unnamedCandidate: 'Unnamed Candidate',
-    rolesGendersCount: '{roles} roles · {genders} genders',
     focalPointLabel: 'Focal point',
+    focalPointHint: 'Sets which part of the portrait remains in frame when cropped by cards.',
   },
   cropModal: {
     title: 'Crop & Frame Cover Image',
@@ -451,6 +451,7 @@ export default {
     cancel: 'Cancel',
     applyCrop: 'Apply Crop',
     dragHint: 'Drag to pan • Wheel to zoom ({zoom}%) • 16:9 banner',
+    dragHintRoster: 'Drag to pan • Wheel to zoom ({zoom}%) • Roster cover (31:50)',
   },
   taxonomies: {
     rolesTitle: 'Roster Roles',
@@ -494,7 +495,7 @@ export default {
     gradientSwap: 'Swap colours',
     rulesHintAffinity: 'Affinity is the share of your smashes (%); count is the number of smashes.',
     rulesHintPriority: 'When several archetypes match, the one with the most conditions wins, then the one higher in the list.',
-    done: 'Done',
+    done: 'Save',
   },
   sharing: {
     backToBreakdownTitle: 'Back to breakdown',

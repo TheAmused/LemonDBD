@@ -38,7 +38,7 @@ export interface ImageUploadDropzoneProps {
   browseLabel?: string;
   invalid?: boolean;
   invalidMessage?: string;
-  aspectRatio?: 'banner' | 'square';
+  aspectRatio?: 'banner' | 'square' | 'portrait';
   className?: string;
   disabled?: boolean;
   allowFileUpload?: boolean;
@@ -153,8 +153,14 @@ export function ImageUploadDropzone({
       {hasValue ? (
         <div
           className={cn(
-            'relative group overflow-hidden rounded-card border border-border-color bg-bg-elevated w-full shadow-xs',
-            previewClassName ? previewClassName : (aspectRatio === 'square' ? 'aspect-square max-w-xs mx-auto' : 'aspect-video max-w-md 2xl:max-w-lg mx-auto'),
+            'relative group overflow-hidden rounded-card border border-border-color bg-bg-elevated shadow-xs',
+            previewClassName
+              ? previewClassName
+              : aspectRatio === 'portrait'
+                ? 'aspect-[31/50] max-h-96 w-auto mx-auto'
+                : aspectRatio === 'square'
+                  ? 'aspect-square max-w-xs mx-auto'
+                  : 'w-full aspect-video max-w-md 2xl:max-w-lg mx-auto',
             invalid && 'border-accent-red'
           )}
         >

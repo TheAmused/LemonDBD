@@ -21,6 +21,7 @@ export interface DraftEntity {
   /** Stable client-only key -- never sent anywhere, just for React lists and
    * keying this entity's translation overrides. */
   key: string;
+  slug?: string;
   name: string;
   media_url: string;
   media_display?: MediaDisplay | null;

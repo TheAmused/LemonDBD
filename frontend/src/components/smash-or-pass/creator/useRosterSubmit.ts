@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useDictionary } from '@/context/DictionaryContext';
 import { apiUrl, authHeaders } from '@/utils/api';
 import { validateSmashRosterDocument } from '@/utils/smashOrPass/codec';
-import { createCustomRosterId, saveCustomRoster } from '@/utils/smashOrPass/storage';
+import { createCustomRosterId, saveCustomRoster, deleteCustomRoster } from '@/utils/smashOrPass/storage';
 import { defaultRosterThemeColor } from '@/utils/smashOrPass/constants';
 import type { StoredCustomRoster } from '@/types/smashOrPass';
 import {
@@ -22,6 +22,7 @@ import { trackEvent } from '@/utils/analytics';
 interface UseRosterSubmitOptions {
   locale: string;
   editId?: string;
+  officialSlug?: string;
   editingRoster?: StoredCustomRoster;
   draft: Draft;
   official: boolean;
@@ -42,6 +43,7 @@ interface UseRosterSubmitOptions {
 export function useRosterSubmit({
   locale,
   editId,
+  officialSlug,
   editingRoster,
   draft,
   official,
@@ -104,12 +106,17 @@ export function useRosterSubmit({
       return;
     }
 
-    if (official && isUserAdmin) {
+    if ((official || Boolean(officialSlug)) && isUserAdmin) {
       setPublishing(true);
       setPublishError(null);
       try {
-        const res = await fetch(apiUrl('/api/v1/smash-or-pass/rosters'), {
-          method: 'POST',
+        const url = officialSlug
+          ? apiUrl(`/api/v1/smash-or-pass/admin/rosters/${officialSlug}`)
+          : apiUrl('/api/v1/smash-or-pass/rosters');
+        const method = officialSlug ? 'PUT' : 'POST';
+
+        const res = await fetch(url, {
+          method,
           headers: {
             'Content-Type': 'application/json',
             ...authHeaders(),
@@ -119,29 +126,36 @@ export function useRosterSubmit({
             description: result.doc.description || '',
             ...(result.doc.cover_image_url ? { cover_image_url: result.doc.cover_image_url } : {}),
             theme_color: result.doc.theme_color || defaultRosterThemeColor(),
-            category: result.doc.category || (official ? 'DBD' : (editingRoster?.category || 'Custom')),
+            category: result.doc.category || 'DBD',
             is_nsfw: result.doc.is_nsfw || false,
+            is_active: draft.is_active !== false,
+            romance_archetypes: result.doc.romance_archetypes || [],
             translations: buildAdminRosterTranslations(rosterTranslations),
-            entities: result.doc.entities.map((e, i) => ({
-              name: e.name,
-              ...(e.real_name ? { real_name: e.real_name } : {}),
-              role: e.role,
-              gender: e.gender,
-              ...(e.media_url ? { media_url: e.media_url } : {}),
-              ...(e.archetype ? { archetype: e.archetype } : {}),
-              bio: e.bio || '',
-              tagline: e.tagline || '',
-              quote: e.quote || '',
-              meme: e.meme || '',
-              turn_on: e.turn_on || '',
-              dealbreaker: e.dealbreaker || '',
-              dating_vibe: e.dating_vibe || '',
-              red_flags: e.red_flags || [],
-              green_flags: e.green_flags || [],
-              ...(e.watermark_left ? { watermark_left: e.watermark_left } : {}),
-              ...(e.watermark_right ? { watermark_right: e.watermark_right } : {}),
-              translations: buildAdminEntityTranslations(entityTranslations[trimmedEntities[i]?.key]),
-            })),
+            entities: result.doc.entities.map((e, i) => {
+              const entitySlug = trimmedEntities[i]?.slug || (e as { slug?: string }).slug;
+              return {
+                ...(entitySlug ? { slug: entitySlug } : {}),
+                name: e.name,
+                ...(e.real_name ? { real_name: e.real_name } : {}),
+                role: e.role,
+                gender: e.gender,
+                ...(e.media_url ? { media_url: e.media_url } : {}),
+                ...(e.media_display ? { media_display: e.media_display } : {}),
+                ...(e.archetype ? { archetype: e.archetype } : {}),
+                bio: e.bio || '',
+                tagline: e.tagline || '',
+                quote: e.quote || '',
+                meme: e.meme || '',
+                turn_on: e.turn_on || '',
+                dealbreaker: e.dealbreaker || '',
+                dating_vibe: e.dating_vibe || '',
+                red_flags: e.red_flags || [],
+                green_flags: e.green_flags || [],
+                ...(e.watermark_left ? { watermark_left: e.watermark_left } : {}),
+                ...(e.watermark_right ? { watermark_right: e.watermark_right } : {}),
+                translations: buildAdminEntityTranslations(entityTranslations[trimmedEntities[i]?.key]),
+              };
+            }),
           }),
         });
         if (!res.ok) {
@@ -152,8 +166,12 @@ export function useRosterSubmit({
           return;
         }
         const body: { data: { slug: string } } = await res.json();
+        // If an existing custom roster was published as official, delete the local copy to avoid duplicates
+        if (editId) {
+          deleteCustomRoster(editId);
+        }
         resetDraft?.();
-        router.push(`/${locale}/smash-or-pass?roster=${body.data.slug}`);
+        router.push(`/${locale}/smash-or-pass?roster=${officialSlug || body.data.slug}`);
       } catch {
         setPublishError(c.saveError);
         setPublishing(false);

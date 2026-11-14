@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/common/Button';
 import { Modal } from '@/components/common/Modal';
+import { Toast } from '@/components/common/Toast';
 import { useSignInThen } from '@/hooks/useSignInThen';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
@@ -13,6 +14,8 @@ import { signingPayload } from '@/utils/contentPayload';
 import { smashRosterExportDoc } from '@/utils/smashOrPass/exportDoc';
 import { deleteCustomRoster } from '@/utils/smashOrPass/storage';
 import { ReportContentModal } from '@/components/common/ReportContentModal';
+import { useOptionalAuth } from '@/context/AuthContext';
+import { apiUrl, authHeaders } from '@/utils/api';
 import { RosterSelectModal, SmashRosterExportModal, SmashRosterImportModal } from './lazyParts';
 import type { useHubOverlays } from './useHubOverlays';
 import type { useSmashRosters } from './useSmashRosters';
@@ -45,24 +48,50 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
   } = overlays;
   // Signing in from the picker carries on with what was asked: the editor, the import window...
   const signIn = useSignInThen();
+  const auth = useOptionalAuth();
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const isAdmin = Boolean(auth?.user?.role === 'admin');
   const [reportingRosterId, setReportingRosterId] = useState<string | null>(null);
   const { allRosters, selectedRosterSlug, customRosterStore, rosterSwitchEffect, getRosterDisplayName, pickRoster, selectRoster } =
     rosters;
 
-  const openEditor = (editId?: string) => {
+  const openEditor = (idOrSlug?: string) => {
     setIsRosterModalOpen(false);
-    router.push(editorPath(locale, editId));
+    const isOfficial = Boolean(idOrSlug && !customRosterStore.custom[idOrSlug] && allRosters.some((r) => r.slug === idOrSlug && !r.is_local));
+    if (isOfficial) {
+      router.push(`/${locale}/smash-or-pass/create?official=${idOrSlug}`);
+    } else {
+      router.push(editorPath(locale, idOrSlug));
+    }
   };
   const openImport = () => {
     setIsRosterModalOpen(false);
     setIsImportModalOpen(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (!rosterPendingDelete) return;
-    const id = rosterPendingDelete.id;
-    deleteCustomRoster(id);
-    if (selectedRosterSlug === `local:${id}`) pickRoster('canon');
+    const { id, isOfficial } = rosterPendingDelete;
+    if (isOfficial) {
+      try {
+        const res = await fetch(apiUrl(`/api/v1/smash-or-pass/admin/rosters/${id}`), {
+          method: 'DELETE',
+          headers: authHeaders(),
+        });
+        if (res.ok) {
+          if (selectedRosterSlug === id) pickRoster('canon');
+          window.location.reload();
+        } else {
+          const err = await res.json().catch(() => ({}));
+          setDeleteError(err?.error || err?.message || 'Failed to delete roster');
+        }
+      } catch (e) {
+        setDeleteError(e instanceof Error ? e.message : 'Network error');
+      }
+    } else {
+      deleteCustomRoster(id);
+      if (selectedRosterSlug === `local:${id}`) pickRoster('canon');
+    }
     setRosterPendingDelete(null);
   };
 
@@ -74,6 +103,14 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
 
   return (
     <>
+      {deleteError && (
+        <Toast
+          tone="red"
+          message={deleteError}
+          onDismiss={() => setDeleteError(null)}
+          dismissLabel={dict.smashOrPass.creator.closeToast}
+        />
+      )}
       <RosterSelectModal
         isOpen={isRosterModalOpen}
         onClose={() => setIsRosterModalOpen(false)}
@@ -83,9 +120,16 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
         onCreateRoster={() => signIn.run(() => openEditor())}
         onImportRoster={() => signIn.run(openImport)}
         onEditRoster={(id) => signIn.run(() => openEditor(id))}
-        onDeleteRoster={(id) => {
-          const roster = customRosterStore.custom[id];
-          setRosterPendingDelete({ id, name: roster?.name || 'Untitled Roster' });
+        onDeleteRoster={(idOrSlug) => {
+          const customRoster = customRosterStore.custom[idOrSlug];
+          if (customRoster) {
+            setRosterPendingDelete({ id: idOrSlug, name: customRoster?.name || 'Untitled Roster', isOfficial: false });
+          } else {
+            const officialRoster = allRosters.find((r) => r.slug === idOrSlug && !r.is_local);
+            if (officialRoster && isAdmin) {
+              setRosterPendingDelete({ id: idOrSlug, name: officialRoster.name, isOfficial: true });
+            }
+          }
         }}
         // Unlike Edit/Create (which navigate away), Export is just an overlay -- the picker stays
         // open underneath it, same as the delete confirmation, so closing it returns to the picker.
@@ -107,7 +151,7 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
           footerClassName="p-4"
           footer={
             <div className="flex w-full justify-center">
-              <Button variant="danger" size="md" onClick={confirmDelete} className="w-full sm:w-auto sm:min-w-36">
+              <Button variant="danger" size="md" onClick={() => { void confirmDelete(); }} className="w-full sm:w-auto sm:min-w-36">
                 {dict.smashOrPass.picker.deleteConfirmAction}
               </Button>
             </div>

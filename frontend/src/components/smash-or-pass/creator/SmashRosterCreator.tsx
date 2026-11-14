@@ -14,15 +14,16 @@
  * `TRANSLATABLE_FIELDS`) is admin+official only -- a custom roster is always
  * single-locale, matching the agreed plan's explicit non-goal.
  */
-import { useMemo, useState } from 'react';
-import { History, Plus, SearchX } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { History, Plus, SearchX, Trash2 } from 'lucide-react';
 import { EmptyState } from '@/components/common/EmptyState';
 import { AuthRequiredState } from '@/components/common/AuthRequiredState';
+import { Modal } from '@/components/common/Modal';
 import { useAuth } from '@/context/AuthContext';
 import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 import { useSmashRosterStore } from '@/hooks/useSmashRosterStore';
 import { sanitizeImageUrl } from '@/utils/smashOrPass/codec';
-import { SMASH_ROSTER_LIMITS,GENDER_QUICK_PICKS,ROLE_QUICK_PICKS } from '@/utils/smashOrPass/constants';
+import { SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
 import { CandidateFormInputs, CandidateTiles } from './EntityEditor';
 import { CoverImageCropModal } from './CoverImageCropModal';
 import { RosterBasicsSection } from './RosterBasicsSection';
@@ -33,8 +34,10 @@ import { Button } from '@/components/common/Button';
 import { Section, Feedback } from "./SmashRosterCreatorParts";
 import { useDictionary } from "@/context/DictionaryContext";
 import { formatMessage } from '@/utils/i18nFormat';
+import { apiUrl, authHeaders } from '@/utils/api';
+import { useRouter } from 'next/navigation';
 
-import { useRosterDraft } from './useRosterDraft';
+import { useRosterDraft, type OfficialRosterDetail } from './useRosterDraft';
 import { useRosterSubmit } from './useRosterSubmit';
 import { Toast } from '@/components/common/Toast';
 
@@ -46,25 +49,61 @@ const CREATOR_COLUMN = 'w-full min-w-0 mx-auto max-w-4xl 2xl:max-wide-2k:max-w-6
 
 interface SmashRosterCreatorProps {
   locale: string;
-  /** A custom roster id to edit in place, instead of building a new one.
-   * Official rosters have no backend update path, so `editId` only ever
-   * refers to a locally-stored roster. */
   editId?: string;
+  officialSlug?: string;
 }
 
-export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) {
+export function SmashRosterCreator({ locale, editId, officialSlug }: SmashRosterCreatorProps) {
   const dict = useDictionary();
   const t = dict.smashOrPass;
   const c = t.creator;
+  const router = useRouter();
   const { isAdmin, user, isAuthenticated, isLoading: authLoading } = useAuth();
   const isUserAdmin = Boolean(isAdmin || user?.role === 'admin');
   const { state: storeState, hydrated: storeHydrated } = useSmashRosterStore();
   const editingRoster = editId ? storeState.custom[editId] : undefined;
 
   const [isCropModalOpen, setIsCropModalOpen] = useState(false);
-  const [official, setOfficial] = useState(false);
+  const [official, setOfficial] = useState(Boolean(officialSlug));
+  const [officialLoading, setOfficialLoading] = useState(Boolean(officialSlug && isUserAdmin));
+  const [officialRoster, setOfficialRoster] = useState<OfficialRosterDetail | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
-  useDocumentTitle(editId ? c.pageTitleEdit : c.pageTitleCreate);
+  useEffect(() => {
+    if (!officialSlug) return;
+    if (!isUserAdmin) {
+      queueMicrotask(() => setOfficialLoading(false));
+      return;
+    }
+    let active = true;
+    fetch(apiUrl(`/api/v1/smash-or-pass/admin/rosters/${officialSlug}`), {
+      headers: { ...authHeaders() },
+    })
+      .then((res) => (res.ok ? res.json() : Promise.reject(new Error('Failed to load roster'))))
+      .then((body: { data: OfficialRosterDetail }) => {
+        if (!active) return;
+        setOfficialRoster(body.data);
+        setOfficial(true);
+        setOfficialLoading(false);
+      })
+      .catch(() => {
+        if (!active) return;
+        setOfficialLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, [officialSlug, isUserAdmin]);
+
+  useDocumentTitle(
+    officialSlug
+      ? `LemonDBD - ${officialRoster?.name || dict.tierLists.untitled}`
+      : editId
+        ? c.pageTitleEdit
+        : c.pageTitleCreate
+  );
 
   const {
     draft,
@@ -85,16 +124,16 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
     activeTranslationLocale,
     setActiveTranslationLocale,
     setIsSubmitting,
-  } = useRosterDraft({ editId, editingRoster, storeHydrated });
+  } = useRosterDraft({ editId, editingRoster, storeHydrated, officialSlug, officialRoster });
 
-  // The roster's own roles and genders, or the standard ones until it defines any.
+  // The roster's dynamically configured roles and genders.
   const effectiveRoles = useMemo(
-    () => (draft.custom_roles && draft.custom_roles.length > 0 ? draft.custom_roles : [...ROLE_QUICK_PICKS]),
+    () => draft.custom_roles || [],
     [draft.custom_roles]
   );
 
   const effectiveGenders = useMemo(
-    () => (draft.custom_genders && draft.custom_genders.length > 0 ? draft.custom_genders : [...GENDER_QUICK_PICKS]),
+    () => draft.custom_genders || [],
     [draft.custom_genders]
   );
 
@@ -121,6 +160,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
   } = useRosterSubmit({
     locale,
     editId,
+    officialSlug,
     editingRoster,
     draft,
     official,
@@ -134,7 +174,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
     setIsSubmitting,
   });
 
-  if (authLoading) {
+  if (authLoading || officialLoading) {
     return <div className="min-h-100" />;
   }
 
@@ -159,20 +199,31 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
     );
   }
 
+  // Official roster failed to load or not found
+  if (officialSlug && !officialLoading && !officialRoster) {
+    return (
+      <div className="relative z-10 flex flex-col gap-2">
+        <EmptyState icon={SearchX} title={t.empty.title} subtitle={t.empty.subtitle} />
+      </div>
+    );
+  }
+
   const startOver = () => {
     resetDraft();
     resetSubmitState();
     setIsSubmitting(false);
   };
 
-  const publishingNow = publishing && official && isUserAdmin;
+  const publishingNow = publishing && (official || Boolean(officialSlug)) && isUserAdmin;
   const submitLabel = publishingNow
     ? c.saving
-    : official && isUserAdmin
-      ? c.publish
-      : editId
-        ? c.saveShort
-        : c.create;
+    : officialSlug && isUserAdmin
+      ? c.saveShort
+      : official && isUserAdmin
+        ? c.publish
+        : editId
+          ? c.saveShort
+          : c.create;
 
   const submitButton = (
     <Button
@@ -211,6 +262,14 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
           dismissLabel={c.closeToast}
         />
       )}
+      {deleteError && (
+        <Toast
+          tone="red"
+          message={deleteError}
+          onDismiss={() => setDeleteError(null)}
+          dismissLabel={c.closeToast}
+        />
+      )}
 
       {/* BLOCK 1: THE BASICS */}
       <div className={CREATOR_COLUMN}>
@@ -223,6 +282,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
           isUserAdmin={isUserAdmin}
           official={official}
           onOfficialChange={setOfficial}
+          officialSlug={officialSlug}
           onOpenCrop={() => setIsCropModalOpen(true)}
         >
           {showTranslations && (
@@ -240,7 +300,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
       <div className={CREATOR_COLUMN}>
         <Section
           title={c.rolesGendersTitle}
-          badge={formatMessage(c.rolesGendersCount, { roles: effectiveRoles.length, genders: effectiveGenders.length })}
+          storageKey="lemondbd_smash_creator_section_taxonomy"
           defaultOpen={false}
         >
           <RosterTaxonomyBlock
@@ -257,6 +317,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
         <Section
           title={c.stepEntities}
           badge={draft.entities.length}
+          storageKey="lemondbd_smash_creator_section_candidates"
           defaultOpen={true}
         >
           <div className="flex flex-col gap-6">
@@ -331,6 +392,7 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
         <Section
           title={c.customArchetypesTitle}
           badge={draft.romance_archetypes.length}
+          storageKey="lemondbd_smash_creator_section_archetypes"
           defaultOpen={false}
         >
           <RomanceArchetypeBuilder
@@ -348,10 +410,80 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
         <Feedback errors={errors as string[]} saveError={saveError} submitError={submitError} publishError={publishError} />
       </div>
 
-      {/* THE ONE SUBMIT BUTTON: centred under the same column as every block above it */}
-      <div className={`${CREATOR_COLUMN} flex justify-center pb-4`}>
+      {/* ACTIONS: centred under the same column as every block above it */}
+      <div className={`${CREATOR_COLUMN} flex flex-wrap items-center justify-center gap-3 pb-4`}>
         {submitButton}
+        {officialSlug && isUserAdmin && (
+          <Button
+            variant="danger"
+            size="lg"
+            onClick={() => setShowDeleteModal(true)}
+            className="min-h-11 2xl:min-h-hit-xl px-6 2xl:px-8 text-sm 2xl:text-base font-bold uppercase tracking-wider"
+          >
+            <Trash2 className="icon-sm" />
+            <span>{t.picker.deleteRoster}</span>
+          </Button>
+        )}
       </div>
+
+      {showDeleteModal && (
+        <Modal
+          isOpen
+          onClose={() => setShowDeleteModal(false)}
+          variant="confirm"
+          layer="top"
+          title={t.picker.deleteConfirmTitle}
+          closeButtonAriaLabel={dict.modal.close}
+          bodyClassName="p-5 text-center"
+          footerClassName="p-4"
+          footer={
+            <div className="flex w-full justify-center gap-2">
+              <Button
+                variant="secondary"
+                size="md"
+                onClick={() => setShowDeleteModal(false)}
+              >
+                {dict.tierLists.cancel}
+              </Button>
+              <Button
+                variant="danger"
+                size="md"
+                disabled={deleting}
+                onClick={() => {
+                  void (async () => {
+                    setDeleting(true);
+                    try {
+                      const res = await fetch(apiUrl(`/api/v1/smash-or-pass/admin/rosters/${officialSlug}`), {
+                        method: 'DELETE',
+                        headers: authHeaders(),
+                      });
+                      if (res.ok) {
+                        resetDraft();
+                        router.push(`/${locale}/smash-or-pass`);
+                      } else {
+                        const err = await res.json().catch(() => ({}));
+                        setDeleteError(err?.error || err?.message || 'Failed to delete roster');
+                        setShowDeleteModal(false);
+                      }
+                    } catch (e) {
+                      setDeleteError(e instanceof Error ? e.message : 'Network error');
+                      setShowDeleteModal(false);
+                    } finally {
+                      setDeleting(false);
+                    }
+                  })();
+                }}
+              >
+                {t.picker.deleteConfirmAction}
+              </Button>
+            </div>
+          }
+        >
+          <p className="type-body text-text-muted">
+            {formatMessage(t.picker.deleteConfirmDesc, { name: draft.name || officialSlug })}
+          </p>
+        </Modal>
+      )}
 
       {/* Cover Image Viewport Crop Modal (Roster card 31:50 aspect ratio) */}
       <CoverImageCropModal

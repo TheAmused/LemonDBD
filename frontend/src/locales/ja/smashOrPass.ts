@@ -367,7 +367,6 @@ export default {
     entityMediaLabel: 'ポートレート画像URL',
     entityRoleLabel: '役割',
     entityGenderLabel: '性別',
-    entityProfileToggle: 'プロフィール詳細',
     entityRealNameLabel: '本名',
     entityArchetypeLabel: 'アーキタイプ',
     entityTaglineLabel: 'サブタイトル / モットー',
@@ -402,6 +401,7 @@ export default {
     blobUrlUnsupportedAdmin: 'blob: URL（Gemini など）はブラウザのセキュリティによりブロックされます。ファイルを保存するか、画像自体をコピー（右クリック -> 画像をコピー）してここに貼り付けてください。',
     blobUrlUnsupportedUser: 'blob: URL（Gemini など）は一時的なもので、ブラウザのセキュリティによりブロックされます。画像ホスティング（Imgur など）の直接の公開リンク（https://）を入力してください。',
     officialPublicHub: '公式名簿として公開（ハブで全体公開）',
+    isActiveOfficialDesc: 'この公式名簿を有効にして訪問者がプレイできるように切り替えます。',
     simpleVersion: 'シンプル版',
     simpleVersionDesc: 'シンプル: クイックカード ＋ 好み・地雷設定（任意）',
     modeLockedHint: 'モードは候補者を追加する前にのみ選択できます。',
@@ -428,8 +428,8 @@ export default {
     startOver: '最初からやり直す',
     closeToast: '閉じる',
     unnamedCandidate: '名前のない候補',
-    rolesGendersCount: 'ロール {roles}件 · 性別 {genders}件',
     focalPointLabel: 'フォーカスポイント',
+    focalPointHint: 'カードのフレーム内でポートレートのどの部分を中心にするかを設定します。',
   },
   cropModal: {
     title: 'カバー画像のトリミングと調整',
@@ -451,6 +451,7 @@ export default {
     cancel: 'キャンセル',
     applyCrop: 'トリミングを適用',
     dragHint: 'ドラッグで移動 • ホイールでズーム ({zoom}%) • 16:9 バナー',
+    dragHintRoster: 'ドラッグで移動 • ホイールでズーム ({zoom}%) • ロスターカバー (31:50)',
   },
   taxonomies: {
     rolesTitle: '名簿の役割',
@@ -494,7 +495,7 @@ export default {
     gradientSwap: '色を入れ替える',
     rulesHintAffinity: '親和性はスマッシュ全体に占める割合（％）、数はスマッシュの数です。',
     rulesHintPriority: '複数のアーキタイプが当てはまる場合は、条件が最も多いものが優先され、同数ならリストの上にあるものが選ばれます。',
-    done: '完了',
+    done: '保存',
   },
   sharing: {
     backToBreakdownTitle: '概要に戻る',

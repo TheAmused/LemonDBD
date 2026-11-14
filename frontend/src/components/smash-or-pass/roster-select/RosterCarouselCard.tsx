@@ -1,5 +1,7 @@
 'use client';
 // frontend/src/components/smash-or-pass/roster-select/RosterCarouselCard.tsx
+import { useRef, useState } from 'react';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 import {
   CardStackIcon,
   HeartIcon,
@@ -63,7 +65,12 @@ export function RosterCarouselCard({
   const isYours = !r.is_imported || Boolean(r.author_id && user?.id && r.author_id === user.id);
   const count = r.entity_count ?? r.character_count ?? 0;
   const rawCoverUrl = rosterCoverUrl(r);
-  const coverUrl = getCommunityCoverThumbUrl(rawCoverUrl, 480) || rawCoverUrl;
+  const thumbCoverUrl = getCommunityCoverThumbUrl(rawCoverUrl, 480) || rawCoverUrl;
+  const hasThumb = Boolean(thumbCoverUrl && thumbCoverUrl !== rawCoverUrl);
+  const [fullLoaded, setFullLoaded] = useState(false);
+  const fullImgRef = useRef<HTMLImageElement>(null);
+
+  useOnValueChange(rawCoverUrl, () => setFullLoaded(false));
 
   const translateX = visualOffset * spreadUnitForViewport();
   const rotateY = Math.max(-55, Math.min(55, -visualOffset * 30));
@@ -117,13 +124,30 @@ export function RosterCarouselCard({
         }}
         className="absolute inset-0 z-10 cursor-pointer rounded-card focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red"
       />
+      {hasThumb && !fullLoaded && (
+        <MotionImg
+          src={thumbCoverUrl}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          decoding="async"
+          draggable={false}
+          onContextMenu={(e) => e.preventDefault()}
+          className={cn(
+            "absolute inset-0 h-full w-full object-cover object-center pointer-events-none transition-all duration-300",
+            r.is_nsfw && !globalNsfw && "blur-md scale-105"
+          )}
+        />
+      )}
       <MotionImg
-        src={coverUrl}
+        ref={fullImgRef}
+        src={rawCoverUrl}
         alt=""
         loading="lazy"
         decoding="async"
         draggable={false}
         onContextMenu={(e) => e.preventDefault()}
+        onLoad={() => setFullLoaded(true)}
         onError={(e) => {
           const target = e.target as HTMLImageElement;
           if (!target.dataset.triedFallback) {
@@ -135,7 +159,8 @@ export function RosterCarouselCard({
         }}
         className={cn(
           "absolute inset-0 h-full w-full object-cover object-center pointer-events-none transition-all duration-300",
-          r.is_nsfw && !globalNsfw && "blur-md scale-105"
+          r.is_nsfw && !globalNsfw && "blur-md scale-105",
+          hasThumb && !fullLoaded ? "opacity-0" : "opacity-100"
         )}
       />
 

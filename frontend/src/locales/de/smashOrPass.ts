@@ -406,7 +406,7 @@ export default {
     cropCoverBadge: 'Zuschneiden 16:9',
     cropClickPrompt: 'Klicken zum Zuschneiden / Anpassen (16:9)',
     rolesGendersTitle: 'Rollen & Geschlechter',
-    customArchetypesTitle: 'Benutzerdefinierte Beziehungs-Archetypen & Persönlichkeitsregeln',
+    customArchetypesTitle: 'Benutzerdefinierte Beziehungs-Archetypen',
     editingCandidate: 'Kandidat bearbeiten',
     allCandidatesHeading: 'Listenkandidaten',
     renameCandidateAria: '{name} umbenennen',

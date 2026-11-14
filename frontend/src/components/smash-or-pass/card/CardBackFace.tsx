@@ -103,33 +103,36 @@ export function CardBackFace({
         data-card-lore=""
         className="space-y-2 h-full pr-1 overflow-y-auto select-text pointer-events-auto scrollbar-thin scrollbar-thumb-border-color"
       >
+        {/* Dating Vibe (always visible on card back) */}
+        <Surface tone="elevated" padding="none" className="p-2.5 border-accent-red/30 space-y-0.5">
+          <span className="type-label-2xs text-accent-red block">
+            {customLabels?.dating_vibe || text.loreLabels.datingArchetype}
+          </span>
+          <p className="type-strong text-text-primary leading-snug">{profile.dating_vibe || charTitle}</p>
+        </Surface>
+
         {/* Mobile-only fallback (<880px): show Turn On & Dealbreaker only when floating lore fragments are hidden */}
-        <div className="@hub-lg/hub:hidden space-y-2">
-          <Surface tone="elevated" padding="none" className="p-2.5 border-accent-red/30 space-y-0.5">
-            <span className="type-label-2xs text-accent-red block">
-              {customLabels?.dating_vibe || text.loreLabels.datingArchetype}
-            </span>
-            <p className="type-strong text-text-primary leading-snug">{profile.dating_vibe || charTitle}</p>
-          </Surface>
+        {(Boolean(profile.turn_on) || Boolean(profile.dealbreaker)) && (
+          <div className="@hub-lg/hub:hidden space-y-2">
+            {profile.turn_on && (
+              <div className="p-2.5 rounded-card bg-accent-green/10 border border-accent-green/40 space-y-0.5">
+                <span className="type-label-2xs text-accent-green block">
+                  {customLabels?.turn_on || text.loreLabels.turn_on}
+                </span>
+                <p className="text-mini text-text-primary leading-snug">{profile.turn_on}</p>
+              </div>
+            )}
 
-          {profile.turn_on && (
-            <div className="p-2.5 rounded-card bg-accent-green/10 border border-accent-green/40 space-y-0.5">
-              <span className="type-label-2xs text-accent-green block">
-                {customLabels?.turn_on || text.loreLabels.turn_on}
-              </span>
-              <p className="text-mini text-text-primary leading-snug">{profile.turn_on}</p>
-            </div>
-          )}
-
-          {profile.dealbreaker && (
-            <div className="p-2.5 rounded-card bg-accent-red/10 border border-accent-red/40 space-y-0.5">
-              <span className="type-label-2xs text-accent-red block">
-                {customLabels?.dealbreaker || text.loreLabels.dealbreaker}
-              </span>
-              <p className="text-mini text-text-primary leading-snug">{profile.dealbreaker}</p>
-            </div>
-          )}
-        </div>
+            {profile.dealbreaker && (
+              <div className="p-2.5 rounded-card bg-accent-red/10 border border-accent-red/40 space-y-0.5">
+                <span className="type-label-2xs text-accent-red block">
+                  {customLabels?.dealbreaker || text.loreLabels.dealbreaker}
+                </span>
+                <p className="text-mini text-text-primary leading-snug">{profile.dealbreaker}</p>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Green & Red Flags (Prominent and unique to the card back) */}
         {(greenFlags.length > 0 || redFlags.length > 0) && (

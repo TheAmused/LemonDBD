@@ -406,7 +406,7 @@ export default {
     cropCoverBadge: 'Recortar 16:9',
     cropClickPrompt: 'Haz clic para recortar / reencuadrar (16:9)',
     rolesGendersTitle: 'Roles y géneros',
-    customArchetypesTitle: 'Arquetipos románticos personalizados y reglas de personalidad',
+    customArchetypesTitle: 'Arquetipos románticos personalizados',
     editingCandidate: 'Editar candidato',
     allCandidatesHeading: 'Candidatos de la lista',
     renameCandidateAria: 'Renombrar {name}',

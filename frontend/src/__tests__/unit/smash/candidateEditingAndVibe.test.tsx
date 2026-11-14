@@ -226,6 +226,25 @@ describe('Candidate Editing and Dating Vibe', () => {
 
       assert.ok(view.getByText('Spooky Hopeless Romantic'));
     });
+
+    it('renders dating_vibe in scrollable container without viewport-gating classes', () => {
+      const view = render(
+        <CardBackFace
+          character={baseEntityItem}
+          profile={{ ...baseProfile, dating_vibe: 'Eternal Flame Lover' }}
+          isFlipped={true}
+          onFlip={() => {}}
+          onVote={() => {}}
+        />,
+        { wrapper: withDictionary() }
+      );
+
+      const vibeEl = view.getByText('Eternal Flame Lover');
+      assert.ok(vibeEl);
+      assert.ok(!vibeEl.closest('.\\@hub-lg\\/hub\\:hidden'), 'Dating vibe must not be hidden on desktop');
+      const scrollContainer = view.container.querySelector('[data-card-lore]');
+      assert.ok(scrollContainer?.classList.contains('overflow-y-auto'), 'Card back lore container must be overflow-y-auto');
+    });
   });
 
   describe('FloatingLoreScattered dating_vibe rendering', () => {

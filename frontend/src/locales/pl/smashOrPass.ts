@@ -422,7 +422,7 @@ export default {
     cropCoverBadge: 'Przytnij 16:9',
     cropClickPrompt: 'Kliknij, aby przyciąć / zmienić kadr (16:9)',
     rolesGendersTitle: 'Role i płcie',
-    customArchetypesTitle: 'Własne archetypy romantyczne i reguły osobowości',
+    customArchetypesTitle: 'Własne archetypy romantyczne',
     editingCandidate: 'Edycja kandydata',
     allCandidatesHeading: 'Kandydaci listy',
     renameCandidateAria: 'Zmień nazwę {name}',

@@ -38,7 +38,7 @@ interface RosterBasicsSectionProps {
   children?: ReactNode;
 }
 
-/** Name, category, description, cover, theme colour, and the simple / NSFW / official switches. */
+/** Name, description, cover, theme colour, and the simple / NSFW / official switches. */
 export function RosterBasicsSection({
   draft,
   patch,
@@ -54,32 +54,24 @@ export function RosterBasicsSection({
   const dict = useDictionary();
   const c = dict.smashOrPass.creator;
 
+  const hasCandidates =
+    draft.entities.some((e) => Boolean(e.name.trim() || e.media_url.trim())) || draft.entities.length > 1;
+
   return (
     <Section title={c.stepBasics}>
       <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-5xl wide-2k:max-w-7xl mx-auto grid gap-4 2xl:gap-6 md:grid-cols-2">
-        <label>
+        <label className="md:col-span-2">
           <span className={LABEL}>
             {c.nameLabel}
             <RequiredMark />
           </span>
           <Input
-            fieldSize="md" invalid={attempted && nameMissing}
+            fieldSize="md"
+            invalid={attempted && nameMissing}
             value={draft.name}
             maxLength={SMASH_ROSTER_LIMITS.maxRosterName}
             onChange={(e) => patch({ name: e.target.value })}
             placeholder={c.namePlaceholder}
-            
-            className="2xl:min-h-hit-xl 2xl:text-base"
-          />
-        </label>
-        <label>
-          <span className={LABEL}>{c.categoryLabel}</span>
-          <Input
-            fieldSize="md"
-            value={draft.category}
-            maxLength={64}
-            onChange={(e) => patch({ category: e.target.value })}
-            placeholder={c.categoryPlaceholder}
             className="2xl:min-h-hit-xl 2xl:text-base"
           />
         </label>
@@ -167,12 +159,13 @@ export function RosterBasicsSection({
           {/* Simple Version Switch */}
           <Tooltip variant="action"
             title={c.simpleVersion}
-            description={c.simpleVersionDesc}
+            description={hasCandidates ? 'Mode can only be chosen before adding candidates.' : c.simpleVersionDesc}
           >
             <LabeledSwitch
               checked={draft.roster_mode === 'simple'}
               onChange={(checked) => patch({ roster_mode: checked ? 'simple' : 'full' })}
               label={c.simpleVersion}
+              disabled={hasCandidates}
             />
           </Tooltip>
 

@@ -124,21 +124,25 @@ export function useSmashDeck({ selectedRosterSlug, customRosterStore, onFeedSett
   const nextCharacter = deck[currentIndex + 1] || null;
   const thirdCharacter = deck[currentIndex + 2] || null;
 
-  // Preload next 3 images in queue using the same 256px portrait thumbnail CharacterCard renders
+  // Preload next 3 images in queue using fullSrc and thumbSrc for instant crisp rendering
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const backendBase = getBackendBaseUrl();
     const preloads = deck.slice(currentIndex + 1, currentIndex + 4);
     preloads.forEach((item) => {
-      const { thumbSrc } = resolveSmashPortraitUrls(item, {
+      const { fullSrc, thumbSrc } = resolveSmashPortraitUrls(item, {
         backendBase,
         thumbWidth: 256,
         useLocalPlaceholder: true,
         fallbackExt: 'webp',
       });
       if (thumbSrc) {
-        const img = new Image();
-        img.src = thumbSrc;
+        const thumbImg = new Image();
+        thumbImg.src = thumbSrc;
+      }
+      if (fullSrc && fullSrc !== thumbSrc) {
+        const fullImg = new Image();
+        fullImg.src = fullSrc;
       }
     });
   }, [currentIndex, deck]);

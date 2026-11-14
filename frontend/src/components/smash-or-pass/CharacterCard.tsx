@@ -239,7 +239,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             <div className="absolute inset-0 z-0 bg-bg-primary overflow-hidden">
               <div className="h-full w-full" style={portraitOffsetY ? { transform: `translateY(${portraitOffsetY}px)` } : undefined}>
                 <CardAvatarImage
-                  src={avatarThumbSrc}
+                  src={avatarSrc}
+                  thumbSrc={avatarThumbSrc}
                   name={character.name}
                   slug={character.slug}
                   isSurvivor={isSurvivor}

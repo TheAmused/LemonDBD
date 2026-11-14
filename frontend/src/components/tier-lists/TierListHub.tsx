@@ -252,7 +252,6 @@ export function TierListHub({ locale }: TierListHubProps) {
             : undefined
         }
         confirmLabel={t.deleteList}
-        cancelLabel={t.cancel}
         onConfirm={() => {
           if (listToDelete) {
             deleteCustomList(listToDelete.id);

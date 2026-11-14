@@ -17,6 +17,10 @@ export default {
     title: 'Página bloqueada',
     text: 'Esta página no está abierta a los visitantes por ahora.',
   },
+  maintenance: {
+    title: "Volvemos pronto",
+    text: "El sitio está en mantenimiento. Gracias por tu paciencia.",
+  },
   error: {
     code: 'Error',
     title: 'Algo salió mal',

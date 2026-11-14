@@ -69,8 +69,10 @@ def create_app(config_class: Type[Config] | None = None) -> Flask:
     )
 
     from app.core.security import enforce_cookie_csrf_protection
+    from app.services.maintenance_mode import enforce_maintenance
 
     flask_app.before_request(enforce_cookie_csrf_protection)
+    flask_app.before_request(enforce_maintenance)
 
     @flask_app.after_request
     def _no_content_sniffing(response):

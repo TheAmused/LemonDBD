@@ -299,7 +299,6 @@ export const MinigamesHub: React.FC<MinigamesHubProps> = ({ locale }) => {
         title={t.deleteTrial}
         message={t.confirmDelete}
         confirmLabel={t.deleteTrial}
-        cancelLabel={t.cancel}
         onConfirm={confirmDelete}
         onCancel={cancelDelete}
       />

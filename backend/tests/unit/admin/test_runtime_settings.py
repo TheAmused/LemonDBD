@@ -18,6 +18,7 @@ from app.services import discord_webhook, site_settings
 from app.services.site_settings import RiskyChangeError
 from app.utils.site_settings_spec import (
     BANNER_LOCALES,
+    DEDICATED_GROUPS,
     RISKY_KEYS,
     SETTING_SPECS,
     SPEC_BY_KEY,
@@ -224,7 +225,8 @@ class TestSaving:
 
     def test_listing_describes_every_field_for_the_form(self, client: FlaskClient, admin: User) -> None:
         rows = {r["key"]: r for r in client.get("/api/v1/admin/settings", headers=_headers(admin)).get_json()["settings"]}
-        assert set(rows) == set(SPEC_BY_KEY)
+        # Groups with a panel of their own (maintenance mode) are not listed in the Settings tab.
+        assert set(rows) == {key for key, spec in SPEC_BY_KEY.items() if spec.group not in DEDICATED_GROUPS}
         assert rows["site_banner_level"]["choices"] == ["info", "warning", "critical"]
         assert rows["site_banner_text"]["max_length"] == 240
         assert rows["altcha_enforced"]["risky_when"] is False

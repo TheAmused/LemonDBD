@@ -29,7 +29,7 @@ const CATEGORIES = {
   reports: ['bug_report', 'content'],
   availability: ['challenge_mode', 'character', 'perk'],
   publishing: ['tier_list', 'roster', 'changelog_post', 'minigame_challenge'],
-  system: ['site_settings', 'maintenance', 'database'],
+  system: ['site_settings', 'maintenance', 'maintenance_mode', 'database'],
 } as const satisfies Record<string, readonly string[]>;
 type Category = keyof typeof CATEGORIES;
 
@@ -56,6 +56,7 @@ const ACTION_LABEL_KEYS = {
   perk_enabled: 'auditActionPerkEnabled',
   site_settings_updated: 'auditActionSiteSettingsUpdated',
   maintenance_run: 'auditActionMaintenanceRun',
+  maintenance_mode_updated: 'auditActionMaintenanceModeUpdated',
   user_data_exported: 'auditActionUserDataExported',
   user_warned: 'auditActionUserWarned',
   user_suspended: 'auditActionUserSuspended',
@@ -98,6 +99,7 @@ const TARGET_LABEL_KEYS = {
   minigame_challenge: 'auditTargetMinigameChallenge',
   site_settings: 'auditTargetSettings',
   maintenance: 'auditTargetMaintenance',
+  maintenance_mode: 'auditTargetMaintenanceMode',
   database: 'auditTargetDatabase',
 } as const;
 

@@ -17,6 +17,10 @@ export default {
     title: 'Page blocked',
     text: 'This page isn\'t open to visitors right now.',
   },
+  maintenance: {
+    title: "Back soon",
+    text: "The site is down for maintenance. Thanks for your patience.",
+  },
   error: {
     code: 'Error',
     title: 'Something went wrong',

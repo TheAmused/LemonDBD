@@ -392,7 +392,6 @@ export function TierListEditor(props: TierListEditorProps) {
         message={resetMessage}
         confirmLabel={t.reset}
         confirmIcon={<RotateCcw className="icon-md" aria-hidden="true" />}
-        cancelLabel={t.cancel}
         onCancel={() => setDialog(null)}
         onConfirm={() => {
           const reset = onReset();
@@ -410,7 +409,6 @@ export function TierListEditor(props: TierListEditorProps) {
           message={t.deleteListMessage}
           confirmLabel={t.deleteList}
           confirmIcon={<Trash2 className="icon-md" aria-hidden="true" />}
-          cancelLabel={t.cancel}
           onCancel={() => setDialog(null)}
           onConfirm={() => {
             setDialog(null);

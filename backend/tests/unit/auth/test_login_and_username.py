@@ -116,3 +116,37 @@ def test_a_password_with_surrounding_spaces_signs_in_as_typed(client: FlaskClien
 def test_a_stray_space_around_a_plain_password_is_still_forgiven(client: FlaskClient) -> None:
     assert _register(client, "plainpw", "Plain", "p@example.com").status_code == 201
     assert client.post(LOGIN, json={"login": "plainpw", "password": "password123 "}).status_code == 200
+
+
+def _make_admin(login: str) -> None:
+    db.session.query(User).filter_by(login=login).one().role = "admin"
+    db.session.commit()
+
+
+def test_admin_only_sign_in_lets_an_admin_through(client: FlaskClient) -> None:
+    _register(client, "door_admin", "Door Admin", "k@example.com")
+    _make_admin("door_admin")
+    res = client.post(LOGIN, json={"login": "door_admin", "password": "password123", "admin_only": True})
+    assert res.status_code == 200
+    assert res.get_json()["user"]["role"] == "admin"
+
+
+def test_admin_only_sign_in_refuses_any_other_account_without_a_session(client: FlaskClient) -> None:
+    _register(client, "plain_user", "Plain User", "l@example.com")
+    refused = client.post(LOGIN, json={"login": "plain_user", "password": "password123", "admin_only": True})
+    wrong = client.post(LOGIN, json={"login": "plain_user", "password": "not-the-password", "admin_only": True})
+    assert refused.status_code == wrong.status_code == 401
+    assert refused.get_json()["error"] == wrong.get_json()["error"]
+    assert "Set-Cookie" not in refused.headers
+    # The same account signs in normally when the door is not asked for.
+    assert client.post(LOGIN, json={"login": "plain_user", "password": "password123"}).status_code == 200
+
+
+def test_admin_only_sign_in_does_not_reveal_a_blocked_account(client: FlaskClient) -> None:
+    _register(client, "banned_user", "Banned User", "m@example.com")
+    db.session.query(User).filter_by(login="banned_user").one().is_active = False
+    db.session.commit()
+    plain = client.post(LOGIN, json={"login": "banned_user", "password": "password123"})
+    door = client.post(LOGIN, json={"login": "banned_user", "password": "password123", "admin_only": True})
+    assert plain.status_code == 403  # the normal sign-in tells the account holder why
+    assert door.status_code == 401 and door.get_json()["error"] == "Invalid credentials"

@@ -357,6 +357,8 @@ export default {
   auditTargetMaintenance: "メンテナンスジョブ",
   auditTargetDatabase: "データベース",
   auditActionMaintenanceRun: "メンテナンスジョブを実行",
+  auditTargetMaintenanceMode: "メンテナンスモード",
+  auditActionMaintenanceModeUpdated: "メンテナンスモードを変更",
   auditActionTierListCreated: "ティアリストを公開",
   auditActionTierListUpdated: "ティアリストを更新",
   auditActionRosterCreated: "ロスターを公開",

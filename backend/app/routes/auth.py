@@ -141,6 +141,7 @@ def login():
         or data.get("username_or_email")
     )
     password = data.get("password")
+    admin_only = data.get("admin_only") is True
 
     if not login_or_email or not password:
         return api_error("Login/email and password are required.", 400)
@@ -153,8 +154,13 @@ def login():
         if not user and password.strip() and password.strip() != password:
             user, token = authenticate_user_credentials(login_or_email.strip(), password.strip())
     except AccountBlockedError as blocked:
+        if admin_only and blocked.user.role != "admin":
+            return api_error("Invalid credentials", 401)
         return blocked_response(blocked.user)
-    if not user:
+    # The admin sign-in asks for `admin_only`: another account is answered exactly like a wrong password
+    # and gets no session. It is a courtesy of that page, not a boundary: maintenance mode itself keeps
+    # every non-admin out of the site, whichever way they signed in.
+    if not user or (admin_only and user.role != "admin"):
         return api_error("Invalid credentials", 401)
 
     if needs_email_verification(user):

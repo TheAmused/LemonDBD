@@ -22,7 +22,7 @@ describe('adminOnlyPageFromPathname', () => {
     }
   });
 
-  it('recognises the admin panel separately (it gets Forbidden, not Blocked)', () => {
+  it('recognises the admin panel separately (it gets the admin sign-in, not Blocked)', () => {
     assert.equal(adminPanelLocaleFromPathname('/en/admin', LOCALES), 'en');
     assert.equal(adminPanelLocaleFromPathname('/pl/admin/', LOCALES), 'pl');
     assert.equal(adminPanelLocaleFromPathname('/en/%61dmin', LOCALES), 'en');

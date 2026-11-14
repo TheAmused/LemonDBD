@@ -64,8 +64,8 @@ describe('archetype builder overhaul', () => {
       { wrapper: withDictionary() }
     );
 
-    const hasInfoBanner = view.container.textContent?.includes(ab.sectionDesc) ?? false;
-    assert.equal(hasInfoBanner, false, 'sectionDesc info banner text should be removed');
+    const hasInfoIcon = Boolean(view.container.querySelector('svg.lucide-info'));
+    assert.equal(hasInfoIcon, false, 'info banner icon should not be present');
   });
 
   it('CustomDropdown is used for role and gender targets instead of input/datalist', () => {
@@ -107,12 +107,45 @@ describe('archetype builder overhaul', () => {
     );
 
     // Done button is rendered inside expanded card
-    const doneBtn = view.queryByText('Done');
+    const doneBtn = view.queryByText(ab.done);
     assert.equal(Boolean(doneBtn), true, 'Done button should exist');
 
     if (doneBtn) {
       fireEvent.click(doneBtn);
       assert.equal(Boolean(view.queryByPlaceholderText(ab.descriptionPlaceholder)), false, 'expanded card is collapsed');
     }
+  });
+
+  it('switching a rule target from role_affinity to gender_affinity resets target_value to availableGenders[0]', () => {
+    let archetypes = [
+      archetype({
+        rules: [
+          { target: 'role_affinity', operator: '>=', value: 60, target_value: 'Survivor' },
+        ],
+      }),
+    ];
+
+    const view = render(
+      <RomanceArchetypeBuilder
+        archetypes={archetypes}
+        onChange={(next) => {
+          archetypes = next;
+        }}
+        availableRoles={['Survivor', 'Killer']}
+        availableGenders={['male', 'female']}
+      />,
+      { wrapper: withDictionary() }
+    );
+
+    // Target dropdown trigger has ariaLabel={ab.rulesTitle}
+    const targetTrigger = view.getByRole('button', { name: ab.rulesTitle });
+    fireEvent.click(targetTrigger);
+
+    // Click gender affinity option
+    const genderAffinityOption = view.getByText(ab.genderAffinity);
+    fireEvent.click(genderAffinityOption);
+
+    assert.equal(archetypes[0].rules[0].target, 'gender_affinity');
+    assert.equal(archetypes[0].rules[0].target_value, 'male');
   });
 });

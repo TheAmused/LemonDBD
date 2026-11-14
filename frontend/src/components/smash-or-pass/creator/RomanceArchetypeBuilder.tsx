@@ -285,6 +285,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                         checked={arch.is_fallback || false}
                         onChange={(checked) => updateArchetype(arch.id, { is_fallback: checked })}
                         className="pt-1 type-strong text-text-secondary"
+                        allowTextSelection
                       >
                         {ab.markAsFallback}
                       </Checkbox>
@@ -325,10 +326,16 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                             onChange={(target) => {
                               // A switch from a count (say 500 votes) to a percentage re-caps the value, so the rule can still match.
                               const patch: Partial<ArchetypeRule> = { target, value: capRuleValue(target, rule.value) };
-                              if ((target === 'role_affinity' || target === 'role_count') && !rule.target_value) {
-                                patch.target_value = availableRoles[0] || '';
-                              } else if ((target === 'gender_affinity' || target === 'gender_count') && !rule.target_value) {
-                                patch.target_value = availableGenders[0] || '';
+                              if (target === 'role_affinity' || target === 'role_count') {
+                                if (!rule.target_value || !availableRoles.includes(rule.target_value)) {
+                                  patch.target_value = availableRoles[0] || '';
+                                }
+                              } else if (target === 'gender_affinity' || target === 'gender_count') {
+                                if (!rule.target_value || !availableGenders.includes(rule.target_value)) {
+                                  patch.target_value = availableGenders[0] || '';
+                                }
+                              } else {
+                                patch.target_value = undefined;
                               }
                               updateRule(arch.id, rIdx, patch);
                             }}
@@ -363,7 +370,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
 
                           <CustomDropdown<ArchetypeRule['operator']>
                             accent="primary"
-                            ariaLabel={ab.rulesTitle}
+                            ariaLabel={`${ab.rulesTitle} Operator`}
                             value={rule.operator}
                             options={operatorOptions}
                             minWidthClass="min-w-36"

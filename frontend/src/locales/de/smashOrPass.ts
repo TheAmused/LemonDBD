@@ -399,6 +399,7 @@ export default {
     addCandidateDisabledHint: 'Füllen Sie Name, Rolle und Geschlecht des aktuellen Kandidaten aus, bevor Sie einen weiteren hinzufügen.',
     incompleteCandidatesError: 'Alle Kandidaten müssen vor dem Speichern Name, Rolle und Geschlecht haben.',
     invalidImage: 'Dieser Titelbild-Link ist ungültig.',
+    blobUrlUnsupported: 'Blob-URLs (z. B. von Gemini) werden durch Browser-Sicherheit blockiert. Lade die Datei herunter oder kopiere das Bild (Rechtsklick -> Bild kopieren) und füge es ein.',
     officialPublicHub: 'Als offizielle Liste veröffentlichen (Öffentlich im Hub)',
     simpleVersion: 'Einfache Version',
     simpleVersionDesc: 'Einfach: Schnelle Karten + optionale Vorlieben & Ausschlusskriterien',

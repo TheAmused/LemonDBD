@@ -159,6 +159,7 @@ export default {
     backgroundImageLabel: "背景画像URL",
     backgroundImagePlaceholder: "https://...",
     backgroundImageHint: "https:// のリンク、または data:image URI。「マイカスタムリスト」のカード背景に表示されます。",
+    blobUrlUnsupported: "blob: URL（Gemini など）はブラウザのセキュリティによりブロックされます。ファイルを保存するか、画像自体をコピー（右クリック -> 画像をコピー）して貼り付けてください。",
     cropCoverTitle: "カバー画像をトリミング / 調整",
     cropClickPrompt: "クリックしてトリミング / 調整 (16:9)",
     publishedLabel: "公開（ユーザーに表示）",

@@ -159,6 +159,7 @@ export default {
     backgroundImageLabel: "Background image URL",
     backgroundImagePlaceholder: "https://...",
     backgroundImageHint: "An https:// link or a data:image URI. Shown behind the card in My Custom Lists.",
+    blobUrlUnsupported: "Blob URLs (e.g. from Gemini) are blocked by browser security. Download the image file or copy the image itself (right-click -> Copy image) and paste it.",
     cropCoverTitle: "Crop / Reframe cover image",
     cropClickPrompt: "Click to Crop / Reframe (16:9)",
     publishedLabel: "Published (visible to public)",

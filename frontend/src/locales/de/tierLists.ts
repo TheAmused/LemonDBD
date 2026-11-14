@@ -159,6 +159,7 @@ export default {
     backgroundImageLabel: "Hintergrundbild-URL",
     backgroundImagePlaceholder: "https://...",
     backgroundImageHint: "Ein https://-Link oder eine data:image-URI. Wird hinter der Karte in „Meine eigenen Listen“ angezeigt.",
+    blobUrlUnsupported: "Blob-URLs (z. B. von Gemini) werden durch Browser-Sicherheit blockiert. Lade die Datei herunter oder kopiere das Bild (Rechtsklick -> Bild kopieren) und füge es ein.",
     cropCoverTitle: "Titelbild zuschneiden / anpassen",
     cropClickPrompt: "Klicken zum Zuschneiden / Anpassen (16:9)",
     publishedLabel: "Veröffentlicht (für Benutzer sichtbar)",

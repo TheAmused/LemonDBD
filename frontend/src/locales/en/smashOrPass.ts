@@ -399,6 +399,7 @@ export default {
     addCandidateDisabledHint: 'Fill in name, role, and gender for the current candidate before adding another.',
     incompleteCandidatesError: 'All candidates must have a name, role, and gender before saving.',
     invalidImage: 'That cover image link is invalid.',
+    blobUrlUnsupported: 'Blob URLs (e.g. from Gemini) are blocked by browser security. Download the image file or copy the image itself (right-click -> Copy image) and paste it.',
     officialPublicHub: 'Publish as Official Roster (Public on Hub)',
     simpleVersion: 'Simple Version',
     simpleVersionDesc: 'Simple: Fast cards + optional turn-on & dealbreaker',

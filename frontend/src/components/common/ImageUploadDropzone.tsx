@@ -88,9 +88,30 @@ export function ImageUploadDropzone({
 
   const commitUrl = () => {
     const trimmed = urlInput.trim();
+    if (trimmed.startsWith('blob:')) {
+      setUploadError(dict.tierLists.creator.blobUrlUnsupported);
+      return;
+    }
     if (trimmed && trimmed !== (value || '').trim()) {
       setUploadError(null);
       onChange(trimmed);
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent) => {
+    const files = e.clipboardData?.files;
+    if (files && files.length > 0 && allowFileUpload) {
+      const file = files[0];
+      if (file.type.startsWith('image/')) {
+        e.preventDefault();
+        void handleFiles(files);
+        return;
+      }
+    }
+    const text = e.clipboardData?.getData('text')?.trim();
+    if (text && text.startsWith('blob:')) {
+      e.preventDefault();
+      setUploadError(dict.tierLists.creator.blobUrlUnsupported);
     }
   };
 
@@ -167,6 +188,7 @@ export function ImageUploadDropzone({
         </div>
       ) : (
         <div
+          onPaste={handlePaste}
           onDragOver={(e) => {
             e.preventDefault();
             if (!disabled && allowFileUpload) setIsDragging(true);
@@ -239,6 +261,7 @@ export function ImageUploadDropzone({
               invalid={invalid}
               value={urlInput}
               onChange={(e) => setUrlInput(e.target.value)}
+              onPaste={handlePaste}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   e.preventDefault();

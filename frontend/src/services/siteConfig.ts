@@ -14,8 +14,8 @@ const DEFAULT_BUG_REPORT_IMAGE_MAX_BYTES = 2 * 1024 * 1024;
 export const DEFAULT_SITE_CONFIG: SiteConfig = {
   loaded: false,
   banner: { active: false, level: 'info', until: null, text: {} },
-  links: { discordInvite: null, donationBmc: null, donationKofi: null, donationMessage: null },
-  features: { registrationOpen: true, emailVerificationRequired: true, googleSignIn: false, contentReportsOpen: true, scoreboardOcr: true, guestBugReports: true, bugReportRequireImage: false },
+  links: { discordInvite: null, donationBmc: null, donationKofi: null, donationMessage: {} },
+  features: { registrationOpen: true, emailVerificationRequired: true, altchaEnforced: true, googleSignIn: false, contentReportsOpen: true, scoreboardOcr: true, guestBugReports: true, bugReportRequireImage: false },
   limits: {
     resendCooldownSeconds: DEFAULT_RESEND_COOLDOWN_SECONDS,
     passwordMinLength: MIN_PASSWORD_LENGTH,
@@ -27,6 +27,16 @@ export const DEFAULT_SITE_CONFIG: SiteConfig = {
 
 type Raw = Record<string, unknown>;
 const isRecord = (value: unknown): value is Raw => typeof value === 'object' && value !== null && !Array.isArray(value);
+/** One text per language, as the server sends them; empty and unknown entries are dropped. */
+const asLocaleTexts = (value: unknown): Partial<Record<Locale, string>> => {
+  const texts: Partial<Record<Locale, string>> = {};
+  if (!isRecord(value)) return texts;
+  for (const locale of i18n.locales) {
+    const entry = value[locale];
+    if (typeof entry === 'string' && entry.trim()) texts[locale] = entry.trim();
+  }
+  return texts;
+};
 const asLink = (value: unknown): string | null => (typeof value === 'string' && /^https:\/\//i.test(value) ? value : null);
 const asBool = (value: unknown, fallback: boolean): boolean => (typeof value === 'boolean' ? value : fallback);
 const asCount = (value: unknown, fallback: number, min: number): number =>
@@ -41,13 +51,7 @@ export function parseSiteConfig(body: unknown): SiteConfig {
   const limits = isRecord(body.limits) ? body.limits : {};
   const defaults = DEFAULT_SITE_CONFIG;
 
-  const text: Partial<Record<Locale, string>> = {};
-  if (isRecord(banner.text)) {
-    for (const locale of i18n.locales) {
-      const value = banner.text[locale];
-      if (typeof value === 'string' && value.trim()) text[locale] = value.trim();
-    }
-  }
+  const text = asLocaleTexts(banner.text);
   const level = BANNER_LEVELS.find((candidate) => candidate === banner.level) ?? 'info';
   const active = banner.active === true && Boolean(text.en);
 
@@ -63,11 +67,12 @@ export function parseSiteConfig(body: unknown): SiteConfig {
       discordInvite: asLink(links.discord_invite),
       donationBmc: asLink(links.donation_bmc),
       donationKofi: asLink(links.donation_kofi),
-      donationMessage: typeof links.donation_message === 'string' && links.donation_message.trim() ? links.donation_message.trim() : null,
+      donationMessage: asLocaleTexts(links.donation_message),
     },
     features: {
       registrationOpen: asBool(features.registration_open, defaults.features.registrationOpen),
       emailVerificationRequired: asBool(features.email_verification_required, defaults.features.emailVerificationRequired),
+      altchaEnforced: asBool(features.altcha_enforced, defaults.features.altchaEnforced),
       googleSignIn: asBool(features.google_sign_in, defaults.features.googleSignIn),
       contentReportsOpen: asBool(features.content_reports_open, defaults.features.contentReportsOpen),
       guestBugReports: asBool(features.guest_bug_reports, defaults.features.guestBugReports),

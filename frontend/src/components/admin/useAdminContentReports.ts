@@ -32,7 +32,7 @@ export function useAdminContentReports({ enabled, refreshKey, notify, onChanged 
   const [items, setItems] = useState<AdminContentReport[]>([]);
   const [stats, setStats] = useState<QueueStats<ContentReportStatus> | null>(null);
   const [total, setTotal] = useState(0);
-  const [status, setStatusState] = usePersistentString<ContentReportStatus | 'all'>(ADMIN_STORAGE.contentStatus, 'pending', oneOf(CONTENT_REPORT_FILTERS));
+  const [status, setStatusState] = usePersistentString<ContentReportStatus | 'all'>(ADMIN_STORAGE.contentStatus, 'all',oneOf(CONTENT_REPORT_FILTERS));
   const [page, setPage] = useState(1);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [resolving, setResolving] = useState(false);

@@ -33,9 +33,10 @@ interface ModerationProfileCardProps {
   summary: ModerationSummary | null;
   busy: boolean;
   onRestore: () => void;
+  onShowHistory: () => void;
 }
 
-export function ModerationProfileCard({ user, summary, busy, onRestore }: ModerationProfileCardProps) {
+export function ModerationProfileCard({ user, summary, busy, onRestore, onShowHistory }: ModerationProfileCardProps) {
   const dict = useDictionary();
   const locale = useLocale();
   const t = dict.moderation.admin;
@@ -88,11 +89,16 @@ export function ModerationProfileCard({ user, summary, busy, onRestore }: Modera
                   </div>
                 ))}
               </dl>
-              {blocked && (
-                <Button size="sm" className="w-full" disabled={busy} onClick={onRestore}>
-                  {t.restoreButton}
+              <div className="flex flex-wrap gap-2">
+                <Button size="sm" className="flex-1" onClick={onShowHistory}>
+                  {t.historyTitle}
                 </Button>
-              )}
+                {blocked && (
+                  <Button size="sm" className="flex-1" disabled={busy} onClick={onRestore}>
+                    {t.restoreButton}
+                  </Button>
+                )}
+              </div>
             </>
           ) : (
             <div className="flex justify-center">

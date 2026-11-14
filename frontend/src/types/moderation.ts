@@ -161,7 +161,8 @@ export interface UserSanctions {
 /** What the admin typed into the decision form (shared by the user drawer and the report case). */
 export interface SanctionDraft {
   kind: SanctionKind;
-  reason_code: SanctionReason;
+  /** Empty until the admin picks one. */
+  reason_code: SanctionReason | '';
   rule_ref: RuleRef | '';
   duration_days: number;
   facts: string;
@@ -171,7 +172,7 @@ export interface SanctionDraft {
 
 export const EMPTY_SANCTION_DRAFT: SanctionDraft = {
   kind: 'warning',
-  reason_code: 'other',
+  reason_code: '',
   rule_ref: '',
   duration_days: DEFAULT_SUSPENSION_DAYS,
   facts: '',
@@ -197,9 +198,13 @@ export function draftFromSuggestion(draft: SanctionDraft, suggestion: Moderation
   return { ...draft, kind: suggestion.kind, duration_days: suggestion.duration_days ?? draft.duration_days };
 }
 
-/** The decision form is complete: every decision needs its facts (the evidence itself is wiped). */
-export function isSanctionDraftValid(draft: SanctionDraft): boolean {
+/**
+ * The decision form is complete: every decision needs its facts (the evidence itself is wiped) and,
+ * unless a report supplies it (`reasonRequired: false`), a reason the admin picked.
+ */
+export function isSanctionDraftValid(draft: SanctionDraft, { reasonRequired = true }: { reasonRequired?: boolean } = {}): boolean {
   if (draft.facts.trim().length === 0) return false;
+  if (reasonRequired && draft.reason_code === '') return false;
   if (draft.kind === 'suspension') {
     return (
       Number.isInteger(draft.duration_days) &&

@@ -7,7 +7,7 @@ import { BuyMeACoffeeIcon, HeartIcon, KofiIcon } from '@/components/icons/DbdIco
 
 import { Modal } from '@/components/common/Modal';
 import { SuccessState } from '@/components/common/SuccessState';
-import { useDictionary } from "@/context/DictionaryContext";
+import { useDictionary, useLocale } from "@/context/DictionaryContext";
 import { useSiteConfig } from '@/context/SiteConfigContext';
 import { RewardedAdSection } from '@/components/sidebar/RewardedAdSection';
 import { SupportTile } from '@/components/sidebar/SupportTile';
@@ -28,7 +28,8 @@ export const BuyCoffeeModal: React.FC<BuyCoffeeModalProps> = ({ isOpen, onClose 
   // The links and the message are admin settings (Settings > Links), so they change without a rebuild.
   // A link the admin cleared is not shown.
   const { links } = useSiteConfig();
-  const donationMessage = links.donationMessage || t.coffeeDonationMessage;
+  const locale = useLocale();
+  const donationMessage = links.donationMessage[locale] ?? links.donationMessage.en ?? t.coffeeDonationMessage;
 
   const supportGateways = [
     {

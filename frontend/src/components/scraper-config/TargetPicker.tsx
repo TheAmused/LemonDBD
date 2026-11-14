@@ -54,7 +54,7 @@ export function TargetPicker({
         </Button>
       </div>
 
-      <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
+      <div className="space-y-4 max-h-64 overflow-y-auto pr-1">
         {TARGET_GROUPS_CONFIG.map((group) => {
           const groupTargets = localizedTargets.filter((t) => t.category === group.key);
           if (groupTargets.length === 0) return null;
@@ -64,7 +64,7 @@ export function TargetPicker({
           const groupLabel = dict.admin?.[group.labelKey] || group.fallbackLabel;
 
           return (
-            <div key={group.key} className="rounded-card border border-border-color bg-bg-primary/40 p-3 space-y-2">
+            <div key={group.key} className="space-y-2">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <GroupIcon className="icon-sm text-accent-red" />

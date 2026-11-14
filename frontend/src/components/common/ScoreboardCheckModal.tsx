@@ -162,24 +162,15 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
       : t.verdicts[match.verdict]
     : '—';
 
+  // The dialog closes with its X; the footer only has what moves the check forward.
   const footer = report ? (
-    <>
-      <Button variant="secondary" onClick={reset}>
-        {t.checkAnother}
-      </Button>
-      <Button variant="primary" onClick={onClose}>
-        {t.close}
-      </Button>
-    </>
+    <Button variant="primary" onClick={reset}>
+      {t.checkAnother}
+    </Button>
   ) : (
-    <>
-      <Button variant="secondary" onClick={onClose} disabled={busy}>
-        {t.close}
-      </Button>
-      <Button variant="primary" onClick={() => { void run(); }} disabled={!file || switchedOff} loading={busy}>
-        {busy ? t.analyzing : t.analyze}
-      </Button>
-    </>
+    <Button variant="primary" onClick={() => { void run(); }} disabled={!file || switchedOff} loading={busy}>
+      {busy ? t.analyzing : t.analyze}
+    </Button>
   );
 
   return (
@@ -190,6 +181,7 @@ export const ScoreboardCheckModal: React.FC<ScoreboardCheckModalProps> = ({ isOp
       title={t.title}
       footer={footer}
       busy={busy}
+      padded
     >
       <div className="space-y-5">
         {error && (

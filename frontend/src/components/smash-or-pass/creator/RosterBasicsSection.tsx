@@ -159,7 +159,7 @@ export function RosterBasicsSection({
           {/* Simple Version Switch */}
           <Tooltip variant="action"
             title={c.simpleVersion}
-            description={hasCandidates ? 'Mode can only be chosen before adding candidates.' : c.simpleVersionDesc}
+            description={hasCandidates ? c.modeLockedHint : c.simpleVersionDesc}
           >
             <LabeledSwitch
               checked={draft.roster_mode === 'simple'}

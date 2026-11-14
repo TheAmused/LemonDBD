@@ -33,7 +33,6 @@ interface UseRosterSubmitOptions {
   entitiesMissing: boolean;
   coverInvalid: boolean;
   resetDraft?: () => void;
-  isSubmittingRef?: React.RefObject<boolean | null> | React.MutableRefObject<boolean>;
   setIsSubmitting?: (submitting: boolean) => void;
 }
 
@@ -54,7 +53,6 @@ export function useRosterSubmit({
   entitiesMissing,
   coverInvalid,
   resetDraft,
-  isSubmittingRef,
   setIsSubmitting,
 }: UseRosterSubmitOptions) {
   const dict = useDictionary();
@@ -75,7 +73,6 @@ export function useRosterSubmit({
     if (nameMissing || entitiesMissing || coverInvalid) return;
 
     setIsSubmitting?.(true);
-    if (isSubmittingRef) isSubmittingRef.current = true;
 
     const trimmedEntities = draft.entities.filter((e) => e.name.trim());
     const rawDoc = {
@@ -83,7 +80,7 @@ export function useRosterSubmit({
       description: draft.description,
       cover_image_url: draft.cover_image_url,
       theme_color: draft.theme_color,
-      category: editingRoster?.category || 'Custom',
+      category: editingRoster?.category || (official ? 'DBD' : 'Custom'),
       is_nsfw: draft.is_nsfw,
       roster_mode: isSimpleMode ? ('simple' as const) : ('full' as const),
       custom_labels: draft.custom_labels,
@@ -96,7 +93,6 @@ export function useRosterSubmit({
     if (!result.ok) {
       setSubmitError(errorMessage(t, result.error));
       setIsSubmitting?.(false);
-      if (isSubmittingRef) isSubmittingRef.current = false;
       return;
     }
 
@@ -115,7 +111,7 @@ export function useRosterSubmit({
             description: result.doc.description || '',
             ...(result.doc.cover_image_url ? { cover_image_url: result.doc.cover_image_url } : {}),
             theme_color: result.doc.theme_color || defaultRosterThemeColor(),
-            category: result.doc.category || 'Custom',
+            category: result.doc.category || (official ? 'DBD' : (editingRoster?.category || 'Custom')),
             is_nsfw: result.doc.is_nsfw || false,
             translations: buildAdminRosterTranslations(rosterTranslations),
             entities: result.doc.entities.map((e, i) => ({
@@ -145,7 +141,6 @@ export function useRosterSubmit({
           setPublishError(errorData.error || c.saveError);
           setPublishing(false);
           setIsSubmitting?.(false);
-          if (isSubmittingRef) isSubmittingRef.current = false;
           return;
         }
         const body: { data: { slug: string } } = await res.json();
@@ -155,7 +150,6 @@ export function useRosterSubmit({
         setPublishError(c.saveError);
         setPublishing(false);
         setIsSubmitting?.(false);
-        if (isSubmittingRef) isSubmittingRef.current = false;
       }
       return;
     }
@@ -165,7 +159,6 @@ export function useRosterSubmit({
       if (!saveResult.ok) {
         setSaveError(saveResult.reason);
         setIsSubmitting?.(false);
-        if (isSubmittingRef) isSubmittingRef.current = false;
         return;
       }
       resetDraft?.();
@@ -178,7 +171,6 @@ export function useRosterSubmit({
     if (!saveResult.ok) {
       setSaveError(saveResult.reason);
       setIsSubmitting?.(false);
-      if (isSubmittingRef) isSubmittingRef.current = false;
       return;
     }
     trackEvent('smash_roster_create', { mode: isSimpleMode ? 'simple' : 'full', nsfw: Boolean(result.doc.is_nsfw) });
@@ -192,7 +184,6 @@ export function useRosterSubmit({
     setSubmitError(null);
     setPublishError(null);
     setIsSubmitting?.(false);
-    if (isSubmittingRef) isSubmittingRef.current = false;
   };
 
   return { submit, attempted, saveError, submitError, publishing, publishError, resetSubmitState };

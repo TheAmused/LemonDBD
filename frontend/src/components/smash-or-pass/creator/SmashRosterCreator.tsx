@@ -84,7 +84,6 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
     setEntityTranslation,
     activeTranslationLocale,
     setActiveTranslationLocale,
-    isSubmittingRef,
     setIsSubmitting,
   } = useRosterDraft({ editId, editingRoster, storeHydrated });
 
@@ -130,7 +129,6 @@ export function SmashRosterCreator({ locale, editId }: SmashRosterCreatorProps) 
     entitiesMissing,
     coverInvalid,
     resetDraft,
-    isSubmittingRef,
     setIsSubmitting,
   });
 

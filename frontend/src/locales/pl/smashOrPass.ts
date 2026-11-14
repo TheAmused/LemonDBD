@@ -417,6 +417,7 @@ export default {
     officialPublicHub: 'Opublikuj jako oficjalną listę (Publiczna w hubie)',
     simpleVersion: 'Wersja prosta',
     simpleVersionDesc: 'Prosta: Szybkie karty + opcjonalne zalety i wady',
+    modeLockedHint: 'Tryb można wybrać tylko przed dodaniem kandydatów.',
     cropCoverTitle: 'Przytnij / zmień kadr okładki',
     cropCoverBadge: 'Przytnij 16:9',
     cropClickPrompt: 'Kliknij, aby przyciąć / zmienić kadr (16:9)',

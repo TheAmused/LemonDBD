@@ -5,26 +5,23 @@
  * - CandidateFormInputs: Form inputs to edit the active candidate's profile, portrait, role and gender.
  * - CandidateTiles: Squished grid of candidates (avatar + name caption) matching the tier list items pattern.
  */
-import { Tabs } from '@/components/common/Tabs';
 import { useRef, useState } from 'react';
 import { Trash2, Upload, Image as ImageIcon } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { sanitizeImageUrl } from '@/utils/smashOrPass/codec';
 import { IMAGE_SIZE_PRESETS, MAX_DATA_IMAGE_CHARS, resizeImageToDataUrl } from '@/utils/imageResize';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
-import { SMASH_ROSTER_LIMITS, TRANSLATABLE_FIELDS, TRANSLATABLE_LOCALES } from '@/utils/smashOrPass/constants';
+import { SMASH_ROSTER_LIMITS, type TRANSLATABLE_FIELDS } from '@/utils/smashOrPass/constants';
 import type { RosterCustomLabels } from '@/types/smashOrPass';
-import { LABEL } from './styles';
 import { RequiredMark } from './RequiredMark';
 import { canonicalGender, genderLabel, termLabel } from '@/utils/smashOrPass/terms';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { CustomDropdown } from '@/components/common/CustomDropdown';
-import { type DraftEntity, type EntityTranslationDraft, TextField, TextAreaField, entityTranslationFieldLabel } from "./EntityEditorParts";
+import { type DraftEntity, type EntityTranslationDraft, TextField, TextAreaField } from "./EntityEditorParts";
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { tip } from '@/components/common/Tooltip';
-
 import { Badge } from '@/components/common/Badge';
 import { Img } from '@/components/common/Img';
 
@@ -57,26 +54,49 @@ export interface CandidateFormInputsProps {
 }
 
 export function CandidateFormInputs({
-      entity,
-      index,
-      onChange,
-      onRemove,
-      showTranslations,
-      translations,
-      onTranslationChange,
-      isSimpleMode = false,
-      customLabels = {},
-      availableRoles = [],
-      availableGenders = [],
-    }: CandidateFormInputsProps) {
+  entity,
+  index,
+  onChange,
+  onRemove,
+  translations,
+  onTranslationChange,
+  isSimpleMode = false,
+  customLabels = {},
+  availableRoles = [],
+  availableGenders = [],
+}: CandidateFormInputsProps) {
   const dict = useDictionary();
   const c = dict.smashOrPass.creator || {};
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [activeLocale, setActiveLocale] = useState<string>(TRANSLATABLE_LOCALES[0]);
+  const [activeLocale, setActiveLocale] = useState<string>('en');
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
   useOnValueChange(entity.key, () => setUploadError(null));
+
+  const isBaseLocale = activeLocale === 'en';
+  const sharedNotice = !isBaseLocale ? (
+    <span className="type-micro text-text-muted/70 font-normal ml-1">({c.sharedFieldNotice})</span>
+  ) : null;
+
+  const getFieldProps = (
+    field: (typeof TRANSLATABLE_FIELDS)[number],
+    baseValue: string,
+    defaultPlaceholder?: string
+  ) => {
+    if (isBaseLocale) {
+      return {
+        value: baseValue,
+        placeholder: defaultPlaceholder,
+        onChange: (v: string) => onChange({ [field]: v }),
+      };
+    }
+    return {
+      value: translations[activeLocale]?.[field] || '',
+      placeholder: baseValue || defaultPlaceholder,
+      onChange: (v: string) => onTranslationChange(activeLocale, field, v),
+    };
+  };
 
   const handlePortraitUpload = async (file: File | undefined) => {
     if (!file) return;
@@ -121,21 +141,36 @@ export function CandidateFormInputs({
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Active candidate header with identity & remove button */}
-      <div className="relative flex items-center justify-between pb-3 border-b border-border-color/60">
-        <div className="w-24 hidden sm:block pointer-events-none" aria-hidden="true" />
-        <div className="flex-1 flex flex-wrap items-center justify-center gap-2 min-w-0 text-center">
+      {/* Active candidate header with identity, language dropdown & remove button */}
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-border-color/60">
+        <div className="flex items-center gap-2 min-w-0">
           <Badge tone="red" size="sm" plain square>
             #{displayIndex}
           </Badge>
-          <h3 className="font-bold text-sm sm:text-base text-text-primary truncate">
+          <h3 className="type-label-lg font-bold text-text-primary truncate">
             {c.editingCandidate}:{' '}
             <span className="text-accent-red">{entity.name.trim() || c.unnamedCandidate}</span>
           </h3>
         </div>
-        <div className="w-24 flex justify-end">
+        <div className="flex items-center gap-2">
+          <span className="type-micro text-text-muted whitespace-nowrap">{c.editingLanguageLabel}:</span>
+          <CustomDropdown<string>
+            value={activeLocale}
+            onChange={(loc) => setActiveLocale(loc)}
+            options={[
+              { value: 'en', label: c.baseLanguageLabel },
+              { value: 'pl', label: 'Polski (PL)' },
+              { value: 'de', label: 'Deutsch (DE)' },
+              { value: 'es', label: 'Español (ES)' },
+              { value: 'ja', label: '日本語 (JA)' },
+            ]}
+            ariaLabel={c.editingLanguageLabel}
+            accent="primary"
+          />
           <Button
-            variant="danger" size="sm" icon
+            variant="danger"
+            size="sm"
+            icon
             onClick={onRemove}
             aria-label={formatMessage((c.removeCandidateAria), { name: entity.name || displayIndex })}
             {...tip(c.removeCandidate, undefined, 'action')}
@@ -195,6 +230,7 @@ export function CandidateFormInputs({
                   {...(c.focalPointHint ? tip(c.focalPointHint, undefined, 'default') : {})}
                 >
                   {c.focalPointLabel}
+                  {sharedNotice}
                 </span>
                 <div
                   className="grid grid-cols-3 gap-1 p-1 rounded-card bg-bg-surface/80 border border-border-color/60"
@@ -243,14 +279,20 @@ export function CandidateFormInputs({
             <label className="block">
               <span className="mb-1 block type-label-xs text-text-secondary">
                 {c.entityNameLabel}
-                <RequiredMark />
+                {isBaseLocale && <RequiredMark />}
               </span>
               <Input
                 fieldSize="md"
-                value={entity.name}
+                value={isBaseLocale ? entity.name : (translations[activeLocale]?.name || '')}
                 maxLength={SMASH_ROSTER_LIMITS.maxEntityName}
-                onChange={(e) => onChange({ name: e.target.value })}
-                placeholder={c.entityNamePlaceholder}
+                onChange={(e) => {
+                  if (isBaseLocale) {
+                    onChange({ name: e.target.value });
+                  } else {
+                    onTranslationChange(activeLocale, 'name', e.target.value);
+                  }
+                }}
+                placeholder={isBaseLocale ? c.entityNamePlaceholder : (entity.name || c.entityNamePlaceholder)}
                 className="font-semibold"
               />
             </label>
@@ -258,6 +300,7 @@ export function CandidateFormInputs({
             <div className="block">
               <label htmlFor={`entity-media-${entity.key}`} className="mb-1 block type-label-xs text-text-secondary">
                 {c.entityMediaLabel}
+                {sharedNotice}
               </label>
               <div className="flex items-center gap-1.5">
                 <Input
@@ -310,6 +353,7 @@ export function CandidateFormInputs({
                 <span className="mb-1 block type-label-xs text-text-secondary">
                   {c.entityRoleLabel}
                   <RequiredMark />
+                  {sharedNotice}
                 </span>
                 <CustomDropdown<string>
                   value={
@@ -334,6 +378,7 @@ export function CandidateFormInputs({
                 <span className="mb-1 block type-label-xs text-text-secondary">
                   {c.entityGenderLabel}
                   <RequiredMark />
+                  {sharedNotice}
                 </span>
                 <CustomDropdown<string>
                   value={
@@ -363,14 +408,14 @@ export function CandidateFormInputs({
         {isSimpleMode && (
           <div className="grid gap-3 sm:grid-cols-2 pt-3 border-t border-border-color/60 max-w-3xl 2xl:max-wide-2k:max-w-4xl wide-2k:max-w-6xl mx-auto w-full">
             <TextField
-              label={c.entityWatermarkLeftLabel}
+              label={<>{c.entityWatermarkLeftLabel}{sharedNotice}</>}
               value={entity.watermark_left}
               max={SMASH_ROSTER_LIMITS.maxWatermark}
               onChange={(v) => onChange({ watermark_left: v })}
               placeholder={c.watermarkLeftPlaceholder}
             />
             <TextField
-              label={c.entityWatermarkRightLabel}
+              label={<>{c.entityWatermarkRightLabel}{sharedNotice}</>}
               value={entity.watermark_right}
               max={SMASH_ROSTER_LIMITS.maxWatermark}
               onChange={(v) => onChange({ watermark_right: v })}
@@ -378,30 +423,23 @@ export function CandidateFormInputs({
             />
             <TextField
               label={customLabels.dating_vibe || c.entityDatingVibeLabel}
-              value={entity.dating_vibe}
               max={SMASH_ROSTER_LIMITS.maxDatingVibe}
-              onChange={(v) => onChange({ dating_vibe: v })}
+              {...getFieldProps('dating_vibe', entity.dating_vibe)}
             />
             <TextField
               label={customLabels.quote || c.entityQuoteLabel}
-              value={entity.quote}
               max={SMASH_ROSTER_LIMITS.maxQuote}
-              onChange={(v) => onChange({ quote: v })}
-              placeholder={c.quotePlaceholder}
+              {...getFieldProps('quote', entity.quote, c.quotePlaceholder)}
             />
             <TextField
               label={customLabels.turn_on || c.entityTurnOnLabel}
-              value={entity.turn_on}
               max={SMASH_ROSTER_LIMITS.maxTurnOn}
-              onChange={(v) => onChange({ turn_on: v })}
-              placeholder={c.turnOnPlaceholder}
+              {...getFieldProps('turn_on', entity.turn_on, c.turnOnPlaceholder)}
             />
             <TextField
               label={customLabels.dealbreaker || c.entityDealbreakerLabel}
-              value={entity.dealbreaker}
               max={SMASH_ROSTER_LIMITS.maxDealbreaker}
-              onChange={(v) => onChange({ dealbreaker: v })}
-              placeholder={c.dealbreakerPlaceholder}
+              {...getFieldProps('dealbreaker', entity.dealbreaker, c.dealbreakerPlaceholder)}
             />
           </div>
         )}
@@ -409,68 +447,79 @@ export function CandidateFormInputs({
         {/* Full Mode: Profile Details directly visible */}
         {!isSimpleMode && (
           <div className="grid gap-3 sm:grid-cols-2 pt-2 border-t border-border-color/40 max-w-3xl 2xl:max-wide-2k:max-w-4xl wide-2k:max-w-6xl mx-auto w-full">
-            <TextField label={c.entityRealNameLabel} value={entity.real_name} max={SMASH_ROSTER_LIMITS.maxRealName} onChange={(v) => onChange({ real_name: v })} />
-            <TextField label={customLabels.archetype || c.entityArchetypeLabel} value={entity.archetype} max={SMASH_ROSTER_LIMITS.maxArchetype} onChange={(v) => onChange({ archetype: v })} />
-            <TextField label={c.entityTaglineLabel} value={entity.tagline} max={SMASH_ROSTER_LIMITS.maxTagline} onChange={(v) => onChange({ tagline: v })} placeholder={c.entityTaglinePlaceholder} />
-            <TextField label={customLabels.quote || c.entityQuoteLabel} value={entity.quote} max={SMASH_ROSTER_LIMITS.maxQuote} onChange={(v) => onChange({ quote: v })} />
-            <TextAreaField label={c.entityBioLabel} value={entity.bio} max={SMASH_ROSTER_LIMITS.maxBio} onChange={(v) => onChange({ bio: v })} full />
-            <TextAreaField label={customLabels.meme || c.entityMemeLabel} value={entity.meme} max={SMASH_ROSTER_LIMITS.maxMeme} onChange={(v) => onChange({ meme: v })} full />
-            <TextField label={customLabels.turn_on || c.entityTurnOnLabel} value={entity.turn_on} max={SMASH_ROSTER_LIMITS.maxTurnOn} onChange={(v) => onChange({ turn_on: v })} />
-            <TextField label={customLabels.dealbreaker || c.entityDealbreakerLabel} value={entity.dealbreaker} max={SMASH_ROSTER_LIMITS.maxDealbreaker} onChange={(v) => onChange({ dealbreaker: v })} />
-            <TextField label={customLabels.dating_vibe || c.entityDatingVibeLabel} value={entity.dating_vibe} max={SMASH_ROSTER_LIMITS.maxDatingVibe} onChange={(v) => onChange({ dating_vibe: v })} full />
+            <TextField
+              label={<>{c.entityRealNameLabel}{sharedNotice}</>}
+              value={entity.real_name}
+              max={SMASH_ROSTER_LIMITS.maxRealName}
+              onChange={(v) => onChange({ real_name: v })}
+            />
+            <TextField
+              label={customLabels.archetype || c.entityArchetypeLabel}
+              max={SMASH_ROSTER_LIMITS.maxArchetype}
+              {...getFieldProps('archetype', entity.archetype)}
+            />
+            <TextField
+              label={c.entityTaglineLabel}
+              max={SMASH_ROSTER_LIMITS.maxTagline}
+              {...getFieldProps('tagline', entity.tagline, c.entityTaglinePlaceholder)}
+            />
+            <TextField
+              label={customLabels.quote || c.entityQuoteLabel}
+              max={SMASH_ROSTER_LIMITS.maxQuote}
+              {...getFieldProps('quote', entity.quote, c.quotePlaceholder)}
+            />
+            <TextAreaField
+              label={c.entityBioLabel}
+              max={SMASH_ROSTER_LIMITS.maxBio}
+              {...getFieldProps('bio', entity.bio)}
+              full
+            />
+            <TextAreaField
+              label={customLabels.meme || c.entityMemeLabel}
+              max={SMASH_ROSTER_LIMITS.maxMeme}
+              {...getFieldProps('meme', entity.meme)}
+              full
+            />
+            <TextField
+              label={customLabels.turn_on || c.entityTurnOnLabel}
+              max={SMASH_ROSTER_LIMITS.maxTurnOn}
+              {...getFieldProps('turn_on', entity.turn_on, c.turnOnPlaceholder)}
+            />
+            <TextField
+              label={customLabels.dealbreaker || c.entityDealbreakerLabel}
+              max={SMASH_ROSTER_LIMITS.maxDealbreaker}
+              {...getFieldProps('dealbreaker', entity.dealbreaker, c.dealbreakerPlaceholder)}
+            />
+            <TextField
+              label={customLabels.dating_vibe || c.entityDatingVibeLabel}
+              max={SMASH_ROSTER_LIMITS.maxDatingVibe}
+              {...getFieldProps('dating_vibe', entity.dating_vibe)}
+              full
+            />
             <TextAreaField
               label={c.entityRedFlagsLabel}
-              value={entity.red_flags}
               max={SMASH_ROSTER_LIMITS.maxFlagText * SMASH_ROSTER_LIMITS.maxFlags}
-              onChange={(v) => onChange({ red_flags: v })}
+              {...getFieldProps('red_flags', entity.red_flags)}
             />
             <TextAreaField
               label={c.entityGreenFlagsLabel}
-              value={entity.green_flags}
               max={SMASH_ROSTER_LIMITS.maxFlagText * SMASH_ROSTER_LIMITS.maxFlags}
-              onChange={(v) => onChange({ green_flags: v })}
+              {...getFieldProps('green_flags', entity.green_flags)}
             />
-            <TextField label={c.entityWatermarkLeftLabel} value={entity.watermark_left} max={SMASH_ROSTER_LIMITS.maxWatermark} onChange={(v) => onChange({ watermark_left: v })} />
-            <TextField label={c.entityWatermarkRightLabel} value={entity.watermark_right} max={SMASH_ROSTER_LIMITS.maxWatermark} onChange={(v) => onChange({ watermark_right: v })} />
-
-            {showTranslations && (
-              <div className="sm:col-span-2 flex flex-col gap-2 rounded-card border border-accent-amber/30 bg-accent-amber/5 p-3">
-                <span className={LABEL}>{c.translationsHeading}</span>
-                <Tabs
-                  ariaLabel={c.translationsHeading}
-                  value={activeLocale}
-                  onChange={setActiveLocale}
-                  panels={false}
-                  variant="boxed"
-                  size="sm"
-                  wrap
-                  tabs={TRANSLATABLE_LOCALES.map((loc) => ({ value: loc, label: loc }))}
-                />
-                <div className="grid gap-2 sm:grid-cols-2">
-                  {TRANSLATABLE_FIELDS.filter((f) => f !== 'red_flags' && f !== 'green_flags').map((field) => (
-                    <TextField
-                      key={field}
-                      label={entityTranslationFieldLabel(c, field)}
-                      value={translations[activeLocale]?.[field] || ''}
-                      max={2000}
-                      onChange={(v) => onTranslationChange(activeLocale, field, v)}
-                    />
-                  ))}
-                  <TextAreaField
-                    label={`${c.entityRedFlagsLabel} (${activeLocale})`}
-                    value={translations[activeLocale]?.red_flags || ''}
-                    max={4000}
-                    onChange={(v) => onTranslationChange(activeLocale, 'red_flags', v)}
-                  />
-                  <TextAreaField
-                    label={`${c.entityGreenFlagsLabel} (${activeLocale})`}
-                    value={translations[activeLocale]?.green_flags || ''}
-                    max={4000}
-                    onChange={(v) => onTranslationChange(activeLocale, 'green_flags', v)}
-                  />
-                </div>
-              </div>
-            )}
+            <TextField
+              label={<>{c.entityWatermarkLeftLabel}{sharedNotice}</>}
+              value={entity.watermark_left}
+              max={SMASH_ROSTER_LIMITS.maxWatermark}
+              onChange={(v) => onChange({ watermark_left: v })}
+              placeholder={c.watermarkLeftPlaceholder}
+            />
+            <TextField
+              label={<>{c.entityWatermarkRightLabel}{sharedNotice}</>}
+              value={entity.watermark_right}
+              max={SMASH_ROSTER_LIMITS.maxWatermark}
+              onChange={(v) => onChange({ watermark_right: v })}
+              placeholder={c.watermarkRightPlaceholder}
+            />
           </div>
         )}
       </div>

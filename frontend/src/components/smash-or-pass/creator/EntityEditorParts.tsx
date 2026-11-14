@@ -14,12 +14,15 @@ import { Badge } from '@/components/common/Badge';
 
 import { Button } from '@/components/common/Button';
 import { Img } from '@/components/common/Img';
+import type { MediaDisplay } from '@/types/smashOrPass';
+
 export interface DraftEntity {
   /** Stable client-only key -- never sent anywhere, just for React lists and
    * keying this entity's translation overrides. */
   key: string;
   name: string;
   media_url: string;
+  media_display?: MediaDisplay | null;
   role: string;
   gender: string;
   real_name: string;
@@ -42,6 +45,7 @@ export function emptyDraftEntity(key: string): DraftEntity {
     key,
     name: '',
     media_url: '',
+    media_display: null,
     role: '',
     gender: '',
     real_name: '',

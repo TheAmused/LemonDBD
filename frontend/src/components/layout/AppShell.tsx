@@ -15,16 +15,17 @@ import { Sidebar } from '@/components/Sidebar';
 import { useLocale } from '@/context/DictionaryContext';
 import { shellClasses, shellForPathname, type ShellSpec } from '@/components/layout/shellRoutes';
 
-type SetShellOverride = (spec: ShellSpec | null) => void;
+type SetShellOverride = (spec: ShellSpec | false | null) => void;
 
 const ShellOverrideContext = createContext<SetShellOverride | null>(null);
 
 /**
  * Lets a component that replaces the page (the error boundary, a rewritten "blocked" page) say
- * which shell it needs, whatever URL it was reached through. `spec` must be a stable reference
- * (a module constant). Applied before paint; removed when the component unmounts.
+ * which shell it needs, whatever URL it was reached through (`false`: none, the page owns the whole
+ * screen). `spec` must be a stable reference (a module constant). Applied before paint; removed when
+ * the component unmounts.
  */
-export function useShellOverride(spec: ShellSpec): void {
+export function useShellOverride(spec: ShellSpec | false): void {
   const setOverride = useContext(ShellOverrideContext);
   useLayoutEffect(() => {
     if (!setOverride) return undefined;
@@ -36,7 +37,7 @@ export function useShellOverride(spec: ShellSpec): void {
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || '/';
   const locale = useLocale();
-  const [override, setOverride] = useState<ShellSpec | null>(null);
+  const [override, setOverride] = useState<ShellSpec | false | null>(null);
   const mainRef = useRef<HTMLElement>(null);
 
   const routeShell = useMemo(() => shellForPathname(pathname).shell, [pathname]);

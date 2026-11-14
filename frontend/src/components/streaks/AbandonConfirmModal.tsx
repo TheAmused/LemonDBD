@@ -24,8 +24,6 @@ export const AbandonConfirmModal: React.FC<AbandonConfirmModalProps> = ({ open, 
     message={dict.streaks.abandonConfirmPrompt}
     confirmLabel={dict.streaks.abandonConfirm}
     size="sm"
-    closeButton="header"
-    closeButtonAriaLabel={dict.modal.close}
     busy={busy}
     onConfirm={onConfirm}
     onCancel={() => {

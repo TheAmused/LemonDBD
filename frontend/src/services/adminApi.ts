@@ -21,6 +21,7 @@ import type {
   ContentReportAction,
   MaintenanceJob,
   MaintenanceRun,
+  MaintenanceState,
   NewUser,
   Reauth,
   SystemCheck,
@@ -91,6 +92,12 @@ export const saveSettings = (changes: Record<string, string | number | boolean |
     settings: changes,
     ...(options.confirmRisky ? { confirm_risky: true, reason: options.reason ?? '' } : {}),
   });
+
+/* Maintenance mode */
+export const fetchMaintenanceMode = () => apiRequest<MaintenanceState>('/admin/maintenance-mode');
+/** `startsAt` / `until` are UTC ISO times or empty: empty start means now, empty end means until it is stopped. */
+export const saveMaintenanceMode = (enabled: boolean, startsAt = '', until = '') =>
+  apiRequest<MaintenanceState>('/admin/maintenance-mode', 'PUT', { enabled, starts_at: startsAt || null, until: until || null });
 
 /* Tools */
 export const fetchSystemChecks = () => apiRequest<{ checks: SystemCheck[] }>('/admin/system');

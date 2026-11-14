@@ -147,7 +147,7 @@ export function AdminPanelClient() {
         title={dict.admin.unsavedSettingsTitle}
         message={dict.admin.unsavedSettingsMessage}
         confirmLabel={dict.admin.unsavedSettingsLeave}
-        cancelLabel={dict.admin.unsavedSettingsStay}
+        alternativeLabel={dict.admin.unsavedSettingsStay}
         onConfirm={() => {
           if (leavingTo) setTabNow(leavingTo);
           setLeavingTo(null);

@@ -28,9 +28,11 @@ export const ROUTE_BACKGROUND_EFFECTS: ReadonlyArray<{ prefix: readonly string[]
   { prefix: ['about'], effect: 'campfire' },
   { prefix: ['achievements'], effect: 'campfire' },
   { prefix: ['admin'], effect: 'campfire' },
+  { prefix: ['admin-entry'], effect: 'campfire' },
   { prefix: ['blocked'], effect: 'campfire' },
   { prefix: ['characters'], effect: 'campfire' },  // list + [slug] detail
   { prefix: ['forbidden'], effect: 'campfire' },
+  { prefix: ['maintenance'], effect: 'campfire' },
   { prefix: ['maps'], effect: 'campfire' },
   { prefix: ['minigames'], effect: 'campfire' },  // hub
   { prefix: ['minigames', 'creator'], effect: 'campfire' },

@@ -17,6 +17,10 @@ export default {
     title: 'Seite gesperrt',
     text: 'Diese Seite ist für Besucher derzeit nicht geöffnet.',
   },
+  maintenance: {
+    title: "Gleich zurück",
+    text: "Die Seite wird gerade gewartet. Danke für deine Geduld.",
+  },
   error: {
     code: 'Fehler',
     title: 'Etwas ist schiefgelaufen',

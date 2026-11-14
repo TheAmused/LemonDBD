@@ -16,6 +16,7 @@ import { ContentRevocationSync } from '@/components/common/ContentRevocationSync
 import { WarningModal } from '@/components/moderation/WarningModal';
 import { AppBackground } from '@/components/layout/AppBackground';
 import { AppShell } from '@/components/layout/AppShell';
+import { MaintenanceWatcher } from '@/components/layout/MaintenanceWatcher';
 import { SiteBannerGate } from '@/components/layout/SiteBannerGate';
 import { SiteConfigProvider } from '@/context/SiteConfigContext';
 import '@/app/globals.css';
@@ -99,6 +100,7 @@ export default async function RootLayout({
                   <TooltipProvider />
                   <FormValidationProvider />
                   <ContentRevocationSync />
+                  <MaintenanceWatcher />
                   <WarningModal />
                 </LocaleDictionaryProvider>
               </SiteConfigProvider>

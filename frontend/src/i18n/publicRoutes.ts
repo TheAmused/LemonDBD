@@ -19,4 +19,4 @@ export const PUBLIC_ROUTES = [
 ] as const;
 
 /** Paths crawlers are asked to skip (every locale), see app/robots.ts. */
-export const PRIVATE_ROUTE_PREFIXES = ['/admin', '/user', '/welcome', '/reset-password', '/blocked', '/forbidden'] as const;
+export const PRIVATE_ROUTE_PREFIXES = ['/admin', '/user', '/welcome', '/reset-password', '/blocked', '/forbidden', '/maintenance'] as const;

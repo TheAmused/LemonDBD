@@ -522,7 +522,7 @@ function SettingsPanel({ notify, t, refreshKey, onDirtyChange }: Omit<SettingsSe
           </div>
         }
         confirmLabel={t.configRiskConfirm}
-        cancelLabel={t.configDiscard}
+        alternativeLabel={t.configDiscard}
         busyLabel={t.configRiskConfirm}
         busy={saving}
         confirmDisabled={!reasonOk}

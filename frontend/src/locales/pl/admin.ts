@@ -357,6 +357,8 @@ export default {
   auditTargetMaintenance: "Zadanie konserwacyjne",
   auditTargetDatabase: "Baza danych",
   auditActionMaintenanceRun: "Uruchomiono zadanie konserwacyjne",
+  auditTargetMaintenanceMode: "Tryb konserwacji",
+  auditActionMaintenanceModeUpdated: "Zmieniono tryb konserwacji",
   auditActionTierListCreated: "Opublikowano tier listę",
   auditActionTierListUpdated: "Zaktualizowano tier listę",
   auditActionRosterCreated: "Opublikowano listę",

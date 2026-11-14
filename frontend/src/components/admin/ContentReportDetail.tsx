@@ -242,7 +242,6 @@ export function ContentReportDetail({ detail, resolving, onResolve, onShowUser }
         title={dict.admin.contentReportBanTitle}
         message={authorDecision ? `${dict.admin.contentReportBanMessage} ${authorConsequence}` : dict.admin.contentReportBanMessage}
         confirmLabel={dict.admin.contentReportBanAction}
-        cancelLabel={dict.admin.cancel}
         busy={resolving}
         onConfirm={() => { void runBan(); }}
         onCancel={() => setConfirmBan(false)}

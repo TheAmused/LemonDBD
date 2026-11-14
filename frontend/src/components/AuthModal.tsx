@@ -31,9 +31,13 @@ interface AuthModalProps {
   onClose: () => void;
   initialMode?: 'login' | 'register';
   verifyEmailFor?: string;
+  /** The admin door: sign-in only (no sign-up, reset or Google), and the server refuses any account that is not an admin. */
+  adminOnly?: boolean;
+  /** Called instead of `onClose` once a sign-in has completed, so a page can send the visitor on. */
+  onSignedIn?: () => void;
 }
 
-export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'login', verifyEmailFor }) => {
+export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMode = 'login', verifyEmailFor, adminOnly = false, onSignedIn }) => {
   const dict = useDictionary();
   const { login, loginWithGoogle, register, forgotPassword } = useAuth();
   const { features, limits } = useSiteConfig();
@@ -83,6 +87,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
   // Signed in with a confirmed address: close, and send an account that has not finished
   // onboarding to the welcome page.
   const closeSignedIn = (signedIn?: Pick<UserProfile, 'onboarding_completed_at'> | null) => {
+    if (onSignedIn) {
+      onSignedIn();
+      return;
+    }
     onClose();
     if (signedIn && !signedIn.onboarding_completed_at) router.push(`/${locale}/welcome`);
   };
@@ -99,7 +107,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
     if (signedIn && !signedIn.is_verified) {
       setNotice({ type: 'verify-reminder', email: signedIn.email });
     } else {
-      onClose();
+      (onSignedIn ?? onClose)();
     }
   };
 
@@ -128,6 +136,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
         const res = await login(loginName, password, {
           website_trap: honeypotValue,
           altcha: altchaPayload,
+          ...(adminOnly ? { admin_only: true } : {}),
         });
         if (res.twoFactorToken) {
           setPassword('');
@@ -294,7 +303,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
             />
           )}
 
-          {mode === 'login' && dict.user.forgotPasswordLink && (
+          {mode === 'login' && !adminOnly && dict.user.forgotPasswordLink && (
             <div className="text-right -mt-1.5">
               <Button
                 type="button"
@@ -342,13 +351,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialMo
         </form>
       )}
 
-      {showAuthBody && mode !== 'forgot' && googleClientId && (
+      {showAuthBody && mode !== 'forgot' && !adminOnly && googleClientId && (
         <GoogleSignInSection clientId={googleClientId} onCredential={(credential) => { void handleGoogleCredential(credential); }} />
       )}
 
-      {showAuthBody && mode !== 'forgot' && demoAccounts.length > 0 && <DemoAccountButtons onFill={handleFillDemo} />}
+      {showAuthBody && mode !== 'forgot' && demoAccounts.length > 0 && <DemoAccountButtons onFill={handleFillDemo} adminOnly={adminOnly} />}
 
-      {showAuthBody && <ModeSwitchLink mode={mode} onSwitch={switchMode} />}
+      {showAuthBody && !adminOnly && <ModeSwitchLink mode={mode} onSwitch={switchMode} />}
 
       <LegalDocModal doc={legalDoc} onClose={() => setLegalDoc(null)} />
     </Modal>

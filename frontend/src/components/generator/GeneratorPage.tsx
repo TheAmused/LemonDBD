@@ -463,7 +463,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
         }
         confirmLabel={dict.generator.lowPoolResetButton}
         confirmIcon={<RotateCcw className="icon-md" />}
-        cancelLabel={dict.generator.lowPoolCloseButton}
+        alternativeLabel={dict.generator.lowPoolCloseButton}
         onConfirm={handleResetDrawnPerksOnly}
         onCancel={() => setShowLowPoolWarning(false)}
       />

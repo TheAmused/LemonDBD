@@ -246,3 +246,15 @@ export interface MaintenanceJob {
   key: string;
   last_run: MaintenanceRun | null;
 }
+
+/* Maintenance mode (Tools tab) */
+export type MaintenanceStatus = 'off' | 'scheduled' | 'active' | 'ended';
+
+export interface MaintenanceState {
+  status: MaintenanceStatus;
+  enabled: boolean;
+  /** UTC ISO times; null when no window was set. */
+  starts_at: string | null;
+  until: string | null;
+}
+

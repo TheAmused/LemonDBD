@@ -153,11 +153,13 @@ def _export_maps(
             # `source_label` are read through `source_id`.
             "callout_image_url": r.callout_image_url,
             "callout_image_local_path": r.callout_image_local_path,
+            "photo_local_path": r.photo_local_path,
             "is_retired": bool(r.is_retired),
             "translations": r.translations or {},
         })
     for row in map_list:
         with_asset(row, "callout_image_local_path", static_dir, include_assets)
+        with_asset(row, "photo_local_path", static_dir, include_assets)
     export_data["maps"] = map_list
     counts["maps"] = len(map_list)
 

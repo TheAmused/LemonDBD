@@ -24,16 +24,21 @@ import {
 } from '@/utils/tierLists/creator';
 import { createCustomListId, saveCustomList } from '@/utils/tierLists/storage';
 import { acknowledgeNsfwContent } from '@/utils/nsfwAck';
-import { LABEL, TOUCH_FIELD } from '../styles';
 import { CreatorItems } from './CreatorItems';
 import { CreatorPreviewModal } from './CreatorPreview';
 import { type IncomingItem, ItemSources } from './ItemSources';
 import { LadderEditor } from './LadderEditor';
-import { LabeledSwitch } from '@/components/common/Switch';
-import { NsfwSwitch } from '@/components/common/NsfwSwitch';
 import { Button } from '@/components/common/Button';
-import { Input } from '@/components/common/Field';
-import { type Draft, readDraft, DRAFT_KEY, Section, STORAGE_WARN_BYTES, formatBytes, Feedback } from './TierListCreatorParts';
+import {
+  type Draft,
+  readDraft,
+  DRAFT_KEY,
+  Section,
+  STORAGE_WARN_BYTES,
+  formatBytes,
+  Feedback,
+  TierListBasicsSection,
+} from './TierListCreatorParts';
 import { formatMessage } from '@/utils/i18nFormat';
 import dynamic from 'next/dynamic';
 import { useDictionary } from '@/context/DictionaryContext';
@@ -42,8 +47,8 @@ import { useIsClient } from '@/hooks/useIsClient';
 import { trackEvent } from '@/utils/analytics';
 import { buildListCreateProps } from '../tierListTracking';
 
-const ImageUploadDropzone = dynamic(
-  () => import('@/components/common/ImageUploadDropzone').then((m) => m.ImageUploadDropzone),
+const CoverImageCropModal = dynamic(
+  () => import('@/components/smash-or-pass/creator/CoverImageCropModal').then((m) => m.CoverImageCropModal),
   { ssr: false }
 );
 
@@ -93,6 +98,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
   const [official, setOfficial] = useState<boolean>(false);
   const [publishing, setPublishing] = useState<boolean>(false);
   const [publishError, setPublishError] = useState<string | null>(null);
+  const [isCropModalOpen, setIsCropModalOpen] = useState<boolean>(false);
 
   const isEditing = Boolean(editId || officialSlug);
 
@@ -414,62 +420,18 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
 
       {/* THE BASICS BLOCK */}
       <div className={WORKSPACE_COLUMN}>
-        <Section title={c.stepBasics}>
-          <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
-            <div className="flex flex-wrap items-center gap-x-8 gap-y-3 md:col-span-2">
-              <NsfwSwitch
-                checked={draft.is_nsfw}
-                onChange={(checked) => patch({ is_nsfw: checked })}
-                label={t.nsfw.label}
-                hint={t.nsfw.hint}
-              />
-              {isAdmin && !officialSlug && (
-                <LabeledSwitch checked={official} onChange={setOfficial} label={c.official} />
-              )}
-              {isAdmin && (official || Boolean(officialSlug)) && (
-                <LabeledSwitch
-                  checked={draft.is_active ?? true}
-                  onChange={(checked) => patch({ is_active: checked })}
-                  label={c.publishedLabel}
-                />
-              )}
-            </div>
-            <label className="md:col-span-1">
-              <span className={LABEL}>
-                {c.titleLabel}
-                <span className="text-accent-red"> *</span>
-              </span>
-              <Input
-                value={draft.title}
-                maxLength={TIER_LIST_LIMITS.maxTitle}
-                onChange={(e) => patch({ title: e.target.value })}
-                invalid={attempted && titleMissing}
-                className={cn(TOUCH_FIELD, '2xl:min-h-hit-xl 2xl:text-base')}
-              />
-            </label>
-            <label className="md:col-span-1">
-              <span className={LABEL}>{c.descriptionLabel}</span>
-              <Input
-                value={draft.description}
-                maxLength={TIER_LIST_LIMITS.maxDescription}
-                onChange={(e) => patch({ description: e.target.value })}
-                className={cn(TOUCH_FIELD, '2xl:min-h-hit-xl 2xl:text-base')}
-              />
-            </label>
-            <div className="md:col-span-2">
-              <ImageUploadDropzone
-                value={draft.backgroundImage}
-                onChange={(val) => patch({ backgroundImage: val })}
-                label={c.backgroundImageLabel}
-                placeholder={c.backgroundImagePlaceholder}
-                hint={isAdmin ? c.backgroundImageHint : undefined}
-                invalid={attempted && backgroundInvalid}
-                invalidMessage={t.invalidImage}
-                allowFileUpload={isAdmin}
-              />
-            </div>
-          </div>
-        </Section>
+        <TierListBasicsSection
+          draft={draft}
+          patch={patch}
+          attempted={attempted}
+          titleMissing={titleMissing}
+          backgroundInvalid={backgroundInvalid}
+          isAdmin={isAdmin}
+          officialSlug={officialSlug}
+          official={official}
+          onOfficialChange={setOfficial}
+          onOpenCrop={() => setIsCropModalOpen(true)}
+        />
       </div>
 
       {/* TIERS BLOCK */}
@@ -551,6 +513,20 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
         isNsfw={draft.is_nsfw}
         locale={locale}
       />
+
+      {/* Background Image 16:9 Viewport Crop Modal */}
+      {isAdmin && (
+        <CoverImageCropModal
+          isOpen={isCropModalOpen}
+          onClose={() => setIsCropModalOpen(false)}
+          imageUrl={draft.backgroundImage}
+          isAdmin={isAdmin}
+          onApplyCrop={(croppedUrl) => {
+            patch({ backgroundImage: croppedUrl });
+            setIsCropModalOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 }

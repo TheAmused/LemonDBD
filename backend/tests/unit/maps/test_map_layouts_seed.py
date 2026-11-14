@@ -118,6 +118,24 @@ def test_macmillan_variant_callout_images_exist() -> None:
 
 
 @pytest.mark.unit
+def test_every_lemondbd_map_names_a_photo() -> None:
+    """The photo path is the explicit link; a variant shares the file of its base map."""
+    for m in _maps():
+        photo = m.get("photo_local_path", "")
+        assert photo.startswith("maps/photos/") and photo.endswith(".webp"), m["name"]
+
+
+@pytest.mark.unit
+@pytest.mark.skipif(
+    not (STATIC / "maps" / "photos").is_dir(),
+    reason="map photos are gitignored (downloaded), so a clean checkout such as CI has none",
+)
+def test_map_photo_files_exist() -> None:
+    for m in _maps():
+        assert (STATIC / m["photo_local_path"]).is_file(), m["name"]
+
+
+@pytest.mark.unit
 def test_map_ids_are_unique_and_contiguous() -> None:
     lemon_ids = sorted(m["id"] for m in _maps())
     assert lemon_ids == list(range(1, len(lemon_ids) + 1))

@@ -4,11 +4,15 @@
 import React, { useState } from 'react';
 import { ImageOff } from 'lucide-react';
 import type { MapRealm } from '@/types/map';
-import { getMapThumbSrc } from '@/utils/mapUtils';
+import { getMapThumbSrc, isRemovedMapVariation } from '@/utils/mapUtils';
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
 import { useDictionary } from '@/context/DictionaryContext';
 import { cn } from '@/utils/cn';
+
+// A callout image is nearly square and shown whole; a photo is 3:2 and fills a wider frame.
+const CALLOUT_FRAME = 'h-24 w-24 sm:h-36 sm:w-36 md:h-40 md:w-40';
+const PHOTO_FRAME = 'aspect-[3/2] w-24 sm:w-44 md:w-52';
 
 export interface MapCardProps {
   map: MapRealm;
@@ -19,8 +23,12 @@ export interface MapCardProps {
 export const MapCard: React.FC<MapCardProps> = ({ map, backendBase, onSelect }) => {
   const dict = useDictionary();
   const [imageFailed, setImageFailed] = useState(false);
-  const imageSrc = getMapThumbSrc(map, backendBase);
-  const retired = Boolean(map.is_retired);
+  // A photo missing on this server (the files are not in git) falls back to the callout image.
+  const [photoFailed, setPhotoFailed] = useState(false);
+  const showPhoto = Boolean(map.photo_local_path) && !photoFailed;
+  const imageSrc = getMapThumbSrc(showPhoto ? map : { ...map, photo_local_path: undefined }, backendBase);
+  // A map taken out of the game, or a variation of one that no longer exists: both are greyed, and both open.
+  const retired = Boolean(map.is_retired) || isRemovedMapVariation(map);
 
   return (
     <TileButton
@@ -33,15 +41,15 @@ export const MapCard: React.FC<MapCardProps> = ({ map, backendBase, onSelect }) 
       )}
       data-testid={`map-card-${map.id}`}
     >
-      <div className="h-24 w-24 sm:h-36 sm:w-36 md:h-40 md:w-40 overflow-hidden rounded-card bg-bg-elevated flex items-center justify-center">
+      <div className={cn(showPhoto ? PHOTO_FRAME : CALLOUT_FRAME, 'overflow-hidden rounded-card bg-bg-elevated flex items-center justify-center')}>
         {imageSrc && !imageFailed ? (
           <Img
             src={imageSrc}
             alt={map.name}
             loading="lazy"
             decoding="async"
-            className="h-full w-full object-contain"
-            onError={() => setImageFailed(true)}
+            className={cn('h-full w-full', showPhoto ? 'object-cover' : 'object-contain')}
+            onError={() => (showPhoto ? setPhotoFailed(true) : setImageFailed(true))}
           />
         ) : (
           <ImageOff className="h-8 w-8 text-text-muted" />

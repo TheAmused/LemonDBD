@@ -222,6 +222,7 @@ def test_map_realm_to_dict_keys_completeness(db_session: Session) -> None:
         "source_label",
         "callout_image_url",
         "callout_image_local_path",
+        "photo_local_path",
         "image_url",
         "layout_type",
         "jungle_gyms_count",
@@ -236,6 +237,26 @@ def test_map_realm_to_dict_keys_completeness(db_session: Session) -> None:
     assert output["source"] == "hens333"
     assert output["source_label"] == "Hens333 12-Clock Callouts"
     assert output["realm"] == "Gideon Meat Plant"
+    assert output["photo_local_path"] == ""
+
+
+@pytest.mark.unit
+def test_map_realm_to_dict_returns_the_photo_path(db_session: Session) -> None:
+    realm = Realm(name="Coldwind Farm")
+    source = MapSource(code="lemondbd", label="LemonDBD")
+    db_session.add_all([realm, source])
+    db_session.flush()
+
+    coal_tower_ii = MapRealm(
+        name="Coal Tower II",
+        realm_id=realm.id,
+        source_id=source.id,
+        photo_local_path="maps/photos/the_macmillan_estate/coal_tower.webp",
+    )
+    db_session.add(coal_tower_ii)
+    db_session.commit()
+
+    assert coal_tower_ii.to_dict()["photo_local_path"] == "maps/photos/the_macmillan_estate/coal_tower.webp"
 
 
 @pytest.mark.unit

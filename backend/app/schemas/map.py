@@ -55,6 +55,7 @@ class MapRealmBase(BaseModel):
     description: str | None = None
     callout_image_url: str | None = Field(None, max_length=500)
     callout_image_local_path: str | None = Field(None, max_length=255)
+    photo_local_path: str | None = Field(None, max_length=255)
     layout_type: str | None = DEFAULT_LAYOUT_TYPE
     pallet_density: str | None = DEFAULT_PALLET_DENSITY
     jungle_gyms_count: int | None = DEFAULT_JUNGLE_GYMS
@@ -80,6 +81,7 @@ class MapRealmResponse(BaseModel):
     source_label: str = DEFAULT_SOURCE_LABEL
     callout_image_url: str = ""
     callout_image_local_path: str = ""
+    photo_local_path: str = ""
     image_url: str = ""
     layout_type: str = DEFAULT_LAYOUT_TYPE
     pallet_density: str = DEFAULT_PALLET_DENSITY

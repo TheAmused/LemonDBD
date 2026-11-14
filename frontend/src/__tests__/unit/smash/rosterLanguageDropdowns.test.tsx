@@ -31,7 +31,7 @@ describe('Smash Roster Creator Unified Language Dropdowns', () => {
           index={0}
           onChange={(patch) => patches.push(patch)}
           onRemove={() => {}}
-          showTranslations={false}
+          showTranslations={true}
           translations={{}}
           onTranslationChange={(locale, field, value) => {
             translationChanges.push({ locale, field, value });
@@ -69,7 +69,7 @@ describe('Smash Roster Creator Unified Language Dropdowns', () => {
       assert.equal(translationChanges.length, 0, 'No translation change should fire when activeLocale is en');
     });
 
-    it('when switching locale to pl, falls back to English values as placeholders when untranslated, and typing invokes onTranslationChange', () => {
+    it('when switching locale to pl, falls back to English values as placeholders when untranslated, and candidate name is canonical/shared', () => {
       const patches: Array<Partial<DraftEntity>> = [];
       const translationChanges: Array<{ locale: string; field: string; value: string }> = [];
 
@@ -86,7 +86,7 @@ describe('Smash Roster Creator Unified Language Dropdowns', () => {
           index={0}
           onChange={(patch) => patches.push(patch)}
           onRemove={() => {}}
-          showTranslations={false}
+          showTranslations={true}
           translations={{}}
           onTranslationChange={(locale, field, value) => {
             translationChanges.push({ locale, field, value });
@@ -104,27 +104,24 @@ describe('Smash Roster Creator Unified Language Dropdowns', () => {
       assert.ok(polishOption, 'Polski (PL) option should be visible in dropdown menu');
       fireEvent.click(polishOption);
 
-      // Inputs should have empty value and English fallback as placeholder
+      // Candidate name is canonical: it displays base name and shows the shared field notice
       const nameLabel = view.getByText(c.entityNameLabel);
+      assert.ok(nameLabel.textContent?.includes(c.sharedFieldNotice), 'Name label should show shared notice when activeLocale is not en');
       const nameInput = nameLabel.closest('label')?.querySelector('input');
       assert.ok(nameInput);
-      assert.equal(nameInput.value, '', 'Polish name translation is not yet set');
-      assert.equal(nameInput.placeholder, 'Claudette Morel', 'Fallback placeholder should be the English name');
+      assert.equal(nameInput.value, 'Claudette Morel', 'Canonical name remains displayed in Polish mode');
 
+      // Translatable field (archetype) has empty value and English fallback as placeholder
       const archetypeLabel = view.getByText(c.entityArchetypeLabel);
       const archetypeInput = archetypeLabel.closest('label')?.querySelector('input');
       assert.ok(archetypeInput);
       assert.equal(archetypeInput.value, '', 'Polish archetype translation is not yet set');
       assert.equal(archetypeInput.placeholder, 'Botanist', 'Fallback placeholder should be the English archetype');
 
-      // Typing into name input invokes onTranslationChange with Polish locale
-      fireEvent.change(nameInput, { target: { value: 'Klaudia Morel' } });
-      assert.deepEqual(translationChanges[translationChanges.length - 1], {
-        locale: 'pl',
-        field: 'name',
-        value: 'Klaudia Morel',
-      });
-      assert.equal(patches.length, 0, 'onChange should not be called when editing non-English locale');
+      // Typing into name input directly triggers onChange (canonical field), NOT onTranslationChange
+      fireEvent.change(nameInput, { target: { value: 'Claudette Morel (Self Care)' } });
+      assert.deepEqual(patches[patches.length - 1], { name: 'Claudette Morel (Self Care)' });
+      assert.equal(translationChanges.length, 0, 'Name changes must NOT invoke onTranslationChange');
 
       // Typing into archetype input invokes onTranslationChange
       fireEvent.change(archetypeInput, { target: { value: 'Botaniczka' } });
@@ -133,10 +130,9 @@ describe('Smash Roster Creator Unified Language Dropdowns', () => {
         field: 'archetype',
         value: 'Botaniczka',
       });
-      assert.equal(patches.length, 0, 'onChange should not be called when editing non-English locale');
     });
 
-    it('when switching locale to pl, displays existing Polish translations', () => {
+    it('when switching locale to pl, displays existing Polish translations for translatable fields while candidate name remains canonical', () => {
       const entity: DraftEntity = {
         ...emptyDraftEntity('c-1'),
         name: 'Dwight Fairfield',
@@ -145,7 +141,6 @@ describe('Smash Roster Creator Unified Language Dropdowns', () => {
 
       const translations: Record<string, EntityTranslationDraft> = {
         pl: {
-          name: 'Dawid Fairfield',
           archetype: 'Nerwowy Przywódca',
         },
       };
@@ -156,7 +151,7 @@ describe('Smash Roster Creator Unified Language Dropdowns', () => {
           index={0}
           onChange={() => {}}
           onRemove={() => {}}
-          showTranslations={false}
+          showTranslations={true}
           translations={translations}
           onTranslationChange={() => {}}
           locale="en"
@@ -168,12 +163,79 @@ describe('Smash Roster Creator Unified Language Dropdowns', () => {
       fireEvent.click(view.getByRole('button', { name: c.editingLanguageLabel }));
       fireEvent.click(view.getByText('Polski (PL)'));
 
-      // Inputs should display the Polish translations
+      // Candidate name is canonical
       const nameInput = view.getByText(c.entityNameLabel).closest('label')?.querySelector('input');
-      assert.equal(nameInput?.value, 'Dawid Fairfield');
+      assert.equal(nameInput?.value, 'Dwight Fairfield');
 
+      // Translatable archetype displays the Polish translation
       const archetypeInput = view.getByText(c.entityArchetypeLabel).closest('label')?.querySelector('input');
       assert.equal(archetypeInput?.value, 'Nerwowy Przywódca');
+    });
+
+    it('when showTranslations is false, does NOT render the language dropdown', () => {
+      const patches: Array<Partial<DraftEntity>> = [];
+
+      const entity: DraftEntity = {
+        ...emptyDraftEntity('c-1'),
+        name: 'Meg Thomas',
+      };
+
+      const view = render(
+        <CandidateFormInputs
+          entity={entity}
+          index={0}
+          onChange={(patch) => patches.push(patch)}
+          onRemove={() => {}}
+          showTranslations={false}
+          translations={{}}
+          onTranslationChange={() => {}}
+          locale="en"
+        />,
+        { wrapper: withDictionary() }
+      );
+
+      const langDropdown = view.queryByRole('button', { name: c.editingLanguageLabel });
+      assert.equal(langDropdown, null, 'Language dropdown should not be rendered when showTranslations is false');
+
+      // Typing into name works normally
+      const nameInput = view.getByText(c.entityNameLabel).closest('label')?.querySelector('input');
+      assert.ok(nameInput);
+      fireEvent.change(nameInput, { target: { value: 'Meg Thomas Updated' } });
+      assert.deepEqual(patches[patches.length - 1], { name: 'Meg Thomas Updated' });
+    });
+
+    it('persists candidate activeLocale across switches when controlled activeLocale and onLocaleChange are provided', () => {
+      let activeCandidateLocale = 'en';
+      const onLocaleChange = (newLocale: string) => {
+        activeCandidateLocale = newLocale;
+      };
+
+      const entity: DraftEntity = {
+        ...emptyDraftEntity('c-1'),
+        name: 'Jake Park',
+      };
+
+      const view = render(
+        <CandidateFormInputs
+          entity={entity}
+          index={0}
+          onChange={() => {}}
+          onRemove={() => {}}
+          showTranslations={true}
+          translations={{}}
+          onTranslationChange={() => {}}
+          activeLocale={activeCandidateLocale}
+          onLocaleChange={onLocaleChange}
+          locale="en"
+        />,
+        { wrapper: withDictionary() }
+      );
+
+      // Change locale to Polish
+      fireEvent.click(view.getByRole('button', { name: c.editingLanguageLabel }));
+      fireEvent.click(view.getByText('Polski (PL)'));
+
+      assert.equal(activeCandidateLocale, 'pl', 'onLocaleChange should be invoked with pl');
     });
   });
 
@@ -209,6 +271,7 @@ describe('Smash Roster Creator Unified Language Dropdowns', () => {
         view = render(
           <RosterBasicsSection
             {...baseProps}
+            showTranslations={true}
             patch={(next) => patches.push(next)}
             onRosterTranslationChange={(locale, field, value) => {
               rosterTranslationChanges.push({ locale, field, value });
@@ -255,6 +318,7 @@ describe('Smash Roster Creator Unified Language Dropdowns', () => {
         view = render(
           <RosterBasicsSection
             {...baseProps}
+            showTranslations={true}
             patch={(next) => patches.push(next)}
             rosterTranslations={{}}
             onRosterTranslationChange={(locale, field, value) => {
@@ -315,6 +379,7 @@ describe('Smash Roster Creator Unified Language Dropdowns', () => {
         view = render(
           <RosterBasicsSection
             {...baseProps}
+            showTranslations={true}
             rosterTranslations={rosterTranslations}
             onRosterTranslationChange={() => {}}
           />,
@@ -331,6 +396,32 @@ describe('Smash Roster Creator Unified Language Dropdowns', () => {
 
       const descTextarea = view.getByText(c.descriptionLabel).closest('label')?.querySelector('textarea');
       assert.equal(descTextarea?.value, 'Polski opis rosteru.');
+    });
+
+    it('when showTranslations is false, does NOT render the language dropdown or the language switcher row', async () => {
+      const patches: Array<Partial<Draft>> = [];
+      const baseProps = createBaseProps();
+
+      let view!: ReturnType<typeof render>;
+      await act(async () => {
+        view = render(
+          <RosterBasicsSection
+            {...baseProps}
+            showTranslations={false}
+            patch={(next) => patches.push(next)}
+          />,
+          { wrapper: withDictionary() }
+        );
+      });
+
+      const langDropdown = view.queryByRole('button', { name: c.editingLanguageLabel });
+      assert.equal(langDropdown, null, 'Language dropdown should not be rendered when showTranslations is false');
+
+      // Editing name updates draft cleanly via patch
+      const nameInput = view.getByText(c.nameLabel).closest('label')?.querySelector('input');
+      assert.ok(nameInput);
+      fireEvent.change(nameInput, { target: { value: 'Custom Roster Title' } });
+      assert.deepEqual(patches[patches.length - 1], { name: 'Custom Roster Title' });
     });
   });
 });

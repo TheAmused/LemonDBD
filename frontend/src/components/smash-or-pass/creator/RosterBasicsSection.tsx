@@ -35,6 +35,7 @@ interface RosterBasicsSectionProps {
   onOfficialChange: (official: boolean) => void;
   officialSlug?: string;
   onOpenCrop: () => void;
+  showTranslations?: boolean;
   rosterTranslations?: RosterTranslations;
   onRosterTranslationChange?: (locale: string, field: 'name' | 'description', value: string) => void;
   /** Extra content under the form, e.g. the translations panel. */
@@ -53,6 +54,7 @@ export function RosterBasicsSection({
   onOfficialChange,
   officialSlug,
   onOpenCrop,
+  showTranslations = false,
   rosterTranslations,
   onRosterTranslationChange,
   children,
@@ -61,8 +63,9 @@ export function RosterBasicsSection({
   const c = dict.smashOrPass.creator;
   const [activeLocale, setActiveLocale] = useState<string>('en');
 
-  const isBaseLocale = activeLocale === 'en';
-  const sharedNotice = !isBaseLocale ? (
+  const effectiveLocale = showTranslations ? activeLocale : 'en';
+  const isBaseLocale = effectiveLocale === 'en';
+  const sharedNotice = showTranslations && !isBaseLocale ? (
     <span className="type-micro text-text-muted/70 font-normal ml-1">({c.sharedFieldNotice})</span>
   ) : null;
 
@@ -72,27 +75,29 @@ export function RosterBasicsSection({
   return (
     <Section title={c.stepBasics} storageKey="lemondbd_smash_creator_section_basics">
       <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-5xl wide-2k:max-w-7xl mx-auto grid gap-4 2xl:gap-6 md:grid-cols-2">
-        <div className="md:col-span-2 flex flex-wrap items-center justify-between gap-2 pb-1 border-b border-border-color/40">
-          <span className="type-label-sm text-text-secondary font-medium">
-            {activeLocale === 'en' ? c.rosterDetailsLabel || 'Roster Details' : `${c.rosterDetailsLabel || 'Roster Details'} (${activeLocale.toUpperCase()})`}
-          </span>
-          <div className="flex items-center gap-2">
-            <span className="type-micro text-text-muted">{c.editingLanguageLabel}:</span>
-            <CustomDropdown<string>
-              value={activeLocale}
-              onChange={(loc) => setActiveLocale(loc)}
-              options={[
-                { value: 'en', label: c.baseLanguageLabel },
-                { value: 'pl', label: 'Polski (PL)' },
-                { value: 'de', label: 'Deutsch (DE)' },
-                { value: 'es', label: 'Español (ES)' },
-                { value: 'ja', label: '日本語 (JA)' },
-              ]}
-              ariaLabel={c.editingLanguageLabel}
-              accent="primary"
-            />
+        {showTranslations && (
+          <div className="md:col-span-2 flex flex-wrap items-center justify-between gap-2 pb-1 border-b border-border-color/40">
+            <span className="type-label-sm text-text-secondary font-medium">
+              {effectiveLocale === 'en' ? c.rosterDetailsLabel || 'Roster Details' : `${c.rosterDetailsLabel || 'Roster Details'} (${effectiveLocale.toUpperCase()})`}
+            </span>
+            <div className="flex items-center gap-2">
+              <span className="type-micro text-text-muted">{c.editingLanguageLabel}:</span>
+              <CustomDropdown<string>
+                value={effectiveLocale}
+                onChange={(loc) => setActiveLocale(loc)}
+                options={[
+                  { value: 'en', label: c.baseLanguageLabel },
+                  { value: 'pl', label: 'Polski (PL)' },
+                  { value: 'de', label: 'Deutsch (DE)' },
+                  { value: 'es', label: 'Español (ES)' },
+                  { value: 'ja', label: '日本語 (JA)' },
+                ]}
+                ariaLabel={c.editingLanguageLabel}
+                accent="primary"
+              />
+            </div>
           </div>
-        </div>
+        )}
 
         <label className="md:col-span-2">
           <span className={LABEL}>
@@ -102,13 +107,13 @@ export function RosterBasicsSection({
           <Input
             fieldSize="md"
             invalid={attempted && nameMissing && isBaseLocale}
-            value={isBaseLocale ? draft.name : rosterTranslations?.[activeLocale]?.name || ''}
+            value={isBaseLocale ? draft.name : rosterTranslations?.[effectiveLocale]?.name || ''}
             maxLength={SMASH_ROSTER_LIMITS.maxRosterName}
             onChange={(e) => {
               if (isBaseLocale) {
                 patch({ name: e.target.value });
               } else {
-                onRosterTranslationChange?.(activeLocale, 'name', e.target.value);
+                onRosterTranslationChange?.(effectiveLocale, 'name', e.target.value);
               }
             }}
             placeholder={isBaseLocale ? c.namePlaceholder : (draft.name || c.rosterNamePlaceholder || c.namePlaceholder)}
@@ -119,13 +124,13 @@ export function RosterBasicsSection({
           <span className={LABEL}>{c.descriptionLabel}</span>
           <Textarea
             fieldSize="md"
-            value={isBaseLocale ? draft.description : rosterTranslations?.[activeLocale]?.description || ''}
+            value={isBaseLocale ? draft.description : rosterTranslations?.[effectiveLocale]?.description || ''}
             maxLength={SMASH_ROSTER_LIMITS.maxRosterDescription}
             onChange={(e) => {
               if (isBaseLocale) {
                 patch({ description: e.target.value });
               } else {
-                onRosterTranslationChange?.(activeLocale, 'description', e.target.value);
+                onRosterTranslationChange?.(effectiveLocale, 'description', e.target.value);
               }
             }}
             placeholder={isBaseLocale ? c.descriptionPlaceholder : (draft.description || c.rosterDescriptionPlaceholder || c.descriptionPlaceholder)}

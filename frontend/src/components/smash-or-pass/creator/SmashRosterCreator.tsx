@@ -69,6 +69,7 @@ export function SmashRosterCreator({ locale, editId, officialSlug }: SmashRoster
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [activeCandidateLocale, setActiveCandidateLocale] = useState<string>('en');
 
   useEffect(() => {
     if (!officialSlug) return;
@@ -144,7 +145,7 @@ export function SmashRosterCreator({ locale, editId, officialSlug }: SmashRoster
   const canAddCandidate = draft.entities.length < SMASH_ROSTER_LIMITS.maxEntities && (draft.entities.length === 0 || isCurrentCandidateComplete);
 
   const isSimpleMode = draft.roster_mode === 'simple';
-  const showTranslations = isUserAdmin && official;
+  const showTranslations = Boolean(isUserAdmin && official);
 
   const {
     submit,
@@ -281,6 +282,7 @@ export function SmashRosterCreator({ locale, editId, officialSlug }: SmashRoster
           onOfficialChange={setOfficial}
           officialSlug={officialSlug}
           onOpenCrop={() => setIsCropModalOpen(true)}
+          showTranslations={showTranslations}
           rosterTranslations={rosterTranslations}
           onRosterTranslationChange={(locale, field, value) =>
             setRosterTranslations((prev) => {
@@ -350,6 +352,8 @@ export function SmashRosterCreator({ locale, editId, officialSlug }: SmashRoster
                     showTranslations={showTranslations}
                     translations={entityTranslations[activeEntity.key] || {}}
                     onTranslationChange={(loc, field, value) => setEntityTranslation(activeEntity.key, loc, field, value)}
+                    activeLocale={activeCandidateLocale}
+                    onLocaleChange={setActiveCandidateLocale}
                     locale={locale}
                     isSimpleMode={isSimpleMode}
                     customLabels={draft.custom_labels}

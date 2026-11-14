@@ -7,6 +7,7 @@ import { cn } from '@/utils/cn';
 import { formatMessage } from '@/utils/i18nFormat';
 import type { ArchetypeRule, CustomRomanceArchetype } from '@/types/smashOrPass';
 import { LABEL } from './styles';
+import { SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
 import { Checkbox } from '@/components/common/Checkbox';
 import { Button } from '@/components/common/Button';
 import { Input, Textarea } from '@/components/common/Field';
@@ -203,6 +204,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                         <Input
                           fieldSize="md"
                           value={arch.title}
+                          maxLength={SMASH_ROSTER_LIMITS.maxArchetype}
                           onChange={(e) => updateArchetype(arch.id, { title: e.target.value })}
                           placeholder={ab.titlePlaceholder}
                         />
@@ -212,6 +214,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                         <Input
                           fieldSize="md"
                           value={arch.subtitle}
+                          maxLength={SMASH_ROSTER_LIMITS.maxArchetypeBadge}
                           onChange={(e) => updateArchetype(arch.id, { subtitle: e.target.value })}
                           placeholder={ab.subtitlePlaceholder}
                         />
@@ -223,6 +226,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                       <Textarea
                         fieldSize="md"
                         value={arch.description}
+                        maxLength={SMASH_ROSTER_LIMITS.maxArchetypeDesc}
                         onChange={(e) => updateArchetype(arch.id, { description: e.target.value })}
                         placeholder={ab.descriptionPlaceholder}
                         rows={3}
@@ -383,6 +387,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                             type="text"
                             inputMode="numeric"
                             autoComplete="off"
+                            maxLength={3}
                             value={String(rule.value)}
                             onChange={(e) => {
                               const digits = Number(e.target.value.replace(/\D/g, '').slice(0, 5));

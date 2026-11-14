@@ -55,7 +55,6 @@ export default {
   passwordResetSuccess: "パスワードの再設定が完了しました！",
   goToHome: "ホームへ移動",
   resetPassword: "パスワード再設定",
-  adminPanel: "管理コントロールセンター",
   streaks: "チャレンジ＆ストリーク",
   generator: "パークランダマイザー",
   maps: "マップエクスプローラー",

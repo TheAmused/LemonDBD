@@ -55,8 +55,6 @@ export default {
   showPool: "Show unranked",
   hidePool: "Hide unranked",
   moveHere: "Move here",
-  selectedHint: "Tap a tier to move {name}",
-  cancelSelection: "Cancel",
   dragHint: "Drag items into tiers, or tap an item and then a tier.",
 
   reset: "Reset",

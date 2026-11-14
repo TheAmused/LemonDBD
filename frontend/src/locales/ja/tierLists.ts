@@ -55,8 +55,6 @@ export default {
   showPool: "未ランクを表示",
   hidePool: "未ランクを隠す",
   moveHere: "ここへ移動",
-  selectedHint: "ティアをタップして{name}を移動",
-  cancelSelection: "キャンセル",
   dragHint: "項目をティアにドラッグするか、項目をタップしてからティアをタップしてください。",
 
   reset: "リセット",

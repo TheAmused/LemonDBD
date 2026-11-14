@@ -16,6 +16,7 @@ import { getCommunityCoverThumbUrl } from '@/utils/thumbUrl';
 import { coverPlaceholderPath } from '@/utils/smashOrPass/placeholderArt';
 import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
 import { Button } from '@/components/common/Button';
+import { useOptionalAuth } from '@/context/AuthContext';
 import { cn } from '@/utils/cn';
 import { MotionImg } from '@/components/common/MotionImg';
 
@@ -53,10 +54,13 @@ export function RosterCarouselCard({
   onCommit,
 }: RosterCarouselCardProps) {
   const dict = useDictionary();
+  const auth = useOptionalAuth();
+  const user = auth?.user;
   const [globalNsfw, setGlobalNsfw] = useGlobalNsfwPreference();
   const absOffset = Math.abs(visualOffset);
   const isCenter = absOffset < 0.5;
   const isRosterEnabled = r.is_active !== false;
+  const isYours = !r.is_imported || Boolean(r.author_id && user?.id && r.author_id === user.id);
   const count = r.entity_count ?? r.character_count ?? 0;
   const rawCoverUrl = rosterCoverUrl(r);
   const coverUrl = getCommunityCoverThumbUrl(rawCoverUrl, 480) || rawCoverUrl;
@@ -163,34 +167,28 @@ export function RosterCarouselCard({
         </div>
       )}
 
-      {r.is_nsfw && (
-        <div
-          data-testid="roster-nsfw-badge"
-          className="absolute top-4 left-1/2 -translate-x-1/2 sm:top-5 flex items-center gap-1 px-2.5 py-1 rounded-card bg-accent-red text-text-inverted text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
-        >
-          <MatureIcon className="icon-sm" aria-hidden="true" />
-          <span>{dict.smashOrPass.nsfw.badge}</span>
+      {(r.is_nsfw || isCurrentlyActive) && (
+        <div className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1.5 flex-wrap justify-end pointer-events-none">
+          {r.is_nsfw && (
+            <div
+              data-testid="roster-nsfw-badge"
+              className="flex items-center gap-1 px-2.5 py-1 rounded-card bg-accent-red text-text-inverted text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md"
+            >
+              <MatureIcon className="icon-sm" aria-hidden="true" />
+              <span>{dict.smashOrPass.nsfw.badge}</span>
+            </div>
+          )}
+
+          {isCurrentlyActive && (
+            <div
+              className="flex items-center gap-1 px-3 py-1.5 rounded-card bg-accent-red text-text-inverted type-strong shadow-md"
+            >
+              <CheckIcon className="icon-md" aria-hidden="true" />
+              <span>{dict.smashOrPass.active}</span>
+            </div>
+          )}
         </div>
       )}
-
-      {r.is_local && (
-        <div
-          data-testid="roster-local-badge"
-          className="absolute bottom-22 left-1/2 -translate-x-1/2 sm:bottom-24 flex items-center gap-1 px-2.5 py-1 rounded-card bg-bg-primary/85 backdrop-blur-md border border-accent-amber/40 text-accent-amber text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none"
-        >
-          <span>{dict.smashOrPass.picker.yours}</span>
-        </div>
-      )}
-
-      {isCurrentlyActive && (
-        <div
-          className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1 px-3 py-1.5 rounded-card bg-accent-red text-text-inverted type-strong pointer-events-none"
-        >
-          <CheckIcon className="icon-md" aria-hidden="true" />
-          <span>{dict.smashOrPass.active}</span>
-        </div>
-      )}
-
 
       {isCenter && (!r.is_nsfw || globalNsfw) && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none" aria-hidden="true">
@@ -206,13 +204,25 @@ export function RosterCarouselCard({
         </div>
       )}
 
-      <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 text-center flex flex-col items-center justify-end z-10 pointer-events-none">
-        <h3 className="text-base sm:text-lg md:text-xl font-black tracking-wide text-text-inverted drop-shadow-md mb-1">
+      <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5 text-center flex flex-col items-center justify-end z-10 pointer-events-none max-h-3/5">
+        {r.is_local && (
+          <div
+            data-testid="roster-local-badge"
+            className={cn(
+              "mb-2 flex items-center gap-1 px-2.5 py-1 rounded-card bg-bg-primary/85 backdrop-blur-md border text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md pointer-events-none",
+              isYours ? "border-accent-amber/40 text-accent-amber" : "border-border-color text-text-secondary"
+            )}
+          >
+            <span>{isYours ? dict.smashOrPass.picker.yours : dict.smashOrPass.picker.imported}</span>
+          </div>
+        )}
+
+        <h3 className="text-base sm:text-lg md:text-xl font-black tracking-wide text-text-inverted drop-shadow-md mb-1 line-clamp-2 break-words break-all text-balance max-w-full">
           {rosterDisplayName(r)}
         </h3>
 
         {r.description && (
-          <p className="text-xs sm:text-sm md:text-base font-bold text-accent-red/90 tracking-wider drop-shadow-md">
+          <p className="text-xs sm:text-sm md:text-base font-bold text-accent-red/90 tracking-wider drop-shadow-md line-clamp-2 sm:line-clamp-3 break-words break-all text-balance max-w-full">
             {r.description}
           </p>
         )}

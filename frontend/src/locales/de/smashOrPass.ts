@@ -257,9 +257,7 @@ export default {
     button: 'Effekte, Sounds und Musik',
     buttonDesc: 'Ändere, was an Effekten, Sounds und Musik abgespielt wird.',
     promptTitle: 'Erlebnis & Atmosphäre',
-    promptMessage: 'Passe Soundeffekte, visuelle Animationen und Filter für Inhalte ab 18 Jahren für deine Reise an.',
     smashPromptTitle: 'Prüfungssicherheit & Atmosphäre',
-    smashPromptDesc: 'Lege fest, wie du die Prüfungen im Nebel erleben möchtest.',
     epilepsyWarningTitle: 'Warnung vor Photosensibilität',
     epilepsyWarningBody: 'Enthält schnelle Animationen, Blitze und Sounds, die Anfälle oder Unbehagen auslösen können. Du kannst Effekte in den Einstellungen deaktivieren.',
     goToSettings: 'Einstellungen',
@@ -288,6 +286,7 @@ export default {
   picker: {
     confirm: 'Bestätigen',
     yours: 'Deine',
+    imported: 'Importiert',
     createRoster: 'Liste erstellen',
     importRoster: 'Importieren',
     editRoster: 'Bearbeiten',

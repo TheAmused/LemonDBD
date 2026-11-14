@@ -106,11 +106,8 @@ export function RosterModals({ locale, overlays, rosters }: RosterModalsProps) {
           bodyClassName="p-5 text-center"
           footerClassName="p-4"
           footer={
-            <div className="flex w-full flex-col-reverse gap-2.5 sm:flex-row">
-              <Button variant="secondary" size="md" onClick={() => setRosterPendingDelete(null)} className="flex-1">
-                {dict.smashOrPass.modals.cancel}
-              </Button>
-              <Button variant="primary" size="md" onClick={confirmDelete} className="flex-1">
+            <div className="flex w-full justify-center">
+              <Button variant="danger" size="md" onClick={confirmDelete} className="w-full sm:w-auto sm:min-w-36">
                 {dict.smashOrPass.picker.deleteConfirmAction}
               </Button>
             </div>

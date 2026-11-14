@@ -11,39 +11,51 @@ import { FitText } from '@/components/common/FitText';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import { isKiller as isKillerRole, isSurvivor as isSurvivorRole } from '@/utils/characterUtils';
-import { themedEdgeStyle } from '@/utils/smashOrPass/badgeGradient';
 
 interface FloatingLoreScatteredProps {
   character: EntityItem | null;
   locale?: string;
   customLabels?: RosterCustomLabels;
-  /** The roster's `theme_color`: a gradient one paints the edge of the four cards. */
+  /** Kept for interface compatibility; lore cards use semantic tone styles. */
   themeColor?: string;
 }
 
-export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ character, locale = 'en', customLabels, themeColor }) => {
+export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
+  character,
+  locale = 'en',
+  customLabels,
+  themeColor: _themeColor,
+}) => {
   const dict = useDictionary();
   const t = dict.smashOrPass;
   if (!character) return null;
 
   const isSurvivor = isSurvivorRole(character.role);
   const isKiller = isKillerRole(character.role);
+  const isCustom =
+    character.id.startsWith('local:') ||
+    character.roster_id?.startsWith('local:') ||
+    (Boolean(character.roster_id) && character.roster_id !== 'canon');
 
   // `metadata_json` is gone from the wire (it was a duplicate of `metadata`), and so is
   // the `i18n` blob that sat next to `translations`. One profile, one locale overlay.
   const currentLoc = locale || 'en';
   const profile = localizedProfile(character.metadata, currentLoc);
 
-  // Defaults for an entity with no profile yet -- localized copy from the dictionary,
-  // not data fallbacks; localizedProfile already resolved locale vs. English.
-  const charTitle = profile.archetype || (isSurvivor ? t.loreTitleSurvivor : isKiller ? t.loreTitleKiller : character.role);
-  const charTagline = profile.tagline || (isSurvivor ? t.loreTaglineSurvivor : isKiller ? t.loreTaglineKiller : '');
+  // Defaults for an entity: custom rosters never receive DBD canon fallbacks
+  const charTitle =
+    profile.archetype ||
+    (isCustom ? character.role : isSurvivor ? t.loreTitleSurvivor : isKiller ? t.loreTitleKiller : character.role);
+  const charTagline =
+    profile.tagline || (isCustom ? '' : isSurvivor ? t.loreTaglineSurvivor : isKiller ? t.loreTaglineKiller : '');
 
-  // Quote resolution: profile quote -> known signature quote for this locale -> generic copy.
+  // Quote resolution: custom rosters only show explicit quotes, never canon DBD survivor/killer templates
   const charQuote =
     profile.quote ||
-    t.knownQuotes[character.slug] ||
-    formatMessage(isKiller ? t.loreQuoteKiller : t.loreQuoteSurvivor, { name: character.name });
+    (isCustom
+      ? ''
+      : t.knownQuotes[character.slug] ||
+        formatMessage(isKiller ? t.loreQuoteKiller : t.loreQuoteSurvivor, { name: character.name }));
 
   // Localized Labels
   const loreLabels = dict.smashOrPass.loreLabels;
@@ -51,8 +63,6 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
   const signatureQuoteLabel = customLabels?.quote || loreLabels.signatureQuote;
   const turnOnLabel = customLabels?.turn_on || loreLabels.turn_on;
   const dealbreakerLabel = customLabels?.dealbreaker || loreLabels.dealbreaker;
-
-  const edgeStyle = themedEdgeStyle(themeColor, 'var(--bg-surface)');
 
   const handleCardHover = () => {
     SmashSounds.playHoverTick();
@@ -74,6 +84,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
             minScale={0.5}
             maxLines={4}
             wrapFirst
+            disableTooltip
             className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-flat font-black uppercase tracking-wider text-text-primary group-hover:text-accent-red group-hover:drop-shadow-glow-red-soft transition-all duration-500 group-hover:scale-105 transform"
           >
             {leftWatermark}
@@ -91,6 +102,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
             minScale={0.5}
             maxLines={4}
             wrapFirst
+            disableTooltip
             className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl leading-flat font-black uppercase tracking-wider text-text-primary group-hover:text-accent-red group-hover:drop-shadow-glow-red-soft transition-all duration-500 group-hover:scale-105 transform"
           >
             {rightWatermark}
@@ -110,7 +122,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
           style={{ animationDelay: '80ms' }}
           onMouseEnter={handleCardHover}
         >
-          <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center" style={edgeStyle}>
+          <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center">
             <div
               data-lore-label=""
               className="sr-only @hub-2xl/hub:not-sr-only @hub-2xl/hub:absolute @hub-2xl/hub:top-0 @hub-2xl/hub:-translate-y-1/2 @hub-2xl/hub:left-1/2 @hub-2xl/hub:-translate-x-1/2 @hub-2xl/hub:inline-flex @hub-2xl/hub:items-center @hub-2xl/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-gutter text-accent-red"
@@ -122,9 +134,11 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
             <p className="text-sm font-black tracking-tight text-text-primary group-hover:text-accent-red transition-colors">
               {profile.dating_vibe || charTitle}
             </p>
-            <p className="text-xs text-text-muted line-clamp-2 leading-snug group-hover:text-text-secondary transition-colors mt-0.5">
-              {charTagline}
-            </p>
+            {Boolean(charTagline) && (
+              <p className="text-xs text-text-muted line-clamp-2 leading-snug group-hover:text-text-secondary transition-colors mt-0.5">
+                {charTagline}
+              </p>
+            )}
           </div>
         </div>
 
@@ -137,7 +151,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
             style={{ animationDelay: '140ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-emerald backdrop-blur-2xl transition-all duration-300 text-center" style={edgeStyle}>
+            <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-emerald backdrop-blur-2xl transition-all duration-300 text-center">
               <div
                 data-lore-label=""
                 className="sr-only @hub-2xl/hub:not-sr-only @hub-2xl/hub:absolute @hub-2xl/hub:top-0 @hub-2xl/hub:-translate-y-1/2 @hub-2xl/hub:left-1/2 @hub-2xl/hub:-translate-x-1/2 @hub-2xl/hub:inline-flex @hub-2xl/hub:items-center @hub-2xl/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-gutter text-accent-green"
@@ -159,27 +173,29 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
         {/* Right Item 1: Identity Profile - Hidden for now */}
 
         {/* Right Item 2: Signature Quote (Tilt Left -1deg & Gold Halo) */}
-        <div
-          key={`quote-${character.slug}`}
-          data-lore-card=""
-          className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-[1.02] @hub-2xl/hub:hover:scale-105 @hub-2xl/hub:hover:-rotate-1 cursor-pointer group"
-          style={{ animationDelay: '120ms' }}
-          onMouseEnter={handleCardHover}
-        >
-          <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-amber backdrop-blur-2xl transition-all duration-300 text-center" style={edgeStyle}>
-            <div
-              data-lore-label=""
-              className="sr-only @hub-2xl/hub:not-sr-only @hub-2xl/hub:absolute @hub-2xl/hub:top-0 @hub-2xl/hub:-translate-y-1/2 @hub-2xl/hub:left-1/2 @hub-2xl/hub:-translate-x-1/2 @hub-2xl/hub:inline-flex @hub-2xl/hub:items-center @hub-2xl/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-gutter text-accent-amber"
-            >
-              <span className="type-label-2xs truncate whitespace-nowrap">
-                {signatureQuoteLabel}
-              </span>
+        {Boolean(charQuote) && (
+          <div
+            key={`quote-${character.slug}`}
+            data-lore-card=""
+            className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-[1.02] @hub-2xl/hub:hover:scale-105 @hub-2xl/hub:hover:-rotate-1 cursor-pointer group"
+            style={{ animationDelay: '120ms' }}
+            onMouseEnter={handleCardHover}
+          >
+            <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-amber backdrop-blur-2xl transition-all duration-300 text-center">
+              <div
+                data-lore-label=""
+                className="sr-only @hub-2xl/hub:not-sr-only @hub-2xl/hub:absolute @hub-2xl/hub:top-0 @hub-2xl/hub:-translate-y-1/2 @hub-2xl/hub:left-1/2 @hub-2xl/hub:-translate-x-1/2 @hub-2xl/hub:inline-flex @hub-2xl/hub:items-center @hub-2xl/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-gutter text-accent-amber"
+              >
+                <span className="type-label-2xs truncate whitespace-nowrap">
+                  {signatureQuoteLabel}
+                </span>
+              </div>
+              <p className="type-body text-text-secondary italic line-clamp-5 break-words group-hover:text-text-primary transition-colors">
+                {charQuote}
+              </p>
             </div>
-            <p className="type-body text-text-secondary italic line-clamp-5 break-words group-hover:text-text-primary transition-colors">
-              {charQuote}
-            </p>
           </div>
-        </div>
+        )}
 
         {/* Right Item 3: Dealbreaker (Tilt Right +1deg & Rose Glow) */}
         {profile.dealbreaker && (
@@ -190,7 +206,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
             style={{ animationDelay: '160ms' }}
             onMouseEnter={handleCardHover}
           >
-            <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center" style={edgeStyle}>
+            <div className="relative pt-4 pb-3 px-3.5 @hub-2xl/hub:pt-5 @hub-2xl/hub:pb-3.5 @hub-2xl/hub:px-4 rounded-card lore-ash-card lore-ash-crimson backdrop-blur-2xl transition-all duration-300 text-center">
               <div
                 data-lore-label=""
                 className="sr-only @hub-2xl/hub:not-sr-only @hub-2xl/hub:absolute @hub-2xl/hub:top-0 @hub-2xl/hub:-translate-y-1/2 @hub-2xl/hub:left-1/2 @hub-2xl/hub:-translate-x-1/2 @hub-2xl/hub:inline-flex @hub-2xl/hub:items-center @hub-2xl/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-gutter text-accent-red"

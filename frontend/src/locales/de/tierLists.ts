@@ -55,8 +55,6 @@ export default {
   showPool: "Nicht eingestufte anzeigen",
   hidePool: "Nicht eingestufte ausblenden",
   moveHere: "Hierher",
-  selectedHint: "Tippe auf ein Tier, um {name} zu verschieben",
-  cancelSelection: "Abbrechen",
   dragHint: "Ziehe Einträge in die Tiers, oder tippe auf einen Eintrag und dann auf ein Tier.",
 
   reset: "Zurücksetzen",

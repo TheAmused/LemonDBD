@@ -29,7 +29,6 @@ export default {
   refresh: "Aktualisieren",
   analyticsTitle: "Umami-Analytics-Dashboard öffnen (Seitenaufrufe, Feature-Nutzung)",
   analytics: "Analysen",
-  enabledLabel: "Aktiviert",
   disabledLabel: "Deaktiviert",
   searchGenericPlaceholder: "Nach Namen suchen",
   disable: "Deaktivieren",

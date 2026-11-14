@@ -41,14 +41,14 @@ describe('theme colour as text', () => {
 });
 
 describe('lore cards', () => {
-  it('all four get the roster gradient as their edge', () => {
+  it('lore cards maintain semantic borders without being overwritten by theme gradient', () => {
     const view = render(<FloatingLoreScattered character={sable} themeColor="custom:#112233,#445566" />, { wrapper: withDictionary() });
     const found = edges(view.container);
-    assert.equal(found.length, 4);
-    for (const image of found) assert.match(image, /#112233/);
+    // Lore cards retain their semantic theme styles without custom gradient background overrides
+    for (const image of found) assert.equal(image, '');
   });
 
-  it('a single-colour theme leaves them as they are', () => {
+  it('a single-colour theme also leaves them as they are', () => {
     const view = render(<FloatingLoreScattered character={sable} themeColor="#ec4899" />, { wrapper: withDictionary() });
     for (const image of edges(view.container)) assert.equal(image, '');
   });

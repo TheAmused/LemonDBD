@@ -7,7 +7,6 @@ export default {
   soundEffectsDesc: 'Odtwarzaj efekty dźwiękowe podczas interakcji i zdarzeń.',
   music: 'Muzyka',
   musicDesc: 'Odtwarzaj muzykę w tle podczas minigier i rozgrywki.',
-  visuals: 'Grafika i animacje',
   animations: 'Interaktywne animacje',
   animationsDesc: 'Płynne animacje i reakcje wizualne, głównie w Smash or Pass.',
   gifs: 'GIF-y',

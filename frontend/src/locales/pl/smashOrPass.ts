@@ -273,9 +273,7 @@ export default {
     button: 'Efekty, dźwięki i muzyka',
     buttonDesc: 'Zmień, jakie efekty, dźwięki i muzyka mają być odtwarzane.',
     promptTitle: 'Doświadczenie i atmosfera',
-    promptMessage: 'Dostosuj efekty dźwiękowe, animacje i filtry treści dla dorosłych do swojej podróży.',
     smashPromptTitle: 'Bezpieczeństwo i atmosfera próby',
-    smashPromptDesc: 'Skonfiguruj swoje wrażenia z prób przed wkroczeniem w mgłę.',
     epilepsyWarningTitle: 'Ostrzeżenie o fotoczułości',
     epilepsyWarningBody: 'Próba zawiera szybkie animacje, błyski i nagłe dźwięki, które mogą wywołać napady lub dyskomfort. Efekty możesz wyłączyć w Ustawieniach.',
     goToSettings: 'Ustawienia',
@@ -304,6 +302,7 @@ export default {
   picker: {
     confirm: 'Potwierdź',
     yours: 'Twoje',
+    imported: 'Zaimportowana',
     createRoster: 'Utwórz Listę',
     importRoster: 'Importuj',
     editRoster: 'Edytuj',

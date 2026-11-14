@@ -73,12 +73,13 @@ describe('shareCodec primitives', () => {
     assert.equal(readShareFragment(''), null);
   });
 
-  it('sanitizeImageUrl allows https, /static and small raster data URLs only', () => {
+  it('sanitizeImageUrl allows https, /static, /api/v1/thumbs and small raster data URLs only', () => {
     assert.equal(sanitizeImageUrl('https://x.test/a.png', 100), 'https://x.test/a.png');
     assert.equal(sanitizeImageUrl('http://x.test/a.png', 100), null);
     assert.equal(sanitizeImageUrl('javascript:alert(1)', 100), null);
     assert.equal(sanitizeImageUrl('/static/a.png', 100), '/static/a.png');
     assert.equal(sanitizeImageUrl('/static/../a.png', 100), null);
+    assert.equal(sanitizeImageUrl('/api/v1/thumbs/avatars/128/survivors/jonah_vasquez.webp', 100), '/api/v1/thumbs/avatars/128/survivors/jonah_vasquez.webp');
     assert.equal(sanitizeImageUrl('data:image/png;base64,AAAA', 100), 'data:image/png;base64,AAAA');
     assert.equal(sanitizeImageUrl('data:image/png;base64,AAAA', 5), null);
     assert.equal(sanitizeImageUrl('data:image/svg+xml;base64,AAAA', 100), null);

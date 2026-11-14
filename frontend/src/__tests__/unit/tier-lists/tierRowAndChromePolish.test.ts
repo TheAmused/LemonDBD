@@ -69,6 +69,32 @@ describe('Tier Row Clear Button & Chrome Polish', () => {
     assert.ok(!html.includes('lucide-eraser'), 'Empty TierRow must not render Eraser icon');
   });
 
+  it('Test 3: TierRow clear column carries group-data-[fit-mode]/board:hidden to be omitted in FIT screenshot mode', () => {
+    const html = renderWithDictionary(
+      React.createElement(
+        DndContext,
+        null,
+        React.createElement(TierRow as any, {
+          tier: sampleTier,
+          keys: ['perk:1'],
+          itemsByKey,
+          shape: 'square',
+          showNames: false,
+          selectedKey: null,
+          onSelect: () => {},
+          onPreview: () => {},
+          onMoveSelectedHere: () => {},
+          onClearRow: () => {},
+        })
+      )
+    );
+
+    assert.ok(
+      html.includes('group-data-[fit-mode]/board:hidden'),
+      'Clear button container must carry group-data-[fit-mode]/board:hidden'
+    );
+  });
+
   it('Test 4: OfficialTierListCard hides "Custom" badge when list.kind === "custom"', () => {
     const customList: TierListSummary = {
       id: 1,

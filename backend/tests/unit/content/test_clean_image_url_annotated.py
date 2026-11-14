@@ -21,6 +21,10 @@ def test_clean_image_url_valid_https():
 def test_clean_image_url_valid_static():
     m = SampleImageModel(url="/static/images/avatar.png")
     assert m.url == "/static/images/avatar.png"
+    m_thumb = SampleImageModel(url="/api/v1/thumbs/avatars/128/survivors/jonah_vasquez.webp")
+    assert m_thumb.url == "/api/v1/thumbs/avatars/128/survivors/jonah_vasquez.webp"
+    m_local = SampleImageModel(url="http://localhost:5000/api/v1/thumbs/avatars/128/survivors/jonah_vasquez.webp")
+    assert m_local.url == "/api/v1/thumbs/avatars/128/survivors/jonah_vasquez.webp"
 
 
 @pytest.mark.unit

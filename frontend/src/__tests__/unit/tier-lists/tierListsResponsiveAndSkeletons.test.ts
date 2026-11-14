@@ -24,11 +24,11 @@ describe('Tier lists: skeleton', () => {
 });
 
 describe('Tier lists: tiles and colors', () => {
-  it('falls back to initials when an item has no image, and never renders an empty src', () => {
+  it('falls back to full item name when an item has no image, and never renders an empty src', () => {
     const html = renderWithDictionary(
       React.createElement(TierItemTile, { item: { key: 'x', name: 'Dwight Fairfield', image: null } })
     );
-    assert.ok(html.includes('>DF<'));
+    assert.ok(html.includes('Dwight Fairfield'));
     assert.ok(!html.includes('<img'));
     assert.ok(html.includes('aria-label="Dwight Fairfield"'));
   });
@@ -154,7 +154,7 @@ describe('Tier lists: CustomTierListCard', () => {
     assert.ok(html.includes('h-8 w-8 rounded-control'), 'Delete button must be squareish (rounded-control)');
     assert.ok(!html.includes('p-1.5 rounded-full'), 'Must not use circular rounded-full on delete button');
     assert.ok(html.includes('+1'), 'Must render +1 overflow badge for 5th item');
-    assert.ok(html.includes('Items: 2/5'), 'Must render Items X/Y chip');
+    assert.ok(html.includes('Ranked: 2/5'), 'Must render Ranked X/Y chip');
     assert.ok(!html.includes('Custom<'), 'Must not render redundant CUSTOM label');
     assert.ok(html.includes('absolute top-3 right-3'), 'Delete button sits in the banner top-right');
     assert.ok(html.includes('Updated '), 'Updated label must render');

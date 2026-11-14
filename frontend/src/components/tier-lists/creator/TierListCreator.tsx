@@ -202,7 +202,8 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
   const hasInlineImages = draft.items.some((i) => i.image?.startsWith('data:'));
 
   const titleMissing = !draft.title.trim();
-  const itemsMissing = draft.items.length === 0;
+  const isCatalogOfficial = Boolean(officialSlug && officialTemplate && officialTemplate.kind !== 'custom');
+  const itemsMissing = !isCatalogOfficial && draft.items.length === 0;
   const trimmedBackground = draft.backgroundImage.trim();
   const safeBackground = trimmedBackground ? sanitizeImageUrl(trimmedBackground) : null;
   const backgroundInvalid = Boolean(trimmedBackground) && !safeBackground;
@@ -227,7 +228,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
   if (
     (editId && storeHydrated && !editingList) ||
     (officialSlug && !authLoading && !isAdmin) ||
-    (officialSlug && !officialLoading && (!officialTemplate || officialTemplate.kind !== 'custom'))
+    (officialSlug && !officialLoading && !officialTemplate)
   ) {
     return (
       <div className="relative z-10 flex flex-col gap-2">
@@ -261,11 +262,15 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
         color: tier.color,
         ...(tier.backgroundImage ? { backgroundImage: tier.backgroundImage } : {}),
       })),
-      items: payload.items.map((i) => ({
-        id: i.id,
-        name: i.name,
-        ...(i.image ? { image_url: i.image } : {}),
-      })),
+      ...(isCatalogOfficial
+        ? {}
+        : {
+            items: payload.items.map((i) => ({
+              id: i.id,
+              name: i.name,
+              ...(i.image ? { image_url: i.image } : {}),
+            })),
+          }),
       is_nsfw: draft.is_nsfw,
       is_active: draft.is_active ?? true,
     };
@@ -295,7 +300,15 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       setPublishError(null);
       setPublishing(true);
       try {
-        const created = await createOfficialTierList(officialPayload, locale, token);
+        const createPayload = {
+          ...officialPayload,
+          items: payload.items.map((i) => ({
+            id: i.id,
+            name: i.name,
+            ...(i.image ? { image_url: i.image } : {}),
+          })),
+        };
+        const created = await createOfficialTierList(createPayload, locale, token);
         try {
           localStorage.removeItem(DRAFT_KEY);
         } catch {
@@ -449,7 +462,7 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
                 onChange={(val) => patch({ backgroundImage: val })}
                 label={c.backgroundImageLabel}
                 placeholder={c.backgroundImagePlaceholder}
-                hint={isAdmin ? c.backgroundImageHint : c.backgroundImagePlaceholder}
+                hint={isAdmin ? c.backgroundImageHint : undefined}
                 invalid={attempted && backgroundInvalid}
                 invalidMessage={t.invalidImage}
                 allowFileUpload={isAdmin}
@@ -472,43 +485,45 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
       </div>
 
       {/* ITEMS BLOCK */}
-      <div className={WORKSPACE_COLUMN}>
-        <Section title={c.stepItems}>
-          <div className="flex flex-col gap-6 2xl:gap-8">
-            <ItemSources onAdd={addItems} existingIds={existingIds} locale={locale} />
-            {skipped > 0 && (
-              <output className="block text-xs 2xl:text-sm font-semibold text-accent-amber">
-                {formatMessage(c.itemsSkipped, { count: skipped }, locale)}
-              </output>
-            )}
-            <CreatorItems
-              items={draft.items}
-              onRename={(id, name) =>
-                setDraft((d) => ({ ...d, items: d.items.map((i) => (i.id === id ? { ...i, name } : i)) }))
-              }
-              onUpdateItem={(id, patch) =>
-                setDraft((d) => ({
-                  ...d,
-                  items: d.items.map((i) => {
-                    if (i.id !== id) return i;
-                    const nextItem: typeof i = { id: i.id, name: patch.name };
-                    if (patch.image) nextItem.image = patch.image;
-                    return nextItem;
-                  }),
-                }))
-              }
-              onRemove={(id) => setDraft((d) => ({ ...d, items: d.items.filter((i) => i.id !== id) }))}
-              onClear={() => patch({ items: [] })}
-            />
-            {hasInlineImages && (
-              <p className={cn('text-xs 2xl:text-sm', bytes > STORAGE_WARN_BYTES ? 'font-semibold text-accent-amber' : 'text-text-muted')}>
-                {formatMessage(c.storageUsage, { size: formatBytes(bytes, locale) })}{' '}
-                {bytes > STORAGE_WARN_BYTES && c.storageWarning}
-              </p>
-            )}
-          </div>
-        </Section>
-      </div>
+      {!isCatalogOfficial && (
+        <div className={WORKSPACE_COLUMN}>
+          <Section title={c.stepItems}>
+            <div className="flex flex-col gap-6 2xl:gap-8">
+              <ItemSources onAdd={addItems} existingIds={existingIds} locale={locale} />
+              {skipped > 0 && (
+                <output className="block text-xs 2xl:text-sm font-semibold text-accent-amber">
+                  {formatMessage(c.itemsSkipped, { count: skipped }, locale)}
+                </output>
+              )}
+              <CreatorItems
+                items={draft.items}
+                onRename={(id, name) =>
+                  setDraft((d) => ({ ...d, items: d.items.map((i) => (i.id === id ? { ...i, name } : i)) }))
+                }
+                onUpdateItem={(id, patch) =>
+                  setDraft((d) => ({
+                    ...d,
+                    items: d.items.map((i) => {
+                      if (i.id !== id) return i;
+                      const nextItem: typeof i = { id: i.id, name: patch.name };
+                      if (patch.image) nextItem.image = patch.image;
+                      return nextItem;
+                    }),
+                  }))
+                }
+                onRemove={(id) => setDraft((d) => ({ ...d, items: d.items.filter((i) => i.id !== id) }))}
+                onClear={() => patch({ items: [] })}
+              />
+              {hasInlineImages && (
+                <p className={cn('text-xs 2xl:text-sm', bytes > STORAGE_WARN_BYTES ? 'font-semibold text-accent-amber' : 'text-text-muted')}>
+                  {formatMessage(c.storageUsage, { size: formatBytes(bytes, locale) })}{' '}
+                  {bytes > STORAGE_WARN_BYTES && c.storageWarning}
+                </p>
+              )}
+            </div>
+          </Section>
+        </div>
+      )}
 
       {/* Preview and save, centered under all the sections. */}
       <div className="flex flex-wrap items-center justify-center gap-3 2xl:gap-4">

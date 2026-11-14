@@ -11,8 +11,8 @@ import { apiUrl, authFetch } from '@/utils/api';
 import { stripManifest, type ContentManifest } from '@/utils/contentSigning';
 import { isRecord } from '@/utils/shareCodec';
 import { checkAndPurgeRevokedContent } from '@/hooks/useContentRevocationSync';
-import { cn } from '@/utils/cn';
 import { IconTile } from '@/components/common/IconTile';
+import { CustomDropdown } from '@/components/common/CustomDropdown';
 
 export const REPORT_REASONS = [
   'hate_speech',
@@ -211,37 +211,24 @@ export function ReportContentModalBody({
         </div>
       )}
 
-      <fieldset className="flex flex-col gap-2">
-        <legend className="type-label-sm text-text-muted mb-1">
+      <div className="flex flex-col gap-1.5">
+        <label id="report-reason-label" className="type-label-sm text-text-muted">
           {t.reportReasonLabel}
-        </legend>
-        <div className="flex flex-col gap-1.5" role="radiogroup" aria-label={t.reportReasonLabel}>
-          {REPORT_REASONS.map((r) => {
-            const isSelected = reason === r;
-            return (
-              <label
-                key={r}
-                className={cn(
-                  'flex items-center gap-3 rounded-control border p-3 text-sm cursor-pointer transition-colors',
-                  isSelected
-                    ? 'border-accent-red bg-accent-red/10 text-text-primary font-medium'
-                    : 'border-border-color bg-bg-surface hover:bg-bg-elevated text-text-secondary'
-                )}
-              >
-                <input
-                  type="radio"
-                  name="report_reason"
-                  value={r}
-                  checked={isSelected}
-                  onChange={() => setReason(r)}
-                  className="accent-accent-red h-4 w-4 shrink-0 cursor-pointer"
-                />
-                <span className="flex-1">{reasonLabels[r]}</span>
-              </label>
-            );
-          })}
-        </div>
-      </fieldset>
+        </label>
+        <CustomDropdown<ReportReason>
+          value={reason}
+          onChange={(r) => setReason(r)}
+          options={REPORT_REASONS.map((r) => ({
+            value: r,
+            label: reasonLabels[r],
+          }))}
+          ariaLabel={t.reportReasonLabel}
+          className="w-full"
+          buttonClassName="w-full justify-between py-2.5 text-sm font-medium"
+          menuClassName="w-full"
+          accent="primary"
+        />
+      </div>
 
       <div className="flex flex-col gap-1.5">
         <label htmlFor="report-notes" className="type-label-sm text-text-muted">
@@ -258,15 +245,13 @@ export function ReportContentModalBody({
         />
       </div>
 
-      <div className="flex items-center justify-end gap-2 pt-2 border-t border-border-color">
-        <Button variant="secondary" onClick={onClose} disabled={status === 'submitting'}>
-          {t.cancel}
-        </Button>
+      <div className="flex items-center justify-center pt-3 border-t border-border-color">
         <Button
           variant="danger"
           type="submit"
           disabled={status === 'submitting'}
           aria-label={t.reportSubmit}
+          className="w-full sm:w-auto sm:min-w-36"
         >
           {status === 'submitting' ? t.reportSubmitting : t.reportSubmit}
         </Button>

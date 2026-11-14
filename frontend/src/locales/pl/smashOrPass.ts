@@ -134,6 +134,7 @@ export default {
     passCount: 'Passy',
     rank: 'Pozycja w Rankingu',
     firstSmash: 'Pierwszy Smash',
+    totalSmashes: 'Łącznie smashe',
   },
   filters: {
     allRoles: 'Wszystkie Role',

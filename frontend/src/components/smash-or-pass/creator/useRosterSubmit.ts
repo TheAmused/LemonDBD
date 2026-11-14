@@ -69,9 +69,7 @@ export function useRosterSubmit({
   const submit = async () => {
     setAttempted(true);
     setSubmitError(null);
-    if (nameMissing || coverInvalid) return;
-
-    if (draft.entities.length === 0) return;
+    if (nameMissing || entitiesMissing || coverInvalid) return;
 
     const hasIncompleteCandidates = draft.entities.some(
       (e) => !e.name?.trim() || !e.role?.trim() || !e.gender?.trim()
@@ -81,8 +79,6 @@ export function useRosterSubmit({
       setIsSubmitting?.(false);
       return;
     }
-
-    if (entitiesMissing) return;
 
     setIsSubmitting?.(true);
 

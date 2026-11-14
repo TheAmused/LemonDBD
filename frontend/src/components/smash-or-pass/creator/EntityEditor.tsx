@@ -16,9 +16,10 @@ import { SMASH_ROSTER_LIMITS, TRANSLATABLE_FIELDS, TRANSLATABLE_LOCALES,GENDER_Q
 import type { RosterCustomLabels } from '@/types/smashOrPass';
 import { LABEL } from './styles';
 import { RequiredMark } from './RequiredMark';
-import { canonicalGender, genderLabel, OFFICIAL_GENDERS, termLabel } from '@/utils/smashOrPass/terms';
+import { canonicalGender, genderLabel, termLabel } from '@/utils/smashOrPass/terms';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
+import { CustomDropdown } from '@/components/common/CustomDropdown';
 import { type DraftEntity, type EntityTranslationDraft, TextField, TextAreaField, entityTranslationFieldLabel } from "./EntityEditorParts";
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
@@ -27,6 +28,18 @@ import { tip } from '@/components/common/Tooltip';
 import { Badge } from '@/components/common/Badge';
 import { ToggleChip } from '@/components/common/ToggleChip';
 import { Img } from '@/components/common/Img';
+
+const FOCAL_POINTS: Array<{ label: string; value: string }> = [
+  { label: 'Top Left', value: 'left top' },
+  { label: 'Top Center', value: 'center top' },
+  { label: 'Top Right', value: 'right top' },
+  { label: 'Center Left', value: 'left center' },
+  { label: 'Center', value: 'center center' },
+  { label: 'Center Right', value: 'right center' },
+  { label: 'Bottom Left', value: 'left bottom' },
+  { label: 'Bottom Center', value: 'center bottom' },
+  { label: 'Bottom Right', value: 'right bottom' },
+];
 
 export interface CandidateFormInputsProps {
   entity: DraftEntity;
@@ -89,11 +102,6 @@ export function CandidateFormInputs({
 
   const displayIndex = String(index + 1).padStart(2, '0');
 
-  // Official genders are picked with the chips (stored as the official rosters store them); the text
-  // field holds only an author's own word, and a typed "Female" or "Monster" becomes the official key.
-  const genderIsOfficial = (OFFICIAL_GENDERS as readonly string[]).includes(entity.gender);
-  const ownGenders = availableGenders.filter((g) => !(OFFICIAL_GENDERS as readonly string[]).includes(canonicalGender(g)));
-
   return (
     <div className="flex flex-col gap-4">
       {/* Active candidate header with identity & remove button */}
@@ -137,6 +145,10 @@ export function CandidateFormInputs({
                   onContextMenu={(e) => e.preventDefault()}
                   referrerPolicy="no-referrer"
                   className="h-full w-full object-cover transition-transform duration-300 hover:scale-105 select-none"
+                  style={{
+                    objectPosition: entity.media_display?.position || 'center center',
+                    objectFit: (entity.media_display?.fit as any) || 'cover',
+                  }}
                 />
               ) : (
                 <div className="flex flex-col items-center gap-2 p-3 text-center text-text-muted select-none">
@@ -149,6 +161,55 @@ export function CandidateFormInputs({
                 #{displayIndex}
               </Badge>
             </div>
+
+            {/* 9-point focal point selector when candidate has media */}
+            {Boolean(safeMedia || entity.media_url.trim()) && (
+              <div className="flex flex-col items-center gap-1.5 pt-1">
+                <span className="type-micro text-text-muted font-medium">
+                  Focal Point
+                </span>
+                <div
+                  className="grid grid-cols-3 gap-1 p-1 rounded-card bg-bg-surface/80 border border-border-color/60"
+                  role="group"
+                  aria-label="Focal Point"
+                >
+                  {FOCAL_POINTS.map((pt) => {
+                    const isSelected = (entity.media_display?.position || 'center center') === pt.value;
+                    return (
+                      <button
+                        key={pt.value}
+                        type="button"
+                        aria-label={pt.label}
+                        aria-pressed={isSelected}
+                        title={pt.label}
+                        onClick={() =>
+                          onChange({
+                            media_display: {
+                              ...entity.media_display,
+                              position: pt.value,
+                              fit: 'cover',
+                            },
+                          })
+                        }
+                        className={cn(
+                          'w-6 h-6 rounded flex items-center justify-center transition-all focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-red',
+                          isSelected
+                            ? 'bg-accent-red text-white shadow-sm ring-1 ring-accent-red'
+                            : 'bg-bg-elevated hover:bg-bg-hover text-text-muted hover:text-text-primary'
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            'w-1.5 h-1.5 rounded-full transition-transform',
+                            isSelected ? 'bg-white scale-125' : 'bg-current opacity-60'
+                          )}
+                        />
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Inputs column: compact inputs taking focused space */}
@@ -217,78 +278,66 @@ export function CandidateFormInputs({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {/* Dynamic Role Input + Quick Chips */}
+              {/* Dynamic Role Selection */}
               <div className="space-y-1">
-                <label className="block">
-                  <span className="mb-1 block type-label-xs text-text-secondary">
-                    {c.entityRoleLabel}
-                  </span>
-                  <Input
-                    fieldSize="md"
-                    value={entity.role}
-                    onChange={(e) => onChange({ role: e.target.value })}
-                    placeholder={c.rolePlaceholder}
-                    list={`role-picks-${entity.key}`}
-                  />
-                  <datalist id={`role-picks-${entity.key}`}>
+                <span className="mb-1 block type-label-xs text-text-secondary">
+                  {c.entityRoleLabel}
+                  <RequiredMark />
+                </span>
+                {availableRoles.length <= 4 ? (
+                  <div className="flex flex-wrap items-center gap-1.5 pt-0.5" role="radiogroup" aria-label={c.entityRoleLabel}>
                     {availableRoles.map((r) => (
-                      <option key={r} value={termLabel(r)}>{termLabel(r)}</option>
-                    ))}
-                  </datalist>
-                </label>
-                {/* Quick-Pick Role Chips */}
-                {availableRoles.length > 0 && (
-                  <div className="flex flex-wrap items-center gap-1 pt-0.5">
-                    <span className="text-micro text-text-muted mr-0.5">{c.quick}</span>
-                    {availableRoles.slice(0, 4).map((r) => (
-                      <ToggleChip pressed={entity.role.toLowerCase() === termLabel(r).toLowerCase()} size="xs" tone="red"
+                      <ToggleChip
                         key={r}
+                        pressed={entity.role.toLowerCase() === termLabel(r).toLowerCase()}
+                        size="xs"
+                        tone="red"
                         onClick={() => onChange({ role: termLabel(r) })}
                       >
                         {termLabel(r)}
                       </ToggleChip>
                     ))}
                   </div>
+                ) : (
+                  <CustomDropdown<string>
+                    value={entity.role}
+                    onChange={(role) => onChange({ role })}
+                    options={availableRoles.map((r) => ({ value: termLabel(r), label: termLabel(r) }))}
+                    ariaLabel={c.entityRoleLabel}
+                  />
                 )}
               </div>
 
-              {/* Dynamic Gender Input + Quick Chips */}
+              {/* Dynamic Gender Selection */}
               <div className="space-y-1">
-                <label className="block">
-                  <span className="mb-1 block type-label-xs text-text-secondary">
-                    {c.entityGenderLabel}
-                  </span>
-                  <Input
-                    fieldSize="md"
-                    value={genderIsOfficial ? '' : entity.gender}
-                    onChange={(e) => onChange({ gender: e.target.value })}
-                    onBlur={(e) => {
-                      if (e.target.value.trim()) onChange({ gender: canonicalGender(e.target.value) });
-                    }}
-                    placeholder={c.genderPlaceholder}
-                    list={ownGenders.length > 0 ? `gender-picks-${entity.key}` : undefined}
-                  />
-                  {ownGenders.length > 0 && (
-                    <datalist id={`gender-picks-${entity.key}`}>
-                      {ownGenders.map((g) => (
-                        <option key={g} value={g}>{termLabel(g)}</option>
-                      ))}
-                    </datalist>
-                  )}
-                </label>
-                {/* Quick-Pick Gender Chips */}
-                {availableGenders.length > 0 && (
-                  <div className="flex flex-wrap items-center gap-1 pt-0.5">
-                    <span className="text-micro text-text-muted mr-0.5">{c.quick}</span>
-                    {availableGenders.slice(0, 4).map((g) => (
-                      <ToggleChip pressed={canonicalGender(entity.gender) === canonicalGender(g)} size="xs" tone="amber"
+                <span className="mb-1 block type-label-xs text-text-secondary">
+                  {c.entityGenderLabel}
+                  <RequiredMark />
+                </span>
+                {availableGenders.length <= 4 ? (
+                  <div className="flex flex-wrap items-center gap-1.5 pt-0.5" role="radiogroup" aria-label={c.entityGenderLabel}>
+                    {availableGenders.map((g) => (
+                      <ToggleChip
                         key={g}
+                        pressed={canonicalGender(entity.gender) === canonicalGender(g)}
+                        size="xs"
+                        tone="amber"
                         onClick={() => onChange({ gender: canonicalGender(g) })}
                       >
                         {genderLabel(g, dict.smashOrPass.filters)}
                       </ToggleChip>
                     ))}
                   </div>
+                ) : (
+                  <CustomDropdown<string>
+                    value={canonicalGender(entity.gender)}
+                    onChange={(gender) => onChange({ gender: canonicalGender(gender) })}
+                    options={availableGenders.map((g) => ({
+                      value: canonicalGender(g),
+                      label: genderLabel(g, dict.smashOrPass.filters),
+                    }))}
+                    ariaLabel={c.entityGenderLabel}
+                  />
                 )}
               </div>
             </div>
@@ -362,7 +411,7 @@ export function CandidateFormInputs({
           <div className="grid gap-3 sm:grid-cols-2 pt-2 border-t border-border-color/40 max-w-3xl 2xl:max-wide-2k:max-w-4xl wide-2k:max-w-6xl mx-auto w-full">
             <TextField label={c.entityRealNameLabel} value={entity.real_name} max={SMASH_ROSTER_LIMITS.maxRealName} onChange={(v) => onChange({ real_name: v })} />
             <TextField label={customLabels.archetype || c.entityArchetypeLabel} value={entity.archetype} max={SMASH_ROSTER_LIMITS.maxArchetype} onChange={(v) => onChange({ archetype: v })} />
-            <TextField label={c.entityTaglineLabel} value={entity.tagline} max={SMASH_ROSTER_LIMITS.maxTagline} onChange={(v) => onChange({ tagline: v })} />
+            <TextField label={c.entityTaglineLabel} value={entity.tagline} max={SMASH_ROSTER_LIMITS.maxTagline} onChange={(v) => onChange({ tagline: v })} placeholder={c.entityTaglinePlaceholder} />
             <TextField label={customLabels.quote || c.entityQuoteLabel} value={entity.quote} max={SMASH_ROSTER_LIMITS.maxQuote} onChange={(v) => onChange({ quote: v })} />
             <TextAreaField label={c.entityBioLabel} value={entity.bio} max={SMASH_ROSTER_LIMITS.maxBio} onChange={(v) => onChange({ bio: v })} full />
             <TextAreaField label={customLabels.meme || c.entityMemeLabel} value={entity.meme} max={SMASH_ROSTER_LIMITS.maxMeme} onChange={(v) => onChange({ meme: v })} full />

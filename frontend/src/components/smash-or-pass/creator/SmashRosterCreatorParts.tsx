@@ -51,6 +51,7 @@ export function entityFromDocument(e: SmashRosterDocumentEntity): DraftEntity {
     key: newKey(),
     name: e.name,
     media_url: e.media_url || '',
+    media_display: e.media_display || null,
     role: e.role || '',
     gender: e.gender || '',
     real_name: e.real_name || '',
@@ -81,6 +82,7 @@ export function toRawEntity(e: DraftEntity): Record<string, unknown> {
   return {
     name: e.name,
     media_url: e.media_url,
+    ...(e.media_display ? { media_display: e.media_display } : {}),
     role: e.role,
     gender: e.gender,
     real_name: e.real_name,
@@ -158,6 +160,7 @@ export function readDraft(): StoredDraft | null {
           key: typeof e?.key === 'string' && e.key ? e.key : (idx === 0 ? 'seed-0' : newKey()),
           name: typeof e?.name === 'string' ? e.name : '',
           media_url: typeof e?.media_url === 'string' ? e.media_url : '',
+          media_display: e?.media_display && typeof e.media_display === 'object' ? e.media_display : null,
           role: typeof e?.role === 'string' ? e.role : '',
           gender: typeof e?.gender === 'string' ? e.gender : '',
           real_name: typeof e?.real_name === 'string' ? e.real_name : '',

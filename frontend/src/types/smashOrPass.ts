@@ -220,6 +220,7 @@ export interface SmashRosterDocumentEntity {
   role: string;
   gender: string;
   media_url?: string;
+  media_display?: MediaDisplay | null;
   watermark_left?: string;
   watermark_right?: string;
   archetype?: string;

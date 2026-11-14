@@ -120,7 +120,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({ ch
               </span>
             </div>
             <p className="text-sm font-black tracking-tight text-text-primary group-hover:text-accent-red transition-colors">
-              {charTitle}
+              {profile.dating_vibe || charTitle}
             </p>
             <p className="text-xs text-text-muted line-clamp-2 leading-snug group-hover:text-text-secondary transition-colors mt-0.5">
               {charTagline}

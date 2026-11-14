@@ -109,7 +109,7 @@ export function CardBackFace({
             <span className="type-label-2xs text-accent-red block">
               {customLabels?.dating_vibe || text.loreLabels.datingArchetype}
             </span>
-            <p className="type-strong text-text-primary leading-snug">{charTitle}</p>
+            <p className="type-strong text-text-primary leading-snug">{profile.dating_vibe || charTitle}</p>
           </Surface>
 
           {profile.turn_on && (

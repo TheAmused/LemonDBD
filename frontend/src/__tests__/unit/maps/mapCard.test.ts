@@ -73,3 +73,25 @@ test('A retired map stays a normal, clickable button, greyed with a filter (not 
   assert.ok(!html.includes('opacity-50'), 'a see-through card would show the background particles');
   assert.ok(html.includes('Removed from the game'));
 });
+
+test('MapCard shows the in-game photo thumbnail when the map has one', () => {
+  const photoMap: MapRealm = { ...sampleMap, photo_local_path: 'maps/photos/autohaven_wreckers/azarovs_resting_place.webp' };
+  const html = renderWithDictionary(
+    React.createElement(MapCard, { map: photoMap, backendBase: 'http://localhost:5000', onSelect: () => {} })
+  );
+  assert.ok(html.includes('http://localhost:5000/api/v1/thumbs/maps/320/photos/autohaven_wreckers/azarovs_resting_place.webp'));
+  assert.ok(!html.includes('callouts/hens333'));
+  assert.ok(html.includes('object-cover'));
+});
+
+test('A variation after the first is marked as removed from the game but stays clickable', () => {
+  const render = (name: string) =>
+    renderWithDictionary(
+      React.createElement(MapCard, { map: { ...sampleMap, name }, backendBase: 'http://localhost:5000', onSelect: () => {} })
+    );
+  const second = render('Coal Tower II');
+  assert.ok(second.includes('Removed from the game') && second.includes('grayscale'));
+  assert.ok(!/<button[^>]*\sdisabled(=|\s|>)/.test(second));
+  assert.ok(!render('Preschool I').includes('Removed from the game'), 'the first variation is the map itself');
+  assert.ok(!render('Coal Tower').includes('Removed from the game'));
+});

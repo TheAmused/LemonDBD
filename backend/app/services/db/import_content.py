@@ -315,7 +315,7 @@ def _import_maps(
 
             for k in [
                 "name", "realm_id", "source_id", "description",
-                "callout_image_url", "callout_image_local_path", "translations",
+                "callout_image_url", "callout_image_local_path", "photo_local_path", "translations",
                 "layout_type", "pallet_density", "jungle_gyms_count",
                 "is_shack", "is_main_building", "is_retired",
                 "size_sq_tiles", "size_sq_meters",
@@ -338,6 +338,11 @@ def _import_maps(
                 static_dir,
                 mdata.get("callout_image_local_path"),
                 mdata.get("callout_image_local_path_data"),
+            )
+            write_asset_base64(
+                static_dir,
+                mdata.get("photo_local_path"),
+                mdata.get("photo_local_path_data"),
             )
         db.session.flush()
         summary["maps"] = {"created": created, "updated": updated}

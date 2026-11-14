@@ -10,7 +10,7 @@ import type { MapRealm } from '@/types/map';
 import type { CharacterItem, Perk } from '@/types/perks';
 import type { TierItem, TierListApiCustomItem, TierListDocumentItem } from '@/types/tierList';
 import { getMapImageSrc, getMapThumbSrc } from '@/utils/mapUtils';
-import { perkIconUrl } from '@/utils/staticUrl';
+import { avatarUrlForCharacter, perkIconUrl } from '@/utils/staticUrl';
 import { staticUrl } from '@/utils/api';
 import { avatarThumbFromPath, getCommunityCoverThumbUrl, getIconThumbUrl } from '@/utils/thumbUrl';
 import { sanitizeImageUrl } from './codec';
@@ -103,7 +103,16 @@ export function mapsToItems(maps: readonly MapRealm[], itemIds?: readonly number
 /** Items authored on an official `custom` template. */
 export function templateCustomItemsToItems(items: readonly TierListApiCustomItem[]): TierItem[] {
   return items.map((item) => {
-    const raw = staticUrl(item.image_local_path) ?? sanitizeImageUrl(item.image_url);
+    let raw = staticUrl(item.image_local_path) ?? sanitizeImageUrl(item.image_url);
+    if (!raw && item.id) {
+      if (item.id.startsWith('survivor:')) {
+        const charUrl = avatarUrlForCharacter(item.name, 'survivors');
+        raw = charUrl ? avatarThumbFromPath(charUrl, 128) || charUrl : null;
+      } else if (item.id.startsWith('killer:')) {
+        const charUrl = avatarUrlForCharacter(item.name, 'killers');
+        raw = charUrl ? avatarThumbFromPath(charUrl, 128) || charUrl : null;
+      }
+    }
     return {
       key: item.id,
       name: item.name,
@@ -114,9 +123,21 @@ export function templateCustomItemsToItems(items: readonly TierListApiCustomItem
 
 /** Items of a user's own custom list (already sanitized when imported). */
 export function documentItemsToItems(items: readonly TierListDocumentItem[]): TierItem[] {
-  return items.map((item) => ({
-    key: item.id,
-    name: item.name,
-    image: item.image ? (item.image.startsWith('/static/') ? staticUrl(item.image) ?? null : item.image) : null,
-  }));
+  return items.map((item) => {
+    let img = item.image ? (item.image.startsWith('/static/') ? staticUrl(item.image) ?? null : item.image) : null;
+    if (!img && item.id) {
+      if (item.id.startsWith('survivor:')) {
+        const charUrl = avatarUrlForCharacter(item.name, 'survivors');
+        img = charUrl ? avatarThumbFromPath(charUrl, 128) || charUrl : null;
+      } else if (item.id.startsWith('killer:')) {
+        const charUrl = avatarUrlForCharacter(item.name, 'killers');
+        img = charUrl ? avatarThumbFromPath(charUrl, 128) || charUrl : null;
+      }
+    }
+    return {
+      key: item.id,
+      name: item.name,
+      image: img,
+    };
+  });
 }

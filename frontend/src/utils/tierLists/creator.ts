@@ -84,7 +84,8 @@ export function parseLinkLines(text: string): ParsedLinkLines {
     if (!line) return;
 
     const split = line.split(/\s*\|\s*|\t+|\s+-\s+(?=\S+:)/);
-    const looksLikeLink = (s: string) => /^[a-z][a-z0-9+.-]*:/i.test(s) || s.startsWith('/static/');
+    const looksLikeLink = (s: string) =>
+      /^[a-z][a-z0-9+.-]*:/i.test(s) || s.startsWith('/static/') || s.startsWith('/api/v1/thumbs/');
 
     let name = '';
     let link = '';

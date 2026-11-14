@@ -254,7 +254,7 @@ function LinksSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
     const trimmedName = itemName.trim();
     const trimmedUrl = imageUrl.trim();
 
-    if (!trimmedName && !trimmedUrl) {
+    if (!trimmedName) {
       setError(t.itemNameRequired);
       return;
     }
@@ -287,7 +287,10 @@ function LinksSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
     <div className="flex h-full flex-col gap-3">
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="flex flex-col gap-1.5">
-          <span className={LABEL}>{t.itemName}</span>
+          <span className={LABEL}>
+            {t.itemName}
+            <span className="text-accent-red"> *</span>
+          </span>
           <Input
             type="text"
             value={itemName}
@@ -353,7 +356,7 @@ function LinksSource({ onAdd }: { onAdd: (items: IncomingItem[]) => void; }) {
       <div className="flex justify-center w-full pt-1">
         <Button
           variant="primary"
-          disabled={!itemName.trim() && !imageUrl.trim()}
+          disabled={!itemName.trim()}
           onClick={handleAdd}
           leftIcon={<Plus className="icon-md" aria-hidden="true" />}
           className="min-h-10 px-6"
@@ -421,6 +424,25 @@ function CatalogSource({ onAdd, existingIds, locale }: {
 
   const renderedItems = useMemo(() => visible.slice(0, renderLimit), [visible, renderLimit]);
 
+  const selectableVisible = useMemo(
+    () => visible.filter((i) => !existingIds.has(i.key)),
+    [visible, existingIds]
+  );
+  const allVisibleSelected =
+    selectableVisible.length > 0 && selectableVisible.every((i) => selected.has(i.key));
+
+  const handleToggleSelectAll = () => {
+    if (allVisibleSelected) {
+      setSelected((prev) => {
+        const next = new Set(prev);
+        selectableVisible.forEach((i) => next.delete(i.key));
+        return next;
+      });
+    } else {
+      setSelected((prev) => new Set([...prev, ...selectableVisible.map((i) => i.key)]));
+    }
+  };
+
   const toggle = (key: string) =>
     setSelected((prev) => {
       const next = new Set(prev);
@@ -452,8 +474,8 @@ function CatalogSource({ onAdd, existingIds, locale }: {
         ))}
       </fieldset>
 
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <div className="flex gap-2 sm:contents">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 w-full">
+        <div className="flex items-center justify-center gap-2 w-full sm:w-auto">
           <div className="shrink-0 sm:hidden">
             <CustomDropdown
               value={kind}
@@ -468,7 +490,7 @@ function CatalogSource({ onAdd, existingIds, locale }: {
             />
           </div>
           <SearchInput
-            wrapperClassName="min-w-0 flex-1"
+            wrapperClassName="min-w-0 w-full sm:w-72"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={c.catalogSearch}
@@ -476,21 +498,15 @@ function CatalogSource({ onAdd, existingIds, locale }: {
             className={TOUCH_FIELD}
           />
         </div>
-        <div className="flex justify-center gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() =>
-              setSelected((prev) => new Set([...prev, ...visible.filter((i) => !existingIds.has(i.key)).map((i) => i.key)]))
-            }
-            className="min-h-hit-sm"
-          >
-            {c.selectAll}
-          </Button>
-          <Button variant="secondary" size="sm" disabled={selected.size === 0} onClick={() => setSelected(new Set())} className="min-h-hit-sm">
-            {c.clearSelection}
-          </Button>
-        </div>
+        <Button
+          variant="secondary"
+          size="sm"
+          disabled={selectableVisible.length === 0}
+          onClick={handleToggleSelectAll}
+          className="min-h-hit-sm whitespace-nowrap px-4"
+        >
+          {allVisibleSelected ? c.clearSelection : c.selectAll}
+        </Button>
       </div>
 
       <div

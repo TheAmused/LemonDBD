@@ -42,11 +42,11 @@ describe('ReportContentModal: Rendering & States', () => {
     );
 
     assert.ok(html.includes(t.reportNoManifest), 'should render unsigned notice when manifest is missing');
-    assert.ok(html.includes('name="report_reason"'), 'unsigned content can still be reported');
+    assert.ok(html.includes(t.reportReasonLabel), 'unsigned content can still be reported');
     assert.ok(html.includes(t.reportSubmit), 'unsigned content keeps the submit button');
   });
 
-  it('renders all 5 reason options, notes textarea and submit button when manifest exists', () => {
+  it('renders reason CustomDropdown, notes textarea and centered submit button when manifest exists', () => {
     const html = renderWithDictionary(
       React.createElement(ReportContentModalBody, {
         manifest: MOCK_MANIFEST,
@@ -57,14 +57,12 @@ describe('ReportContentModal: Rendering & States', () => {
       })
     );
 
-    assert.ok(html.includes(t.reportReasonHate), 'renders hate speech option');
-    assert.ok(html.includes(t.reportReasonHarassment), 'renders harassment option');
-    assert.ok(html.includes(t.reportReasonExplicit), 'renders explicit option');
-    assert.ok(html.includes(t.reportReasonIllegal), 'renders illegal option');
-    assert.ok(html.includes(t.reportReasonOther), 'renders other option');
+    assert.ok(html.includes(t.reportReasonHate), 'renders selected reason option in CustomDropdown trigger');
+    assert.ok(html.includes(t.reportReasonLabel), 'renders reason label');
     assert.ok(html.includes(t.reportNotesLabel), 'renders notes label');
     assert.ok(html.includes(t.reportNotesPlaceholder), 'renders notes placeholder');
     assert.ok(html.includes(t.reportSubmit), 'renders submit button');
+    assert.ok(html.includes('justify-center'), 'submit button container is centered');
     assert.equal(REPORT_REASONS.length, 5, 'defines exactly 5 canonical report reasons');
   });
 

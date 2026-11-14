@@ -23,7 +23,6 @@ import { TierListSkeleton } from './TierListSkeleton';
 import { HEADER_BTN } from './styles';
 import { Button } from '@/components/common/Button';
 import { useDictionary } from "@/context/DictionaryContext";
-import { Badge } from '@/components/common/Badge';
 import { AccordionSection } from '@/components/common/AccordionSection';
 import { Tooltip } from '@/components/common/Tooltip';
 import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
@@ -89,8 +88,6 @@ export function TierListHub({ locale }: TierListHubProps) {
     [state.custom]
   );
 
-  const customCount = hydrated ? customLists.length : 0;
-
   const rankedCount = useCallback(
     (slug: string) =>
       Object.values(state.rankings[slug]?.placements ?? {}).reduce((n, keys) => n + keys.length, 0),
@@ -145,12 +142,10 @@ export function TierListHub({ locale }: TierListHubProps) {
         open={isOfficialOpen}
         onToggle={toggleOfficial}
         banner="/images/banners/banner_loadouts.webp"
-        badge={lists.length > 0 && (<Badge tone="red" size="sm" plain>{lists.length}</Badge>)}
         headerAction={
           <Tooltip
             variant="action"
-            title={dict.smashOrPass.effectsPrefs.button}
-            description={dict.smashOrPass.effectsPrefs.buttonDesc}
+            title={dict.sidebar.settings}
             placement="bottom"
           >
             <Button
@@ -158,7 +153,7 @@ export function TierListHub({ locale }: TierListHubProps) {
               size="sm"
               icon
               onClick={() => router.push(`/${locale}/settings`)}
-              aria-label={dict.smashOrPass.effectsPrefs.button}
+              aria-label={dict.sidebar.settings}
               className="h-9 w-9 min-h-9 min-w-9"
             >
               <Settings className="icon-md" aria-hidden="true" />
@@ -209,7 +204,6 @@ export function TierListHub({ locale }: TierListHubProps) {
         open={isCustomOpen}
         onToggle={toggleCustom}
         banner="/images/banners/banner_account.webp"
-        badge={hydrated && (<Badge tone="red" size="sm" plain>{customCount}</Badge>)}
         headerAction={<div className="flex items-center gap-2"><Button variant="secondary" onClick={handleOpenImport} className={HEADER_BTN}><FileJson className="shrink-0" aria-hidden="true" /><span className="hidden sm:inline">{t.importJson}</span></Button><Button variant="primary" onClick={createBlank} className={HEADER_BTN}><Plus className="shrink-0" aria-hidden="true" /><span className="hidden sm:inline">{t.newCustomList}</span></Button></div>}
         stickyHeader
         as="section"

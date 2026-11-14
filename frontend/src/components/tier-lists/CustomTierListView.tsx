@@ -39,10 +39,14 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
   const t = dict.tierLists;
   const router = useRouter();
   const { state, hydrated } = useTierListStore();
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { isAuthenticated, isLoading: authLoading, user } = useAuth();
   const list = state.custom[id];
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const nsfwGate = useNsfwGate('tier_list', id, list?.is_nsfw === true);
+
+  const isImported = Boolean(list?._manifest?.author_login && list._manifest.author_login !== user?.username);
+  const authorName = list?._manifest?.author_login;
+  const authorOrKindLabel = isImported ? `@${authorName}` : dict.smashOrPass.picker.yours;
 
   useDocumentTitle(list ? `LemonDBD - ${list.title || t.untitled}` : t.pageTitle);
 
@@ -138,7 +142,7 @@ export function CustomTierListView({ id, locale }: CustomTierListViewProps) {
         preferenceKey="custom"
         title={list.title}
         description={list.description}
-        kindLabel={t.kinds.custom}
+        kindLabel={authorOrKindLabel}
         items={items}
         tiers={list.tiers}
         placements={list.placements}

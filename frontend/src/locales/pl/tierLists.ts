@@ -71,7 +71,7 @@ export default {
   addTier: "Dodaj tier",
   editDetails: "Edytuj szczegóły",
   deleteList: "Usuń listę",
-  deleteListTitle: "Usunąć tę własną listę?",
+  deleteListTitle: "Usunąć tą listę?",
   deleteListMessage: "Zostanie trwale usunięta z tej przeglądarki.",
   toolbarAria: "Akcje tier listy",
   scaleFit: "Dopasuj",

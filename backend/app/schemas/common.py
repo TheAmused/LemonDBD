@@ -20,7 +20,7 @@ _MAX_DATA_IMAGE_CHARS = 131_072
 
 def clean_image_url(value: str | None) -> str | None:
     """`https:` URLs, raster `data:image/*` up to the size cap, or a
-    same-origin `/static/...` path. Anything else -- and anything at
+    same-origin `/static/...` or `/api/v1/thumbs/...` path. Anything else -- and anything at
     all when `value` is falsy -- becomes None rather than an error."""
     if not value:
         return None
@@ -31,7 +31,11 @@ def clean_image_url(value: str | None) -> str | None:
         return value if len(value) <= _MAX_DATA_IMAGE_CHARS and _DATA_IMAGE_PATTERN.match(value) else None
     if any(c in value for c in ('"', "'", "\\", "<", ">")) or any(ord(c) <= 32 or ord(c) == 127 for c in value):
         return None
-    if value.startswith("/static/"):
+    local_match = re.match(r"^https?://(?:localhost|127\.0\.0\.1)(?::\d+)?(/.*)$", value)
+    if local_match:
+        value = local_match.group(1)
+
+    if value.startswith("/static/") or value.startswith("/api/v1/thumbs/"):
         return value if ".." not in value and "//" not in value else None
     if len(value) > 2048:
         return None

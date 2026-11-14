@@ -10,13 +10,13 @@ import {
   Eye,
   EyeOff,
   Flag,
-  MousePointerClick,
   Pencil,
   RotateCcw,
   Trash2,
   Upload,
 } from 'lucide-react';
 import { ConfirmModal } from '@/components/common/ConfirmModal';
+import { cn } from '@/utils/cn';
 import type { TierDefinition, TierItem, TierListDocument, TierPlacements } from '@/types/tierList';
 import { usePersistentString } from '@/hooks/usePersistentString';
 import { useFinePointer } from '@/hooks/useFinePointer';
@@ -28,14 +28,11 @@ import { TierListExportModal } from './TierListExportModal';
 import { type ImportTarget, TierListImportModal } from './TierListImportModal';
 import { TierListScaleControl } from './TierListScaleControl';
 import type { TierTileShape } from './TierItemTile';
-import { TOUCH_BTN } from './styles';
 import { Alert } from '@/components/common/Alert';
 import { Button, buttonClassName } from '@/components/common/Button';
 import { MenuItem, menuItemClassName } from '@/components/common/MenuItem';
 import { Popover, popoverTriggerProps } from '@/components/common/Popover';
 import { tip } from '@/components/common/Tooltip';
-import { formatMessage } from '@/utils/i18nFormat';
-import { Surface } from '@/components/common/Surface';
 import { type TierListTag, trackEvent } from '@/utils/analytics';
 import { useTierListRankingTracking } from './tierListTracking';
 
@@ -140,7 +137,6 @@ export function TierListEditor(props: TierListEditorProps) {
   const board = useMemo(() => buildBoard(items, tiers, placements), [items, tiers, placements]);
   const visibleKeys = useMemo(() => new Set(items.map((i) => i.key)), [items]);
   const catalogOrder = useMemo(() => items.map((i) => i.key), [items]);
-  const itemsByKey = useMemo(() => new Map(items.map((i) => [i.key, i])), [items]);
 
   // A selection whose item vanished (removed, re-imported) is dropped (while rendering).
   if (selectedKey && !visibleKeys.has(selectedKey)) setSelectedKey(null);
@@ -175,8 +171,6 @@ export function TierListEditor(props: TierListEditorProps) {
     [board, commit, tiers, trackRanking]
   );
 
-  const selectedItem = selectedKey ? itemsByKey.get(selectedKey) : undefined;
-
   const exportDoc = useMemo(
     () => (dialog === 'export' ? buildExportDoc(tiers, placementsFromBoard(board, tiers, placements, visibleKeys)) : null),
     [dialog, buildExportDoc, tiers, board, placements, visibleKeys]
@@ -187,8 +181,6 @@ export function TierListEditor(props: TierListEditorProps) {
     kindLabel && pageTitle && kindLabel.trim().toLowerCase() === pageTitle.trim().toLowerCase()
   );
   const showKindBadge = Boolean(kindLabel && !isDuplicateKind);
-  const hasExtendedToolbar = mode === 'custom';
-  const secondaryLabelClass = hasExtendedToolbar ? 'sr-only' : 'hidden xl:inline short:hidden!';
 
   return (
     <div className="relative z-10 flex flex-col gap-3 sm:gap-3.5 w-full">
@@ -287,6 +279,7 @@ export function TierListEditor(props: TierListEditorProps) {
               <Button
                 variant="secondary"
                 size="sm"
+                icon
                 onClick={() => setShowNamesPref(showNames ? 'off' : 'on')}
                 aria-pressed={showNames}
                 aria-label={showNames ? t.hideNames : t.showNames}
@@ -294,25 +287,25 @@ export function TierListEditor(props: TierListEditorProps) {
                 className={TOOLBAR_BTN}
               >
                 {showNames ? <EyeOff aria-hidden="true" /> : <Eye aria-hidden="true" />}
-                <span className={secondaryLabelClass}>{showNames ? t.hideNames : t.showNames}</span>
+                <span className="sr-only">{showNames ? t.hideNames : t.showNames}</span>
               </Button>
             )}
-            <Button variant="secondary" size="sm" onClick={() => setDialog('import')} aria-label={t.import} {...tip(t.import, undefined, 'action')} className={TOOLBAR_BTN}>
+            <Button variant="secondary" size="sm" icon onClick={() => setDialog('import')} aria-label={t.import} {...tip(t.import, undefined, 'action')} className={TOOLBAR_BTN}>
               <Upload aria-hidden="true" />
-              <span className={secondaryLabelClass}>{t.import}</span>
+              <span className="sr-only">{t.import}</span>
             </Button>
-            <Button variant="secondary" size="sm" onClick={() => setDialog('export')} aria-label={t.export} {...tip(t.export, undefined, 'action')} className={TOOLBAR_BTN}>
+            <Button variant="secondary" size="sm" icon onClick={() => setDialog('export')} aria-label={t.export} {...tip(t.export, undefined, 'action')} className={TOOLBAR_BTN}>
               <Download aria-hidden="true" />
-              <span className={secondaryLabelClass}>{t.export}</span>
+              <span className="sr-only">{t.export}</span>
             </Button>
-            <Button variant="secondary" size="sm" onClick={() => setDialog('reset')} aria-label={t.reset} {...tip(t.reset, undefined, 'action')} className={TOOLBAR_BTN}>
+            <Button variant="secondary" size="sm" icon onClick={() => setDialog('reset')} aria-label={t.reset} {...tip(t.reset, undefined, 'action')} className={TOOLBAR_BTN}>
               <RotateCcw aria-hidden="true" />
-              <span className={secondaryLabelClass}>{t.reset}</span>
+              <span className="sr-only">{t.reset}</span>
             </Button>
             {onReport && (
-              <Button variant="secondary" size="sm" onClick={onReport} aria-label={t.reportButtonAria} {...tip(t.reportButton, undefined, 'action')} className={TOOLBAR_BTN}>
+              <Button variant="secondary" size="sm" icon onClick={onReport} aria-label={t.reportButtonAria} {...tip(t.reportButton, undefined, 'action')} className={TOOLBAR_BTN}>
                 <Flag aria-hidden="true" />
-                <span className={secondaryLabelClass}>{t.reportButton}</span>
+                <span className="sr-only">{t.reportButton}</span>
               </Button>
             )}
             {editHref && (
@@ -320,20 +313,21 @@ export function TierListEditor(props: TierListEditorProps) {
                 href={editHref}
                 aria-label={t.editDetails}
                 {...tip(t.editDetails, undefined, 'action')}
-                className={buttonClassName('secondary', 'sm', TOOLBAR_BTN)}
+                className={buttonClassName('secondary', 'sm', cn(TOOLBAR_BTN, 'w-9 min-w-9 p-0'))}
               >
                 <Pencil className="icon-sm" aria-hidden="true" />
-                <span className="hidden xl:inline short:hidden!">{t.editDetails}</span>
+                <span className="sr-only">{t.editDetails}</span>
               </Link>
             )}
             {onDelete && (
               <Button
                 variant="soft"
                 size="sm"
+                icon
                 onClick={() => setDialog('delete')}
                 aria-label={t.deleteList}
                 {...tip(t.deleteList, undefined, 'action')}
-                className={TOOLBAR_BTN}
+                className={cn(TOOLBAR_BTN, 'hover:bg-accent-red hover:text-text-inverted')}
               >
                 <Trash2 aria-hidden="true" />
                 <span className="sr-only">{t.deleteList}</span>
@@ -347,27 +341,6 @@ export function TierListEditor(props: TierListEditorProps) {
         <Alert onDismiss={() => setSaveError(null)} dismissLabel={t.dismiss}>
           {saveError === 'quota' ? t.saveFailedQuota : t.saveFailedUnavailable}
         </Alert>
-      )}
-
-      {selectedItem && (
-        // `fixed` (not part of normal flow) on purpose: this used to sit
-        // inline above the board and shove every tier row down the instant
-        // an item was selected -- and back up on deselect -- a layout jump
-        // on every tap. Floating it over the page instead keeps the tap-to-
-        // select flow (and its cancel action) working exactly as
-        // before with zero effect on anything else's position.
-        <div
-          aria-live="polite"
-          className="pointer-events-none fixed inset-x-0 bottom-4 z-40 flex justify-center px-4 lemon-modal-overlay-sidebar-aware"
-        >
-          <Surface padding="none" className="pointer-events-auto flex max-w-xl flex-wrap items-center justify-center gap-2 border-accent-amber/40 shadow-lg px-3 py-1.5 type-card-title text-accent-amber text-center">
-            <MousePointerClick className="icon-md shrink-0" aria-hidden="true" />
-            <span className="min-w-0">{formatMessage(t.selectedHint, { name: selectedItem.name })}</span>
-            <Button variant="secondary" onClick={() => setSelectedKey(null)} className={TOUCH_BTN}>
-              {t.cancelSelection}
-            </Button>
-          </Surface>
-        </div>
       )}
 
       <TierListBoard

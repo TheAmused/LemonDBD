@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Pencil, X, Plus } from 'lucide-react';
-import type { Dictionary } from '@/locales/types';
 import { cn } from '@/utils/cn';
 import { sanitizeImageUrl } from '@/utils/smashOrPass/codec';
 import type { TRANSLATABLE_FIELDS } from '@/utils/smashOrPass/constants';
@@ -67,7 +66,7 @@ export function emptyDraftEntity(key: string): DraftEntity {
 }
 
 /** One locale's overrides for this entity's translatable fields. */
-export type EntityTranslationDraft = Partial<Record<(typeof TRANSLATABLE_FIELDS)[number] | 'name', string>>;
+export type EntityTranslationDraft = Partial<Record<(typeof TRANSLATABLE_FIELDS)[number], string>>;
 
 export interface CandidateTilesProps {
   entities: DraftEntity[];
@@ -229,20 +228,6 @@ export function CandidateTiles({ entities, selectedKey, onSelect, onRename, onRe
       </div>
     </div>
   );
-}
-
-export function entityTranslationFieldLabel(c: Dictionary['smashOrPass']['creator'], field: string): string {
-  const map: Record<string, string> = {
-    archetype: c.entityArchetypeLabel,
-    bio: c.entityBioLabel,
-    tagline: c.entityTaglineLabel,
-    quote: c.entityQuoteLabel,
-    meme: c.entityMemeLabel,
-    turn_on: c.entityTurnOnLabel,
-    dealbreaker: c.entityDealbreakerLabel,
-    dating_vibe: c.entityDatingVibeLabel,
-  };
-  return map[field] || field;
 }
 
 export function TextField({

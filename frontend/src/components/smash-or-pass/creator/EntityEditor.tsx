@@ -43,9 +43,11 @@ export interface CandidateFormInputsProps {
   totalCount?: number;
   onChange: (patch: Partial<DraftEntity>) => void;
   onRemove: () => void;
-  showTranslations: boolean;
+  showTranslations?: boolean;
   translations: Record<string, EntityTranslationDraft>;
   onTranslationChange: (locale: string, field: string, value: string) => void;
+  activeLocale?: string;
+  onLocaleChange?: (locale: string) => void;
   locale: string;
   isSimpleMode?: boolean;
   customLabels?: RosterCustomLabels;
@@ -58,8 +60,11 @@ export function CandidateFormInputs({
   index,
   onChange,
   onRemove,
+  showTranslations = false,
   translations,
   onTranslationChange,
+  activeLocale: controlledLocale,
+  onLocaleChange,
   isSimpleMode = false,
   customLabels = {},
   availableRoles = [],
@@ -68,14 +73,24 @@ export function CandidateFormInputs({
   const dict = useDictionary();
   const c = dict.smashOrPass.creator || {};
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [activeLocale, setActiveLocale] = useState<string>('en');
+  const [internalLocale, setInternalLocale] = useState<string>('en');
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
   useOnValueChange(entity.key, () => setUploadError(null));
 
-  const isBaseLocale = activeLocale === 'en';
-  const sharedNotice = !isBaseLocale ? (
+  const currentLocale = controlledLocale ?? internalLocale;
+  const setLocale = (nextLocale: string) => {
+    if (onLocaleChange) {
+      onLocaleChange(nextLocale);
+    } else {
+      setInternalLocale(nextLocale);
+    }
+  };
+
+  const effectiveLocale = showTranslations ? currentLocale : 'en';
+  const isBaseLocale = effectiveLocale === 'en';
+  const sharedNotice = showTranslations && !isBaseLocale ? (
     <span className="type-micro text-text-muted/70 font-normal ml-1">({c.sharedFieldNotice})</span>
   ) : null;
 
@@ -92,9 +107,9 @@ export function CandidateFormInputs({
       };
     }
     return {
-      value: translations[activeLocale]?.[field] || '',
+      value: translations[effectiveLocale]?.[field] || '',
       placeholder: baseValue || defaultPlaceholder,
-      onChange: (v: string) => onTranslationChange(activeLocale, field, v),
+      onChange: (v: string) => onTranslationChange(effectiveLocale, field, v),
     };
   };
 
@@ -153,20 +168,24 @@ export function CandidateFormInputs({
           </h3>
         </div>
         <div className="flex items-center gap-2">
-          <span className="type-micro text-text-muted whitespace-nowrap">{c.editingLanguageLabel}:</span>
-          <CustomDropdown<string>
-            value={activeLocale}
-            onChange={(loc) => setActiveLocale(loc)}
-            options={[
-              { value: 'en', label: c.baseLanguageLabel },
-              { value: 'pl', label: 'Polski (PL)' },
-              { value: 'de', label: 'Deutsch (DE)' },
-              { value: 'es', label: 'Español (ES)' },
-              { value: 'ja', label: '日本語 (JA)' },
-            ]}
-            ariaLabel={c.editingLanguageLabel}
-            accent="primary"
-          />
+          {showTranslations && (
+            <>
+              <span className="type-micro text-text-muted whitespace-nowrap">{c.editingLanguageLabel}:</span>
+              <CustomDropdown<string>
+                value={effectiveLocale}
+                onChange={(loc) => setLocale(loc)}
+                options={[
+                  { value: 'en', label: c.baseLanguageLabel },
+                  { value: 'pl', label: 'Polski (PL)' },
+                  { value: 'de', label: 'Deutsch (DE)' },
+                  { value: 'es', label: 'Español (ES)' },
+                  { value: 'ja', label: '日本語 (JA)' },
+                ]}
+                ariaLabel={c.editingLanguageLabel}
+                accent="primary"
+              />
+            </>
+          )}
           <Button
             variant="danger"
             size="sm"
@@ -279,20 +298,15 @@ export function CandidateFormInputs({
             <label className="block">
               <span className="mb-1 block type-label-xs text-text-secondary">
                 {c.entityNameLabel}
-                {isBaseLocale && <RequiredMark />}
+                <RequiredMark />
+                {sharedNotice}
               </span>
               <Input
                 fieldSize="md"
-                value={isBaseLocale ? entity.name : (translations[activeLocale]?.name || '')}
+                value={entity.name}
                 maxLength={SMASH_ROSTER_LIMITS.maxEntityName}
-                onChange={(e) => {
-                  if (isBaseLocale) {
-                    onChange({ name: e.target.value });
-                  } else {
-                    onTranslationChange(activeLocale, 'name', e.target.value);
-                  }
-                }}
-                placeholder={isBaseLocale ? c.entityNamePlaceholder : (entity.name || c.entityNamePlaceholder)}
+                onChange={(e) => onChange({ name: e.target.value })}
+                placeholder={c.entityNamePlaceholder}
                 className="font-semibold"
               />
             </label>

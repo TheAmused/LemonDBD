@@ -1,9 +1,9 @@
 // frontend/src/__tests__/unit/smash/hubAudioAndTooltips.test.ts
 import '../../helpers/dom';
-import { describe, it } from 'node:test';
+import { afterEach, beforeEach, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
-import { render, withAppProviders } from '../../helpers/dom';
+import { act, render, routeFetch, withAppProviders } from '../../helpers/dom';
 import enSmash from '@/locales/en/smashOrPass';
 import plSmash from '@/locales/pl/smashOrPass';
 import deSmash from '@/locales/de/smashOrPass';
@@ -25,6 +25,20 @@ const lockedRoster: RosterItem = {
 };
 
 describe('Smash or Pass Hub Audio & Modal Polish', () => {
+  let api: ReturnType<typeof routeFetch> | null = null;
+
+  beforeEach(() => {
+    api = routeFetch({
+      '/auth/me': { body: { authenticated: false } },
+      '/site-config': { body: {} },
+    });
+  });
+
+  afterEach(() => {
+    api?.restore();
+    api = null;
+  });
+
   describe('flipToDatingProfile locale strings', () => {
     it('uses "Flip card" for English and "Obróć kartę" for Polish', () => {
       assert.equal(enSmash.flipToDatingProfile, 'Flip card');
@@ -39,18 +53,21 @@ describe('Smash or Pass Hub Audio & Modal Polish', () => {
   });
 
   describe('locked roster labels and badges', () => {
-    it('does not contain "Draft" or "(Draft)" in aria-label or rendered badges', () => {
-      const view = render(
-        React.createElement(RosterCarouselCard, {
-          roster: lockedRoster,
-          visualOffset: 0,
-          isDragging: false,
-          isCurrentlyActive: false,
-          onJump: () => undefined,
-          onCommit: () => undefined,
-        }),
-        { wrapper: withAppProviders().wrapper }
-      );
+    it('does not contain "Draft" or "(Draft)" in aria-label or rendered badges', async () => {
+      let view!: ReturnType<typeof render>;
+      await act(async () => {
+        view = render(
+          React.createElement(RosterCarouselCard, {
+            roster: lockedRoster,
+            visualOffset: 0,
+            isDragging: false,
+            isCurrentlyActive: false,
+            onJump: () => undefined,
+            onCommit: () => undefined,
+          }),
+          { wrapper: withAppProviders().wrapper }
+        );
+      });
 
       const button = view.container.querySelector('[data-roster-card]');
       assert.ok(button, 'roster card button should exist');

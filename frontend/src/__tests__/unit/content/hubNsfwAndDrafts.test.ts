@@ -120,7 +120,7 @@ describe('Hub NSFW Blurring & Admin Draft/Delete UX', () => {
     assert.ok(html.includes('blur-md'), 'roster cover should have blur-md class when NSFW is not globally acknowledged');
   });
 
-  it('RosterCarouselCard renders Draft badge when r.is_active === false', () => {
+  it('RosterCarouselCard does not render Draft badge when r.is_active === false', () => {
     const html = renderWithDictionary(
       React.createElement(RosterCarouselCard, {
         roster: { ...mockRoster, is_active: false },
@@ -132,7 +132,7 @@ describe('Hub NSFW Blurring & Admin Draft/Delete UX', () => {
       })
     );
 
-    assert.ok(html.includes(en.tierLists.draft), 'draft badge should be rendered for inactive roster');
+    assert.ok(!html.includes(en.tierLists.draft), 'draft badge should not be rendered for inactive roster');
   });
 
   it('TierListCreatorParts readDraft preserves is_active status', async () => {

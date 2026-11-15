@@ -74,6 +74,7 @@ const ACTION_LABEL_KEYS = {
   'tier_list.create': 'auditActionTierListCreated',
   'tier_list.update': 'auditActionTierListUpdated',
   'smash_roster.create': 'auditActionRosterCreated',
+  'smash_roster.update': 'auditActionRosterUpdated',
   'changelog.create': 'auditActionChangelogCreated',
   'changelog.update': 'auditActionChangelogUpdated',
   'changelog.reorder': 'auditActionChangelogReordered',

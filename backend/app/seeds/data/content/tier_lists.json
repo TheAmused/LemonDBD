@@ -10,23 +10,23 @@
       "slug": "survivor-perks",
       "kind": "survivor_perks",
       "title": "Survivor Perks",
-      "description": "Second-chance crutches or sandbagging trash. Rank the perks that keep your ass off the hook.",
+      "description": "Second-chance crutches or useless dead weight. Rank the perks that keep your ass off the hook.",
       "translations": {
         "de": {
           "title": "Überlebenden-Perks",
-          "description": "Second-Chance-Crutches oder Sandbagging-Müll? Bewerte die Perks, die deinen Arsch vor dem Haken retten."
+          "description": "Second-Chance-Crutches oder nutzloser Ballast? Bewerte die Perks, die deinen Arsch vor dem Haken retten."
         },
         "es": {
           "title": "Perks de superviviente",
-          "description": "¿Muletas de segunda oportunidad o basura para hacer sandbagging? Clasifica los perks que te salvan el culo del gancho."
+          "description": "¿Muletas de segunda oportunidad o peso muerto inútil? Clasifica los perks que te salvan el culo del gancho."
         },
         "ja": {
           "title": "サバイバーのパーク",
-          "description": "ガチの救済パークか、味方を売る地雷か。フック送りを拒否るためのパークを格付けしろ。"
+          "description": "命拾いの救済パークか、役に立たないお荷物パークか。フック送りを拒否るためのパークを格付けしろ。"
         },
         "pl": {
           "title": "Perki ocalałych",
-          "description": "Crutche na drugą szansę czy sandbagujący team syf? Oceń perki, które ratują ci dupę przed zawiśnięciem na haku."
+          "description": "Crutche na drugą szansę czy bezużyteczny balast? Oceń perki, które ratują ci dupę przed zawiśnięciem na haku."
         }
       },
       "cover_image_url": "/static/tier-lists/banner_survivor_perks.webp",
@@ -39,23 +39,23 @@
       "slug": "killer-perks",
       "kind": "killer_perks",
       "title": "Killer Perks",
-      "description": "Sweaty gen-kick slowdown or meme builds that get you teabagged at the exit gate. Rank the meta.",
+      "description": "Sweaty gen-kick slowdown or weak niche perks that get you teabagged at the exit gate. Rank the meta.",
       "translations": {
         "de": {
           "title": "Killer-Perks",
-          "description": "Verschwitzter Gen-Kick-Slowdown oder Meme-Builds, für die du am Exit-Gate geteabaggt wirst? Bewerte die Meta."
+          "description": "Verschwitzter Gen-Kick-Slowdown oder schwache Nischen-Perks, für die du am Exit-Gate geteabaggt wirst? Bewerte die Meta."
         },
         "es": {
           "title": "Perks de asesino",
-          "description": "¿Slowdown tryhard de patear motores o memes para que te hagan teabag en la puerta de salida? Clasifica el meta."
+          "description": "¿Slowdown tryhard de patear motores o perks débiles y de nicho para que te hagan teabag en la puerta de salida? Clasifica el meta."
         },
         "ja": {
           "title": "キラーのパーク",
-          "description": "ガチガチの遅延構成か、脱出ゲート前で屈伸煽りを食らうネタ枠か。キラーのメタを格付けしろ。"
+          "description": "ガチガチの遅延構成か、脱出ゲート前で屈伸煽りを食らうニッチで弱いパークか。キラーのメタを格付けしろ。"
         },
         "pl": {
           "title": "Perki zabójców",
-          "description": "Spocony gen-kick i slowdown czy memiczny szrot, za który zteabagują cię w bramie? Oceń zabójczą metę."
+          "description": "Spocony gen-kick i slowdown czy niszowe, słabe perki, za które zteabagują cię w bramie? Oceń zabójczą metę."
         }
       },
       "cover_image_url": "/static/tier-lists/banner_killer_perks.webp",

@@ -97,7 +97,8 @@ export interface ModalProps {
   fullscreenOnMobile?: boolean;
   /** Wrap children in standard body padding. */
   padded?: boolean;
-  /** Element to focus on open. Fallback: [data-autofocus], first control, the panel. */
+  /** Element to focus on open: pass 'close' to focus close button, or initialFocusRef. Fallback: [data-autofocus], first control, the panel. */
+  initialFocus?: 'close';
   initialFocusRef?: React.RefObject<HTMLElement | null>;
   /** Do not move focus back to the opener on close. */
   restoreFocus?: boolean;
@@ -142,6 +143,7 @@ export const Modal: React.FC<ModalProps> = ({
   zIndexClassName,
   fullscreenOnMobile = false,
   padded = false,
+  initialFocus,
   initialFocusRef,
   restoreFocus = true,
   ariaDescribedBy,
@@ -171,7 +173,7 @@ export const Modal: React.FC<ModalProps> = ({
 
   // Effect events: the open/focus effects below run once per open, reading these props as they are then.
   const notifyOpen = useEffectEvent(() => onOpen?.());
-  const focusOptions = useEffectEvent(() => ({ initialFocusRef, restoreFocus }));
+  const focusOptions = useEffectEvent(() => ({ initialFocus, initialFocusRef, restoreFocus }));
 
   /* stack + scroll lock */
   useEffect(() => {
@@ -235,12 +237,13 @@ export const Modal: React.FC<ModalProps> = ({
     // is plain :focus (not :focus-visible); re-focusing it left a focus ring and
     // its tooltip stuck on screen after the modal closed.
     const openerWasKeyboard = Boolean(opener?.matches?.(':focus-visible'));
-    const { initialFocusRef: initialFocus, restoreFocus: shouldRestore } = focusOptions();
+    const { initialFocus, initialFocusRef, restoreFocus: shouldRestore } = focusOptions();
     const raf = requestAnimationFrame(() => {
       const panel = panelRef.current;
       if (!panel) return;
       const target =
-        initialFocus?.current ??
+        (initialFocus === 'close' ? panel.querySelector<HTMLElement>('[data-modal-close]') : null) ??
+        initialFocusRef?.current ??
         panel.querySelector<HTMLElement>('[data-autofocus]') ??
         getFocusable(panel).find((el) => !el.hasAttribute('data-modal-close')) ??
         panel;

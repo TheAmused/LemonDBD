@@ -55,7 +55,6 @@ export default {
   passwordResetSuccess: "¡Tu contraseña se ha restablecido con éxito!",
   goToHome: "Ir al Inicio",
   resetPassword: "Restablecer Contraseña",
-  adminPanel: "Centro de Control de Administración",
   streaks: "Desafíos y Rachas",
   generator: "Aleatorizador de Habilidades",
   maps: "Explorador de Mapas",

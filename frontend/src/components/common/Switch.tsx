@@ -82,13 +82,17 @@ export const LabeledSwitch: React.FC<{
   label: React.ReactNode;
   labelClassName?: string;
   className?: string;
-}> = ({ checked, onChange, label, labelClassName = SWITCH_LABEL, className = '' }) => (
+  disabled?: boolean;
+}> = ({ checked, onChange, label, labelClassName = SWITCH_LABEL, className = '', disabled = false }) => (
   <button
     type="button"
     role="switch"
     aria-checked={checked}
-    onClick={() => onChange(!checked)}
-    className={`group flex cursor-pointer select-none items-center gap-2.5 rounded-control text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red ${className}`}
+    disabled={disabled}
+    onClick={() => !disabled && onChange(!checked)}
+    className={`group flex select-none items-center gap-2.5 rounded-control text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red ${
+      disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'
+    } ${className}`}
   >
     <SwitchTrack checked={checked} />
     <span className={labelClassName}>{label}</span>

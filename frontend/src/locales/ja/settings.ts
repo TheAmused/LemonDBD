@@ -7,7 +7,6 @@ export default {
   soundEffectsDesc: '操作時やイベント発生時に効果音を再生します。',
   music: '音楽',
   musicDesc: 'ミニゲームやマッチ中にBGMを再生します。',
-  visuals: 'ビジュアル＆モーション',
   animations: 'インタラクティブアニメーション',
   animationsDesc: '滑らかなアニメーションと視覚的フィードバック。主に Smash or Pass で使われます。',
   gifs: 'GIF',

@@ -1,11 +1,13 @@
 'use client';
 // frontend/src/components/smash-or-pass/card/CardAvatarImage.tsx
-import type { CSSProperties, SyntheticEvent } from 'react';
+import { type CSSProperties, type SyntheticEvent, useRef, useState } from 'react';
 import type { MediaDisplay } from '@/types/smashOrPass';
 import { MotionImg } from '@/components/common/MotionImg';
+import { useOnValueChange } from '@/hooks/useOnValueChange';
 
 interface CardAvatarImageProps {
   src: string;
+  thumbSrc?: string;
   name: string;
   slug: string;
   isSurvivor: boolean;
@@ -48,9 +50,10 @@ function retryAvatar(e: SyntheticEvent<HTMLImageElement>, backendBase: string, i
   }
 }
 
-/** The character's portrait, with the avatar fallback chain and the optional per-character framing. */
+/** The character's portrait, with progressive high-res loading, avatar fallback chain, and optional per-character framing. */
 export function CardAvatarImage({
   src,
+  thumbSrc,
   name,
   slug,
   isSurvivor,
@@ -59,18 +62,61 @@ export function CardAvatarImage({
   priority,
   className,
 }: CardAvatarImageProps) {
+  const [fullLoaded, setFullLoaded] = useState(false);
+  const fullImgRef = useRef<HTMLImageElement>(null);
+  const hasThumb = Boolean(thumbSrc && thumbSrc !== src);
+
+  useOnValueChange(src, () => setFullLoaded(false));
+
+  if (!hasThumb) {
+    return (
+      <MotionImg
+        src={src}
+        alt={name}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : 'auto'}
+        decoding="async"
+        draggable={false}
+        onContextMenu={(e) => e.preventDefault()}
+        className={`select-none ${className ?? ''}`}
+        style={mediaDisplayStyle(display)}
+        onError={(e) => retryAvatar(e, backendBase, isSurvivor, slug)}
+      />
+    );
+  }
+
   return (
-    <MotionImg
-      src={src}
-      alt={name}
-      loading={priority ? 'eager' : 'lazy'}
-      fetchPriority={priority ? 'high' : 'auto'}
-      decoding="async"
-      draggable={false}
-      onContextMenu={(e) => e.preventDefault()}
-      className={`select-none ${className ?? ''}`}
-      style={mediaDisplayStyle(display)}
-      onError={(e) => retryAvatar(e, backendBase, isSurvivor, slug)}
-    />
+    <div className="relative h-full w-full overflow-hidden">
+      {!fullLoaded && (
+        <MotionImg
+          src={thumbSrc!}
+          alt=""
+          aria-hidden="true"
+          loading={priority ? 'eager' : 'lazy'}
+          fetchPriority={priority ? 'high' : 'auto'}
+          decoding="async"
+          draggable={false}
+          onContextMenu={(e) => e.preventDefault()}
+          className={`absolute inset-0 select-none ${className ?? ''}`}
+          style={mediaDisplayStyle(display)}
+        />
+      )}
+      <MotionImg
+        ref={fullImgRef}
+        src={src}
+        alt={name}
+        loading={priority ? 'eager' : 'lazy'}
+        fetchPriority={priority ? 'high' : 'auto'}
+        decoding="async"
+        draggable={false}
+        onContextMenu={(e) => e.preventDefault()}
+        className={`select-none ${className ?? ''} transition-opacity duration-300 ${
+          !fullLoaded ? 'opacity-0' : 'opacity-100'
+        }`}
+        style={mediaDisplayStyle(display)}
+        onLoad={() => setFullLoaded(true)}
+        onError={(e) => retryAvatar(e, backendBase, isSurvivor, slug)}
+      />
+    </div>
   );
 }

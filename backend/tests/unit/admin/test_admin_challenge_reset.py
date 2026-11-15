@@ -169,7 +169,7 @@ class TestAdminChallengeReset:
         assert "Wynik z exploita." in outbox[0].html and "sekcję Fair play" in outbox[0].body
         assert "/pl/terms-of-service#termination" in outbox[0].body
         log = db_session.query(AdminAuditLog).filter_by(action="user_challenge_reset").one()
-        assert '"emailed":true' in log.details and "Wynik z exploita." in log.details
+        assert '"emailed": true' in log.details and "Wynik z exploita." in log.details
 
     def test_the_email_works_without_a_note_and_in_english_by_default(
         self, app: Flask, client: FlaskClient, admin: User, seeded: User

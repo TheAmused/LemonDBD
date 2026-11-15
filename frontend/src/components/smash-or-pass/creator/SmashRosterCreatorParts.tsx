@@ -10,6 +10,7 @@ import { emptyDraftEntity, type DraftEntity, type EntityTranslationDraft } from 
 import { Badge } from '@/components/common/Badge';
 import { useDictionary } from '@/context/DictionaryContext';
 import { AccordionSection } from '@/components/common/AccordionSection';
+import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
 export function newKey(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') return crypto.randomUUID();
@@ -21,8 +22,8 @@ export interface Draft {
   description: string;
   cover_image_url: string;
   theme_color: string;
-  category: string;
   is_nsfw: boolean;
+  is_active?: boolean;
   roster_mode: 'simple' | 'full';
   custom_labels: RosterCustomLabels;
   custom_roles?: string[];
@@ -31,18 +32,21 @@ export interface Draft {
   entities: DraftEntity[];
 }
 
+const DEFAULT_ROSTER_ROLES = ['Survivor', 'Killer'] as const;
+const DEFAULT_ROSTER_GENDERS = ['female', 'male', 'monster_other'] as const;
+
 export function freshDraft(): Draft {
   return {
     name: '',
     description: '',
     cover_image_url: '',
     theme_color: defaultRosterThemeColor(),
-    category: '',
     is_nsfw: false,
+    is_active: true,
     roster_mode: 'simple',
     custom_labels: {},
-    custom_roles: [],
-    custom_genders: [],
+    custom_roles: [...DEFAULT_ROSTER_ROLES],
+    custom_genders: [...DEFAULT_ROSTER_GENDERS],
     romance_archetypes: [],
     entities: [emptyDraftEntity('seed-0')],
   };
@@ -53,6 +57,7 @@ export function entityFromDocument(e: SmashRosterDocumentEntity): DraftEntity {
     key: newKey(),
     name: e.name,
     media_url: e.media_url || '',
+    media_display: e.media_display || null,
     role: e.role || '',
     gender: e.gender || '',
     real_name: e.real_name || '',
@@ -83,6 +88,7 @@ export function toRawEntity(e: DraftEntity): Record<string, unknown> {
   return {
     name: e.name,
     media_url: e.media_url,
+    ...(e.media_display ? { media_display: e.media_display } : {}),
     role: e.role,
     gender: e.gender,
     real_name: e.real_name,
@@ -128,9 +134,9 @@ export function buildAdminEntityTranslations(t: Record<string, EntityTranslation
     for (const [field, value] of Object.entries(entry)) {
       if (!value) continue;
       if (field === 'red_flags' || field === 'green_flags') {
-        const arr = splitLines(value);
+        const arr = Array.isArray(value) ? value : splitLines(value);
         if (arr.length) cleaned[field] = arr;
-      } else if (value.trim()) {
+      } else if (typeof value === 'string' && value.trim()) {
         cleaned[field] = value.trim();
       }
     }
@@ -160,6 +166,7 @@ export function readDraft(): StoredDraft | null {
           key: typeof e?.key === 'string' && e.key ? e.key : (idx === 0 ? 'seed-0' : newKey()),
           name: typeof e?.name === 'string' ? e.name : '',
           media_url: typeof e?.media_url === 'string' ? e.media_url : '',
+          media_display: e?.media_display && typeof e.media_display === 'object' ? e.media_display : null,
           role: typeof e?.role === 'string' ? e.role : '',
           gender: typeof e?.gender === 'string' ? e.gender : '',
           real_name: typeof e?.real_name === 'string' ? e.real_name : '',
@@ -183,12 +190,16 @@ export function readDraft(): StoredDraft | null {
       description: typeof parsed.description === 'string' ? parsed.description : '',
       cover_image_url: typeof parsed.cover_image_url === 'string' ? parsed.cover_image_url : '',
       theme_color: typeof parsed.theme_color === 'string' && parsed.theme_color ? parsed.theme_color : defaultRosterThemeColor(),
-      category: typeof parsed.category === 'string' ? parsed.category : '',
       is_nsfw: Boolean(parsed.is_nsfw),
+      is_active: parsed.is_active !== false,
       roster_mode: parsed.roster_mode === 'full' ? 'full' : 'simple',
       custom_labels: (parsed.custom_labels && typeof parsed.custom_labels === 'object') ? parsed.custom_labels : {},
-      custom_roles: Array.isArray(parsed.custom_roles) ? parsed.custom_roles.filter((r) => typeof r === 'string') : [],
-      custom_genders: Array.isArray(parsed.custom_genders) ? parsed.custom_genders.filter((g) => typeof g === 'string') : [],
+      custom_roles: Array.isArray(parsed.custom_roles) && parsed.custom_roles.length > 0
+        ? parsed.custom_roles.filter((r) => typeof r === 'string')
+        : [...DEFAULT_ROSTER_ROLES],
+      custom_genders: Array.isArray(parsed.custom_genders) && parsed.custom_genders.length > 0
+        ? parsed.custom_genders.filter((g) => typeof g === 'string')
+        : [...DEFAULT_ROSTER_GENDERS],
       romance_archetypes: Array.isArray(parsed.romance_archetypes) ? parsed.romance_archetypes : [],
       entities,
       rosterTranslations: (parsed.rosterTranslations && typeof parsed.rosterTranslations === 'object') ? parsed.rosterTranslations : {},
@@ -210,17 +221,25 @@ interface SectionProps {
   defaultOpen?: boolean;
   headerAction?: React.ReactNode;
   toggleAria?: string;
+  storageKey?: string;
   children: React.ReactNode;
 }
 
-export function Section({ title, badge, defaultOpen = true, headerAction, toggleAria, children }: SectionProps) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+export function Section({ title, badge, defaultOpen = true, headerAction, toggleAria, storageKey, children }: SectionProps) {
+  const [persistedOpen, togglePersisted] = usePersistentDrawer(
+    storageKey || 'lemondbd_smash_creator_section_default',
+    defaultOpen
+  );
+  const [localOpen, setLocalOpen] = useState(defaultOpen);
+
+  const isOpen = storageKey ? persistedOpen : localOpen;
+  const onToggle = storageKey ? togglePersisted : () => setLocalOpen((prev) => !prev);
 
   return (
     <AccordionSection
       title={title}
       open={isOpen}
-      onToggle={() => setIsOpen((prev) => !prev)}
+      onToggle={onToggle}
       toggleLabel={toggleAria}
       badge={badge !== undefined ? <Badge size="sm" plain>{badge}</Badge> : null}
       headerAction={headerAction}

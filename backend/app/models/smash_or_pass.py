@@ -121,6 +121,7 @@ class Roster(Base, TranslatableModelMixin):
     #: Pixels every portrait in this roster is shifted down on its card, to hide a cutout that fades
     #: out above the card's bottom edge. 0 (no shift) for every roster whose art fills the frame.
     portrait_offset_y: Mapped[int] = mapped_column(Integer, default=0, server_default="0", nullable=False)
+    romance_archetypes: Mapped[list[dict[str, Any]] | None] = _json_column(default=list, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, nullable=False
     )
@@ -165,6 +166,7 @@ class Roster(Base, TranslatableModelMixin):
             "is_nsfw": self.is_nsfw,
             "is_active": self.is_active,
             "portrait_offset_y": self.portrait_offset_y,
+            "romance_archetypes": self.romance_archetypes or [],
             "created_at": self.created_at.isoformat() if self.created_at else None,
         }
 

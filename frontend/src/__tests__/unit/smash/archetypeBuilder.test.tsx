@@ -58,12 +58,12 @@ describe('archetype builder', () => {
     assert.equal(state.archetypes[0].rules[0].value, 100, 'a count of 500 is re-capped to a percentage');
   });
 
-  it('the fallback hint sits under the fallback checkbox, only while none is marked', () => {
+  it('the fallback checkbox is rendered with updated label', () => {
     const { view } = mount([archetype()]);
-    assert.ok(view.getByText(ab.noFallbackNote));
+    assert.ok(view.getByText(ab.markAsFallback));
     view.unmount();
     const marked = mount([archetype({ is_fallback: true })]);
-    assert.equal(marked.view.queryByText(ab.noFallbackNote), null);
+    assert.ok(marked.view.getByText(ab.fallbackBadge));
   });
 
   it('"Custom" starts a gradient and offers a handle for each end', () => {

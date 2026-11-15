@@ -120,6 +120,15 @@ function sanitizeEntity(
 
   const entity: SmashRosterDocumentEntity = { id, name, role, gender };
   if (media_url) entity.media_url = media_url;
+  if (isRecord(entry.media_display) && typeof entry.media_display.position === 'string') {
+    entity.media_display = {
+      position: cleanText(entry.media_display.position, 64) || 'center center',
+      fit: 'cover',
+    };
+    if (typeof entry.media_display.scale === 'number' && Number.isFinite(entry.media_display.scale)) {
+      entity.media_display.scale = Math.min(2.0, Math.max(0.25, Number(entry.media_display.scale.toFixed(2))));
+    }
+  }
 
   const real_name = cleanText(entry.real_name, SMASH_ROSTER_LIMITS.maxRealName, counter);
   if (real_name) entity.real_name = real_name;

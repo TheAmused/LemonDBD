@@ -3,13 +3,10 @@
 import { RotateCcw, Share2 } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { tip } from '@/components/common/Tooltip';
-import { resolveSmashPortraitUrls } from '../smashAvatarUrl';
 import { HeartIcon } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
-import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { sanitizeImageUrl } from '@/utils/smashOrPass/codec';
 import type { RomancePersonaResult } from '@/utils/smashPersona';
-import { MotionImg } from '@/components/common/MotionImg';
 
 interface PersonaBreakdownProps {
   persona: RomancePersonaResult;
@@ -24,17 +21,9 @@ interface PersonaBreakdownProps {
 export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onResetAll }: PersonaBreakdownProps) {
   const dict = useDictionary();
   const text = dict.smashOrPass;
-  const backendBase = getBackendBaseUrl();
-
-  const favoriteCharAvatar = persona.favoriteChar
-    ? resolveSmashPortraitUrls(persona.favoriteChar, {
-        backendBase,
-        thumbWidth: 128,
-        fallbackExt: 'png',
-      }).thumbSrc
-    : null;
-
   const safeBadgeUrl = persona.badgeImageUrl ? sanitizeImageUrl(persona.badgeImageUrl) : null;
+  const displayTotalSmashes =
+    persona.totalSmashes ?? (persona.totalVotes > 0 ? Math.round((persona.smashRate / 100) * persona.totalVotes) : 0);
 
   return (
     <div className="flex flex-col divide-y divide-border-color/50 [&>*]:py-4 [&>*:first-child]:pt-0 [&>*:last-child]:pb-0">
@@ -66,9 +55,7 @@ export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onRe
       </section>
 
       {/* Numbers: plain figures, set apart by thin rules */}
-      <section
-        className={`grid ${persona.favoriteChar ? 'grid-cols-3' : 'grid-cols-2'} gap-0 divide-x divide-border-color/50 text-xs [&>*]:px-3 [&>*:first-child]:pl-0 [&>*:last-child]:pr-0`}
-      >
+      <section className="grid grid-cols-3 gap-0 divide-x divide-border-color/50 text-xs [&>*]:px-3 [&>*:first-child]:pl-0 [&>*:last-child]:pr-0">
         <div className="flex flex-col gap-1">
           <span className="text-text-muted type-caption">{text.totalEvaluated}</span>
           <span className="text-lg font-black text-text-primary">
@@ -77,50 +64,57 @@ export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onRe
         </div>
 
         <div className="flex flex-col gap-1">
-          <span className="text-text-muted type-caption">{text.statsDetail.smashRate}</span>
+          <span className="text-text-muted type-caption">{text.statsDetail.totalSmashes ?? text.statsDetail.smashCount}</span>
           <span className="text-lg font-black text-accent-red flex items-center gap-1">
             <HeartIcon className="icon-md fill-accent-red" />
-            {persona.smashRate}{text.percentSign}
+            {displayTotalSmashes}
           </span>
         </div>
 
-        {persona.favoriteChar && (
-          <div className="flex items-center gap-2.5 min-w-0">
-            {favoriteCharAvatar && (
-              <div className="h-9 w-9 rounded-chip overflow-hidden bg-bg-primary shrink-0">
-                <MotionImg src={favoriteCharAvatar} alt="" className="h-full w-full object-cover" />
-              </div>
-            )}
-            <div className="min-w-0">
-              <span className="text-text-muted type-micro block truncate">{text.statsDetail.firstSmash}</span>
-              <span className="type-strong text-text-primary truncate block">{persona.favoriteChar.name}</span>
-            </div>
-          </div>
-        )}
+        <div className="flex flex-col gap-1">
+          <span className="text-text-muted type-caption">{text.statsDetail.smashRate}</span>
+          <span className="text-lg font-black text-text-primary">
+            {persona.smashRate}{text.percentSign}
+          </span>
+        </div>
       </section>
 
       {/* Role affinity (survivor vs killer) */}
       <section className="space-y-2.5">
-        <div className="flex items-center justify-between">
-          <span className="type-label-xs text-text-secondary">{text.roleAffinity}</span>
-          {persona.totalSmashes !== undefined && (
-            <span className="type-micro text-text-muted">
-              {persona.totalSmashes > 0
-                ? `${persona.totalSmashes} ${text.statsDetail.smashCount}`
-                : text.noSmashesRecorded}
-            </span>
-          )}
-        </div>
+        <span className="type-label-xs text-text-secondary block">{text.roleAffinity}</span>
 
-        <div className="flex justify-between items-center type-strong">
-          <span className="text-accent-green">
-            {text.filters.survivors}
-            {persona.smashedSurvivors !== undefined ? ` (${persona.smashedSurvivors})` : ''} ({persona.survivorAffinity}{text.percentSign})
-          </span>
-          <span className="text-accent-red">
-            {text.filters.killers}
-            {persona.smashedKillers !== undefined ? ` (${persona.smashedKillers})` : ''} ({persona.killerAffinity}{text.percentSign})
-          </span>
+        <div className="grid grid-cols-2 gap-2 sm:gap-3">
+          <div className="rounded-card bg-bg-surface/50 border border-border-color/40 p-2.5 flex flex-col gap-0.5">
+            <span className="text-accent-green type-caption uppercase font-bold">
+              {text.filters.survivors}
+            </span>
+            <div className="flex items-baseline gap-1.5">
+              {persona.smashedSurvivors !== undefined && (
+                <span className="text-sm sm:text-base font-black text-text-primary mr-1">
+                  {persona.smashedSurvivors}
+                </span>
+              )}
+              <span className="text-xs text-text-muted">
+                ({persona.survivorAffinity}{text.percentSign})
+              </span>
+            </div>
+          </div>
+
+          <div className="rounded-card bg-bg-surface/50 border border-border-color/40 p-2.5 flex flex-col gap-0.5">
+            <span className="text-accent-red type-caption uppercase font-bold">
+              {text.filters.killers}
+            </span>
+            <div className="flex items-baseline gap-1.5">
+              {persona.smashedKillers !== undefined && (
+                <span className="text-sm sm:text-base font-black text-text-primary mr-1">
+                  {persona.smashedKillers}
+                </span>
+              )}
+              <span className="text-xs text-text-muted">
+                ({persona.killerAffinity}{text.percentSign})
+              </span>
+            </div>
+          </div>
         </div>
 
         <div

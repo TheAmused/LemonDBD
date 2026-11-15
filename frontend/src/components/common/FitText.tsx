@@ -148,6 +148,7 @@ export interface FitTextProps extends Omit<React.HTMLAttributes<HTMLSpanElement>
    * does not fit at full size, instead of shrinking a single line first.
    */
   wrapFirst?: boolean;
+  disableTooltip?: boolean;
 }
 
 export const FitText: React.FC<FitTextProps> = ({
@@ -156,6 +157,7 @@ export const FitText: React.FC<FitTextProps> = ({
   maxLines = 1,
   alternatives,
   wrapFirst = false,
+  disableTooltip = false,
   className,
   style,
   title,
@@ -230,12 +232,14 @@ export const FitText: React.FC<FitTextProps> = ({
         : null),
   };
 
+  const tooltipText = disableTooltip ? undefined : (title ?? (clamped || fit.index > 0 ? text : undefined));
+
   return (
     <span
       ref={wrapperRef}
       data-text={text}
       data-flow={flowing ? 'static' : 'overlay'}
-      {...tip(title ?? (clamped || fit.index > 0 ? text : undefined), undefined, 'status')}
+      {...(tooltipText ? tip(tooltipText, undefined, 'status') : {})}
       className={cn(
         'relative inline-block min-w-0 max-w-full align-bottom',
         // Reserves the natural one-line size; see the header comment.

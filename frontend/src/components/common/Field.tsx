@@ -1,3 +1,4 @@
+'use client';
 // frontend/src/components/common/Field.tsx
 // Text inputs, textareas, selects and search boxes with ONE focus / error /
 // disabled style. Checkbox lives in Checkbox.tsx, switches in Switch.tsx.
@@ -64,16 +65,66 @@ export const FieldButton = React.forwardRef<HTMLButtonElement, FieldButtonProps>
   );
 });
 
-export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & CommonFieldProps;
+const useIsoLayoutEffect = typeof window === 'undefined' ? React.useEffect : React.useLayoutEffect;
+
+export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement>, CommonFieldProps {
+  autoResize?: boolean;
+}
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
-  { fieldSize = 'md', invalid, pill = false, className, ...rest },
-  ref
+  { fieldSize = 'md', invalid, pill = false, autoResize = false, className, onChange, onInput, ...rest },
+  forwardedRef
 ) {
+  const innerRef = React.useRef<HTMLTextAreaElement | null>(null);
+
+  const adjustHeight = React.useCallback(() => {
+    const el = innerRef.current;
+    if (!el || !autoResize) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  }, [autoResize]);
+
+  useIsoLayoutEffect(() => {
+    adjustHeight();
+  }, [adjustHeight, rest.value, rest.placeholder]);
+
+  React.useEffect(() => {
+    if (!autoResize) return;
+    const handleResize = () => adjustHeight();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [autoResize, adjustHeight]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    adjustHeight();
+    onChange?.(e);
+  };
+
+  const handleInput = (e: Parameters<NonNullable<React.TextareaHTMLAttributes<HTMLTextAreaElement>['onInput']>>[0]) => {
+    adjustHeight();
+    onInput?.(e);
+  };
+
   return (
     <textarea
-      ref={ref}
+      ref={(node) => {
+        innerRef.current = node;
+        if (typeof forwardedRef === 'function') {
+          forwardedRef(node);
+        } else if (forwardedRef) {
+          (forwardedRef as React.MutableRefObject<HTMLTextAreaElement | null>).current = node;
+        }
+      }}
       aria-invalid={invalid || undefined}
-      className={cn(FIELD_BASE, FIELD_SIZES[fieldSize], pill ? FIELD_RADIUS_PILL : FIELD_RADIUS, 'resize-y', invalid && FIELD_ERROR, className)}
+      onChange={handleChange}
+      onInput={handleInput}
+      className={cn(
+        FIELD_BASE,
+        FIELD_SIZES[fieldSize],
+        pill ? FIELD_RADIUS_PILL : FIELD_RADIUS,
+        autoResize ? 'resize-none overflow-hidden [field-sizing:content]' : 'resize-y',
+        invalid && FIELD_ERROR,
+        className
+      )}
       {...rest}
     />
   );

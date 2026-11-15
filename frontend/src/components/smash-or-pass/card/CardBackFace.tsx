@@ -42,9 +42,6 @@ export function CardBackFace({
   const dict = useDictionary();
   const text = dict.smashOrPass;
   const role = roleBadge(character.role, text.filters);
-  // `|| character.role` is a render-level default for an entity with no archetype yet,
-  // not a data fallback — localizedProfile already resolved locale vs. English.
-  const charTitle = profile.archetype || character.role;
   const charTagline = profile.tagline;
   const charBio = profile.bio;
   const charQuote = profile.quote;
@@ -103,33 +100,38 @@ export function CardBackFace({
         data-card-lore=""
         className="space-y-2 h-full pr-1 overflow-y-auto select-text pointer-events-auto scrollbar-thin scrollbar-thumb-border-color"
       >
-        {/* Mobile-only fallback (<880px): show Turn On & Dealbreaker only when floating lore fragments are hidden */}
-        <div className="@hub-lg/hub:hidden space-y-2">
+        {/* Dating Vibe (always visible on card back if defined) */}
+        {Boolean(profile.dating_vibe) && (
           <Surface tone="elevated" padding="none" className="p-2.5 border-accent-red/30 space-y-0.5">
             <span className="type-label-2xs text-accent-red block">
-              {customLabels?.dating_vibe || text.loreLabels.datingArchetype}
+              {customLabels?.dating_vibe || text.loreLabels.datingVibe}
             </span>
-            <p className="type-strong text-text-primary leading-snug">{charTitle}</p>
+            <p className="type-strong text-text-primary leading-snug">{profile.dating_vibe}</p>
           </Surface>
+        )}
 
-          {profile.turn_on && (
-            <div className="p-2.5 rounded-card bg-accent-green/10 border border-accent-green/40 space-y-0.5">
-              <span className="type-label-2xs text-accent-green block">
-                {customLabels?.turn_on || text.loreLabels.turn_on}
-              </span>
-              <p className="text-mini text-text-primary leading-snug">{profile.turn_on}</p>
-            </div>
-          )}
+        {/* Mobile-only fallback (<880px): show Turn On & Dealbreaker only when floating lore fragments are hidden */}
+        {(Boolean(profile.turn_on) || Boolean(profile.dealbreaker)) && (
+          <div className="@hub-lg/hub:hidden space-y-2">
+            {profile.turn_on && (
+              <div className="p-2.5 rounded-card bg-accent-green/10 border border-accent-green/40 space-y-0.5">
+                <span className="type-label-2xs text-accent-green block">
+                  {customLabels?.turn_on || text.loreLabels.turn_on}
+                </span>
+                <p className="text-mini text-text-primary leading-snug">{profile.turn_on}</p>
+              </div>
+            )}
 
-          {profile.dealbreaker && (
-            <div className="p-2.5 rounded-card bg-accent-red/10 border border-accent-red/40 space-y-0.5">
-              <span className="type-label-2xs text-accent-red block">
-                {customLabels?.dealbreaker || text.loreLabels.dealbreaker}
-              </span>
-              <p className="text-mini text-text-primary leading-snug">{profile.dealbreaker}</p>
-            </div>
-          )}
-        </div>
+            {profile.dealbreaker && (
+              <div className="p-2.5 rounded-card bg-accent-red/10 border border-accent-red/40 space-y-0.5">
+                <span className="type-label-2xs text-accent-red block">
+                  {customLabels?.dealbreaker || text.loreLabels.dealbreaker}
+                </span>
+                <p className="text-mini text-text-primary leading-snug">{profile.dealbreaker}</p>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Green & Red Flags (Prominent and unique to the card back) */}
         {(greenFlags.length > 0 || redFlags.length > 0) && (
@@ -202,7 +204,6 @@ export function CardBackFace({
             const rect = e.currentTarget.getBoundingClientRect();
             onVote('pass', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
           }}
-          {...tip(text.pass, undefined, 'action')}
           aria-label={text.pass}
           variant="secondary" size="lg" icon className="h-13 w-13 shadow-2xl backdrop-blur-md hover:scale-110 active:scale-95 touch-manipulation sm:h-14 sm:w-14"
         >
@@ -217,7 +218,6 @@ export function CardBackFace({
             const rect = e.currentTarget.getBoundingClientRect();
             onVote('smash', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
           }}
-          {...tip(text.smash, undefined, 'action')}
           aria-label={text.smash}
           variant="primary" size="lg" icon className="h-13 w-13 hover:scale-110 active:scale-95 touch-manipulation sm:h-14 sm:w-14"
         >

@@ -13,9 +13,7 @@ import { SortableTierItem } from './SortableTierItem';
 import type { TierTileShape } from './TierItemTile';
 import { containerDndId, itemDndId } from './dndIds';
 import { SearchInput } from '@/components/common/Field';
-import { Badge } from '@/components/common/Badge';
 import { EmptyState } from '@/components/common/EmptyState';
-import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 
 import { Button } from '@/components/common/Button';
@@ -141,9 +139,6 @@ export function TierPool({
           <h2 className="text-xs sm:text-sm font-black uppercase tracking-widest text-text-primary">
             {t.unranked}
           </h2>
-          <Badge tone="red" plain className="type-strong-xs">
-            {formatMessage(t.unrankedCount, { count: keys.length })}
-          </Badge>
         </div>
 
         {/* No onClick of its own: the click bubbles to the header, which toggles (keyboard Enter/Space included). */}

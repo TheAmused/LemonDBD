@@ -66,7 +66,7 @@ describe('TierListEditor: delete', () => {
     let deleted = 0;
     editor(() => void (deleted += 1));
     fireEvent.click(screen.getByRole('menuitem', { name: new RegExp(t.deleteList) }));
-    fireEvent.click(screen.getByRole('button', { name: t.cancel }));
+    fireEvent.click(screen.getByRole('button', { name: en.modal.close }));
     assert.equal(deleted, 0);
   });
 });

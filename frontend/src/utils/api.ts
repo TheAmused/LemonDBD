@@ -52,6 +52,7 @@ export function apiUrl(endpoint: string): string {
 export function staticUrl(rawPath?: string | null): string | undefined {
   if (!rawPath) return undefined;
   if (rawPath.startsWith('http://') || rawPath.startsWith('https://')) return rawPath;
+  if (rawPath.startsWith('/api/v1/thumbs/')) return rawPath;
   const cleanPath = rawPath.replace(/^\/?(static\/)?/, '');
   const base = getBackendBaseUrl();
   return base ? `${base}/static/${cleanPath}` : `/static/${cleanPath}`;

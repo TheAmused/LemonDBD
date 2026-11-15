@@ -2,11 +2,12 @@
 // frontend/src/components/smash-or-pass/creator/RomanceArchetypeBuilder.tsx
 
 import React, { useState } from 'react';
-import { Plus, Trash2, ChevronDown, Info } from 'lucide-react';
+import { Plus, Trash2, ChevronDown, Check } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { formatMessage } from '@/utils/i18nFormat';
 import type { ArchetypeRule, CustomRomanceArchetype } from '@/types/smashOrPass';
 import { LABEL } from './styles';
+import { SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
 import { Checkbox } from '@/components/common/Checkbox';
 import { Button } from '@/components/common/Button';
 import { Input, Textarea } from '@/components/common/Field';
@@ -45,6 +46,10 @@ const isPercentTarget = (target: ArchetypeRule['target']) => target === 'smash_r
 
 /** A rule value as its target allows it: 0-100 for a percentage, any whole number otherwise. */
 const capRuleValue = (target: ArchetypeRule['target'], value: number) => (isPercentTarget(target) ? Math.min(100, value) : value);
+
+/** Title is required; non-fallback archetypes must have at least one evaluation rule. */
+const isArchetypeComplete = (a: CustomRomanceArchetype): boolean =>
+  Boolean(a.title.trim() && (a.is_fallback || a.rules.length > 0));
 
 interface RomanceArchetypeBuilderProps {
   archetypes: CustomRomanceArchetype[];
@@ -136,10 +141,6 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
           {ab.sectionTitle}
         </h3>
       )}
-      <Surface tone="elevated" padding="none" className="flex items-start gap-2.5 p-3 bg-bg-elevated/50">
-        <Info className="mt-0.5 icon-md shrink-0 text-accent-amber" aria-hidden="true" />
-        <p className="type-body text-text-secondary">{ab.sectionDesc}</p>
-      </Surface>
 
       {archetypes.length === 0 ? (
         <EmptyState variant="compact" title={ab.noArchetypes} />
@@ -180,7 +181,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
 
                   <div className="pointer-events-none flex items-center gap-1.5 shrink-0 ml-2">
                     <Button
-                      variant="ghost" size="sm" icon
+                      variant="danger" size="sm" icon
                       className="pointer-events-auto relative"
                       aria-label={formatMessage(dict.smashOrPass.creator.removeCandidateAria, {
                         name: arch.title || `${ab.titleLabel} #${idx + 1}`,
@@ -203,10 +204,14 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                   <div className="p-4 sm:p-5 border-t border-border-color/60 space-y-5 bg-bg-surface/50">
                     <div className="grid gap-3 sm:grid-cols-2">
                       <div>
-                        <label className={LABEL}>{ab.titleLabel}</label>
+                        <label className={LABEL}>
+                          {ab.titleLabel}
+                          <span className="ml-0.5 text-accent-red" aria-hidden="true">*</span>
+                        </label>
                         <Input
                           fieldSize="md"
                           value={arch.title}
+                          maxLength={SMASH_ROSTER_LIMITS.maxArchetype}
                           onChange={(e) => updateArchetype(arch.id, { title: e.target.value })}
                           placeholder={ab.titlePlaceholder}
                         />
@@ -216,6 +221,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                         <Input
                           fieldSize="md"
                           value={arch.subtitle}
+                          maxLength={SMASH_ROSTER_LIMITS.maxArchetypeBadge}
                           onChange={(e) => updateArchetype(arch.id, { subtitle: e.target.value })}
                           placeholder={ab.subtitlePlaceholder}
                         />
@@ -223,10 +229,13 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                     </div>
 
                     <div>
-                      <label className={LABEL}>{ab.descriptionLabel}</label>
+                      <label className={LABEL}>
+                        {ab.descriptionLabel}
+                      </label>
                       <Textarea
                         fieldSize="md"
                         value={arch.description}
+                        maxLength={SMASH_ROSTER_LIMITS.maxArchetypeDesc}
                         onChange={(e) => updateArchetype(arch.id, { description: e.target.value })}
                         placeholder={ab.descriptionPlaceholder}
                         rows={3}
@@ -238,7 +247,6 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                       <span className={LABEL}>{ab.visualBadgeLabel}</span>
 
                       <div className="space-y-2">
-                        <span className="type-strong-xs text-text-secondary block">{ab.badgeGradientColor}</span>
                         <div className="flex flex-wrap gap-2">
                           {COLOR_PRESETS.map((color) => (
                             <ToggleChip pressed={arch.badge_color === color.value} size="xs"
@@ -290,12 +298,10 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                         checked={arch.is_fallback || false}
                         onChange={(checked) => updateArchetype(arch.id, { is_fallback: checked })}
                         className="pt-1 type-strong text-text-secondary"
+                        allowTextSelection
                       >
                         {ab.markAsFallback}
                       </Checkbox>
-                      {!archetypes.some((a) => a.is_fallback) && (
-                        <p className="type-caption text-text-muted">{ab.noFallbackNote}</p>
-                      )}
                     </div>
 
                     {/* Rule Engine Conditions */}
@@ -312,7 +318,10 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                         </Button>
                       </div>
 
-                      <p className="type-caption text-text-muted">{ab.rulesHint}</p>
+                      <div className="space-y-1 type-caption text-text-muted">
+                        <p>{ab.rulesHintAffinity}</p>
+                        <p>{ab.rulesHintPriority}</p>
+                      </div>
 
                       <div className="divide-y divide-border-color/60">
                       {arch.rules.map((rule, rIdx) => (
@@ -329,46 +338,52 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                             buttonClassName="min-h-9"
                             onChange={(target) => {
                               // A switch from a count (say 500 votes) to a percentage re-caps the value, so the rule can still match.
-                              updateRule(arch.id, rIdx, { target, value: capRuleValue(target, rule.value) });
+                              const patch: Partial<ArchetypeRule> = { target, value: capRuleValue(target, rule.value) };
+                              if (target === 'role_affinity' || target === 'role_count') {
+                                if (!rule.target_value || !availableRoles.includes(rule.target_value)) {
+                                  patch.target_value = availableRoles[0] || '';
+                                }
+                              } else if (target === 'gender_affinity' || target === 'gender_count') {
+                                if (!rule.target_value || !availableGenders.includes(rule.target_value)) {
+                                  patch.target_value = availableGenders[0] || '';
+                                }
+                              } else {
+                                patch.target_value = undefined;
+                              }
+                              updateRule(arch.id, rIdx, patch);
                             }}
                           />
 
                           {(rule.target === 'role_affinity' || rule.target === 'role_count') && (
-                            <Input
-                              fieldSize="sm"
-                              value={rule.target_value || ''}
-                              placeholder={ab.rolePlaceholder}
-                              list={`roles-list-${arch.id}`}
-                              onChange={(e) => updateRule(arch.id, rIdx, { target_value: e.target.value })}
-                              className="w-auto max-w-32.5"
+                            <CustomDropdown<string>
+                              accent="primary"
+                              ariaLabel={ab.rolePlaceholder}
+                              value={rule.target_value || availableRoles[0] || ''}
+                              options={availableRoles.map((r) => ({ value: r, label: r }))}
+                              minWidthClass="min-w-36"
+                              buttonClassName="min-h-9"
+                              onChange={(val) => updateRule(arch.id, rIdx, { target_value: val })}
                             />
                           )}
 
                           {(rule.target === 'gender_affinity' || rule.target === 'gender_count') && (
-                            <Input
-                              fieldSize="sm"
-                              value={rule.target_value || ''}
-                              placeholder={ab.genderPlaceholder}
-                              list={`genders-list-${arch.id}`}
-                              onChange={(e) => updateRule(arch.id, rIdx, { target_value: e.target.value })}
-                              className="w-auto max-w-32.5"
+                            <CustomDropdown<string>
+                              accent="primary"
+                              ariaLabel={ab.genderPlaceholder}
+                              value={rule.target_value || availableGenders[0] || ''}
+                              options={availableGenders.map((g) => ({
+                                value: g,
+                                label: genderLabel(g, dict.smashOrPass.filters),
+                              }))}
+                              minWidthClass="min-w-36"
+                              buttonClassName="min-h-9"
+                              onChange={(val) => updateRule(arch.id, rIdx, { target_value: val })}
                             />
                           )}
 
-                          <datalist id={`roles-list-${arch.id}`}>
-                            {availableRoles.map((r) => (
-                              <option key={r} value={r}>{r}</option>
-                            ))}
-                          </datalist>
-                          <datalist id={`genders-list-${arch.id}`}>
-                            {availableGenders.map((g) => (
-                              <option key={g} value={g}>{genderLabel(g, dict.smashOrPass.filters)}</option>
-                            ))}
-                          </datalist>
-
                           <CustomDropdown<ArchetypeRule['operator']>
                             accent="primary"
-                            ariaLabel={ab.rulesTitle}
+                            ariaLabel={`${ab.rulesTitle} Operator`}
                             value={rule.operator}
                             options={operatorOptions}
                             minWidthClass="min-w-36"
@@ -381,6 +396,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                             type="text"
                             inputMode="numeric"
                             autoComplete="off"
+                            maxLength={3}
                             value={String(rule.value)}
                             onChange={(e) => {
                               const digits = Number(e.target.value.replace(/\D/g, '').slice(0, 5));
@@ -390,7 +406,7 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                           />
 
                           <Button
-                            variant="ghost" size="xs" icon
+                            variant="danger" size="xs" icon
                             onClick={() => removeRule(arch.id, rIdx)}
                             aria-label={ab.removeRule}
                             className="ml-auto"
@@ -401,6 +417,18 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
                       ))}
                       </div>
                     </div>
+
+                    <div className="flex justify-end pt-3 border-t border-border-color/60">
+                      <Button
+                        variant={isArchetypeComplete(arch) ? 'primary' : 'secondary'}
+                        size="sm"
+                        onClick={() => setExpandedId(null)}
+                        disabled={!isArchetypeComplete(arch)}
+                      >
+                        <Check className="icon-sm" />
+                        <span>{ab.done || dict.modal?.done || 'Save'}</span>
+                      </Button>
+                    </div>
                   </div>
                 )}
               </Surface>
@@ -410,7 +438,12 @@ export function RomanceArchetypeBuilder({ archetypes, onChange, availableRoles, 
       )}
 
       <div className="flex justify-center pt-1">
-        <Button variant="secondary" size="md" onClick={addArchetype}>
+        <Button
+          variant="secondary"
+          size="md"
+          onClick={addArchetype}
+          disabled={archetypes.some((a) => !isArchetypeComplete(a))}
+        >
           <Plus />
           <span>{ab.addArchetype}</span>
         </Button>

@@ -13,15 +13,18 @@ MAX_REVISION_LENGTH = 32
 pytestmark = pytest.mark.unit
 
 
-def _revisions() -> dict[str, str | None]:
-    found: dict[str, str | None] = {}
+def _revisions() -> dict[str, list[str]]:
+    found: dict[str, list[str]] = {}
     for path in sorted(VERSIONS.glob("*.py")):
         text = path.read_text(encoding="utf-8")
         revision = re.search(r'^revision\s*=\s*"([^"]+)"', text, re.M)
         if not revision:
             continue
-        down = re.search(r'^down_revision\s*=\s*(?:"([^"]+)"|None)', text, re.M)
-        found[revision.group(1)] = down.group(1) if down else None
+        down_match = re.search(r'^down_revision\s*=\s*(.+)$', text, re.M)
+        downs: list[str] = []
+        if down_match:
+            downs = re.findall(r'"([^"]+)"', down_match.group(1))
+        found[revision.group(1)] = downs
     return found
 
 
@@ -32,7 +35,7 @@ def test_revision_ids_fit_the_alembic_version_column():
 
 def test_the_migration_chain_has_exactly_one_head():
     revisions = _revisions()
-    parents = {down for down in revisions.values() if down}
+    parents = {down for downs in revisions.values() for down in downs}
     heads = sorted(set(revisions) - parents)
     assert len(heads) == 1, heads
     assert parents <= set(revisions), "a revision points at a parent that does not exist"

@@ -61,7 +61,7 @@ export function SmashRosterImportModal({ isOpen, onClose, sharePayload, onImport
   const doImport = () => {
     if (!result?.ok) return;
     const id = createCustomRosterId();
-    const saveResult = saveCustomRoster({ id, ...result.doc, createdAt: Date.now() });
+    const saveResult = saveCustomRoster({ id, ...result.doc, createdAt: Date.now(), is_imported: true });
     if (!saveResult.ok) {
       setSaveError(saveResult.reason);
       return;

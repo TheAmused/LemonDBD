@@ -7,7 +7,7 @@ import { Plus, X, User } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Input } from '@/components/common/Field';
 import { useDictionary } from "@/context/DictionaryContext";
-import { GENDER_QUICK_PICKS } from '@/utils/smashOrPass/constants';
+import { GENDER_QUICK_PICKS, ROLE_QUICK_PICKS, SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
 import { canonicalGender, genderLabel } from '@/utils/smashOrPass/terms';
 import { Badge } from '@/components/common/Badge';
 import { MaskIcon } from '@/components/icons/DbdIcons';
@@ -71,6 +71,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
           <Input
             fieldSize="md"
             type="text"
+            maxLength={SMASH_ROSTER_LIMITS.maxRoleOrGender}
             value={newRoleInput}
             onChange={(e) => setNewRoleInput(e.target.value)}
             onKeyDown={(e) => {
@@ -93,7 +94,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
 
         {/* Quick Suggestion Chips */}
         <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1">
-          {['Survivor', 'Killer', 'Hero', 'Villain', 'Neutral'].map((preset) => {
+          {[...ROLE_QUICK_PICKS, 'Hero', 'Villain', 'Neutral'].map((preset) => {
             const isAdded = roles.some((r) => r.toLowerCase() === preset.toLowerCase());
             if (isAdded) return null;
             return (
@@ -134,7 +135,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
       <div className="flex flex-col gap-3 pt-6 md:pt-0 md:pl-6">
         <div className="flex flex-col items-center justify-center text-center gap-1">
           <div className="flex items-center justify-center gap-2">
-            <User className="icon-md text-accent-green" />
+            <User className="icon-md text-accent-red" />
             <h3 className="text-xs sm:text-sm font-black uppercase tracking-wider text-text-primary">
               {tx.gendersTitle}
             </h3>
@@ -146,6 +147,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
           <Input
             fieldSize="md"
             type="text"
+            maxLength={SMASH_ROSTER_LIMITS.maxRoleOrGender}
             value={newGenderInput}
             onChange={(e) => setNewGenderInput(e.target.value)}
             onKeyDown={(e) => {
@@ -157,7 +159,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
             placeholder={tx.addGenderPlaceholder}
           />
           <Button
-            variant="success" size="md"
+            variant="primary" size="md"
             onClick={() => handleAddGender()}
             className="shrink-0"
           >
@@ -189,7 +191,7 @@ export const RosterTaxonomyBlock: React.FC<RosterTaxonomyBlockProps> = ({ roles,
           {genders.map((gender) => (
               <Badge
                 key={gender}
-                tone="green" size="md" plain square
+                tone="red" size="md" plain square
               >
                 <span>{genderLabel(gender, dict.smashOrPass.filters)}</span>
                 <Button

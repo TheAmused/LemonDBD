@@ -135,7 +135,10 @@ export function TierItemEditModal({ item, isOpen, onClose, onSave }: TierItemEdi
 
         <div className="flex flex-col gap-4">
           <label className="flex flex-col gap-1.5">
-            <span className={LABEL}>{t.itemName}</span>
+            <span className={LABEL}>
+              {t.itemName}
+              <span className="text-accent-red"> *</span>
+            </span>
             <Input
               type="text"
               value={name}

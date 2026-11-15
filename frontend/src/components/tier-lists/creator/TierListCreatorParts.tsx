@@ -1,13 +1,27 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { CircleAlert } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import { CircleAlert, Crop } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import type { TierDefinition, TierListDocumentItem } from '@/types/tierList';
 import { type LadderPresetId } from '@/utils/tierLists/creator';
 import { migrateTierListState } from '@/utils/tierLists/storage';
 import { useDictionary } from '@/context/DictionaryContext';
 import { AccordionSection } from '@/components/common/AccordionSection';
+import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
+import { NsfwSwitch } from '@/components/common/NsfwSwitch';
+import { LabeledSwitch } from '@/components/common/Switch';
+import { Input } from '@/components/common/Field';
+import { Button } from '@/components/common/Button';
+import { tip } from '@/components/common/Tooltip';
+import { TIER_LIST_LIMITS } from '@/utils/tierLists/constants';
+import { LABEL, TOUCH_FIELD } from '../styles';
+
+const ImageUploadDropzone = dynamic(
+  () => import('@/components/common/ImageUploadDropzone').then((m) => m.ImageUploadDropzone),
+  { ssr: false }
+);
 
 /** Unfinished work survives a reload or an accidental back-navigation. Only
  * used for a brand-new list -- editing an existing one (see `editId` below)
@@ -62,14 +76,31 @@ export function formatBytes(bytes: number, locale: string): string {
     : `${Math.max(1, Math.round(bytes / 1024)).toLocaleString(locale)} KB`;
 }
 
-export function Section({ title, defaultOpen = true, children }: { title: string; defaultOpen?: boolean; children: React.ReactNode }) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
+export function Section({
+  title,
+  defaultOpen = true,
+  storageKey,
+  children,
+}: {
+  title: string;
+  defaultOpen?: boolean;
+  storageKey?: string;
+  children: React.ReactNode;
+}) {
+  const [persistedOpen, togglePersisted] = usePersistentDrawer(
+    storageKey || 'lemondbd_tierlist_creator_section_default',
+    defaultOpen
+  );
+  const [localOpen, setLocalOpen] = useState(defaultOpen);
+
+  const isOpen = storageKey ? persistedOpen : localOpen;
+  const onToggle = storageKey ? togglePersisted : () => setLocalOpen((prev) => !prev);
 
   return (
     <AccordionSection
       title={title}
       open={isOpen}
-      onToggle={() => setIsOpen((prev) => !prev)}
+      onToggle={onToggle}
       as="section"
     >
       {children}
@@ -108,5 +139,123 @@ export function Feedback({ errors, saveError, publishError, scrollSignal, classN
         ))}
       </div>
     </div>
+  );
+}
+
+export interface TierListBasicsSectionProps {
+  draft: Draft;
+  patch: (next: Partial<Draft>) => void;
+  attempted: boolean;
+  titleMissing: boolean;
+  backgroundInvalid: boolean;
+  isAdmin: boolean;
+  officialSlug?: string;
+  official: boolean;
+  onOfficialChange: (official: boolean) => void;
+  onOpenCrop: () => void;
+}
+
+export function TierListBasicsSection({
+  draft,
+  patch,
+  attempted,
+  titleMissing,
+  backgroundInvalid,
+  isAdmin,
+  officialSlug,
+  official,
+  onOfficialChange,
+  onOpenCrop,
+}: TierListBasicsSectionProps) {
+  const dict = useDictionary();
+  const t = dict.tierLists;
+  const c = t.creator;
+
+  return (
+    <Section title={c.stepBasics} storageKey="lemondbd_tierlist_creator_section_basics">
+      <div className="grid gap-4 2xl:gap-6 md:grid-cols-2">
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-3 md:col-span-2">
+          <NsfwSwitch
+            checked={draft.is_nsfw}
+            onChange={(checked) => patch({ is_nsfw: checked })}
+            label={t.nsfw.label}
+            hint={t.nsfw.hint}
+          />
+          {isAdmin && !officialSlug && (
+            <LabeledSwitch checked={official} onChange={onOfficialChange} label={c.official} />
+          )}
+          {isAdmin && (official || Boolean(officialSlug)) && (
+            <LabeledSwitch
+              checked={draft.is_active ?? true}
+              onChange={(checked) => patch({ is_active: checked })}
+              label={c.publishedLabel}
+            />
+          )}
+        </div>
+        <label className="md:col-span-1">
+          <span className={LABEL}>
+            {c.titleLabel}
+            <span className="text-accent-red"> *</span>
+          </span>
+          <Input
+            value={draft.title}
+            maxLength={TIER_LIST_LIMITS.maxTitle}
+            onChange={(e) => patch({ title: e.target.value })}
+            invalid={attempted && titleMissing}
+            className={cn(TOUCH_FIELD, '2xl:min-h-hit-xl 2xl:text-base')}
+          />
+        </label>
+        <label className="md:col-span-1">
+          <span className={LABEL}>{c.descriptionLabel}</span>
+          <Input
+            value={draft.description}
+            maxLength={TIER_LIST_LIMITS.maxDescription}
+            onChange={(e) => patch({ description: e.target.value })}
+            className={cn(TOUCH_FIELD, '2xl:min-h-hit-xl 2xl:text-base')}
+          />
+        </label>
+        <div className="md:col-span-2">
+          <ImageUploadDropzone
+            value={draft.backgroundImage}
+            onChange={(val) => patch({ backgroundImage: val })}
+            label={c.backgroundImageLabel}
+            placeholder={c.backgroundImagePlaceholder}
+            hint={isAdmin ? c.backgroundImageHint : undefined}
+            invalid={attempted && backgroundInvalid}
+            invalidMessage={t.invalidImage}
+            aspectRatio="banner"
+            allowFileUpload={isAdmin}
+            onPreviewClick={isAdmin ? onOpenCrop : undefined}
+            previewOverlay={
+              isAdmin ? (
+                <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-text-inverted type-strong pointer-events-none">
+                  <Crop className="icon-lg text-accent-red" />
+                  <span>{c.cropClickPrompt}</span>
+                </div>
+              ) : undefined
+            }
+            previewActions={
+              isAdmin ? (
+                <Button
+                  type="button"
+                  variant="overlay"
+                  size="xs"
+                  icon
+                  pill
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onOpenCrop();
+                  }}
+                  {...tip(c.cropCoverTitle, undefined, 'action')}
+                  aria-label={c.cropCoverTitle}
+                >
+                  <Crop />
+                </Button>
+              ) : undefined
+            }
+          />
+        </div>
+      </div>
+    </Section>
   );
 }

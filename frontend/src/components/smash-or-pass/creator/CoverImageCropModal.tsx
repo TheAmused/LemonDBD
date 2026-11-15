@@ -14,6 +14,7 @@ import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 import { paletteColor } from '@/utils/themeColor';
 import { Img } from '@/components/common/Img';
+import { cn } from '@/utils/cn';
 import { useOnValueChange } from '@/hooks/useOnValueChange';
 import { MAX_DATA_IMAGE_CHARS, encodeCanvasWithinBudget } from '@/utils/imageResize';
 
@@ -24,9 +25,10 @@ interface CoverImageCropModalProps {
   onApplyCrop: (croppedDataUrl: string) => void;
   themeColor?: string;
   isAdmin?: boolean;
+  aspectRatio?: 'roster' | 'banner';
 }
 
-export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen, onClose, imageUrl, onApplyCrop, isAdmin = false }) => {
+export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen, onClose, imageUrl, onApplyCrop, isAdmin = false, aspectRatio = 'banner' }) => {
   const dict = useDictionary();
   const cm = dict.smashOrPass.cropModal || {
     title: 'Crop & Frame Cover Image',
@@ -48,6 +50,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
     cancel: 'Cancel',
     applyCrop: 'Apply Crop',
     dragHint: 'Drag to pan • Wheel to zoom ({zoom}%) • 16:9 banner',
+    dragHintRoster: 'Drag to pan • Wheel to zoom ({zoom}%) • Roster cover (31:50)',
   };
 
   const [currentUrl, setCurrentUrl] = useState<string>(imageUrl);
@@ -203,8 +206,9 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
     if (!containerRef.current || !imgRef.current) return;
 
     try {
-      const targetWidth = 800;
-      const targetHeight = 450; // 16:9 banner
+      const isRoster = aspectRatio === 'roster';
+      const targetWidth = isRoster ? 620 : 800;
+      const targetHeight = isRoster ? 1000 : 450;
       const canvas = document.createElement('canvas');
       canvas.width = targetWidth;
       canvas.height = targetHeight;
@@ -279,22 +283,25 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
     }
   };
 
-  // Determine if image aspect ratio is taller than 16:9 (e.g. portrait or square)
-  const isTallerThan16x9 = naturalSize.width && naturalSize.height
-    ? (naturalSize.width / naturalSize.height) < (16 / 9)
+  const isRoster = aspectRatio === 'roster';
+  const targetRatio = isRoster ? (620 / 1000) : (16 / 9);
+
+  // Determine if image aspect ratio is taller than target aspect ratio
+  const isTallerThanTarget = naturalSize.width && naturalSize.height
+    ? (naturalSize.width / naturalSize.height) < targetRatio
     : false;
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      size="3xl"
+      size={isRoster ? "2xl" : "3xl"}
       title={cm.title}
     >
       <div className="space-y-4 p-4 sm:p-6 select-none">
         <p className="text-center type-body text-text-secondary">{cm.subtitle}</p>
-        {/* Interactive Crop Viewport (16:9 Aspect Ratio) */}
-        <div className="relative rounded-card border-2 border-accent-red/40 bg-bg-primary overflow-hidden shadow-2xl">
+        {/* Interactive Crop Viewport */}
+        <div className={cn("relative rounded-card border-2 border-accent-red/40 bg-bg-primary overflow-hidden shadow-2xl", isRoster ? "w-full max-w-xs mx-auto" : "w-full")}>
           <div
             ref={containerRef}
             // Drag-to-pan and wheel-zoom for pointers; the zoom slider and buttons are the keyboard controls.
@@ -304,7 +311,10 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
             onWheel={handleWheel}
-            className="relative w-full aspect-[16/9] flex items-center justify-center overflow-hidden cursor-grab active:cursor-grabbing bg-bg-surface"
+            className={cn(
+              "relative flex items-center justify-center overflow-hidden cursor-grab active:cursor-grabbing bg-bg-surface",
+              isRoster ? "w-full max-w-xs mx-auto aspect-[31/50]" : "w-full aspect-[16/9]"
+            )}
             style={{ touchAction: 'none' }}
           >
             {currentUrl && !imageError ? (
@@ -318,10 +328,10 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
                 draggable={false}
                 className="max-w-none pointer-events-none transition-transform duration-75 select-none"
                 style={{
-                  width: isTallerThan16x9 ? `${100 * zoom}%` : 'auto',
-                  height: isTallerThan16x9 ? 'auto' : `${100 * zoom}%`,
-                  minWidth: isTallerThan16x9 ? `${100 * zoom}%` : undefined,
-                  minHeight: !isTallerThan16x9 ? `${100 * zoom}%` : undefined,
+                  width: isTallerThanTarget ? `${100 * zoom}%` : 'auto',
+                  height: isTallerThanTarget ? 'auto' : `${100 * zoom}%`,
+                  minWidth: isTallerThanTarget ? `${100 * zoom}%` : undefined,
+                  minHeight: !isTallerThanTarget ? `${100 * zoom}%` : undefined,
                   transform: `translate(${offset.x}px, ${offset.y}px)`,
                 }}
               />
@@ -361,14 +371,14 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
 
             {/* Hint overlay */}
             <div className="absolute bottom-3 left-3 px-2.5 py-1 rounded-chip bg-bg-primary/80 backdrop-blur-md border border-border-subtle type-micro text-text-secondary pointer-events-none">
-              {cm.dragHint ? formatMessage(cm.dragHint, { zoom: Math.round(zoom * 100) }) : ''}
+              {(isRoster && cm.dragHintRoster ? cm.dragHintRoster : cm.dragHint) ? formatMessage((isRoster && cm.dragHintRoster ? cm.dragHintRoster : cm.dragHint)!, { zoom: Math.round(zoom * 100) }) : ''}
             </div>
           </div>
         </div>
 
         {/* Controls Bar: Zoom Slider & Quick Actions */}
-        <Surface tone="elevated" padding="none" className="flex flex-col sm:flex-row items-center justify-between gap-4 p-3.5">
-          <div className="flex items-center gap-2.5 w-full sm:w-auto">
+        <Surface tone="elevated" padding="none" className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3 overflow-hidden">
+          <div className="flex items-center gap-2 flex-1 min-w-0">
             <Button
               variant="secondary" size="sm" icon
               onClick={() => setZoom((z) => Math.max(1, Math.min(5, Number((z - 0.25).toFixed(2)))))}
@@ -377,7 +387,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
               <ZoomOut />
             </Button>
 
-            <span className="type-strong text-text-muted flex items-center gap-1 shrink-0 w-24">
+            <span className="type-strong text-text-muted flex items-center gap-1 shrink-0 min-w-12 text-xs">
               <ZoomIn className="icon-sm text-accent-red" />
               {Math.round(zoom * 100)}%
             </span>
@@ -389,7 +399,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
               step="0.05"
               value={zoom}
               onChange={(e) => setZoom(parseFloat(e.target.value))}
-              className="w-full sm:w-44 accent-accent-red cursor-pointer"
+              className="w-full min-w-12 max-w-40 accent-accent-red cursor-pointer"
             />
 
             <Button
@@ -401,7 +411,7 @@ export const CoverImageCropModal: React.FC<CoverImageCropModalProps> = ({ isOpen
             </Button>
           </div>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+          <div className="flex items-center justify-end gap-2 shrink-0 flex-wrap">
             <Button
               variant="secondary" size="sm"
               onClick={handleReset}

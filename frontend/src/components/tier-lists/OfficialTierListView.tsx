@@ -189,7 +189,7 @@ export function OfficialTierListView({ slug, locale }: OfficialTierListViewProps
       resetMessage={template.has_default_placements ? t.resetToOfficialMessage : t.resetMessage}
       poolEmptyLabel={t.poolEmpty}
       onSave={onSave}
-      editHref={isAdmin && template.kind === 'custom' ? `/${locale}/tier-lists/new?official=${encodeURIComponent(slug)}` : undefined}
+      editHref={isAdmin ? `/${locale}/tier-lists/new?official=${encodeURIComponent(slug)}` : undefined}
       onDelete={isAdmin ? handleDeleteOfficial : undefined}
       onReset={onReset}
       buildExportDoc={buildExportDoc}

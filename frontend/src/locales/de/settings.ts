@@ -7,7 +7,6 @@ export default {
   soundEffectsDesc: 'Soundeffekte bei Interaktionen und Ereignissen abspielen.',
   music: 'Musik',
   musicDesc: 'Hintergrundmusik in Minispielen und Prüfungen abspielen.',
-  visuals: 'Grafik & Bewegung',
   animations: 'Interaktive Animationen',
   animationsDesc: 'Flüssige Bewegung und visuelles Feedback, vor allem bei Smash or Pass.',
   gifs: 'GIFs',

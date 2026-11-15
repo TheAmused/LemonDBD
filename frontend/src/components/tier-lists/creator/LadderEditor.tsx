@@ -158,13 +158,13 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                   />
                 </TileButton>
 
-                {/* Integrated Name Input */}
-                <input
-                  value={tier.label}
-                  maxLength={TIER_LIST_LIMITS.maxTierLabel}
-                  onChange={(e) => update(tier.id, { label: e.target.value })}
-                  aria-label={formatMessage(c.tierLabelAria, { index: index + 1 })}
-                  className="min-w-0 flex-1 bg-transparent px-3 type-card-title text-text-primary focus:outline-hidden focus:bg-bg-elevated/40 transition-colors"
+                {/* Clickable Row Area to Open Tier Settings */}
+                <button
+                  type="button"
+                  onClick={() => setPaletteFor(open ? null : tier.id)}
+                  aria-expanded={open}
+                  aria-label={formatMessage(c.tierColorAria, { label: tier.label })}
+                  className="min-w-0 flex-1 bg-transparent px-3 flex items-center hover:bg-bg-elevated/40 transition-colors cursor-pointer"
                 />
 
                 {/* Delete Button */}
@@ -197,6 +197,17 @@ export function LadderEditor({ tiers, onChange, onPreset, activePreset }: Ladder
                     );
                   })}
                   <TierColorPicker size="sm" color={tier.color} onChange={(hex) => update(tier.id, { color: hex })} />
+                  <label className="flex min-w-0 basis-full flex-col gap-1 mt-1">
+                    <span className="type-strong text-text-secondary">{t.tierLabel}</span>
+                    <Input
+                      value={tier.label}
+                      maxLength={TIER_LIST_LIMITS.maxTierLabel}
+                      placeholder={tier.label || 'S'}
+                      onChange={(e) => update(tier.id, { label: e.target.value })}
+                      aria-label={formatMessage(c.tierLabelAria, { index: index + 1 })}
+                      className="min-h-hit-sm bg-bg-primary"
+                    />
+                  </label>
                   <label className="flex min-w-0 basis-full flex-col gap-1 mt-1">
                     <span className="type-strong text-text-secondary">{t.tierBackgroundImage}</span>
                     <Input

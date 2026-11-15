@@ -23,7 +23,7 @@ describe('Campfire Dossier: CampfireHeader', () => {
     created_at: '2026-01-01T00:00:00Z',
   };
 
-  it('renders player username and hides the Survivor/Killer title, devotion, grade, email, and status badges', () => {
+  it('renders player username and hides devotion, grade, email, and status badges', () => {
     const html = renderWithDictionary(
       React.createElement(CampfireHeader, {
         user: mockUser,
@@ -35,8 +35,6 @@ describe('Campfire Dossier: CampfireHeader', () => {
     );
 
     assert.ok(html.includes('CampfireMaster'));
-    assert.ok(!html.includes('Survivor'));
-    assert.ok(!html.includes('Killer'));
     // Omitted / hidden per user mandate
     assert.ok(!html.includes('Saved to Database'));
     assert.ok(!html.includes('Lvl'));

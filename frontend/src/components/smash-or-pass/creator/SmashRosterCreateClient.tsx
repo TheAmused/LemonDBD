@@ -8,8 +8,10 @@ import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import type { Locale } from '@/i18n/config';
 
 function SmashRosterCreateContent({ locale }: { locale: Locale }) {
-  const editId = useSearchParams().get('edit') ?? undefined;
-  return <SmashRosterCreator locale={locale} editId={editId} />;
+  const searchParams = useSearchParams();
+  const editId = searchParams.get('edit') ?? undefined;
+  const officialSlug = searchParams.get('official') ?? undefined;
+  return <SmashRosterCreator locale={locale} editId={editId} officialSlug={officialSlug} />;
 }
 
 export function SmashRosterCreateClient() {

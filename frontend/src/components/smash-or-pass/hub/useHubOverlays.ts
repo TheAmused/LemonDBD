@@ -16,7 +16,7 @@ export function useHubOverlays(isPrefsOpen = false) {
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState<boolean>(false);
   const [isHowToPlayOpen, setIsHowToPlayOpen] = useState<boolean>(false);
   const [selectedStatCharacter, setSelectedStatCharacter] = useState<EntityItem | null>(null);
-  const [rosterPendingDelete, setRosterPendingDelete] = useState<{ id: string; name: string } | null>(null);
+  const [rosterPendingDelete, setRosterPendingDelete] = useState<{ id: string; name: string; isOfficial?: boolean } | null>(null);
   const [isImportModalOpen, setIsImportModalOpen] = useState<boolean>(false);
   const [exportingRosterId, setExportingRosterId] = useState<string | null>(null);
 

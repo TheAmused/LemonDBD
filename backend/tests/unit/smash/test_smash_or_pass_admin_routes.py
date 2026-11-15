@@ -243,3 +243,140 @@ class TestSmashOrPassAdminCreate:
         entity = res.get_json()["data"]["entities"][0]
         assert "fr" not in entity["metadata"]["translations"]
         assert entity["metadata"]["translations"]["de"] == {"tagline": "Hallo"}
+
+    def test_get_admin_roster_requires_auth_and_admin(
+        self, client: FlaskClient, user_headers: dict[str, str], admin_headers: dict[str, str]
+    ) -> None:
+        client.post("/api/v1/smash-or-pass/rosters", json=self._payload(), headers=admin_headers)
+        res_no_auth = client.get("/api/v1/smash-or-pass/admin/rosters/test-admin-roster")
+        assert res_no_auth.status_code == 401
+
+        res_user = client.get("/api/v1/smash-or-pass/admin/rosters/test-admin-roster", headers=user_headers)
+        assert res_user.status_code == 403
+
+    def test_get_admin_roster_not_found(self, client: FlaskClient, admin_headers: dict[str, str]) -> None:
+        res = client.get("/api/v1/smash-or-pass/admin/rosters/non-existent-roster", headers=admin_headers)
+        assert res.status_code == 404
+
+    def test_get_admin_roster_returns_full_data(
+        self, client: FlaskClient, admin_headers: dict[str, str]
+    ) -> None:
+        client.post(
+            "/api/v1/smash-or-pass/rosters",
+            json=self._payload(
+                romance_archetypes=[{"id": "hopeless-romantic", "name": "Hopeless Romantic"}],
+                entities=[
+                    {
+                        "name": "Alpha Entity",
+                        "real_name": "Alpha Real",
+                        "role": "Survivor",
+                        "gender": "female",
+                        "watermark_left": "Left Mark",
+                        "watermark_right": "Right Mark",
+                        "archetype": "The Maverick",
+                        "chapter": "Chapter 1",
+                        "danger_level": "High",
+                    }
+                ],
+            ),
+            headers=admin_headers,
+        )
+        res = client.get("/api/v1/smash-or-pass/admin/rosters/test-admin-roster", headers=admin_headers)
+        assert res.status_code == 200
+        data = res.get_json()["data"]
+        assert data["slug"] == "test-admin-roster"
+        assert len(data["romance_archetypes"]) == 1
+        assert len(data["entities"]) == 1
+        e = data["entities"][0]
+        assert e["name"] == "Alpha Entity"
+        assert e["real_name"] == "Alpha Real"
+        assert e["watermark_left"] == "Left Mark"
+        assert e["watermark_right"] == "Right Mark"
+        assert e["archetype"] == "The Maverick"
+        assert e["chapter"] == "Chapter 1"
+        assert e["danger_level"] == "High"
+
+    def test_update_admin_roster_requires_admin(
+        self, client: FlaskClient, user_headers: dict[str, str], admin_headers: dict[str, str]
+    ) -> None:
+        client.post("/api/v1/smash-or-pass/rosters", json=self._payload(), headers=admin_headers)
+        res = client.put(
+            "/api/v1/smash-or-pass/admin/rosters/test-admin-roster",
+            json=self._payload(name="Updated Title"),
+            headers=user_headers,
+        )
+        assert res.status_code == 403
+
+    def test_update_admin_roster_updates_and_preserves_slugs(
+        self, client: FlaskClient, db_session: Session, admin_headers: dict[str, str]
+    ) -> None:
+        create_res = client.post("/api/v1/smash-or-pass/rosters", json=self._payload(), headers=admin_headers)
+        assert create_res.status_code == 201
+        created_data = create_res.get_json()["data"]
+        entity1 = created_data["entities"][0]
+        entity2 = created_data["entities"][1]
+
+        update_payload = self._payload(
+            name="Renamed Admin Roster",
+            description="Updated description",
+            entities=[
+                {
+                    "slug": entity1["slug"],
+                    "name": "Alpha Renamed",
+                    "role": "Survivor",
+                    "gender": "female",
+                    "bio": "New Bio",
+                },
+                {
+                    "slug": entity2["slug"],
+                    "name": entity2["name"],
+                    "role": "Killer",
+                    "gender": "monster_other",
+                },
+            ],
+        )
+        update_res = client.put(
+            "/api/v1/smash-or-pass/admin/rosters/test-admin-roster",
+            json=update_payload,
+            headers=admin_headers,
+        )
+        assert update_res.status_code == 200
+        updated_data = update_res.get_json()["data"]
+        assert updated_data["name"] == "Renamed Admin Roster"
+        assert updated_data["description"] == "Updated description"
+        assert len(updated_data["entities"]) == 2
+
+        # Entity 1 preserved its ID and slug even though its name was changed
+        updated_e1 = next(e for e in updated_data["entities"] if e["slug"] == entity1["slug"])
+        assert updated_e1["id"] == entity1["id"]
+        assert updated_e1["name"] == "Alpha Renamed"
+        assert updated_e1["bio"] == "New Bio"
+
+    def test_delete_admin_roster_refuses_canon(
+        self, client: FlaskClient, admin_headers: dict[str, str]
+    ) -> None:
+        res = client.delete("/api/v1/smash-or-pass/admin/rosters/canon", headers=admin_headers)
+        assert res.status_code == 400
+        body = res.get_json()
+        assert "Cannot delete canonical roster" in (body.get("error") or body.get("message") or "")
+
+    def test_delete_admin_roster_success(
+        self, client: FlaskClient, db_session: Session, admin_headers: dict[str, str]
+    ) -> None:
+        create_res = client.post("/api/v1/smash-or-pass/rosters", json=self._payload(), headers=admin_headers)
+        assert create_res.status_code == 201
+        slug = create_res.get_json()["data"]["slug"]
+        seed_path = self.rosters_dir / f"{slug}.json"
+        assert seed_path.exists()
+
+        del_res = client.delete(f"/api/v1/smash-or-pass/admin/rosters/{slug}", headers=admin_headers)
+        assert del_res.status_code == 200
+
+        # Roster and seed file are gone
+        assert not seed_path.exists()
+        roster_in_db = db_session.scalar(select(Roster).where(Roster.slug == slug))
+        assert roster_in_db is None
+
+        # Subsequent delete returns 404
+        del_again = client.delete(f"/api/v1/smash-or-pass/admin/rosters/{slug}", headers=admin_headers)
+        assert del_again.status_code == 404

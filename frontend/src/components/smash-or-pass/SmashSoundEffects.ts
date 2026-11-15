@@ -3,9 +3,9 @@ import { SmashSoundBase } from './SmashSoundBase';
 import { jitter, playBell, playNoise, playTone } from './sound/voices';
 
 /** A smash this soon after the last one is a quick streak: it gets a light chime, never the full chord. */
-const RAPID_GAP_S = 0.9;
+const RAPID_GAP_S = 0.45;
 /** Faster than this the chime is skipped altogether, so mashing the button never stacks sounds. */
-const SKIP_GAP_S = 0.35;
+const SKIP_GAP_S = 0.20;
 /** A roster pick this soon after the last one stays silent. */
 const SELECT_MIN_GAP_S = 0.4;
 

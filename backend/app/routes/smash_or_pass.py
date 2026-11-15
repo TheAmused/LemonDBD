@@ -17,6 +17,7 @@ from app.services.community_media import (
     ingest_dict_media_urls,
     warm_community_thumbs_async,
 )
+from app.services.smash_or_pass.roster_admin import admin_roster_response
 from app.services.smash_or_pass_service import SmashOrPassService
 from app.utils.lang import extract_lang as _extract_lang
 from app.utils.pagination import paginate_args
@@ -86,19 +87,6 @@ def _roster_entities(payload: SmashRosterAdminCreate) -> list[dict[str, Any]]:
     ]
 
 
-def _created_roster_response(row: Roster) -> dict[str, Any]:
-    """`Roster.to_dict()` never carries its entities -- every other read path fetches them through
-    a separate Entity/EntityStat select (get_feed, get_characters_with_stats) instead of
-    eager-loading the relationship on every roster row. The creator UI wants confirmation of what
-    it just built, so this one response assembles both by hand rather than adding entities to the
-    model's own general-purpose `to_dict()`."""
-    data = row.to_dict()
-    data["entity_count"] = len(row.entities)
-    data["character_count"] = len(row.entities)
-    data["entities"] = [e.to_dict() for e in row.entities]
-    return data
-
-
 @smash_or_pass_bp.route("/rosters", methods=["POST"])
 @admin_required
 def create_roster():
@@ -132,6 +120,7 @@ def create_roster():
             is_active=payload.is_active,
             translations={k: v.model_dump(exclude_none=True) for k, v in payload.translations.items()},
             entities=entities,
+            romance_archetypes=payload.romance_archetypes,
         )
     except ValueError as err:
         return api_error(str(err), 400)
@@ -146,7 +135,71 @@ def create_roster():
         target_id=row.id,
         details={"slug": row.slug, "name": row.name, "entity_count": len(payload.entities)},
     )
-    return jsonify({"status": "success", "data": _created_roster_response(row)}), 201
+    return jsonify({"status": "success", "data": admin_roster_response(row)}), 201
+
+
+
+@smash_or_pass_bp.route("/admin/rosters/<slug>", methods=["GET"])
+@admin_required
+def get_admin_roster(slug: str):
+    """Retrieve full official roster data (with all entities and translations) for admin editing."""
+    normalized_slug = (slug or "").strip().lower()
+    roster = db.session.scalar(select(Roster).where(Roster.slug == normalized_slug))
+    if not roster:
+        return api_error(f"Roster '{slug}' not found", 404)
+    return jsonify({"status": "success", "data": admin_roster_response(roster)}), 200
+
+
+@smash_or_pass_bp.route("/admin/rosters/<slug>", methods=["PUT"])
+@admin_required
+def update_roster(slug: str):
+    """Admin-only update of an official roster, its entities, translations, or active status."""
+    normalized_slug = (slug or "").strip().lower()
+    body = request.get_json(silent=True) or {}
+    try:
+        payload = SmashRosterAdminCreate(**body)
+    except ValidationError as err:
+        return api_error("Invalid roster", 400, details=err.errors())
+
+    cover_image_url, cover_invalid, cover_ingested = ingest_cover_image(payload.cover_image_url, max_side=800)
+    if cover_invalid:
+        return api_error("Invalid cover image URL", 400)
+
+    entities = _roster_entities(payload)
+    entities_ingested = ingest_dict_media_urls(entities, "media_url", max_side=512)
+    ingested = cover_ingested or entities_ingested
+
+    try:
+        row = smash_service.update_roster(
+            normalized_slug,
+            name=payload.name,
+            description=payload.description,
+            cover_image_url=cover_image_url,
+            theme_color=payload.theme_color,
+            category=payload.category,
+            is_nsfw=payload.is_nsfw,
+            is_active=payload.is_active,
+            translations={k: v.model_dump(exclude_none=True) for k, v in payload.translations.items()},
+            entities=entities,
+            romance_archetypes=payload.romance_archetypes,
+        )
+    except ValueError as err:
+        return api_error(str(err), 400)
+
+    if not row:
+        return api_error(f"Roster '{slug}' not found", 404)
+
+    if ingested:
+        warm_community_thumbs_async(current_app.static_folder)
+
+    log_admin_action(
+        g.current_user.id,
+        "smash_roster.update",
+        target_type="roster",
+        target_id=row.id,
+        details={"slug": row.slug, "name": row.name, "entity_count": len(payload.entities), "is_active": row.is_active},
+    )
+    return jsonify({"status": "success", "data": admin_roster_response(row)}), 200
 
 
 @smash_or_pass_bp.route("/admin/rosters/<slug>", methods=["DELETE"])
@@ -154,13 +207,22 @@ def create_roster():
 def delete_roster(slug: str):
     """Deletes an official smash-or-pass roster."""
     normalized_slug = (slug or "").strip().lower()
+    if normalized_slug == "canon":
+        return api_error("Cannot delete canonical roster", 400)
     roster = db.session.scalar(select(Roster).where(Roster.slug == normalized_slug))
     if not roster:
         return api_error(f"Roster '{slug}' not found", 404)
 
     target_id = roster.id
     name = roster.name
-    deleted = smash_service.delete_roster(normalized_slug)
+    try:
+        deleted = smash_service.delete_roster(normalized_slug)
+    except ValueError as err:
+        return api_error(str(err), 400)
+    except Exception as e:
+        logger.error(f"Error deleting roster '{slug}': {e}")
+        return api_error("Something went wrong. Please try again.", 500)
+
     if not deleted:
         return api_error(f"Roster '{slug}' not found", 404)
 

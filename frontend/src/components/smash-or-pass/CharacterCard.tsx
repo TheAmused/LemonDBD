@@ -239,7 +239,8 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             <div className="absolute inset-0 z-0 bg-bg-primary overflow-hidden">
               <div className="h-full w-full" style={portraitOffsetY ? { transform: `translateY(${portraitOffsetY}px)` } : undefined}>
                 <CardAvatarImage
-                  src={avatarThumbSrc}
+                  src={avatarSrc}
+                  thumbSrc={avatarThumbSrc}
                   name={character.name}
                   slug={character.slug}
                   isSurvivor={isSurvivor}
@@ -302,7 +303,6 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const rect = e.currentTarget.getBoundingClientRect();
                   onVote('pass', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
-                {...tip(rawSmashDict.pass, undefined, 'action')}
                 aria-label={rawSmashDict.pass}
                 variant="secondary" size="lg" icon className="h-13 w-13 shadow-2xl backdrop-blur-md hover:scale-110 active:scale-95 touch-manipulation sm:h-14 sm:w-14"
               >
@@ -318,7 +318,6 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                   const rect = e.currentTarget.getBoundingClientRect();
                   onVote('smash', { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 });
                 }}
-                {...tip(rawSmashDict.smash, undefined, 'action')}
                 aria-label={rawSmashDict.smash}
                 variant="primary" size="lg" icon className="h-13 w-13 hover:scale-110 active:scale-95 touch-manipulation sm:h-14 sm:w-14"
               >

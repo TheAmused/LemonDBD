@@ -72,6 +72,8 @@ export interface CustomDropdownProps<T extends string = string> {
   menuClassName?: string;
   align?: 'left' | 'right';
   minWidthClass?: string;
+  matchWidth?: boolean;
+  emptyLabel?: string;
   accent?: DropdownAccent;
 }
 
@@ -91,6 +93,8 @@ export function CustomDropdown<T extends string = string>({
   menuClassName = '',
   align = 'left',
   minWidthClass = 'min-w-40',
+  matchWidth,
+  emptyLabel,
   accent = 'amber',
 }: CustomDropdownProps<T>) {
   const accentClasses = ACCENT_CLASSES[accent];
@@ -102,7 +106,9 @@ export function CustomDropdown<T extends string = string>({
   const triggerLabel = label ?? selectedOption?.label;
   const triggerIcon = icon || selectedOption?.icon;
 
-  // The menu is portaled, so `w-full` would mean viewport width: map it to the trigger width.
+  // The menu is portaled, so `w-full` or `min-w-full` would mean viewport width: map them to the trigger width.
+  const isMatchWidth = Boolean(matchWidth || minWidthClass.includes('min-w-full') || menuClassName.includes('w-full'));
+  const resolvedMinWidthClass = minWidthClass.replace(/(^|\s)min-w-full(?=\s|$)/g, '$1min-w-[var(--popover-anchor-width)]');
   const resolvedMenuClassName = menuClassName.replace(/(^|\s)w-full(?=\s|$)/g, '$1w-[var(--popover-anchor-width)]');
 
   const handleToggle = useCallback(() => {
@@ -156,15 +162,22 @@ export function CustomDropdown<T extends string = string>({
         onClose={() => setIsOpen(false)}
         align={align === 'right' ? 'end' : 'start'}
         gap={6}
+        matchWidth={isMatchWidth}
         maxHeight={typeof window !== 'undefined' ? window.innerHeight * 0.7 : undefined}
         role={children ? 'group' : undefined}
         as={multiple ? 'fieldset' : undefined}
         ariaLabel={children || multiple ? (ariaLabel || (typeof triggerLabel === 'string' ? triggerLabel : undefined)) : undefined}
-        className={cn(MENU_PANEL_CLASS, minWidthClass, 'custom-scrollbar', resolvedMenuClassName)}
+        className={cn(MENU_PANEL_CLASS, resolvedMinWidthClass, 'custom-scrollbar', resolvedMenuClassName)}
       >
             {children
               ? children
-              : (options ?? []).map((opt) => {
+              : (options ?? []).length === 0
+                ? (
+                  <div className="p-3 text-center text-xs text-text-muted select-none">
+                    {emptyLabel || '—'}
+                  </div>
+                )
+                : (options ?? []).map((opt) => {
                   const isSelected = multiple ? values.includes(opt.value) : opt.value === value;
                   return (
                     <MenuItem selected={isSelected} tone={accent === 'amber' ? 'amber' : 'red'} className="justify-between"

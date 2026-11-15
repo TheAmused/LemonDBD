@@ -19,6 +19,8 @@ export interface CheckboxProps {
   className?: string;
   /** Classes for the box itself (size overrides). */
   boxClassName?: string;
+  /** If true, allows text selection on the label (select-text instead of default select-none). */
+  allowTextSelection?: boolean;
 }
 
 export const Checkbox: React.FC<CheckboxProps> = ({
@@ -32,10 +34,12 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   id,
   className,
   boxClassName,
+  allowTextSelection,
 }) => (
   <label
     className={cn(
-      'inline-flex items-center gap-2 select-none',
+      'inline-flex items-center gap-2',
+      allowTextSelection ? 'select-text' : 'select-none',
       disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer',
       className
     )}

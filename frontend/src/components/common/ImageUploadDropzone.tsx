@@ -38,7 +38,7 @@ export interface ImageUploadDropzoneProps {
   browseLabel?: string;
   invalid?: boolean;
   invalidMessage?: string;
-  aspectRatio?: 'banner' | 'square';
+  aspectRatio?: 'banner' | 'square' | 'portrait';
   className?: string;
   disabled?: boolean;
   allowFileUpload?: boolean;
@@ -48,6 +48,8 @@ export interface ImageUploadDropzoneProps {
   removeAriaLabel?: string;
   onPreviewClick?: () => void;
   previewOverlay?: React.ReactNode;
+  previewClassName?: string;
+  dropzoneClassName?: string;
 }
 
 export function ImageUploadDropzone({
@@ -69,6 +71,8 @@ export function ImageUploadDropzone({
   removeAriaLabel,
   onPreviewClick,
   previewOverlay,
+  previewClassName,
+  dropzoneClassName,
 }: ImageUploadDropzoneProps) {
   const dict = useDictionary();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -82,11 +86,36 @@ export function ImageUploadDropzone({
     setUploadError(null);
   });
 
+  const blobUnsupportedMessage = allowFileUpload
+    ? dict.tierLists.creator.blobUrlUnsupportedAdmin
+    : dict.tierLists.creator.blobUrlUnsupportedUser;
+
   const commitUrl = () => {
     const trimmed = urlInput.trim();
+    if (trimmed.startsWith('blob:')) {
+      setUploadError(blobUnsupportedMessage);
+      return;
+    }
     if (trimmed && trimmed !== (value || '').trim()) {
       setUploadError(null);
       onChange(trimmed);
+    }
+  };
+
+  const handlePaste = (e: React.ClipboardEvent) => {
+    const files = e.clipboardData?.files;
+    if (files && files.length > 0 && allowFileUpload) {
+      const file = files[0];
+      if (file.type.startsWith('image/')) {
+        e.preventDefault();
+        void handleFiles(files);
+        return;
+      }
+    }
+    const text = e.clipboardData?.getData('text')?.trim();
+    if (text && text.startsWith('blob:')) {
+      e.preventDefault();
+      setUploadError(blobUnsupportedMessage);
     }
   };
 
@@ -124,8 +153,14 @@ export function ImageUploadDropzone({
       {hasValue ? (
         <div
           className={cn(
-            'relative group overflow-hidden rounded-card border border-border-color bg-bg-elevated w-full mx-auto shadow-xs',
-            aspectRatio === 'square' ? 'aspect-square max-w-xs' : 'aspect-video max-w-md 2xl:max-w-lg',
+            'relative group overflow-hidden rounded-card border border-border-color bg-bg-elevated shadow-xs',
+            previewClassName
+              ? previewClassName
+              : aspectRatio === 'portrait'
+                ? 'aspect-[31/50] max-h-96 w-auto mx-auto'
+                : aspectRatio === 'square'
+                  ? 'aspect-square max-w-xs mx-auto'
+                  : 'w-full aspect-video max-w-md 2xl:max-w-lg mx-auto',
             invalid && 'border-accent-red'
           )}
         >
@@ -163,6 +198,7 @@ export function ImageUploadDropzone({
         </div>
       ) : (
         <div
+          onPaste={handlePaste}
           onDragOver={(e) => {
             e.preventDefault();
             if (!disabled && allowFileUpload) setIsDragging(true);
@@ -179,6 +215,7 @@ export function ImageUploadDropzone({
           }}
           className={cn(
             'flex flex-col items-center justify-center gap-3 rounded-card border-2 border-dashed p-4 sm:p-6 text-center transition-colors',
+            dropzoneClassName,
             isDragging && allowFileUpload ? 'border-accent-red bg-accent-red/5' : 'border-border-color bg-bg-primary/20',
             invalid && 'border-accent-red',
             disabled && 'opacity-50 cursor-not-allowed'
@@ -234,6 +271,7 @@ export function ImageUploadDropzone({
               invalid={invalid}
               value={urlInput}
               onChange={(e) => setUrlInput(e.target.value)}
+              onPaste={handlePaste}
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
                   e.preventDefault();

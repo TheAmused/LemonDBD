@@ -1,10 +1,11 @@
 'use client';
 // frontend/src/components/smash-or-pass/creator/RosterBasicsSection.tsx
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Crop } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { Button } from '@/components/common/Button';
 import { Input, Textarea } from '@/components/common/Field';
+import { CustomDropdown } from '@/components/common/CustomDropdown';
 
 const ImageUploadDropzone = dynamic(
   () => import('@/components/common/ImageUploadDropzone').then((m) => m.ImageUploadDropzone),
@@ -14,11 +15,10 @@ import { LabeledSwitch } from '@/components/common/Switch';
 import { Tooltip, tip } from '@/components/common/Tooltip';
 import { useDictionary } from '@/context/DictionaryContext';
 import { defaultRosterThemeColor, SMASH_ROSTER_LIMITS } from '@/utils/smashOrPass/constants';
-import { type Draft, Section } from './SmashRosterCreatorParts';
+import { type Draft, type RosterTranslations, Section } from './SmashRosterCreatorParts';
 import { LABEL } from './styles';
 import { RequiredMark } from './RequiredMark';
 import { GradientEditor } from './GradientEditor';
-import { cn } from '@/utils/cn';
 import { encodeThemeColor, themeGradientOf } from '@/utils/smashOrPass/badgeGradient';
 
 /** A checkbox row whose whole line is the click target. */
@@ -33,12 +33,16 @@ interface RosterBasicsSectionProps {
   isUserAdmin: boolean;
   official: boolean;
   onOfficialChange: (official: boolean) => void;
+  officialSlug?: string;
   onOpenCrop: () => void;
+  showTranslations?: boolean;
+  rosterTranslations?: RosterTranslations;
+  onRosterTranslationChange?: (locale: string, field: 'name' | 'description', value: string) => void;
   /** Extra content under the form, e.g. the translations panel. */
   children?: ReactNode;
 }
 
-/** Name, category, description, cover, theme colour, and the simple / NSFW / official switches. */
+/** Name, description, cover, theme colour, and the simple / NSFW / official switches. */
 export function RosterBasicsSection({
   draft,
   patch,
@@ -48,38 +52,71 @@ export function RosterBasicsSection({
   isUserAdmin,
   official,
   onOfficialChange,
+  officialSlug,
   onOpenCrop,
+  showTranslations = false,
+  rosterTranslations,
+  onRosterTranslationChange,
   children,
 }: RosterBasicsSectionProps) {
   const dict = useDictionary();
   const c = dict.smashOrPass.creator;
+  const [activeLocale, setActiveLocale] = useState<string>('en');
+
+  const effectiveLocale = showTranslations ? activeLocale : 'en';
+  const isBaseLocale = effectiveLocale === 'en';
+  const sharedNotice = showTranslations && !isBaseLocale ? (
+    <span className="type-micro text-text-muted/70 font-normal ml-1">({c.sharedFieldNotice})</span>
+  ) : null;
+
+  const hasCandidates =
+    draft.entities.some((e) => Boolean(e.name.trim() || e.media_url.trim())) || draft.entities.length > 1;
 
   return (
-    <Section title={c.stepBasics}>
+    <Section title={c.stepBasics} storageKey="lemondbd_smash_creator_section_basics">
       <div className="w-full max-w-4xl 2xl:max-wide-2k:max-w-5xl wide-2k:max-w-7xl mx-auto grid gap-4 2xl:gap-6 md:grid-cols-2">
-        <label>
+        {showTranslations && (
+          <div className="md:col-span-2 flex flex-wrap items-center justify-between gap-2 pb-1 border-b border-border-color/40">
+            <span className="type-label-sm text-text-secondary font-medium">
+              {effectiveLocale === 'en' ? c.rosterDetailsLabel || 'Roster Details' : `${c.rosterDetailsLabel || 'Roster Details'} (${effectiveLocale.toUpperCase()})`}
+            </span>
+            <div className="flex items-center gap-2">
+              <span className="type-micro text-text-muted">{c.editingLanguageLabel}:</span>
+              <CustomDropdown<string>
+                value={effectiveLocale}
+                onChange={(loc) => setActiveLocale(loc)}
+                options={[
+                  { value: 'en', label: c.baseLanguageLabel },
+                  { value: 'pl', label: 'Polski (PL)' },
+                  { value: 'de', label: 'Deutsch (DE)' },
+                  { value: 'es', label: 'Español (ES)' },
+                  { value: 'ja', label: '日本語 (JA)' },
+                ]}
+                ariaLabel={c.editingLanguageLabel}
+                accent="primary"
+              />
+            </div>
+          </div>
+        )}
+
+        <label className="md:col-span-2">
           <span className={LABEL}>
             {c.nameLabel}
             <RequiredMark />
           </span>
           <Input
-            fieldSize="md" invalid={attempted && nameMissing}
-            value={draft.name}
-            maxLength={SMASH_ROSTER_LIMITS.maxRosterName}
-            onChange={(e) => patch({ name: e.target.value })}
-            placeholder={c.namePlaceholder}
-            
-            className="2xl:min-h-hit-xl 2xl:text-base"
-          />
-        </label>
-        <label>
-          <span className={LABEL}>{c.categoryLabel}</span>
-          <Input
             fieldSize="md"
-            value={draft.category}
-            maxLength={64}
-            onChange={(e) => patch({ category: e.target.value })}
-            placeholder={c.categoryPlaceholder}
+            invalid={attempted && nameMissing && isBaseLocale}
+            value={isBaseLocale ? draft.name : rosterTranslations?.[effectiveLocale]?.name || ''}
+            maxLength={SMASH_ROSTER_LIMITS.maxRosterName}
+            onChange={(e) => {
+              if (isBaseLocale) {
+                patch({ name: e.target.value });
+              } else {
+                onRosterTranslationChange?.(effectiveLocale, 'name', e.target.value);
+              }
+            }}
+            placeholder={isBaseLocale ? c.namePlaceholder : (draft.name || c.rosterNamePlaceholder || c.namePlaceholder)}
             className="2xl:min-h-hit-xl 2xl:text-base"
           />
         </label>
@@ -87,23 +124,32 @@ export function RosterBasicsSection({
           <span className={LABEL}>{c.descriptionLabel}</span>
           <Textarea
             fieldSize="md"
-            value={draft.description}
+            autoResize
+            value={isBaseLocale ? draft.description : rosterTranslations?.[effectiveLocale]?.description || ''}
             maxLength={SMASH_ROSTER_LIMITS.maxRosterDescription}
-            onChange={(e) => patch({ description: e.target.value })}
-            placeholder={c.descriptionPlaceholder}
+            onChange={(e) => {
+              if (isBaseLocale) {
+                patch({ description: e.target.value });
+              } else {
+                onRosterTranslationChange?.(effectiveLocale, 'description', e.target.value);
+              }
+            }}
+            placeholder={isBaseLocale ? c.descriptionPlaceholder : (draft.description || c.rosterDescriptionPlaceholder || c.descriptionPlaceholder)}
             rows={2}
             className="2xl:text-base"
           />
         </label>
-        <div className="md:col-span-2">
+        <div className="md:col-span-1 flex flex-col gap-1.5 justify-start">
           <ImageUploadDropzone
             value={draft.cover_image_url}
             onChange={(val) => patch({ cover_image_url: val })}
-            label={c.coverImageLabel}
+            label={isBaseLocale ? c.coverImageLabel : `${c.coverImageLabel} (${c.sharedFieldNotice})`}
             placeholder={c.coverImagePlaceholder}
             invalid={attempted && coverInvalid}
             invalidMessage={c.invalidImage || dict.tierLists.invalidImage}
-            aspectRatio="banner"
+            aspectRatio="portrait"
+            previewClassName="h-96 w-auto aspect-[31/50] mx-auto rounded-card overflow-hidden"
+            dropzoneClassName="h-96 w-full max-w-xs mx-auto"
             allowFileUpload={isUserAdmin}
             onPreviewClick={isUserAdmin ? () => onOpenCrop() : undefined}
             previewOverlay={
@@ -133,33 +179,20 @@ export function RosterBasicsSection({
                 </Button>
               ) : undefined
             }
-            emptyActions={
-              isUserAdmin ? (
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => onOpenCrop()}
-                  {...tip(c.cropCoverTitle, undefined, 'action')}
-                  aria-label={c.cropCoverTitle}
-                  className="shrink-0 px-3"
-                >
-                  <Crop className="icon-md text-accent-red" />
-                  <span className="hidden sm:inline">{c.cropCoverBadge}</span>
-                </Button>
-              ) : undefined
-            }
           />
         </div>
 
-        <div className="md:col-span-2 mx-auto w-full max-w-2xl">
-          <span className={cn(LABEL, 'block text-center')}>{c.themeColorLabel}</span>
+        <div className="md:col-span-1 flex flex-col gap-1.5 justify-start">
+          <span className="block type-label-sm text-text-secondary">
+            {c.themeColorLabel}
+            {sharedNotice}
+          </span>
           <GradientEditor
             value={themeGradientOf(draft.theme_color || defaultRosterThemeColor())}
             title={draft.name || c.namePlaceholder}
+            hint={c.themeColorHint}
             onChange={(gradient) => patch({ theme_color: encodeThemeColor(gradient) })}
           />
-          <p className="mt-2 text-center type-caption text-text-muted">{c.themeColorHint}</p>
         </div>
 
         {/* Toggles Row: Simple Version, NSFW, and Official (Admin) */}
@@ -167,12 +200,13 @@ export function RosterBasicsSection({
           {/* Simple Version Switch */}
           <Tooltip variant="action"
             title={c.simpleVersion}
-            description={c.simpleVersionDesc}
+            description={hasCandidates ? c.modeLockedHint : c.simpleVersionDesc}
           >
             <LabeledSwitch
               checked={draft.roster_mode === 'simple'}
               onChange={(checked) => patch({ roster_mode: checked ? 'simple' : 'full' })}
-              label={c.simpleVersion}
+              label={<>{c.simpleVersion}{sharedNotice}</>}
+              disabled={hasCandidates}
             />
           </Tooltip>
 
@@ -184,12 +218,12 @@ export function RosterBasicsSection({
             <LabeledSwitch
               checked={draft.is_nsfw}
               onChange={(checked) => patch({ is_nsfw: checked })}
-              label={c.nsfwLabel}
+              label={<>{c.nsfwLabel}{sharedNotice}</>}
             />
           </Tooltip>
 
-          {/* Official Roster Switch (Admin only) */}
-          {isUserAdmin && (
+          {/* Official Roster Switch (Admin only, only for new rosters) */}
+          {isUserAdmin && !officialSlug && (
             <Tooltip variant="action"
               title={c.officialPublicHub}
               description="Publish directly to the public Hub directory for all visitors."
@@ -197,8 +231,23 @@ export function RosterBasicsSection({
               <LabeledSwitch
                 checked={official}
                 onChange={onOfficialChange}
-                label={c.officialPublicHub}
+                label={<>{c.officialPublicHub}{sharedNotice}</>}
                 labelClassName="type-strong-fluid text-accent-red group-hover:underline transition-colors"
+              />
+            </Tooltip>
+          )}
+
+          {/* Active / Remote Toggle (Admin only, for official rosters) */}
+          {isUserAdmin && (official || Boolean(officialSlug)) && (
+            <Tooltip variant="action"
+              title={dict.tierLists.creator.publishedLabel}
+              description={c.isActiveOfficialDesc}
+            >
+              <LabeledSwitch
+                checked={draft.is_active !== false}
+                onChange={(checked) => patch({ is_active: checked })}
+                label={<>{dict.tierLists.creator.publishedLabel}{sharedNotice}</>}
+                labelClassName="type-strong-fluid text-accent-green group-hover:underline transition-colors"
               />
             </Tooltip>
           )}

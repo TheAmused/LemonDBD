@@ -7,7 +7,6 @@ export default {
   soundEffectsDesc: 'Play sound effects during interactions and events.',
   music: 'Music',
   musicDesc: 'Play background music across minigames and trials.',
-  visuals: 'Visuals & Motion',
   animations: 'Interactive Animations',
   animationsDesc: 'Smooth motion and visual feedback, mostly on Smash or Pass.',
   gifs: 'GIFs',

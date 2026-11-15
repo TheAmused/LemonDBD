@@ -43,10 +43,19 @@ describe('sanitizeImageUrl', () => {
     assert.equal(sanitizeImageUrl(huge), null);
   });
 
-  it('accepts backend static paths but not traversal', () => {
+  it('accepts backend static paths and thumbnail proxy paths but not traversal', () => {
     assert.equal(sanitizeImageUrl('/static/icons/perks/x.webp'), '/static/icons/perks/x.webp');
     assert.equal(sanitizeImageUrl('/static/../secret'), null);
     assert.equal(sanitizeImageUrl('/static//evil.example/x'), null);
+    assert.equal(
+      sanitizeImageUrl('/api/v1/thumbs/avatars/128/survivors/jonah_vasquez.webp'),
+      '/api/v1/thumbs/avatars/128/survivors/jonah_vasquez.webp'
+    );
+    assert.equal(sanitizeImageUrl('/api/v1/thumbs/../secret'), null);
+    assert.equal(
+      sanitizeImageUrl('http://localhost:5000/api/v1/thumbs/avatars/128/survivors/jonah_vasquez.webp'),
+      '/api/v1/thumbs/avatars/128/survivors/jonah_vasquez.webp'
+    );
   });
 });
 

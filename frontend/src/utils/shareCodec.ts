@@ -41,7 +41,7 @@ export function uniqueId(base: string, taken: Set<string>): string {
 /**
  * Returns a displayable image source, or null if `raw` is not one we allow.
  * Accepted: `https:` URLs, raster `data:image/*;base64` up to
- * `maxDataImageChars`, and backend-relative `/static/...` paths.
+ * `maxDataImageChars`, and backend-relative `/static/...` or `/api/v1/thumbs/...` paths.
  */
 export function sanitizeImageUrl(raw: unknown, maxDataImageChars: number): string | null {
   if (typeof raw !== 'string') return null;
@@ -52,7 +52,7 @@ export function sanitizeImageUrl(raw: unknown, maxDataImageChars: number): strin
     return value.length <= maxDataImageChars && DATA_IMAGE_PATTERN.test(value) ? value : null;
   }
 
-  if (value.startsWith('/static/')) {
+  if (value.startsWith('/static/') || value.startsWith('/api/v1/thumbs/')) {
     // A same-origin backend asset. No traversal, no protocol-relative `//host`.
     return !value.includes('..') && !value.includes('//') && !/[\s"'<>\\]/.test(value) ? value : null;
   }
@@ -60,6 +60,15 @@ export function sanitizeImageUrl(raw: unknown, maxDataImageChars: number): strin
   if (value.length > 2048) return null;
   try {
     const url = new URL(value);
+    const isLocalBackend =
+      url.protocol === 'http:' &&
+      (url.hostname === 'localhost' || url.hostname === '127.0.0.1' || url.hostname === 'backend') &&
+      (url.pathname.startsWith('/static/') || url.pathname.startsWith('/api/v1/thumbs/'));
+
+    if (isLocalBackend) {
+      return !url.username && !url.password ? `${url.pathname}${url.search}` : null;
+    }
+
     return url.protocol === 'https:' && !url.username && !url.password ? url.href : null;
   } catch {
     return null;

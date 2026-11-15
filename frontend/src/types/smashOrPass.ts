@@ -128,6 +128,9 @@ export interface RosterItem {
    * apart (no leaderboard fetch, no server vote, an "Edit"/"Delete" action
    * instead of nothing). */
   is_local?: boolean;
+  is_imported?: boolean;
+  author_id?: number;
+  author_login?: string;
   roster_mode?: 'simple' | 'full';
   custom_roles?: string[];
   custom_genders?: string[];
@@ -220,6 +223,7 @@ export interface SmashRosterDocumentEntity {
   role: string;
   gender: string;
   media_url?: string;
+  media_display?: MediaDisplay | null;
   watermark_left?: string;
   watermark_right?: string;
   archetype?: string;
@@ -292,6 +296,7 @@ export interface StoredCustomRoster extends SmashRosterDocument {
   id: string;
   createdAt: number;
   updatedAt: number;
+  is_imported?: boolean;
 }
 
 export interface SmashRosterStoreState {

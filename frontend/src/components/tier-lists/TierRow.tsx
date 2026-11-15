@@ -15,6 +15,7 @@ import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 
 import { Button } from '@/components/common/Button';
+import { tip } from '@/components/common/Tooltip';
 interface TierRowProps {
   tier: TierDefinition;
   keys: string[];
@@ -129,28 +130,27 @@ export const TierRow = React.memo(function TierRow({
         )}
       </div>
 
-      {/* Far right, on every row, for everyone who can rank: one click empties the row. Empty rows keep a spacer so the column never changes width. */}
+      {/* Far right, on every row, for everyone who can rank: one click empties the row. Empty rows keep a spacer so the column never changes width. Hidden in screenshot / FIT mode. */}
       {onClearRow && (
-        <div className="flex shrink-0 items-center px-1.5 sm:px-2">
+        <div className="flex shrink-0 items-stretch border-l border-border-color/80 group-data-[fit-mode]/board:hidden">
           {keys.length > 0 ? (
             <Button
               type="button"
-              variant="overlay"
-              size="xs"
+              variant="danger"
+              size="sm"
               icon
-              pill
               onClick={(e) => {
                 e.stopPropagation();
                 onClearRow(tier.id);
               }}
+              {...tip(formatMessage(t.clearTierAria, { label: tier.label }), undefined, 'action')}
               aria-label={formatMessage(t.clearTierAria, { label: tier.label })}
-              title={formatMessage(t.clearTierAria, { label: tier.label })}
-              className="opacity-70 transition-opacity hover:opacity-100 focus-visible:opacity-100"
+              className="w-11 sm:w-12 h-full"
             >
-              <Eraser aria-hidden="true" />
+              <Eraser className="icon-lg sm:icon-xl shrink-0 transition-transform hover:scale-110" aria-hidden="true" />
             </Button>
           ) : (
-            <span aria-hidden="true" className="h-6 w-6" />
+            <span aria-hidden="true" className="w-11 sm:w-12" />
           )}
         </div>
       )}

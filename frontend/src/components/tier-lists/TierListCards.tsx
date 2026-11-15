@@ -7,7 +7,8 @@ import { ChevronRight, Info, Trash2 } from 'lucide-react';
 import type { StoredCustomList, TierListSummary } from '@/types/tierList';
 import { sanitizeImageUrl } from '@/utils/tierLists/codec';
 import { staticUrl } from '@/utils/api';
-import { getCommunityCoverThumbUrl } from '@/utils/thumbUrl';
+import { avatarUrlForCharacter } from '@/utils/staticUrl';
+import { avatarThumbFromPath, getCommunityCoverThumbUrl } from '@/utils/thumbUrl';
 
 import { tip } from '@/components/common/Tooltip';
 import { formatDate } from '@/utils/format';
@@ -19,6 +20,7 @@ import { cn } from '@/utils/cn';
 
 import { Button } from '@/components/common/Button';
 import { Img } from '@/components/common/Img';
+import { useOptionalAuth } from '@/context/AuthContext';
 const CARD =
   'group relative flex h-full flex-col overflow-hidden rounded-card border border-border-color/80 bg-bg-surface p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-accent-red/50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-amber';
 
@@ -52,9 +54,10 @@ function defaultCustomCover(id: string): string {
   return DEFAULT_CUSTOM_COVERS[hash % DEFAULT_CUSTOM_COVERS.length];
 }
 
-function coverSrc(url: string): string | null {
+function coverSrc(url: string | null | undefined): string | null {
   if (!url) return null;
   if (url.startsWith('/images/')) return url;
+  if (url.startsWith('/api/v1/thumbs/')) return url;
   if (url.startsWith('/static/')) return getCommunityCoverThumbUrl(url, 480) || url;
   if (!/^[a-z]+:/i.test(url)) {
     const resolved = staticUrl(url);
@@ -62,6 +65,30 @@ function coverSrc(url: string): string | null {
   }
   const safe = sanitizeImageUrl(url);
   return safe ? getCommunityCoverThumbUrl(safe, 480) || safe : null;
+}
+
+function itemThumbSrc(url: string | null | undefined, id?: string, name?: string): string | null {
+  if (url) {
+    const safe = sanitizeImageUrl(url);
+    if (safe) {
+      if (safe.startsWith('/static/')) {
+        const resolved = staticUrl(safe);
+        return resolved ?? safe;
+      }
+      return safe;
+    }
+  }
+  if (id && name) {
+    if (id.startsWith('survivor:')) {
+      const charUrl = avatarUrlForCharacter(name, 'survivors');
+      return charUrl ? avatarThumbFromPath(charUrl, 128) || charUrl : null;
+    }
+    if (id.startsWith('killer:')) {
+      const charUrl = avatarUrlForCharacter(name, 'killers');
+      return charUrl ? avatarThumbFromPath(charUrl, 128) || charUrl : null;
+    }
+  }
+  return null;
 }
 
 /** True while the one-line clamped text is actually cut off (re-measured on resize). */
@@ -131,7 +158,10 @@ export function OfficialTierListCard({ list, rankedCount, locale, showNsfw = tru
   const dict = useDictionary();
   const t = dict.tierLists;
   const cover = coverSrc(list.cover_image_url);
-  const defaultCover = DEFAULT_OFFICIAL_COVERS[list.slug] || DEFAULT_OFFICIAL_COVERS[list.kind] || null;
+  const defaultCover =
+    DEFAULT_OFFICIAL_COVERS[list.slug] ||
+    DEFAULT_OFFICIAL_COVERS[list.kind] ||
+    (list.kind === 'custom' ? defaultCustomCover(list.slug) : null);
   const effectiveCover = cover || (defaultCover ? coverSrc(defaultCover) : null);
   const kindName = t.kinds[list.kind];
   const isDuplicateKind = Boolean(
@@ -252,6 +282,8 @@ interface CustomCardProps {
 }
 
 export function CustomTierListCard({ list, locale, onDelete, disabled, showNsfw = true, onRevealNsfw }: CustomCardProps) {
+  const auth = useOptionalAuth();
+  const user = auth?.user;
   const dict = useDictionary();
   const t = dict.tierLists;
   const descRef = React.useRef<HTMLParagraphElement>(null);
@@ -265,6 +297,8 @@ export function CustomTierListCard({ list, locale, onDelete, disabled, showNsfw 
   const shown = list.items.slice(0, SHOWCASE_MAX);
   const overflow = total - shown.length;
   const fullyRanked = total > 0 && ranked >= total;
+  const isImported = Boolean(list._manifest?.author_login && list._manifest.author_login !== user?.username);
+  const authorName = list._manifest?.author_login;
 
   const inner = (
     <>
@@ -308,7 +342,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled, showNsfw 
         {descClamped && list.description && <DescriptionPeek text={list.description} />}
         <div className="absolute top-3 left-3 z-30 transition-opacity group-has-[[aria-expanded=true]]/banner:opacity-0">
           <Badge tone="overlay" size="sm" className={cn('tabular-nums', fullyRanked ? 'text-accent-green' : 'text-text-muted')}>
-            {formatMessage(t.itemsCount, { count: `${ranked}/${total}` })}
+            {formatMessage(t.rankedCount, { count: `${ranked}/${total}` })}
           </Badge>
         </div>
         {list.is_nsfw && showNsfw && (
@@ -326,7 +360,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled, showNsfw 
             }}
             {...tip(t.deleteList, undefined, 'action')}
             aria-label={`${t.deleteList} ${customTitle}`}
-            variant="overlay" size="sm" icon className="absolute top-3 right-3 z-30 transition-[opacity,color,background-color] hover:bg-accent-red/20 hover:text-accent-red group-has-[[aria-expanded=true]]/banner:opacity-0"
+            variant="overlay" size="sm" icon className="absolute top-3 right-3 z-30 transition-[opacity,color,background-color] hover:bg-accent-red hover:text-text-inverted hover:border-accent-red group-has-[[aria-expanded=true]]/banner:opacity-0"
           >
             <Trash2 aria-hidden="true" />
           </Button>
@@ -335,9 +369,20 @@ export function CustomTierListCard({ list, locale, onDelete, disabled, showNsfw 
 
       <div className="relative z-10 flex flex-1 flex-col gap-2.5">
         <div className="flex flex-col gap-1 text-center sm:text-left">
-          <h3 className="type-card-title text-text-primary group-hover:text-accent-red transition-colors line-clamp-1 break-words">
-            {customTitle}
-          </h3>
+          <div className="flex items-center justify-between gap-2">
+            <h3 className="type-card-title text-text-primary group-hover:text-accent-red transition-colors line-clamp-1 break-words">
+              {customTitle}
+            </h3>
+            {isImported ? (
+              <Badge tone="overlay" size="sm" className="shrink-0 text-text-muted font-normal">
+                @{authorName}
+              </Badge>
+            ) : (
+              <Badge tone="overlay" size="sm" className="shrink-0 text-accent-amber font-semibold">
+                {dict.smashOrPass.picker.yours}
+              </Badge>
+            )}
+          </div>
           {list.description && (
             <p
               ref={descRef}
@@ -354,11 +399,12 @@ export function CustomTierListCard({ list, locale, onDelete, disabled, showNsfw 
             <span className="type-caption text-text-muted italic line-clamp-1">{t.poolEmptyCustom}</span>
           ) : (
             <>
-              {shown.map((item) =>
-                item.image ? (
+              {shown.map((item) => {
+                const thumb = itemThumbSrc(item.image, item.id, item.name);
+                return thumb ? (
                   <Img
                     key={item.id}
-                    src={coverSrc(item.image) ?? undefined}
+                    src={thumb}
                     alt=""
                     loading="lazy"
                     referrerPolicy="no-referrer"
@@ -372,8 +418,8 @@ export function CustomTierListCard({ list, locale, onDelete, disabled, showNsfw 
                   >
                     {Array.from(item.name.trim())[0]?.toUpperCase() ?? '?'}
                   </span>
-                )
-              )}
+                );
+              })}
               {overflow > 0 && (
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-chip border border-dashed border-border-color bg-bg-surface/80 type-strong-xs text-text-muted shadow-xs tabular-nums">
                   +{overflow}

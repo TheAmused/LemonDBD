@@ -34,29 +34,6 @@ const LG_IMAGE_CLASSES: Record<TierTileShape, string> = {
   wide: 'h-20 phone-lg:h-24 sm:h-28',
 };
 
-/** The first `count` characters of `word`, counted by code point so astral letters stay whole. */
-function leadingChars(word: string, count: number): string {
-  let out = '';
-  let taken = 0;
-  for (const ch of word) {
-    if (taken === count) break;
-    out += ch;
-    taken += 1;
-  }
-  return out;
-}
-
-/** `William "Bill" Overbeck` -> `WB`: first letter of the first two words that have one. */
-function initials(name: string): string {
-  const words = name
-    .split(/\s+/)
-    .map((w) => w.replace(/[^\p{L}\p{N}]/gu, ''))
-    .filter(Boolean);
-  if (words.length === 0) return name.slice(0, 2).toUpperCase();
-  const letters = words.length > 1 ? leadingChars(words[0], 1) + leadingChars(words[1], 1) : leadingChars(words[0], 2);
-  return letters.toUpperCase();
-}
-
 interface TierItemTileProps extends React.HTMLAttributes<HTMLDivElement> {
   item: TierItem;
   shape?: TierTileShape;
@@ -112,7 +89,7 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
           // A bare icon sits straight on the board; the plate and border only come back for selection, hover and the placeholder.
           hasImage ? (size === 'lg' ? 'bg-bg-elevated/40' : 'bg-transparent') : 'bg-bg-elevated',
           selected
-            ? 'border-accent-amber ring-2 ring-accent-amber'
+            ? 'border-accent-red ring-2 ring-accent-red'
             : cn('group-hover:border-accent-red/60', hasImage && size !== 'lg' ? 'border-transparent' : 'border-border-color')
         )}
       >
@@ -124,13 +101,23 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
             shape === 'wide' ? 'object-cover' : 'object-contain p-0.5'
           )}
           fallbackIcon={
-            <span className="px-1 text-center type-card-title text-text-secondary" aria-hidden="true">
-              {initials(item.name)}
-            </span>
+            <div className="flex h-full w-full items-center justify-center p-1 text-center">
+              <FitText
+                aria-hidden="true"
+                minScale={0.5}
+                maxLines={3}
+                className={cn(
+                  'w-full text-center font-bold leading-tight text-text-primary break-words select-none',
+                  size === 'sm' ? 'text-tiny' : size === 'lg' ? 'text-xs' : 'text-tiny sm:text-mini'
+                )}
+              >
+                {item.name}
+              </FitText>
+            </div>
           }
         />
       </div>
-      {showName && (
+      {showName && hasImage && (
         <FitText
           aria-hidden="true"
           minScale={size === 'lg' ? 0.75 : 0.65}

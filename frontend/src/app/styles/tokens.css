@@ -410,7 +410,7 @@
 @utility grid-cols-label-control { grid-template-columns: minmax(0, 1fr) minmax(0, 14rem); }
 
 /* Heights tied to the screen: whole-viewport pages, dialogs and panels. */
-@utility min-h-screen-nav { min-height: calc(100vh - 4rem); }
+@utility min-h-screen-nav { min-height: calc(100dvh - 4rem); }
 @utility min-h-screen-smash { min-height: calc(100dvh - 5rem); }
 @utility min-h-vh-60 { min-height: 60vh; }
 @utility min-h-vh-70 { min-height: 70vh; }

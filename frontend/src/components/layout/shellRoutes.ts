@@ -26,7 +26,7 @@ export const SHELL_PADDING_CLASSES: Record<ShellPadding, string> = {
 };
 
 export const DEFAULT_SHELL_OUTER_CLASSNAME =
-  'min-h-screen text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300';
+  'min-h-dvh text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300';
 
 export interface ShellSpec {
   /** Named padding scale for <main>. Defaults to 'comfortable'. Ignored if `customPadding` is set. */
@@ -42,7 +42,7 @@ export interface ShellSpec {
 
 const CENTERED_PAGE = {
   customPadding: 'p-4 sm:p-8 lg:p-12',
-  mainClassName: 'flex items-center justify-center min-h-screen-nav lg:min-h-screen',
+  mainClassName: 'flex items-center justify-center min-h-screen-nav lg:min-h-dvh',
 } as const satisfies ShellSpec;
 
 /** The "you can't see this" pages (404, 403, blocked, crashed) -- the home layout with different words. */
@@ -50,7 +50,7 @@ export const ERROR_SHELL: ShellSpec = { ...CENTERED_PAGE, mainId: 'main-error-co
 
 const LEGAL: ShellSpec = {
   padding: 'spacious',
-  mainClassName: 'flex flex-col items-center min-h-screen-nav lg:min-h-screen overflow-y-auto relative',
+  mainClassName: 'flex flex-col items-center min-h-screen-nav lg:min-h-dvh overflow-y-auto relative',
 };
 
 const MINIGAME_CENTERED: ShellSpec = {
@@ -69,7 +69,7 @@ export interface ShellRoute {
 
 export const ROUTE_SHELLS: ReadonlyArray<ShellRoute> = [
   { prefix: [], shell: CENTERED_PAGE },  // home  /
-  { prefix: ['about'], shell: { padding: 'spacious', mainClassName: 'flex flex-col items-center justify-center min-h-screen-nav lg:min-h-screen overflow-y-auto relative' } },
+  { prefix: ['about'], shell: { padding: 'spacious', mainClassName: 'flex flex-col items-center justify-center min-h-screen-nav lg:min-h-dvh overflow-y-auto relative' } },
   { prefix: ['achievements'], shell: { padding: 'spacious' } },
   // overflow-x-clip, not overflow-y-auto: an auto-scrolling <main> as tall as its content never scrolls, and a sticky bar inside it (Settings' save bar) then never sticks to the screen.
   { prefix: ['admin'], shell: { mainId: 'main-admin-content', mainClassName: 'overflow-x-clip' } },
@@ -77,7 +77,7 @@ export const ROUTE_SHELLS: ReadonlyArray<ShellRoute> = [
   { prefix: ['characters'], shell: { mainClassName: 'relative overflow-y-auto' } },  // list + [slug] detail
   { prefix: ['forbidden'], shell: ERROR_SHELL },
   { prefix: ['maintenance'], shell: false },  // the closed-for-maintenance page: no sidebar, nothing to click through to
-  { prefix: ['maps'], shell: { customPadding: 'p-4 sm:p-6 lg:p-7', mainClassName: 'relative min-h-screen flex flex-col gap-4' } },
+  { prefix: ['maps'], shell: { customPadding: 'p-4 sm:p-6 lg:p-7', mainClassName: 'relative min-h-dvh flex flex-col gap-4' } },
   { prefix: ['minigames'], shell: { mainClassName: 'relative flex flex-col' } },  // hub
   { prefix: ['minigames', 'creator'], shell: MINIGAME_CENTERED },
   { prefix: ['minigames', 'idle'], shell: MINIGAME_CENTERED },
@@ -92,10 +92,10 @@ export const ROUTE_SHELLS: ReadonlyArray<ShellRoute> = [
     },
   },
   { prefix: ['privacy-policy'], shell: LEGAL },
-  { prefix: ['randomizer'], shell: { padding: 'flush', mainClassName: 'min-h-screen overflow-y-auto flex flex-col relative' } },
+  { prefix: ['randomizer'], shell: { padding: 'flush', mainClassName: 'min-h-dvh overflow-y-auto flex flex-col relative' } },
   { prefix: ['reset-password'], shell: false },  // a bare, centred form: no sidebar
   { prefix: ['rules'], shell: LEGAL },
-  { prefix: ['settings'], shell: { padding: 'spacious', mainClassName: 'flex flex-col items-center justify-center min-h-screen-nav lg:min-h-screen overflow-y-auto relative' } },
+  { prefix: ['settings'], shell: { padding: 'spacious', mainClassName: 'flex flex-col items-center justify-center min-h-screen-nav lg:min-h-dvh overflow-y-auto relative' } },
   { prefix: ['smash-or-pass'], shell: { mainClassName: 'overflow-y-auto' } },  // hub
   { prefix: ['smash-or-pass', 'create'], shell: TIER_LIST_WORKSPACE },
   {
@@ -104,7 +104,7 @@ export const ROUTE_SHELLS: ReadonlyArray<ShellRoute> = [
       padding: 'spacious',
       mainClassName: 'overflow-y-auto',
       // Streaks has never painted the fog overlay; kept as it was.
-      outerClassName: 'min-h-screen text-text-primary flex flex-col lg:flex-row transition-colors duration-300',
+      outerClassName: 'min-h-dvh text-text-primary flex flex-col lg:flex-row transition-colors duration-300',
     },
   },
   { prefix: ['terms-of-service'], shell: LEGAL },

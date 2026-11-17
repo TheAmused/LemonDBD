@@ -16,7 +16,7 @@ export function OnboardingAuthRequired({ locale }: { locale: string }) {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-6 text-center">
+    <div className="flex min-h-dvh flex-col items-center justify-center p-6 text-center">
       <Surface padding="none" className="w-full max-w-md space-y-4 p-8 shadow-xl">
         <IconTile tone="red" size="lg" className="mx-auto">
           <LemonIcon className="h-10 w-10 text-accent-red" />

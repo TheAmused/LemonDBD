@@ -33,7 +33,7 @@ export default {
   forgotSentNotice: "そのメールアドレスが登録されている場合、パスワード再設定リンクを送信しました。",
   signIn: "ログイン",
   createAccount: "アカウント作成",
-  sendResetLink: "再設定リンクを送信",
+  sendResetLink: "送信",
   adminDemo: "管理者（lemon）",
   userDemo: "一般ユーザー（user）",
   verifyEmailRequired: "キャラクター所持状況を管理するにはメール認証が必要です。",

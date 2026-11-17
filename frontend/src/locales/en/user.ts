@@ -33,7 +33,7 @@ export default {
   forgotSentNotice: "If that email is registered, a password reset link is on its way.",
   signIn: "Sign In",
   createAccount: "Create Account",
-  sendResetLink: "Send Reset Link",
+  sendResetLink: "Send",
   adminDemo: "Admin (lemon)",
   userDemo: "User (user)",
   verifyEmailRequired: "Verify your email to manage your character collection.",

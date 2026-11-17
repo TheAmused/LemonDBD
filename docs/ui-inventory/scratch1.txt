@@ -1,0 +1,418 @@
+﻿=== character-detail/CharacterDetailClient.tsx
+'use client';
+  CharacterDetailPayload,
+  CharacterItem} from '@/components/character-detail/CharacterSubpageView';
+  CharacterSubpageView
+export function CharacterDetailClient({ slug }: { slug: string }) {
+  const locale = useLocale() as Locale;
+  const dict = useDictionary();
+  const backendBase = getBackendBaseUrl();
+  const rosterKey = `${backendBase}/api/v1/characters?lang=${locale}`;
+  const { data: rosterResponse } = useCachedData<{ data?: CharacterItem[] }>(
+    rosterKey,
+    () => fetchJson<{ data?: CharacterItem[] }>(rosterKey)
+  );
+  const allCharacters = rosterResponse?.data ?? [];
+  const detailKey = slug
+    ? `${backendBase}/api/v1/characters/${encodeURIComponent(slug)}/detail?lang=${locale}`
+    : null;
+  const {
+    data: detailResponse,
+    loading,
+    error: detailError,
+  } = useCachedData<{ data?: CharacterDetailPayload }>(detailKey, () =>
+    fetchJson<{ data?: CharacterDetailPayload }>(detailKey as string)
+  );
+  const detailData = detailResponse?.data ?? null;
+  const notFound = Boolean(detailError) || (detailResponse !== undefined && !detailResponse.data?.character);
+  useEffect(() => {
+    if (detailError) logger.error('Failed to fetch character detail:', detailError);
+  }, [detailError]);
+  useDocumentTitle(
+    detailData?.character?.name ? `${detailData.character.name} - LemonDBD` : undefined
+  );
+  const t = dict.characterDetail;
+  return (
+    <div>
+      {loading ? (
+        <CharacterDetailSkeleton />
+      ) : notFound || !detailData ? (
+        <EmptyState
+          variant="solid"
+          icon={UserX}
+          title={t.notFoundTitle}
+          subtitle={t.notFoundDesc}
+        >
+          <Link
+            href={`/${locale}/characters`}
+          >
+            <ChevronLeft />
+            <span>{t.backToCharacters}</span>
+          </Link>
+        </EmptyState>
+      ) : (
+        <Suspense fallback={<CharacterDetailSkeleton />}>
+          <CharacterSubpageView
+            currentLocale={locale}
+            detailData={detailData}
+            allCharacters={allCharacters}
+          />
+        </Suspense>
+      )}
+    </div>
+  );
+}
+=== character-detail/CharacterSubpageView.tsx
+'use client';
+export * from './types';
+export * from './SurvivorDetailView';
+export * from './KillerDetailView';
+interface CharacterSubpageViewProps {
+  currentLocale: string;
+  detailData: CharacterDetailPayload;
+  allCharacters?: CharacterItem[];
+}
+export const CharacterSubpageView: React.FC<CharacterSubpageViewProps> = (props) => {
+  const { detailData } = props;
+  const character = detailData?.character;
+  const role = (character?.category || character?.role || '').toLowerCase();
+  const isSurvivor = role === 'survivor';
+  if (isSurvivor) {
+    return <SurvivorDetailView {...props} />;
+  }
+  return <KillerDetailView {...props} />;
+};
+=== character-detail/KillerDetailView.tsx
+'use client';
+  CharacterViewBaseProps,
+  AddonItem,
+  EquipmentItem,
+  OfferingItem} from './types';
+  getAssetThumbUrl,
+  getAssetUrl,
+  formatLocalizedReleaseDate,
+  formatKillerHeight,
+  localizeTerrorRadiusText,
+const LoreModal = dynamic(() => import('./modals/LoreModal').then((m) => m.LoreModal), { ssr: false });
+const Model3DModal = dynamic(() => import('./modals/Model3DModal').then((m) => m.Model3DModal), { ssr: false });
+const KillerPowerModal = dynamic(() => import('./modals/KillerPowerModal').then((m) => m.KillerPowerModal), { ssr: false });
+const TerrorRadiusModal = dynamic(() => import('./modals/TerrorRadiusModal').then((m) => m.TerrorRadiusModal), { ssr: false });
+const EquipmentDetailModal = dynamic(() => import('./modals/EquipmentDetailModal').then((m) => m.EquipmentDetailModal), { ssr: false });
+const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
+export const KillerDetailView: React.FC<CharacterViewBaseProps> = ({ currentLocale, detailData, allCharacters = [] }) => {
+  const dict = useDictionary();
+  const backendBase = getBackendBaseUrl();
+  const t = dict.characterDetail;
+  const character = detailData?.character || { name: '', category: 'Killer' };
+  const killerPower = detailData?.power;
+  const perks = detailData?.perks || [];
+  const addons = detailData?.addons || [];
+  const offerings = detailData?.offerings || [];
+  const [isLoreModalOpen, setIsLoreModalOpen] = useState<boolean>(false);
+  const [isModelModalOpen, setIsModelModalOpen] = useState<boolean>(false);
+  const [isPowerModalOpen, setIsPowerModalOpen] = useState<boolean>(false);
+  const [isTerrorRadiusModalOpen, setIsTerrorRadiusModalOpen] = useState<boolean>(false);
+  const [selectedEquipment, setSelectedEquipment] = useState<AddonItem | EquipmentItem | OfferingItem | null>(null);
+  const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
+  const killerSpeed = killerPower?.movement_speed || '4.6 m/s (115%)';
+  const killerTerrorRadius = localizeTerrorRadiusText(killerPower?.terror_radius || '32 metres', currentLocale);
+  const killerTRMeters = killerPower?.terror_radius_meters || 32;
+  const killerHeight = formatKillerHeight(killerPower?.height, t);
+  const chapterName = character.chapter_name || t.baseGame || '';
+  const releaseDate = formatLocalizedReleaseDate(
+    character.release_date || String(character.release_year || '2016'),
+    currentLocale
+  );
+  const rawLoreText = character.lore || '';
+  return (
+    <article aria-label={character.name}>
+      {/* 1. Back button & Character Navigator */}
+      <CharacterTopBar
+        currentLocale={currentLocale}
+        character={character}
+        isSurvivor={false}
+        allCharacters={allCharacters}
+        t={t}
+      />
+      {/* 2. Main Hero Showcase */}
+      <section>
+        {/* Left: Avatar Showcase */}
+        <CharacterHeroAvatar
+          character={character}
+          isSurvivor={false}
+          chapterName={chapterName}
+          backendBase={backendBase}
+          onOpenModelModal={() => setIsModelModalOpen(true)}
+          t={t}
+        />
+        {/* Right: Character Info & Identity */}
+        <div>
+          <header>
+            <div>
+              {killerPower && (
+                <TileButton
+                  onClick={() => setIsPowerModalOpen(true)}
+                  {...tip(killerPower.name, undefined, 'item')}
+                  aria-label={killerPower.name}
+                >
+                  {killerPower.icon_url || killerPower.icon_local_path ? (
+                    <Img
+                      src={getAssetThumbUrl(backendBase, killerPower.icon_local_path, killerPower.icon_url)}
+                      alt={killerPower.name}
+                      onError={fallbackThroughSources(
+                        getAssetUrl(backendBase, killerPower.icon_local_path, killerPower.icon_url),
+                        killerPower.icon_url
+                      )}
+                    />
+                  ) : (
+                    <Zap aria-hidden="true" />
+                  )}
+                </TileButton>
+              )}
+              <div>
+                <h1>
+                  {character.name}
+                </h1>
+                {character.real_name && character.real_name !== character.name && (
+                  <p>
+                    {t.realName || ''}:{' '}
+                    <span>{character.real_name}</span>
+                  </p>
+                )}
+              </div>
+            </div>
+            <WrapRow>
+              <InfoChipButton onClick={() => setIsLoreModalOpen(true)}>
+                <BookOpen aria-hidden="true" />
+                {t.viewLore || ''}
+                <ArrowRight aria-hidden="true" />
+              </InfoChipButton>
+              <InfoChip>
+                <Calendar aria-hidden="true" />
+                {releaseDate}
+              </InfoChip>
+              <InfoChip>
+                {character.is_licensed
+                  ? t.dlcLicensed
+                  : t.dlcOriginal}
+              </InfoChip>
+            </WrapRow>
+          </header>
+          {/* Combat Stats Mini-Bar */}
+          <KillerCombatStats
+            killerSpeed={killerSpeed}
+            killerTerrorRadius={killerTerrorRadius}
+            killerHeight={killerHeight}
+            onOpenTerrorRadiusModal={() => setIsTerrorRadiusModalOpen(true)}
+            t={t}
+          />
+          {/* Perks Section */}
+          <CharacterPerksSection
+            perks={perks}
+            character={character}
+            backendBase={backendBase}
+            onSelectPerk={(p) => setSelectedPerk(p as unknown as Perk)}
+            t={t}
+          />
+        </div>
+      </section>
+      {/* 3. Killer Add-ons Section */}
+      <KillerEquipmentSection
+        addons={addons}
+        backendBase={backendBase}
+        onSelectEquipment={(item) => setSelectedEquipment(item)}
+        t={t}
+      />
+      {/* 4. Dedicated Killer Offerings Section */}
+      <OfferingsSection
+        offerings={offerings}
+        characterRole="Killer"
+        backendBase={backendBase}
+        onSelectOffering={(item) => setSelectedEquipment(item as unknown as EquipmentItem)}
+        t={t}
+      />
+      {/* Modals */}
+      <LoreModal
+        isOpen={isLoreModalOpen}
+        onClose={() => setIsLoreModalOpen(false)}
+        character={character}
+        rawLoreText={rawLoreText}
+        t={t}
+      />
+      <Model3DModal
+        isOpen={isModelModalOpen}
+        onClose={() => setIsModelModalOpen(false)}
+        character={character}
+        isSurvivor={false}
+        backendBase={backendBase}
+        t={t}
+      />
+      {killerPower && (
+        <KillerPowerModal
+          isOpen={isPowerModalOpen}
+          onClose={() => setIsPowerModalOpen(false)}
+          killerPower={killerPower}
+          character={character}
+          backendBase={backendBase}
+          t={t}
+        />
+      )}
+      <TerrorRadiusModal
+        isOpen={isTerrorRadiusModalOpen}
+        onClose={() => setIsTerrorRadiusModalOpen(false)}
+        character={character}
+        killerTerrorRadius={killerTerrorRadius}
+        killerTRMeters={killerTRMeters}
+        killerSpeed={killerSpeed}
+        t={t}
+      />
+      <EquipmentDetailModal
+        item={selectedEquipment}
+        onClose={() => setSelectedEquipment(null)}
+        backendBase={backendBase}
+        character={character}
+        isSurvivor={false}
+        t={t}
+      />
+      {selectedPerk && (
+        <PerkModal
+          perk={selectedPerk}
+          onClose={() => setSelectedPerk(null)}
+        />
+      )}
+    </article>
+  );
+};
+=== character-detail/SurvivorDetailView.tsx
+'use client';
+  CharacterViewBaseProps,
+  AddonItem,
+  EquipmentItem,
+  OfferingItem} from './types';
+  formatLocalizedReleaseDate,
+const LoreModal = dynamic(() => import('./modals/LoreModal').then((m) => m.LoreModal), { ssr: false });
+const Model3DModal = dynamic(() => import('./modals/Model3DModal').then((m) => m.Model3DModal), { ssr: false });
+const EquipmentDetailModal = dynamic(() => import('./modals/EquipmentDetailModal').then((m) => m.EquipmentDetailModal), { ssr: false });
+const PerkModal = dynamic(() => import('@/components/PerkModal').then((m) => m.PerkModal), { ssr: false });
+export const SurvivorDetailView: React.FC<CharacterViewBaseProps> = ({ currentLocale, detailData, allCharacters = [] }) => {
+  const dict = useDictionary();
+  const backendBase = getBackendBaseUrl();
+  const t = dict.characterDetail;
+  const character = detailData?.character || { name: '', category: 'Survivor' };
+  const perks = Array.isArray(detailData?.perks) ? detailData.perks : [];
+  const addons = Array.isArray(detailData?.addons) ? detailData.addons : [];
+  const items = Array.isArray(detailData?.items) ? detailData.items : [];
+  const offerings = Array.isArray(detailData?.offerings) ? detailData.offerings : [];
+  const [isLoreModalOpen, setIsLoreModalOpen] = useState<boolean>(false);
+  const [isModelModalOpen, setIsModelModalOpen] = useState<boolean>(false);
+  const [selectedEquipment, setSelectedEquipment] = useState<AddonItem | EquipmentItem | OfferingItem | null>(null);
+  const [selectedPerk, setSelectedPerk] = useState<Perk | null>(null);
+  const chapterName = character.chapter_name || t.baseGame || '';
+  const releaseDate = formatLocalizedReleaseDate(
+    character.release_date || String(character.release_year || '2016'),
+    currentLocale
+  );
+  const rawLoreText = character.lore || '';
+  return (
+    <article aria-label={character.name}>
+      <CharacterTopBar
+        currentLocale={currentLocale}
+        character={character}
+        isSurvivor={true}
+        allCharacters={allCharacters}
+        t={t}
+      />
+      <section>
+        <CharacterHeroAvatar
+          character={character}
+          isSurvivor={true}
+          chapterName={chapterName}
+          backendBase={backendBase}
+          onOpenModelModal={() => setIsModelModalOpen(true)}
+          t={t}
+        />
+        <div>
+          <header>
+            <div>
+              <h1>
+                {character.name}
+              </h1>
+              {character.real_name && character.real_name !== character.name && (
+                <p>
+                  {t.realName || ''}:{' '}
+                  <span>{character.real_name}</span>
+                </p>
+              )}
+            </div>
+            <WrapRow>
+              <InfoChipButton onClick={() => setIsLoreModalOpen(true)}>
+                <BookOpen aria-hidden="true" />
+                {t.viewLore || ''}
+                <ArrowRight aria-hidden="true" />
+              </InfoChipButton>
+              <InfoChip>
+                <Calendar aria-hidden="true" />
+                {releaseDate}
+              </InfoChip>
+              <InfoChip>
+                {character.is_licensed
+                  ? t.dlcLicensed
+                  : t.dlcOriginal}
+              </InfoChip>
+            </WrapRow>
+          </header>
+          <CharacterPerksSection
+            perks={perks}
+            character={character}
+            backendBase={backendBase}
+            onSelectPerk={(p) => setSelectedPerk(p as unknown as Perk)}
+            t={t}
+          />
+        </div>
+      </section>
+      <SurvivorEquipmentSection
+        items={items}
+        addons={addons}
+        backendBase={backendBase}
+        onSelectEquipment={(item) => setSelectedEquipment(item)}
+        t={t}
+      />
+      <OfferingsSection
+        offerings={offerings}
+        characterRole="Survivor"
+        backendBase={backendBase}
+        onSelectOffering={(item) => setSelectedEquipment(item as unknown as EquipmentItem)}
+        t={t}
+      />
+      <LoreModal
+        isOpen={isLoreModalOpen}
+        onClose={() => setIsLoreModalOpen(false)}
+        character={character}
+        rawLoreText={rawLoreText}
+        t={t}
+      />
+      <Model3DModal
+        isOpen={isModelModalOpen}
+        onClose={() => setIsModelModalOpen(false)}
+        character={character}
+        isSurvivor={true}
+        backendBase={backendBase}
+        t={t}
+      />
+      <EquipmentDetailModal
+        item={selectedEquipment}
+        onClose={() => setSelectedEquipment(null)}
+        backendBase={backendBase}
+        character={character}
+        isSurvivor={true}
+        t={t}
+      />
+      {selectedPerk && (
+        <PerkModal
+          perk={selectedPerk}
+          onClose={() => setSelectedPerk(null)}
+        />
+      )}
+    </article>
+  );
+};

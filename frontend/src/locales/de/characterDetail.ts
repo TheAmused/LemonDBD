@@ -134,7 +134,7 @@ export default {
   categoryWardDescSurvivor: 'Erhalt von Gegenständen & Opfergaben',
   categoryLuckDesc: 'Glück im Trial',
   categoryBlueprintDesc: 'Platzierung von Luke & Keller',
-  categoryChestDesc: 'Zusätzliche Kisten',
+  categoryChestDesc: 'Anzahl der Kisten',
   categoryFogDesc: 'Nebeldichte',
   categoryHooksDesc: 'Abstand der Haken',
   inspectOfferingPrefix: 'Opfergabe ansehen:',

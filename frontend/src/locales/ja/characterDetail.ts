@@ -134,7 +134,7 @@ export default {
   categoryWardDescSurvivor: 'アイテムとオファリングの温存',
   categoryLuckDesc: '試練での幸運',
   categoryBlueprintDesc: 'ハッチと地下室の配置',
-  categoryChestDesc: '追加チェストの出現',
+  categoryChestDesc: 'チェストの数',
   categoryFogDesc: '霧の濃さ',
   categoryHooksDesc: 'フック間の距離',
   inspectOfferingPrefix: 'オファリングを確認:',

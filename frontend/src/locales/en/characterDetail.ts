@@ -134,7 +134,7 @@ export default {
   categoryWardDescSurvivor: 'Item & offering preservation',
   categoryLuckDesc: 'Trial fortune',
   categoryBlueprintDesc: 'Hatch & basement placement',
-  categoryChestDesc: 'Extra chest spawns',
+  categoryChestDesc: 'Chest count',
   categoryFogDesc: 'Fog density',
   categoryHooksDesc: 'Hook distance',
   inspectOfferingPrefix: 'Inspect offering:',

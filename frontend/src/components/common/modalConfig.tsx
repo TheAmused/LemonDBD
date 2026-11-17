@@ -204,7 +204,11 @@ export const useModal = (): ModalContextValue => {
 
 /** True while the viewport is narrower than `maxWidth` px. */
 export function useIsCompact(maxWidth: number): boolean {
-  const [compact, setCompact] = useState(false);
+  // Read at once, not after the first effect: a Modal mounted open picks its enter animation on the first render,
+  // and a late flip to the sheet motion left the panel stuck at the opacity the scale motion had reached.
+  const [compact, setCompact] = useState(
+    () => typeof window !== 'undefined' && Boolean(window.matchMedia) && window.matchMedia(`(max-width: ${maxWidth - 1}px)`).matches
+  );
   useEffect(() => {
     if (typeof window === 'undefined' || !window.matchMedia) return;
     const mq = window.matchMedia(`(max-width: ${maxWidth - 1}px)`);

@@ -78,10 +78,11 @@ export const PerksTogglePopup: React.FC<PerksTogglePopupProps> = ({
     <Modal
       isOpen
       onClose={onClose}
-      variant="sheet"
+      variant="dialog"
       size="lg"
       layer="top"
-      title={`${character.name} ${perksLabel ?? ''}`.trimEnd()}
+      title={perksLabel}
+      ariaLabel={`${character.name} ${perksLabel ?? ''}`.trimEnd()}
       closeButtonAriaLabel={dict.modal.close}
     >
       {dict.characterDetail.togglePerkOwnershipHelp && (

@@ -134,7 +134,7 @@ export default {
   categoryWardDescSurvivor: 'Ochrona przedmiotów i darów',
   categoryLuckDesc: 'Fortuna w próbie',
   categoryBlueprintDesc: 'Położenie włazu i piwnicy',
-  categoryChestDesc: 'Dodatkowe skrzynie',
+  categoryChestDesc: 'Liczba skrzyń',
   categoryFogDesc: 'Gęstość mgły',
   categoryHooksDesc: 'Odległość między hakami',
   inspectOfferingPrefix: 'Zbadaj dar:',

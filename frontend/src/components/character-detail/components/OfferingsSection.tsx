@@ -29,8 +29,9 @@ import { AccordionSection } from '@/components/common/AccordionSection';
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
 import { fallbackThroughSources } from '@/utils/thumbUrl';
-const KILLER_OFFERING_KEYS = ['special', 'mori', 'bloodpoint', 'map', 'shroud', 'ward'] as const;
+const KILLER_OFFERING_KEYS = ['special', 'mori', 'bloodpoint', 'map', 'shroud', 'blueprint', 'chest', 'fog', 'hooks', 'ward'] as const;
 const SURVIVOR_OFFERING_KEYS = ['special', 'bloodpoint', 'luck', 'map', 'shroud', 'blueprint', 'chest', 'fog', 'hooks', 'ward'] as const;
+type OfferingCategoryKey = (typeof KILLER_OFFERING_KEYS | typeof SURVIVOR_OFFERING_KEYS)[number];
 
 interface OfferingsSectionProps {
   offerings?: OfferingItem[];
@@ -59,108 +60,25 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
   const isKiller = isKillerRole(role);
 
   const categories = useMemo<OfferingCategoryConfig[]>(() => {
-    if (isKiller) {
-      return [
-        {
-          key: 'special',
-          label: t.categorySpecial,
-          icon: SparkleIcon,
-          desc: t.categorySpecialDesc,
-        },
-        {
-          key: 'mori',
-          label: t.categoryMori,
-          icon: MoriCharmIcon,
-          desc: t.categoryMoriDesc,
-        },
-        {
-          key: 'bloodpoint',
-          label: t.categoryBloodpoints,
-          icon: Coins,
-          desc: t.categoryBloodpointsDesc,
-        },
-        {
-          key: 'map',
-          label: t.categoryMap,
-          icon: MapIcon,
-          desc: t.categoryMapDesc,
-        },
-        {
-          key: 'shroud',
-          label: t.categoryShroud,
-          icon: EyeOff,
-          desc: t.categoryShroudDesc,
-        },
-        {
-          key: 'ward',
-          label: t.categoryWard,
-          icon: WardCharmIcon,
-          desc: t.categoryWardDescKiller,
-        },
-      ];
-    }
-    return [
-      {
-        key: 'special',
-        label: t.categorySpecial,
-        icon: SparkleIcon,
-        desc: t.categorySpecialDesc,
-      },
-      {
-        key: 'bloodpoint',
-        label: t.categoryBloodpoints,
-        icon: Coins,
-        desc: t.categoryBloodpointsDesc,
-      },
-      {
-        key: 'luck',
-        label: t.categoryLuck,
-        icon: DiceIcon,
-        desc: t.categoryLuckDesc,
-      },
-      {
-        key: 'map',
-        label: t.categoryMap,
-        icon: MapIcon,
-        desc: t.categoryMapDesc,
-      },
-      {
-        key: 'shroud',
-        label: t.categoryShroud,
-        icon: EyeOff,
-        desc: t.categoryShroudDesc,
-      },
-      {
-        key: 'blueprint',
-        label: t.categoryBlueprint,
-        icon: DoorOpen,
-        desc: t.categoryBlueprintDesc,
-      },
-      {
-        key: 'chest',
-        label: t.categoryChest,
-        icon: Box,
-        desc: t.categoryChestDesc,
-      },
-      {
-        key: 'fog',
-        label: t.categoryFog,
-        icon: Cloud,
-        desc: t.categoryFogDesc,
-      },
-      {
-        key: 'hooks',
-        label: t.categoryHooks,
-        icon: HookIcon,
-        desc: t.categoryHooksDesc,
-      },
-      {
+    const defs: Record<OfferingCategoryKey, OfferingCategoryConfig> = {
+      special: { key: 'special', label: t.categorySpecial, icon: SparkleIcon, desc: t.categorySpecialDesc },
+      mori: { key: 'mori', label: t.categoryMori, icon: MoriCharmIcon, desc: t.categoryMoriDesc },
+      bloodpoint: { key: 'bloodpoint', label: t.categoryBloodpoints, icon: Coins, desc: t.categoryBloodpointsDesc },
+      luck: { key: 'luck', label: t.categoryLuck, icon: DiceIcon, desc: t.categoryLuckDesc },
+      map: { key: 'map', label: t.categoryMap, icon: MapIcon, desc: t.categoryMapDesc },
+      shroud: { key: 'shroud', label: t.categoryShroud, icon: EyeOff, desc: t.categoryShroudDesc },
+      blueprint: { key: 'blueprint', label: t.categoryBlueprint, icon: DoorOpen, desc: t.categoryBlueprintDesc },
+      chest: { key: 'chest', label: t.categoryChest, icon: Box, desc: t.categoryChestDesc },
+      fog: { key: 'fog', label: t.categoryFog, icon: Cloud, desc: t.categoryFogDesc },
+      hooks: { key: 'hooks', label: t.categoryHooks, icon: HookIcon, desc: t.categoryHooksDesc },
+      ward: {
         key: 'ward',
         label: t.categoryWard,
         icon: WardCharmIcon,
-        desc: t.categoryWardDescSurvivor,
+        desc: isKiller ? t.categoryWardDescKiller : t.categoryWardDescSurvivor,
       },
-    ];
+    };
+    return (isKiller ? KILLER_OFFERING_KEYS : SURVIVOR_OFFERING_KEYS).map((key) => defs[key]);
   }, [isKiller, t]);
 
   const [selectedCategory, setSelectedCategory] = usePersistentString(

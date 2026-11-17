@@ -134,7 +134,7 @@ export default {
   categoryWardDescSurvivor: 'Conservación de objetos y ofrendas',
   categoryLuckDesc: 'Fortuna en la prueba',
   categoryBlueprintDesc: 'Ubicación de trampilla y sótano',
-  categoryChestDesc: 'Cofres adicionales',
+  categoryChestDesc: 'Cantidad de cofres',
   categoryFogDesc: 'Densidad de niebla',
   categoryHooksDesc: 'Distancia entre ganchos',
   inspectOfferingPrefix: 'Inspeccionar ofrenda:',

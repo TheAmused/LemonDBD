@@ -33,7 +33,7 @@ export default {
   forgotSentNotice: "Falls diese E-Mail registriert ist, wurde ein Link zum Zurücksetzen versandt.",
   signIn: "Anmelden",
   createAccount: "Konto erstellen",
-  sendResetLink: "Reset-Link senden",
+  sendResetLink: "Senden",
   adminDemo: "Admin (lemon)",
   userDemo: "Benutzer (user)",
   verifyEmailRequired: "Bestätige deine E-Mail, um deine Charaktersammlung zu verwalten.",

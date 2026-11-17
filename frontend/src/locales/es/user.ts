@@ -33,7 +33,7 @@ export default {
   forgotSentNotice: "Si ese correo está registrado, te hemos enviado un enlace para restablecer la contraseña.",
   signIn: "Iniciar Sesión",
   createAccount: "Crear Cuenta",
-  sendResetLink: "Enviar Enlace de Restablecimiento",
+  sendResetLink: "Enviar",
   adminDemo: "Admin (lemon)",
   userDemo: "Usuario (user)",
   verifyEmailRequired: "Verifica tu correo electrónico para administrar tu colección de personajes.",

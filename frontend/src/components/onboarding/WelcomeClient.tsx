@@ -23,7 +23,7 @@ export function WelcomeClient() {
 
   if (onboardingDone) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-dvh items-center justify-center">
         <Spinner size="lg" tone="accent" />
       </div>
     );

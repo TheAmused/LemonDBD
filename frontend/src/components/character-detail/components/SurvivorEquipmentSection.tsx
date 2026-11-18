@@ -149,7 +149,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
               />
             </div>
             <h3 className="hidden sm:block text-center type-label-sm text-accent-green mb-4">
-              {t.items} ({categorizedData.displayedItems.length})
+              {t.items}
             </h3>
 
             {categorizedData.displayedItems.length === 0 ? (
@@ -185,9 +185,7 @@ export const SurvivorEquipmentSection: React.FC<SurvivorEquipmentSectionProps> =
 
           <div className="flex flex-col p-4">
             <h3 className="text-center type-label-sm text-text-secondary mb-4">
-              {selectedCategory === 'trial_exclusive'
-                ? t.specialTrialRules
-                : `${t.compatibleAddons} (${categorizedData.displayedAddons.length})`}
+              {selectedCategory === 'trial_exclusive' ? t.specialTrialRules : t.compatibleAddons}
             </h3>
 
             {selectedCategory === 'trial_exclusive' ? (

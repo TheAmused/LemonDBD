@@ -4,7 +4,7 @@
 // The presentational pieces of the sign-in / sign-up dialog. AuthModal keeps the state and the
 // requests; these only render what it hands them.
 import React from 'react';
-import { Mail, LogIn, UserPlus, ShieldAlert, MailWarning } from 'lucide-react';
+import { LogIn, UserPlus, ShieldAlert, MailWarning } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Checkbox } from '@/components/common/Checkbox';
 import { FieldLabel, Input } from '@/components/common/Field';
@@ -169,7 +169,7 @@ export const SubmitLabel: React.FC<{ mode: AuthMode }> = ({ mode }) => {
   const dict = useDictionary();
   if (mode === 'login') return <><LogIn className="icon-md" /><span>{dict.user.signIn}</span></>;
   if (mode === 'register') return <><UserPlus className="icon-md" /><span>{dict.user.createAccount}</span></>;
-  return <><Mail className="icon-md" /><span>{dict.user.sendResetLink}</span></>;
+  return <span>{dict.user.sendResetLink}</span>;
 };
 
 /** "or" divider plus the Google button. */

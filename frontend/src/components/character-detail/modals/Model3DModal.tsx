@@ -22,10 +22,10 @@ const Model3DContent: React.FC<{ src: string; closeLabel: string }> = ({ src, cl
     <div className="relative mx-auto w-fit max-w-full rounded-card border-2 border-accent-red/60 bg-bg-surface/95 shadow-2xl p-4 sm:p-6 flex items-center justify-center">
       <Button
         icon
-        variant="secondary"
+        variant="ghost"
         data-modal-close
         onClick={close}
-        className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 shadow-md"
+        className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10"
         aria-label={closeLabel}
       >
         <X />

@@ -68,7 +68,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
 
   if (loading || authLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-dvh items-center justify-center">
         <Spinner size="lg" tone="accent" />
       </div>
     );
@@ -90,7 +90,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   }
 
   return (
-    <div className="min-h-screen p-2.5 sm:p-5 lg:p-6 pb-32 sm:pb-36 lg:pb-36">
+    <div className="min-h-dvh p-2.5 sm:p-5 lg:p-6 pb-32 sm:pb-36 lg:pb-36">
       <div className="mx-auto w-full max-w-page 2xl:max-w-page-lg 3xl:max-w-page-xl">
         {/* Unified Card Container */}
         <Surface padding="none" className="p-3 sm:p-5 lg:p-6 shadow-2xl space-y-3.5 sm:space-y-4">

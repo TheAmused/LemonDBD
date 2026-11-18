@@ -42,6 +42,7 @@ export { CampfireMugIcon } from './dbd/CampfireMugIcon';
 export { FullRosterLaurelIcon } from './dbd/FullRosterLaurelIcon';
 export { RankFirstIcon } from './dbd/RankFirstIcon';
 export { RankPlacedIcon } from './dbd/RankPlacedIcon';
+export { HookIcon } from './dbd/HookIcon';
 
 // Smash or Pass
 export { HeartIcon } from './smash/HeartIcon';

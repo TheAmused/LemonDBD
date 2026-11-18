@@ -6,7 +6,8 @@ import {  Coins,
   Map as MapIcon,
   EyeOff,
   DoorOpen,
-  Box,} from 'lucide-react';
+  Box,
+  Cloud,} from 'lucide-react';
 import type {
   OfferingItem,
   CharacterDetailDictionary} from '../types';
@@ -17,7 +18,7 @@ import {
   getRarityRank
 } from '../types';
 import { CategoryPicker } from './CategoryPicker';
-import { MoriCharmIcon, WardCharmIcon, DiceIcon, SparkleIcon } from '@/components/icons/DbdIcons';
+import { MoriCharmIcon, WardCharmIcon, DiceIcon, SparkleIcon, HookIcon } from '@/components/icons/DbdIcons';
 import { usePersistentString } from '@/hooks/usePersistentString';
 import { usePersistentDrawer } from '@/hooks/usePersistentDrawer';
 
@@ -28,8 +29,9 @@ import { AccordionSection } from '@/components/common/AccordionSection';
 import { TileButton } from '@/components/common/TileButton';
 import { Img } from '@/components/common/Img';
 import { fallbackThroughSources } from '@/utils/thumbUrl';
-const KILLER_OFFERING_KEYS = ['special', 'mori', 'bloodpoint', 'map', 'shroud', 'ward'] as const;
-const SURVIVOR_OFFERING_KEYS = ['special', 'bloodpoint', 'luck', 'map', 'shroud', 'blueprint', 'chest', 'ward'] as const;
+const KILLER_OFFERING_KEYS = ['special', 'mori', 'bloodpoint', 'map', 'shroud', 'blueprint', 'chest', 'fog', 'hooks', 'ward'] as const;
+const SURVIVOR_OFFERING_KEYS = ['special', 'bloodpoint', 'luck', 'map', 'shroud', 'blueprint', 'chest', 'fog', 'hooks', 'ward'] as const;
+type OfferingCategoryKey = (typeof KILLER_OFFERING_KEYS | typeof SURVIVOR_OFFERING_KEYS)[number];
 
 interface OfferingsSectionProps {
   offerings?: OfferingItem[];
@@ -58,96 +60,25 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
   const isKiller = isKillerRole(role);
 
   const categories = useMemo<OfferingCategoryConfig[]>(() => {
-    if (isKiller) {
-      return [
-        {
-          key: 'special',
-          label: t.categorySpecial,
-          icon: SparkleIcon,
-          desc: t.categorySpecialDesc,
-        },
-        {
-          key: 'mori',
-          label: t.categoryMori,
-          icon: MoriCharmIcon,
-          desc: t.categoryMoriDesc,
-        },
-        {
-          key: 'bloodpoint',
-          label: t.categoryBloodpoints,
-          icon: Coins,
-          desc: t.categoryBloodpointsDesc,
-        },
-        {
-          key: 'map',
-          label: t.categoryMap,
-          icon: MapIcon,
-          desc: t.categoryMapDesc,
-        },
-        {
-          key: 'shroud',
-          label: t.categoryShroud,
-          icon: EyeOff,
-          desc: t.categoryShroudDesc,
-        },
-        {
-          key: 'ward',
-          label: t.categoryWard,
-          icon: WardCharmIcon,
-          desc: t.categoryWardDescKiller,
-        },
-      ];
-    }
-    return [
-      {
-        key: 'special',
-        label: t.categorySpecial,
-        icon: SparkleIcon,
-        desc: t.categorySpecialDesc,
-      },
-      {
-        key: 'bloodpoint',
-        label: t.categoryBloodpoints,
-        icon: Coins,
-        desc: t.categoryBloodpointsDesc,
-      },
-      {
-        key: 'luck',
-        label: t.categoryLuck,
-        icon: DiceIcon,
-        desc: t.categoryLuckDesc,
-      },
-      {
-        key: 'map',
-        label: t.categoryMap,
-        icon: MapIcon,
-        desc: t.categoryMapDesc,
-      },
-      {
-        key: 'shroud',
-        label: t.categoryShroud,
-        icon: EyeOff,
-        desc: t.categoryShroudDesc,
-      },
-      {
-        key: 'blueprint',
-        label: t.categoryBlueprint,
-        icon: DoorOpen,
-        desc: t.categoryBlueprintDesc,
-      },
-      {
-        key: 'chest',
-        label: t.categoryChest,
-        icon: Box,
-        desc: t.categoryChestDesc,
-      },
-      {
+    const defs: Record<OfferingCategoryKey, OfferingCategoryConfig> = {
+      special: { key: 'special', label: t.categorySpecial, icon: SparkleIcon, desc: t.categorySpecialDesc },
+      mori: { key: 'mori', label: t.categoryMori, icon: MoriCharmIcon, desc: t.categoryMoriDesc },
+      bloodpoint: { key: 'bloodpoint', label: t.categoryBloodpoints, icon: Coins, desc: t.categoryBloodpointsDesc },
+      luck: { key: 'luck', label: t.categoryLuck, icon: DiceIcon, desc: t.categoryLuckDesc },
+      map: { key: 'map', label: t.categoryMap, icon: MapIcon, desc: t.categoryMapDesc },
+      shroud: { key: 'shroud', label: t.categoryShroud, icon: EyeOff, desc: t.categoryShroudDesc },
+      blueprint: { key: 'blueprint', label: t.categoryBlueprint, icon: DoorOpen, desc: t.categoryBlueprintDesc },
+      chest: { key: 'chest', label: t.categoryChest, icon: Box, desc: t.categoryChestDesc },
+      fog: { key: 'fog', label: t.categoryFog, icon: Cloud, desc: t.categoryFogDesc },
+      hooks: { key: 'hooks', label: t.categoryHooks, icon: HookIcon, desc: t.categoryHooksDesc },
+      ward: {
         key: 'ward',
         label: t.categoryWard,
         icon: WardCharmIcon,
-        desc: t.categoryWardDescSurvivor,
+        desc: isKiller ? t.categoryWardDescKiller : t.categoryWardDescSurvivor,
       },
-    ];
+    };
+    return (isKiller ? KILLER_OFFERING_KEYS : SURVIVOR_OFFERING_KEYS).map((key) => defs[key]);
   }, [isKiller, t]);
 
   const [selectedCategory, setSelectedCategory] = usePersistentString(
@@ -219,11 +150,15 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         else if (rawLower.includes('shroud') || nameLower.includes('całun') || nameLower.includes('schleier')) {
           itemCategory = 'shroud';
         }
-        // 5. Blueprints
+        // 5. Hook distance (Petrified Oak)
+        else if (/\boak\b/.test(rawLower) || nameLower.includes('dąb')) {
+          itemCategory = 'hooks';
+        }
+        // 6. Blueprints
         else if (rawLower.includes('blueprint') || nameLower.includes('plan') || nameLower.includes('blaupause')) {
           itemCategory = 'blueprint';
         }
-        // 6. Luck Charms
+        // 7. Luck Charms
         else if (
           ['chalk', 'salt', 'salty lips', 'statuette'].some((k) => rawLower.includes(k)) ||
           nameLower.includes('kreda') ||
@@ -232,7 +167,7 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         ) {
           itemCategory = 'luck';
         }
-        // 7. Bloodpoints
+        // 8. Bloodpoints
         else if (
           [
             'streamers',
@@ -263,14 +198,15 @@ export const OfferingsSection: React.FC<OfferingsSectionProps> = ({
         ) {
           itemCategory = 'bloodpoint';
         }
-        // 8. Chests, Fog Reagents & Oaks
-        else if (
-          ['coin', 'reagent', 'oak', 'vial'].some((k) => rawLower.includes(k)) ||
-          ['moneta', 'odczynnik', 'dąb', 'flakon'].some((k) => nameLower.includes(k))
-        ) {
+        // 9. Chests (coins)
+        else if (rawLower.includes('coin') || nameLower.includes('moneta')) {
           itemCategory = 'chest';
         }
-        // 9. Maps / Realm Offerings
+        // 10. Fog (reagents and vials)
+        else if (['reagent', 'vial'].some((k) => rawLower.includes(k)) || ['odczynnik', 'flakon'].some((k) => nameLower.includes(k))) {
+          itemCategory = 'fog';
+        }
+        // 11. Maps / Realm Offerings
         else {
           itemCategory = 'map';
         }

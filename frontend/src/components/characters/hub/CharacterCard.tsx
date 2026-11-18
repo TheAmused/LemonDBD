@@ -114,17 +114,18 @@ export function CharacterCard({
         {ownershipMode && <OwnershipClipOverlay isOwned={isOwned} isPartial={hasPartialPerks} imageSrc={avatarThumbSrc} imageClassName={PORTRAIT_CROP} />}
 
         {ownershipMode && !isOwned && (
-          <div className="pointer-events-none absolute inset-x-0 bottom-1.5 z-20 flex justify-center sm:bottom-2">
+          <div className="pointer-events-none absolute inset-x-0 bottom-1.5 z-20 flex justify-center px-2 sm:bottom-2">
             <Button
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 onOpenPerks(char);
               }}
-              variant="amberSoft" size="xs" className="pointer-events-auto"
+              variant="overlay" size="xs" pill className="pointer-events-auto"
             >
-              <span>{dict.filters.perks}</span>
-              {perkStats.total > 0 && ` (${perkStats.unlocked}/${perkStats.total})`}
+              {perkStats.total > 0
+                ? `${dict.filters.perks} (${perkStats.unlocked}/${perkStats.total})`
+                : dict.filters.perks}
             </Button>
           </div>
         )}

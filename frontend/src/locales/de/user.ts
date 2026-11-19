@@ -23,7 +23,6 @@ export default {
   saveChanges: "Speichern",
   newPassword: "Neues Passwort",
   confirmPassword: "Neues Passwort bestätigen",
-  passwordPlaceholder: "Leer lassen, um aktuelles beizubehalten",
   currentPassword: "Aktuelles Passwort",
   currentPasswordHint: "Erforderlich, um deine Kontodaten zu aktualisieren",
   currentPasswordRequired: "Du musst dein aktuelles Passwort eingeben, um deine Kontodaten zu aktualisieren.",

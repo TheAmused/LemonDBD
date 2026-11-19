@@ -23,7 +23,6 @@ export default {
   saveChanges: "Save",
   newPassword: "New Password",
   confirmPassword: "Confirm New Password",
-  passwordPlaceholder: "Leave blank to keep current",
   currentPassword: "Current Password",
   currentPasswordHint: "Required to update your account details",
   currentPasswordRequired: "You must enter your current password to update your account details.",

@@ -298,7 +298,7 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
           )}
 
           {!hasPassword && (
-            <div className="space-y-3 pt-3 border-t border-border-color">
+            <div className="space-y-3 pt-3">
               <span className="type-label-sm text-text-primary flex items-center gap-2">
                 <LockIcon className="icon-sm text-accent-amber" />
                 <span>{t.setPasswordTitle}</span>
@@ -319,16 +319,11 @@ export const UserProfileForm: React.FC<UserProfileFormProps> = ({
 
           {/* Password Management */}
           {hasPassword && (
-          <div className="space-y-3 pt-3 border-t border-border-color">
-            <div className="flex items-center justify-between">
-              <span className="type-label-sm text-text-primary flex items-center gap-2">
-                <LockIcon className="icon-sm text-accent-amber" />
-                <span>{dict.user.passwordLabel}</span>
-              </span>
-              <span className="type-caption text-text-muted">
-                {t.passwordPlaceholder}
-              </span>
-            </div>
+          <div className="space-y-3 pt-3">
+            <span className="type-label-sm text-text-primary flex items-center gap-2">
+              <LockIcon className="icon-sm text-accent-amber" />
+              <span>{dict.user.passwordLabel}</span>
+            </span>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {/* New Password Input */}

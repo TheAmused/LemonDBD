@@ -36,7 +36,7 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
   const emptyLabel = emptyLabelProp ?? dict.user.emptySlot;
   const clearLabel = clearLabelProp ?? dict.user.clearPerk;
 
-  const iconUrl = perk ? getPerkIconThumbUrl(perk, 96) : null;
+  const iconUrl = perk ? getPerkIconThumbUrl(perk, 256) : null;
 
   return (
     <div className="relative group h-[var(--perk-size)] w-[var(--perk-size)]">
@@ -62,7 +62,7 @@ export const PerkDiamondSlot: React.FC<PerkDiamondSlotProps> = ({
             e.stopPropagation();
             onClear(e);
           }}
-          {...tip(clearLabel, undefined, 'action')} aria-label={clearLabel}
+          aria-label={clearLabel}
           variant="primary" size="xs" icon pill className="hit-area absolute left-3/4 top-1/4 z-20 -translate-x-1/2 -translate-y-1/2 pointer-coarse:min-h-0 pointer-coarse:min-w-0 opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
         >
           <X />

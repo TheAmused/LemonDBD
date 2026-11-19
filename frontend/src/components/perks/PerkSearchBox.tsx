@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/perks/PerkSearchBox.tsx
 //
-// THE perk search (Perks page and the profile loadout picker): one SearchInput
+// THE perk search (Perks page and the Id Please setup): one SearchInput
 // with the active perk-type filters inside it as chips (its token variant), a
 // "Types" CustomDropdown (multi-select variant) next to it, and a dropdown under the field offering the types the text is starting
 // to name ("hea" -> Healing · 47) and, where wanted, the best-matching perks.
@@ -38,8 +38,6 @@ interface PerkSearchBoxProps {
   onTypesChange: (types: PerkType[]) => void;
   /** List matching perks under the field too (off where the grid right below already shows them). */
   suggestPerks?: boolean;
-  /** Mark the field as the control a dialog focuses when it opens (data-autofocus). */
-  focusOnOpen?: boolean;
   /** Types as chips inside the field plus the Types button (default). Off: a plain field, the caller shows the active types elsewhere. */
   typesInField?: boolean;
   className?: string;
@@ -52,7 +50,6 @@ export const PerkSearchBox: React.FC<PerkSearchBoxProps> = ({
   activeTypes,
   onTypesChange,
   suggestPerks = false,
-  focusOnOpen = false,
   typesInField = true,
   className,
 }) => {
@@ -128,7 +125,6 @@ export const PerkSearchBox: React.FC<PerkSearchBoxProps> = ({
         clearLabel={dict.filters.clearSearch}
         placeholder={typesInField && activeTypes.length > 0 ? '' : dict.perkTypes.searchPlaceholder}
         aria-label={dict.perkTypes.searchPlaceholder}
-        data-autofocus={focusOnOpen || undefined}
       />
 
       {typesInField && (

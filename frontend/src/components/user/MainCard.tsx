@@ -53,7 +53,7 @@ export const MainCard: React.FC<MainCardProps> = ({
     { character: loadout.characterName, category: role },
     role
   );
-  const avatarSrc = avatarThumbFromPath(rawAvatarSrc, 128) || rawAvatarSrc;
+  const avatarSrc = avatarThumbFromPath(rawAvatarSrc, 256) || rawAvatarSrc;
 
   return (
     <div

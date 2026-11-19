@@ -193,7 +193,7 @@ export const GoogleSignInSection: React.FC<{ clientId: string; onCredential: (cr
 export const DemoAccountButtons: React.FC<{ onFill: (role: DemoAccount['role']) => void; adminOnly?: boolean }> = ({ onFill, adminOnly = false }) => {
   const dict = useDictionary();
   return (
-    <div className="mt-4 pt-4 border-t border-border-color">
+    <div className="mt-4">
       {dict.user.quickDemoAccounts && (
         <p className="type-label-2xs text-text-muted mb-2 text-center">{dict.user.quickDemoAccounts}</p>
       )}

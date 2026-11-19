@@ -33,7 +33,7 @@ export function SettingsClient() {
   ];
 
   return (
-    <div className="relative z-10 mx-auto my-auto flex w-full max-w-4xl flex-col gap-6 py-6 sm:py-8">
+    <div className="relative z-10 mx-auto my-auto flex w-full max-w-4xl flex-col gap-6">
       <Surface tone="flat" padding="lg" className="divide-y divide-border-subtle/60">
         <SettingRow icon={CampfireIcon} title={dict.settings.campfire} description={dict.settings.campfireDesc}>
           <fieldset

@@ -23,7 +23,6 @@ export default {
   saveChanges: "保存",
   newPassword: "新しいパスワード",
   confirmPassword: "新しいパスワード（確認）",
-  passwordPlaceholder: "変更しない場合は空欄のまま",
   currentPassword: "現在のパスワード",
   currentPasswordHint: "アカウント情報を更新するために必要です",
   currentPasswordRequired: "アカウント情報を更新するには、現在のパスワードを入力する必要があります。",

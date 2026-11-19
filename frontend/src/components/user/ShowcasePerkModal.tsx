@@ -6,12 +6,14 @@ import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from '
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { Check } from 'lucide-react';
 import type { RoleCategory, Perk } from '@/types/perks';
-import { getKnownPerkTypes, perkTypesByRole, type PerkType } from '@/utils/perkTypes';
+import { perkTypesByRole } from '@/utils/perkTypes';
 import { usePerkTypeVocabulary } from '@/hooks/usePerkTypeVocabulary';
 import { isEmptyQuery, parsePerkQuery } from '@/utils/perkSearch/parse';
 import { roleOnlyConflict, searchPerks } from '@/utils/perkSearch/match';
 import { sortByRelevance } from '@/utils/perkSearch/sort';
-import { PerkSearchBox } from '@/components/perks/PerkSearchBox';
+import { SearchInput } from '@/components/common/Field';
+import { CONTROL_HEIGHT } from '@/components/perks/PerkSearchBox';
+import { cn } from '@/utils/cn';
 import { roleOnlyMessage } from '@/components/perks/roleOnlyMessage';
 import { useCatalogPerks } from '@/hooks/useCatalogPerks';
 import { useProgressiveList } from '@/hooks/useProgressiveList';
@@ -39,21 +41,18 @@ interface ShowcasePerkModalProps {
 
 const PerkGridItem = React.memo<{
   perk: Perk;
-  /** The primary type's name, so a perk found by its type shows why. */
-  typeLabel: string;
   isSelected: boolean;
   onToggle: (perk: Perk) => void;
-}>(({ perk, typeLabel, isSelected, onToggle }) => {
+}>(({ perk, isSelected, onToggle }) => {
   return (
-    <SelectableCard selected={isSelected} className="group relative flex flex-col items-center p-3 text-center"
+    <SelectableCard selected={isSelected} className="group relative flex flex-col items-center p-2 text-center sm:p-3"
      
       onClick={() => onToggle(perk)}>
       {/* Perk Icon — just the icon, no shape/background/border behind it */}
-      <div className="relative w-21 h-21 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform pointer-events-none">
+      <div className="relative aspect-square w-full max-w-21 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform pointer-events-none">
         <PerkIcon
           perk={perk}
           src={getPerkIconThumbUrl(perk) ?? undefined}
-          size={84}
           alt={perk.name}
           fallbackIcon={<PerkHexIcon className="h-8 w-8 text-accent-red" />}
           className="object-contain"
@@ -64,7 +63,6 @@ const PerkGridItem = React.memo<{
       <span className="type-strong text-text-primary group-hover:text-accent-red line-clamp-1">
         {perk.name}
       </span>
-      <span className="text-micro text-text-muted line-clamp-1">{typeLabel}</span>
 
       {/* Selected Indicator */}
       {isSelected && (
@@ -80,18 +78,16 @@ PerkGridItem.displayName = 'PerkGridItem';
 export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, role, perkIds, onSetPerk, onClose, locale = 'en' }) => {
   const dict = useDictionary();
   const [search, setSearch] = useState('');
-  const [types, setTypes] = useState<PerkType[]>([]);
   const { perks, loading } = useCatalogPerks(locale, isOpen);
   const vocab = usePerkTypeVocabulary();
 
   useOnValueChange(isOpen, (open) => {
     if (open) {
       setSearch('');
-      setTypes([]);
     }
   });
 
-  // The role's perks are listed right away, by name; a search or type chip narrows them, best match first.
+  // The role's perks are listed right away, by name; a search narrows them, best match first (a type named in the text counts).
   const sortedPerks = useMemo(
     () =>
       perks
@@ -102,16 +98,14 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, ro
   const query = useMemo(() => parsePerkQuery(search, vocab), [search, vocab]);
   const filteredPerks = useMemo(
     () =>
-      isEmptyQuery(query) && types.length === 0
-        ? sortedPerks
-        : sortByRelevance(searchPerks(sortedPerks, query, types), locale),
-    [sortedPerks, query, types, locale]
+      isEmptyQuery(query) ? sortedPerks : sortByRelevance(searchPerks(sortedPerks, query), locale),
+    [sortedPerks, query, locale]
   );
   const typesByRole = useMemo(() => perkTypesByRole(perks), [perks]);
-  const conflict = filteredPerks.length === 0 ? roleOnlyConflict(query, types, role, typesByRole) : null;
+  const conflict = filteredPerks.length === 0 ? roleOnlyConflict(query, [], role, typesByRole) : null;
 
   // The grid fills in as it is scrolled: a role has a couple hundred perks, each with an icon.
-  const { limit, rootRef, sentinelRef } = useProgressiveList(filteredPerks.length, `${role}|${search}|${types.join(',')}`);
+  const { limit, rootRef, sentinelRef } = useProgressiveList(filteredPerks.length, `${role}|${search}`);
   const visiblePerks = useMemo(() => filteredPerks.slice(0, limit), [filteredPerks, limit]);
 
   // Read through a ref so togglePerk keeps one identity and a pick re-renders only the tiles whose selection changed.
@@ -137,27 +131,28 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, ro
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      size="2xl"
+      size="4xl"
       title={dict.user.selectPerk}
       className="max-h-vh-85 flex flex-col"
       bodyClassName="flex flex-col min-h-0 overflow-hidden"
       borderless
     >
-      {/* Search Bar */}
-      {/* The same search as the Perks page; the grid below already lists the matching perks. */}
-      <div className="p-4 bg-bg-elevated/40 shrink-0">
-        <PerkSearchBox
-          rolePerks={sortedPerks}
-          search={search}
-          setSearch={setSearch}
-          activeTypes={types}
-          onTypesChange={setTypes}
-          focusOnOpen
+      {/* The grid below already lists the matching perks, so the field is just a field. */}
+      <div className="shrink-0 px-4 pt-4 sm:px-6 sm:pt-6">
+        <SearchInput
+          pill
+          fieldSize="sm"
+          className={cn('bg-bg-elevated/60 font-medium', CONTROL_HEIGHT)}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder={dict.filters.searchPlaceholder}
+          aria-label={dict.filters.searchPlaceholder}
+          data-autofocus
         />
       </div>
 
       {/* Perks Grid */}
-      <div ref={rootRef} className="flex-1 overflow-y-auto p-4 sm:p-6 min-h-0">
+      <div ref={rootRef} className="flex-1 overflow-y-auto px-4 pb-4 pt-3 sm:px-6 sm:pb-6 min-h-0">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 space-y-3">
             <Spinner size="lg" tone="accent" />
@@ -169,12 +164,11 @@ export const ShowcasePerkModal: React.FC<ShowcasePerkModalProps> = ({ isOpen, ro
           <EmptyState variant="inline" title={conflict ? roleOnlyMessage(conflict, dict, locale) : dict.user.noPerksFound} />
         ) : (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+            <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
               {visiblePerks.map((perk) => (
                 <PerkGridItem
                   key={perk.id ?? perk.name}
                   perk={perk}
-                  typeLabel={vocab.labels[getKnownPerkTypes(perk)[0]]}
                   isSelected={perk.id !== undefined && perkIds.includes(perk.id)}
                   onToggle={togglePerk}
                 />

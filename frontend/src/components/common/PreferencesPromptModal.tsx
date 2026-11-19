@@ -110,7 +110,7 @@ export function PreferencesPromptModal({
             onClick={isSmash ? handleContinueDefaults : handleGoToSettings}
             className="w-full sm:w-auto min-h-11 justify-center px-6"
           >
-            {isSmash ? text.enterTrial : text.goToSettings}
+            {isSmash ? text.continueTrial : text.goToSettings}
           </Button>
         </div>
       </div>

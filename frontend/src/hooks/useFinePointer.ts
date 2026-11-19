@@ -1,7 +1,7 @@
 // frontend/src/hooks/useFinePointer.ts
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 const QUERY = '(hover: hover) and (pointer: fine)';
 
@@ -11,16 +11,5 @@ const QUERY = '(hover: hover) and (pointer: fine)';
  * touch-friendly UI is the safe default.
  */
 export function useFinePointer(): boolean {
-  const [fine, setFine] = useState<boolean>(false);
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
-    const mq = window.matchMedia(QUERY);
-    const update = () => setFine(mq.matches);
-    update();
-    mq.addEventListener('change', update);
-    return () => mq.removeEventListener('change', update);
-  }, []);
-
-  return fine;
+  return useMediaQuery(QUERY) === true;
 }

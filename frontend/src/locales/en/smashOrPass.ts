@@ -151,7 +151,7 @@ export default {
     resetConfirmTitle: 'Reset All Votes?',
     resetConfirmDesc: 'This will clear your voting history and restore all candidates to your deck.',
     cancel: 'Cancel',
-    confirm: 'Yes, Reset All',
+    confirm: 'Reset',
   },
   notifications: {
 },
@@ -263,7 +263,7 @@ export default {
     epilepsyWarningBody: 'Features rapid animations, flashes, and sudden sounds that may trigger seizures or discomfort. You can disable effects in Settings.',
     goToSettings: 'Settings',
     continueDefaults: 'Defaults',
-    enterTrial: 'Enter Trial',
+    continueTrial: 'Continue',
   },
   tooltips: {
     filter: 'Filter Candidates',

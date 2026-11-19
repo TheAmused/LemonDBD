@@ -151,7 +151,7 @@ export default {
     resetConfirmTitle: 'Alle Stimmen zurücksetzen?',
     resetConfirmDesc: 'Dadurch wird dein Abstimmungsverlauf gelöscht und alle Kandidaten werden zurückgesetzt.',
     cancel: 'Abbrechen',
-    confirm: 'Ja, alle zurücksetzen',
+    confirm: 'Zurücksetzen',
   },
   notifications: {
 },
@@ -263,7 +263,7 @@ export default {
     epilepsyWarningBody: 'Enthält schnelle Animationen, Blitze und Sounds, die Anfälle oder Unbehagen auslösen können. Du kannst Effekte in den Einstellungen deaktivieren.',
     goToSettings: 'Einstellungen',
     continueDefaults: 'Standardwerte',
-    enterTrial: 'Prüfung betreten',
+    continueTrial: 'Weiter',
   },
   tooltips: {
     filter: 'Kandidaten filtern',

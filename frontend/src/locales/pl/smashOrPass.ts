@@ -151,7 +151,7 @@ export default {
     resetConfirmTitle: 'Zresetować wszystkie głosy?',
     resetConfirmDesc: 'Spowoduje to wyczyszczenie historii oceniania i przywrócenie wszystkich postaci do talii.',
     cancel: 'Anuluj',
-    confirm: 'Tak, zresetuj wszystko',
+    confirm: 'Zresetuj',
   },
   notifications: {
 },
@@ -279,7 +279,7 @@ export default {
     epilepsyWarningBody: 'Próba zawiera szybkie animacje, błyski i nagłe dźwięki, które mogą wywołać napady lub dyskomfort. Efekty możesz wyłączyć w Ustawieniach.',
     goToSettings: 'Ustawienia',
     continueDefaults: 'Domyślne',
-    enterTrial: 'Wejdź do próby',
+    continueTrial: 'Kontynuuj',
   },
   tooltips: {
     filter: 'Filtruj kandydatów',

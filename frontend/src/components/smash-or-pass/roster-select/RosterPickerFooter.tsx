@@ -8,6 +8,9 @@ import type { RosterItem } from '@/types/smashOrPass';
 import { LockIcon, UploadIcon } from '@/components/icons/DbdIcons';
 import { useOptionalAuth } from '@/context/AuthContext';
 
+/** The roster creator is not built for phones or tablets: its add and edit buttons are gone below the lg breakpoint. */
+const TOUCH_HIDDEN = 'max-lg:hidden';
+
 export interface RosterHeaderActionsProps {
   activeRosterInCenter?: RosterItem | null;
   onCreateRoster?: () => void;
@@ -38,6 +41,7 @@ export function RosterHeaderActions({
           type="button"
           onClick={onCreateRoster}
           variant="soft" size="sm" icon
+          className={TOUCH_HIDDEN}
           {...tip(dict.smashOrPass.picker.createRoster, undefined, 'action')}
           aria-label={dict.smashOrPass.picker.createRoster}
         >
@@ -62,6 +66,7 @@ export function RosterHeaderActions({
             <Button
               type="button"
               variant="secondary" size="sm" icon
+              className={TOUCH_HIDDEN}
               onClick={() => onEditRoster(activeRosterInCenter.id)}
               {...tip(dict.smashOrPass.picker.editRoster, undefined, 'action')}
               aria-label={dict.smashOrPass.picker.editRoster}
@@ -111,6 +116,7 @@ export function RosterHeaderActions({
             <Button
               type="button"
               variant="secondary" size="sm" icon
+              className={TOUCH_HIDDEN}
               onClick={() => onEditRoster(activeRosterInCenter.slug)}
               {...tip(dict.smashOrPass.picker.editRoster, undefined, 'action')}
               aria-label={dict.smashOrPass.picker.editRoster}

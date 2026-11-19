@@ -151,7 +151,7 @@ export default {
     resetConfirmTitle: 'すべての投票をリセットしますか？',
     resetConfirmDesc: 'これまでの投票履歴が消去され、すべての候補者がデッキに復元されます。',
     cancel: 'キャンセル',
-    confirm: 'はい、すべてリセット',
+    confirm: 'リセット',
   },
   notifications: {
 },
@@ -263,7 +263,7 @@ export default {
     epilepsyWarningBody: '急なアニメーション、点滅、効果音が含まれ、発作や不快感を引き起こす可能性があります。設定で無効にできます。',
     goToSettings: '設定',
     continueDefaults: 'デフォルト',
-    enterTrial: 'マッチを開始',
+    continueTrial: '続ける',
   },
   tooltips: {
     filter: '候補者を絞り込む',

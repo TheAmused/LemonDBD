@@ -90,13 +90,13 @@ export function AtmospherePreferencesList() {
         />
       </div>
 
-      {/* 5. Cząsteczki ogniska - centered */}
-      <div className="flex flex-col items-center justify-center gap-2.5 py-3.5 px-2 sm:px-3 text-center">
-        <div className="flex items-center justify-center gap-2.5">
+      {/* 5. Cząsteczki ogniska: label left, mode buttons right (wrap below when narrow) */}
+      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-3 px-2 sm:px-3 py-3.5">
+        <div className="flex items-center gap-3 min-w-0">
           <CampfireIcon className="icon-lg text-accent-red shrink-0" aria-hidden="true" />
           <span className="type-strong-fluid text-text-primary">{text.campfire}</span>
         </div>
-        <fieldset aria-label={text.campfire} className="flex flex-wrap items-center justify-center gap-2 border-0 p-0 m-0">
+        <fieldset aria-label={text.campfire} className="flex shrink-0 items-center gap-2 border-0 p-0 m-0">
           {campfireModes.map(({ mode, label }) => (
             <Button
               key={mode}
@@ -104,7 +104,7 @@ export function AtmospherePreferencesList() {
               size="sm"
               aria-pressed={preferences.backgroundAnimation === mode}
               onClick={() => void updatePreferences({ backgroundAnimation: mode })}
-              className="min-h-10 min-w-20 justify-center px-4"
+              className="min-h-11 min-w-18"
             >
               {label}
             </Button>

@@ -151,7 +151,7 @@ export default {
     resetConfirmTitle: '¿Restablecer todos los votos?',
     resetConfirmDesc: 'Esto borrará tu historial de votación y restaurará todos los candidatos a tu mazo.',
     cancel: 'Cancelar',
-    confirm: 'Sí, restablecer todo',
+    confirm: 'Restablecer',
   },
   notifications: {
 },
@@ -263,7 +263,7 @@ export default {
     epilepsyWarningBody: 'Incluye animaciones rápidas, destellos y sonidos que pueden provocar convulsiones o molestias. Puedes desactivarlos en Ajustes.',
     goToSettings: 'Ajustes',
     continueDefaults: 'Predeterminados',
-    enterTrial: 'Entrar a la prueba',
+    continueTrial: 'Continuar',
   },
   tooltips: {
     filter: 'Filtrar candidatos',

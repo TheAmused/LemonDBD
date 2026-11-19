@@ -42,9 +42,9 @@ describe('preferences prompt', () => {
     assert.equal(localStorage.getItem(PREFERENCES_CONFIGURED_KEY), 'true');
   });
 
-  it('in smash or pass, entering the trial keeps the defaults and remembers the entry', () => {
+  it('in smash or pass, continuing keeps the defaults and remembers the entry', () => {
     const prompt = open('smash');
-    fireEvent.click(screen.getByRole('button', { name: text.enterTrial }));
+    fireEvent.click(screen.getByRole('button', { name: text.continueTrial }));
     assert.equal(prompt.closed(), 1);
     assert.equal(localStorage.getItem(SMASH_ENTRY_ACK_KEY), 'true');
   });

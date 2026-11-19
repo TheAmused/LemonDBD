@@ -1,7 +1,6 @@
 'use client';
 // frontend/src/components/smash-or-pass/hub/HubModals.tsx
-import { Button } from '@/components/common/Button';
-import { Modal } from '@/components/common/Modal';
+import { ConfirmModal } from '@/components/common/ConfirmModal';
 import { useDictionary } from '@/context/DictionaryContext';
 import type { EntityItem, LeaderboardItem, RosterItem } from '@/types/smashOrPass';
 import { CharacterStatsModal, RomancePersonaModal, SmashLeaderboardModal } from './lazyParts';
@@ -81,22 +80,14 @@ export function HubModals({
       />
 
       {/* RESET CONFIRMATION MODAL */}
-      <Modal
-        isOpen={isResetConfirmOpen}
-        onClose={() => setIsResetConfirmOpen(false)}
-        variant="confirm"
-        layer="top"
-        initialFocus="close"
+      <ConfirmModal
+        open={isResetConfirmOpen}
         title={dict.smashOrPass.modals.resetConfirmTitle}
-        footerClassName="flex justify-center"
-        footer={
-          <Button variant="danger" size="md" onClick={onResetAllVotes} className="w-full sm:w-auto min-w-40">
-            {dict.smashOrPass.modals.confirm}
-          </Button>
-        }
-      >
-        <p className="px-6 py-5 text-center type-body text-text-muted">{dict.smashOrPass.modals.resetConfirmDesc}</p>
-      </Modal>
+        message={dict.smashOrPass.modals.resetConfirmDesc}
+        confirmLabel={dict.smashOrPass.modals.confirm}
+        onConfirm={onResetAllVotes}
+        onCancel={() => setIsResetConfirmOpen(false)}
+      />
     </>
   );
 }

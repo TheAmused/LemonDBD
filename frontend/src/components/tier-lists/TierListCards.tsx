@@ -115,7 +115,11 @@ function useIsClamped(ref: React.RefObject<HTMLElement | null>, text: string): b
  * events, so the card link underneath keeps working, and the banner chips fade out of its way.
  */
 function DescriptionPeek({ text }: { text: string }) {
-  const [open, setOpen] = React.useState(false);
+  // A mouse hover previews the text; a press pins it and the next press hides it (even while the
+  // pointer is still over the button). Touch never hovers, so a tap only pins and unpins.
+  const [pinned, setPinned] = React.useState(false);
+  const [hovered, setHovered] = React.useState(false);
+  const open = pinned || hovered;
   return (
     <>
       <div
@@ -133,11 +137,12 @@ function DescriptionPeek({ text }: { text: string }) {
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          setOpen((o) => !o);
+          setPinned(!pinned);
+          setHovered(false);
         }}
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
-        onBlur={() => setOpen(false)}
+        onPointerEnter={(e) => setHovered(e.pointerType === 'mouse')}
+        onPointerLeave={() => setHovered(false)}
+        onBlur={() => setPinned(false)}
         variant="overlay" size="sm" icon className="absolute bottom-3 left-3 z-30"
       >
         <Info aria-hidden="true" />

@@ -6,7 +6,7 @@
 // from every page.
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Check } from 'lucide-react';
+import { Check, Copy } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { SegmentedControl } from '@/components/common/SegmentedControl';
 import { Table, TableHead, TableBody, TableRow, Th, Td } from '@/components/common/Table';
@@ -54,9 +54,6 @@ export const BardInsultsModal: React.FC<BardInsultsModalProps> = ({ isOpen, onCl
       padded
       bodyClassName="space-y-4"
     >
-      <p className="text-center type-body text-text-secondary">{t.insultsIntro}</p>
-      <p className="text-center type-label-2xs text-text-muted">{t.insultsCopyHint}</p>
-
       <div className="flex justify-center">
         <SegmentedControl<Side>
           ariaLabel={t.insultsSideAria}
@@ -88,7 +85,9 @@ export const BardInsultsModal: React.FC<BardInsultsModalProps> = ({ isOpen, onCl
                   className="flex w-full cursor-pointer items-center justify-center gap-2 px-3 py-2 italic transition-colors hover:text-accent-red focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
                 >
                   <span>{row.bard}</span>
-                  {copiedBard === row.bard && <Check aria-hidden="true" className="icon-md shrink-0 text-accent-green" />}
+                  {copiedBard === row.bard
+                    ? <Check aria-hidden="true" className="icon-md shrink-0 text-accent-green" />
+                    : <Copy aria-hidden="true" className="icon-md shrink-0 text-text-muted" />}
                 </button>
               </Td>
             </TableRow>

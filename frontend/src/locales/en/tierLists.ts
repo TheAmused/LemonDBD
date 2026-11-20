@@ -235,7 +235,7 @@ export default {
   reportReasonExplicit: "Explicit or NSFW content",
   reportReasonIllegal: "Illegal or dangerous content",
   reportReasonOther: "Other violation",
-  reportNotesLabel: "Additional details (optional)",
+  reportNotesLabel: "Additional details",
   reportNotesPlaceholder: "Explain what makes this content inappropriate...",
   reportSubmit: "Submit report",
   reportSubmitting: "Submitting...",

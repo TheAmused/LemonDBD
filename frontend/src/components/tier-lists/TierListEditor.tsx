@@ -31,6 +31,7 @@ import type { TierTileShape } from './TierItemTile';
 import { Alert } from '@/components/common/Alert';
 import { Button, buttonClassName } from '@/components/common/Button';
 import { MenuItem, menuItemClassName } from '@/components/common/MenuItem';
+import { CREATOR_ENTRY_HIDDEN } from './styles';
 import { Popover, popoverTriggerProps } from '@/components/common/Popover';
 import { tip } from '@/components/common/Tooltip';
 import { type TierListTag, trackEvent } from '@/utils/analytics';
@@ -237,7 +238,7 @@ export function TierListEditor(props: TierListEditorProps) {
             {t.reset}
           </MenuItem>
           {editHref && (
-            <Link href={editHref} role="menuitem" className={menuItemClassName()} onClick={() => setMenuOpen(false)}>
+            <Link href={editHref} role="menuitem" className={cn(menuItemClassName(), CREATOR_ENTRY_HIDDEN)} onClick={() => setMenuOpen(false)}>
               <Pencil className="icon-md" aria-hidden="true" />
               {t.editDetails}
             </Link>
@@ -313,7 +314,7 @@ export function TierListEditor(props: TierListEditorProps) {
                 href={editHref}
                 aria-label={t.editDetails}
                 {...tip(t.editDetails, undefined, 'action')}
-                className={buttonClassName('secondary', 'sm', cn(TOOLBAR_BTN, 'w-9 min-w-9 p-0'))}
+                className={buttonClassName('secondary', 'sm', cn(TOOLBAR_BTN, 'w-9 min-w-9 p-0', CREATOR_ENTRY_HIDDEN))}
               >
                 <Pencil className="icon-sm" aria-hidden="true" />
                 <span className="sr-only">{t.editDetails}</span>

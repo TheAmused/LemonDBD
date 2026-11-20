@@ -14,7 +14,12 @@ import { Button } from '@/components/common/Button';
 import { useDictionary } from '@/context/DictionaryContext';
 import { usePreferences, type BackgroundAnimationMode } from '@/hooks/usePreferences';
 
-export function AtmospherePreferencesList() {
+export type AtmosphereRow = 'sounds' | 'music' | 'effects' | 'nsfw' | 'campfire';
+
+const ALL_ROWS: readonly AtmosphereRow[] = ['sounds', 'music', 'effects', 'nsfw', 'campfire'];
+
+/** `rows` limits the list to the preferences a page actually uses; every row shows by default. */
+export function AtmospherePreferencesList({ rows = ALL_ROWS }: { rows?: readonly AtmosphereRow[] }) {
   const dict = useDictionary();
   const text = dict.settings;
   const { preferences, updatePreferences } = usePreferences();
@@ -26,9 +31,9 @@ export function AtmospherePreferencesList() {
   ];
 
   return (
-    <div className="divide-y divide-border-color/60 border-y border-border-color/60">
+    <div className="divide-y divide-border-color/60">
       {/* 1. Efekty dźwiękowe */}
-      <div className="flex items-center justify-between gap-3 px-2 sm:px-3 py-3.5">
+      {rows.includes('sounds') && <div className="flex items-center justify-between gap-3 px-2 sm:px-3 py-3.5">
         <div className="flex items-center gap-3 min-w-0">
           <VolumeIcon className="icon-lg text-accent-red shrink-0" aria-hidden="true" />
           <span className="type-strong-fluid text-text-primary">
@@ -40,10 +45,10 @@ export function AtmospherePreferencesList() {
           onChange={(checked) => void updatePreferences({ sounds: checked })}
           ariaLabel={text.soundEffects}
         />
-      </div>
+      </div>}
 
       {/* 2. Muzyka */}
-      <div className="flex items-center justify-between gap-3 px-2 sm:px-3 py-3.5">
+      {rows.includes('music') && <div className="flex items-center justify-between gap-3 px-2 sm:px-3 py-3.5">
         <div className="flex items-center gap-3 min-w-0">
           <MusicIcon className="icon-lg text-accent-red shrink-0" aria-hidden="true" />
           <span className="type-strong-fluid text-text-primary">
@@ -55,10 +60,10 @@ export function AtmospherePreferencesList() {
           onChange={(checked) => void updatePreferences({ music: checked })}
           ariaLabel={text.music}
         />
-      </div>
+      </div>}
 
       {/* 3. Animacje */}
-      <div className="flex items-center justify-between gap-3 px-2 sm:px-3 py-3.5">
+      {rows.includes('effects') && <div className="flex items-center justify-between gap-3 px-2 sm:px-3 py-3.5">
         <div className="flex items-center gap-3 min-w-0">
           <ClapperboardIcon className="icon-lg text-accent-red shrink-0" aria-hidden="true" />
           <span className="type-strong-fluid text-text-primary">
@@ -70,17 +75,14 @@ export function AtmospherePreferencesList() {
           onChange={(checked) => void updatePreferences({ effects: checked })}
           ariaLabel={text.animations}
         />
-      </div>
+      </div>}
 
       {/* 4. NSFW / 18+ */}
-      <div className="flex items-center justify-between gap-3 px-2 sm:px-3 py-3.5">
+      {rows.includes('nsfw') && <div className="flex items-center justify-between gap-3 px-2 sm:px-3 py-3.5">
         <div className="flex items-center gap-2.5 min-w-0">
-          <MatureIcon className="icon-lg text-accent-amber shrink-0" aria-hidden="true" />
+          <MatureIcon className="icon-lg text-accent-red shrink-0" aria-hidden="true" />
           <span className="type-strong-fluid text-text-primary">
             {text.nsfw}
-          </span>
-          <span className="type-label-2xs font-bold text-accent-amber px-2 py-0.5 rounded-full border border-accent-amber/40 bg-accent-amber/10 shrink-0">
-            18+
           </span>
         </div>
         <Switch
@@ -88,29 +90,30 @@ export function AtmospherePreferencesList() {
           onChange={(checked) => void updatePreferences({ nsfw: checked })}
           ariaLabel={text.nsfw}
         />
-      </div>
+      </div>}
 
-      {/* 5. Cząsteczki ogniska: label left, mode buttons right (wrap below when narrow) */}
-      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-3 px-2 sm:px-3 py-3.5">
+      {/* 5. Cząsteczki ogniska: label left (may wrap onto two lines), the three small mode buttons always right */}
+      {rows.includes('campfire') && <div className="flex items-center justify-between gap-3 px-2 sm:px-3 py-3.5">
         <div className="flex items-center gap-3 min-w-0">
           <CampfireIcon className="icon-lg text-accent-red shrink-0" aria-hidden="true" />
-          <span className="type-strong-fluid text-text-primary">{text.campfire}</span>
+          <span className="type-strong-fluid text-text-primary">
+            {text.campfire}
+          </span>
         </div>
-        <fieldset aria-label={text.campfire} className="flex shrink-0 items-center gap-2 border-0 p-0 m-0">
+        <fieldset aria-label={text.campfire} className="flex shrink-0 items-center gap-1.5 border-0 p-0 m-0">
           {campfireModes.map(({ mode, label }) => (
             <Button
               key={mode}
               variant={preferences.backgroundAnimation === mode ? 'primary' : 'secondary'}
-              size="sm"
+              size="xs"
               aria-pressed={preferences.backgroundAnimation === mode}
               onClick={() => void updatePreferences({ backgroundAnimation: mode })}
-              className="min-h-11 min-w-18"
             >
               {label}
             </Button>
           ))}
         </fieldset>
-      </div>
+      </div>}
     </div>
   );
 }

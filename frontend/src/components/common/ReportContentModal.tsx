@@ -5,6 +5,7 @@ import React, { useState, useCallback } from 'react';
 import { CheckCircle2, ShieldAlert, CircleAlert, TriangleAlert } from 'lucide-react';
 import { Modal } from '@/components/common/Modal';
 import { Button } from '@/components/common/Button';
+import { FormField } from '@/components/common/Field';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useSiteConfig } from '@/context/SiteConfigContext';
 import { apiUrl, authFetch } from '@/utils/api';
@@ -211,10 +212,7 @@ export function ReportContentModalBody({
         </div>
       )}
 
-      <div className="flex flex-col gap-1.5">
-        <label id="report-reason-label" className="type-label-sm text-text-muted">
-          {t.reportReasonLabel}
-        </label>
+      <FormField label={t.reportReasonLabel} labelId="report-reason-label" required>
         <CustomDropdown<ReportReason>
           value={reason}
           onChange={(r) => setReason(r)}
@@ -228,12 +226,9 @@ export function ReportContentModalBody({
           menuClassName="w-full"
           accent="primary"
         />
-      </div>
+      </FormField>
 
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="report-notes" className="type-label-sm text-text-muted">
-          {t.reportNotesLabel}
-        </label>
+      <FormField label={t.reportNotesLabel} htmlFor="report-notes">
         <textarea
           id="report-notes"
           value={notes}
@@ -243,7 +238,7 @@ export function ReportContentModalBody({
           maxLength={500}
           className="w-full resize-none rounded-control border border-border-color bg-bg-surface p-3 text-sm text-text-primary placeholder:text-text-muted focus:border-accent-red focus:outline-none transition-colors"
         />
-      </div>
+      </FormField>
 
       <div className="flex items-center justify-center pt-3 border-t border-border-color">
         <Button

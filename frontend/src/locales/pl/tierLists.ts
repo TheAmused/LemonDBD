@@ -235,7 +235,7 @@ export default {
   reportReasonExplicit: "Treści erotyczne lub dla dorosłych (NSFW)",
   reportReasonIllegal: "Nielegalne lub niebezpieczne treści",
   reportReasonOther: "Inne naruszenie",
-  reportNotesLabel: "Dodatkowe informacje (opcjonalnie)",
+  reportNotesLabel: "Dodatkowe informacje",
   reportNotesPlaceholder: "Opisz, dlaczego ta treść jest nieodpowiednia...",
   reportSubmit: "Wyślij zgłoszenie",
   reportSubmitting: "Wysyłanie...",

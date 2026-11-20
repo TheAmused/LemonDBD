@@ -256,6 +256,27 @@ export const TooltipBubble: React.FC<TooltipBubbleProps> = ({
   );
 };
 
+/**
+ * Hover tooltips are for a mouse. A finger has no hover: a tap makes the browser emulate mouse events
+ * and a long press focuses the control, which would flash or hold a bubble. So the hover and focus
+ * tooltips stay quiet while the latest input was a touch, and come back on the next mouse move,
+ * pen or key press. Listeners go in once, on first use, and live for the page.
+ */
+let touchInput = false;
+let watchingInput = false;
+
+function noteInput(e: Event) {
+  touchInput = e.type !== 'keydown' && (e as PointerEvent).pointerType === 'touch';
+}
+
+function watchInput() {
+  if (watchingInput || typeof document === 'undefined') return;
+  watchingInput = true;
+  for (const type of ['pointerdown', 'pointermove', 'keydown']) {
+    document.addEventListener(type, noteInput, { capture: true, passive: true });
+  }
+}
+
 export interface TooltipProps {
   title?: string;
   description?: string;
@@ -281,8 +302,11 @@ export const Tooltip: React.FC<TooltipProps> = ({
 }) => {
   // The trigger the pointer or focus is on; the bubble shows while there is one.
   const [anchor, setAnchor] = useState<HTMLSpanElement | null>(null);
-  const show = (e: React.SyntheticEvent<HTMLSpanElement>) => setAnchor(e.currentTarget);
+  const show = (e: React.SyntheticEvent<HTMLSpanElement>) => {
+    if (!touchInput) setAnchor(e.currentTarget);
+  };
   const hide = () => setAnchor(null);
+  useEffect(watchInput, []);
 
   if (disabled || (!title && !content)) return <>{children}</>;
 
@@ -293,8 +317,6 @@ export const Tooltip: React.FC<TooltipProps> = ({
       onMouseLeave={hide}
       onFocus={show}
       onBlur={hide}
-      onTouchStart={show}
-      onTouchEnd={hide}
     >
       {children}
       {anchor && (
@@ -342,17 +364,13 @@ export const TooltipProvider: React.FC = () => {
       };
     };
 
-    // A tap fires an emulated `mouseover`; on touch screens that would pop a hover bubble on every tap and leave it stuck.
-    let lastTouch = 0;
-    const onPointerDown = (e: PointerEvent) => {
-      if (e.pointerType !== 'mouse') lastTouch = Date.now();
-    };
-    const hoverIsReal = () => window.matchMedia?.('(hover: hover)').matches !== false && Date.now() - lastTouch > 800;
+    watchInput();
 
     const show = (e: Event) => {
       const el = find(e.target);
       if (!el) return;
-      if (e.type === 'mouseover' && !hoverIsReal()) return;
+      // A tap emulates mouseover and a long press focuses the control: neither is a hover.
+      if (touchInput) return;
       // Focus shows the bubble only for keyboard focus; pointer hover has its own event.
       if (e.type === 'focusin' && !(e.target as HTMLElement).matches?.(':focus-visible')) return;
       const next = read(el);
@@ -368,11 +386,15 @@ export const TooltipProvider: React.FC = () => {
     };
 
     const dismiss = () => setActive(null);
+    // Registered after watchInput's own listener, so touchInput is already current here.
+    const dismissOnTouch = () => {
+      if (touchInput) dismiss();
+    };
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') dismiss();
     };
 
-    document.addEventListener('pointerdown', onPointerDown, true);
+    document.addEventListener('pointerdown', dismissOnTouch, true);
     document.addEventListener('mouseover', show);
     document.addEventListener('focusin', show);
     document.addEventListener('mouseout', hide);
@@ -380,7 +402,7 @@ export const TooltipProvider: React.FC = () => {
     document.addEventListener('mousedown', dismiss);
     document.addEventListener('keydown', onKey);
     return () => {
-      document.removeEventListener('pointerdown', onPointerDown, true);
+      document.removeEventListener('pointerdown', dismissOnTouch, true);
       document.removeEventListener('mouseover', show);
       document.removeEventListener('focusin', show);
       document.removeEventListener('mouseout', hide);

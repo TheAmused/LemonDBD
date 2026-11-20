@@ -20,11 +20,12 @@ import { createCustomListId, deleteCustomList, saveCustomList, saveRanking, type
 import { CustomTierListCard, OfficialTierListCard } from './TierListCards';
 import { TierListImportModal } from './TierListImportModal';
 import { TierListSkeleton } from './TierListSkeleton';
-import { HEADER_BTN } from './styles';
+import { CREATOR_ENTRY_HIDDEN, HEADER_BTN } from './styles';
 import { Button } from '@/components/common/Button';
 import { useDictionary } from "@/context/DictionaryContext";
 import { AccordionSection } from '@/components/common/AccordionSection';
 import { Tooltip } from '@/components/common/Tooltip';
+import { TierListSettingsModal } from './TierListSettingsModal';
 import { useGlobalNsfwPreference } from '@/utils/nsfwAck';
 import { PreferencesPromptModal } from '@/components/common/PreferencesPromptModal';
 import { usePreferences } from '@/hooks/usePreferences';
@@ -49,6 +50,7 @@ export function TierListHub({ locale }: TierListHubProps) {
   const { lists, loading, error, refresh } = useTierListSummaries(locale);
   const { state, hydrated } = useTierListStore();
   const [importOpen, setImportOpen] = useState<boolean>(false);
+  const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [sharePayload, setSharePayload] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<SaveResult | null>(null);
   const [listToDelete, setListToDelete] = useState<{ id: string; title: string } | null>(null);
@@ -152,7 +154,7 @@ export function TierListHub({ locale }: TierListHubProps) {
               variant="secondary"
               size="sm"
               icon
-              onClick={() => router.push(`/${locale}/settings`)}
+              onClick={() => setSettingsOpen(true)}
               aria-label={dict.sidebar.settings}
               className="h-9 w-9 min-h-9 min-w-9"
             >
@@ -204,7 +206,7 @@ export function TierListHub({ locale }: TierListHubProps) {
         open={isCustomOpen}
         onToggle={toggleCustom}
         banner="/images/banners/banner_account.webp"
-        headerAction={<div className="flex items-center gap-2"><Button variant="secondary" onClick={handleOpenImport} className={HEADER_BTN}><FileJson className="shrink-0" aria-hidden="true" /><span className="hidden sm:inline">{t.importJson}</span></Button><Button variant="primary" onClick={createBlank} className={HEADER_BTN}><Plus className="shrink-0" aria-hidden="true" /><span className="hidden sm:inline">{t.newCustomList}</span></Button></div>}
+        headerAction={<div className="flex items-center gap-2"><Button variant="secondary" onClick={handleOpenImport} className={HEADER_BTN}><FileJson className="shrink-0" aria-hidden="true" /><span className="hidden sm:inline">{t.importJson}</span></Button><Button variant="primary" onClick={createBlank} className={`${HEADER_BTN} ${CREATOR_ENTRY_HIDDEN}`}><Plus className="shrink-0" aria-hidden="true" /><span className="hidden sm:inline">{t.newCustomList}</span></Button></div>}
         stickyHeader
         as="section"
         bodyClassName="p-4 sm:p-6"
@@ -253,6 +255,8 @@ export function TierListHub({ locale }: TierListHubProps) {
           }
         }}
       />
+
+      <TierListSettingsModal isOpen={settingsOpen} onClose={() => setSettingsOpen(false)} />
 
       <TierListImportModal
         open={importOpen}

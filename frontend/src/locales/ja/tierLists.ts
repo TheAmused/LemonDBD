@@ -235,7 +235,7 @@ export default {
   reportReasonExplicit: "露骨または不適切なコンテンツ (NSFW)",
   reportReasonIllegal: "違法または危険なコンテンツ",
   reportReasonOther: "その他の違反",
-  reportNotesLabel: "詳細情報（任意）",
+  reportNotesLabel: "詳細情報",
   reportNotesPlaceholder: "このコンテンツが不適切である理由を入力してください...",
   reportSubmit: "報告を送信",
   reportSubmitting: "送信中...",

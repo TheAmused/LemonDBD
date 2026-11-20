@@ -19,7 +19,6 @@
 - **Account Management section (`tabSanctum`)**:
   - `components/user/UserProfileForm.tsx` (`UserProfileForm`)
   - `components/user/DownloadDataSection.tsx` (`DownloadDataSection`)
-  - `components/user/SignOutEverywhereSection.tsx` (`SignOutEverywhereSection`)
   - `components/user/DeleteAccountSection.tsx` (`DeleteAccountSection`)
   - `components/user/TwoFactorSection.tsx` (`TwoFactorSection`)
   - `components/user/TwoFactorSetupModal.tsx` (`TwoFactorSetupModal`)
@@ -117,8 +116,7 @@
     - **Form Action Row**:
       - Left icon-button cluster:
         1. **Download My Data** (`DownloadDataSection.tsx` with `iconOnly`): `Button` (`variant="secondary"`, `size="sm"`, `icon`, `leftIcon={<Download />}`), `aria-label` & tooltip title: `dict.user.downloadDataTitle` `"Download my data"`, tooltip description: `dict.user.downloadDataDesc` `"Get a copy of everything we store about your account (profile, ownership, showcase, streaks, stats, votes, bug reports and moderation records) as a JSON file."`. Inline error alert on failure: `dict.user.downloadDataFailed` `"Could not prepare your data. Try again."`. (Note: non-`iconOnly` variant renders label `dict.user.downloadDataButton` `"Download my data"`).
-        2. **Sign Out Everywhere** (`SignOutEverywhereSection.tsx`): `Button` (`variant="secondary"`, `size="sm"`, `icon`, `leftIcon={<LogOut />}`), `aria-label` & tooltip title: `dict.user.signOutEverywhereTitle` `"Sign out everywhere"`, tooltip description: `dict.user.signOutEverywhereDesc` `"End every session of this account on all devices, this one included. Use it after signing in on a shared computer or if you think someone else has access."`. Inline error alert on failure: `dict.user.signOutEverywhereFailed` `"Could not sign out everywhere. Try again."`.
-        3. **Delete Account** (`DeleteAccountSection.tsx` with `iconOnly`): `Button` (`variant="danger"`, `size="sm"`, `icon`, `leftIcon={<Trash2 />}`), `aria-label` & tooltip title: `dict.user.deleteAccountTitle` `"Delete account"`, tooltip description: `dict.user.deleteAccountDesc` `"Permanently delete your account and everything saved on it: ownership, showcase, streaks and progress. This cannot be undone."`, opens Delete Account Confirm Modal. (Note: non-`iconOnly` variant renders label `dict.user.deleteAccountButton` `"Delete my account"`).
+        2. **Delete Account** (`DeleteAccountSection.tsx` with `iconOnly`): `Button` (`variant="danger"`, `size="sm"`, `icon`, `leftIcon={<Trash2 />}`), `aria-label` & tooltip title: `dict.user.deleteAccountTitle` `"Delete account"`, tooltip description: `dict.user.deleteAccountDesc` `"Permanently delete your account and everything saved on it: ownership, showcase, streaks and progress. This cannot be undone."`, opens Delete Account Confirm Modal. (Note: non-`iconOnly` variant renders label `dict.user.deleteAccountButton` `"Delete my account"`).
       - Right submit button: `Button` (`type="submit"`, `variant="primary"`, `size="sm"`, `loading={isUpdating}`) `dict.user.saveChanges` `"Save"`.
   - **Two-Factor Authentication Sub-section** (`TwoFactorSection.tsx`):
     - Header row: `ShieldCheck` icon (`lucide-react`, amber) + heading `h3` `dict.twoFactor.sectionTitle` `"Two-factor authentication"` + `Switch` (rendered when `status?.available` is true; `ariaLabel`: `dict.twoFactor.sectionTitle`; `checked={status.enabled || setupOpen}`; `disabled={needsPassword && !status.enabled}`; toggling on opens `TwoFactorSetupModal`, toggling off sets `action='disable'` on `TwoFactorConfirmModal`).

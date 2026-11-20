@@ -205,7 +205,6 @@
     "src/components/user/PerkDiamondSlot.tsx",
     "src/components/user/RecoveryCodesPanel.tsx",
     "src/components/user/ShowcasePerkModal.tsx",
-    "src/components/user/SignOutEverywhereSection.tsx",
     "src/components/user/TwoFactorSection.tsx",
     "src/components/user/TwoFactorSetupModal.tsx",
     "src/components/user/UserBugReportsDrawer.tsx",

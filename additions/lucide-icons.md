@@ -100,7 +100,7 @@
 | `LayoutList` | 2 | `src/components/Sidebar.tsx:8`, `src/components/tier-lists/TierListHub.tsx:8` |
 | `ListOrdered` | 2 | `src/components/common/RichTextEditor.tsx:12`, `src/components/tier-lists/creator/LadderEditor.tsx:5` |
 | `LogIn` | 2 | `src/components/auth/AuthModalParts.tsx:8`, `src/components/sidebar/SidebarUserSection.tsx:8` |
-| `LogOut` | 2 | `src/components/sidebar/SidebarUserSection.tsx:8`, `src/components/user/SignOutEverywhereSection.tsx:8` |
+| `LogOut` | 1 | `src/components/sidebar/SidebarUserSection.tsx:8` |
 | `Map` | 2 | `src/components/character-detail/components/OfferingsSection.tsx:5`, `src/components/character-detail/components/SurvivorEquipmentSection.tsx:6` |
 | `Megaphone` | 2 | `src/components/admin/AdminSettingsSection.tsx:10`, `src/components/changelog/WhatsNewLauncher.tsx:5` |
 | `Mic` | 2 | `src/components/maps/MapsClient.tsx:7`, `src/components/maps/voice/voiceStatusConfig.ts:3` |
@@ -490,7 +490,6 @@
 | `src/components/user/PerkDiamondSlot.tsx` | 3 | `Plus`, `X` |
 | `src/components/user/RecoveryCodesPanel.tsx` | 8 | `Check`, `Copy`, `Download` |
 | `src/components/user/ShowcasePerkModal.tsx` | 7 | `Check` |
-| `src/components/user/SignOutEverywhereSection.tsx` | 8 | `LogOut` |
 | `src/components/user/TwoFactorSection.tsx` | 7 | `ShieldCheck` |
 | `src/components/user/TwoFactorSetupModal.tsx` | 8 | `Check`, `Copy` |
 | `src/components/user/UserBugReportsDrawer.tsx` | 5 | `Plus` |

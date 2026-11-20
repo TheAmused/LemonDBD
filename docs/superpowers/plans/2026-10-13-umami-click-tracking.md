@@ -207,7 +207,6 @@ Logged in only. Events measure adoption of account features.
 | `showcase_complete` | `role`: `survivor` / `killer` | `hooks/useUserShowcase.ts` (see below) |
 | `avatar_upload` | none | `handleAvatarFileChange` in `user/page.tsx`, after `uploadAvatar` succeeds |
 | `data_download` | none | `DownloadDataSection.tsx`, after `downloadAccountData` succeeds |
-| `sign_out_everywhere` | none | `SignOutEverywhereSection.tsx`, after the sign out of all devices succeeded |
 | `account_delete` | none | `DeleteAccountSection.tsx`, after `deleteAccount` succeeds |
 | `two_factor_change` | `action`: `enabled` / `disabled` | `TwoFactorSetupModal.tsx` (after `enableTwoFactor`) and the disable flow in `TwoFactorSection.tsx` |
 

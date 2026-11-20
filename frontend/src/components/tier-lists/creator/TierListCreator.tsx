@@ -132,9 +132,9 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
   const draftLoaded = draftReadFor !== null;
 
   // Phones and tablets get no creator: send a visitor who lands on its URL back to the hub.
+  if (wideEnough && !admitted) setAdmitted(true);
   useEffect(() => {
-    if (wideEnough) setAdmitted(true);
-    else if (wideEnough === false && !admitted) router.replace(`/${locale}/tier-lists`);
+    if (wideEnough === false && !admitted) router.replace(`/${locale}/tier-lists`);
   }, [wideEnough, admitted, router, locale]);
 
   useEffect(() => {

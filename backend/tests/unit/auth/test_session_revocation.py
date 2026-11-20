@@ -87,22 +87,6 @@ class TestLogoutRevokes:
 
 
 @pytest.mark.unit
-class TestSignOutEverywhere:
-    def test_every_session_ends(self, client: FlaskClient, db_session) -> None:
-        user = _make_user()
-        laptop, phone = generate_token(user.id, user.role), generate_token(user.id, user.role)
-        res = client.post("/api/v1/auth/logout-all", headers=_bearer(laptop))
-        assert res.status_code == 200
-        assert _me(client, headers=_bearer(laptop)) is False
-        assert _me(client, headers=_bearer(phone)) is False
-        db.session.refresh(user)
-        assert user.token_version == 1
-
-    def test_requires_a_session(self, client: FlaskClient) -> None:
-        assert client.post("/api/v1/auth/logout-all").status_code == 401
-
-
-@pytest.mark.unit
 class TestAuthorizationHeaderAndCookie:
     def test_a_non_bearer_header_does_not_bypass_the_origin_check(self, client: FlaskClient, db_session) -> None:
         user = _make_user()

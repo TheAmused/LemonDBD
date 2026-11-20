@@ -42,6 +42,8 @@ import {
 import { formatMessage } from '@/utils/i18nFormat';
 import dynamic from 'next/dynamic';
 import { useDictionary } from '@/context/DictionaryContext';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { CREATOR_MIN_WIDTH } from '../styles';
 import { Toast } from '@/components/common/Toast';
 import { useIsClient } from '@/hooks/useIsClient';
 import { trackEvent } from '@/utils/analytics';
@@ -68,6 +70,9 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
   const t = dict.tierLists;
   const c = t.creator;
   const router = useRouter();
+  const wideEnough = useMediaQuery(CREATOR_MIN_WIDTH);
+  // Once the creator has opened on a wide screen it stays: narrowing the window mid-edit must not throw the draft away.
+  const [admitted, setAdmitted] = useState(false);
   const { isAdmin, isLoading: authLoading, token, isAuthenticated } = useAuth();
   const { state: storeState, hydrated: storeHydrated } = useTierListStore();
   const editingList = editId ? storeState.custom[editId] : undefined;
@@ -125,6 +130,12 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
     }
   }
   const draftLoaded = draftReadFor !== null;
+
+  // Phones and tablets get no creator: send a visitor who lands on its URL back to the hub.
+  useEffect(() => {
+    if (wideEnough) setAdmitted(true);
+    else if (wideEnough === false && !admitted) router.replace(`/${locale}/tier-lists`);
+  }, [wideEnough, admitted, router, locale]);
 
   useEffect(() => {
     if (!restored) return;
@@ -213,6 +224,8 @@ export function TierListCreator({ locale, editId, officialSlug }: TierListCreato
   const trimmedBackground = draft.backgroundImage.trim();
   const safeBackground = trimmedBackground ? sanitizeImageUrl(trimmedBackground) : null;
   const backgroundInvalid = Boolean(trimmedBackground) && !safeBackground;
+
+  if (!wideEnough && !admitted) return wideEnough === null ? <div className="min-h-100" /> : null;
 
   if (authLoading) {
     return <div className="min-h-100" />;

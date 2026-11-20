@@ -17,7 +17,7 @@ on PostgreSQL and Redis with a Next.js front end, served behind nginx and run wi
 | Smash or Pass | `/[locale]/smash-or-pass` | Swipe voting with leaderboards, custom rosters and effect preferences |
 | Minigames | `/[locale]/minigames` | Daily fog trial, idle game, six guessers and a challenge creator |
 | Achievements | `/[locale]/achievements` | Account achievements |
-| Account | `/[locale]/user` | Profile, e-mail verification, two-factor sign-in, data export, sign out everywhere, account deletion |
+| Account | `/[locale]/user` | Profile, e-mail verification, two-factor sign-in, data export, account deletion |
 | Admin | `/[locale]/admin` | Users, warnings and bans, content moderation, bug reports, runtime settings, database import/export |
 
 The site is translated into English, Polish, Spanish, German and Japanese (`/en`, `/pl`, `/es`,

@@ -19,7 +19,6 @@ from app.core.security import (
     set_session_cookie,
     widen_legacy_session_cookie,
 )
-from app.core.transaction import transaction
 from app.schemas.user import UserRegister, UserResponse
 from app.services import site_settings
 from app.services.altcha_service import AltchaService
@@ -275,20 +274,6 @@ def logout():
     # Deleting the cookie is not enough: a copy of the token would stay valid until it expired.
     revoke_token(request_token())
     response = make_response(jsonify({"status": "success", "message": "Logged out successfully"}), 200)
-    return clear_session_cookie(response)
-
-
-@auth_bp.route("/logout-all", methods=["POST"])
-@limiter.limit("10 per hour")
-@login_required
-def logout_everywhere():
-    """Sign out every session of this account, on every device (this one included)."""
-    user = g.current_user
-    with transaction():
-        user.token_version = int(user.token_version or 0) + 1
-    response = make_response(
-        jsonify({"status": "success", "message": "Signed out on every device."}), 200
-    )
     return clear_session_cookie(response)
 
 

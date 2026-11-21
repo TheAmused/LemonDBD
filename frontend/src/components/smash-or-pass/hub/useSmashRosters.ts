@@ -17,7 +17,7 @@ import { initialRosterSlug, rememberRoster } from './voteStorage';
 const canonPlaceholder = (): RosterItem => ({
   id: 'canon',
   slug: 'canon',
-  name: 'Dead by Daylight: Fog Canon',
+  name: 'Fog Canon',
   description: 'Official 98 Characters',
   theme_color: defaultRosterThemeColor(),
   category: 'DBD Canon',

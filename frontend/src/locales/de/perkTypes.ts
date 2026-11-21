@@ -33,7 +33,7 @@ export default {
     entity: "entität, blockiert, blockieren, blockade",
   },
   generalKeywords: "allgemein, allgemeine, allgemeines",
-  searchPlaceholder: "Perks, Charaktere oder Typen suchen...",
+  searchPlaceholder: "Suchen",
   typesButton: "Typen",
   clearTypes: "Alle entfernen",
   typeFilters: "Nach Perk-Typ filtern",

@@ -178,7 +178,14 @@ export function CardBackFace({
         {/* Quote/tagline shown inline when the floating lore fragments are hidden (narrow hubs) */}
         {(Boolean(charTagline) || Boolean(charQuote)) && (
           <div className="@hub-lg/hub:hidden space-y-2.5">
-            {charTagline && <p className="px-1 text-mini text-text-secondary italic leading-snug">{charTagline}</p>}
+            {charTagline && (
+              <Surface tone="elevated" padding="none" className="p-2.5 space-y-0.5">
+                <span className="type-label-2xs text-text-muted block">
+                  {text.creator.entityTaglineLabel}
+                </span>
+                <p className="text-mini text-text-secondary italic leading-snug">{charTagline}</p>
+              </Surface>
+            )}
 
             {charQuote && (
               <Surface tone="elevated" padding="none" className="p-2.5 border-accent-amber/30 space-y-0.5">

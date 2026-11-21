@@ -22,9 +22,10 @@ interface PerkFilterMenuProps {
   typeCounts?: PerkTypeCounts;
   /** Omit where the All / Owned / General choice means nothing. */
   scopeFilter?: PerkScopeFilter;
+  className?: string;
 }
 
-export const PerkFilterMenu: React.FC<PerkFilterMenuProps> = ({ perks, activeTypes, onTypesChange, typeCounts, scopeFilter }) => {
+export const PerkFilterMenu: React.FC<PerkFilterMenuProps> = ({ perks, activeTypes, onTypesChange, typeCounts, scopeFilter, className }) => {
   const dict = useDictionary();
   const perkTypeCounts = useMemo(() => countPerkTypes(perks), [perks]);
   const roleTypes = useMemo(() => typesWithPerks(perkTypeCounts), [perkTypeCounts]);
@@ -50,7 +51,8 @@ export const PerkFilterMenu: React.FC<PerkFilterMenuProps> = ({ perks, activeTyp
       align="right"
       minWidthClass=""
       menuClassName="w-72 sm:w-96"
-      buttonClassName={CONTROL_HEIGHT}
+      className={className}
+      buttonClassName={`w-full justify-between sm:w-auto ${CONTROL_HEIGHT}`}
     >
       <PerkFilterPanel
         roleTypes={roleTypes}

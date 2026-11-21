@@ -41,7 +41,7 @@ describe('PerkFilters header', () => {
 
   it('the search is a plain field: no Types button and no type chips inside it', () => {
     const html = renderFilters({ activeTypes: ['healing', 'chase'] });
-    assert.match(html, /placeholder="Search perks, characters or types\.\.\."/);
+    assert.match(html, /placeholder="Search"/);
     assert.ok(!html.includes('aria-label="Filter by perk type"'));
   });
 

@@ -13,10 +13,11 @@ const SORT_ORDERS: readonly SortOrder[] = ['asc', 'desc'];
 interface PerkSortMenuProps {
   order: SortOrder;
   setOrder: (order: SortOrder) => void;
+  className?: string;
   buttonClassName?: string;
 }
 
-export const PerkSortMenu: React.FC<PerkSortMenuProps> = ({ order, setOrder, buttonClassName }) => {
+export const PerkSortMenu: React.FC<PerkSortMenuProps> = ({ order, setOrder, className, buttonClassName }) => {
   const dict = useDictionary();
 
   const sortLabel = (direction: SortOrder) =>
@@ -34,6 +35,7 @@ export const PerkSortMenu: React.FC<PerkSortMenuProps> = ({ order, setOrder, but
       accent="primary"
       align="right"
       minWidthClass="min-w-44"
+      className={className}
       buttonClassName={buttonClassName}
     />
   );

@@ -95,18 +95,18 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
     >
       <h1 className="sr-only">{dict.filters.perks}</h1>
 
-      <div className="flex flex-wrap items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 lg:flex-nowrap lg:justify-between">
+      <div className="flex flex-col gap-2 px-3 py-3 sm:gap-3 sm:px-4 lg:flex-row lg:items-center lg:justify-between">
         <SegmentedControl
           ariaLabel={dict.filters.sortByRole}
           value={role}
           onChange={setRole}
           options={roleOptions}
           size="fill"
-          className={CONTROL_H}
+          className={`w-full sm:w-auto sm:self-start lg:self-auto ${CONTROL_H}`}
         />
 
         {/* Search, Filters and Sort are one group: the search sits right next to the filters it works with. */}
-        <div className="flex w-full flex-wrap items-center gap-2 sm:gap-3 lg:w-auto lg:flex-nowrap">
+        <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:gap-3 lg:w-auto">
           <PerkSearchBox
             rolePerks={rolePerks}
             search={search}
@@ -115,22 +115,26 @@ export const PerkFilters: React.FC<PerkFiltersProps> = ({
             onTypesChange={onTypesChange}
             suggestPerks
             typesInField={false}
-            className="relative z-40 min-w-56 flex-1 lg:w-96 lg:flex-none"
+            className="relative z-40 w-full sm:flex-1 lg:w-96 lg:flex-none"
           />
 
-          <PerkFilterMenu
-            perks={rolePerks}
-            activeTypes={activeTypes}
-            onTypesChange={onTypesChange}
-            typeCounts={typeCounts}
-            scopeFilter={{ ownershipFilter, setOwnershipFilter, isLoggedIn, scope, setScope }}
-          />
+          <div className="grid w-full grid-cols-2 items-center gap-2 sm:flex sm:w-auto sm:gap-3">
+            <PerkFilterMenu
+              perks={rolePerks}
+              activeTypes={activeTypes}
+              onTypesChange={onTypesChange}
+              typeCounts={typeCounts}
+              scopeFilter={{ ownershipFilter, setOwnershipFilter, isLoggedIn, scope, setScope }}
+              className="w-full sm:w-auto"
+            />
 
-          <PerkSortMenu
-            order={order}
-            setOrder={setOrder}
-            buttonClassName={CONTROL_HEIGHT}
-          />
+            <PerkSortMenu
+              order={order}
+              setOrder={setOrder}
+              className="w-full sm:w-auto"
+              buttonClassName={`w-full justify-between sm:w-auto ${CONTROL_HEIGHT}`}
+            />
+          </div>
         </div>
       </div>
     </Surface>

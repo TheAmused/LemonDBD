@@ -143,10 +143,10 @@ export function SegmentedControl<T extends string>({
               isActive ? 'text-accent-red' : 'text-text-primary hover:text-accent-red hover:bg-bg-elevated/60'
             )
           : cn(
-              'relative z-10 flex flex-1 cursor-pointer items-center justify-center gap-1 sm:gap-1.5 wide:gap-2 whitespace-nowrap pointer-coarse:min-h-11 rounded-control px-2 sm:px-3 wide:px-4 wide-2k:px-5 transition-colors duration-200',
+              'relative z-10 flex flex-1 cursor-pointer items-center justify-center text-center leading-none gap-1 sm:gap-1.5 wide:gap-2 whitespace-nowrap rounded-control px-2 sm:px-3 wide:px-4 wide-2k:px-5 transition-colors duration-200',
               padY,
               textSize,
-              size === 'fill' && 'px-4 sm:px-5 wide:px-6',
+              size === 'fill' ? 'h-full px-4 sm:px-5 wide:px-6' : 'pointer-coarse:min-h-11',
               isActive ? activeTextClass : opt.disabled ? 'cursor-not-allowed text-text-muted opacity-60' : 'text-text-primary hover:text-accent-red'
             );
 

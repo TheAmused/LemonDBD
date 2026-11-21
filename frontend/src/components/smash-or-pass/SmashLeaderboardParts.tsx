@@ -24,9 +24,6 @@ export interface TierConfig {
   range: string;
 }
 
-// LocalizedMetadata is gone: it described the duplicate `i18n` / `translations` blobs and
-// the `title` twin of `archetype`. EntityProfile (via localizedProfile) covers it now.
-
 interface CandidateRowProps {
   item: LeaderboardItem;
   index: number;
@@ -48,8 +45,7 @@ interface CandidateRowProps {
 }
 
 /**
- * Highly optimized, memoized candidate row for the Hall of Fame leaderboard.
- * Uses native title attributes for badges to avoid mounting hundreds of nested Tooltip portals.
+ * Compact, high-signal candidate row for the Hall of Fame leaderboard.
  */
 export const CandidateRow = React.memo<CandidateRowProps>(({
   item,
@@ -62,8 +58,6 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
   rawSmashDict,
   survivorLabel,
   killerLabel,
-  unratedLabel,
-  noVotesDesc,
   percentSign,
   votesWord,
   onSelectCharacter,
@@ -90,8 +84,7 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
   );
 
   const profile = localizedProfile(item.metadata, locale || 'en');
-  // `|| item.role` is the render-level default for an entity with no archetype yet.
-  const itemSubtitle = profile.archetype || profile.tagline || item.role;
+  const itemSubtitle = profile.archetype || profile.tagline || '';
 
   const candidateAriaLabel = rawSmashDict?.candidateRankLabel
     ? formatMessage(rawSmashDict.candidateRankLabel, { name: itemName, rank: index + 1, rate: smashRate })
@@ -111,147 +104,118 @@ export const CandidateRow = React.memo<CandidateRowProps>(({
         }
       }}
       aria-label={candidateAriaLabel}
-      className={`group relative flex w-full flex-col sm:flex-row items-stretch sm:items-center justify-between p-3.5 sm:p-4 rounded-card border text-left transition-all duration-150 select-none hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red gap-3.5 sm:gap-4 ${
+      className={`group relative flex w-full items-center p-2.5 sm:px-4 sm:py-3 rounded-card border text-left transition-all duration-150 select-none hover:shadow-lg active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red gap-2.5 sm:gap-3.5 ${
         hasUserSmashed
           ? 'bg-accent-red/10 border-accent-red/50 hover:border-accent-red'
-          : 'bg-bg-surface border-border-color hover:border-border-subtle hover:bg-bg-elevated hover:shadow-lg'
+          : 'bg-bg-surface border-border-color hover:border-border-subtle hover:bg-bg-elevated'
       }`}
     >
-      {/* Left Section: Rank + Avatar + Details */}
-      <div className="flex items-center gap-3.5 sm:gap-4 min-w-0 flex-1">
-        {/* Special Luxury Rank Medals for #1, #2, #3 */}
-        <div
-          className={`flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-card font-black text-xs sm:text-sm shrink-0 transition-transform group-hover:scale-105 ${
-            isTop3
-              ? index === 0
-                ? 'medal-gold'
-                : index === 1
-                  ? 'medal-silver'
-                  : 'medal-bronze'
-              : 'bg-bg-elevated text-text-muted border border-border-color'
-          }`}
-        >
-          {isTop3 ? (
-            index === 0 ? (
-              <RankFirstIcon className="icon-lg fill-current stroke-current" />
-            ) : (
-              <RankPlacedIcon className="icon-lg" />
-            )
+      {/* Rank Badge */}
+      <div
+        className={`flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-chip font-black text-xs sm:text-sm shrink-0 ${
+          isTop3
+            ? index === 0
+              ? 'medal-gold'
+              : index === 1
+                ? 'medal-silver'
+                : 'medal-bronze'
+            : 'bg-bg-elevated text-text-muted border border-border-color'
+        }`}
+      >
+        {isTop3 ? (
+          index === 0 ? (
+            <RankFirstIcon className="icon-md fill-current stroke-current" />
           ) : (
-            `#${index + 1}`
-          )}
-        </div>
+            <RankPlacedIcon className="icon-md" />
+          )
+        ) : (
+          `#${index + 1}`
+        )}
+      </div>
 
-        {/* Avatar Portrait */}
-        <Surface tone="elevated" padding="none" className="relative h-13 w-13 sm:h-14 sm:w-14 overflow-hidden shrink-0 shadow-inner group-hover:border-accent-red/50 transition-colors">
-          <MotionImg
-            src={avatarSrc}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            className="h-full w-full object-cover object-top"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              if (!target.dataset.triedFallback) {
-                target.dataset.triedFallback = '1';
-                target.src = `${backendBase}/static/avatars/survivors/sable_ward.webp`;
-              }
-            }}
-          />
-          {hasUserSmashed && (
-            <div
-              className="absolute top-1 right-1 flex h-4 w-4 items-center justify-center rounded-full bg-accent-red text-text-inverted ring-2 ring-bg-surface"
-              {...tip(rawSmashDict?.youSmashedThis || '', undefined, 'status')}
-              aria-label={rawSmashDict?.youSmashedThis || ''}
-            >
-              <HeartIcon className="icon-2xs fill-text-inverted text-text-inverted" />
-            </div>
-          )}
-        </Surface>
+      {/* Clean Avatar Portrait (no overlapping badges) */}
+      <Surface tone="elevated" padding="none" className="relative h-10 w-10 sm:h-12 sm:w-12 overflow-hidden shrink-0">
+        <MotionImg
+          src={avatarSrc}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover object-top"
+          onError={(e) => {
+            const target = e.target as HTMLImageElement;
+            if (!target.dataset.triedFallback) {
+              target.dataset.triedFallback = '1';
+              target.src = `${backendBase}/static/avatars/survivors/sable_ward.webp`;
+            }
+          }}
+        />
+      </Surface>
 
-        {/* Details: Name + Icon-Only Badges */}
-        <div className="min-w-0 text-left flex-1">
-          <div className="flex items-center gap-2 flex-wrap mb-1">
-            <span className="text-sm sm:text-base font-black text-text-primary group-hover:text-accent-red truncate">
+      {/* Main Content: Name + Rate on top, Progress Bar + Counts below */}
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className="text-sm sm:text-base font-bold text-text-primary group-hover:text-accent-red truncate">
               {itemName}
             </span>
-
-            {/* Role: text and colour, no icon */}
-            <Badge tone={isSurvivor ? 'green' : 'red'} size="xs" className="shrink-0">
+            {hasUserSmashed && (
+              <span
+                {...tip(rawSmashDict?.youSmashedThis || '', undefined, 'status')}
+                aria-label={rawSmashDict?.youSmashedThis || ''}
+                className="inline-flex shrink-0 text-accent-red"
+              >
+                <HeartIcon className="icon-xs fill-accent-red" />
+              </span>
+            )}
+            <Badge tone={isSurvivor ? 'green' : 'red'} size="xs" className="hidden sm:inline-flex shrink-0">
               {isSurvivor ? survivorLabel : killerLabel}
             </Badge>
-
-            {/* Tier Icon Badge or Unrated "?" Badge (Accessible native tooltip) */}
-            {tier ? (
+            {tier && (
               <span
                 {...tip(`${tier.name} (${tier.range})`, undefined, 'status')}
                 aria-label={`${tier.name} (${tier.range})`}
-                className={`flex h-6 w-6 items-center justify-center rounded-chip border shrink-0 transition-transform hover:scale-110 ${tier.style}`}
+                className={`hidden sm:flex h-5 w-5 items-center justify-center rounded-chip border shrink-0 ${tier.style}`}
               >
                 {tier.icon}
-              </span>
-            ) : (
-              <span
-                {...tip(`${unratedLabel} - ${noVotesDesc}`, undefined, 'status')}
-                aria-label={`${unratedLabel} - ${noVotesDesc}`}
-                className="flex h-6 w-6 items-center justify-center rounded-chip border border-border-color bg-bg-elevated text-text-muted type-strong shadow-inner shrink-0 transition-transform hover:scale-110"
-              >
-                ?
               </span>
             )}
           </div>
 
-          <p className="text-xs text-text-muted italic line-clamp-1">
+          <span className={`shrink-0 text-sm sm:text-base font-black tabular-nums ${hasVotes ? 'text-accent-red' : 'text-text-muted'}`}>
+            {hasVotes ? `${smashRate}${percentSign}` : '—'}
+          </span>
+        </div>
+
+        {itemSubtitle && (
+          <p className="hidden sm:line-clamp-1 text-xs text-text-muted mt-0.5">
             {itemSubtitle}
           </p>
-        </div>
-      </div>
+        )}
 
-      {/* Right Section: Visual Progress Bar + Smash Percentage + Vote Breakdown */}
-      <div className="flex items-center justify-between sm:justify-end gap-3.5 shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-border-color">
-        {/* Progress Bar */}
-        <div className="flex flex-col gap-1 w-28 sm:w-32 shrink-0">
-          <div className="flex items-center justify-between type-caption">
-            <span className={`font-bold flex items-center gap-1 ${hasVotes ? 'text-accent-red' : 'text-text-muted'}`}>
-              <HeartIcon className={`icon-xs ${hasVotes ? 'fill-accent-red text-accent-red' : 'text-text-muted'}`} />
-              {hasVotes ? `${smashRate}${percentSign}` : '—'}
-            </span>
-            <span className="text-text-muted">
-              {hasVotes ? `${100 - smashRate}${percentSign}` : '—'}
-            </span>
-          </div>
-
-          <div className="h-2 w-full rounded-full bg-bg-elevated overflow-hidden flex shadow-inner">
+        <div className="mt-1.5 flex items-center gap-2.5">
+          <div className="h-1.5 flex-1 rounded-full bg-bg-elevated overflow-hidden flex">
             {hasVotes ? (
-              <>
-                <div
-                  style={{ width: `${Math.max(4, Math.min(100, smashRate))}%` }}
-                  className="h-full bg-accent-red transition-all duration-300"
-                />
-                <div
-                  style={{ width: `${Math.max(0, 100 - smashRate)}%` }}
-                  className="h-full bg-border-color"
-                />
-              </>
+              <div
+                style={{ width: `${Math.max(3, Math.min(100, smashRate))}%` }}
+                className="h-full bg-accent-red transition-all duration-300"
+              />
             ) : (
               <div className="h-full w-full bg-border-color" />
             )}
           </div>
 
-          <span className="type-micro text-text-muted text-right">
-            {formatNumber(totalVotes)} {votesWord}
-          </span>
-        </div>
-
-        {/* Smashes / Passes Numeric Counts */}
-        <div className="text-right text-xs shrink-0 min-w-16.25">
-          <div className="flex items-center gap-1.5 justify-end text-accent-red font-black">
-            <HeartIcon className="icon-sm fill-accent-red" />
-            <span>{smashCount}</span>
-          </div>
-          <div className="flex items-center gap-1.5 justify-end text-text-muted type-strong-xs mt-0.5">
-            <PassIcon className="icon-xs text-text-muted" />
-            <span>{passCount}</span>
+          <div className="flex items-center gap-2 text-xs tabular-nums shrink-0">
+            <span className="flex items-center gap-1 text-accent-red font-bold">
+              <HeartIcon className="icon-xs fill-accent-red" />
+              {smashCount}
+            </span>
+            <span className="flex items-center gap-1 text-text-muted">
+              <PassIcon className="icon-xs text-text-muted" />
+              {passCount}
+            </span>
+            <span className="hidden sm:inline text-text-muted">
+              · {formatNumber(totalVotes)} {votesWord}
+            </span>
           </div>
         </div>
       </div>

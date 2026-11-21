@@ -38,7 +38,7 @@ export function SettingsClient() {
         <SettingRow icon={CampfireIcon} title={dict.settings.campfire} description={dict.settings.campfireDesc}>
           <fieldset
             aria-label={dict.settings.campfire}
-            className="flex shrink-0 items-center gap-2 border-0 p-0 m-0"
+            className="grid grid-cols-3 w-full sm:w-auto sm:flex shrink-0 items-center gap-2 border-0 p-0 m-0"
           >
             {campfireModes.map(({ mode, label }) => (
               <Button

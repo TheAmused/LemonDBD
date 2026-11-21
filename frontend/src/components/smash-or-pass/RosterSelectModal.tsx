@@ -88,29 +88,31 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
       ariaLabel={selectRosterTitle}
       closeButtonAriaLabel={dict.modal.close}
       backdrop="blur"
-      className="h-modal-roster max-h-237.5 min-h-145 max-w-roster-modal border-2 border-accent-red/35 rounded-card"
+      className="h-auto max-h-237.5 sm:h-modal-roster sm:min-h-145 max-w-roster-modal border-2 border-accent-red/35 rounded-card"
       bodyClassName="flex flex-col overflow-hidden"
     >
-      <div className="relative flex min-h-0 w-full flex-1 flex-col items-center justify-between overflow-hidden p-4 sm:p-6 md:p-8">
-        {/* Top Left: Filter Toggle (Official vs Custom) */}
-        <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-50">
-          <SegmentedControl<'official' | 'custom'>
-            ariaLabel={dict.smashOrPass.picker.officialTab}
-            size="sm"
-            value={filter}
-            onChange={handleFilterChange}
-            className="bg-bg-elevated/90 backdrop-blur-md"
-            options={[
-              { value: 'official', label: `${dict.smashOrPass.picker.officialTab} (${officialRosters.length})` },
-              { value: 'custom', label: `${dict.smashOrPass.picker.customTab} (${customRosters.length})` },
-            ]}
-          />
-        </div>
-
-        <div className="text-center pt-1 sm:pt-2 pb-3 space-y-3">
-          <h2 className="text-xl sm:text-3xl md:text-4xl font-black tracking-spaced-md sm:tracking-spaced-lg text-text-primary uppercase">
+      <div className="relative flex min-h-0 w-full flex-1 flex-col items-center justify-center gap-2.5 sm:gap-0 sm:justify-between overflow-hidden p-3.5 sm:p-6 md:p-8">
+        <div className="order-1 text-center pt-0.5 sm:pt-2 sm:pb-2 w-full">
+          <h2 className="w-fit mx-auto px-10 xl:px-0 text-lg sm:text-3xl md:text-4xl font-black tracking-spaced-sm sm:tracking-spaced-lg text-text-primary uppercase">
             {selectRosterTitle}
           </h2>
+        </div>
+
+        {/* Below xl (mobile, tablet, 1024px): inline bar under carousel [Import | Official/Custom | Delete]; on xl+ (1280px+): toggle top-left, actions under title */}
+        <div className="order-3 xl:order-1 flex items-center justify-between xl:justify-center gap-2 w-full xl:pb-3">
+          <div className="order-2 xl:order-none relative z-10 xl:z-20 flex justify-center xl:w-auto xl:absolute xl:top-6 xl:left-6">
+            <SegmentedControl<'official' | 'custom'>
+              ariaLabel={dict.smashOrPass.picker.officialTab}
+              size="sm"
+              value={filter}
+              onChange={handleFilterChange}
+              className="bg-bg-elevated/90 backdrop-blur-md"
+              options={[
+                { value: 'official', label: `${dict.smashOrPass.picker.officialTab} (${officialRosters.length})` },
+                { value: 'custom', label: `${dict.smashOrPass.picker.customTab} (${customRosters.length})` },
+              ]}
+            />
+          </div>
 
           <RosterHeaderActions
             activeRosterInCenter={activeRosterInCenter}
@@ -130,12 +132,12 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           onPointerUp={handlePointerUp}
           onPointerCancel={handlePointerUp}
           onClickCapture={handleClickCapture}
-          className={`relative w-full flex-1 min-h-0 flex items-center justify-center overflow-visible touch-none select-none my-2 [container-type:size] ${N > 1 ? 'cursor-grab active:cursor-grabbing' : ''}`}
+          className={`order-2 relative w-full h-76 sm:h-auto sm:flex-1 min-h-0 flex items-center justify-center overflow-visible touch-none select-none sm:my-3 [container-type:size] ${N > 1 ? 'cursor-grab active:cursor-grabbing' : ''}`}
           style={{
             perspective: 1200,
-            // The centred card is drawn at 1.06x; the carousel's own height (cqh) bounds it, so it never reaches the buttons above.
-            ['--card-h' as string]: 'clamp(260px, calc((100cqh - 1rem) / 1.06), 760px)',
-            ['--card-w' as string]: 'calc(var(--card-h) * 0.685)',
+            // Compact width on narrow phones (62% of container) so side cards & arrows stay visible.
+            ['--card-w' as string]: 'min(calc((100cqh - 0.5rem) / 1.06 * 0.685), calc(100cqw * 0.62))',
+            ['--card-h' as string]: 'calc(var(--card-w) / 0.685)',
           }}
           aria-label={selectRosterTitle}
         >
@@ -207,13 +209,7 @@ export const RosterSelectModal: React.FC<RosterSelectModalProps> = ({
           )}
         </section>
 
-        <div className="text-center pt-2 pb-1 space-y-2 sm:space-y-3">
-          {dict.smashOrPass.dwellHint && (
-            <p className="text-xs sm:text-sm md:text-base text-text-muted tracking-wide">
-              {dict.smashOrPass.dwellHint}
-            </p>
-          )}
-
+        <div className="order-4 text-center pt-2 pb-1 space-y-2 sm:space-y-3">
           {activeRosterInCenter && (
             <RosterPickerFooter
               roster={activeRosterInCenter}

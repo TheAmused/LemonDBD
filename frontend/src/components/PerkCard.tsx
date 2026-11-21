@@ -162,8 +162,8 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
                            constant, small fraction of the perk icon -- which
                            always stays the dominant, legible element. */
                         ? named
-                          ? 'h-[min(20cqh,20cqw)] w-[min(20cqh,20cqw)] max-h-11 max-w-11'
-                          : 'h-[min(30cqh,30cqw)] w-[min(30cqh,30cqw)] max-h-14 max-w-14'
+                          ? 'h-[min(26cqh,26cqw)] w-[min(26cqh,26cqw)] max-h-12 max-w-12'
+                          : 'h-[min(32cqh,32cqw)] w-[min(32cqh,32cqw)] max-h-14 max-w-14'
                         : 'h-9 w-9 sm:h-11 sm:w-11 md:h-12 md:w-12 lg:h-13 lg:w-13'
                 }`}
               >

@@ -71,7 +71,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
   return (
     <div className="pointer-events-none absolute inset-0 z-10 select-none">
       {/* 1. FLANKING WATERMARK TYPOGRAPHY (DUAL-IDENTITY: LEFT & RIGHT AROUND CARD) */}
-      <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 z-0 hidden @hub-lg/hub:flex items-center justify-center overflow-hidden">
         {/* Left Side: Watermark Left */}
         <div
           key={`watermark-left-${character.slug}`}
@@ -79,7 +79,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
           onMouseEnter={handleCardHover}
         >
           <FitText
-            minScale={0.5}
+            minScale={0.25}
             maxLines={4}
             wrapFirst
             disableTooltip
@@ -97,7 +97,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
           onMouseEnter={handleCardHover}
         >
           <FitText
-            minScale={0.5}
+            minScale={0.25}
             maxLines={4}
             wrapFirst
             disableTooltip
@@ -109,7 +109,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
       </div>
 
       {/* 2. LEFT FLANKING DOSSIER WING */}
-      <div className="pointer-events-none absolute left-2 sm:left-4 @hub-2xl/hub:left-6 top-below-smash-header bottom-12 hidden @hub-lg/hub:flex flex-col justify-between w-lore-column space-y-4 p-2 pt-3">
+      <div className="pointer-events-none absolute left-2 sm:left-4 @hub-2xl/hub:left-6 top-below-smash-header bottom-12 hidden @hub-lg/hub:grid grid-rows-2 items-center gap-4 w-lore-column p-2 pt-3">
         {/* Left Item 1: Trial Classification - Hidden for now */}
 
         {/* Left Item 2: Dating Archetype (Tilt Right +2deg & Crimson Flare) */}
@@ -169,7 +169,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
       </div>
 
       {/* 3. RIGHT FLANKING DOSSIER WING */}
-      <div className="pointer-events-none absolute right-2 sm:right-4 @hub-2xl/hub:right-6 top-below-smash-header bottom-12 hidden @hub-lg/hub:flex flex-col justify-between w-lore-column space-y-4 p-2 pt-3">
+      <div className="pointer-events-none absolute right-2 sm:right-4 @hub-2xl/hub:right-6 top-below-smash-header bottom-12 hidden @hub-lg/hub:grid grid-rows-2 items-center gap-4 w-lore-column p-2 pt-3">
         {/* Right Item 1: Identity Profile - Hidden for now */}
 
         {/* Right Item 2: Signature Quote (Tilt Left -1deg & Gold Halo) */}

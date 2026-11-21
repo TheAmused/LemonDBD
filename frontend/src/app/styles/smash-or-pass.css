@@ -22,11 +22,12 @@
 
 .smash-stage {
   --smash-shell: 4rem; /* mobile top bar; the sidebar layout has none */
-  --smash-pad: 1rem; /* <main> padding, top and bottom */
+  --smash-pad: 0.75rem; /* <main> padding, top and bottom */
   --smash-header: 10.5rem; /* the hub header at phone width (three rows) */
-  --smash-gaps: 3rem; /* gaps around the card, plus a little air under it */
+  --smash-drawer: 0rem; /* reserved space below header for slide-out filter drawer on md+ */
+  --smash-gaps: 1.5rem; /* gaps around the card */
   --smash-card-h: clamp(
-    25rem,
+    19rem,
     calc(100dvh - var(--smash-shell) - 2 * var(--smash-pad) - var(--smash-header) - var(--smash-gaps)),
     43.75rem
   );
@@ -35,14 +36,21 @@
 
 @media (min-width: 640px) {
   .smash-stage {
-    --smash-pad: 1.5rem;
+    --smash-pad: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .smash-stage {
+    --smash-drawer: 4rem;
+    --smash-gaps: 5.5rem;
   }
 }
 
 @media (min-width: 1024px) {
   .smash-stage {
     --smash-shell: 0rem;
-    --smash-pad: 2rem;
+    --smash-pad: 1.5rem;
   }
 }
 

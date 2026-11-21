@@ -15,6 +15,7 @@ import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
 
 import { Button } from '@/components/common/Button';
+import { TileButton } from '@/components/common/TileButton';
 import { tip } from '@/components/common/Tooltip';
 interface TierRowProps {
   tier: TierDefinition;
@@ -56,7 +57,7 @@ export const TierRow = React.memo(function TierRow({
   return (
     <section
       aria-label={formatMessage(t.tierAria, { label: tier.label })}
-      className="grid grid-cols-tier-label-xs phone-lg:grid-cols-tier-label-sm sm:max-wide-2k:grid-cols-tier-label-md wide-2k:grid-cols-tier-label-lg overflow-hidden rounded-card border border-border-color bg-bg-surface shadow-xs group-data-[fit]/board:grid-cols-[var(--badge-w)_minmax(0,1fr)]!"
+      className="flex-1 grid grid-cols-tier-label-xs phone-lg:grid-cols-tier-label-sm sm:max-wide-2k:grid-cols-tier-label-md wide-2k:grid-cols-tier-label-lg overflow-hidden rounded-card border border-border-color bg-bg-surface shadow-xs group-data-[fit]/board:grid-cols-[var(--badge-w)_minmax(0,1fr)]!"
     >
       {/* Clicking the badge or the row drops the selected tile here, a pointer shortcut
           for the row's own "Move here" button (role="presentation": no second control). */}
@@ -134,21 +135,18 @@ export const TierRow = React.memo(function TierRow({
       {onClearRow && (
         <div className="flex shrink-0 items-stretch border-l border-border-color/80 group-data-[fit-mode]/board:hidden">
           {keys.length > 0 ? (
-            <Button
-              type="button"
-              variant="danger"
-              size="sm"
-              icon
+            <TileButton
+              press={false}
               onClick={(e) => {
                 e.stopPropagation();
                 onClearRow(tier.id);
               }}
               {...tip(formatMessage(t.clearTierAria, { label: tier.label }), undefined, 'action')}
               aria-label={formatMessage(t.clearTierAria, { label: tier.label })}
-              className="w-11 sm:w-12 h-full"
+              className="flex w-11 sm:w-12 h-full items-center justify-center bg-accent-red/15 text-accent-red hover:bg-accent-red/25 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
             >
               <Eraser className="icon-lg sm:icon-xl shrink-0 transition-transform hover:scale-110" aria-hidden="true" />
-            </Button>
+            </TileButton>
           ) : (
             <span aria-hidden="true" className="w-11 sm:w-12" />
           )}

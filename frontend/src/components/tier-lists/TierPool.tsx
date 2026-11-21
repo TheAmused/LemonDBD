@@ -3,8 +3,8 @@
 
 import React, { useMemo, useState } from 'react';
 import { useDroppable } from '@dnd-kit/core';
-import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
-import { ArrowDownToLine, ChevronDown, X } from 'lucide-react';
+import { SortableContext, horizontalListSortingStrategy, rectSortingStrategy } from '@dnd-kit/sortable';
+import { ArrowDownToLine, ChevronDown, Maximize2, Minimize2, X } from 'lucide-react';
 import type { TierItem } from '@/types/tierList';
 import { cn } from '@/utils/cn';
 import { normalizeSearchText } from '@/utils/perkUtils';
@@ -53,7 +53,9 @@ export function TierPool({
   const dict = useDictionary();
   const t = dict.tierLists;
   const [query, setQuery] = useState<string>('');
+  const [expanded, setExpanded] = useState<boolean>(false);
   const { setNodeRef, isOver } = useDroppable({ id: containerDndId(POOL_CONTAINER_ID) });
+  const isHorizontalTray = !collapsed && !expanded;
 
   const visibleKeys = useMemo(() => {
     const needle = normalizeSearchText(query);
@@ -78,11 +80,12 @@ export function TierPool({
   return (
     <aside
       data-tier-pool=""
+      data-sticky-tray={isHorizontalTray ? 'true' : 'false'}
       aria-label={t.unranked}
       className={cn(
-        'w-full flex flex-col overflow-hidden border border-border-color bg-bg-surface shadow-xs rounded-card transition-all',
-        'shrink-0 bg-bg-surface/95 shadow-sm',
-        'group-data-[fit]/board:min-h-(--pool-min-total) group-data-[fit-mode]/board:max-h-(--pool-max-total)'
+        'group/tray sticky bottom-2 z-30 mt-auto w-full min-w-0 max-w-full flex flex-col overflow-hidden border border-border-color bg-bg-surface/95 backdrop-blur-xl shadow-2xl rounded-card transition-all',
+        'shrink-0',
+        'group-data-[fit-mode]/board:max-h-(--pool-max-total)'
       )}
     >
       {/* Header: search on the left (always reachable, even collapsed), title centred on the panel, collapse toggle on the right. */}
@@ -108,8 +111,8 @@ export function TierPool({
           data-pool-search=""
           className={cn(
             'relative z-10 col-span-3 row-start-2 cursor-auto sm:col-span-1 sm:col-start-1 sm:row-start-1 sm:max-w-xs',
-            // Nothing to search in an empty pool: drop the field and give its row back to the tiers.
-            keys.length === 0 && !query && 'hidden'
+            // Nothing to search in an empty pool, and keep collapsed bar slim unless filtering.
+            ((keys.length === 0 && !query) || (collapsed && !query)) && 'hidden'
           )}
         >
           <SearchInput
@@ -121,7 +124,7 @@ export function TierPool({
             }}
             placeholder={t.searchPool}
             aria-label={t.searchPoolAria}
-            className="h-8.5 bg-bg-primary pr-8 text-xs sm:text-sm"
+            className="h-8.5 bg-bg-primary pr-8 text-xs sm:text-sm [&::-webkit-search-cancel-button]:hidden"
           />
           {query && (
             <Button
@@ -139,30 +142,58 @@ export function TierPool({
           <h2 className="text-xs sm:text-sm font-black uppercase tracking-widest text-text-primary">
             {t.unranked}
           </h2>
+          <span className="rounded-chip bg-bg-elevated px-1.5 py-0.5 type-strong tabular-nums text-text-secondary">
+            {keys.length}
+          </span>
         </div>
 
-        {/* No onClick of its own: the click bubbles to the header, which toggles (keyboard Enter/Space included). */}
-        <button
-          type="button"
-          aria-expanded={!collapsed}
-          aria-label={collapsed ? t.showPool : t.hidePool}
-          className="relative z-10 col-start-3 row-start-1 justify-self-end flex min-h-10 min-w-10 items-center justify-center cursor-pointer select-none text-text-secondary hover:text-accent-red transition-colors"
-        >
-          <ChevronDown
-            className={`icon-md sm:icon-lg text-accent-red transition-transform duration-300 ease-in-out ${
-              collapsed ? 'rotate-0' : 'rotate-180'
-            }`}
-          />
-        </button>
+        {/* Right controls: expand to multi-row sheet + collapse toggle */}
+        <div className="relative z-10 col-start-3 row-start-1 justify-self-end flex items-center gap-0.5">
+          <button
+            type="button"
+            data-testid="pool-expand-toggle"
+            aria-pressed={expanded}
+            aria-label={expanded ? t.hidePool : t.showPool}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (collapsed) {
+                onCollapsedChange(false);
+                setExpanded(true);
+              } else {
+                setExpanded((prev) => !prev);
+              }
+            }}
+            className="flex min-h-10 min-w-10 items-center justify-center cursor-pointer select-none text-text-secondary hover:text-accent-amber transition-colors"
+          >
+            {expanded ? (
+              <Minimize2 className="icon-sm sm:icon-md" aria-hidden="true" />
+            ) : (
+              <Maximize2 className="icon-sm sm:icon-md" aria-hidden="true" />
+            )}
+          </button>
+          {/* No onClick of its own: the click bubbles to the header, which toggles (keyboard Enter/Space included). */}
+          <button
+            type="button"
+            aria-expanded={!collapsed}
+            aria-label={collapsed ? t.showPool : t.hidePool}
+            className="flex min-h-10 min-w-10 items-center justify-center cursor-pointer select-none text-text-secondary hover:text-accent-red transition-colors"
+          >
+            <ChevronDown
+              className={`icon-md sm:icon-lg text-accent-red transition-transform duration-300 ease-in-out ${
+                collapsed ? 'rotate-0' : 'rotate-180'
+              }`}
+            />
+          </button>
+        </div>
       </div>
 
       {/* Drawer Content */}
       <div
-        className={`grid min-h-0 flex-1 transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
-          !collapsed ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-        }`}
+        className={cn(
+          'min-h-0 min-w-0 overflow-hidden flex-col',
+          collapsed ? 'hidden' : 'flex flex-1'
+        )}
       >
-        <div className="min-h-0 overflow-hidden flex flex-col">
           {canReceiveSelection && (
             <div className="flex items-center justify-center border-t border-b border-border-color px-3 sm:px-4 py-2 bg-bg-surface/50">
               <Button
@@ -182,15 +213,31 @@ export function TierPool({
             role="presentation"
             onClick={canReceiveSelection ? () => onMoveSelectedHere(POOL_CONTAINER_ID) : undefined}
             className={cn(
-              'min-h-21 p-3 sm:p-4 transition-colors',
-              'group-data-[fit]/board:min-h-0! group-data-[fit]/board:p-(--tile-pad)!',
+              'w-full min-w-0 overscroll-contain transition-colors [scrollbar-width:thin]',
+              expanded
+                ? 'h-80 sm:h-96 overflow-y-auto p-3 sm:p-4'
+                : 'overflow-x-auto overflow-y-hidden px-3 py-2 sm:px-4 touch-pan-x',
+              'group-data-[fit]/board:p-(--tile-pad)!',
               'group-data-[fit-mode]/board:flex-1 group-data-[fit-mode]/board:overflow-y-auto group-data-[fit-mode]/board:overscroll-contain',
               isOver && 'bg-accent-red/10',
               canReceiveSelection && 'cursor-pointer hover:bg-accent-amber/5'
             )}
           >
-          <div className="flex flex-wrap content-start justify-start gap-1 phone-lg:gap-1.5 sm:gap-2 group-data-[fit]/board:gap-(--tile-gap)!">
-            <SortableContext items={visibleKeys.map(itemDndId)} strategy={rectSortingStrategy}>
+          <div
+            className={cn(
+              'gap-1.5 sm:gap-2 group-data-[fit]/board:gap-(--tile-gap)!',
+              expanded
+                ? 'flex flex-wrap content-start justify-center'
+                : cn(
+                    'grid grid-flow-col auto-cols-max items-start justify-start w-max min-w-full',
+                    visibleKeys.length <= 6 ? 'grid-rows-1' : 'grid-rows-2 lg:grid-rows-1'
+                  )
+            )}
+          >
+            <SortableContext
+              items={visibleKeys.map(itemDndId)}
+              strategy={expanded ? rectSortingStrategy : horizontalListSortingStrategy}
+            >
               {visibleKeys.map((key) => {
                 const item = itemsByKey.get(key);
                 return item ? (
@@ -211,12 +258,11 @@ export function TierPool({
             <EmptyState
               variant="inline"
               title={keys.length === 0 ? emptyLabel : t.poolNoMatches}
-              className="py-6 text-center"
+              className={expanded ? 'py-6 text-center' : 'py-2 text-center'}
             />
           )}
         </div>
       </div>
-    </div>
   </aside>
 );
 }

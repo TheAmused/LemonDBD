@@ -13,6 +13,7 @@ import React, { createContext, useContext, useEffect, useLayoutEffect, useMemo, 
 import { usePathname } from 'next/navigation';
 import { Sidebar } from '@/components/Sidebar';
 import { useLocale } from '@/context/DictionaryContext';
+import { cn } from '@/utils/cn';
 import { shellClasses, shellForPathname, type ShellSpec } from '@/components/layout/shellRoutes';
 
 type SetShellOverride = (spec: ShellSpec | false | null) => void;
@@ -57,7 +58,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {/* Keyed by its classes: a page with a different shell gets a fresh <main> instead of
               animating its padding (`transition-[padding]`) while its content swaps. The sidebar
               is a sibling, so it is untouched either way. */}
-          <main key={classes.main} ref={mainRef} id={classes.mainId} className={classes.main}>
+          <main key={classes.main} ref={mainRef} id={classes.mainId} className={cn(classes.main, 'min-w-0')}>
             {children}
           </main>
         </div>

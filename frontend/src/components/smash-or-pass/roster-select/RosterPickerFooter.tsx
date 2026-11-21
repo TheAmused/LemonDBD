@@ -33,32 +33,45 @@ export function RosterHeaderActions({
   const dict = useDictionary();
   const auth = useOptionalAuth();
   const isAdmin = Boolean(auth?.user?.role === 'admin');
+  const hasRightActions = Boolean(
+    activeRosterInCenter &&
+      (activeRosterInCenter.is_local
+        ? onExportRoster || onReportRoster || onDeleteRoster
+        : isAdmin && onDeleteRoster)
+  );
 
   return (
-    <div className="flex flex-wrap items-center justify-center gap-2 pt-0.5">
-      {onCreateRoster && (
-        <Button
-          type="button"
-          onClick={onCreateRoster}
-          variant="soft" size="sm" icon
-          className={TOUCH_HIDDEN}
-          {...tip(dict.smashOrPass.picker.createRoster, undefined, 'action')}
-          aria-label={dict.smashOrPass.picker.createRoster}
-        >
-          <Plus className="icon-md" aria-hidden="true" />
-        </Button>
+    <div className="contents xl:flex xl:flex-wrap xl:items-center xl:justify-center xl:gap-2 xl:pt-0.5">
+      {(onCreateRoster || onImportRoster) && (
+        <div className="order-1 xl:order-none flex items-center gap-1.5 shrink-0">
+          {onCreateRoster && (
+            <Button
+              type="button"
+              onClick={onCreateRoster}
+              variant="soft" size="sm" icon
+              className={TOUCH_HIDDEN}
+              {...tip(dict.smashOrPass.picker.createRoster, undefined, 'action')}
+              aria-label={dict.smashOrPass.picker.createRoster}
+            >
+              <Plus className="icon-md" aria-hidden="true" />
+            </Button>
+          )}
+          {onImportRoster && (
+            <Button
+              type="button"
+              onClick={onImportRoster}
+              variant="secondary" size="sm" icon
+              {...tip(dict.smashOrPass.picker.importRoster, undefined, 'action')}
+              aria-label={dict.smashOrPass.picker.importRoster}
+            >
+              <UploadIcon className="icon-md" aria-hidden="true" />
+            </Button>
+          )}
+        </div>
       )}
-      {onImportRoster && (
-        <Button
-          type="button"
-          onClick={onImportRoster}
-          variant="secondary" size="sm" icon
-          {...tip(dict.smashOrPass.picker.importRoster, undefined, 'action')}
-          aria-label={dict.smashOrPass.picker.importRoster}
-        >
-          <UploadIcon className="icon-md" aria-hidden="true" />
-        </Button>
-      )}
+
+      {(hasRightActions || onImportRoster) && (
+        <div className="order-3 xl:order-none flex items-center justify-end gap-1.5 shrink-0 min-w-8 xl:min-w-0">
 
       {activeRosterInCenter?.is_local && (
         <>
@@ -136,6 +149,8 @@ export function RosterHeaderActions({
             </Button>
           )}
         </>
+      )}
+        </div>
       )}
     </div>
   );

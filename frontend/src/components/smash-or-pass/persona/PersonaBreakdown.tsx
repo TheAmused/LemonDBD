@@ -134,7 +134,7 @@ export function PersonaBreakdown({ persona, isSharedView, onShare, onClose, onRe
       </section>
 
       {/* Bottom Actions */}
-      <section className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+      <section className="flex flex-row items-center gap-3">
         {isSharedView ? (
             <Button
               variant="primary" size="md"

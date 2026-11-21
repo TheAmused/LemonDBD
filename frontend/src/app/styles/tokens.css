@@ -431,7 +431,7 @@
 
 /* Where the Smash lore sits around the card. */
 @utility top-lore { top: 44%; }
-@utility top-below-smash-header { top: calc(var(--smash-header) + 1rem); }
+@utility top-below-smash-header { top: calc(var(--smash-header) + var(--smash-drawer, 0rem) + 1rem); }
 @utility inset-diamond-inner { inset: 14.65%; }
 
 /* Auto-fill grids of tiles, wider tiles on wider screens: xs, sm, md, lg, xl. */

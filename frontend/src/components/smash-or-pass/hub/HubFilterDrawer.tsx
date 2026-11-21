@@ -52,7 +52,7 @@ export function HubFilterDrawer({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -6, scale: 0.99 }}
           transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-          className="absolute top-full left-0 right-0 mt-2 z-40 p-2.5 sm:p-3 rounded-card bg-bg-surface/95 border border-border-color backdrop-blur-2xl shadow-2xl"
+          className="absolute top-full left-0 right-0 mx-auto w-full md:w-fit md:max-w-full mt-2 z-40 p-2.5 sm:p-3 rounded-card bg-bg-surface/95 border border-border-color backdrop-blur-2xl shadow-2xl"
         >
           <div className="flex flex-col md:flex-row items-center justify-between gap-2.5 sm:gap-3">
             {/* Role Segmented Switch */}

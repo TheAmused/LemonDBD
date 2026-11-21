@@ -27,7 +27,7 @@ test('SmashOrPass: API Service Layer & Types', async (t) => {
       {
         id: 'r-1',
         slug: 'canon',
-        name: 'Dead by Daylight: Fog Canon',
+        name: 'Fog Canon',
         description: 'Official 98 Characters',
         theme_color: '#ff0055',
         category: 'DBD Canon',

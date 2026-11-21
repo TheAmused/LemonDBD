@@ -37,8 +37,16 @@ export function useCardDrag({ isTopCard, isExiting, isFlipped, initialExitOffset
     if (exitFrom !== null && initialExitOffset) setDragOffset(initialExitOffset);
   });
 
+  // Reset tilt and drag whenever the card flips so emulated mousemove from a mobile tap never leaves it tilted.
+  useOnValueChange(isFlipped, () => {
+    setTilt(FLAT);
+    setDragOffset({ x: 0, y: 0 });
+    setIsDragging(false);
+  });
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isTopCard || isDragging || isExiting || isFlipped || !cardRef.current) return;
+    if (typeof window !== 'undefined' && window.matchMedia && !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;

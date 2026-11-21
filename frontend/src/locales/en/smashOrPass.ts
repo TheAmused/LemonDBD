@@ -10,7 +10,6 @@ export default {
   smash: 'Smash',
   superSmash: 'Super Smash',
   streak: 'Streak',
-  dwellHint: 'Grab and spin. Whatever card is in the center will be chosen.',
   candidates: 'candidates',
   candidatesWord: 'candidates',
   votes: 'votes',
@@ -54,7 +53,7 @@ export default {
   roleAffinity: 'Faction Affinity Balance',
   totalEvaluated: 'Total Evaluated:',
   copiedToClipboard: 'Copied to Clipboard!',
-  shareArchetype: 'Share Archetype',
+  shareArchetype: 'Share',
   godTier: 'God Tier',
   fatalAttraction: 'Fatal Attraction',
   friendzone: 'Friendzone',
@@ -69,7 +68,7 @@ export default {
   reset: 'Reset',
   rosters: {
     canon: {
-      name: 'Dead by Daylight: Fog Canon',
+      name: 'Fog Canon',
       description: 'Original trial survivors and killers from the canon realm.',
     },
     hoy: {

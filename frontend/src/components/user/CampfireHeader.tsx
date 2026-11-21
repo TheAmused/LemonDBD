@@ -119,6 +119,7 @@ export const CampfireHeader: React.FC<CampfireHeaderProps> = ({
             ownership={ownership}
             compact={false}
             hideTitle={false}
+            className="w-full"
           />
         </div>
       </div>

@@ -218,7 +218,7 @@ export const FitText: React.FC<FitTextProps> = ({
   const innerStyle: React.CSSProperties = {
     fontSize: `${fit.scale}em`,
     whiteSpace: fit.mode === 'wrap' ? 'normal' : 'nowrap',
-    overflowWrap: fit.mode === 'single' || (wrapFirst && fit.mode === 'wrap') ? 'normal' : 'break-word',
+    overflowWrap: fit.mode === 'single' || wrapFirst ? 'normal' : 'break-word',
     ...(clamped && maxLines <= 1
       ? { overflow: 'hidden', textOverflow: 'ellipsis' }
       : clamped

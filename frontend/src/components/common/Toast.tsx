@@ -3,9 +3,11 @@
 // A notice pinned to the top right corner ("draft restored", "saved"). One look and one position, so
 // every toast in the app appears in the same place. The caller decides when it is shown.
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Surface } from '@/components/common/Surface';
+import { useIsClient } from '@/hooks/useIsClient';
 import { cn } from '@/utils/cn';
 
 export type ToastTone = 'amber' | 'red' | 'green' | 'amberSolid';
@@ -33,6 +35,7 @@ export interface ToastProps {
 
 export function Toast({ tone = 'amber', align = 'right', icon, message, actions, onDismiss, autoDismissMs, dismissLabel }: ToastProps) {
   const t = TONES[tone];
+  const mounted = useIsClient();
   useEffect(() => {
     if (!autoDismissMs || !onDismiss) return;
     const timer = window.setTimeout(onDismiss, autoDismissMs);
@@ -45,7 +48,7 @@ export function Toast({ tone = 'amber', align = 'right', icon, message, actions,
       padding="none"
       className={cn(
         'z-50 flex w-toast max-w-md items-center gap-3 bg-bg-surface/95 p-3 text-xs font-semibold text-text-primary shadow-2xl backdrop-blur-xl animate-in fade-in slide-in-from-top-4 duration-300 sm:w-auto sm:text-sm 2xl:p-4 2xl:text-base',
-        align === 'right' ? 'fixed top-5 right-5' : 'pointer-events-auto w-auto',
+        align === 'right' ? 'fixed top-20 right-4 sm:right-5 lg:top-5' : 'pointer-events-auto w-auto',
         t.border
       )}
     >
@@ -59,10 +62,14 @@ export function Toast({ tone = 'amber', align = 'right', icon, message, actions,
       )}
     </Surface>
   );
-  if (align === 'right') return toast;
-  return (
-    <div className="pointer-events-none fixed left-[var(--sidebar-width,0rem)] right-0 top-6 z-50 flex justify-center px-4 transition-[left] duration-300">
-      {toast}
-    </div>
-  );
+  const node =
+    align === 'right' ? (
+      toast
+    ) : (
+      <div className="pointer-events-none fixed left-[var(--sidebar-width,0rem)] right-0 top-20 lg:top-6 z-50 flex justify-center px-4 transition-[left] duration-300">
+        {toast}
+      </div>
+    );
+  if (!mounted || typeof document === 'undefined') return node;
+  return createPortal(node, document.body);
 }

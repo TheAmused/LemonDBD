@@ -302,11 +302,31 @@ export const Tooltip: React.FC<TooltipProps> = ({
 }) => {
   // The trigger the pointer or focus is on; the bubble shows while there is one.
   const [anchor, setAnchor] = useState<HTMLSpanElement | null>(null);
+  const suppressedRef = useRef(false);
   const show = (e: React.SyntheticEvent<HTMLSpanElement>) => {
-    if (!touchInput) setAnchor(e.currentTarget);
+    if (touchInput || suppressedRef.current) return;
+    if (e.type === 'focus' && !(e.target as HTMLElement).matches?.(':focus-visible')) return;
+    setAnchor(e.currentTarget);
   };
-  const hide = () => setAnchor(null);
+  const hide = () => {
+    suppressedRef.current = false;
+    setAnchor(null);
+  };
+  const suppressOnPress = () => {
+    suppressedRef.current = true;
+    setAnchor(null);
+  };
   useEffect(watchInput, []);
+  useEffect(() => {
+    if (!anchor) return;
+    const dismiss = () => setAnchor(null);
+    document.addEventListener('pointerdown', dismiss, true);
+    document.addEventListener('click', dismiss, true);
+    return () => {
+      document.removeEventListener('pointerdown', dismiss, true);
+      document.removeEventListener('click', dismiss, true);
+    };
+  }, [anchor]);
 
   if (disabled || (!title && !content)) return <>{children}</>;
 
@@ -317,6 +337,7 @@ export const Tooltip: React.FC<TooltipProps> = ({
       onMouseLeave={hide}
       onFocus={show}
       onBlur={hide}
+      onPointerDownCapture={suppressOnPress}
     >
       {children}
       {anchor && (
@@ -366,11 +387,13 @@ export const TooltipProvider: React.FC = () => {
 
     watchInput();
 
+    let suppressedEl: HTMLElement | null = null;
+
     const show = (e: Event) => {
       const el = find(e.target);
       if (!el) return;
       // A tap emulates mouseover and a long press focuses the control: neither is a hover.
-      if (touchInput) return;
+      if (touchInput || suppressedEl === el) return;
       // Focus shows the bubble only for keyboard focus; pointer hover has its own event.
       if (e.type === 'focusin' && !(e.target as HTMLElement).matches?.(':focus-visible')) return;
       const next = read(el);
@@ -382,32 +405,35 @@ export const TooltipProvider: React.FC = () => {
       if (!el) return;
       const related = (e as MouseEvent).relatedTarget;
       if (related instanceof Node && el.contains(related)) return;
+      if (suppressedEl === el) suppressedEl = null;
       setActive((prev) => (prev?.el === el ? null : prev));
     };
 
     const dismiss = () => setActive(null);
-    // Registered after watchInput's own listener, so touchInput is already current here.
-    const dismissOnTouch = () => {
-      if (touchInput) dismiss();
+    const suppressOnPointerDown = (e: Event) => {
+      suppressedEl = find(e.target);
+      dismiss();
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') dismiss();
     };
 
-    document.addEventListener('pointerdown', dismissOnTouch, true);
+    document.addEventListener('pointerdown', suppressOnPointerDown, true);
     document.addEventListener('mouseover', show);
     document.addEventListener('focusin', show);
     document.addEventListener('mouseout', hide);
     document.addEventListener('focusout', hide);
     document.addEventListener('mousedown', dismiss);
+    document.addEventListener('click', dismiss, true);
     document.addEventListener('keydown', onKey);
     return () => {
-      document.removeEventListener('pointerdown', dismissOnTouch, true);
+      document.removeEventListener('pointerdown', suppressOnPointerDown, true);
       document.removeEventListener('mouseover', show);
       document.removeEventListener('focusin', show);
       document.removeEventListener('mouseout', hide);
       document.removeEventListener('focusout', hide);
       document.removeEventListener('mousedown', dismiss);
+      document.removeEventListener('click', dismiss, true);
       document.removeEventListener('keydown', onKey);
     };
   }, []);

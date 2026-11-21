@@ -196,7 +196,7 @@ export const BugReportModal: React.FC<BugReportModalProps> = ({ isOpen, onClose,
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      variant="sheet"
+      variant="dialog"
       size={isSuccess ? 'sm' : 'xl'}
       title={isSuccess ? undefined : t.bugReportModalTitle || ''}
       ariaLabel={(isSuccess ? t.bugSuccessMessage : t.bugReportModalTitle) || 'Bug report'}

@@ -30,8 +30,15 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
 
   if (perks.length === 0) return null;
 
+  const gridColsClass =
+    perks.length === 1
+      ? 'grid-cols-1'
+      : perks.length === 2
+        ? 'grid-cols-2'
+        : 'grid-cols-3';
+
   return (
-    <div className="my-auto grid w-full grid-cols-fit-perk gap-4 pt-2 sm:gap-6">
+    <div className={`my-auto grid w-full ${gridColsClass} gap-2.5 pt-2 sm:gap-6`}>
       {perks.map((perk, idx) => {
         const iconSrc = getAssetThumbUrl(backendBase, perk.icon_local_path, perk.icon_url, 256);
 
@@ -50,7 +57,7 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
                   icon_local_path: perk.icon_local_path || '',
                 })
               }
-              className="flex w-full max-w-40 flex-col items-center gap-2 rounded-control p-1 transition-all duration-300"
+              className="flex w-full max-w-40 flex-col items-center gap-1.5 sm:gap-2 rounded-control p-1 transition-all duration-300"
               aria-label={`${perk.name} - ${t.clickToInspect}`}
             >
               <Img
@@ -62,7 +69,7 @@ export const CharacterPerksSection: React.FC<CharacterPerksSectionProps> = ({
                 loading="lazy"
                 onError={fallbackThroughSources(getAssetUrl(backendBase, perk.icon_local_path, perk.icon_url))}
               />
-              <span className="line-clamp-2 min-h-10 text-center type-card-title text-text-primary">{perk.name}</span>
+              <span className="line-clamp-2 min-h-8 sm:min-h-10 text-center type-strong-fluid text-text-primary">{perk.name}</span>
             </TileButton>
 
             {perk.is_disabled && (

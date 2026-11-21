@@ -269,76 +269,108 @@ export const SmashLeaderboardModal: React.FC<SmashLeaderboardModalProps> = ({
       className="h-modal-panel max-h-212.5 min-h-120"
       bodyClassName="flex flex-col"
     >
-      {editionName && (
-        <p className="shrink-0 truncate bg-bg-elevated px-4 pt-3 text-center type-strong text-text-secondary">{editionName}</p>
-      )}
-      {/* SINGLE HORIZONTAL FILTER & SEARCH TOOLBAR */}
-      <div className="p-3.5 sm:p-4 bg-bg-elevated border-b border-border-color shrink-0">
-        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
-          {/* 1. Search Bar */}
-          <div className="relative flex-1 min-w-35">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 icon-sm text-text-muted" aria-hidden="true" />
-            <Input
-              fieldSize="sm"
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={searchPlaceholder}
-              aria-label={searchPlaceholder}
-              className="pl-9 pr-8"
-            />
-            {searchQuery && (
-              <Button
-                variant="ghost" size="xs" icon
-                onClick={() => setSearchQuery('')}
-                aria-label={dict.filters.clearSearch}
-                className="absolute right-1.5 top-1/2 -translate-y-1/2"
+      {/* SINGLE COMPACT FILTER & SEARCH TOOLBAR */}
+      <div className="px-3 pb-3 pt-2 sm:p-4 bg-bg-elevated border-b border-border-color shrink-0 space-y-2">
+        {editionName && (
+          <p className="truncate text-center type-strong text-text-muted">{editionName}</p>
+        )}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+          {/* 1. Search Bar + View Mode on mobile */}
+          <div className="flex items-center gap-2 w-full sm:w-auto sm:flex-1">
+            <div className="relative flex-1 min-w-0">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 icon-sm text-text-muted" aria-hidden="true" />
+              <Input
+                fieldSize="sm"
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={dict.filters.searchPlaceholder}
+                aria-label={searchPlaceholder}
+                className="pl-9 pr-8"
+              />
+              {searchQuery && (
+                <Button
+                  variant="ghost" size="xs" icon
+                  onClick={() => setSearchQuery('')}
+                  aria-label={dict.filters.clearSearch}
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2"
+                >
+                  <X />
+                </Button>
+              )}
+            </div>
+
+            {/* Mobile View Mode Toggle */}
+            <div className="sm:hidden shrink-0">
+              <Tooltip variant="action"
+                title={viewMode === 'flat' ? groupByTierLabel : rankedListLabel}
+                description={
+                  viewMode === 'flat'
+                    ? (rawSmashDict.tooltips.groupByTierDesc)
+                    : (rawSmashDict.tooltips.rankedListDesc)
+                }
+                placement="bottom"
               >
-                <X />
-              </Button>
-            )}
+                <Button
+                  variant={viewMode === 'grouped' ? 'soft' : 'secondary'} size="sm" icon
+                  onClick={() => setViewMode(viewMode === 'flat' ? 'grouped' : 'flat')}
+                  aria-label={viewMode === 'flat' ? groupByTierLabel : rankedListLabel}
+                  className="h-9 w-9"
+                >
+                  <Layers className="icon-sm" />
+                </Button>
+              </Tooltip>
+            </div>
           </div>
 
-          {/* 2. Custom Gender Dropdown */}
-          <CustomDropdown<'all' | 'female' | 'male' | 'monster_other'>
-            value={genderFilter}
-            onChange={setGenderFilter}
-            options={genderOptions}
-            icon={<User className="icon-sm" />}
-            ariaLabel={allGendersLabel}
-            minWidthClass="min-w-42.5"
-          />
+          <div className="grid grid-cols-2 sm:flex items-center gap-2 w-full sm:w-auto">
+            {/* 2. Custom Gender Dropdown */}
+            <CustomDropdown<'all' | 'female' | 'male' | 'monster_other'>
+              value={genderFilter}
+              onChange={setGenderFilter}
+              options={genderOptions}
+              icon={<User className="icon-sm" />}
+              ariaLabel={allGendersLabel}
+              minWidthClass="min-w-42.5"
+              className="w-full sm:w-auto"
+              buttonClassName="w-full justify-between sm:w-auto"
+            />
 
-          {/* 3. Custom Sort Dropdown */}
-          <CustomDropdown<'smash_rate' | 'total_votes' | 'smash_count'>
-            value={sortBy}
-            onChange={setSortBy}
-            options={sortOptions}
-            icon={<ArrowDownUp className="icon-sm" />}
-            ariaLabel={sortSmashRateLabel}
-            minWidthClass="min-w-40"
-            align="right"
-          />
+            {/* 3. Custom Sort Dropdown */}
+            <CustomDropdown<'smash_rate' | 'total_votes' | 'smash_count'>
+              value={sortBy}
+              onChange={setSortBy}
+              options={sortOptions}
+              icon={<ArrowDownUp className="icon-sm" />}
+              ariaLabel={sortSmashRateLabel}
+              minWidthClass="min-w-40"
+              align="right"
+              className="w-full sm:w-auto"
+              buttonClassName="w-full justify-between sm:w-auto"
+            />
 
-          {/* 4. View Mode Toggle with Reusable Tooltip Component */}
-          <Tooltip variant="action"
-            title={viewMode === 'flat' ? groupByTierLabel : rankedListLabel}
-            description={
-              viewMode === 'flat'
-                ? (rawSmashDict.tooltips.groupByTierDesc)
-                : (rawSmashDict.tooltips.rankedListDesc)
-            }
-            placement="bottom"
-          >
-            <Button
-              variant={viewMode === 'grouped' ? 'soft' : 'secondary'} size="sm" icon
-              onClick={() => setViewMode(viewMode === 'flat' ? 'grouped' : 'flat')}
-              aria-label={viewMode === 'flat' ? groupByTierLabel : rankedListLabel}
-              className="h-8 w-8 sm:h-9 sm:w-9"
-            >
-              <Layers className="icon-sm sm:icon-md" />
-            </Button>
-          </Tooltip>
+            {/* 4. Desktop View Mode Toggle */}
+            <div className="hidden sm:block shrink-0">
+              <Tooltip variant="action"
+                title={viewMode === 'flat' ? groupByTierLabel : rankedListLabel}
+                description={
+                  viewMode === 'flat'
+                    ? (rawSmashDict.tooltips.groupByTierDesc)
+                    : (rawSmashDict.tooltips.rankedListDesc)
+                }
+                placement="bottom"
+              >
+                <Button
+                  variant={viewMode === 'grouped' ? 'soft' : 'secondary'} size="sm" icon
+                  onClick={() => setViewMode(viewMode === 'flat' ? 'grouped' : 'flat')}
+                  aria-label={viewMode === 'flat' ? groupByTierLabel : rankedListLabel}
+                  className="h-9 w-9"
+                >
+                  <Layers className="icon-md" />
+                </Button>
+              </Tooltip>
+            </div>
+          </div>
         </div>
       </div>
 

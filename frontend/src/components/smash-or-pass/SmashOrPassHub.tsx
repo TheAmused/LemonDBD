@@ -150,7 +150,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
 
   return (
     <div
-      className={`relative min-h-screen-smash flex flex-col justify-start space-y-3 pb-12 overflow-x-clip ${
+      className={`relative flex-1 min-h-0 flex flex-col justify-start space-y-2 sm:space-y-3 overflow-x-clip ${
         effectsEnabled ? '' : '[&_*]:animate-none!'
       }`}
     >
@@ -205,6 +205,7 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
             isFilterDrawerOpen={overlays.isFilterDrawerOpen}
             onOpenRosters={() => overlays.setIsRosterModalOpen(true)}
             onToggleFilters={() => overlays.setIsFilterDrawerOpen((prev) => !prev)}
+            onCloseFilters={() => overlays.setIsFilterDrawerOpen(false)}
             onOpenEffects={() => overlays.setIsSettingsOpen(true)}
             onOpenPersona={() => overlays.setIsPersonaOpen(true)}
             onOpenLeaderboard={() => overlays.setIsLeaderboardOpen(true)}
@@ -237,29 +238,31 @@ export const SmashOrPassHub: React.FC<SmashOrPassHubProps> = ({ locale = 'en' })
               />
             </div>
           ) : (
-            <CardArena
-              activeRoster={activeRoster}
-              selectedRosterSlug={selectedRosterSlug}
-              nsfwAcknowledged={rosters.nsfwAcknowledged}
-              loading={deck.loading}
-              currentCharacter={deck.currentCharacter}
-              nextCharacter={deck.nextCharacter}
-              thirdCharacter={deck.thirdCharacter}
-              currentIndex={deck.currentIndex}
-              locale={locale}
-              dragPhysics={exit.dragPhysics}
-              isExiting={exit.isExiting}
-              exitVote={exit.exitVote}
-              exitOffset={exit.exitOffset}
-              effectsEnabled={effectsEnabled}
-              sessionSmashes={sessionSmashes}
-              sessionPasses={sessionPasses}
-              onAcknowledgeNsfw={rosters.handleAcknowledgeNsfw}
-              onVote={castVote}
-              onDragUpdate={(x, y, isDragging) => exit.setDragPhysics({ x, y, isDragging })}
-              onOpenPersona={() => overlays.setIsPersonaOpen(true)}
-              onReset={() => setIsResetConfirmOpen(true)}
-            />
+            <div className="flex-1 min-h-0 flex flex-col justify-center md:pt-14">
+              <CardArena
+                activeRoster={activeRoster}
+                selectedRosterSlug={selectedRosterSlug}
+                nsfwAcknowledged={rosters.nsfwAcknowledged}
+                loading={deck.loading}
+                currentCharacter={deck.currentCharacter}
+                nextCharacter={deck.nextCharacter}
+                thirdCharacter={deck.thirdCharacter}
+                currentIndex={deck.currentIndex}
+                locale={locale}
+                dragPhysics={exit.dragPhysics}
+                isExiting={exit.isExiting}
+                exitVote={exit.exitVote}
+                exitOffset={exit.exitOffset}
+                effectsEnabled={effectsEnabled}
+                sessionSmashes={sessionSmashes}
+                sessionPasses={sessionPasses}
+                onAcknowledgeNsfw={rosters.handleAcknowledgeNsfw}
+                onVote={castVote}
+                onDragUpdate={(x, y, isDragging) => exit.setDragPhysics({ x, y, isDragging })}
+                onOpenPersona={() => overlays.setIsPersonaOpen(true)}
+                onReset={() => setIsResetConfirmOpen(true)}
+              />
+            </div>
           )}
         </div>
       </div>

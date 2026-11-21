@@ -1,10 +1,10 @@
 'use client';
 // frontend/src/components/smash-or-pass/hub/HubHeader.tsx
-import { useRef, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { BarChart2, ChevronDown, SlidersHorizontal, Settings, Shuffle, RotateCcw, Ellipsis, User, HelpCircle } from 'lucide-react';
 import { Tooltip } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
-import { MENU_PANEL_CLASS, Popover, popoverTriggerProps } from '@/components/common/Popover';
+import { TileButton } from '@/components/common/TileButton';
 import {
   CardStackIcon,
   HeartIcon,
@@ -12,13 +12,8 @@ import {
 } from '@/components/icons/DbdIcons';
 import { useDictionary } from '@/context/DictionaryContext';
 import type { RosterItem } from '@/types/smashOrPass';
-import { getBackendBaseUrl } from '@/utils/perkUtils';
 import { isLocalRosterSlug } from '@/utils/smashOrPass/rosterSlug';
-import { rosterCoverUrl } from '../roster-select/rosterDisplay';
-import { getCommunityCoverThumbUrl } from '@/utils/thumbUrl';
-import { Badge } from '@/components/common/Badge';
-import { MenuItem } from '@/components/common/MenuItem';
-import { MotionImg } from '@/components/common/MotionImg';
+import { HubActionsDrawer, type HubDrawerAction } from './HubActionsDrawer';
 
 /** Square icon buttons: 44px to touch, a little smaller where a pointer is precise. */
 const DOCK_BUTTON =
@@ -64,6 +59,7 @@ interface HubHeaderProps {
   isFilterDrawerOpen: boolean;
   onOpenRosters: () => void;
   onToggleFilters: () => void;
+  onCloseFilters?: () => void;
   onOpenEffects: () => void;
   onOpenPersona: () => void;
   onOpenLeaderboard: () => void;
@@ -78,7 +74,6 @@ interface HubHeaderProps {
 export function HubHeader({
   activeRoster,
   rosterName,
-  rosterBadgeCount,
   remainingInDeck,
   sessionSmashes,
   sessionPasses,
@@ -87,6 +82,7 @@ export function HubHeader({
   isFilterDrawerOpen,
   onOpenRosters,
   onToggleFilters,
+  onCloseFilters,
   onOpenEffects,
   onOpenPersona,
   onOpenLeaderboard,
@@ -101,76 +97,74 @@ export function HubHeader({
   // Custom rosters live in this browser only, so they have no Hall of Fame.
   const hasLeaderboard = !isLocalRosterSlug(activeRoster.slug);
 
-  const moreRef = useRef<HTMLButtonElement>(null);
   const [moreOpen, setMoreOpen] = useState(false);
-  const fromMore = (action: () => void) => () => {
+  const handleToggleFilters = () => {
     setMoreOpen(false);
-    action();
+    onToggleFilters();
+  };
+  const handleToggleMore = () => {
+    if (!moreOpen && isFilterDrawerOpen) onCloseFilters?.();
+    setMoreOpen((open) => !open);
   };
 
-  // Shuffle, reset and help live in the "More" menu below 640px of hub width and as buttons above it.
+  // Secondary actions show inline on @hub-sm/hub+ and @hub-md/hub+; on narrow phones they live in the slide-out drawer.
   const WIDE_ONLY = 'hidden @hub-md/hub:flex';
+
+  const drawerActions: HubDrawerAction[] = [
+    ...(hasLeaderboard
+      ? [{ key: 'leaderboard', label: tooltips.leaderboard, Icon: BarChart2, onClick: onOpenLeaderboard, variant: 'secondary' as const }]
+      : []),
+    { key: 'archetype', label: tooltips.archetype, Icon: User, onClick: onOpenPersona, variant: 'secondary' },
+    { key: 'effects', label: dict.smashOrPass.effectsPrefs.button, Icon: Settings, onClick: onOpenEffects, variant: 'secondary' },
+    { key: 'shuffle', label: tooltips.shuffle, Icon: Shuffle, onClick: onShuffle, variant: 'secondary' },
+    { key: 'help', label: tooltips.howToPlay, Icon: HelpCircle, onClick: onOpenHowToPlay, variant: 'secondary' },
+    { key: 'reset', label: tooltips.resetAllVotes, Icon: RotateCcw, onClick: onReset, variant: 'soft' },
+  ];
 
   return (
     <header
       data-hub-header=""
-      className={`relative ${isFilterDrawerOpen ? 'z-40' : 'z-30'} mx-auto w-full max-w-6xl rounded-card bg-bg-surface border border-border-color backdrop-blur-2xl p-2.5 @hub-sm/hub:p-4 @hub-xl/hub:p-5 transition-all`}
+      className={`relative ${isFilterDrawerOpen || moreOpen ? 'z-40' : 'z-30'} mx-auto w-full max-w-6xl rounded-card bg-bg-surface border border-border-color backdrop-blur-2xl transition-all`}
     >
-      {/* Below 1016px of hub width: roster on row 1, stats + actions on row 2 (phones: three rows).
-          From 1016px: one row, stats | roster | actions. */}
-      <div className="flex flex-col @hub-xl/hub:flex-row items-center justify-between gap-2 @hub-sm/hub:gap-3 @hub-xl/hub:gap-4 w-full">
-        {/* ROSTER: heart-flanked selector */}
-        <div className="flex items-center justify-center gap-2.5 w-full @hub-xl/hub:w-auto order-1 @hub-xl/hub:order-2 min-w-0">
+      {/* Integrated segmented toolbar:
+          Below 1016px: roster bar on top, stats + actions bar below (on phones: [Filter] [Stats] [More]).
+          From 1016px: single row [Stats | Roster | Actions]. */}
+      <div className="flex flex-col @hub-xl/hub:flex-row items-stretch justify-between w-full">
+        {/* ROSTER: flat segmented center (no inner pill, no cover image, original heart + chevron icons) */}
+        <TileButton
+          press={false}
+          onClick={onOpenRosters}
+          className="group relative flex items-center justify-center gap-2.5 w-full @hub-xl/hub:w-auto order-1 @hub-xl/hub:order-2 min-w-0 px-4 py-2.5 @hub-xl/hub:px-6 @hub-xl/hub:py-3 rounded-t-card @hub-xl/hub:rounded-none bg-bg-elevated/40 hover:bg-bg-elevated/75 border-b @hub-xl/hub:border-b-0 @hub-xl/hub:border-x border-border-color transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red"
+        >
           <HeartIcon className="hidden @hub-xs/hub:block icon-lg text-accent-red animate-pulse shrink-0" aria-hidden="true" />
-
-          <Button
-            type="button"
-            onClick={onOpenRosters}
-            variant="soft" size="md" className="min-w-0 max-w-full gap-2.5"
-          >
-            <span className="relative flex h-6 w-6 items-center justify-center rounded-chip overflow-hidden border border-accent-red/60 shrink-0">
-              <MotionImg
-                src={getCommunityCoverThumbUrl(rosterCoverUrl(activeRoster), 256) || rosterCoverUrl(activeRoster)}
-                alt=""
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = `${getBackendBaseUrl()}/static/avatars/survivors/sable_ward.webp`;
-                }}
-                className="h-full w-full object-cover"
-              />
-            </span>
-            <span className="truncate min-w-0 max-w-64 text-text-primary group-hover:text-accent-red font-black tracking-wide">
-              {rosterName}
-            </span>
-            <Badge tone="red" size="sm" plain square>
-              {rosterBadgeCount}
-            </Badge>
-            <ChevronDown className="icon-md shrink-0 text-accent-red group-hover:translate-y-0.5 transition-transform" aria-hidden="true" />
-          </Button>
-
+          <span className="truncate min-w-0 max-w-64 text-text-primary group-hover:text-accent-red font-black tracking-wide transition-colors">
+            {rosterName}
+          </span>
+          <ChevronDown className="icon-md shrink-0 text-accent-red group-hover:translate-y-0.5 transition-transform" aria-hidden="true" />
           <HeartIcon className="hidden @hub-xs/hub:block icon-lg text-accent-red animate-pulse shrink-0" aria-hidden="true" />
-        </div>
+        </TileButton>
 
-        {/* STATS + ACTIONS: one row from 560px, stacked on phones; dissolves into the main row from 1016px */}
-        <div className="flex flex-col @hub-sm/hub:flex-row items-center justify-between gap-2 @hub-sm/hub:gap-3 w-full order-2 @hub-xl/hub:order-none @hub-xl/hub:contents">
-          {/* Live session figures: plain in the banner, set apart by thin vertical rules (no capsule of their own) */}
-          <div className="flex items-center justify-center order-2 @hub-sm/hub:order-1 shrink-0">
-            <div className="flex items-center gap-3 text-xs">
-              <span className="flex items-center gap-1.5 text-text-secondary font-bold">
+        {/* STATS + ACTIONS: [Filter | Stats | More] on mobile; [Stats | Actions] on tablet+; dissolves on desktop */}
+        <div className="flex flex-row items-center justify-between gap-2 @hub-sm/hub:gap-3 w-full px-2.5 py-2 @hub-sm/hub:px-4 @hub-sm/hub:py-2.5 order-2 @hub-xl/hub:order-none @hub-xl/hub:contents">
+          {/* Live session figures: centered on mobile, left on tablet/laptop/desktop */}
+          <div className="flex items-center justify-center @hub-sm/hub:justify-start shrink-0 order-2 @hub-sm/hub:order-1 @hub-xl/hub:px-4 @hub-xl/hub:py-3">
+            <div className="flex items-center gap-2 @hub-sm/hub:gap-3 text-xs">
+              <span className="flex items-center gap-1 text-text-secondary font-bold">
                 <CardStackIcon className="icon-md text-text-secondary" aria-hidden="true" />
                 <span className="type-card-title text-text-primary">{remainingInDeck}</span>
-                <span className="text-mini text-text-muted font-medium">{hudLabels.left}</span>
+                <span className="hidden @hub-sm/hub:inline text-mini text-text-muted font-medium">{hudLabels.left}</span>
               </span>
-              <span className="h-5 w-px bg-border-color" aria-hidden="true" />
-              <span className="flex items-center gap-1.5 text-accent-red type-strong-fluid">
+              <span className="h-4 @hub-sm/hub:h-5 w-px bg-border-color" aria-hidden="true" />
+              <span className="flex items-center gap-1 text-accent-red type-strong-fluid">
                 <HeartIcon className="icon-md" aria-hidden="true" />
                 <span>{sessionSmashes}</span>
               </span>
-              <span className="h-5 w-px bg-border-color" aria-hidden="true" />
-              <span className="flex items-center gap-1.5 text-text-muted type-strong-fluid">
+              <span className="h-4 @hub-sm/hub:h-5 w-px bg-border-color" aria-hidden="true" />
+              <span className="flex items-center gap-1 text-text-muted type-strong-fluid">
                 <PassIcon className="icon-md text-text-muted" aria-hidden="true" />
                 <span>{sessionPasses}</span>
               </span>
-              <span className="h-5 w-px bg-border-color" aria-hidden="true" />
+              <span className="h-4 @hub-sm/hub:h-5 w-px bg-border-color" aria-hidden="true" />
               <span className="text-accent-amber font-black text-xs tracking-wide">
                 {sessionSmashRate}
                 {dict.smashOrPass.percentSign}
@@ -178,128 +172,112 @@ export function HubHeader({
             </div>
           </div>
 
-          {/* Action cluster (>=44px touch targets on touch screens) */}
-          <div className="flex items-center justify-center @hub-xl/hub:justify-end gap-1.5 sm:gap-2 order-1 @hub-sm/hub:order-2 @hub-xl/hub:order-3 shrink-0">
-            <DockAction
-              title={tooltips.filter}
-              description={tooltips.filterDesc}
-              ariaLabel={tooltips.filter}
-              variant={isFilterDrawerOpen || isFilterActive ? 'soft' : 'secondary'}
-              onClick={onToggleFilters}
-            >
-              <SlidersHorizontal className="icon-lg" aria-hidden="true" />
-            </DockAction>
-
-            <DockAction
-              title={dict.smashOrPass.effectsPrefs.button}
-              description={dict.smashOrPass.effectsPrefs.buttonDesc}
-              ariaLabel={dict.smashOrPass.effectsPrefs.button}
-              variant="secondary"
-              onClick={onOpenEffects}
-            >
-              <Settings className="icon-lg" aria-hidden="true" />
-            </DockAction>
-
-            <DockAction
-              title={dict.smashOrPass.modals.personaTitle}
-              description={tooltips.archetypeDesc}
-              ariaLabel={tooltips.archetype}
-              variant="secondary"
-              onClick={onOpenPersona}
-            >
-              <User className="icon-lg" aria-hidden="true" />
-            </DockAction>
-
-            {/* Hall of Fame leaderboard (official rosters only) */}
-            {hasLeaderboard && (
+          {/* Action cluster: `contents` on mobile so Filter flanks left & More flanks right; grouped right on sm+ */}
+          <div className="contents @hub-sm/hub:flex items-center justify-end gap-1.5 sm:gap-2 shrink-0 @hub-sm/hub:order-2 @hub-xl/hub:order-3 @hub-xl/hub:px-4 @hub-xl/hub:py-2.5">
+            <div className="order-1 @hub-sm/hub:order-none">
               <DockAction
-                title={dict.smashOrPass.modals.leaderboardTitle}
-                description={tooltips.leaderboardDesc}
-                ariaLabel={tooltips.leaderboard}
-                variant="secondary"
-                onClick={onOpenLeaderboard}
+                title={tooltips.filter}
+                description={tooltips.filterDesc}
+                ariaLabel={tooltips.filter}
+                variant={isFilterDrawerOpen || isFilterActive ? 'soft' : 'secondary'}
+                onClick={handleToggleFilters}
               >
-                <BarChart2 className="icon-lg" aria-hidden="true" />
+                <SlidersHorizontal className="icon-lg" aria-hidden="true" />
               </DockAction>
-            )}
+            </div>
 
-            <DockAction
-              title={tooltips.shuffle}
-              description={tooltips.shuffleDesc}
-              ariaLabel={tooltips.shuffle}
-              variant="secondary"
-              onClick={onShuffle}
-              className={WIDE_ONLY}
-            >
-              <Shuffle className="icon-lg" aria-hidden="true" />
-            </DockAction>
-
-            <DockAction
-              title={tooltips.resetAllVotes}
-              description={tooltips.resetDesc}
-              ariaLabel={tooltips.resetAllVotes}
-              variant="secondary"
-              onClick={onReset}
-              className={WIDE_ONLY}
-            >
-              <RotateCcw className="icon-lg" aria-hidden="true" />
-            </DockAction>
-
-            <DockAction
-              title={tooltips.howToPlay}
-              description={tooltips.howToPlayDesc}
-              ariaLabel={tooltips.howToPlay}
-              variant="secondary"
-              onClick={onOpenHowToPlay}
-              className={WIDE_ONLY}
-            >
-              <HelpCircle className="icon-lg" aria-hidden="true" />
-            </DockAction>
-
-            {/* Narrow hubs: shuffle / reset / help collapse into one menu */}
-            <div className="@hub-md/hub:hidden">
-              <Button
-                ref={moreRef}
+            <div className="hidden @hub-sm/hub:flex items-center gap-1.5 sm:gap-2">
+              <DockAction
+                title={dict.smashOrPass.effectsPrefs.button}
+                description={dict.smashOrPass.effectsPrefs.buttonDesc}
+                ariaLabel={dict.smashOrPass.effectsPrefs.button}
                 variant="secondary"
+                onClick={onOpenEffects}
+              >
+                <Settings className="icon-lg" aria-hidden="true" />
+              </DockAction>
+
+              <DockAction
+                title={dict.smashOrPass.modals.personaTitle}
+                description={tooltips.archetypeDesc}
+                ariaLabel={tooltips.archetype}
+                variant="secondary"
+                onClick={onOpenPersona}
+              >
+                <User className="icon-lg" aria-hidden="true" />
+              </DockAction>
+
+              {/* Hall of Fame leaderboard (official rosters only) */}
+              {hasLeaderboard && (
+                <DockAction
+                  title={dict.smashOrPass.modals.leaderboardTitle}
+                  description={tooltips.leaderboardDesc}
+                  ariaLabel={tooltips.leaderboard}
+                  variant="secondary"
+                  onClick={onOpenLeaderboard}
+                >
+                  <BarChart2 className="icon-lg" aria-hidden="true" />
+                </DockAction>
+              )}
+
+              <DockAction
+                title={tooltips.shuffle}
+                description={tooltips.shuffleDesc}
+                ariaLabel={tooltips.shuffle}
+                variant="secondary"
+                onClick={onShuffle}
+                className={WIDE_ONLY}
+              >
+                <Shuffle className="icon-lg" aria-hidden="true" />
+              </DockAction>
+
+              <DockAction
+                title={tooltips.resetAllVotes}
+                description={tooltips.resetDesc}
+                ariaLabel={tooltips.resetAllVotes}
+                variant="secondary"
+                onClick={onReset}
+                className={WIDE_ONLY}
+              >
+                <RotateCcw className="icon-lg" aria-hidden="true" />
+              </DockAction>
+
+              <DockAction
+                title={tooltips.howToPlay}
+                description={tooltips.howToPlayDesc}
+                ariaLabel={tooltips.howToPlay}
+                variant="secondary"
+                onClick={onOpenHowToPlay}
+                className={WIDE_ONLY}
+              >
+                <HelpCircle className="icon-lg" aria-hidden="true" />
+              </DockAction>
+            </div>
+
+            {/* Slide-out actions drawer trigger (below @hub-md/hub) */}
+            <div className="@hub-md/hub:hidden order-3 @hub-sm/hub:order-none">
+              <Button
+                variant={moreOpen ? 'soft' : 'secondary'}
                 size="md"
                 icon
-                onClick={() => setMoreOpen((open) => !open)}
+                onClick={handleToggleMore}
                 aria-label={tooltips.moreActions}
-                {...popoverTriggerProps(moreOpen, 'menu')}
+                aria-expanded={moreOpen}
                 className={DOCK_BUTTON}
               >
                 <Ellipsis aria-hidden="true" />
               </Button>
-              <Popover
-                open={moreOpen}
-                anchorRef={moreRef}
-                onClose={() => setMoreOpen(false)}
-                align="end"
-                role="menu"
-                ariaLabel={tooltips.moreActions}
-                className={MENU_PANEL_CLASS}
-              >
-                {[
-                  { label: tooltips.shuffle, Icon: Shuffle, run: onShuffle },
-                  { label: tooltips.resetAllVotes, Icon: RotateCcw, run: onReset },
-                  { label: tooltips.howToPlay, Icon: HelpCircle, run: onOpenHowToPlay },
-                ].map(({ label, Icon, run }) => (
-                  <MenuItem
-                    key={label}
-                    role="menuitem"
-                    onClick={fromMore(run)}
-                  >
-                    <Icon className="icon-md shrink-0" aria-hidden="true" />
-                    <span>{label}</span>
-                  </MenuItem>
-                ))}
-              </Popover>
             </div>
           </div>
         </div>
       </div>
 
       {children}
+      <HubActionsDrawer
+        isOpen={moreOpen}
+        actions={drawerActions}
+        onClose={() => setMoreOpen(false)}
+      />
     </header>
   );
 }

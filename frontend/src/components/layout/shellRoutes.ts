@@ -96,7 +96,14 @@ export const ROUTE_SHELLS: ReadonlyArray<ShellRoute> = [
   { prefix: ['reset-password'], shell: false },  // a bare, centred form: no sidebar
   { prefix: ['rules'], shell: LEGAL },
   { prefix: ['settings'], shell: { padding: 'spacious', mainClassName: 'flex flex-col items-center justify-center min-h-screen-nav lg:min-h-dvh overflow-y-auto relative' } },
-  { prefix: ['smash-or-pass'], shell: { mainClassName: 'overflow-y-auto' } },  // hub
+  {
+    prefix: ['smash-or-pass'],
+    shell: {
+      padding: 'tight',
+      outerClassName: 'h-dvh overflow-hidden text-text-primary flex flex-col lg:flex-row dbd-fog-overlay transition-colors duration-300',
+      mainClassName: 'relative flex h-full min-h-0 flex-col overflow-y-auto',
+    },
+  },  // hub
   { prefix: ['smash-or-pass', 'create'], shell: TIER_LIST_WORKSPACE },
   {
     prefix: ['streaks'],  // hub, [role], and every challenge run

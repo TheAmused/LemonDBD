@@ -52,10 +52,10 @@ const RadialDial: React.FC<DialProps> = ({
 
   return (
     <div
-      className={`relative flex flex-col items-center justify-between border border-border-color bg-bg-surface backdrop-blur-md shadow-sm transition-all hover:border-accent-amber/40 group ${
+      className={`relative flex flex-col items-center justify-between border border-border-color bg-bg-surface backdrop-blur-md shadow-sm transition-all hover:border-accent-amber/40 group min-w-0 ${
         compact
-          ? 'aspect-square rounded-card p-2 sm:p-2.5 w-full min-w-0'
-          : 'aspect-square w-full sm:w-36 sm:h-36 xl:w-36 xl:h-36 2xl:w-44 2xl:h-44 rounded-card p-2.5 sm:p-3 lg:p-3.5 2xl:p-4'
+          ? 'aspect-square rounded-card p-2 sm:p-2.5 w-full'
+          : 'aspect-square w-full max-w-36 sm:w-36 sm:h-36 xl:w-36 xl:h-36 2xl:max-w-44 2xl:w-44 2xl:h-44 rounded-card p-2 sm:p-3 lg:p-3.5 2xl:p-4 mx-auto'
       }`}
     >
       {/* Radial Gauge SVG */}
@@ -64,7 +64,7 @@ const RadialDial: React.FC<DialProps> = ({
           className={`${
             compact
               ? 'w-16 h-16 sm:w-20 sm:h-20'
-              : 'w-14 h-14 xs:w-16 xs:h-16 sm:w-20 sm:h-20 md:w-22 md:h-22 xl:w-20 xl:h-20 2xl:w-26 2xl:h-26'
+              : 'w-16 h-16 phone:w-18 phone:h-18 sm:w-22 sm:h-22 xl:w-22 xl:h-22 2xl:w-26 2xl:h-26'
           } -rotate-90 transform`}
           viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`}
         >
@@ -97,14 +97,14 @@ const RadialDial: React.FC<DialProps> = ({
             className={`${
               compact
                 ? 'text-xs sm:text-base'
-                : 'text-xs xs:text-sm sm:text-lg md:text-xl xl:text-lg 2xl:text-2xl'
+                : 'text-xs phone:text-sm sm:text-lg xl:text-lg 2xl:text-2xl'
             } font-black tracking-tight text-text-primary`}
           >
             {percentage}%
           </div>
           <div
             className={`${
-              compact ? 'text-micro sm:text-tiny' : 'text-micro xs:text-tiny sm:text-xs 2xl:text-sm'
+              compact ? 'text-micro sm:text-tiny' : 'text-micro phone:text-tiny sm:text-xs 2xl:text-sm'
             } font-bold text-text-secondary`}
           >
             {count}/{total}
@@ -113,10 +113,10 @@ const RadialDial: React.FC<DialProps> = ({
       </div>
 
       {/* Title below */}
-      <div className="flex items-center shrink-0 mt-auto max-w-full">
+      <div className="flex items-center justify-center shrink-0 mt-auto max-w-full">
         <span
           className={`${
-            compact ? 'text-micro sm:text-tiny' : 'text-micro xs:text-tiny sm:text-xs 2xl:text-sm'
+            compact ? 'text-micro sm:text-tiny' : 'text-micro phone:text-tiny sm:text-xs 2xl:text-sm'
           } font-black uppercase tracking-wider text-text-primary truncate`}
         >
           {title}
@@ -156,7 +156,7 @@ export const VaultMasteryDials: React.FC<VaultMasteryDialsProps> = ({ ownership,
         </div>
       )}
 
-      <div className="grid grid-cols-3 gap-2 sm:gap-4">
+      <div className="grid grid-cols-3 gap-2.5 sm:flex sm:items-center sm:justify-center sm:gap-4 w-full">
         {/* Survivors Dial */}
         <RadialDial
           title={dict.stats.survivors}

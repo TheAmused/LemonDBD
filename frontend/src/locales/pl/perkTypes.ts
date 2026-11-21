@@ -33,7 +33,7 @@ export default {
     entity: "byt, blokada, blokuje, blokowanie, zablokowane",
   },
   generalKeywords: "ogólna, ogólne, ogólny, ogólnych",
-  searchPlaceholder: "Szukaj perków, postaci lub typów...",
+  searchPlaceholder: "Szukaj",
   typesButton: "Typy",
   clearTypes: "Wyczyść wszystkie",
   typeFilters: "Filtruj według typu perka",

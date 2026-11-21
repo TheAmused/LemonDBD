@@ -159,7 +159,7 @@ export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalR
     <nav
       aria-label={dict.pagination.navAriaLabel}
       className={cn(
-        'flex w-full flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:justify-between sm:gap-x-4 lg:gap-x-5',
+        'flex w-full flex-wrap items-center justify-between gap-x-3 gap-y-2 sm:gap-x-4 lg:gap-x-5',
         NAV_VARIANTS[variant],
         className
       )}

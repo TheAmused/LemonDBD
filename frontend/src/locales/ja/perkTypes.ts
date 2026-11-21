@@ -33,7 +33,7 @@ export default {
     entity: "エンティティ, ブロック, 妨害, 阻止",
   },
   generalKeywords: "共通",
-  searchPlaceholder: "パーク・キャラクター・種別で検索...",
+  searchPlaceholder: "検索",
   typesButton: "種別",
   clearTypes: "すべて解除",
   typeFilters: "パーク種別で絞り込み",

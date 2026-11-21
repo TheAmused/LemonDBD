@@ -56,12 +56,11 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
   const isActiveTarget = (charName: string) =>
     activeCharacterIds.some((c) => c.toLowerCase().trim() === charName.toLowerCase().trim());
 
-  const getAvatarUrl = (char: OwnedCharacterItem) =>
-    avatarThumbFromPath(
-      staticUrl(char.avatar_local_path) ||
-        avatarUrlForCharacter(char.name, role === 'survivor' ? 'survivors' : 'killers'),
-      128
-    );
+  const getFullAvatarUrl = (char: OwnedCharacterItem) =>
+    staticUrl(char.avatar_local_path) ||
+    avatarUrlForCharacter(char.name, role === 'survivor' ? 'survivors' : 'killers');
+
+  const getAvatarUrl = (char: OwnedCharacterItem) => avatarThumbFromPath(getFullAvatarUrl(char), 128);
 
   const completedText = dict.stats.completed;
   const activeTargetText = dict.streaks.activeGauntletTarget;
@@ -138,10 +137,22 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
                     <Img
                       src={avatarUrl}
                       alt={displayName(char.name)}
+                      loading="lazy"
+                      decoding="async"
                       draggable={false}
                       className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${completed ? 'brightness-105' : !active ? 'opacity-90' : ''
                         }`}
-                      onError={() => handleImageError(char.name)}
+                      onError={(e) => {
+                        // A failed thumbnail gets one retry with the full image before the placeholder shows.
+                        const img = e.currentTarget;
+                        const fullUrl = getFullAvatarUrl(char);
+                        if (!img.dataset.triedFull && fullUrl && fullUrl !== avatarUrl) {
+                          img.dataset.triedFull = '1';
+                          img.src = fullUrl;
+                        } else {
+                          handleImageError(char.name);
+                        }
+                      }}
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-text-muted">

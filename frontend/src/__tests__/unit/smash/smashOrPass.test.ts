@@ -15,7 +15,7 @@ test('SmashOrPass: Types & Roster/Entity Contracts', async (t) => {
     const roster: RosterItem = {
       id: 'canon',
       slug: 'canon',
-      name: 'Dead by Daylight: Fog Canon',
+      name: 'Fog Canon',
       description: 'Official 98 Characters',
       theme_color: '#ff0055',
       category: 'DBD Canon',
@@ -23,7 +23,7 @@ test('SmashOrPass: Types & Roster/Entity Contracts', async (t) => {
       is_active: true,
       entity_count: 98,
     };
-    assert.strictEqual(roster.name, 'Dead by Daylight: Fog Canon');
+    assert.strictEqual(roster.name, 'Fog Canon');
     assert.strictEqual(roster.description, 'Official 98 Characters');
     assert.strictEqual('name_i18n_key' in roster, false);
     assert.strictEqual('description_i18n_key' in roster, false);

@@ -39,7 +39,7 @@ interface RosterCarouselCardProps {
 function spreadUnitForViewport(): number {
   if (typeof window === 'undefined') return 260;
   const w = window.innerWidth;
-  if (w < 640) return 145;
+  if (w < 640) return 168;
   if (w < 1024) return 205;
   if (w >= 1536) return 360;
   if (w >= 1280) return 310;
@@ -185,30 +185,30 @@ export function RosterCarouselCard({
 
       {isRosterEnabled && (
         <div
-          className="absolute top-4 left-4 sm:top-5 sm:left-5 flex items-center gap-1.5 px-3 py-1.5 rounded-card bg-bg-primary/80 backdrop-blur-md border border-border-color text-text-inverted type-strong-fluid shadow-md pointer-events-none"
+          className="absolute top-2.5 left-2.5 sm:top-5 sm:left-5 flex items-center gap-1 sm:gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 rounded-card bg-bg-primary/80 backdrop-blur-md border border-border-color text-text-inverted type-strong-xs sm:type-strong-fluid shadow-md pointer-events-none"
         >
-          <CardStackIcon className="icon-md text-accent-red" aria-hidden="true" />
+          <CardStackIcon className="icon-sm sm:icon-md text-accent-red" aria-hidden="true" />
           <span>{count}</span>
         </div>
       )}
 
       {(r.is_nsfw || isCurrentlyActive) && (
-        <div className="absolute top-4 right-4 sm:top-5 sm:right-5 flex items-center gap-1.5 flex-wrap justify-end pointer-events-none">
+        <div className="absolute top-2.5 right-2.5 sm:top-5 sm:right-5 flex items-center gap-1 sm:gap-1.5 flex-wrap justify-end pointer-events-none">
           {r.is_nsfw && (
             <div
               data-testid="roster-nsfw-badge"
-              className="flex items-center gap-1 px-2.5 py-1 rounded-card bg-accent-red text-text-inverted text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md"
+              className="flex items-center gap-1 px-2 py-1 sm:px-2.5 sm:py-1 rounded-card bg-accent-red text-text-inverted text-tiny sm:text-xs font-black uppercase tracking-wide shadow-md"
             >
-              <MatureIcon className="icon-sm" aria-hidden="true" />
+              <MatureIcon className="icon-xs sm:icon-sm" aria-hidden="true" />
               <span>{dict.smashOrPass.nsfw.badge}</span>
             </div>
           )}
 
           {isCurrentlyActive && (
             <div
-              className="flex items-center gap-1 px-3 py-1.5 rounded-card bg-accent-red text-text-inverted type-strong shadow-md"
+              className="flex items-center gap-1 px-2 py-1 sm:px-3 sm:py-1.5 rounded-card bg-accent-red text-text-inverted type-strong-xs sm:type-strong shadow-md"
             >
-              <CheckIcon className="icon-md" aria-hidden="true" />
+              <CheckIcon className="icon-sm sm:icon-md" aria-hidden="true" />
               <span>{dict.smashOrPass.active}</span>
             </div>
           )}
@@ -242,12 +242,12 @@ export function RosterCarouselCard({
           </div>
         )}
 
-        <h3 className="text-base sm:text-lg md:text-xl font-black tracking-wide text-text-inverted drop-shadow-md mb-1 line-clamp-2 break-words break-all text-balance max-w-full">
+        <h3 className="text-base sm:text-lg md:text-xl font-black tracking-wide text-text-inverted drop-shadow-md mb-1 line-clamp-2 break-words text-balance max-w-full">
           {rosterDisplayName(r)}
         </h3>
 
         {r.description && (
-          <p className="text-xs sm:text-sm md:text-base font-bold text-accent-red/90 tracking-wider drop-shadow-md line-clamp-2 sm:line-clamp-3 break-words break-all text-balance max-w-full">
+          <p className="text-xs sm:text-sm md:text-base font-bold text-accent-red/90 tracking-wider drop-shadow-md line-clamp-2 sm:line-clamp-3 break-words text-balance max-w-full">
             {r.description}
           </p>
         )}

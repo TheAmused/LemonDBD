@@ -26,7 +26,7 @@ import { POOL_CONTAINER_ID } from '@/utils/tierLists/constants';
 import { TierItemPreviewModal } from './TierItemPreviewModal';
 import { TierItemTile, type TierTileShape } from './TierItemTile';
 import { TierPool } from './TierPool';
-import { SidewaysPointerSensor } from './touchSensors';
+import { SidewaysPointerSensor, TrayTouchSensor } from './touchSensors';
 import { TierRow } from './TierRow';
 import { parseContainerDndId, parseItemDndId } from './dndIds';
 import { formatMessage } from '@/utils/i18nFormat';
@@ -135,6 +135,7 @@ export function TierListBoard({
   const namesShown = showNames && !fit?.namesHidden;
   const fitStyle = fit
     ? ({
+        minHeight: fit.fitMode ? undefined : 'calc(100dvh - 10.5rem)',
         '--tile': `${fit.tile}px`,
         '--tile-w': `${fit.tileWidth}px`,
         '--tile-gap': `${fit.gap}px`,
@@ -155,7 +156,8 @@ export function TierListBoard({
     // Touch, in the tier rows and the pool alike: a sideways drag picks a tile up at once (tiles only claim
     // vertical panning, so an up/down swipe still scrolls). One touch sensor only: two of them (pointer + touch
     // events) would both start a drag from the same finger.
-    useSensor(SidewaysPointerSensor, { activationConstraint: { distance: { x: 10 } } }),
+    useSensor(SidewaysPointerSensor, { activationConstraint: { distance: { x: 10 }, tolerance: { y: 10 } } }),
+    useSensor(TrayTouchSensor, { activationConstraint: { distance: { y: 10 }, tolerance: { x: 20 } } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
@@ -198,6 +200,7 @@ export function TierListBoard({
 
   const handleDragStart = useCallback(
     (event: DragStartEvent) => {
+      if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
       const key = parseItemDndId(event.active.id);
       if (!key) return;
       startBoard.current = board;
@@ -318,11 +321,11 @@ export function TierListBoard({
         data-fit-mode={fit?.fitMode ? '' : undefined}
         data-scroll={fit?.pageScroll ? '' : undefined}
         style={fitStyle}
-        className="group/board relative flex flex-col w-full gap-3"
+        className="group/board relative flex flex-col w-full min-w-0 gap-3"
       >
         <div
           className={cn(
-            'flex flex-col gap-2 w-full group-data-[fit]/board:gap-(--row-gap)! shrink-0'
+            'flex flex-1 flex-col gap-2 w-full group-data-[fit]/board:gap-(--row-gap)!'
           )}
         >
           {tiers.map((tier) => (
@@ -364,7 +367,16 @@ export function TierListBoard({
         </DragOverlay>
       </div>
 
-      <TierItemPreviewModal item={previewKey ? itemsByKey.get(previewKey) ?? null : null} onClose={closePreview} />
+      <TierItemPreviewModal
+        item={previewKey ? itemsByKey.get(previewKey) ?? null : null}
+        tiers={tiers}
+        onMoveToTier={(key, tierId) => {
+          const next = moveItem(board, key, tierId, undefined, catalogOrder);
+          onSelectedKeyChange(null);
+          if (!sameBoard(next, board)) onBoardChange(next);
+        }}
+        onClose={closePreview}
+      />
     </DndContext>
   );
 }

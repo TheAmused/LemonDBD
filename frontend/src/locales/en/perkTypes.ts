@@ -34,7 +34,7 @@ export default {
     entity: "blocks, blocked, blocking, blocker",
   },
   generalKeywords: "general",
-  searchPlaceholder: "Search perks, characters or types...",
+  searchPlaceholder: "Search",
   typesButton: "Types",
   clearTypes: "Clear all",
   typeFilters: "Filter by perk type",

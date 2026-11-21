@@ -33,7 +33,7 @@ export default {
     entity: "entidad, bloqueo, bloquea, bloquear",
   },
   generalKeywords: "general, generales, común, comunes",
-  searchPlaceholder: "Buscar habilidades, personajes o tipos...",
+  searchPlaceholder: "Buscar",
   typesButton: "Tipos",
   clearTypes: "Quitar todos",
   typeFilters: "Filtrar por tipo de habilidad",

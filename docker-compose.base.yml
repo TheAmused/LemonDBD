@@ -84,6 +84,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: dbd_backend
+    restart: unless-stopped
     # Reached only through nginx (rate limits, bot filter, body limits). The dev overlay
     # publishes it on loopback for debugging; production never publishes it.
     expose:

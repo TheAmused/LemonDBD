@@ -64,7 +64,7 @@ export interface FitResult {
 }
 
 export const MIN_TILE = 18;
-const BASE_MIN_TILE = 48;
+const BASE_MIN_TILE = 56;
 export const NAMES_MIN_TILE = 44;
 const BASE_MAX_TILE = 96;
 const SCALED_MAX_TILE = 128;
@@ -89,7 +89,7 @@ const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n
  * - ~93-96px on 1440p / 2K+ desktops (2560px)
  */
 export function maxTileFor(width: number, _height?: number): number {
-  return clamp(Math.round(44 + width * 0.022), BASE_MIN_TILE, BASE_MAX_TILE);
+  return clamp(Math.round(52 + width * 0.018), BASE_MIN_TILE, BASE_MAX_TILE);
 }
 
 export interface TileMetrics {
@@ -164,7 +164,7 @@ function neededFull(input: FitInput, m: TileMetrics): number {
  * fills the screen instead of leaving a gap at the bottom.
  */
 function fitToScreen(input: FitInput): FitResult {
-  const maxTile = Math.min(FIT_MAX_TILE, Math.max(maxTileFor(input.width, input.height), Math.round(input.width / 9)));
+  const maxTile = Math.min(FIT_MAX_TILE, Math.max(maxTileFor(input.width, input.height), Math.round(input.width / 4.2)));
 
   const fitsAt = (t: number, names: boolean) => rowsTotalHeight(input, metricsFor(t, input.shape, names)) <= input.height;
 

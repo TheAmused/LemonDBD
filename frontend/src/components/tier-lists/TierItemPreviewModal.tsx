@@ -4,26 +4,29 @@
 import React from 'react';
 import { Modal } from '@/components/common/Modal';
 import { PerkDescription } from '@/components/PerkDescription';
-import type { TierItem } from '@/types/tierList';
+import type { TierDefinition, TierItem } from '@/types/tierList';
 import { Surface } from '@/components/common/Surface';
+import { Badge } from '@/components/common/Badge';
+import { Button } from '@/components/common/Button';
 import { Img } from '@/components/common/Img';
+import { tierColorProps } from './tierColor';
+import { cn } from '@/utils/cn';
+import { useDictionary } from '@/context/DictionaryContext';
 
 interface TierItemPreviewModalProps {
   /** The tile that was double-clicked/double-tapped, or null to stay closed. */
   item: TierItem | null;
+  tiers?: TierDefinition[];
+  onMoveToTier?: (key: string, tierId: string) => void;
   onClose: () => void;
 }
 
 /**
- * Double-click (or double-tap) preview for any tier-list tile: a bigger
- * picture and the name for a survivor/killer/map/custom item, plus the
- * description underneath for perks -- the one kind `perksToItems` already
- * attaches one to. Built on the same `Modal` chrome and `PerkDescription`
- * renderer the rest of the site uses instead of a bespoke lightbox, so
- * every item kind gets a rich preview without a perk-specific, character-
- * specific and map-specific modal each duplicating the same layout.
+ * Double-click (or double-tap) preview for any tier-list tile, aligned with the
+ * perk/character card style across the site, with optional quick tier assignment.
  */
-export function TierItemPreviewModal({ item, onClose }: TierItemPreviewModalProps) {
+export function TierItemPreviewModal({ item, tiers, onMoveToTier, onClose }: TierItemPreviewModalProps) {
+  const dict = useDictionary();
   if (!item) return null;
 
   return (
@@ -31,28 +34,22 @@ export function TierItemPreviewModal({ item, onClose }: TierItemPreviewModalProp
       isOpen
       onClose={onClose}
       size="xl"
-      // `title` takes a ReactNode, so the accent color below is just a styled
-      // span passed straight through -- no change to `Modal` itself. `title`
-      // no longer being a plain string means Modal's own `aria-label`
-      // fallback (`typeof title === 'string'`) won't fire, so the accessible
-      // name is set explicitly here instead.
       title={<span className="text-accent-red">{item.name}</span>}
       ariaLabel={item.name}
     >
-      <div className="flex flex-col items-center gap-4 p-5 sm:p-6">
-        {item.subtitle && <p className="line-clamp-2 text-center type-strong text-accent-amber">{item.subtitle}</p>}
+      <div className="flex flex-col items-center gap-4 p-4 sm:p-6">
+        {item.subtitle && (
+          <Badge tone="amber" size="sm" className="max-w-full truncate">
+            {item.subtitle}
+          </Badge>
+        )}
+
         {(item.fullImage ?? item.image) ? (
-          // Sized by the image's own intrinsic ratio, not forced into a
-          // fixed square -- a tall character portrait and a wide map photo
-          // should each keep their real shape. `max-h`/`max-w` (not fixed
-          // `h`/`w`) cap it so a large source image never overflows the
-          // modal or viewport, while `w-auto h-auto` let it shrink no
-          // further than the image and its container actually need.
           <div className="flex w-full items-center justify-center">
             <Img
               src={(item.fullImage ?? item.image) as string}
               alt={item.name}
-              className="h-auto max-h-vh-65 w-auto max-w-full rounded-card border border-border-color bg-bg-elevated object-contain"
+              className="h-auto max-h-vh-65 w-auto max-w-full rounded-card border border-border-color bg-bg-elevated/60 object-contain p-1 shadow-inner"
             />
           </div>
         ) : (
@@ -62,8 +59,47 @@ export function TierItemPreviewModal({ item, onClose }: TierItemPreviewModalProp
             </span>
           </Surface>
         )}
+
         {item.description && (
-          <PerkDescription description={item.description} />
+          <Surface tone="elevated" padding="none" className="w-full p-3.5 sm:p-4">
+            <PerkDescription description={item.description} />
+          </Surface>
+        )}
+
+        {tiers && tiers.length > 0 && onMoveToTier && (
+          <div className="w-full pt-1 border-t border-border-color/70">
+            <div className="flex flex-wrap items-center justify-center gap-1.5 pt-2">
+              {tiers.map((tier) => {
+                const cp = tierColorProps(tier.color);
+                return (
+                  <Button
+                    key={tier.id}
+                    type="button"
+                    size="sm"
+                    variant="secondary"
+                    aria-label={tier.label}
+                    onClick={() => {
+                      onMoveToTier(item.key, tier.id);
+                      onClose();
+                    }}
+                    style={cp.style}
+                    className={cn('min-w-10 border-0 font-black', cp.className)}
+                  >
+                    {tier.label}
+                  </Button>
+                );
+              })}
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                onClick={onClose}
+                className="ml-1"
+              >
+                {dict.modal.close}
+              </Button>
+            </div>
+          </div>
         )}
       </div>
     </Modal>

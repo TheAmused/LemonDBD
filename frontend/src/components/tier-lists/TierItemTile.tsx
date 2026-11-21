@@ -14,14 +14,14 @@ export type TierTileShape = 'square' | 'wide';
 // px-based `wide*` breakpoints before the rem-based sm..xl ones, so an open-ended
 // `lg:` rule would override `wide-2k:` on the same property.
 const SHAPE_CLASSES: Record<TierTileShape, string> = {
-  // >= 56px on the smallest screens: comfortably above the 44px touch minimum.
-  square: 'w-12 phone-lg:w-14 sm:max-lg:w-16 lg:max-wide-2k:w-18 wide-2k:w-24',
-  wide: 'w-19 phone-lg:w-22 sm:max-lg:w-24 lg:max-wide-2k:w-28 wide-2k:w-36',
+  // >= 56px on the smallest screens: comfortably above the 44px touch minimum and gives 2-line perk names room.
+  square: 'w-14 phone-lg:w-15 sm:max-lg:w-16 lg:max-wide-2k:w-18 wide-2k:w-24',
+  wide: 'w-20 phone-lg:w-22 sm:max-lg:w-24 lg:max-wide-2k:w-28 wide-2k:w-36',
 };
 
 const IMAGE_CLASSES: Record<TierTileShape, string> = {
-  square: 'h-12 phone-lg:h-14 sm:max-lg:h-16 lg:max-wide-2k:h-18 wide-2k:h-24',
-  wide: 'h-12 phone-lg:h-14 sm:max-lg:h-16 lg:max-wide-2k:h-18 wide-2k:h-24',
+  square: 'h-14 phone-lg:h-15 sm:max-lg:h-16 lg:max-wide-2k:h-18 wide-2k:h-24',
+  wide: 'h-14 phone-lg:h-15 sm:max-lg:h-16 lg:max-wide-2k:h-18 wide-2k:h-24',
 };
 
 const LG_SHAPE_CLASSES: Record<TierTileShape, string> = {
@@ -65,7 +65,7 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
       aria-label={item.name}
       className={cn(
         'group relative flex shrink-0 select-none flex-col items-center gap-1 rounded-card outline-none',
-        'touch-pan-y [-webkit-touch-callout:none] focus-visible:ring-2 focus-visible:ring-accent-amber',
+        'touch-pan-y group-data-[sticky-tray=true]/tray:touch-pan-x [-webkit-touch-callout:none] focus-visible:ring-2 focus-visible:ring-accent-amber',
         size === 'sm'
           ? 'w-11'
           : size === 'lg'
@@ -120,10 +120,11 @@ export const TierItemTile = React.forwardRef<HTMLDivElement, TierItemTileProps>(
       {showName && hasImage && (
         <FitText
           aria-hidden="true"
-          minScale={size === 'lg' ? 0.75 : 0.65}
-          maxLines={size === 'lg' ? 2 : 1}
+          minScale={size === 'lg' ? 0.75 : 0.72}
+          maxLines={2}
+          wrapFirst
           className={cn(
-            'w-full text-center font-bold leading-tight text-text-secondary',
+            'w-full text-center font-bold leading-tight text-text-secondary line-clamp-2',
             size === 'lg'
               ? 'px-0.5 text-xs sm:text-caption mt-0.5'
               : 'text-tiny sm:text-mini group-data-[fit]/board:text-(length:--tile-fs)'

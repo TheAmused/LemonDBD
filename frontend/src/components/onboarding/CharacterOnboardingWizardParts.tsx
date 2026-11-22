@@ -21,14 +21,24 @@ export function resolveOnboardingView(stored: string | null): OnboardingView {
  *  translated. Survivor 7 -- killer 7 is The Doctor. */
 export const LEGEND_SURVIVOR_ID = 7;
 
-// Minimum 3 columns on mobile small screens as requested.
+/** Chapter cards: two per row on phones so the picture and name are easy to read and tap. */
+export const CHAPTER_GRID_CLASS =
+  'grid grid-cols-2 gap-1.5 sm:gap-2.5 md:gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7';
+
+/** The columns CHAPTER_GRID_CLASS renders at each viewport width (Tailwind sm/md/lg/xl/2xl), kept in step by hand
+ * because CSS grid does not expose its column count; the expand panel is placed after the last card of a row. */
 export const CHAPTER_GRID_BREAKPOINTS: { minWidth: number; columns: number }[] = [
-  { minWidth: 1720, columns: 7 },
-  { minWidth: 1440, columns: 6 },
-  { minWidth: 1180, columns: 5 },
-  { minWidth: 880, columns: 4 },
-  { minWidth: 0, columns: 3 },
+  { minWidth: 1536, columns: 7 },
+  { minWidth: 1280, columns: 6 },
+  { minWidth: 1024, columns: 5 },
+  { minWidth: 768, columns: 4 },
+  { minWidth: 640, columns: 3 },
+  { minWidth: 0, columns: 2 },
 ];
+
+/** An opened chapter's characters: one column more than the chapters at every width, so a portrait is never bigger than a chapter card. */
+export const CHARACTER_GRID_CLASS =
+  'grid grid-cols-3 gap-1.5 sm:gap-2.5 md:gap-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 2xl:grid-cols-8';
 
 export interface OnboardingCharacter {
   id: number;

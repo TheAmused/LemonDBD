@@ -1,9 +1,9 @@
 // frontend/src/__tests__/unit/randomizer/scatterPoints.test.ts
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { chaosPoints, phoneScatterField } from '@/components/generator/lib/scatterPoints';
+import { chaosPoints, scatterField } from '@/components/generator/lib/scatterPoints';
 
-// Real phone and small tablet screens: width x height.
+// Real phone and tablet screens (portrait and landscape): width x height.
 const SCREENS: ReadonlyArray<readonly [number, number]> = [
   [320, 640],
   [360, 740],
@@ -11,12 +11,18 @@ const SCREENS: ReadonlyArray<readonly [number, number]> = [
   [430, 932],
   [600, 960],
   [700, 1000],
+  [768, 1024],
+  [820, 1180],
+  [834, 1194],
+  [1024, 768],
+  [1024, 1366],
+  [1180, 820],
 ];
 
-describe('Loot Crate phone scatter', () => {
+describe('Loot Crate phone and tablet scatter', () => {
   it('never lets two perks overlap and keeps every perk inside the field, on every screen and throw size', () => {
     for (const [w, h] of SCREENS) {
-      const field = phoneScatterField(w, h);
+      const field = scatterField(w, h);
       for (let count = 8; count <= 12; count++) {
         for (let run = 0; run < 100; run++) {
           const px = chaosPoints(count, field).map((p) => ({ x: (p.x / 100) * field.width, y: (p.y / 100) * field.height }));
@@ -38,7 +44,7 @@ describe('Loot Crate phone scatter', () => {
 
   it('spreads the perks over the whole field instead of piling them up', () => {
     for (const [w, h] of SCREENS) {
-      const field = phoneScatterField(w, h);
+      const field = scatterField(w, h);
       const innerH = field.height - 2 * field.marginPx;
       let totalSpread = 0;
       const runs = 100;
@@ -51,7 +57,7 @@ describe('Loot Crate phone scatter', () => {
   });
 
   it('does not put perks on a grid: the same count gives different layouts', () => {
-    const field = phoneScatterField(390, 844);
+    const field = scatterField(390, 844);
     assert.notDeepEqual(chaosPoints(10, field), chaosPoints(10, field));
   });
 });

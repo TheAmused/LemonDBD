@@ -123,6 +123,14 @@ def has_box_clearance(floor: dict[str, Any], x: float, y: float, hw: float, hh: 
     return all(point_on_floor(floor, x + px, y + py) for px, py in probes)
 
 
+def ring_perimeter(ring: list[list[float]]) -> float:
+    """Length of a closed ring. Identical to mapLayout.ts."""
+    return sum(
+        math.hypot(ring[(i + 1) % len(ring)][0] - p[0], ring[(i + 1) % len(ring)][1] - p[1])
+        for i, p in enumerate(ring)
+    )
+
+
 def distance_to_landmark(lm: dict[str, Any], x: float, y: float) -> float:
     """Distance from point to landmark footprint or marker. Identical to mapLayout.ts."""
     marker_half_m = 4.5
@@ -185,7 +193,7 @@ def get_clock_labels(floor: dict[str, Any]) -> tuple[tuple[float, float], list[d
 
     labels = []
     outline = floor.get("outline", [])
-    if outside_m is not None or not outline or len(outline[0]) < 3:
+    if outside_m is not None or not outline or len(outline[0]) < 3 or ring_perimeter(outline[0]) == 0:
         for hour in range(1, 13):
             point = None
             for offset in sector_offsets:

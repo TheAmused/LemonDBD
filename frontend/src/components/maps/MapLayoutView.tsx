@@ -8,17 +8,13 @@
  */
 import React, { useId, useMemo } from 'react';
 import type { MapLayout } from '@/types/map';
-import { clockLabels, floorBounds, ringsToPath, roomBox, GAME_TILE_M } from '@/utils/mapLayout';
+import { clockLabels, floorBounds, layoutViewBox, ringsToPath, roomBox, GAME_TILE_M, PAD_M } from '@/utils/mapLayout';
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
 import { MapLandmarks } from '@/components/maps/MapLandmarks';
 
 /** Thumbnail frame in metres; the largest maps are 144 m along their long side. */
 const THUMB_FRAME_M = 152;
-/** Margin around the full view, in metres. */
-const PAD_M = 8;
-/** Extra margin on a floor with named rooms: its clock numbers are printed outside the outline. */
-const ROOMS_PAD_M = 6;
 const SCALE_BAR_M = 32;
 
 export interface MapLayoutViewProps extends Omit<React.SVGProps<SVGSVGElement>, 'viewBox'> {
@@ -54,7 +50,7 @@ export const MapLayoutView: React.FC<MapLayoutViewProps> = ({
   const clock = useMemo(() => (variant === 'full' ? clockLabels(floor) : null), [floor, variant]);
   const { width_m: width, height_m: height } = layout;
   const hasRooms = (floor.rooms?.length ?? 0) > 0;
-  const extra = hasRooms ? ROOMS_PAD_M : 0;
+  const box = layoutViewBox(layout, hasRooms);
 
   if (variant === 'thumb') {
     const b = floorBounds(floor);
@@ -75,7 +71,7 @@ export const MapLayoutView: React.FC<MapLayoutViewProps> = ({
 
   return (
     <svg
-      viewBox={`${-PAD_M - extra} ${-PAD_M - extra} ${width + (PAD_M + extra) * 2} ${height + PAD_M * 3 + extra}`}
+      viewBox={`${box.x} ${box.y} ${box.w} ${box.h}`}
       className={className}
       {...rest}
     >

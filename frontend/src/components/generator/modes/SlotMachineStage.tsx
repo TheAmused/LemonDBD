@@ -116,7 +116,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({
               newly-resized cells -- reels visibly resize/misalign the
               moment the spin ends. */}
           <div className={cn('flex flex-col items-center gap-1.5 sm:gap-3', phase !== 'awaiting' && 'invisible')}>
-            <p aria-live="polite" className="max-w-lg text-center text-xs sm:text-base font-bold text-text-secondary">
+            <p aria-live="polite" className="max-w-72 text-balance text-center text-xs sm:max-w-lg sm:text-base font-bold text-text-secondary">
               {confirmHint}
             </p>
             <DbdButton

@@ -20,11 +20,10 @@ export function SlotMachineIdle({ role, disabled, onPull }: SlotMachineIdleProps
 
   return (
     <StageIdleColumn>
-      <StagePrompt className="leading-relaxed">
-        {dict.generator.slotMachinePrompt}
-        {' '}
-        {dict.generator.slotCursedFlavor}
-      </StagePrompt>
+      <div className="flex flex-col items-center gap-1.5">
+        <StagePrompt>{dict.generator.slotMachinePrompt}</StagePrompt>
+        <StagePrompt className="font-normal text-text-muted sm:text-sm xl:text-base wide:text-lg">{dict.generator.slotCursedFlavor}</StagePrompt>
+      </div>
       <TileButton
         onClick={onPull}
         disabled={disabled}

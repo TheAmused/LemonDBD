@@ -152,7 +152,7 @@ export const IdPleaseBoard: React.FC<IdPleaseBoardProps> = ({ role }) => {
         ) : (
           match && (
             <div className="space-y-3">
-              <IdPleaseMatchCard match={match} />
+              <IdPleaseMatchCard match={match} showSide={laneSide === null} />
               <StreakActionBar>
                 <StreakActionButton variant="red" onClick={() => { void submitResult('loss'); }} disabled={busy}>
                   {s.loseMatch}

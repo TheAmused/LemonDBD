@@ -179,7 +179,7 @@ test('getThumbUrl and getCommunityCoverThumbUrl snap requested widths to backend
   );
   assert.equal(
     getThumbUrl('avatars', '/static/avatars/killers/trapper.webp', 999, ''),
-    '/api/v1/thumbs/avatars/256/killers/trapper.webp',
+    '/api/v1/thumbs/avatars/512/killers/trapper.webp',
   );
   assert.equal(
     getThumbUrl('icons', '/static/icons/perks/sprint.png', 100, ''),

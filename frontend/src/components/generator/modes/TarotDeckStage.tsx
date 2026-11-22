@@ -132,7 +132,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
       </StagePrompt>
 
       {cards ? (
-        <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 lg:grid-cols-4 max-w-full justify-items-center lg:gap-4 xl:gap-6 2xl:gap-8 wide:gap-10 wide-2k:gap-12 wide-4k:gap-16">
+        <div className="grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 xl:grid-cols-4 max-w-full justify-items-center xl:gap-6 2xl:gap-8 wide:gap-10 wide-2k:gap-12 wide-4k:gap-16">
           {cards.map((card, idx) => {
             const { name, slug } = tarotCard(card.type, role);
             const cardName = typeNames[name] || DEFAULT_TYPE_NAMES[name];
@@ -148,7 +148,7 @@ export const TarotDeckStage: React.FC<TarotDeckStageProps> = ({
             return (
               <div key={idx} style={{ perspective: '1200px' }}>
                 <motion.div
-                  className="relative h-44 w-32 xs:h-48 xs:w-36 sm:h-52 sm:w-36 md:h-60 md:w-40 lg:h-68 lg:w-48 xl:h-88 xl:w-60 2xl:h-110 2xl:w-72 wide:h-127.5 wide:w-84 wide-2k:h-145 wide-2k:w-96 wide-4k:h-170 wide-4k:w-110"
+                  className="relative h-44 w-32 phone:h-48 phone:w-36 sm:h-52 sm:w-36 md:h-60 md:w-40 lg:h-68 lg:w-48 xl:h-88 xl:w-60 2xl:h-110 2xl:w-72 wide:h-127.5 wide:w-84 wide-2k:h-145 wide-2k:w-96 wide-4k:h-170 wide-4k:w-110"
                   style={{ transformStyle: 'preserve-3d' }}
                   animate={{
                     rotateY: card.flipped ? 180 : 0,

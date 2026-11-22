@@ -37,7 +37,7 @@ export function SlotMachineComplete({
       <p className="text-sm font-bold text-text-secondary text-center sm:text-base">
         {dict.generator.scatterComplete}
       </p>
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         {selected.map((slot, idx) => {
           const { isObscured, onClick } = getSlotInteraction(
             idx,

@@ -46,7 +46,10 @@ export function VoiceStatusMessage({
         {voiceStatus === 'listening' && (
           <div className={STATUS_COLUMN}>
             <div className="flex items-center justify-center gap-2 max-w-full">
-              <span className="h-2 w-2 rounded-full bg-accent-red animate-ping shrink-0" aria-hidden="true" />
+              <span className="relative flex h-2 w-2 shrink-0" aria-hidden="true">
+                <span className="absolute inline-flex h-full w-full rounded-full bg-accent-red opacity-75 animate-ping" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-red" />
+              </span>
               <span className="type-strong-fluid text-text-primary truncate max-w-70 sm:max-w-xl">
                 {liveTranscript
                   ? `“${liveTranscript}”`

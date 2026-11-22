@@ -55,6 +55,8 @@ export interface MapLayoutFloor {
   rooms?: MapRoom[];
   area_m2: number;
   landmarks?: MapLandmark[];
+  /** Explicit 1-12 clock label positions (metres) overriding automatic placement. */
+  clock?: Array<{ hour: number; x: number; y: number }>;
 }
 
 /** A map's footprint in metres on the 8 m (sqT) grid, drawn by MapLayoutView. */

@@ -477,7 +477,15 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                   <h2 className="absolute top-2 left-2 right-2 text-center text-sm sm:text-base font-black text-text-inverted tracking-tight line-clamp-2">
                     {realm}
                   </h2>
-                  <Badge tone="overlay" size="sm" plain className="absolute bottom-2 right-2 text-text-inverted">
+                  <Badge
+                    tone="overlay"
+                    size="sm"
+                    plain
+                    className={cn(
+                      'absolute bottom-2 right-2 text-text-inverted',
+                      realmRetired && 'left-2 justify-center whitespace-normal text-center leading-tight'
+                    )}
+                  >
                     {realmRetired ? dict.maps.retiredMap : realmMaps.length}
                   </Badge>
                 </TileButton>
@@ -501,7 +509,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                                 {group.realm}
                               </h3>
                             )}
-                            <div className="grid grid-cols-3 gap-2 justify-items-center sm:flex sm:flex-wrap sm:justify-start sm:gap-3">
+                            <div className="grid grid-cols-3 gap-3 justify-items-stretch sm:flex sm:flex-wrap sm:justify-start sm:gap-3">
                               {group.maps.map((m) => (
                                 <MapCard
                                   key={m.id}

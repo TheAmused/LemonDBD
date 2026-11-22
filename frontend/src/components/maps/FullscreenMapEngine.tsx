@@ -62,7 +62,7 @@ function Presence({ present, label }: { present: boolean; label: string }) {
       ) : (
         <X className={cn(LEGEND_ICON, 'text-accent-red/70')} aria-hidden="true" />
       )}
-      <span className="sr-only">{present ? label : `${label}: —`}</span>
+      <span className="sr-only">{label}</span>
     </span>
   );
 }
@@ -95,10 +95,10 @@ export const MapDetailsLegend: React.FC<{ map: MapRealm; className?: string }> =
           </LegendRow>
         )}
         <LegendRow mark={<LandmarkSquare kind="shack" />} label={m.shackYes}>
-          <Presence present={Boolean(map.is_shack)} label={m.shackYes} />
+          <Presence present={Boolean(map.is_shack)} label={map.is_shack ? m.shackYes : `${m.shackYes}, ${m.legendAbsent}`} />
         </LegendRow>
         <LegendRow mark={<LandmarkSquare kind="main" />} label={m.mainBuildingYes}>
-          <Presence present={Boolean(map.is_main_building)} label={m.mainBuildingYes} />
+          <Presence present={Boolean(map.is_main_building)} label={map.is_main_building ? m.mainBuildingYes : `${m.mainBuildingYes}, ${m.legendAbsent}`} />
         </LegendRow>
       </dl>
       <MapSymbolKey map={keyed} className="mt-3 max-sm:hidden border-t border-border-color/60 pt-3 wide-2k:mt-4 wide-2k:pt-4" />
@@ -374,9 +374,9 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
             {multiFloor.floors.map(({ floor, idx }, pos) => {
               const floorTitle =
                 floor.label === 'lower'
-                  ? 'LOWER FLOOR'
+                  ? dict.maps.floorLower
                   : floor.label === 'upper'
-                    ? 'UPPER FLOOR'
+                    ? dict.maps.floorUpper
                     : `${dict.maps.floorAria} ${idx + 1}`;
               return (
                 <div
@@ -387,11 +387,11 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
                     pos > 0 && (isStacked ? 'border-t border-border-color/60 pt-4' : 'border-l border-border-color/60 pl-4')
                   )}
                 >
-                  <span className="text-base font-black tracking-wider text-text-primary mb-1">{floorTitle}</span>
+                  <span className="text-base font-black uppercase tracking-wider text-text-primary mb-1">{floorTitle}</span>
                   <MapLayoutView
                     layout={layout}
                     floorIndex={idx}
-                    title={`${activeMap?.name || ''} — ${floorTitle}`}
+                    title={`${activeMap?.name || ''}, ${floorTitle}`}
                     className="w-full h-auto"
                   />
                 </div>

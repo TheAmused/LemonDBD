@@ -141,8 +141,8 @@ test('FullscreenMapEngine renders indoor map tactical intel without shack and 0 
   assert.ok(html.includes('Indoor'));
   assert.ok(html.includes('142 sqT'));
   assert.ok(html.includes('9,088 m²'));
-  assert.ok(html.includes('>Shack<') && html.includes('Shack: —'), 'a map without a shack explicitly shows it is absent');
-  assert.ok(html.includes('>Main Building<') && html.includes('Main Building: —'), 'a map without a main building explicitly shows it is absent');
+  assert.ok(html.includes('>Shack<') && html.includes('Shack, not present'), 'a map without a shack explicitly shows it is absent');
+  assert.ok(html.includes('>Main Building<') && html.includes('Main Building, not present'), 'a map without a main building explicitly shows it is absent');
   const key = html.slice(html.indexOf('data-testid="map-symbol-key"'));
   assert.ok(!key.includes('Off-limits area') && !key.includes('16 m game tile'), 'no layout drawn: no layout symbols keyed');
   assert.ok(!key.includes('Landmarks &amp; Features'), 'no landmark codes: no landmarks heading');
@@ -182,7 +182,7 @@ test('FullscreenMapEngine renders multi-floor layout with floor headings and doc
     })
   );
   assert.ok(html.includes('data-layout-orientation='), 'multi-floor map uses responsive layout container');
-  assert.ok(html.includes('LOWER FLOOR') && html.includes('UPPER FLOOR'), 'both floor titles are rendered');
+  assert.ok(html.includes('Lower floor') && html.includes('Upper floor'), 'both floor titles are rendered');
   const key = html.slice(html.indexOf('data-testid="map-symbol-key"'), html.indexOf('</aside>'));
   assert.ok(key.includes('>CT<') && key.includes('Courtyard'), 'feature codes drawn on the map are documented in the legend');
 });

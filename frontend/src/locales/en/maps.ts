@@ -40,6 +40,7 @@ export default {
   landmarksApprox: 'Landmark positions are approximate.',
   shackYes: 'Shack',
   mainBuildingYes: 'Main Building',
+  legendAbsent: 'not present',
   surfaceArea: 'Surface Area',
   layoutLabel: 'Layout',
   sizeLabel: 'Size',

@@ -18,6 +18,7 @@ import { LandmarkSquare } from '@/components/maps/MapLandmarks';
 import { MapSymbolKey } from '@/components/maps/MapSymbolKey';
 import { MapLegendFrame } from '@/components/maps/MapLegendFrame';
 import { MapLayoutView } from '@/components/maps/MapLayoutView';
+import { layoutViewBox } from '@/utils/mapLayout';
 import { useMapLayout } from '@/hooks/useMapLayout';
 
 /** The zoom steps of the -/+ buttons, in percent of the picture's real size. */
@@ -157,12 +158,10 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
       .map((floor, idx) => ({ floor, idx }))
       .sort((a, b) => (order[a.floor.label ?? ''] ?? 2) - (order[b.floor.label ?? ''] ?? 2));
     const hasRooms = layout.floors.some((f) => (f.rooms?.length ?? 0) > 0);
-    const extra = hasRooms ? 6 : 0;
-    const vbW = layout.width_m + (8 + extra) * 2;
-    const vbH = layout.height_m + 8 * 3 + extra;
+    const vb = layoutViewBox(layout, hasRooms);
     const pxPerM = 8;
-    const panelW = Math.round(vbW * pxPerM);
-    const panelH = Math.round(vbH * pxPerM);
+    const panelW = Math.round(vb.w * pxPerM);
+    const panelH = Math.round(vb.h * pxPerM);
     const headerH = 32;
     const gap = 24;
     const size = isStacked

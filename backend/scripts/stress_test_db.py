@@ -8,7 +8,6 @@ Usage:
 from __future__ import annotations
 
 import argparse
-import os
 import random
 import sys
 import time
@@ -17,16 +16,15 @@ from pathlib import Path
 from typing import Any
 
 from sqlalchemy import create_engine, text
+from sqlalchemy.engine import make_url
 from sqlalchemy.orm import Session
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-# Ensure app.core.extensions / models can import without a live Flask app config
-os.environ.setdefault("DATABASE_URL", "postgresql+psycopg://postgres:postgres@127.0.0.1:5432/dbd_db")
-
 import app.models  # noqa: E402,F401 -- registers every SQLAlchemy model onto Base.metadata
+from app.core.config import Config  # noqa: E402
 from app.core.extensions import Base  # noqa: E402
 from app.models.challenge_completion import ChallengeCompletionRecord  # noqa: E402
 from app.models.chapter import Chapter  # noqa: E402
@@ -46,10 +44,11 @@ from app.models.user import (  # noqa: E402
     UserShowcase,
 )
 
-ADMIN_URL = "postgresql+psycopg://postgres:postgres@127.0.0.1:5432/postgres"
-SOURCE_URL = "postgresql+psycopg://postgres:postgres@127.0.0.1:5432/dbd_db"
+# Credentials and host come from DATABASE_URL (the same setting the app uses); only the database name differs.
+SOURCE_URL = make_url(Config.SQLALCHEMY_DATABASE_URI)
+ADMIN_URL = SOURCE_URL.set(database="postgres")
 STRESS_DB = "lemondbd_stress_test"
-STRESS_URL = f"postgresql+psycopg://postgres:postgres@127.0.0.1:5432/{STRESS_DB}"
+STRESS_URL = SOURCE_URL.set(database=STRESS_DB)
 
 
 def _fmt_bytes(n: int) -> str:
@@ -636,6 +635,9 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=42, help="Random seed.")
     parser.add_argument("--keep", action="store_true", help="Keep the temporary stress-test database afterwards.")
     args = parser.parse_args()
+
+    if SOURCE_URL.database == STRESS_DB:
+        raise SystemExit(f"DATABASE_URL points at '{STRESS_DB}', which this script drops. Point it at the real database.")
 
     print(f"[1/5] Recreating isolated PostgreSQL database '{STRESS_DB}'...")
     _recreate_stress_db()

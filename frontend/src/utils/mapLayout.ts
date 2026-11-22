@@ -106,6 +106,30 @@ function hasBoxClearance(floor: MapLayoutFloor, x: number, y: number, hw: number
   return probes.every(([px, py]) => pointOnFloor(floor, x + px, y + py));
 }
 
+/** Margin around the full view, in metres. */
+export const PAD_M = 8;
+/** Extra margin on a floor with named rooms: its clock numbers are printed outside the outline. */
+const ROOMS_PAD_M = 6;
+
+/** The SVG viewBox of a full floor view; `hasRooms` widens the margin for numbers printed outside. */
+export function layoutViewBox(layout: MapLayout, hasRooms: boolean): { x: number; y: number; w: number; h: number } {
+  const extra = hasRooms ? ROOMS_PAD_M : 0;
+  return {
+    x: -PAD_M - extra,
+    y: -PAD_M - extra,
+    w: layout.width_m + (PAD_M + extra) * 2,
+    h: layout.height_m + PAD_M * 3 + extra,
+  };
+}
+
+/** Length of a closed ring, in metres. */
+function ringPerimeter(ring: MapPoint[]): number {
+  return ring.reduce((sum, p, i) => {
+    const q = ring[(i + 1) % ring.length];
+    return sum + Math.hypot(q[0] - p[0], q[1] - p[1]);
+  }, 0);
+}
+
 export interface ClockLabel {
   hour: number;
   x: number;
@@ -190,7 +214,8 @@ export function clockLabels(floor: MapLayoutFloor): { center: MapPoint; labels: 
   };
 
   const labels: ClockLabel[] = [];
-  if (rooms.length > 0 || floor.outline.length === 0 || floor.outline[0].length < 3) {
+  // A ring with no length has no perimeter to space the numbers along.
+  if (rooms.length > 0 || floor.outline.length === 0 || floor.outline[0].length < 3 || ringPerimeter(floor.outline[0]) === 0) {
     for (let hour = 1; hour <= 12; hour++) {
       let point: MapPoint | null = null;
       for (const offset of SECTOR_OFFSETS) {

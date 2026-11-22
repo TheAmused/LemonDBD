@@ -17,6 +17,7 @@ import { ZoomControl, type ZoomValue } from '@/components/common/ZoomControl';
 import { LandmarkSquare } from '@/components/maps/MapLandmarks';
 import { MapSymbolKey } from '@/components/maps/MapSymbolKey';
 import { MapLegendFrame } from '@/components/maps/MapLegendFrame';
+import { MapLayoutView } from '@/components/maps/MapLayoutView';
 import { useMapLayout } from '@/hooks/useMapLayout';
 
 /** The zoom steps of the -/+ buttons, in percent of the picture's real size. */
@@ -52,12 +53,16 @@ function LegendRow({ mark, label, children }: { mark: React.ReactNode; label: st
   );
 }
 
-/** A structure the map has: a check, with the full "Shack" / "Main Building" text read out. */
-function Presence({ yes }: { yes: string }) {
+/** A structure the map has or lacks: a green check when present, a muted cross when absent. */
+function Presence({ present, label }: { present: boolean; label: string }) {
   return (
     <span className="inline-flex">
-      <CheckIcon className={cn(LEGEND_ICON, 'text-accent-green')} aria-hidden="true" />
-      <span className="sr-only">{yes}</span>
+      {present ? (
+        <CheckIcon className={cn(LEGEND_ICON, 'text-accent-green')} aria-hidden="true" />
+      ) : (
+        <X className={cn(LEGEND_ICON, 'text-accent-red/70')} aria-hidden="true" />
+      )}
+      <span className="sr-only">{present ? label : `${label}: —`}</span>
     </span>
   );
 }
@@ -69,8 +74,6 @@ export const MapDetailsLegend: React.FC<{ map: MapRealm; className?: string }> =
   const layout = useMapLayout(map);
   const keyed = layout && !map.layout ? { ...map, layout } : map;
 
-  // Only what the map has is listed: a shack or a main building it lacks is not mentioned, and the symbol
-  // key below names only the symbols drawn on it. The frame folds, moves and remembers both.
   return (
     <MapLegendFrame title={m.legendTitle} toggleLabel={m.legendToggleAria} moveLabel={m.legendMoveAria} className={className}>
       <dl className="grid grid-cols-2 gap-x-5 gap-y-1.5 sm:mt-3 sm:block sm:space-y-2.5 wide-2k:mt-4 wide-2k:space-y-3.5">
@@ -91,16 +94,12 @@ export const MapDetailsLegend: React.FC<{ map: MapRealm; className?: string }> =
             </span>
           </LegendRow>
         )}
-        {map.is_shack && (
-          <LegendRow mark={<LandmarkSquare kind="shack" />} label={m.shackYes}>
-            <Presence yes={m.shackYes} />
-          </LegendRow>
-        )}
-        {map.is_main_building && (
-          <LegendRow mark={<LandmarkSquare kind="main" />} label={m.mainBuildingYes}>
-            <Presence yes={m.mainBuildingYes} />
-          </LegendRow>
-        )}
+        <LegendRow mark={<LandmarkSquare kind="shack" />} label={m.shackYes}>
+          <Presence present={Boolean(map.is_shack)} label={m.shackYes} />
+        </LegendRow>
+        <LegendRow mark={<LandmarkSquare kind="main" />} label={m.mainBuildingYes}>
+          <Presence present={Boolean(map.is_main_building)} label={m.mainBuildingYes} />
+        </LegendRow>
       </dl>
       <MapSymbolKey map={keyed} className="mt-3 max-sm:hidden border-t border-border-color/60 pt-3 wide-2k:mt-4 wide-2k:pt-4" />
     </MapLegendFrame>
@@ -122,6 +121,7 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
     () => availableMaps.find((m) => m.id === mapId) || null,
     [availableMaps, mapId]
   );
+  const layout = useMapLayout(activeMap);
   const imageSrc = getMapImageSrc(activeMap, backendBase);
 
   // Zoom is a percent of the picture's real size, or 'fit' (the whole picture in the map area, which is
@@ -148,7 +148,31 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
     setPan({ x: 0, y: 0 });
   }
 
-  const fitPercent = natural && box ? Math.min(box.w / natural.w, box.h / natural.h) * 100 : 100;
+  const isMultiFloor = Boolean(layout && layout.floors.length > 1);
+  const isStacked = isMultiFloor && box ? box.w < box.h || box.w < 640 : false;
+  const multiFloor = useMemo(() => {
+    if (!layout || layout.floors.length <= 1) return null;
+    const order: Record<string, number> = { lower: 0, upper: 1 };
+    const floors = layout.floors
+      .map((floor, idx) => ({ floor, idx }))
+      .sort((a, b) => (order[a.floor.label ?? ''] ?? 2) - (order[b.floor.label ?? ''] ?? 2));
+    const hasRooms = layout.floors.some((f) => (f.rooms?.length ?? 0) > 0);
+    const extra = hasRooms ? 6 : 0;
+    const vbW = layout.width_m + (8 + extra) * 2;
+    const vbH = layout.height_m + 8 * 3 + extra;
+    const pxPerM = 8;
+    const panelW = Math.round(vbW * pxPerM);
+    const panelH = Math.round(vbH * pxPerM);
+    const headerH = 32;
+    const gap = 24;
+    const size = isStacked
+      ? { w: panelW, h: (panelH + headerH) * floors.length + gap * (floors.length - 1) }
+      : { w: panelW * floors.length + gap * (floors.length - 1), h: panelH + headerH };
+    return { floors, panelW, panelH, headerH, gap, size };
+  }, [layout, isStacked]);
+
+  const effectiveNatural = multiFloor ? multiFloor.size : natural;
+  const fitPercent = effectiveNatural && box ? Math.min(box.w / effectiveNatural.w, box.h / effectiveNatural.h) * 100 : 100;
   const zoomPercent = zoom === 'fit' ? fitPercent : zoom;
   // Fit can be above the largest step (a small picture on a big screen), so it widens both bounds.
   const clampZoom = useCallback(
@@ -330,7 +354,51 @@ export const FullscreenMapEngineView: React.FC<FullscreenMapEngineProps> = ({ ma
         style={{ touchAction: 'none' }}
         className="relative flex-1 min-h-0 w-full cursor-default overflow-hidden flex items-center justify-center bg-bg-primary pt-4 pb-20 px-4"
       >
-        {imageSrc && !imageFailed ? (
+        {multiFloor && layout ? (
+          <div
+            data-pan-target
+            data-layout-orientation={isStacked ? 'vertical' : 'horizontal'}
+            style={{
+              width: multiFloor.size.w,
+              height: multiFloor.size.h,
+              transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoomPercent / 100})`,
+              transformOrigin: 'center center',
+              transition: isDragging ? 'none' : 'transform 75ms ease-out',
+            }}
+            className={cn(
+              'shrink-0 select-none flex items-center justify-center rounded-card bg-bg-surface/60 p-3 shadow-2xl',
+              isStacked ? 'flex-col gap-6' : 'flex-row gap-6',
+              isDragging ? 'cursor-grabbing' : 'cursor-grab'
+            )}
+          >
+            {multiFloor.floors.map(({ floor, idx }, pos) => {
+              const floorTitle =
+                floor.label === 'lower'
+                  ? 'LOWER FLOOR'
+                  : floor.label === 'upper'
+                    ? 'UPPER FLOOR'
+                    : `${dict.maps.floorAria} ${idx + 1}`;
+              return (
+                <div
+                  key={idx}
+                  style={{ width: multiFloor.panelW }}
+                  className={cn(
+                    'flex flex-col items-center shrink-0',
+                    pos > 0 && (isStacked ? 'border-t border-border-color/60 pt-4' : 'border-l border-border-color/60 pl-4')
+                  )}
+                >
+                  <span className="text-base font-black tracking-wider text-text-primary mb-1">{floorTitle}</span>
+                  <MapLayoutView
+                    layout={layout}
+                    floorIndex={idx}
+                    title={`${activeMap?.name || ''} — ${floorTitle}`}
+                    className="w-full h-auto"
+                  />
+                </div>
+              );
+            })}
+          </div>
+        ) : imageSrc && !imageFailed ? (
           <Img
             data-pan-target
             src={imageSrc}

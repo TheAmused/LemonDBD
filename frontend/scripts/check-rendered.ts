@@ -5,7 +5,7 @@
 //
 //  1. Touch targets: on a phone viewport every visible control must be at least 44x44 CSS px,
 //     measured from its real bounding box (not guessed from Tailwind classes).
-//  2. Themes: every page is loaded in light, light-lemon and dark, and every piece of visible text
+//  2. Themes: every page is loaded in light and dark, and every piece of visible text
 //     must keep its contrast against the background it actually sits on (WCAG AA 4.5:1, or 3:1 for
 //     large text). Text below 1.5:1 is invisible, which is always a failure.
 //
@@ -18,7 +18,7 @@ import { chromium, type Page } from 'playwright';
 const BASE = (process.env.CHECK_BASE_URL ?? 'http://localhost').replace(/\/$/, '');
 const LOCALE = process.env.CHECK_LOCALE ?? 'en';
 const APP = path.resolve(__dirname, '../src/app/[locale]');
-const THEMES = ['light', 'light-lemon', 'dark'] as const;
+const THEMES = ['light', 'dark'] as const;
 const MIN_TARGET = 44;
 const INVISIBLE_RATIO = 1.5;
 

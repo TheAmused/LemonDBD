@@ -530,7 +530,7 @@ function CatalogSource({ onAdd, existingIds, locale }: {
                   onClick={() => toggle(item.key)}
                   aria-pressed={isSelected}
                   aria-label={item.name}
-                  className="relative flex flex-col items-center justify-start self-start rounded-control disabled:opacity-40 transition-transform hover:scale-105"
+                  className="relative flex flex-col items-center justify-start self-start rounded-control disabled:opacity-dimmed transition-transform hover:scale-105"
                 >
                   <TierItemTile
                     item={item}

@@ -26,6 +26,8 @@ interface StreakPanelBaseProps {
   creator?: string;
   disabled?: boolean;
   disabledReason?: string | null;
+  /** Art drawn dark on a white sheet: in the light theme it is multiplied into the card instead of sitting on it as a white box. */
+  multiplyArt?: boolean;
   /** Shows a trophy badge -- this challenge has already been fully cleared. */
   completed?: boolean;
   /** Killer count frozen at that completion, shown next to the gold badge. */
@@ -56,6 +58,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
       href,
       onClick,
       comingSoon,
+      multiplyArt,
       disabled,
       disabledReason,
       completed,
@@ -71,17 +74,13 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
     <>
       {image && (
         <>
-          <div
-            aria-hidden="true"
-            className="dark:hidden pointer-events-none absolute -right-6 -bottom-6 h-44 w-44 rounded-full bg-bg-primary/90 blur-xl"
-          />
           <Img
             src={image}
             alt=""
             aria-hidden="true"
             loading="lazy"
             decoding="async"
-            className="pointer-events-none absolute -right-5 -bottom-5 h-40 w-40 object-cover opacity-100 dark:opacity-70 dark:[mask-image:radial-gradient(circle_at_bottom_right,black,transparent_85%)]"
+            className={`pointer-events-none absolute -right-5 -bottom-5 h-40 w-40 object-cover opacity-100 dark:opacity-70 ${multiplyArt ? 'streak-art-multiply' : 'streak-art'} dark:[mask-image:radial-gradient(circle_at_bottom_right,black,transparent_85%)]`}
           />
         </>
       )}
@@ -136,7 +135,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
         <button
           type="button"
           onClick={() => setShowDisabledModal(true)}
-          className={`text-left cursor-pointer ${base} bg-bg-elevated/50 opacity-70`}
+          className={`text-left cursor-pointer ${base} bg-bg-elevated/50 card-inactive`}
         >
           {body}
         </button>
@@ -151,7 +150,7 @@ export const StreakPanel: React.FC<StreakPanelProps> = ({
   }
 
   if (comingSoon) {
-    return <div className={`${base} bg-bg-elevated/50 opacity-70`}>{body}</div>;
+    return <div className={`${base} bg-bg-elevated/50 card-inactive`}>{body}</div>;
   }
 
   if (onClick) {

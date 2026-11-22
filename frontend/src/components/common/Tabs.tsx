@@ -201,7 +201,7 @@ export function Tabs<T extends string>({
             onKeyDown={(e) => onKeyDown(e, i)}
             {...restButtonProps}
             className={cn(
-              'inline-flex shrink-0 cursor-pointer items-center justify-center whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:cursor-not-allowed disabled:opacity-50',
+              'inline-flex shrink-0 cursor-pointer items-center justify-center whitespace-nowrap transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:cursor-not-allowed disabled:opacity-disabled',
               SIZES[size],
               fullWidth && 'flex-1',
               variantClass,

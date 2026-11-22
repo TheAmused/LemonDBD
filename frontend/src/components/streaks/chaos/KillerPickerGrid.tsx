@@ -37,7 +37,7 @@ const KillerTile: React.FC<{
       disabled={disabled || isCompleted}
       aria-label={`${displayName}${isCompleted ? ' (Cleared)' : ''}`}
       className={`relative flex select-none flex-col items-center overflow-hidden rounded-control border transition-all ${
-        isCompleted ? '' : 'disabled:opacity-40'
+        isCompleted ? '' : 'disabled:opacity-dimmed'
       } ${cardBorder}`}
     >
       {isCompleted && (

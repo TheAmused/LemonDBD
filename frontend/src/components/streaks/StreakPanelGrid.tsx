@@ -236,6 +236,7 @@ export const StreakPanelGrid: React.FC<StreakPanelGridProps> = ({ locale, role }
               title={panel.title}
               image={panel.image}
               creator={panel.creator}
+              multiplyArt
               completed={idPleaseCardCompleted}
               prefetchHrefs={[`/${locale}/streaks/${role}/id-please`]}
               onClick={() => {

@@ -30,7 +30,7 @@ export function buildStatusConfig(rawVoiceDict: Dictionary['voice']): Record<Voi
       badge: rawVoiceDict.processingAudio || '',
       dotClass: 'bg-accent-amber animate-pulse',
       icon: RefreshCw,
-      buttonColor: 'bg-accent-amber text-text-inverted ring-accent-amber/40',
+      buttonColor: 'bg-amber-fill text-on-amber-fill ring-accent-amber/40',
     },
     matched: {
       badge: rawVoiceDict.matchedExecuting || '',
@@ -42,7 +42,7 @@ export function buildStatusConfig(rawVoiceDict: Dictionary['voice']): Record<Voi
       badge: rawVoiceDict.noMatchTryAgain || '',
       dotClass: 'bg-accent-amber',
       icon: MicOff,
-      buttonColor: 'bg-accent-amber text-text-inverted ring-accent-amber/30',
+      buttonColor: 'bg-amber-fill text-on-amber-fill ring-accent-amber/30',
     },
     error: {
       badge: rawVoiceDict.micErrorCheckPermission || '',

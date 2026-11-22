@@ -5,7 +5,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { Sun, Moon, Laptop, Citrus } from 'lucide-react';
+import { Sun, Moon, Laptop } from 'lucide-react';
 import { FlagIcon } from './FlagIcon';
 import { FogReportIcon, CampfireMugIcon } from '@/components/icons/DbdIcons';
 
@@ -108,14 +108,12 @@ export const SidebarBottomControls: React.FC<SidebarBottomControlsProps> = ({
   useDismissOnOutsideOrEscape(isThemeMenuOpen, themeMenuRef, () => setIsThemeMenuOpen(false));
 
   const lightLabel = dict.sidebar.themeLight;
-  const lightLemonLabel = dict.sidebar.themeLightLemon;
   const darkLabel = dict.sidebar.themeDark;
   const systemLabel = dict.sidebar.themeSystem;
 
-  // Short wordings for the narrow trigger button ("Light mode (Lemon)" -> "Lemon").
+  // Short wordings for the narrow trigger button ("Light mode" -> "Light").
   const THEME_OPTIONS: { id: ThemeOptionId; label: string; short: string; icon: React.ReactNode }[] = [
     { id: 'light', label: lightLabel, short: dict.sidebar.themeLightShort, icon: <Sun className="icon-md" /> },
-    { id: 'light-lemon', label: lightLemonLabel, short: dict.sidebar.themeLightLemonShort, icon: <Citrus className="icon-md" /> },
     { id: 'dark', label: darkLabel, short: dict.sidebar.themeDarkShort, icon: <Moon className="icon-md" /> },
     { id: 'system', label: systemLabel, short: dict.sidebar.themeSystemShort, icon: <Laptop className="icon-md" /> },
   ];

@@ -95,7 +95,7 @@ describe('ui: shared primitives', () => {
 });
 
 describe('ui: theming', () => {
-  it('no fixed palette colours (white/black/slate/gray/zinc/neutral); use theme tokens so light, lemon and dark all work', () => {
+  it('no fixed palette colours (white/black/slate/gray/zinc/neutral); use theme tokens so light and dark both work', () => {
     const bad = scanLines(/\b(text|bg|border|ring|fill|stroke|from|to|via)-(white|black|slate-\d+|gray-\d+|zinc-\d+|neutral-\d+|stone-\d+)\b/);
     assert.deepEqual(bad, [], `Theme-blind colour utilities:\n${bad.join('\n')}`);
   });

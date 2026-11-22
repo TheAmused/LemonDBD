@@ -63,9 +63,8 @@ All routes under `app/[locale]/*` mount inside the root locale layout (`app/[loc
         - **Unverified email state** (`mustConfirmEmail(user, verificationRequired)`): `"Email not verified. Verify now"` link button (`sidebar.emailNotVerified`, opens `AuthModal` in email verification mode).
     - **Bottom Controls** (`components/sidebar/SidebarBottomControls.tsx`):
       - **Language Picker**: trigger button (`FlagIcon` + uppercase locale code `EN` / `PL` / `ES` / `DE` / `JA`, `aria-label="Switch Language"` / `sidebar.switchLanguage`, `aria-expanded`); popover `Surface` menu listing 5 `Link` items (`English`, `Polski`, `Español`, `Deutsch`, `日本語` with `FlagIcon`).
-      - **Theme Picker**: trigger button (current theme icon + `FitText` label/short label, `aria-label="Change Theme"` / `sidebar.toggleTheme`, `aria-expanded`); popover `Surface` menu with 4 `MenuItem` options:
+      - **Theme Picker**: trigger button (current theme icon + `FitText` label/short label, `aria-label="Change Theme"` / `sidebar.toggleTheme`, `aria-expanded`); popover `Surface` menu with 3 `MenuItem` options:
         - `"Light mode"` / short `"Light"` (`sidebar.themeLight` / `themeLightShort`, `Sun` icon).
-        - `"Light mode (Lemon)"` / short `"Lemon"` (`sidebar.themeLightLemon` / `themeLightLemonShort`, `Citrus` icon).
         - `"Dark mode"` / short `"Dark"` (`sidebar.themeDark` / `themeDarkShort`, `Moon` icon).
         - `"System theme"` / short `"System"` (`sidebar.themeSystem` / `themeSystemShort`, `Laptop` icon).
       - **Report Bug Button**: `"Report Bug"` (`sidebar.reportBug`, `FogReportIcon`, opens `BugReportModal`).

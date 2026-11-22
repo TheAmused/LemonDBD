@@ -52,7 +52,7 @@ export const RoleTabs: React.FC<RoleTabsProps> = ({ locale }) => {
       value: 'challenge',
       href: `/${locale}/streaks/challenge`,
       label: `${survivorLabel}/${killerLabel}`,
-      activeClassName: 'bg-accent-amber border-accent-amber text-text-inverted',
+      activeClassName: 'bg-amber-fill border-accent-amber text-on-amber-fill',
     },
   ];
 

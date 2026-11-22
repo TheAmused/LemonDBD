@@ -6,7 +6,7 @@
 - **Layout entry**: `app/[locale]/layout.tsx`
 - **Providers & global runtime hosts**:
   - `components/UmamiScript.tsx` (analytics script loader)
-  - `components/ThemeProvider.tsx` (`next-themes` wrapper: `light`, `dark`, `light-lemon`, `system`)
+  - `components/ThemeProvider.tsx` (`next-themes` wrapper: `light`, `dark`, `system`; a saved `light-lemon` is migrated to `light`)
   - `context/AuthContext.tsx` (`AuthProvider`)
   - `context/PreferencesContext.tsx` (`PreferencesProvider`)
   - `context/SiteConfigContext.tsx` (`SiteConfigProvider`)
@@ -114,9 +114,8 @@
         - `ja`: JP `FlagIcon` + `"日本語"`
     - **Theme Switcher**:
       - Trigger button (`aria-label="Change Theme"` / `sidebar.toggleTheme`, `aria-expanded`): current theme icon + `FitText` label (full label or short fallback).
-      - Dropdown menu (`Surface`, opens upward): 4 `MenuItem` options:
+      - Dropdown menu (`Surface`, opens upward): 3 `MenuItem` options:
         - `light`: `Sun` icon + `"Light mode"` (`sidebar.themeLight`, short `"Light"` / `sidebar.themeLightShort`)
-        - `light-lemon`: `Citrus` icon + `"Light mode (Lemon)"` (`sidebar.themeLightLemon`, short `"Lemon"` / `sidebar.themeLightLemonShort`)
         - `dark`: `Moon` icon + `"Dark mode"` (`sidebar.themeDark`, short `"Dark"` / `sidebar.themeDarkShort`)
         - `system`: `Laptop` icon + `"System theme"` (`sidebar.themeSystem`, short `"System"` / `sidebar.themeSystemShort`)
     - **Support & Feedback row**:

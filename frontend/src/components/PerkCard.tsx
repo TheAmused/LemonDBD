@@ -124,7 +124,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
       >
         {coordinateLabel && (
           <Badge
-            tone="overlay" size="xs" plain className={`absolute z-10 text-accent-amber ${size === 'fill' ? 'top-1 left-1' : 'top-0 left-0 px-1 py-0'}`}
+            tone="coordinate" size="xs" plain className={`absolute z-10 ${size === 'fill' ? 'top-1 left-1' : 'top-0 left-0 px-1 py-0'}`}
           >
             {coordinateLabel}
           </Badge>

@@ -206,7 +206,7 @@ export const ChaosBoard: React.FC = () => {
               </h3>
 
               <div
-                className={`transition-opacity ${run?.perks_revealed ? '' : 'opacity-40 pointer-events-none'
+                className={`transition-opacity ${run?.perks_revealed ? '' : 'opacity-dimmed pointer-events-none'
                   }`}
               >
                 <KillerPickerGrid

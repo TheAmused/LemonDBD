@@ -8,6 +8,8 @@ Cel: jedna zmiana w jednym miejscu przesuwa wygląd całej strony. Poniżej źr�
 | Warstwy z-index (modal, modal-top, system, popover, tooltip) | `tokens.css` (`--layer-*`, `z-modal`, `z-modal-top`, `z-system`) | `z-modal`, `z-modal-top`, `z-system`. Lokalne układanie w komponencie to zwykłe `z-0`..`z-40`. |
 | Poświaty (amber, red, green, muted; sm, md, lg, soft) | `tokens.css` (`--shadow-glow-*`) | `shadow-glow-amber-md` itd. Bez `shadow-[0_0_Npx_...]`. |
 | Kolory, tło, ramki, akcenty | `frontend/src/app/styles/base.css` (motywy) i `tokens.css` (`--color-*`) | `bg-bg-surface`, `text-accent-red`... Bez kolorów Tailwinda i `#hex`. |
+| Warstwy na zdjęciach i portretach (przyciemnienie pod tytułem, zanik banera, welon portretu, plakietka współrzędnych) | `base.css` (`--image-scrim`, `--portrait-veil`, `--banner-fade`, `--accent-red-on-scrim`, `--coord-chip-*`, osobno dla jasnego i ciemnego motywu) i `tokens.css` | `from-image-scrim/90`, `from-banner-fade`, `from-portrait-veil/40`, `text-accent-red-on-scrim`, `<Badge tone="coordinate">`. Bez `dark:` w komponencie. |
+| Wygląd tylko jasnego motywu, którego nie da się wyrazić tokenem (grafika kart serii, wyłączona karta, etykieta lore, poświata karty Smash) | `frontend/src/app/styles/effects.css` (`:root:not(.dark)`) | klasy `streak-art`, `card-inactive`, `card-ash-border`, `lore-ash-*`. Motyw zmienia się tam, nie w komponencie. |
 | Typografia | `frontend/src/app/styles/type-roles.css` | `type-label`, `type-strong`, `type-card-title`... |
 | Przycisk | `common/Button.tsx` (warianty, rozmiary, promień, cel dotyku) | `<Button variant size icon pill>`; link wyglądający jak przycisk: `buttonClassName()` |
 | Przełącznik włącz/wyłącz | `common/ToggleChip.tsx` | `<ToggleChip pressed tone size>` |

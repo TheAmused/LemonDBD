@@ -5,7 +5,7 @@ import React from 'react';
 import { cn } from '@/utils/cn';
 import { FitText } from '@/components/common/FitText';
 
-export type BadgeTone = 'neutral' | 'red' | 'redSolid' | 'amber' | 'green' | 'blue' | 'purple' | 'overlay' | 'onAccent';
+export type BadgeTone = 'neutral' | 'red' | 'redSolid' | 'amber' | 'green' | 'blue' | 'purple' | 'overlay' | 'coordinate' | 'onAccent';
 export type BadgeSize = 'xs' | 'sm' | 'md' | 'lg';
 
 const BADGE_TONES: Record<BadgeTone, string> = {
@@ -18,12 +18,14 @@ const BADGE_TONES: Record<BadgeTone, string> = {
   purple: 'bg-accent-purple/10 text-accent-purple border-accent-purple/30',
   /** A frosted label laid over an image or a card banner. */
   overlay: 'bg-bg-surface/85 text-text-secondary border-border-color/60 shadow-xs backdrop-blur-md',
+  /** The page and slot marker on a perk icon: frosted in the dark theme, bare text in the light one (tokens decide). */
+  coordinate: 'bg-coord-chip text-accent-amber border-coord-chip-border shadow-xs backdrop-blur-md',
   /** A count inside a coloured button: takes the button's text colour. */
   onAccent: 'bg-text-inverted/20 text-inherit border-transparent',
 };
 
 // Tones that read as a flat chip instead of a pill.
-const CHIP_TONES: readonly BadgeTone[] = ['neutral', 'overlay'];
+const CHIP_TONES: readonly BadgeTone[] = ['neutral', 'overlay', 'coordinate'];
 
 const BADGE_SIZES: Record<BadgeSize, string> = {
   xs: 'px-1.5 py-0.5 text-micro',

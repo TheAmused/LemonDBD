@@ -47,19 +47,6 @@ describe('SidebarBottomControls Theme Switcher', () => {
     assert.ok(html.includes('Light mode'), 'Button must show the light mode label');
   });
 
-  it('shows the current theme label on the closed button when theme is "light-lemon"', () => {
-    const html = renderWithDictionary(
-      React.createElement(SidebarBottomControls, {
-        currentLocale: 'en',
-        theme: 'light-lemon',
-        onOpenBugModal: () => {},
-        onOpenCoffeeModal: () => {},
-      })
-    );
-
-    assert.ok(html.includes('Light mode (Lemon)'), 'Button must show the light-lemon mode label');
-  });
-
   it('shows the current theme label on the closed button when theme is "dark"', () => {
     const html = renderWithDictionary(
       React.createElement(SidebarBottomControls, {
@@ -99,7 +86,7 @@ describe('SidebarBottomControls Theme Switcher', () => {
     assert.ok(html.includes('Dark mode'), 'Must fall back to the dark option label');
   });
 
-  it('uses dictionary fallbacks for light, light-lemon, dark, and system labels when provided', () => {
+  it('uses dictionary fallbacks for light, dark, and system labels when provided', () => {
     const html = renderWithDictionary(
       React.createElement(SidebarBottomControls, {
         currentLocale: 'en',
@@ -111,7 +98,6 @@ describe('SidebarBottomControls Theme Switcher', () => {
         overrides: {
           sidebar: {
             themeLight: 'Jasny',
-            themeLightLemon: 'Jasny (Cytryna)',
             themeDark: 'Ciemny',
             themeSystem: 'Systemowy',
           },

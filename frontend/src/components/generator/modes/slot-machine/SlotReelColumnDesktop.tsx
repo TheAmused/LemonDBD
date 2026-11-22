@@ -130,7 +130,7 @@ export function SlotReelColumnDesktop({
           reelWindow
         )}
         {reel.locked && (
-          <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-accent-amber text-text-inverted shadow-xs">
+          <div className="absolute -top-2 -right-2 z-30 flex h-6 w-6 items-center justify-center rounded-full bg-amber-fill text-on-amber-fill shadow-xs">
             <LockIcon className="icon-sm" />
           </div>
         )}

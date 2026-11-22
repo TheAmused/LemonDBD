@@ -37,7 +37,7 @@ export function badgeGradientProps(value: string): { className: string; style?: 
   if (custom) {
     return { className: '', style: { backgroundImage: `linear-gradient(135deg, ${custom.from}, ${custom.to})` } };
   }
-  return { className: `bg-gradient-to-br ${value}` };
+  return { className: `gradient-badge bg-gradient-to-br ${value}` };
 }
 
 /**

@@ -357,7 +357,7 @@
   --spacing-wheel-wide: min(720px, 58dvh);
   --spacing-wheel-2k: min(900px, 60dvh);
   --spacing-wheel-4k: min(1100px, 62dvh);
-  --spacing-chaos-wheel: 260px;
+  --spacing-chaos-wheel: min(300px, calc(100vw - 3.5rem));
   --spacing-chaos-wheel-sm: 330px;
   --spacing-chaos-wheel-md: 370px;
   --spacing-chaos-wheel-xl: min(480px, calc(100vh - 480px));

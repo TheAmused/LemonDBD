@@ -1,7 +1,7 @@
 // frontend/src/components/generator/shared/StageFrame.tsx
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { cn } from '@/utils/cn';
 
 interface StageFrameProps {
@@ -17,6 +17,22 @@ interface StageFrameProps {
 }
 
 export const StageFrame: React.FC<StageFrameProps> = ({ children, className, topLeft, topRight }) => {
+  const hasHeader = Boolean(topLeft || topRight);
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  // Height of the header block (with its bottom margin). Below xl the header is a tall stack of rows, which pushes
+  // the centred stage visibly below the middle of the screen; an equal spacer under the stage puts its middle back there.
+  const [headerPx, setHeaderPx] = useState(0);
+
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const measure = () => setHeaderPx(el.offsetHeight + parseFloat(getComputedStyle(el).marginBottom));
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasHeader]);
+
   return (
     <div
       className={cn(
@@ -30,8 +46,8 @@ export const StageFrame: React.FC<StageFrameProps> = ({ children, className, top
         className="pointer-events-none absolute inset-0 dbd-cinematic-vignette"
       />
 
-      {(topLeft || topRight) && (
-        <div className="relative z-20 mb-3 sm:mb-4 flex shrink-0 flex-col items-center justify-center gap-3 xl:flex-row xl:items-center xl:justify-between">
+      {hasHeader && (
+        <div ref={headerRef} className="relative z-20 mb-3 sm:mb-4 flex shrink-0 flex-col items-center justify-center gap-3 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 w-full xl:w-auto shrink-0 order-1 xl:order-2">
             {topRight}
           </div>
@@ -44,6 +60,9 @@ export const StageFrame: React.FC<StageFrameProps> = ({ children, className, top
       <div className="relative z-10 flex flex-1 min-h-80 flex-col items-center justify-center sm:min-h-110 lg:min-h-130">
         {children}
       </div>
+
+      {/* It is the first thing to shrink when the screen is short, so it never causes a scroll of its own. */}
+      {hasHeader && <div aria-hidden="true" className="min-h-0 shrink xl:hidden" style={{ flexBasis: headerPx }} />}
     </div>
   );
 };

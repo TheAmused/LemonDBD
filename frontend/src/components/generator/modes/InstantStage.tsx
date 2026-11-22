@@ -1,7 +1,7 @@
 // frontend/src/components/generator/modes/InstantStage.tsx
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { DbdButton } from '@/components/common/Button';
 import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
@@ -11,7 +11,7 @@ import { pickRandomLoadout, buildDrawnSlots } from '../lib/perkPicker';
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
 import { StageIdleColumn, StagePrompt } from '../shared/StageIdle';
-import { playFanfare, playReelThud } from '@/utils/perkAudio';
+import { playFanfare } from '@/utils/perkAudio';
 import { useDictionary } from "@/context/DictionaryContext";
 
 export interface InstantStageProps {
@@ -52,23 +52,12 @@ export const InstantStage: React.FC<InstantStageProps> = ({
     }) => {
   const dict = useDictionary();
   const [revealSlots, setRevealSlots] = useState<(DrawnSlot | null)[]>(() => [0, 1, 2, 3].map((i) => initialSlots?.[i] ?? null));
-  const stopTimeoutsRef = useRef<(NodeJS.Timeout | number)[]>([]);
   const reduceMotion = useReducedMotion();
-
-  useEffect(() => {
-    return () => {
-      stopTimeoutsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
-    };
-  }, []);
 
   const handleRoll = () => {
     if (activePlayablePerks.length === 0) return;
 
     onRollStart?.();
-
-    // A new roll replaces the previous one: its pending sounds and completion are cancelled, so rolls can be spammed.
-    stopTimeoutsRef.current.forEach((timeoutId) => clearTimeout(timeoutId));
-    stopTimeoutsRef.current = [];
 
     const picked = pickRandomLoadout(activePlayablePerks, activeMutator, 4);
     const slots = buildDrawnSlots(picked, activePlayablePerks);
@@ -76,20 +65,14 @@ export const InstantStage: React.FC<InstantStageProps> = ({
     // fewer than 4 perks were available to draw.
     setRevealSlots([0, 1, 2, 3].map((i) => slots[i] || null));
 
-    slots.forEach((_, i) => {
-      const timeoutId = window.setTimeout(() => playReelThud(), i * 150);
-      stopTimeoutsRef.current.push(timeoutId);
-    });
+    // The perks are on screen the moment of the click, so the one sound plays right then too:
+    // no per-slot ticks, nothing that keeps playing after the roll is already done.
+    playFanfare();
 
     // Every click is a finished roll: its perks leave the No-Repeat pool right away, however fast
-    // the next click comes. Only the fanfare waits for the reveal (and is dropped by a newer roll).
+    // the next click comes.
     onRollComplete(slots);
     onLoadoutComplete?.();
-
-    const finalTimeoutId = window.setTimeout(() => {
-      playFanfare();
-    }, slots.length * 150 + 200);
-    stopTimeoutsRef.current.push(finalTimeoutId);
   };
 
   return (
@@ -111,7 +94,7 @@ export const InstantStage: React.FC<InstantStageProps> = ({
           empty and filled slots share the exact same footprint, so rolling
           never changes the stage's height (no jump, no reserved dead
           space when idle either). */}
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5 lg:grid-cols-4 xl:gap-6 2xl:gap-8 wide:gap-10 wide-2k:gap-12 wide-4k:gap-16">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5 xl:grid-cols-4 xl:gap-6 2xl:gap-8 wide:gap-10 wide-2k:gap-12 wide-4k:gap-16">
         {revealSlots.map((slot, i) => {
           const { isObscured, onClick } = getSlotInteraction(
             i,

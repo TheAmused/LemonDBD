@@ -94,6 +94,9 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
 
     const size = canvas.width;
     const scale = size / 500;
+    // Canvas pixels per CSS pixel: the wheel is drawn at 800 but shown at about 300 on a phone.
+    const displayPx = canvas.clientWidth || size;
+    const pxPerCss = size / displayPx;
     const center = size / 2;
     const radius = center - 26 * scale;
     const hubRadius = 46 * scale;
@@ -131,29 +134,37 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
 
       const midAngle = startAngle + sliceAngle / 2;
       const [line1, line2] = getMutatorDisplayLines(m, dict);
-      const iconFontSize = Math.round(22 * scale);
-      const textFontSize = Math.round(12.5 * scale);
-      const contentRadius = 145 * scale;
+      const contentRadius = 158 * scale;
 
       const cx = center + Math.cos(midAngle) * contentRadius;
       const cy = center + Math.sin(midAngle) * contentRadius;
 
-      ctx.save();
-      // Draw icon - Always faces the user upright (no rotation)
-      ctx.font = canvasEmojiFont(iconFontSize);
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(m.icon, cx, cy - 18 * scale);
+      // Sizes are chosen in CSS pixels (the canvas is drawn at 800 and shown much smaller on a phone),
+      // then narrowed until the longest line fits the slice at this distance from the hub.
+      const sliceWidth = 2 * contentRadius * Math.sin(sliceAngle / 2) * 0.92;
+      let textPx = Math.min(12, Math.max(8.5, displayPx * 0.03)) * pxPerCss;
+      const iconPx = Math.min(26, Math.max(16, displayPx * 0.057)) * pxPerCss;
+      ctx.font = canvasFont('bold', textPx);
+      const widest = Math.max(ctx.measureText(line1).width, line2 ? ctx.measureText(line2).width : 0);
+      if (widest > sliceWidth) textPx = Math.max(7.5 * pxPerCss, (textPx * sliceWidth) / widest);
 
-      // Draw label lines - Always faces the user upright (no rotation)
-      ctx.font = canvasFont('bold', textFontSize);
-      ctx.fillStyle = paletteColor('slate-50');
+      const lineH = textPx * 1.2;
+      const gap = 3 * pxPerCss;
+      const blockH = iconPx + gap + (line2 ? 2 : 1) * lineH;
+      const top = cy - blockH / 2;
+
+      ctx.save();
+      // Icon and label always face the user upright (no rotation).
+      ctx.font = canvasEmojiFont(iconPx);
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(line1, cx, cy + 4 * scale);
-      if (line2) {
-        ctx.fillText(line2, cx, cy + 18 * scale);
-      }
+      ctx.fillText(m.icon, cx, top + iconPx / 2);
+
+      ctx.font = canvasFont('bold', textPx);
+      ctx.fillStyle = paletteColor('slate-50');
+      const firstLineY = top + iconPx + gap + lineH / 2;
+      ctx.fillText(line1, cx, firstLineY);
+      if (line2) ctx.fillText(line2, cx, firstLineY + lineH);
       ctx.restore();
     }
 
@@ -307,17 +318,18 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
         aria-live="polite"
         className={`mt-3 sm:mt-4 xl:mt-5 rounded-card border p-3 sm:p-4 bg-bg-primary ${shownMutator.borderColor || 'border-border-color'}`}
       >
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2.5 min-w-0">
+        {/* On a phone the actions drop under the text, so the description gets the full width and is never cut. */}
+        <div className="flex flex-col gap-2.5 sm:flex-row sm:items-start sm:justify-between sm:gap-3">
+          <div className="flex items-start gap-2.5 min-w-0">
             <span className="text-xl sm:text-2xl shrink-0" aria-hidden="true">{shownMutator.icon}</span>
             <div className="min-w-0">
-              <h3 className={`text-xs sm:text-sm font-extrabold truncate ${shownMutator.textColor}`}>
+              <h3 className={`text-xs sm:text-sm font-extrabold ${shownMutator.textColor}`}>
                 {locShown.name}
               </h3>
-              <p className="text-xs text-text-secondary mt-0.5 line-clamp-2">{locShown.description}</p>
+              <p className="text-xs text-text-secondary mt-0.5">{locShown.description}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center justify-between gap-2 shrink-0 sm:justify-end">
             <Button
               type="button"
               onClick={handleClearCurse}
@@ -325,7 +337,7 @@ export const ChaosWheelModal: React.FC<ChaosWheelModalProps> = ({ isOpen, role, 
               variant="ghostDanger" size="sm"
             >
               <Trash2 className="icon-sm sm:icon-md" />
-              <span className="hidden xs:inline">{dict.generator.clearMutator}</span>
+              <span>{dict.generator.clearMutator}</span>
             </Button>
             <div className="flex items-center gap-1 text-accent-green type-strong-fluid bg-accent-green/10 px-2.5 py-1 rounded-chip border border-accent-green/30">
               <Check className="icon-sm sm:icon-md" aria-hidden="true" />

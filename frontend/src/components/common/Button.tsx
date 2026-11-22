@@ -36,7 +36,7 @@ const BUTTON_VARIANTS: Record<ButtonVariant, string> = {
   ghost: 'text-text-secondary hover:bg-bg-elevated hover:text-text-primary',
   danger: 'border border-accent-red/40 bg-accent-red/10 text-accent-red hover:bg-accent-red hover:text-text-inverted',
   success: 'bg-accent-green text-text-inverted shadow-sm hover:brightness-110',
-  amber: 'bg-accent-amber text-text-inverted shadow-sm hover:bg-accent-amber-hover',
+  amber: 'bg-amber-fill text-on-amber-fill shadow-sm hover:bg-amber-fill-hover',
   amberSoft: 'border border-accent-amber/40 bg-accent-amber/10 text-accent-amber hover:bg-accent-amber/20',
   link: 'text-accent-amber underline-offset-2 hover:underline',
   linkMuted: 'text-text-muted underline-offset-2 hover:text-text-primary hover:underline',
@@ -96,7 +96,7 @@ const ROLE_RING: Record<DbdButtonRole, string> = {
 };
 
 const BUTTON_BASE =
-  'inline-flex max-w-full shrink-0 items-center justify-center font-bold transition-colors cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:cursor-not-allowed disabled:opacity-50';
+  'inline-flex max-w-full shrink-0 items-center justify-center font-bold transition-colors cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:cursor-not-allowed disabled:opacity-disabled';
 
 /** The one corner radius of a Button. Callers never set their own: `pill` is the only alternative. */
 const BUTTON_RADIUS = 'rounded-control';

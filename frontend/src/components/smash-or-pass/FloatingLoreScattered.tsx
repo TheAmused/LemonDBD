@@ -75,7 +75,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
         {/* Left Side: Watermark Left */}
         <div
           key={`watermark-left-${character.slug}`}
-          className="pointer-events-auto anim-watermark-dissolve absolute top-lore -translate-y-1/2 right-1/2 mr-32 sm:mr-40 md:mr-52 lg:mr-64 w-lore-rail sm:w-lore-rail-sm md:w-lore-rail-md lg:w-lore-rail-lg text-center opacity-[0.07] dark:opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
+          className="pointer-events-auto anim-watermark-dissolve absolute top-lore -translate-y-1/2 right-1/2 mr-32 sm:mr-40 md:mr-52 lg:mr-64 w-lore-rail sm:w-lore-rail-sm md:w-lore-rail-md lg:w-lore-rail-lg text-center opacity-[0.12] dark:opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
           onMouseEnter={handleCardHover}
         >
           <FitText
@@ -92,7 +92,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
         {/* Right Side: Watermark Right */}
         <div
           key={`watermark-right-${character.slug}`}
-          className="pointer-events-auto anim-watermark-dissolve absolute top-lore -translate-y-1/2 left-1/2 ml-32 sm:ml-40 md:ml-52 lg:ml-64 w-lore-rail sm:w-lore-rail-sm md:w-lore-rail-md lg:w-lore-rail-lg text-center opacity-[0.07] dark:opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
+          className="pointer-events-auto anim-watermark-dissolve absolute top-lore -translate-y-1/2 left-1/2 ml-32 sm:ml-40 md:ml-52 lg:ml-64 w-lore-rail sm:w-lore-rail-sm md:w-lore-rail-md lg:w-lore-rail-lg text-center opacity-[0.12] dark:opacity-[0.04] hover:opacity-25 transition-all duration-500 cursor-default group"
           style={{ animationDelay: '100ms' }}
           onMouseEnter={handleCardHover}
         >

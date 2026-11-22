@@ -266,4 +266,122 @@
     0 4px 20px color-mix(in srgb, var(--palette-black) 45%, transparent);
 }
 
+/* ---------------------------------------------------------------------------
+ * Light theme: the ash edges above are a dark-theme look (black glows, near-black borders).
+ * Here they become soft warm edges. The dark theme keeps the rules above untouched.
+ * --------------------------------------------------------------------------- */
+:root:not(.dark) .card-ash-border {
+  background-image:
+    linear-gradient(var(--bg-primary), var(--bg-primary)),
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--accent-red) 55%, var(--border-color)) 0%,
+      var(--border-color) 45%,
+      var(--border-color) 65%,
+      color-mix(in srgb, var(--accent-red) 40%, var(--border-color)) 100%
+    );
+  box-shadow: 0 10px 30px -6px color-mix(in srgb, var(--palette-black) 18%, transparent);
+}
 
+:root:not(.dark) .lore-ash-card {
+  box-shadow: 0 6px 18px -6px color-mix(in srgb, var(--palette-black) 22%, transparent);
+}
+
+:root:not(.dark) .lore-ash-crimson {
+  background-image:
+    linear-gradient(var(--bg-surface), var(--bg-surface)),
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--accent-red) 60%, var(--border-color)) 0%,
+      var(--border-color) 50%,
+      color-mix(in srgb, var(--accent-red) 40%, var(--border-color)) 100%
+    );
+}
+
+:root:not(.dark) .lore-ash-emerald {
+  background-image:
+    linear-gradient(var(--bg-surface), var(--bg-surface)),
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--accent-green) 60%, var(--border-color)) 0%,
+      var(--border-color) 50%,
+      color-mix(in srgb, var(--accent-green) 40%, var(--border-color)) 100%
+    );
+}
+
+:root:not(.dark) .lore-ash-amber {
+  background-image:
+    linear-gradient(var(--bg-surface), var(--bg-surface)),
+    linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--accent-amber) 60%, var(--border-color)) 0%,
+      var(--border-color) 50%,
+      color-mix(in srgb, var(--accent-amber) 40%, var(--border-color)) 100%
+    );
+}
+
+:root:not(.dark) .lore-ash-crimson:hover,
+:root:not(.dark) .group:hover .lore-ash-crimson {
+  box-shadow: 0 8px 20px -6px color-mix(in srgb, var(--accent-red) 40%, transparent);
+}
+
+:root:not(.dark) .lore-ash-emerald:hover,
+:root:not(.dark) .group:hover .lore-ash-emerald {
+  box-shadow: 0 8px 20px -6px color-mix(in srgb, var(--accent-green) 40%, transparent);
+}
+
+:root:not(.dark) .lore-ash-amber:hover,
+:root:not(.dark) .group:hover .lore-ash-amber {
+  box-shadow: 0 8px 20px -6px color-mix(in srgb, var(--accent-amber) 40%, transparent);
+}
+
+.gradient-badge {
+  /* The preset badge gradients end in the page colour and carry white text: a badge keeps the dark ends in every theme. */
+  --color-bg-primary: var(--image-scrim);
+  --color-bg-surface: var(--image-scrim-raised);
+}
+
+/* Only the gradient stops get the dark ends: whatever sits inside the badge keeps the theme's own colours. */
+.gradient-badge > * {
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-surface: var(--bg-surface);
+}
+
+:root:not(.dark) [data-lore-label] {
+  background: transparent;
+}
+
+/* Wide Smash layout: the label sits inside the card instead of straddling its border, so it needs no backdrop. */
+@container hub (min-width: 65rem) {
+  :root:not(.dark) [data-lore-label] {
+    top: 0.25rem;
+    translate: -50% 0;
+  }
+
+  :root:not(.dark) .lore-ash-card {
+    padding-top: 1.5rem;
+  }
+}
+
+/* Streak cards: white line art is inked in the light theme; art drawn dark on white is multiplied into the card. */
+:root:not(.dark) .streak-art {
+  opacity: 0.3;
+  filter: invert(1);
+}
+
+:root:not(.dark) .streak-art-multiply {
+  mix-blend-mode: multiply;
+}
+
+/* A card that is switched off: see-through in the dark theme, full strength in the light one. */
+.card-inactive {
+  opacity: 0.7;
+}
+
+:root:not(.dark) .card-inactive {
+  opacity: 1;
+}
+
+:root:not(.dark) .archetype-plaque {
+  box-shadow: 0 6px 18px -6px color-mix(in srgb, var(--palette-black) 22%, transparent);
+}

@@ -92,7 +92,7 @@ const PerkAttrCell: React.FC<{ evaluation?: AttributeEvaluation; value?: string 
   const bgStyle = isCorrect
     ? 'bg-accent-green text-text-inverted border-accent-green shadow-accent-green/20'
     : isPartial
-    ? 'bg-accent-amber text-text-inverted border-accent-amber shadow-accent-amber/20'
+    ? 'bg-amber-fill text-on-amber-fill border-accent-amber shadow-accent-amber/20'
     : 'bg-accent-red/20 text-accent-red border-accent-red/40 shadow-accent-red/10';
 
   return (

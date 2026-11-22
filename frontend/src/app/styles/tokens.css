@@ -5,7 +5,6 @@
  * Tailwind v4 Custom Variant Declarations
  * --------------------------------------------------------------------------- */
 @custom-variant dark (&:where(.dark, .dark *));
-@custom-variant lemon (&:where(.light-lemon, .light-lemon *));
 /* A short viewport (landscape phone): `short:hidden` drops secondary chrome. Use it, never `[@media(max-height:559px)]:`. */
 @custom-variant short (@media (max-height: 559px));
 
@@ -131,10 +130,21 @@
   --color-bg-sidebar-hover: var(--bg-sidebar-hover);
   --color-border-color: var(--border-color);
   --color-border-subtle: var(--border-subtle);
+  /* Layers that sit on a photo or portrait: one colour per theme, so no component picks a light or dark variant itself. */
+  --color-image-scrim: var(--image-scrim);
+  --color-portrait-veil: var(--portrait-veil);
+  --color-banner-fade: var(--banner-fade);
+  --color-coord-chip: var(--coord-chip-bg);
+  --color-coord-chip-border: var(--coord-chip-border);
+  /* A solid amber fill with its text: golden in the light theme (amber text itself must stay dark enough to read). */
+  --color-amber-fill: var(--amber-fill);
+  --color-amber-fill-hover: var(--amber-fill-hover);
+  --color-on-amber-fill: var(--on-amber-fill);
 
   --color-accent-red: var(--accent-red);
   --color-accent-red-hover: var(--accent-red-hover);
   --color-accent-red-text: var(--accent-red-text);
+  --color-accent-red-on-scrim: var(--accent-red-on-scrim);
   --color-accent-amber: var(--accent-amber);
   --color-accent-amber-hover: var(--accent-amber-hover);
   --color-accent-green: var(--accent-green);
@@ -397,6 +407,10 @@
 @utility icon-md { width: 1rem; height: 1rem; }
 @utility icon-lg { width: 1.25rem; height: 1.25rem; }
 @utility icon-xl { width: 1.5rem; height: 1.5rem; }
+
+/* How faded a switched-off control is. `opacity-disabled` for a control, `opacity-dimmed` for a tile in a list. */
+@utility opacity-disabled { opacity: var(--opacity-disabled); }
+@utility opacity-dimmed { opacity: var(--opacity-dimmed); }
 
 /* Heights of scrolling lists and of skeletons that stand in for a loaded section. */
 @utility max-h-list { max-height: 36rem; }

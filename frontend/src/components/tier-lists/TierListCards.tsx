@@ -196,7 +196,7 @@ export function OfficialTierListCard({ list, rankedCount, locale, showNsfw = tru
         )}
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-t from-bg-surface via-bg-surface/50 to-transparent pointer-events-none"
+          className="absolute inset-0 bg-gradient-to-t from-banner-fade via-banner-fade/50 to-transparent pointer-events-none"
         />
         {list.is_nsfw && !showNsfw && (
           <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-1.5 bg-bg-surface/75 backdrop-blur-xs p-3 text-center">
@@ -324,7 +324,7 @@ export function CustomTierListCard({ list, locale, onDelete, disabled, showNsfw 
         )}
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-t from-bg-surface via-bg-surface/50 to-transparent pointer-events-none"
+          className="absolute inset-0 bg-gradient-to-t from-banner-fade via-banner-fade/50 to-transparent pointer-events-none"
         />
         {list.is_nsfw && !showNsfw && (
           <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-1.5 bg-bg-surface/75 backdrop-blur-xs p-3 text-center">

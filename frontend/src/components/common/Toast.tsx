@@ -17,7 +17,7 @@ const TONES: Record<ToastTone, { border: string; text: string }> = {
   red: { border: 'border-accent-red/40', text: 'text-accent-red' },
   green: { border: 'border-accent-green/40', text: 'text-accent-green' },
   // A loud notice: full amber fill, white text (an action is needed before the page can be used).
-  amberSolid: { border: 'border-accent-amber bg-accent-amber text-text-inverted ring-2 ring-accent-amber/50', text: '' },
+  amberSolid: { border: 'border-accent-amber bg-amber-fill text-on-amber-fill ring-2 ring-accent-amber/50', text: '' },
 };
 
 export interface ToastProps {

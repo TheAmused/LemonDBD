@@ -154,7 +154,7 @@ export function RosterBasicsSection({
             onPreviewClick={isUserAdmin ? () => onOpenCrop() : undefined}
             previewOverlay={
               isUserAdmin ? (
-                <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-text-inverted type-strong pointer-events-none">
+                <div className="absolute inset-0 bg-bg-primary/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 text-text-primary type-strong pointer-events-none">
                   <Crop className="icon-lg text-accent-red" />
                   <span>{c.cropClickPrompt}</span>
                 </div>

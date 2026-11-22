@@ -164,7 +164,7 @@ export function RosterCarouselCard({
         )}
       />
 
-      <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/95 via-bg-primary/40 to-bg-primary/20 pointer-events-none" aria-hidden="true" />
+      <div className="absolute inset-0 bg-gradient-to-t from-image-scrim/95 via-image-scrim/40 to-image-scrim/20 pointer-events-none" aria-hidden="true" />
 
       {isCenter && r.is_nsfw && !globalNsfw && (
         <div className="absolute inset-0 z-30 flex items-center justify-center p-4">
@@ -185,7 +185,7 @@ export function RosterCarouselCard({
 
       {isRosterEnabled && (
         <div
-          className="absolute top-2.5 left-2.5 sm:top-5 sm:left-5 flex items-center gap-1 sm:gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 rounded-card bg-bg-primary/80 backdrop-blur-md border border-border-color text-text-inverted type-strong-xs sm:type-strong-fluid shadow-md pointer-events-none"
+          className="absolute top-2.5 left-2.5 sm:top-5 sm:left-5 flex items-center gap-1 sm:gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 rounded-card bg-image-scrim/80 backdrop-blur-md border border-border-color text-text-inverted type-strong-xs sm:type-strong-fluid shadow-md pointer-events-none"
         >
           <CardStackIcon className="icon-sm sm:icon-md text-accent-red" aria-hidden="true" />
           <span>{count}</span>
@@ -247,7 +247,7 @@ export function RosterCarouselCard({
         </h3>
 
         {r.description && (
-          <p className="text-xs sm:text-sm md:text-base font-bold text-accent-red/90 tracking-wider drop-shadow-md line-clamp-2 sm:line-clamp-3 break-words text-balance max-w-full">
+          <p className="text-xs sm:text-sm md:text-base font-bold text-accent-red-on-scrim/90 tracking-wider drop-shadow-md line-clamp-2 sm:line-clamp-3 break-words text-balance max-w-full">
             {r.description}
           </p>
         )}

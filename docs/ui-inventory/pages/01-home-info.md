@@ -324,7 +324,7 @@ All routes under `app/[locale]/*` mount inside the root locale layout (`app/[loc
       - Search input box: `Search` icon + text `Input` (placeholder `"Search"` / `onboarding.searchPlaceholder`) + conditional clear `Button` (`X` icon, `aria-label="Clear search"` / `filters.clearSearch` when `searchQuery` is non-empty).
       - Bulk selection buttons:
         - `"I own everything"` `ToggleChip` (`onboarding.selectAllButton`, `pressed={isAllOwned}`, shows `Check` icon when active; toggles all chapters owned/unowned).
-        - Clear all: icon-only `Button` with an `Eraser` icon (`aria-label` and tooltip `"Clear all"` / `onboarding.deselectAllButton`, `variant="secondary"`, disabled when `!hasAnySelection`; resets all non-free chapters/perks).
+        - `"Clear all"` `Button` (`onboarding.deselectAllButton`, `variant="ghost"`, no border, aligned right in the header row on phones, disabled when `!hasAnySelection`; resets all non-free chapters/perks).
     - **Customize Hint (`<p>`)**:
       - `Info` icon (Lucide) + `"Tip: tap the picture to mark the whole chapter as owned. Tap the name under it to expand its characters and pick them one by one or unlock just their perks."` (`onboarding.legendCustomizeHint`).
     - **Chapters Grid (`ChapterCard.tsx`, `CHAPTER_GRID_CLASS`, 2 to 7 columns responsive)**:

@@ -38,7 +38,7 @@ export function ChapterToolbar({
       </span>
 
       <Button
-        variant="secondary" size="sm" icon className="order-2 sm:order-4"
+        variant="secondary" size="sm" icon className="order-2 justify-self-end sm:order-4"
         aria-label={t.deselectAllButton} {...tip(t.deselectAllButton, undefined, 'action')}
         disabled={!hasAnySelection} onClick={onDeselectAll}
       >

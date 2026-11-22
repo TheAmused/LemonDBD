@@ -19,7 +19,7 @@ const SLOT_SIZE_CLASSES: Record<PerkSlotSize, string> = {
   large: 'h-32 w-32 sm:h-40 sm:w-40 md:h-44 md:w-44 lg:h-44 lg:w-44 xl:h-52 xl:w-52 2xl:h-60 2xl:w-60 wide:h-68 wide:w-68 wide:h-76 wide:w-76 wide-2k:h-88 wide-2k:w-88 wide-4k:h-96 wide-4k:w-96',
   fill: 'h-[min(88cqh,88cqw)] w-[min(88cqh,88cqw)] max-h-48 max-w-48',
   tarot: 'h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36 xl:h-48 xl:w-48 2xl:h-56 2xl:w-56 wide:h-64 wide:w-64 wide-2k:h-72 wide-2k:w-72 wide-4k:h-80 wide-4k:w-80',
-  compact: 'h-22 w-22 phone:h-24 phone:w-24 sm:h-28 sm:w-28',
+  compact: 'h-22 w-22 phone:h-24 phone:w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36',
   // Same as 'default' through lg (tablet/phone already reads fine); shrinks
   // a step further from xl up so the wheel itself can claim the freed space
   // on wide monitors instead of the two loadout slots matching its growth.
@@ -39,7 +39,7 @@ export interface PerkSlotProps {
   isActive?: boolean;
   announce?: boolean;
   /** 'large' is used by every mode's result grid; the Wheel's flanking
-   * loadout slots stay at 'default'; 'tarot' fits inside tarot cards; 'compact' for mobile scatter. */
+   * loadout slots stay at 'default'; 'tarot' fits inside tarot cards; 'compact' for the phone and tablet scatter. */
   size?: PerkSlotSize;
   /** Persistent Blind Mode -- distinct from `isObscured` (the Chaos
    * "Curse of Blindness" mutator), which does NOT show the coordinate tag.

@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 import { PerkIcon } from '@/components/ui/PerkIcon';
 import { HelpCircle } from 'lucide-react';
 import type { Perk } from '@/types/perks';
-import { getPerkIconThumbUrl, getCharacterAvatarUrl } from '@/utils/perkUtils';
+import { getPerkIconThumbUrl, getPerkIconUrl, getCharacterAvatarUrl } from '@/utils/perkUtils';
 import { avatarThumbFromPath } from '@/utils/thumbUrl';
 import { DisabledBadge } from '@/components/DisabledBadge';
 
@@ -26,7 +26,7 @@ const GRID_SIZE_CLASSES: Record<'default' | 'large' | 'fill' | 'tarot' | 'compac
   large: 'h-32 w-32 sm:h-40 sm:w-40 md:h-44 md:w-44 lg:h-44 lg:w-44 xl:h-52 xl:w-52 2xl:h-60 2xl:w-60 wide:h-68 wide:w-68 wide:h-76 wide:w-76 wide-2k:h-88 wide-2k:w-88 wide-4k:h-96 wide-4k:w-96',
   fill: 'h-[min(88cqh,88cqw)] w-[min(88cqh,88cqw)] max-h-48 max-w-48',
   tarot: 'h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36 xl:h-48 xl:w-48 2xl:h-56 2xl:w-56 wide:h-64 wide:w-64 wide-2k:h-72 wide-2k:w-72 wide-4k:h-80 wide-4k:w-80',
-  compact: 'h-22 w-22 phone:h-24 phone:w-24 sm:h-28 sm:w-28',
+  compact: 'h-22 w-22 phone:h-24 phone:w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36',
   wheelFlank: 'h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36 xl:h-36 xl:w-36 2xl:h-44 2xl:w-44 wide:h-52! wide:w-52! wide-2k:h-60! wide-2k:w-60! wide-4k:h-72! wide-4k:w-72!',
 };
 
@@ -52,7 +52,8 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
   const [avatarError, setAvatarError] = useState(false);
   const [showDisabledModal, setShowDisabledModal] = useState(false);
 
-  const iconSrc = getPerkIconThumbUrl(perk);
+  // Fixed-size cards are drawn at 96 to 240px (more on a sharp screen), so they take the full icon, as the detail view does; the small cells of a grid take the light thumbnail.
+  const iconSrc = size === 'fill' ? getPerkIconThumbUrl(perk, 128) : getPerkIconUrl(perk);
   const rawAvatarSrc = getCharacterAvatarUrl(
     perk,
     perk.category === 'Killer' ? 'Killer' : 'Survivor'
@@ -152,7 +153,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
                   muted ? 'grayscale ' : ''
                 }${
                   size === 'compact'
-                    ? 'h-7 w-7 sm:h-8 sm:w-8'
+                    ? 'h-7 w-7 sm:h-8 sm:w-8 md:h-10 md:w-10 lg:h-11 lg:w-11'
                     : size === 'tarot'
                       ? 'h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-8 lg:w-8 xl:h-10 xl:w-10 2xl:h-12 2xl:w-12 wide:h-14 wide:w-14'
                       : size === 'fill'

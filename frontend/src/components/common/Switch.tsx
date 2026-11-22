@@ -30,12 +30,8 @@ const THUMB_OFF: Record<SwitchSize, string> = {
   sm: 'translate-x-0.5',
 };
 
-/**
- * Presentational track + thumb. Use it directly only when the switch must sit
- * inside a larger clickable element (a button can't be nested in a button);
- * that parent then carries role="switch" itself.
- */
-export const SwitchTrack: React.FC<{ checked: boolean; size?: SwitchSize; className?: string }> = ({
+/** Presentational track + thumb shared by Switch and LabeledSwitch. */
+const SwitchTrack: React.FC<{ checked: boolean; size?: SwitchSize; className?: string }> = ({
   checked,
   size = 'md',
   className = '',

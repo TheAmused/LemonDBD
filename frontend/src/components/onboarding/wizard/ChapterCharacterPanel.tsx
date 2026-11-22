@@ -1,16 +1,17 @@
 'use client';
 // frontend/src/components/onboarding/wizard/ChapterCharacterPanel.tsx
 import React from 'react';
-import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
-import { useDictionary } from '@/context/DictionaryContext';
-import { type ChapterGroup, type OnboardingCharacter, resolveOnboardingAvatar } from '../CharacterOnboardingWizardParts';
+import { CharacterCard } from '@/components/characters/hub/CharacterCard';
 import { Surface } from '@/components/common/Surface';
-import { Badge } from '@/components/common/Badge';
-import { TileButton } from "@/components/common/TileButton";
-import { Img } from '@/components/common/Img';
+import {
+  type ChapterGroup,
+  type OnboardingCharacter,
+  CHARACTER_GRID_CLASS,
+} from '../CharacterOnboardingWizardParts';
 
 interface ChapterCharacterPanelProps {
   group: ChapterGroup;
+  locale: string;
   backendBase: string;
   isCharacterOwned: (character: OnboardingCharacter) => boolean;
   getCharacterPerkStats: (characterId: number, role: string) => { total: number; unlocked: number };
@@ -18,62 +19,39 @@ interface ChapterCharacterPanelProps {
   onOpenPerks: (character: OnboardingCharacter) => void;
 }
 
-/** The expanded chapter's characters: click a portrait to own it, open its perks when not owned. */
+/** The expanded chapter's characters, as the same cards the Characters page shows in ownership mode. */
 export function ChapterCharacterPanel({
   group,
+  locale,
   backendBase,
   isCharacterOwned,
   getCharacterPerkStats,
   setCharacterOwned,
   onOpenPerks,
 }: ChapterCharacterPanelProps) {
-  const dict = useDictionary();
-  const t = dict.onboarding;
-
   return (
-    <Surface padding="sm" className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 2xl:grid-cols-12 gap-3">
-      {group.characters.map((c) => {
-        const isOwned = isCharacterOwned(c);
-        const perkStats = getCharacterPerkStats(c.id, c.category);
-        const hasPartialPerks = !isOwned && perkStats.unlocked > 0;
-        return (
-          <Surface
-            key={c.id}
-            padding="none" className="group relative flex flex-col overflow-hidden"
-          >
-            <button
-              type="button"
-              onClick={() => setCharacterOwned(c.id, c.category, !isOwned)}
-              className="relative aspect-[3/4] w-full cursor-pointer"
-            >
-              <Img
-                src={resolveOnboardingAvatar(backendBase, c)}
-                alt=""
-                aria-hidden="true"
-                className="absolute inset-0 h-full w-full object-cover object-top"
-              />
-              <CharacterOwnershipOverlay
-                isOwned={isOwned}
-                hasPartialPerks={hasPartialPerks}
-                avatarSrc={resolveOnboardingAvatar(backendBase, c)}
-                lockedTitle={dict.modal.unownedPerk}
-                ownedTitle={dict.filters.ownedOnly}
-              />
-              <Badge tone="overlay" size="xs" plain className="absolute bottom-1 left-1 right-1 truncate text-text-inverted text-center">
-                {c.name}
-              </Badge>
-            </button>
-            {!isOwned && perkStats.total > 0 && (
-              <TileButton
-                onClick={() => onOpenPerks(c)}
-                className="w-full border-t border-border-color bg-accent-amber/10 px-1.5 py-1 type-strong-2xs text-accent-amber hover:bg-accent-amber/20 transition-colors cursor-pointer" press={false}
-              >
-                {t.perksButton} ({perkStats.unlocked}/{perkStats.total})
-              </TileButton>
-            )}
-          </Surface>
-        );
-      })}
+    <Surface padding="none" className={`${CHARACTER_GRID_CLASS} p-1 sm:p-2.5 md:p-3`}>
+      {group.characters.map((c) => (
+        <CharacterCard
+          key={c.id}
+          char={{
+            id: c.id,
+            name: c.name,
+            category: c.category,
+            role: c.role,
+            avatar_url: c.avatar_url,
+            avatar_local_path: c.avatar_local_path,
+          }}
+          locale={locale}
+          backendBase={backendBase}
+          ownershipMode
+          isOwned={isCharacterOwned(c)}
+          perkStats={getCharacterPerkStats(c.id, c.category)}
+          onToggleOwned={(id, role) => setCharacterOwned(id, role, !isCharacterOwned(c))}
+          onOpenPerks={() => onOpenPerks(c)}
+          onOpenDisabled={() => undefined}
+        />
+      ))}
     </Surface>
   );
 }

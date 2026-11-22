@@ -1,7 +1,7 @@
 'use client';
 // frontend/src/components/onboarding/wizard/OnboardingLegend.tsx
 import React from 'react';
-import { CharacterOwnershipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
+import { OwnershipClipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
 import { useDictionary } from '@/context/DictionaryContext';
 import { type OnboardingCharacter, resolveOnboardingAvatar } from '../CharacterOnboardingWizardParts';
 import { Img } from '@/components/common/Img';
@@ -26,11 +26,10 @@ function LegendItem({ legendCharacter, backendBase, label, isOwned, hasPartialPe
             className="absolute inset-0 h-full w-full object-cover object-top"
           />
         )}
-        <CharacterOwnershipOverlay
+        <OwnershipClipOverlay
           isOwned={isOwned}
-          hasPartialPerks={hasPartialPerks}
-          avatarSrc={legendCharacter ? resolveOnboardingAvatar(backendBase, legendCharacter) : undefined}
-          badgeSize="sm"
+          isPartial={hasPartialPerks}
+          imageSrc={legendCharacter ? resolveOnboardingAvatar(backendBase, legendCharacter) : undefined}
         />
       </span>
       <span className="text-tiny sm:text-xs font-semibold text-text-primary leading-tight">{label}</span>
@@ -43,7 +42,7 @@ interface OnboardingLegendProps {
   backendBase: string;
 }
 
-/** "How it works": the three ownership states, drawn on a real portrait. */
+/** "How it works": the three ownership states, drawn on a real portrait (grey = locked, colour = owned). */
 export function OnboardingLegend({ legendCharacter, backendBase }: OnboardingLegendProps) {
   const t = useDictionary().onboarding;
   const shared = { legendCharacter, backendBase };

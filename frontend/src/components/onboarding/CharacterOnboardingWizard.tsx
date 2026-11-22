@@ -11,6 +11,7 @@ import { ActionBarButton, StickyActionBar } from '@/components/common/StickyActi
 import {
   type OnboardingCharacter,
   type OnboardingPerk,
+  CHAPTER_GRID_CLASS,
   isDefaultUnlockedPerk,
   slugifyChapterName,
 } from './CharacterOnboardingWizardParts';
@@ -43,7 +44,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
   const {
     backendBase, characters, allPerks, ownershipDraft, perkUnlockDraft, loading,
     chapterBanners, translatedChapterNames, searchQuery, setSearchQuery,
-    chapterGroups, filteredChapterGroups, ownedChaptersCount, isCharacterOwned,
+    filteredChapterGroups, isCharacterOwned,
     isAllOwned, hasAnySelection, legendCharacter,
     setCharacterOwned, toggleChapter, handleDeselectAllChapters, handleToggleAllChapters,
     togglePerkUnlocked, getCharacterPerkStats,
@@ -113,8 +114,6 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
           {/* DLC / Chapters Section */}
           <section className="space-y-3">
             <ChapterToolbar
-              ownedChaptersCount={ownedChaptersCount}
-              chapterCount={chapterGroups.length}
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
               isAllOwned={isAllOwned}
@@ -130,7 +129,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
               </span>
             </p>
 
-            <div className="grid grid-cols-3 gap-1.5 sm:gap-2.5 md:gap-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
+            <div className={CHAPTER_GRID_CLASS}>
               {filteredChapterGroups.map((group, index) => (
                 <React.Fragment key={group.chapterName}>
                   <ChapterCard
@@ -175,6 +174,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
                           >
                             <ChapterCharacterPanel
                               group={renderedGroup}
+                              locale={locale}
                               backendBase={backendBase}
                               isCharacterOwned={isCharacterOwned}
                               getCharacterPerkStats={getCharacterPerkStats}
@@ -210,7 +210,7 @@ export const CharacterOnboardingWizard: React.FC<CharacterOnboardingWizardProps>
         onTogglePerk={togglePerkUnlocked}
         onClose={() => setPerksPopupCharacter(null)}
         backendBase={backendBase}
-        perksLabel={t.perksButton}
+        perksLabel={dict.filters.perks}
       />
     </div>
   );

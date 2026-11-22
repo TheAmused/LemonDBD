@@ -46,7 +46,7 @@ test('no raw type="checkbox" / role="switch" outside Checkbox and Switch', () =>
     offenders((f) => /type="checkbox"|role="switch"/.test(f.src), [
       'components/common/Checkbox.tsx',
       'components/common/Switch.tsx',
-      // Whole-row switch button that hosts SwitchTrack (a button cannot nest a Switch).
+      // Picture-sized switch button: the chapter banner is the control (a button cannot nest a Switch).
       'components/onboarding/wizard/ChapterCard.tsx',
     ]),
     []

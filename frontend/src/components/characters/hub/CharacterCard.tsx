@@ -121,7 +121,7 @@ export function CharacterCard({
                 e.stopPropagation();
                 onOpenPerks(char);
               }}
-              variant="overlay" size="xs" pill className="pointer-events-auto"
+              variant="overlay" size="xs" pill className="pointer-events-auto whitespace-nowrap max-sm:px-2 max-sm:text-tiny"
             >
               {perkStats.total > 0
                 ? `${dict.filters.perks} (${perkStats.unlocked}/${perkStats.total})`

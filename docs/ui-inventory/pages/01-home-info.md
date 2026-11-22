@@ -284,7 +284,7 @@ All routes under `app/[locale]/*` mount inside the root locale layout (`app/[loc
   - `components/onboarding/wizard/useOnboardingCompletion.ts`
   - `components/onboarding/wizard/useChapterExpansion.ts`
 - Shared character/modal components:
-  - `components/characters/CharacterOwnershipOverlay.tsx` (`CharacterOwnershipOverlay`, `OwnershipClipOverlay`)
+  - `components/characters/CharacterOwnershipOverlay.tsx` (`OwnershipClipOverlay`)
   - `components/characters/PerksTogglePopup.tsx`
   - `components/common/StickyActionBar.tsx` (`StickyActionBar`, `ActionBarButton`)
   - `components/layout/CenteredScreen.tsx`
@@ -315,38 +315,31 @@ All routes under `app/[locale]/*` mount inside the root locale layout (`app/[loc
       - Subheading (`<p>`): `"Pick the chapters you own so the perk randomizer and streaks only offer you perks you can actually use. You can always change this later from your Characters page."` (`onboarding.subheading`).
     - **Legend Section (`OnboardingLegend.tsx`)**:
       - Heading (`<h2>`): `"How this works"` (`onboarding.legendTitle`).
-      - 3-column example portrait grid (renders Survivor #7 Ace Visconti's portrait via `Img` + `CharacterOwnershipOverlay` with `badgeSize="sm"`):
-        1. Locked swatch (`isOwned={false}`, `hasPartialPerks={false}`): desaturated/dimmed portrait, amber `LockIcon` badge, label `"Character locked"` (`onboarding.legendLocked`).
-        2. Partial swatch (`isOwned={false}`, `hasPartialPerks={true}`): half-desaturated left / full-color right split portrait, amber `LockIcon` badge, label `"Character partially unlocked (only perks unlocked)"` (`onboarding.legendPartial`).
-        3. Owned swatch (`isOwned={true}`, `hasPartialPerks={false}`): full-color portrait, green `Check` badge, label `"Character unlocked"` (`onboarding.legendOwned`).
+      - 3-column example portrait grid (renders Survivor #7 Ace Visconti's portrait via `Img` + `OwnershipClipOverlay`, no badges):
+        1. Locked swatch (`isOwned={false}`, `isPartial={false}`): desaturated/dimmed portrait, label `"Character locked"` (`onboarding.legendLocked`).
+        2. Partial swatch (`isOwned={false}`, `isPartial={true}`): half-desaturated left / full-color right split portrait, label `"Character partially unlocked (only perks unlocked)"` (`onboarding.legendPartial`).
+        3. Owned swatch (`isOwned={true}`): full-color portrait, label `"Character unlocked"` (`onboarding.legendOwned`).
     - **Chapters Toolbar (`ChapterToolbar.tsx`)**:
-      - Section label: `"Chapters"` (`onboarding.chaptersTitle`) + `InfoChip` counter `{ownedChaptersCount} / {chapterCount}`.
-      - Search input box: `Search` icon + text `Input` (placeholder `"Search chapters or characters..."` / `onboarding.searchPlaceholder`) + conditional clear `Button` (`X` icon, `aria-label="Clear search"` / `filters.clearSearch` when `searchQuery` is non-empty).
+      - Section label: `"Chapters"` (`onboarding.chaptersTitle`).
+      - Search input box: `Search` icon + text `Input` (placeholder `"Search"` / `onboarding.searchPlaceholder`) + conditional clear `Button` (`X` icon, `aria-label="Clear search"` / `filters.clearSearch` when `searchQuery` is non-empty).
       - Bulk selection buttons:
         - `"I own everything"` `ToggleChip` (`onboarding.selectAllButton`, `pressed={isAllOwned}`, shows `Check` icon when active; toggles all chapters owned/unowned).
         - `"Clear all"` `Button` (`onboarding.deselectAllButton`, `variant="secondary"`, disabled when `!hasAnySelection`; resets all non-free chapters/perks).
     - **Customize Hint (`<p>`)**:
-      - `Info` icon (Lucide) + `"Tip: for a chapter you don't own, expand it and use a character's Perks button to unlock individual perks without owning the whole character."` (`onboarding.legendCustomizeHint`).
-    - **Chapters Grid (`ChapterCard.tsx`, 3 to 7 columns responsive)**:
+      - `Info` icon (Lucide) + `"Tip: tap the picture to mark the whole chapter as owned. Tap the name under it to expand its characters and pick them one by one or unlock just their perks."` (`onboarding.legendCustomizeHint`).
+    - **Chapters Grid (`ChapterCard.tsx`, `CHAPTER_GRID_CLASS`, 2 to 7 columns responsive)**:
       - Each `ChapterCard` represents a non-free DLC chapter sorted by release date:
-        - **Top Banner Accordion Button** (`aria-expanded={isExpanded}`, `aria-controls="chapter-panel-{slug}"`):
+        - **Top Banner Ownership Button** (`role="switch"`, `aria-checked={chapterOwned}`, `aria-label="I own this chapter: {chapterDisplayName}"` / `onboarding.ownChapterButton`):
           - Chapter capsule image (`Img`) or fallback chapter display name text.
-          - `OwnershipClipOverlay`: full color when all characters in chapter are owned; split left-grayscale / right-color when partially owned (some characters or perks unlocked); full grayscale + dark scrim when locked.
-          - `ChevronDown` icon in top-right corner (rotates 180° when expanded).
-        - **Bottom Ownership Switch Row (`TileButton`, `role="switch"`, `aria-checked={chapterOwned}`, `aria-label="I own this chapter: {chapterDisplayName}"` / `onboarding.ownChapterButton`)**:
+          - `OwnershipClipOverlay` (no badge): full color when all characters in chapter are owned; split left-grayscale / right-color when partially owned (some characters or perks unlocked); full grayscale + dark scrim when locked.
+        - **Bottom Expand Row (`TileButton`, `aria-expanded={isExpanded}`, `aria-controls="chapter-panel-{slug}"`)**:
           - Chapter title (`<h3>`: localized chapter name or canonical name).
-          - `SwitchTrack` (`size="sm"`, green when `chapterOwned`).
+          - `ChevronDown` icon (rotates 180° when expanded).
     - **Expanded Chapter Character Panel (`ChapterCharacterPanel.tsx`)**:
-      - Animated full-row panel (`framer-motion` `AnimatePresence`, placed after the last card of the expanded chapter's grid row) containing a 3-to-12 column character grid:
-      - Each character card (`Surface`):
-        - **Portrait Toggle Button** (toggles character ownership + cascades to their teachable perks):
-          - Character portrait `Img`.
-          - `CharacterOwnershipOverlay`:
-            - When locked/partial (`!isOwned`): amber `LockIcon` badge with status tooltip `"Unowned perk"` (`modal.unownedPerk`) + full or half grayscale `OwnershipClipOverlay`.
-            - When owned (`isOwned`): green `Check` badge with status tooltip `"Owned"` (`filters.ownedOnly`).
-          - Bottom overlay `Badge`: character name (`c.name`).
-        - **Perks Button (`TileButton`)** (rendered only when `!isOwned && perkStats.total > 0`):
-          - Label: `"Perks ({unlocked}/{total})"` (`onboarding.perksButton`), amber tinted footer button; opens `PerksTogglePopup` for that character.
+      - Animated full-row panel (`framer-motion` `AnimatePresence`, placed after the last card of the expanded chapter's grid row) containing a character grid one column denser than the chapters grid at every width (`CHARACTER_GRID_CLASS`, 3 to 8 columns), so a portrait is never bigger than a chapter card:
+      - Each character is the Characters page's `CharacterCard` in `ownershipMode` (toggles character ownership + cascades to their teachable perks):
+        - Portrait with `OwnershipClipOverlay` (grey/dim when locked, colour when owned, no badge) and a name bar underneath.
+        - When `!isOwned`: overlay pill `Button` `"Perks ({unlocked}/{total})"` (`filters.perks`) at the bottom of the portrait; opens `PerksTogglePopup` for that character.
   - **Bottom Sticky Action Bar (`StickyActionBar` with `sidebarAware={false}`)**:
     - `ActionBarButton` (`variant="red"`, `wide`, uppercase): `"Continue"` (`onboarding.continueButton`) or `"Saving..."` (`onboarding.savingLabel` while `saving` is true; saves bulk character & perk ownership, marks onboarding complete, clears draft, and redirects to `/${locale}`).
 
@@ -372,7 +365,7 @@ All routes under `app/[locale]/*` mount inside the root locale layout (`app/[loc
 - **Perks Toggle Popup** (`components/characters/PerksTogglePopup.tsx`, `Modal` with `variant="sheet"`, `size="lg"`, `layer="top"`):
   - Trigger: Clicking `"Perks ({unlocked}/{total})"` on any unowned character card inside an expanded `ChapterCharacterPanel`.
   - Elements:
-    - Header title: `"{character.name} Perks"` (`onboarding.perksButton`), close `X` button (`aria-label="Close"` / `modal.close`).
+    - Header title: `"{character.name} Perks"` (`filters.perks`), close `X` button (`aria-label="Close"` / `modal.close`).
     - Help caption: `"Click a perk to toggle whether you own it."` (`characterDetail.togglePerkOwnershipHelp`).
     - 3-column perk grid (`TileButton` items):
       - Perk icon `Img` (full color when unlocked, grayscale + 50% opacity when locked).

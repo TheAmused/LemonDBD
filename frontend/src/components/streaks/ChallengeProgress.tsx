@@ -7,6 +7,9 @@ import { Flag, Infinity as InfinityIcon } from 'lucide-react';
 import { TrophyIcon } from '@/components/icons/DbdIcons';
 
 const MAX_NODE_PX = 28;
+/** On a narrow track (phones, small tablets) the badges stay smaller so they do not crowd the bar. */
+const COMPACT_MAX_NODE_PX = 20;
+const COMPACT_TRACK_PX = 640;
 const MIN_NODE_PX = 14;
 /** Share of the space between two trophies a trophy may fill, so the track stays visible between them. */
 const NODE_FILL_RATIO = 0.7;
@@ -39,10 +42,11 @@ const nodeLeft = (percent: number, nodeSize: number) => `calc(${percent}% + ${(0
 
 /** Flag size from the typical spacing (the median, so a crowded finish does not shrink them all). */
 const nodeSizeFor = (positions: number[], total: number, trackPx: number): number => {
-  if (trackPx <= 0 || positions.length < 2) return MAX_NODE_PX;
+  const maxNode = trackPx > 0 && trackPx < COMPACT_TRACK_PX ? COMPACT_MAX_NODE_PX : MAX_NODE_PX;
+  if (trackPx <= 0 || positions.length < 2) return maxNode;
   const gaps = positions.slice(1).map((pos, i) => ((pos - positions[i]) / total) * trackPx).sort((x, y) => x - y);
   const typical = gaps[Math.floor(gaps.length / 2)];
-  return Math.max(MIN_NODE_PX, Math.min(MAX_NODE_PX, Math.floor(typical * NODE_FILL_RATIO)));
+  return Math.max(MIN_NODE_PX, Math.min(maxNode, Math.floor(typical * NODE_FILL_RATIO)));
 };
 
 /** Trophies that fit the track: walking back from the finish, drops any that would crowd the next one. */
@@ -124,9 +128,10 @@ export const ChallengeProgress: React.FC<ChallengeProgressProps> = ({ current, t
             <div
               className="absolute inset-y-0 left-0 rounded-full transition-[width,background] duration-700 ease-out"
               style={{
-                width: `${ratio * 100}%`,
+                // One linear ramp from a node-sized stub (first win) to the full track (finish), so every win
+                // moves the bar and the first one animates instead of snapping to a minimum width.
+                width: cleared > 0 ? `calc(${nodeSize}px + ${ratio} * (100% - ${nodeSize}px))` : '0px',
                 background: `linear-gradient(90deg, ${fillColor(0)}, ${fillColor(ratio)})`,
-                minWidth: cleared > 0 ? `${nodeSize}px` : 0,
               }}
             />
           </div>

@@ -22,12 +22,12 @@ const avatarUrlFor = (name: string, role: Role, characters: OwnedCharacterItem[]
   if (!name) return null;
   const owned = characters.find((c) => c.name === name)?.avatar_local_path;
   const resolved = staticUrl(owned) || avatarUrlForCharacter(name, role === 'survivor' ? 'survivors' : 'killers');
-  return resolved ? avatarThumbFromPath(resolved, 128) || null : null;
+  return resolved ? avatarThumbFromPath(resolved, 256) || null : null;
 };
 
 const perkIconFor = (perk: Perk) => {
   const resolved = perkIconUrl(perk);
-  return resolved ? getIconThumbUrl(resolved, 128) || null : null;
+  return resolved ? getIconThumbUrl(resolved, 256) || null : null;
 };
 
 export const RevealPortrait: React.FC<{ name?: string; role: Role; phase: DrawPhase; characters: OwnedCharacterItem[] }> = ({
@@ -197,7 +197,7 @@ const PerkSlotsRow: React.FC<PerkSlotsRowProps> = ({ tierInfo, randomPerks, disp
           {dict.streaks.goesInBare}
         </p>
       )}
-      <ul className={large ? 'flex items-start gap-5 sm:gap-7 xl:gap-12' : size === 'compact' ? 'flex items-start gap-4 xl:gap-6' : 'flex items-start gap-5 xl:gap-10'}>
+      <ul className={large ? 'flex items-start gap-5 sm:gap-8 xl:gap-12' : size === 'compact' ? 'flex items-start gap-4 sm:gap-6 xl:gap-8' : 'flex items-start gap-5 sm:gap-7 xl:gap-10'}>
         {slots.map((idx) => {
           if (idx === 0 && perkLimit === 0 && randomPerks.length > 0) {
             const perk = randomPerks[0];
@@ -335,19 +335,19 @@ export const CompactPlayerBuild: React.FC<CompactPlayerBuildProps> = ({ index, p
   }
 
   return (
-    <div className="flex w-full flex-col items-center gap-4 px-1 sm:min-h-44.5 sm:flex-row sm:justify-center sm:gap-6 sm:px-4">
-      <div className="flex shrink-0 items-center gap-3 sm:border-r sm:border-border-color sm:pr-6 xl:gap-4">
+    <div className="flex w-full flex-col items-center gap-4 px-1 sm:min-h-44.5 sm:flex-row sm:px-4">
+      <div className="flex shrink-0 items-center justify-center gap-3 sm:w-2/5 sm:min-w-fit sm:self-stretch sm:border-r sm:border-border-color sm:px-4 xl:gap-4">
         <div className="flex flex-col items-center gap-1.5">
           {avatarBox('w-14 h-14 sm:w-24 sm:h-24 xl:w-28 xl:h-28', 'w-8 h-8 sm:w-10 sm:h-10 xl:w-12 xl:h-12')}
           <span className="max-w-28 text-xs font-bold text-text-primary text-center leading-tight">{displayName}</span>
         </div>
         <TeachablePerkCluster perks={player.character_perks} perkSize="[--perk-size:2.5rem] sm:[--perk-size:3rem] xl:[--perk-size:4rem]" />
       </div>
-      <div className="flex min-w-0 flex-col items-center justify-center gap-6 sm:gap-9">
+      <div className="flex min-w-0 flex-col items-center justify-center gap-6 sm:flex-1 sm:gap-9">
         {Array.from({ length: playersPerCharacter }, (_, n) => (
           <div key={n} className="flex items-center gap-2 sm:gap-4">
             {shared && (
-              <span className="w-10 shrink-0 text-micro sm:w-14 uppercase font-black text-accent-red tracking-wider">
+              <span className="w-10 shrink-0 text-center text-micro sm:w-14 uppercase font-black text-accent-red tracking-wider">
                 {playerLabel} {index * playersPerCharacter + n + 1}
               </span>
             )}

@@ -25,7 +25,7 @@ const CATEGORY_SUBDIR: Record<ThumbCategory, string> = {
 
 /** Mirrors backend `THUMB_SPECS` allow-listed widths so frontend requests never 404. */
 const CATEGORY_ALLOWED_WIDTHS: Record<ThumbCategory, readonly number[]> = {
-  avatars: [128, 256],
+  avatars: [128, 256, 512],
   maps: [320],
   chapters: [480],
   realms: [320],

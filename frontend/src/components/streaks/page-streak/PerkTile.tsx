@@ -40,11 +40,11 @@ export const PerkTile: React.FC<PerkTileProps> = ({
       <svg
         viewBox="0 0 100 100"
         aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 h-full w-full text-accent-red transition-opacity duration-150 ${
+        className={`pointer-events-none absolute inset-0 h-full w-full transition-opacity duration-150 ${
           selected ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        <polygon points="50,1.5 98.5,50 50,98.5 1.5,50" fill="none" stroke="currentColor" strokeWidth="1.5" />
+        <polygon points="50,2.5 97.5,50 50,97.5 2.5,50" fill="none" strokeWidth="3" strokeLinejoin="round" className="stroke-accent-red" />
       </svg>
     </>
   );

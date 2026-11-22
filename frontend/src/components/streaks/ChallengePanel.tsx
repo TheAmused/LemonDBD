@@ -36,12 +36,24 @@ export const ChallengePanel: React.FC<ChallengePanelProps> = ({ header, progress
 interface ChallengeHeaderLayoutProps {
   stats: React.ReactNode;
   actions: React.ReactNode;
+  /** A control that sits before the stats, e.g. an icon button back to the picker. */
+  leading?: React.ReactNode;
 }
 
 /** Splits the header strip into a stats zone and an actions zone. */
-export const ChallengeHeaderLayout: React.FC<ChallengeHeaderLayoutProps> = ({ stats, actions }) => (
-  <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto_auto] items-center gap-2 sm:flex sm:flex-wrap sm:justify-between sm:gap-x-4 sm:gap-y-3">
-    <div className="contents sm:flex sm:flex-wrap sm:items-center sm:gap-2.5">{stats}</div>
+export const ChallengeHeaderLayout: React.FC<ChallengeHeaderLayoutProps> = ({ stats, actions, leading }) => (
+  <div
+    className={cn(
+      'grid items-center gap-2 sm:flex sm:flex-wrap sm:justify-between sm:gap-x-4 sm:gap-y-3',
+      leading
+        ? 'grid-cols-[auto_minmax(0,1fr)_minmax(0,1fr)_auto_auto]'
+        : 'grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto_auto]'
+    )}
+  >
+    <div className="contents sm:flex sm:flex-wrap sm:items-center sm:gap-2.5">
+      {leading}
+      {stats}
+    </div>
     <div className="contents sm:ml-auto sm:flex sm:flex-wrap sm:items-center sm:justify-end sm:gap-2.5">{actions}</div>
   </div>
 );
@@ -244,7 +256,7 @@ export const StandardHeaderActions: React.FC<StandardHeaderActionsProps> = ({ on
       onClick={() => setOpen((v) => !v)}
       aria-expanded={open}
       aria-label={dict.streaks.moreActions}
-      className="relative col-span-full h-5 w-full p-0 before:absolute before:-inset-y-3 before:inset-x-0 before:content-[''] sm:hidden"
+      className="relative col-span-full -mb-1 -mt-0.5 h-4 min-h-0 w-full p-0 pointer-coarse:min-h-0 before:absolute before:-inset-y-3 before:inset-x-0 before:content-[''] sm:hidden"
     >
       <ChevronDown className={`icon-lg transition-transform duration-300 ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
     </Button>

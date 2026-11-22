@@ -3,12 +3,13 @@
 
 import React, { useMemo, useState } from 'react';
 import { SelectableCard } from '@/components/common/SelectableCard';
-import { Button } from '@/components/common/Button';
+import { RoleToggle } from '@/components/generator/shared/RoleToggle';
 import { PerkSearchBox } from '@/components/perks/PerkSearchBox';
 import { PerkFilterMenu } from '@/components/perks/PerkFilterMenu';
 import { roleOnlyMessage } from '@/components/perks/roleOnlyMessage';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useCatalogPerks } from '@/hooks/useCatalogPerks';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useProgressiveList } from '@/hooks/useProgressiveList';
 import { usePerkTypeVocabulary } from '@/hooks/usePerkTypeVocabulary';
 import { isEmptyQuery, parsePerkQuery } from '@/utils/perkSearch/parse';
@@ -36,6 +37,7 @@ import { useIdPleasePreview, useIdPleaseRoster } from './useIdPleaseSetupData';
 
 // A side has a couple of hundred perks, each with an icon: the grid fills in as it is scrolled.
 const FIRST_CHUNK = 36;
+const NO_TYPES: PerkType[] = [];
 
 /** Place of a perk in the inventory (page, then slot); perks the inventory does not list go last. */
 function inventoryIndex(coordinates: ReadonlyMap<number, PerkCoordinate>, perk: IdPleasePerk): number {
@@ -73,7 +75,10 @@ export const IdPleaseSetup: React.FC<IdPleaseSetupProps> = ({ lane, difficulty, 
   const chosen = opening.positions;
   const updateOpening = (next: IdPleaseOpening) => saveOpening(serializeIdPleaseOpening(openingKey, next));
   const [search, setSearch] = useState('');
-  const [types, setTypes] = useState<PerkType[]>([]);
+  const [pickedTypes, setTypes] = useState<PerkType[]>([]);
+  // Perk types are filtered from the Filters button and the search suggestions, which only a desktop has.
+  const desktop = useMediaQuery('(min-width: 1024px)') === true;
+  const types = desktop ? pickedTypes : NO_TYPES;
 
   const { roster, loading } = useIdPleaseRoster(lane, side, fingerprint);
   // Hardcore+ shuffles the perks when the run starts, so there is no first match to show beforehand.
@@ -124,24 +129,19 @@ export const IdPleaseSetup: React.FC<IdPleaseSetupProps> = ({ lane, difficulty, 
   return (
     <div className="space-y-6">
       <header className="flex items-baseline justify-between gap-3">
-        <h2 className="type-label text-text-secondary">{s.idPleaseSetupTitle}</h2>
+        <h2 className="type-label-sm text-text-secondary">{s.idPleaseSetupTitle}</h2>
         <p className="text-sm tabular-nums text-text-muted">{formatMessage(s.idPleasePerksChosen, { count: chosen.length })}</p>
       </header>
 
       {laneSide === null && (
-        <fieldset className="flex flex-wrap items-center gap-2" aria-label={s.idPleaseChooseSide}>
-          {(['survivor', 'killer'] as const).map((option) => (
-            <Button
-              key={option}
-              variant={side === option ? 'primary' : 'secondary'}
-              aria-pressed={side === option}
-              onClick={() => changeSide(option)}
-              disabled={busy}
-            >
-              {option === 'killer' ? s.killer : s.survivor}
-            </Button>
-          ))}
-        </fieldset>
+        <div className="flex justify-center">
+          <RoleToggle
+            role={side === 'killer' ? 'Killer' : 'Survivor'}
+            onChange={(role) => {
+              if (!busy) changeSide(role === 'Killer' ? 'killer' : 'survivor');
+            }}
+          />
+        </div>
       )}
 
       <section>
@@ -155,9 +155,12 @@ export const IdPleaseSetup: React.FC<IdPleaseSetupProps> = ({ lane, difficulty, 
             onTypesChange={setTypes}
             suggestPerks
             typesInField={false}
-            className="relative z-40 min-w-48 flex-1 sm:max-w-72"
+            suggestTypes={desktop}
+            className="min-w-48 flex-1 sm:max-w-72"
           />
-          <PerkFilterMenu perks={rolePerks} activeTypes={types} onTypesChange={setTypes} typeCounts={typeCounts} />
+          <div className="max-lg:hidden">
+            <PerkFilterMenu perks={rolePerks} activeTypes={types} onTypesChange={setTypes} typeCounts={typeCounts} />
+          </div>
         </div>
 
         {unplayable ? (
@@ -190,13 +193,13 @@ export const IdPleaseSetup: React.FC<IdPleaseSetupProps> = ({ lane, difficulty, 
 
       {preview && (
         <div className={cn('grid gap-6 border-t border-border-color pt-5', preview.second && 'lg:grid-cols-2')}>
-          <IdPleaseMatchCard match={preview.first} />
-          {preview.second && <IdPleaseMatchCard match={preview.second} title={s.idPleaseMatchTwoPreview} />}
+          <IdPleaseMatchCard match={preview.first} showSide={laneSide === null} />
+          {preview.second && <IdPleaseMatchCard match={preview.second} showSide={laneSide === null} />}
         </div>
       )}
 
       <StreakActionBar>
-        <StreakActionButton variant="green" onClick={() => onStart(side, chosen)} disabled={busy || !full || (!shuffled && !preview)}>
+        <StreakActionButton variant="red" onClick={() => onStart(side, chosen)} disabled={busy || !full || (!shuffled && !preview)}>
           {s.idPleaseStart}
         </StreakActionButton>
       </StreakActionBar>

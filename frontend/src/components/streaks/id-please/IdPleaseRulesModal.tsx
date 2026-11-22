@@ -48,7 +48,7 @@ export const IdPleaseRulesModal: React.FC<IdPleaseRulesModalProps> = ({ isOpen, 
   return (
     <RulesModalShell isOpen={isOpen} onClose={onClose} title={s.rules}>
       <RulesHowItWorks
-        tone="neutral"
+        tone="red"
         title={s.howItWorks}
         items={[
           winCondition,
@@ -84,7 +84,7 @@ export const IdPleaseRulesModal: React.FC<IdPleaseRulesModalProps> = ({ isOpen, 
 
       <RulesModalFooterSections
         copy={s}
-        tone="neutral"
+        tone="red"
         showFreezeNotice={false}
         exceptions={resolveRuleEntries(s, exceptions)}
         clarifications={resolveRuleEntries(s, clarifications)}

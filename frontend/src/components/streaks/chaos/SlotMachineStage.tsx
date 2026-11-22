@@ -13,7 +13,6 @@ import { perkIconUrl as perkIconFor } from '@/utils/staticUrl';
 import { getIconThumbUrl } from '@/utils/thumbUrl';
 import { usePerkDisplayName } from '@/context/DisplayNamesContext';
 import { Button } from '@/components/common/Button';
-import { Spinner } from '@/components/common/Spinner';
 import { useDictionary } from "@/context/DictionaryContext";
 import { useChallengeAnimations } from '../useChallengeAnimations';
 import { TileButton } from '@/components/common/TileButton';
@@ -46,8 +45,10 @@ const ReelStrip: React.FC<{
   durationMs: number;
   /** False lands the reel at once, with no spin. */
   animate: boolean;
+  /** The perks are in but the spin has not started: the reel stays empty instead of flashing the result. */
+  awaitingSpin: boolean;
   onLanded: () => void;
-}> = ({ finalPerk, pool, spinToken, direction, durationMs, animate, onLanded }) => {
+}> = ({ finalPerk, pool, spinToken, direction, durationMs, animate, awaitingSpin, onLanded }) => {
   const windowRef = useRef<HTMLDivElement | null>(null);
   const [itemPx, setItemPx] = useState(0);
   const [spinning, setSpinning] = useState(false);
@@ -139,7 +140,7 @@ const ReelStrip: React.FC<{
         </div>
       ) : (
         <div className="w-full h-full flex items-center justify-center bg-bg-elevated">
-          <PerkImg perk={finalPerk} className="w-full h-full object-contain p-1.5" />
+          <PerkImg perk={awaitingSpin ? null : finalPerk} className="w-full h-full object-contain p-1.5" />
         </div>
       )}
     </div>
@@ -178,6 +179,8 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({ perks, addon
   const [hasSpunThisBuild, setHasSpunThisBuild] = useState(revealed);
   // A lever pull waiting for its reveal: that reveal spins the reels; any other one shows the perks at once.
   const [pendingSpin, setPendingSpin] = useState(false);
+  // The reels have been told to spin for the pending pull. Until then, the reveal that just arrived must not show on them.
+  const [spinBegan, setSpinBegan] = useState(false);
   const spinStartedRef = useRef(false);
   const leverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -202,6 +205,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({ perks, addon
   useEffect(() => {
     if (!revealed || !pendingSpin || spinStartedRef.current) return;
     spinStartedRef.current = true;
+    setSpinBegan(true);
     start(() => {
       spinStartedRef.current = false;
       setPendingSpin(false);
@@ -212,13 +216,14 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({ perks, addon
   const handlePull = () => {
     if (revealed || loading || locked) return;
     setPendingSpin(true);
+    setSpinBegan(false);
     setLeverPulled(true);
     leverTimerRef.current = setTimeout(() => setLeverPulled(false), LEVER_PENDING_MS);
     onPullLever();
   };
 
   return (
-    <div className="relative w-full overflow-hidden rounded-card p-3 pb-8 sm:p-8">
+    <div className="relative w-full overflow-hidden rounded-card p-3 sm:p-8">
       <div className="relative z-10">
         <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
           <div className="grid w-full grid-cols-4 items-end gap-2 sm:flex sm:w-auto">
@@ -231,6 +236,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({ perks, addon
                 direction={REEL_DIRECTIONS[i]}
                 durationMs={REEL_SPIN_MS[i]}
                 animate={animations}
+                awaitingSpin={animations && pendingSpin && !spinBegan}
                 onLanded={reportLanded}
               />
             ))}
@@ -240,7 +246,7 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({ perks, addon
             <SlotLever down={revealed || leverPulled} disabled={revealed || loading || locked} animate={animations} onPull={handlePull} />
           </div>
           {!revealed && (
-            <Button variant="primary" size="md" onClick={handlePull} disabled={locked} loading={loading} className="w-full sm:hidden">
+            <Button variant="primary" size="md" onClick={handlePull} disabled={locked || loading} loading={loading && pendingSpin} className="w-full sm:hidden">
               {dict.streaks.pullTheLever}
             </Button>
           )}
@@ -258,15 +264,6 @@ export const SlotMachineStage: React.FC<SlotMachineStageProps> = ({ perks, addon
             )}
           </div>
         </div>
-      </div>
-
-      <div
-        className={`absolute inset-x-0 bottom-2 z-10 flex items-center justify-center gap-2 text-text-muted text-xs ${
-          loading ? 'visible' : 'invisible'
-        }`}
-      >
-        <Spinner size="xs" tone="current" />
-        <span>{dict.app.loading}</span>
       </div>
     </div>
   );

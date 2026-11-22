@@ -50,7 +50,7 @@ export const KillerRosterGrid: React.FC<KillerRosterGridProps> = ({ locale, rost
   const [disabledEntry, setDisabledEntry] = useState<RosterEntry | null>(null);
   return (
     <>
-    <ul className="grid grid-cols-3 gap-2 sm:grid-cols-5 sm:gap-3 lg:grid-cols-10">
+    <ul className="grid grid-cols-4 gap-2 sm:grid-cols-5 sm:gap-3 lg:grid-cols-10">
       {roster.map((entry) => {
         // The card looks finished only while the run itself is: an abandon flips it back to in_progress.
         const done = entry.status === 'completed';

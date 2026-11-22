@@ -151,9 +151,7 @@ def get_clock_labels(floor: dict[str, Any]) -> tuple[tuple[float, float], list[d
     landmark_clearance_m = 4.0
     # Corridors between named rooms are narrow: a number there needs less clear floor around it.
     clock_clearance_m = 2.0 if floor.get("rooms") else 4.0
-    clock_inset_m = 7.0
     # Landmarks are only dodged a short way inwards of the edge.
-    landmark_search_m = 10.0
     # On a floor with named rooms the numbers would sit on the names: they are printed just outside
     # the outline instead, in the margin of the picture.
     outside_m = 5.0 if bool(floor.get("rooms")) else None

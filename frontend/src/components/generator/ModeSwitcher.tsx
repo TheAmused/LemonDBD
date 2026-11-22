@@ -52,8 +52,8 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ mode, onChange }) =>
 
   return (
     <>
-      {/* Smaller screens (< xl: mobile, tablet, 1024px laptop): Clean Dropdown */}
-      <div className="w-full xl:hidden flex justify-center">
+      {/* Smaller screens (< 2xl: the sidebar leaves too little width for five modes next to the toolbar): Clean Dropdown */}
+      <div className="w-full 2xl:hidden flex justify-center">
         <CustomDropdown<GeneratorMode>
           value={mode}
           onChange={onChange}
@@ -69,8 +69,8 @@ export const ModeSwitcher: React.FC<ModeSwitcherProps> = ({ mode, onChange }) =>
         />
       </div>
 
-      {/* Large Desktop (>= xl: 1280px+): Sleek Horizontal Segmented Control */}
-      <div className="hidden xl:block">
+      {/* Large Desktop (>= 2xl: 1536px+): Sleek Horizontal Segmented Control */}
+      <div className="hidden 2xl:block">
         <SegmentedControl<GeneratorMode>
           value={mode}
           onChange={onChange}

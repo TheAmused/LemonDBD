@@ -13,6 +13,6 @@ export const ERROR_PAGE_REFERENCE = 'mt-6 type-caption text-text-muted';
 // route's client bundle, and buttonClassName would pull in tailwind-merge (~16KB gzip) for two
 // fixed strings. errorBoundaries.test.ts keeps these equal to what buttonClassName returns.
 const BUTTON_BASE =
-  'inline-flex max-w-full shrink-0 items-center justify-center font-bold transition-colors cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:cursor-not-allowed disabled:opacity-50';
+  'inline-flex max-w-full shrink-0 items-center justify-center font-bold transition-colors cursor-pointer select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:cursor-not-allowed disabled:opacity-disabled';
 export const GLOBAL_ERROR_RETRY_BUTTON = `${BUTTON_BASE} border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated hover:text-text-primary gap-2 px-6 py-3 text-base rounded-control`;
 export const GLOBAL_ERROR_HOME_BUTTON = `${BUTTON_BASE} bg-accent-red text-text-inverted shadow-sm hover:bg-accent-red-hover gap-2 px-6 py-3 text-base rounded-control`;

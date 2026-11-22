@@ -473,7 +473,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                       <ImageOff className="h-8 w-8 text-text-muted" />
                     </div>
                   )}
-                  <div className="absolute inset-0 bg-gradient-to-b from-bg-primary/90 via-bg-primary/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-image-scrim/90 via-image-scrim/20 to-transparent" />
                   <h2 className="absolute top-2 left-2 right-2 text-center text-sm sm:text-base font-black text-text-inverted tracking-tight line-clamp-2">
                     {realm}
                   </h2>
@@ -482,7 +482,7 @@ export const MapExplorer: React.FC<MapExplorerProps> = ({
                     size="sm"
                     plain
                     className={cn(
-                      'absolute bottom-2 right-2 text-text-inverted',
+                      'absolute bottom-2 right-2 text-text-primary',
                       realmRetired && 'left-2 justify-center whitespace-normal text-center leading-tight'
                     )}
                   >

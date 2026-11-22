@@ -38,7 +38,7 @@ const NAV_VARIANTS = {
 const PAGE_CONTROL_HEIGHT = 'h-7 py-0 sm:h-8 lg:h-9 xl:h-10 wide:h-11';
 // One look for the arrow buttons.
 const PAGE_BUTTON =
-  'pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-40 transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11';
+  'pointer-coarse:min-h-11 pointer-coarse:min-w-11 flex h-7 w-7 items-center justify-center rounded-control border border-border-color bg-bg-surface text-text-secondary hover:bg-bg-elevated disabled:opacity-dimmed transition-colors cursor-pointer disabled:cursor-not-allowed sm:h-8 sm:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 wide:h-11 wide:w-11';
 const PAGE_ICON = 'h-3.5 w-3.5 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6';
 
 export const Pagination: React.FC<PaginationProps> = ({ page, totalPages, totalResults, limit, onPageChange, onLimitChange, variant = 'page', className }) => {

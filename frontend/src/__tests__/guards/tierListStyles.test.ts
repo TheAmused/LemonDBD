@@ -39,14 +39,14 @@ describe('tier list styles', () => {
     }
   });
 
-  it('every token color has a literal Tailwind class backed by a --color-tier-* theme token in all 3 themes', () => {
+  it('every token color has a literal Tailwind class backed by a --color-tier-* theme token in both themes', () => {
     const css = readGlobalCss(path.resolve(__dirname, '../../app/globals.css'));
 
-    // `@media (prefers-color-scheme: dark) { :root:not(.light, .light-lemon,
-    // .dark) {...} }` is a deliberate, byte-for-byte mirror of `.dark` (see
+    // `@media (prefers-color-scheme: dark) { :root:not(.light, .dark)
+    // {...} }` is a deliberate, byte-for-byte mirror of `.dark` (see
     // the comment above it in globals.css): it only closes the FOUC gap
-    // before next-themes' script picks a real class, so it is not a fourth
-    // theme. It's stripped out before counting the three real ones, and
+    // before next-themes' script picks a real class, so it is not a third
+    // theme. It's stripped out before counting the two real ones, and
     // checked separately below for staying in sync with `.dark`.
     const mediaStart = css.indexOf('@media (prefers-color-scheme: dark)');
     assert.ok(mediaStart >= 0, 'expected the documented OS-dark gap-frame fallback block');
@@ -70,7 +70,7 @@ describe('tier list styles', () => {
       assert.equal(TIER_TOKEN_BG_CLASSES[token], `bg-tier-${token}`);
       assert.ok(withoutFallback.includes(`--color-tier-${token}: var(--tier-${token});`), `missing @theme mapping for ${token}`);
       const definitions = withoutFallback.match(new RegExp(`--tier-${token}: #[0-9a-f]{6};`, 'g')) ?? [];
-      assert.equal(definitions.length, 3, `--tier-${token} must be defined for light, light-lemon and dark`);
+      assert.equal(definitions.length, 2, `--tier-${token} must be defined for light and dark`);
 
       const darkMatch = withoutFallback.match(new RegExp(`\\.dark \\{[\\s\\S]*?--tier-${token}: (#[0-9a-f]{6});`));
       const fallbackMatch = fallbackBlock.match(new RegExp(`--tier-${token}: (#[0-9a-f]{6});`));

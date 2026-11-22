@@ -46,7 +46,7 @@ export const ToggleChip = React.forwardRef<HTMLButtonElement, ToggleChipProps>(f
       type="button"
       aria-pressed={pressed}
       className={cn(
-        'inline-flex shrink-0 items-center justify-center border font-bold transition-colors cursor-pointer select-none touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:cursor-not-allowed disabled:opacity-50',
+        'inline-flex shrink-0 items-center justify-center border font-bold transition-colors cursor-pointer select-none touch-manipulation focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red disabled:cursor-not-allowed disabled:opacity-disabled',
         pill ? 'rounded-full' : 'rounded-control',
         icon ? ICON_SIZES[size] : SIZES[size],
         pressed ? ON[tone] : OFF,

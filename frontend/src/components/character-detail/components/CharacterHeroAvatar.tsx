@@ -63,7 +63,7 @@ export const CharacterHeroAvatar: React.FC<CharacterHeroAvatarProps> = ({
             <div className="h-12 w-12 rounded-card bg-accent-red/20 border border-accent-red/40 flex items-center justify-center text-accent-red mb-2 shadow-lg group-hover:scale-110 transition-transform">
               <ZoomIn className="icon-xl" />
             </div>
-            <span className="type-label-sm text-text-inverted">
+            <span className="type-label-sm text-text-primary">
               {t.view3DModel}
             </span>
           </div>

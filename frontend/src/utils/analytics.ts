@@ -19,7 +19,7 @@ export type ChallengeRole = Role | 'mixed';
 /** What Gauntlet Lemon's tokens buy: a different target, a chosen one, a free perk slot, or a shield for a lost match. */
 export type ChallengeBoost = 'reroll' | 'pick' | 'slot' | 'shield';
 /** The themes of the sidebar picker; `system` follows the device. */
-export type ThemeName = 'light' | 'light-lemon' | 'dark' | 'system';
+export type ThemeName = 'light' | 'dark' | 'system';
 export type SettingName = 'campfire' | 'gifs' | 'nsfw' | 'sounds' | 'music' | 'animations';
 export type ChallengeUiAction =
   | 'rules'

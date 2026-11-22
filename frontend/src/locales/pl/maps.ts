@@ -40,6 +40,7 @@ export default {
   landmarksApprox: 'Położenie punktów orientacyjnych jest przybliżone.',
   shackYes: 'Chatka',
   mainBuildingYes: 'Główny Budynek',
+  legendAbsent: 'brak',
   surfaceArea: 'Powierzchnia',
   layoutLabel: 'Układ',
   sizeLabel: 'Rozmiar',

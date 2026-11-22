@@ -11,8 +11,9 @@ import { useDictionary } from '@/context/DictionaryContext';
 import { cn } from '@/utils/cn';
 
 // A callout image is nearly square and shown whole; a photo is 3:2 and fills a wider frame.
-const CALLOUT_FRAME = 'h-24 w-24 sm:h-36 sm:w-36 md:h-40 md:w-40';
-const PHOTO_FRAME = 'aspect-[3/2] w-24 sm:w-44 md:w-52';
+// Sized so map cards stay compact on mobile grids and never exceed realm tile widths on tablets.
+const CALLOUT_FRAME = 'aspect-square w-full sm:h-28 sm:w-28 lg:h-32 lg:w-32';
+const PHOTO_FRAME = 'aspect-[3/2] w-full sm:w-32 lg:w-36';
 
 export interface MapCardProps {
   map: MapRealm;
@@ -35,7 +36,7 @@ export const MapCard: React.FC<MapCardProps> = ({ map, backendBase, onSelect }) 
       onClick={() => onSelect(map)}
       aria-label={retired ? `${map.name}: ${dict.maps.retiredMap}` : undefined}
       className={cn(
-        'group flex flex-col items-center gap-2 rounded-control border-2 border-border-color bg-bg-surface p-2 min-h-11 touch-manipulation transition-all duration-200 shadow-sm hover:border-accent-red',
+        'group flex w-full sm:w-32 lg:w-36 flex-col items-center gap-2 rounded-control border-2 border-border-color bg-bg-surface p-2 min-h-11 touch-manipulation transition-all duration-200 shadow-sm hover:border-accent-red',
         // Greyed with a filter, not opacity: a see-through card lets the background particles show through.
         retired && 'grayscale brightness-75'
       )}

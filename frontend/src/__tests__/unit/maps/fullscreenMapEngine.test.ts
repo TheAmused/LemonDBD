@@ -141,11 +141,50 @@ test('FullscreenMapEngine renders indoor map tactical intel without shack and 0 
   assert.ok(html.includes('Indoor'));
   assert.ok(html.includes('142 sqT'));
   assert.ok(html.includes('9,088 m²'));
-  assert.ok(!html.includes('Shack'), 'a map without a shack does not mention one');
-  assert.ok(!html.includes('Main Building'), 'a map without a main building does not mention one');
+  assert.ok(html.includes('>Shack<') && html.includes('Shack, not present'), 'a map without a shack explicitly shows it is absent');
+  assert.ok(html.includes('>Main Building<') && html.includes('Main Building, not present'), 'a map without a main building explicitly shows it is absent');
   const key = html.slice(html.indexOf('data-testid="map-symbol-key"'));
   assert.ok(!key.includes('Off-limits area') && !key.includes('16 m game tile'), 'no layout drawn: no layout symbols keyed');
   assert.ok(!key.includes('Landmarks &amp; Features'), 'no landmark codes: no landmarks heading');
+});
+
+test('FullscreenMapEngine renders multi-floor layout with floor headings and documents feature codes in the legend', () => {
+  const midwichWithLayout: MapRealm = {
+    ...sampleMidwichMap,
+    layout: {
+      v: 1,
+      cell_m: 8,
+      width_m: 64,
+      height_m: 64,
+      floors: [
+        {
+          label: 'lower',
+          outline: [[[0, 0], [64, 0], [64, 64], [0, 64]]],
+          rooms: [{ label: 'COURTYARD', x: 32, y: 32, w: 20, h: 20 }],
+          landmarks: [{ kind: 'feature', label: 'CT', x: 44, y: 44 }],
+          area_m2: 4096,
+        },
+        {
+          label: 'upper',
+          outline: [[[0, 0], [64, 0], [64, 64], [0, 64]]],
+          blocked: [[[20, 20], [44, 20], [44, 44], [20, 44]]],
+          area_m2: 3520,
+        },
+      ],
+    },
+  };
+  const html = renderWithDictionary(
+    React.createElement(FullscreenMapEngine, {
+      mapId: 45,
+      availableMaps: [midwichWithLayout],
+      backendBase: 'http://localhost:5000',
+      onClose: () => {},
+    })
+  );
+  assert.ok(html.includes('data-layout-orientation='), 'multi-floor map uses responsive layout container');
+  assert.ok(html.includes('Lower floor') && html.includes('Upper floor'), 'both floor titles are rendered');
+  const key = html.slice(html.indexOf('data-testid="map-symbol-key"'), html.indexOf('</aside>'));
+  assert.ok(key.includes('>CT<') && key.includes('Courtyard'), 'feature codes drawn on the map are documented in the legend');
 });
 
 test('FullscreenMapEngine renders float tile size accurately', () => {

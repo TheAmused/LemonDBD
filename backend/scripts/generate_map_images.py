@@ -114,6 +114,23 @@ def has_clearance(floor: dict[str, Any], x: float, y: float, m: float) -> bool:
     return all(point_on_floor(floor, x + px, y + py) for px, py in probes)
 
 
+def has_box_clearance(floor: dict[str, Any], x: float, y: float, hw: float, hh: float) -> bool:
+    """Check clearance across a rectangular label box around (x, y). Identical to mapLayout.ts."""
+    probes = [
+        (0.0, 0.0), (hw, 0.0), (-hw, 0.0), (0.0, hh), (0.0, -hh),
+        (hw, hh), (hw, -hh), (-hw, hh), (-hw, -hh),
+    ]
+    return all(point_on_floor(floor, x + px, y + py) for px, py in probes)
+
+
+def ring_perimeter(ring: list[list[float]]) -> float:
+    """Length of a closed ring. Identical to mapLayout.ts."""
+    return sum(
+        math.hypot(ring[(i + 1) % len(ring)][0] - p[0], ring[(i + 1) % len(ring)][1] - p[1])
+        for i, p in enumerate(ring)
+    )
+
+
 def distance_to_landmark(lm: dict[str, Any], x: float, y: float) -> float:
     """Distance from point to landmark footprint or marker. Identical to mapLayout.ts."""
     marker_half_m = 4.5
@@ -142,9 +159,7 @@ def get_clock_labels(floor: dict[str, Any]) -> tuple[tuple[float, float], list[d
     landmark_clearance_m = 4.0
     # Corridors between named rooms are narrow: a number there needs less clear floor around it.
     clock_clearance_m = 2.0 if floor.get("rooms") else 4.0
-    clock_inset_m = 7.0
     # Landmarks are only dodged a short way inwards of the edge.
-    landmark_search_m = 10.0
     # On a floor with named rooms the numbers would sit on the names: they are printed just outside
     # the outline instead, in the margin of the picture.
     outside_m = 5.0 if bool(floor.get("rooms")) else None
@@ -154,7 +169,11 @@ def get_clock_labels(floor: dict[str, Any]) -> tuple[tuple[float, float], list[d
     def clear_of_landmarks(x: float, y: float) -> bool:
         return all(distance_to_landmark(lm, x, y) >= landmark_clearance_m for lm in landmarks)
 
-    def place(degrees: float) -> tuple[float, float] | None:
+    show_mid = has_clearance(floor, cx, cy, clock_clearance_m) and clear_of_landmarks(cx, cy)
+    if floor.get("clock"):
+        return (cx, cy), list(floor["clock"]), show_mid
+
+    def place_outside(degrees: float) -> tuple[float, float] | None:
         angle = math.radians(degrees)
         dx = math.sin(angle)
         dy = -math.cos(angle)
@@ -169,46 +188,121 @@ def get_clock_labels(floor: dict[str, Any]) -> tuple[tuple[float, float], list[d
             r += ray_step_m
         if last_inside < 0:
             return None
-        if outside_m is not None:
-            # Beyond the last point of the outline itself: a blocked room at the edge is no reason to stop short.
-            out_r = max(last_in_outline, last_inside) + outside_m
-            return (cx + dx * out_r, cy + dy * out_r)
-
-        start = max(0.0, last_inside - clock_inset_m)
-        edge_safe = None
-        best = None
-        stop = max(0.0, start - landmark_search_m)
-        r = start
-        while r >= stop and best is None:
-            x = cx + dx * r
-            y = cy + dy * r
-            if has_clearance(floor, x, y, clock_clearance_m):
-                if edge_safe is None:
-                    edge_safe = r
-                if clear_of_landmarks(x, y):
-                    best = r
-            r -= ray_step_m
-
-        r = stop
-        while edge_safe is None and r >= 0:
-            if has_clearance(floor, cx + dx * r, cy + dy * r, clock_clearance_m):
-                edge_safe = r
-            r -= ray_step_m
-
-        final_r = best if best is not None else (edge_safe if edge_safe is not None else last_inside)
-        return (cx + dx * final_r, cy + dy * final_r)
+        out_r = max(last_in_outline, last_inside) + (outside_m or 5.0)
+        return (cx + dx * out_r, cy + dy * out_r)
 
     labels = []
-    for hour in range(1, 13):
-        point = None
-        for offset in sector_offsets:
-            point = place(hour * 30.0 + offset)
+    outline = floor.get("outline", [])
+    if outside_m is not None or not outline or len(outline[0]) < 3 or ring_perimeter(outline[0]) == 0:
+        for hour in range(1, 13):
+            point = None
+            for offset in sector_offsets:
+                point = place_outside(hour * 30.0 + offset)
+                if point is not None:
+                    break
             if point is not None:
-                break
-        if point is not None:
-            labels.append({"hour": hour, "x": point[0], "y": point[1]})
+                labels.append({"hour": hour, "x": point[0], "y": point[1]})
+    else:
+        ring = list(outline[0])
+        n = len(ring)
+        area = sum(ring[i][0] * ring[(i + 1) % n][1] - ring[(i + 1) % n][0] * ring[i][1] for i in range(n))
+        if area < 0:
+            ring.reverse()
+        segs: list[tuple[list[float], list[float], float, float]] = []
+        total = 0.0
+        for i in range(n):
+            p0, p1 = ring[i], ring[(i + 1) % n]
+            length = math.hypot(p1[0] - p0[0], p1[1] - p0[1])
+            if length > 0:
+                segs.append((p0, p1, length, total))
+                total += length
 
-    show_mid = has_clearance(floor, cx, cy, clock_clearance_m) and clear_of_landmarks(cx, cy)
+        def ray_param(dx: float, dy: float) -> float:
+            best_r = -1.0
+            best_d = 0.0
+            for p0, p1, length, start in segs:
+                sx, sy = p1[0] - p0[0], p1[1] - p0[1]
+                denom = dx * sy - dy * sx
+                if abs(denom) < 1e-9:
+                    continue
+                qx, qy = p0[0] - cx, p0[1] - cy
+                r = (qx * sy - qy * sx) / denom
+                t = (qx * dy - qy * dx) / denom
+                if r > 0 and -1e-6 <= t <= 1.0 + 1e-6 and r > best_r:
+                    best_r = r
+                    best_d = start + max(0.0, min(1.0, t)) * length
+            return best_d
+
+        d12 = ray_param(0.0, -1.0)
+        d3 = ray_param(1.0, 0.0)
+        d6 = ray_param(0.0, 1.0)
+        d9 = ray_param(-1.0, 0.0)
+
+        def arc(a: float, b: float) -> float:
+            return (b - a) % total
+
+        anchors = [
+            (1, (d12 + arc(d12, d3) / 3.0) % total),
+            (2, (d12 + 2.0 * arc(d12, d3) / 3.0) % total),
+            (3, d3),
+            (4, (d3 + arc(d3, d6) / 3.0) % total),
+            (5, (d3 + 2.0 * arc(d3, d6) / 3.0) % total),
+            (6, d6),
+            (7, (d6 + arc(d6, d9) / 3.0) % total),
+            (8, (d6 + 2.0 * arc(d6, d9) / 3.0) % total),
+            (9, d9),
+            (10, (d9 + arc(d9, d12) / 3.0) % total),
+            (11, (d9 + 2.0 * arc(d9, d12) / 3.0) % total),
+            (12, d12),
+        ]
+
+        def at_arc(raw_d: float) -> tuple[float, float, float, float]:
+            d = raw_d % total
+            for p0, p1, length, start in segs:
+                if start <= d <= start + length + 1e-9:
+                    t = (d - start) / length
+                    return (
+                        p0[0] + (p1[0] - p0[0]) * t,
+                        p0[1] + (p1[1] - p0[1]) * t,
+                        -(p1[1] - p0[1]) / length,
+                        (p1[0] - p0[0]) / length,
+                    )
+            return cx, cy, 0.0, 0.0
+
+        for hour, d in anchors:
+            hw = 5.5 if hour >= 10 else 4.0
+            hh = 4.5
+            best = None
+            for d_off in (0.0, 5.0, -5.0, 10.0, -10.0, 15.0, -15.0):
+                ex, ey, nx, ny = at_arc(d + d_off)
+                for inset in (7.0, 8.5, 10.0, 12.0, 14.0, 5.5):
+                    tx, ty = ex + nx * inset, ey + ny * inset
+                    if (
+                        has_box_clearance(floor, tx, ty, hw, hh)
+                        and clear_of_landmarks(tx, ty)
+                        and all(math.hypot(tx - p["x"], ty - p["y"]) >= 11.0 for p in labels)
+                    ):
+                        best = (tx, ty)
+                        break
+                if best is not None:
+                    break
+            if best is None:
+                ex, ey, _, _ = at_arc(d)
+                dx, dy = cx - ex, cy - ey
+                dl = math.hypot(dx, dy) or 1.0
+                for inset in (7.0, 9.0, 11.0, 13.0, 15.0, 18.0, 5.0):
+                    tx, ty = ex + (dx / dl) * inset, ey + (dy / dl) * inset
+                    if has_box_clearance(floor, tx, ty, hw, hh):
+                        best = (tx, ty)
+                        break
+                if best is None:
+                    for inset in (7.0, 5.0, 9.0, 3.0):
+                        tx, ty = ex + (dx / dl) * inset, ey + (dy / dl) * inset
+                        if point_on_floor(floor, tx, ty):
+                            best = (tx, ty)
+                            break
+            labels.append({"hour": hour, "x": best[0] if best else cx, "y": best[1] if best else cy})
+
     return (cx, cy), labels, show_mid
 
 

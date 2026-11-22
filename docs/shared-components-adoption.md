@@ -320,7 +320,7 @@ Wszystkie 9 trafień to nie placeholdery, tylko pulsujące stany (wybrane pole, 
 
 ## 10. Przełącznik role=switch (PRZEJRZANE, brak zmian)
 
-`ChapterCard` już korzysta z `SwitchTrack` (część prezentacyjna `Switch`), bo cały wiersz jest klikalny.
+`ChapterCard` ma własny przycisk `role="switch"` na obrazku rozdziału (nie da się zagnieździć `Switch` w przycisku). `SwitchTrack` jest teraz prywatny dla `Switch.tsx`.
 
 ## 11. Overlaye fixed inset-0 (PRZEJRZANE, brak zmian)
 

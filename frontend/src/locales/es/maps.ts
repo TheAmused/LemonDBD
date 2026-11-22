@@ -40,6 +40,7 @@ export default {
   landmarksApprox: 'Las posiciones de los puntos de referencia son aproximadas.',
   shackYes: 'Cabaña',
   mainBuildingYes: 'Edificio Principal',
+  legendAbsent: 'no presente',
   surfaceArea: 'Área de Superficie',
   layoutLabel: 'Diseño',
   sizeLabel: 'Tamaño',

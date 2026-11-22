@@ -40,6 +40,7 @@ export default {
   landmarksApprox: 'ランドマークの位置は概算です。',
   shackYes: '小屋あり',
   mainBuildingYes: 'メイン建物あり',
+  legendAbsent: 'なし',
   surfaceArea: '面積',
   layoutLabel: 'レイアウト',
   sizeLabel: 'サイズ',

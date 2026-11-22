@@ -40,6 +40,7 @@ export default {
   landmarksApprox: 'Die Positionen der Wahrzeichen sind ungefähr.',
   shackYes: 'Hütte',
   mainBuildingYes: 'Hauptgebäude',
+  legendAbsent: 'nicht vorhanden',
   surfaceArea: 'Fläche',
   layoutLabel: 'Layout',
   sizeLabel: 'Größe',

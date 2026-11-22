@@ -40,6 +40,8 @@ interface PerkSearchBoxProps {
   suggestPerks?: boolean;
   /** Types as chips inside the field plus the Types button (default). Off: a plain field, the caller shows the active types elsewhere. */
   typesInField?: boolean;
+  /** Offer perk types as suggestions under the field and on Enter (default). Off on touch screens, where the Types filter is not shown. */
+  suggestTypes?: boolean;
   className?: string;
 }
 
@@ -51,6 +53,7 @@ export const PerkSearchBox: React.FC<PerkSearchBoxProps> = ({
   onTypesChange,
   suggestPerks = false,
   typesInField = true,
+  suggestTypes = true,
   className,
 }) => {
   const dict = useDictionary();
@@ -64,8 +67,8 @@ export const PerkSearchBox: React.FC<PerkSearchBoxProps> = ({
   const roleTypes = useMemo(() => typesWithPerks(typeCounts), [typeCounts]);
 
   const typeSuggestions = useMemo(
-    () => suggestPerkTypes(search, vocab, roleTypes.filter((t) => !activeTypes.includes(t))),
-    [search, vocab, roleTypes, activeTypes]
+    () => (suggestTypes ? suggestPerkTypes(search, vocab, roleTypes.filter((t) => !activeTypes.includes(t))) : []),
+    [suggestTypes, search, vocab, roleTypes, activeTypes]
   );
   const perkSuggestions = useMemo(
     () =>

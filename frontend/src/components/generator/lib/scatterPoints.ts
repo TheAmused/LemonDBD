@@ -1,8 +1,8 @@
 // frontend/src/components/generator/lib/scatterPoints.ts
-// Where the Loot Crate perks land on a phone: spread over the whole field, but never on top of each other.
+// Where the Loot Crate perks land on a phone or a tablet: spread over the whole field, but never on top of each other.
 
-/** The scatter field of a phone: its size in px and the perk it has to hold. */
-export interface PhoneScatterField {
+/** The scatter field of a phone or tablet: its size in px and the perk it has to hold. */
+export interface ScatterField {
   width: number;
   height: number;
   /** Width of one perk on this screen (the `compact` size plus its padding). */
@@ -13,18 +13,27 @@ export interface PhoneScatterField {
   minGapPx: number;
 }
 
-/** Sizes the field from the screen: as wide as the stage allows and about 62% of the screen tall. */
-export function phoneScatterField(viewportW: number, viewportH: number): PhoneScatterField {
-  const itemPx = viewportW < 400 ? 92 : viewportW < 640 ? 100 : 116;
+/** The most perks the crate throws. */
+const MAX_THROW = 12;
+/** Share of the field a packed set of perks can fill: the perks are diamonds, so some of the field always stays empty. */
+const PACKING = 0.65;
+
+/**
+ * Sizes the field from the screen: as wide as the stage allows (`stageW` when it is measured, else the screen minus the
+ * page padding; a tablet gets a wider field than a phone) and about 62% of the screen tall, or taller when the larger
+ * perks of a tablet would not fit (the page then scrolls).
+ */
+export function scatterField(viewportW: number, viewportH: number, stageW?: number): ScatterField {
+  // The slot of `PerkSlot` size `compact` at this width, plus its padding.
+  const itemPx = viewportW < 400 ? 92 : viewportW < 640 ? 100 : viewportW < 768 ? 116 : viewportW < 1024 ? 132 : 148;
   const framePad = viewportW < 640 ? 16 : 40;
-  const maxWidth = viewportW < 640 ? 448 : 576;
-  return {
-    width: Math.min(viewportW - framePad, maxWidth),
-    height: Math.round(Math.min(Math.max(viewportH * 0.62, 480), 760)),
-    itemPx,
-    marginPx: itemPx / 2 + 4,
-    minGapPx: Math.round(itemPx * 0.94),
-  };
+  const maxWidth = viewportW < 640 ? 448 : viewportW < 768 ? 576 : 880;
+  const width = Math.min(stageW ?? viewportW - framePad, maxWidth);
+  const marginPx = itemPx / 2 + 4;
+  const minGapPx = Math.round(itemPx * 0.94);
+  const roomy = Math.ceil(2 * marginPx + (MAX_THROW * 0.866 * minGapPx * minGapPx) / PACKING / Math.max(1, width - 2 * marginPx));
+  const wanted = Math.round(Math.min(Math.max(viewportH * 0.62, 480), 760));
+  return { width, height: Math.max(wanted, roomy), itemPx, marginPx, minGapPx };
 }
 
 export interface ScatterPoint {
@@ -42,7 +51,7 @@ const MAX_PASSES = 300;
  * than `minGapPx` (and keeps all of them inside the edge margin) until none is left, so the one you want is always
  * easy to tap.
  */
-export function chaosPoints(count: number, field: PhoneScatterField, random: () => number = Math.random): ScatterPoint[] {
+export function chaosPoints(count: number, field: ScatterField, random: () => number = Math.random): ScatterPoint[] {
   const { width, height, marginPx, minGapPx } = field;
   const innerW = Math.max(0, width - 2 * marginPx);
   const innerH = Math.max(0, height - 2 * marginPx);

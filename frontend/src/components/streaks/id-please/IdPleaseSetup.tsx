@@ -9,6 +9,7 @@ import { PerkFilterMenu } from '@/components/perks/PerkFilterMenu';
 import { roleOnlyMessage } from '@/components/perks/roleOnlyMessage';
 import { useDictionary, useLocale } from '@/context/DictionaryContext';
 import { useCatalogPerks } from '@/hooks/useCatalogPerks';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useProgressiveList } from '@/hooks/useProgressiveList';
 import { usePerkTypeVocabulary } from '@/hooks/usePerkTypeVocabulary';
 import { isEmptyQuery, parsePerkQuery } from '@/utils/perkSearch/parse';
@@ -36,6 +37,7 @@ import { useIdPleasePreview, useIdPleaseRoster } from './useIdPleaseSetupData';
 
 // A side has a couple of hundred perks, each with an icon: the grid fills in as it is scrolled.
 const FIRST_CHUNK = 36;
+const NO_TYPES: PerkType[] = [];
 
 /** Place of a perk in the inventory (page, then slot); perks the inventory does not list go last. */
 function inventoryIndex(coordinates: ReadonlyMap<number, PerkCoordinate>, perk: IdPleasePerk): number {
@@ -73,7 +75,10 @@ export const IdPleaseSetup: React.FC<IdPleaseSetupProps> = ({ lane, difficulty, 
   const chosen = opening.positions;
   const updateOpening = (next: IdPleaseOpening) => saveOpening(serializeIdPleaseOpening(openingKey, next));
   const [search, setSearch] = useState('');
-  const [types, setTypes] = useState<PerkType[]>([]);
+  const [pickedTypes, setTypes] = useState<PerkType[]>([]);
+  // Perk types are filtered from the Filters button and the search suggestions, which only a desktop has.
+  const desktop = useMediaQuery('(min-width: 1024px)') === true;
+  const types = desktop ? pickedTypes : NO_TYPES;
 
   const { roster, loading } = useIdPleaseRoster(lane, side, fingerprint);
   // Hardcore+ shuffles the perks when the run starts, so there is no first match to show beforehand.
@@ -150,6 +155,7 @@ export const IdPleaseSetup: React.FC<IdPleaseSetupProps> = ({ lane, difficulty, 
             onTypesChange={setTypes}
             suggestPerks
             typesInField={false}
+            suggestTypes={desktop}
             className="min-w-48 flex-1 sm:max-w-72"
           />
           <div className="max-lg:hidden">

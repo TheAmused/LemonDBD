@@ -9,8 +9,6 @@ import type { MapLandmark, MapLayout, MapLayoutFloor, MapPoint, MapRoom } from '
 
 /** One game tile is a 2x2 block of 8 m squares. */
 export const GAME_TILE_M = 16;
-/** How far inside the edge a clock number sits, in metres. */
-const CLOCK_INSET_M = 7;
 /** Clear floor every clock number keeps around it, in metres (labels are ~6 m tall). */
 const CLOCK_CLEARANCE_M = 4;
 /** Ray-march step when looking for the edge of the map, in metres. */
@@ -92,6 +90,46 @@ function hasClearance(floor: MapLayoutFloor, x: number, y: number, m: number): b
   return probes.every(([px, py]) => pointOnFloor(floor, x + px, y + py));
 }
 
+/** Is the floor clear across a rectangular label box (`hw` x `hh` half-extents) around (x, y)? */
+function hasBoxClearance(floor: MapLayoutFloor, x: number, y: number, hw: number, hh: number): boolean {
+  const probes: MapPoint[] = [
+    [0, 0],
+    [hw, 0],
+    [-hw, 0],
+    [0, hh],
+    [0, -hh],
+    [hw, hh],
+    [hw, -hh],
+    [-hw, hh],
+    [-hw, -hh],
+  ];
+  return probes.every(([px, py]) => pointOnFloor(floor, x + px, y + py));
+}
+
+/** Margin around the full view, in metres. */
+export const PAD_M = 8;
+/** Extra margin on a floor with named rooms: its clock numbers are printed outside the outline. */
+const ROOMS_PAD_M = 6;
+
+/** The SVG viewBox of a full floor view; `hasRooms` widens the margin for numbers printed outside. */
+export function layoutViewBox(layout: MapLayout, hasRooms: boolean): { x: number; y: number; w: number; h: number } {
+  const extra = hasRooms ? ROOMS_PAD_M : 0;
+  return {
+    x: -PAD_M - extra,
+    y: -PAD_M - extra,
+    w: layout.width_m + (PAD_M + extra) * 2,
+    h: layout.height_m + PAD_M * 3 + extra,
+  };
+}
+
+/** Length of a closed ring, in metres. */
+function ringPerimeter(ring: MapPoint[]): number {
+  return ring.reduce((sum, p, i) => {
+    const q = ring[(i + 1) % ring.length];
+    return sum + Math.hypot(q[0] - p[0], q[1] - p[1]);
+  }, 0);
+}
+
 export interface ClockLabel {
   hour: number;
   x: number;
@@ -102,8 +140,6 @@ export interface ClockLabel {
 const LANDMARK_CLEARANCE_M = 4;
 /** Angles tried within an hour's sector when its own direction misses the floor, in degrees. */
 const SECTOR_OFFSETS = [0, 5, -5, 10, -10, 14, -14];
-/** How much further inwards a clock number may move to clear a landmark, in metres. */
-const LANDMARK_SEARCH_M = 10;
 /** On a floor with named rooms the numbers would sit on the names: they are printed this far outside the outline. */
 const OUTSIDE_M = 5;
 /** MID needs less clear floor on such a floor: its corridors are narrow. */
@@ -156,8 +192,12 @@ export function clockLabels(floor: MapLayoutFloor): { center: MapPoint; labels: 
   const inOutline = (x: number, y: number) => floor.outline.some((ring) => pointInRing(x, y, ring));
   const clearOfLandmarks = (x: number, y: number) =>
     landmarks.every((lm) => distanceToLandmark(lm, x, y) >= LANDMARK_CLEARANCE_M);
-  // Place one number along a ray from the centre; null when the ray never touches the floor.
-  const place = (degrees: number): MapPoint | null => {
+  const showMid = hasClearance(floor, cx, cy, clearance) && clearOfLandmarks(cx, cy);
+  if (floor.clock && floor.clock.length > 0) {
+    return { center: [cx, cy], labels: floor.clock, showMid };
+  }
+  // Place one number along a ray from the centre (used for room-based maps where numbers sit outside).
+  const placeOutside = (degrees: number): MapPoint | null => {
     const angle = (degrees * Math.PI) / 180;
     const dx = Math.sin(angle);
     const dy = -Math.cos(angle);
@@ -168,43 +208,148 @@ export function clockLabels(floor: MapLayoutFloor): { center: MapPoint; labels: 
       if (inOutline(cx + dx * r, cy + dy * r)) lastInOutline = r;
     }
     if (lastInside < 0) return null;
-    if (rooms.length > 0) {
-      // Beyond the last point of the outline itself: a blocked room at the edge is no reason to stop short.
-      const out = Math.max(lastInOutline, lastInside) + OUTSIDE_M;
-      return [cx + dx * out, cy + dy * out];
-    }
-    const start = Math.max(0, lastInside - CLOCK_INSET_M);
-    let edgeSafe: number | null = null;
-    let best: number | null = null;
-    // Only look a short way further in for a spot clear of landmarks: a number pushed deep inside
-    // reads as a different sector. Otherwise it stays by the edge, drawn on top of the footprint.
-    const stop = Math.max(0, start - LANDMARK_SEARCH_M);
-    for (let r = start; r >= stop && best === null; r -= RAY_STEP_M) {
-      const x = cx + dx * r;
-      const y = cy + dy * r;
-      if (!hasClearance(floor, x, y, clearance)) continue;
-      edgeSafe ??= r;
-      if (clearOfLandmarks(x, y)) best = r;
-    }
-    for (let r = stop; edgeSafe === null && r >= 0; r -= RAY_STEP_M) {
-      if (hasClearance(floor, cx + dx * r, cy + dy * r, clearance)) edgeSafe = r;
-    }
-    // Narrow spots with no clearance anywhere along the ray: the last point that is on the floor.
-    const r = best ?? edgeSafe ?? lastInside;
-    return [cx + dx * r, cy + dy * r];
+    // Beyond the last point of the outline itself: a blocked room at the edge is no reason to stop short.
+    const out = Math.max(lastInOutline, lastInside) + OUTSIDE_M;
+    return [cx + dx * out, cy + dy * out];
   };
+
   const labels: ClockLabel[] = [];
-  for (let hour = 1; hour <= 12; hour++) {
-    // The hour's own direction first, then nearby ones inside its 30 degree sector (odd shapes whose
-    // centre sits in a notch can miss the floor in exactly that direction).
-    let point: MapPoint | null = null;
-    for (const offset of SECTOR_OFFSETS) {
-      point = place(hour * 30 + offset);
-      if (point) break;
+  // A ring with no length has no perimeter to space the numbers along.
+  if (rooms.length > 0 || floor.outline.length === 0 || floor.outline[0].length < 3 || ringPerimeter(floor.outline[0]) === 0) {
+    for (let hour = 1; hour <= 12; hour++) {
+      let point: MapPoint | null = null;
+      for (const offset of SECTOR_OFFSETS) {
+        point = placeOutside(hour * 30 + offset);
+        if (point) break;
+      }
+      if (point) labels.push({ hour, x: point[0], y: point[1] });
     }
-    if (point) labels.push({ hour, x: point[0], y: point[1] });
+  } else {
+    // Non-room maps: anchor 12, 3, 6, 9 at cardinal ray hits from centre, then space intermediate
+    // hours evenly along the perimeter between them so asymmetric maps match competitive callouts.
+    const ring = [...floor.outline[0]];
+    const n = ring.length;
+    let area = 0;
+    for (let i = 0; i < n; i++) {
+      const [x0, y0] = ring[i];
+      const [x1, y1] = ring[(i + 1) % n];
+      area += x0 * y1 - x1 * y0;
+    }
+    if (area < 0) ring.reverse();
+
+    const segs: Array<{ p0: MapPoint; p1: MapPoint; len: number; start: number }> = [];
+    let total = 0;
+    for (let i = 0; i < n; i++) {
+      const p0 = ring[i];
+      const p1 = ring[(i + 1) % n];
+      const len = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]);
+      if (len > 0) {
+        segs.push({ p0, p1, len, start: total });
+        total += len;
+      }
+    }
+
+    const rayParam = (dx: number, dy: number): number => {
+      let bestR = -1;
+      let bestD = 0;
+      for (const { p0, p1, len, start } of segs) {
+        const sx = p1[0] - p0[0];
+        const sy = p1[1] - p0[1];
+        const denom = dx * sy - dy * sx;
+        if (Math.abs(denom) < 1e-9) continue;
+        const qx = p0[0] - cx;
+        const qy = p0[1] - cy;
+        const r = (qx * sy - qy * sx) / denom;
+        const t = (qx * dy - qy * dx) / denom;
+        if (r > 0 && t >= -1e-6 && t <= 1 + 1e-6 && r > bestR) {
+          bestR = r;
+          bestD = start + Math.max(0, Math.min(1, t)) * len;
+        }
+      }
+      return bestD;
+    };
+
+    const d12 = rayParam(0, -1);
+    const d3 = rayParam(1, 0);
+    const d6 = rayParam(0, 1);
+    const d9 = rayParam(-1, 0);
+    const arc = (a: number, b: number) => (((b - a) % total) + total) % total;
+    const anchors: Array<[number, number]> = [
+      [1, (d12 + arc(d12, d3) / 3) % total],
+      [2, (d12 + (2 * arc(d12, d3)) / 3) % total],
+      [3, d3],
+      [4, (d3 + arc(d3, d6) / 3) % total],
+      [5, (d3 + (2 * arc(d3, d6)) / 3) % total],
+      [6, d6],
+      [7, (d6 + arc(d6, d9) / 3) % total],
+      [8, (d6 + (2 * arc(d6, d9)) / 3) % total],
+      [9, d9],
+      [10, (d9 + arc(d9, d12) / 3) % total],
+      [11, (d9 + (2 * arc(d9, d12)) / 3) % total],
+      [12, d12],
+    ];
+
+    const atArc = (rawD: number): [number, number, number, number] => {
+      const d = ((rawD % total) + total) % total;
+      for (const { p0, p1, len, start } of segs) {
+        if (d >= start && d <= start + len + 1e-9) {
+          const t = (d - start) / len;
+          return [
+            p0[0] + (p1[0] - p0[0]) * t,
+            p0[1] + (p1[1] - p0[1]) * t,
+            -(p1[1] - p0[1]) / len,
+            (p1[0] - p0[0]) / len,
+          ];
+        }
+      }
+      return [cx, cy, 0, 0];
+    };
+
+    for (const [hour, d] of anchors) {
+      const hw = hour >= 10 ? 5.5 : 4.0;
+      const hh = 4.5;
+      const farFromPlaced = (tx: number, ty: number) =>
+        labels.every((prev) => Math.hypot(tx - prev.x, ty - prev.y) >= 11);
+      let best: MapPoint | null = null;
+      for (const dOff of [0, 5, -5, 10, -10, 15, -15]) {
+        const [ex, ey, nx, ny] = atArc(d + dOff);
+        for (const inset of [7, 8.5, 10, 12, 14, 5.5]) {
+          const tx = ex + nx * inset;
+          const ty = ey + ny * inset;
+          if (hasBoxClearance(floor, tx, ty, hw, hh) && clearOfLandmarks(tx, ty) && farFromPlaced(tx, ty)) {
+            best = [tx, ty];
+            break;
+          }
+        }
+        if (best) break;
+      }
+      if (!best) {
+        const [ex, ey] = atArc(d);
+        const dx = cx - ex;
+        const dy = cy - ey;
+        const dl = Math.hypot(dx, dy) || 1;
+        for (const inset of [7, 9, 11, 13, 15, 18, 5]) {
+          const tx = ex + (dx / dl) * inset;
+          const ty = ey + (dy / dl) * inset;
+          if (hasBoxClearance(floor, tx, ty, hw, hh)) {
+            best = [tx, ty];
+            break;
+          }
+        }
+        if (!best) {
+          for (const inset of [7, 5, 9, 3]) {
+            const tx = ex + (dx / dl) * inset;
+            const ty = ey + (dy / dl) * inset;
+            if (pointOnFloor(floor, tx, ty)) {
+              best = [tx, ty];
+              break;
+            }
+          }
+        }
+      }
+      labels.push({ hour, x: best?.[0] ?? cx, y: best?.[1] ?? cy });
+    }
   }
-  const showMid = hasClearance(floor, cx, cy, clearance) && clearOfLandmarks(cx, cy);
   return { center: [cx, cy], labels, showMid };
 }
 

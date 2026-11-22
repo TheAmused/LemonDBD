@@ -102,10 +102,18 @@ test('clockLabels puts every number on the floor, inside the edge', () => {
   assert.strictEqual(labels.length, 12);
   for (const l of labels) {
     assert.ok(pointOnFloor(thompson.floors[0], l.x, l.y), `hour ${l.hour} is on the floor`);
-    assert.strictEqual(clockHourAt(center[0], center[1], l.x, l.y), l.hour, `hour ${l.hour} sits in its own sector`);
   }
   const twelve = labels.find((l) => l.hour === 12)!;
   assert.ok(twelve.y < 10, '12 sits near the top edge');
+  // Hours 1..11 proceed clockwise around the centre.
+  const angleOf = (l: { x: number; y: number }) => {
+    const deg = (Math.atan2(l.x - center[0], -(l.y - center[1])) * 180) / Math.PI;
+    return deg < 0 ? deg + 360 : deg;
+  };
+  const ordered = labels.filter((l) => l.hour !== 12).sort((a, b) => a.hour - b.hour);
+  for (let i = 1; i < ordered.length; i++) {
+    assert.ok(angleOf(ordered[i]) > angleOf(ordered[i - 1]), `hour ${ordered[i].hour} is clockwise of ${ordered[i - 1].hour}`);
+  }
 });
 
 test('ringsToPath writes closed SVG subpaths', () => {

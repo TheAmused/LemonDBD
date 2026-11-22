@@ -692,7 +692,7 @@ Exhaustive inventory of all visible UI elements, component trees, interactive st
     - Live prompt: `"Pick one. Choosing it costs the Entity 1-2 of the others. {count}/4 locked in."` (`generator.scatterPrompt`)
     - 8–12 perks are thrown out; picking one locks it in (un-greys it) while the Entity randomly claims and removes 1–2 other unpicked perks:
     - **Mobile (`< md`)**: Top 4-slot loadout progress tray (`#1`..`#4` dashed boxes filling with compact `PerkSlot`s) + centered flex-wrap pool of remaining muted `PerkSlot`s
-    - **Desktop (`>= md`)**: Full-area absolute scatter field (`scatterPointStyle`) with rotated/scaled `PerkSlot`s (muted until picked; picked perks stay in place in full color while Entity-claimed perks animate out)
+    - **Desktop (`>= md`)**: Full-area absolute scatter field (`scatterPointStyle`) with upright, unscaled `PerkSlot`s (a tilt or a fractional scale resamples the icon and softens it) (muted until picked; picked perks stay in place in full color while Entity-claimed perks animate out)
   - **Sub-state C — Complete (`phase === 'complete'`)**:
     - Heading: `"Your loadout is locked in."` (`generator.scatterComplete`)
     - 4-card result grid (`PerkSlot` `size="large"`)

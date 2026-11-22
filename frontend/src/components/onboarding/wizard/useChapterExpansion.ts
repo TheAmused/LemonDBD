@@ -76,7 +76,7 @@ export function useChapterExpansion(filteredChapterGroups: ChapterGroup[]) {
   // the other cards sharing that row get shoved onto a new row too (there's
   // no room left for a full-width item mid-row), which reads as unrelated
   // cards randomly jumping instead of the row smoothly growing.
-  const chapterColumns = useResponsiveGridColumns(CHAPTER_GRID_BREAKPOINTS, 3);
+  const chapterColumns = useResponsiveGridColumns(CHAPTER_GRID_BREAKPOINTS, 2);
   const renderedGroup = renderedChapter
     ? filteredChapterGroups.find((g) => g.chapterName === renderedChapter)
     : undefined;

@@ -3,7 +3,6 @@
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
 import { OwnershipClipOverlay } from '@/components/characters/CharacterOwnershipOverlay';
-import { SwitchTrack } from '@/components/common/Switch';
 import { useDictionary } from '@/context/DictionaryContext';
 import { getChapterThumbSrc } from '@/utils/thumbUrl';
 import {
@@ -28,7 +27,7 @@ interface ChapterCardProps {
   toggleChapter: (group: ChapterGroup, own: boolean) => void;
 }
 
-/** One chapter tile: banner (expands its characters) and a footer switch (owns the whole chapter). */
+/** One chapter tile: banner (owns the whole chapter) and a footer (expands its characters). */
 export function ChapterCard({
   group,
   isExpanded,
@@ -61,9 +60,10 @@ export function ChapterCard({
     <div className={`flex flex-col overflow-hidden rounded-card border sm:border-2 bg-bg-surface ${isExpanded ? 'border-accent-red' : 'border-border-color'}`}>
       <button
         type="button"
-        onClick={() => toggleChapterExpanded(group.chapterName)}
-        aria-expanded={isExpanded}
-        aria-controls={chapterPanelId}
+        onClick={() => toggleChapter(group, !chapterOwned)}
+        role="switch"
+        aria-checked={chapterOwned}
+        aria-label={chapterSwitchLabel}
         className="group relative flex aspect-video w-full items-center justify-center overflow-hidden bg-bg-elevated cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red"
       >
         {bannerSrc ? (
@@ -86,24 +86,21 @@ export function ChapterCard({
           isPartial={chapterPartiallyOwned}
           imageSrc={bannerSrc}
         />
-        <ChevronDown
-          className={`absolute top-1 right-1 sm:top-2 sm:right-2 icon-sm sm:icon-lg text-text-inverted drop-shadow transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
-        />
       </button>
-      {/* The whole footer toggles ownership, not just the small
-          switch -- Switch renders its own <button>, so it can't
-          be nested here; SwitchTrack is its presentational half. */}
+      {/* The footer opens the chapter's characters; the picture above
+          owns the whole chapter, since that is the far more common pick. */}
       <TileButton
-        onClick={() => toggleChapter(group, !chapterOwned)}
-        role="switch"
-        aria-checked={chapterOwned}
-        aria-label={chapterSwitchLabel}
+        onClick={() => toggleChapterExpanded(group.chapterName)}
+        aria-expanded={isExpanded}
+        aria-controls={chapterPanelId}
         className="flex w-full items-center justify-between gap-1 sm:gap-2 border-t border-border-color px-1.5 py-1 sm:px-2.5 sm:py-2 text-left cursor-pointer hover:bg-bg-elevated transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-red" press={false}
       >
-        <h3 className="flex-1 text-micro sm:text-xs font-bold sm:font-extrabold leading-tight line-clamp-2 min-h-5.5 sm:min-h-8 flex items-center text-text-primary break-words">
+        <h3 className="flex-1 text-xs font-extrabold leading-tight line-clamp-2 min-h-8 flex items-center text-text-primary break-words">
           {chapterDisplayName}
         </h3>
-        <SwitchTrack checked={chapterOwned} size="sm" />
+        <ChevronDown
+          className={`shrink-0 icon-sm sm:icon-md text-text-secondary transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+        />
       </TileButton>
     </div>
   );

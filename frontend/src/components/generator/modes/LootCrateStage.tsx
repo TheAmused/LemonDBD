@@ -9,12 +9,12 @@ import type { ChaosMutator } from '@/types/chaos';
 
 import { pickRandomLoadout, buildDrawnSlots } from '../lib/perkPicker';
 import { getSlotInteraction } from '../lib/blindnessCurse';
+import { chaosPoints, phoneScatterField, type PhoneScatterField } from '../lib/scatterPoints';
 import { PerkSlot } from '../shared/PerkSlot';
 import { StagePrompt, StageProp } from '../shared/StageIdle';
 import { playFanfare, playReelThud, playCardFlip } from '@/utils/perkAudio';
 import { formatMessage } from '@/utils/i18nFormat';
 import { useDictionary } from "@/context/DictionaryContext";
-import { Surface } from '@/components/common/Surface';
 import { publicImageThumb } from '@/utils/publicThumb';
 
 export interface LootCrateStageProps {
@@ -40,10 +40,15 @@ const LOADOUT_SIZE = 4;
 interface ScatterItem extends DrawnSlot {
   id: string;
   rotate: number;
-  /** Landing position as a percentage of the scatter field, so the perks
-   * genuinely land thrown around the block instead of snapping into a grid. */
-  xPct: number;
-  yPct: number;
+  /** Desktop: the grid cell it lands in (percent of the scatter field) and its own random offset from the
+   * cell centre, in -1..1 (see `scatterPoint`). */
+  cellXPct: number;
+  cellYPct: number;
+  jitterX: number;
+  jitterY: number;
+  /** Phone: where it lands (percent of the field), anywhere, see `chaosPoints`. */
+  phoneXPct: number;
+  phoneYPct: number;
   scale: number;
   /** Where it flies in FROM (a delta from its landing spot), so it reads as
    * "thrown out of the crate" rather than fading in in place. */
@@ -51,19 +56,12 @@ interface ScatterItem extends DrawnSlot {
   fromY: number;
 }
 
-/** A 4x3 cell grid (12 slots -- covers the 8-12 throw range) shuffled and
- * jittered per-item, so drops land scattered around the block view without
- * two perks ever landing on top of each other. */
-function buildScatterLayout(count: number): { xPct: number; yPct: number }[] {
-  const cols = 4;
-  const rows = 3;
-  const cells: { xPct: number; yPct: number }[] = [];
+/** Centres of a cols x rows grid (percent of the field), in random order. */
+function shuffledCells(cols: number, rows: number): { x: number; y: number }[] {
+  const cells: { x: number; y: number }[] = [];
   for (let r = 0; r < rows; r++) {
     for (let cIdx = 0; cIdx < cols; cIdx++) {
-      cells.push({
-        xPct: (cIdx + 0.5) * (100 / cols),
-        yPct: (r + 0.5) * (100 / rows),
-      });
+      cells.push({ x: (cIdx + 0.5) * (100 / cols), y: (r + 0.5) * (100 / rows) });
     }
   }
   // Shuffle (Fisher-Yates).
@@ -71,10 +69,35 @@ function buildScatterLayout(count: number): { xPct: number; yPct: number }[] {
     const j = Math.floor(Math.random() * (i + 1));
     [cells[i], cells[j]] = [cells[j], cells[i]];
   }
-  return cells.slice(0, count).map((cell) => ({
-    xPct: Math.min(94, Math.max(6, cell.xPct + (Math.random() - 0.5) * 14)),
-    yPct: Math.min(90, Math.max(10, cell.yPct + (Math.random() - 0.5) * 20)),
+  return cells;
+}
+
+/** A 4x3 cell grid on desktop (12 slots -- covers the 8-12 throw range), shuffled, each item with its
+ * own random offset, so drops land scattered around the block view without two perks ever landing on
+ * top of each other. A phone gets free random points
+ * instead, checked so that no two perks overlap (see `chaosPoints`). */
+function buildScatterLayout(count: number, phoneField: PhoneScatterField): Pick<ScatterItem, 'cellXPct' | 'cellYPct' | 'jitterX' | 'jitterY' | 'phoneXPct' | 'phoneYPct'>[] {
+  const desktop = shuffledCells(4, 3);
+  const phone = chaosPoints(count, phoneField);
+  return Array.from({ length: count }, (_, i) => ({
+    cellXPct: desktop[i].x,
+    cellYPct: desktop[i].y,
+    jitterX: Math.random() * 2 - 1,
+    jitterY: Math.random() * 2 - 1,
+    phoneXPct: phone[i].x,
+    phoneYPct: phone[i].y,
   }));
+}
+
+/** How far (percent of the field) a desktop item may sit from its cell centre. */
+const DESKTOP_SPREAD_X_PCT = 7;
+const DESKTOP_SPREAD_Y_PCT = 10;
+
+function scatterPoint(item: ScatterItem): { xPct: number; yPct: number } {
+  return {
+    xPct: Math.min(94, Math.max(6, item.cellXPct + item.jitterX * DESKTOP_SPREAD_X_PCT)),
+    yPct: Math.min(90, Math.max(10, item.cellYPct + item.jitterY * DESKTOP_SPREAD_Y_PCT)),
+  };
 }
 
 /**
@@ -93,10 +116,10 @@ function buildScatterLayout(count: number): { xPct: number; yPct: number }[] {
  */
 const SCATTER_EDGE_MARGIN_PX = 130;
 
-function scatterPointStyle(point: { xPct: number; yPct: number }): { left: string; top: string } {
+function scatterPointStyle(point: { xPct: number; yPct: number }, edgeMarginPx: number): { left: string; top: string } {
   return {
-    left: `clamp(${SCATTER_EDGE_MARGIN_PX}px, ${point.xPct}%, calc(100% - ${SCATTER_EDGE_MARGIN_PX}px))`,
-    top: `clamp(${SCATTER_EDGE_MARGIN_PX}px, ${point.yPct}%, calc(100% - ${SCATTER_EDGE_MARGIN_PX}px))`,
+    left: `clamp(${edgeMarginPx}px, ${point.xPct}%, calc(100% - ${edgeMarginPx}px))`,
+    top: `clamp(${edgeMarginPx}px, ${point.yPct}%, calc(100% - ${edgeMarginPx}px))`,
   };
 }
 
@@ -129,6 +152,8 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
   const dict = useDictionary();
   const [phase, setPhase] = useState<CratePhase>(initialSlots?.length ? 'complete' : 'closed');
   const [scatterPool, setScatterPool] = useState<ScatterItem[]>([]);
+  // The phone's scatter field is sized from the screen when the pool is thrown, and the perks are placed to fit it.
+  const [phoneField, setPhoneField] = useState<PhoneScatterField>(() => phoneScatterField(390, 844));
   const [lockedItems, setLockedItems] = useState<ScatterItem[]>([]);
   const lockedIds = new Set(lockedItems.map((l) => l.id));
   const [selected, setSelected] = useState<DrawnSlot[]>(initialSlots ?? []);
@@ -163,18 +188,19 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
       const throwCount = Math.min(activePlayablePerks.length, Math.floor(Math.random() * 5) + 8); // 8-12
       const picked = pickRandomLoadout(activePlayablePerks, activeMutator, throwCount);
       const drawn = buildDrawnSlots(picked, activePlayablePerks);
-      const layout = buildScatterLayout(drawn.length);
+      const field = phoneScatterField(window.innerWidth, window.innerHeight);
+      const layout = buildScatterLayout(drawn.length, field);
       const pool: ScatterItem[] = drawn.map((slot, i) => ({
         ...slot,
         id: slot.perk?.name || `${slot.page}-${slot.slot}`,
         rotate: (Math.random() - 0.5) * 30,
-        xPct: layout[i].xPct,
-        yPct: layout[i].yPct,
+        ...layout[i],
         scale: 0.88 + Math.random() * 0.24,
         fromX: (Math.random() - 0.5) * 260,
         fromY: -220 - Math.random() * 80,
       }));
 
+      setPhoneField(field);
       setScatterPool(pool);
       setLockedItems([]);
       setSelected([]);
@@ -282,56 +308,40 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
 
       {phase === 'scattering' && (
         <>
-          <StagePrompt live>
+          {/* How it works is already explained next to the crate before it is opened, so the pick count is only
+              announced to screen readers. */}
+          <p aria-live="polite" className="sr-only">
             {scatterPrompt}
-          </StagePrompt>
+          </p>
 
-          {/* Mobile & Tablet (< md): Centered balanced offerings and 4-slot loadout tray */}
-          <div className="flex flex-col items-center justify-center flex-1 w-full my-auto gap-3.5 md:hidden">
-            {/* 4-Slot Loadout Progress Tray */}
-            <Surface padding="none" className="flex items-center justify-center gap-2 sm:gap-2.5 py-1.5 px-3 bg-bg-surface/90 shadow-xs backdrop-blur-sm">
-              {[0, 1, 2, 3].map((slotIdx) => {
-                const locked = lockedItems[slotIdx];
-                return locked ? (
-                  <div key={`mob-tray-locked-${locked.id}`} className="relative">
-                    <PerkSlot perk={locked.perk} role={role} page={locked.page} slot={locked.slot} size="compact" />
-                  </div>
-                ) : (
-                  <div
-                    key={`mob-tray-empty-${slotIdx}`}
-                    className="flex flex-col items-center justify-center w-18.5 h-18.5 xs:w-21 xs:h-21 rounded-card border-2 border-dashed border-border-color bg-bg-surface/90 text-text-muted"
-                  >
-                    <span className="type-strong opacity-40">#{slotIdx + 1}</span>
-                  </div>
-                );
-              })}
-            </Surface>
-
-            {/* Scattered Offerings: Symmetrically Centered Flex Wrap */}
-            <div className="flex flex-wrap items-center justify-center gap-2.5 xs:gap-3 sm:gap-4 w-full max-w-sm sm:max-w-md mx-auto py-1">
+          {/* Phones (< md): the same chaos as on desktop, on a fixed field: large perks thrown about at random.
+              They carry no [P/S] tag while you pick; it shows once the loadout is done. */}
+          <div className="flex w-full flex-1 items-center justify-center md:hidden">
+            <div className="relative w-full max-w-md sm:max-w-xl" style={{ height: phoneField.height }}>
               <AnimatePresence>
-                {scatterPool.filter((item) => !lockedIds.has(item.id)).map((item) => (
-                  <motion.div
-                    key={`mob-scatter-${item.id}`}
-                    initial={reduceMotion ? false : { opacity: 0, scale: 0.6 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.3 }}
-                    transition={{ duration: 0.2 }}
-                    whileHover={reduceMotion ? undefined : { scale: 1.08, zIndex: 10 }}
-                    whileTap={{ scale: 0.94 }}
-                    className="cursor-pointer shrink-0 transition-transform"
-                  >
-                    <PerkSlot
-                      perk={item.perk}
-                      role={role}
-                      page={item.page}
-                      slot={item.slot}
-                      size="compact"
-                      muted
-                      onClick={() => handlePick(item)}
-                    />
-                  </motion.div>
-                ))}
+                {scatterPool.map((item) => {
+                  const locked = lockedIds.has(item.id);
+                  return (
+                    <motion.div
+                      key={`mob-${item.id}`}
+                      className="absolute -translate-x-1/2 -translate-y-1/2"
+                      style={scatterPointStyle({ xPct: item.phoneXPct, yPct: item.phoneYPct }, phoneField.marginPx)}
+                      initial={reduceMotion ? false : { opacity: 0, x: item.fromX * 0.5, y: item.fromY * 0.5, rotate: item.rotate, scale: 0.4 }}
+                      animate={{ opacity: 1, x: 0, y: 0, rotate: item.rotate, scale: 1 }}
+                      exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.3, transition: { duration: 0.25 } }}
+                      transition={reduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 210, damping: 16 }}
+                      whileTap={reduceMotion || locked ? undefined : { scale: 0.94 }}
+                    >
+                      <PerkSlot
+                        perk={item.perk}
+                        role={role}
+                        size="compact"
+                        muted={!locked}
+                        onClick={locked ? undefined : () => handlePick(item)}
+                      />
+                    </motion.div>
+                  );
+                })}
               </AnimatePresence>
             </div>
           </div>
@@ -343,7 +353,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                 <motion.div
                   key={item.id}
                   className="absolute -translate-x-1/2 -translate-y-1/2 group"
-                  style={scatterPointStyle(item)}
+                  style={scatterPointStyle(scatterPoint(item), SCATTER_EDGE_MARGIN_PX)}
                   initial={reduceMotion ? false : { opacity: 0, x: item.fromX, y: item.fromY, rotate: item.rotate * 2.2, scale: 0.4 }}
                   animate={{ opacity: 1, x: 0, y: 0, rotate: item.rotate, scale: item.scale }}
                   exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.3, rotate: item.rotate + 50, transition: { duration: 0.25 } }}
@@ -372,7 +382,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
           <p className="text-sm font-bold text-text-secondary text-center sm:text-base">
             {dict.generator.scatterComplete}
           </p>
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
             {selected.map((slot, idx) => {
               const { isObscured, onClick } = getSlotInteraction(
                 idx,

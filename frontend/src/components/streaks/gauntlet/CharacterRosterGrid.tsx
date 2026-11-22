@@ -86,11 +86,12 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
             const avatarUrl = getAvatarUrl(char);
             const hasError = imageErrors[char.name];
 
+            const selected = Boolean(selectedCharacterId) && selectedCharacterId?.toLowerCase().trim() === char.name.toLowerCase().trim();
             let cardBorder = 'border-border-color hover:border-border-subtle bg-bg-surface shadow-sm';
             if (completed) {
               cardBorder = 'border-accent-green bg-accent-green/10 border-2';
-            } else if (selectedCharacterId && selectedCharacterId.toLowerCase().trim() === char.name.toLowerCase().trim()) {
-              cardBorder = 'border-accent-green border-2 bg-accent-green/10 ring-2 ring-accent-green';
+            } else if (selected) {
+              cardBorder = 'border-accent-red shadow-lg border-2 bg-accent-red/10';
             } else if (active) {
               cardBorder = 'border-accent-red animate-pulse shadow-lg border-2 bg-accent-red/10';
             } else if (checkpoint) {
@@ -104,7 +105,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
               <div
                 key={char.name}
                 className={`relative group select-none overflow-hidden rounded-card border flex flex-col items-center justify-between transition-all duration-200 ${cardBorder} ${
-                  selectable ? 'cursor-pointer hover:border-accent-green focus:outline-none focus:ring-2 focus:ring-accent-green' : ''
+                  selectable ? 'cursor-pointer hover:border-accent-red focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-red' : ''
                 }`}
                 aria-label={`${displayName(char.name)}${statusSuffix}`}
                 {...(selectable
@@ -161,7 +162,7 @@ export const CharacterRosterGrid: React.FC<CharacterRosterGridProps> = ({
                   )}
                 </div>
 
-                <span className="text-mini leading-tight font-semibold text-center text-text-secondary line-clamp-2 min-h-two-lines w-full px-1.5 py-2 group-hover:text-accent-red transition-colors">
+                <span className="text-mini leading-tight font-semibold text-center line-clamp-2 min-h-two-lines w-full px-1.5 py-2 text-text-secondary">
                   {displayName(char.name)}
                 </span>
               </div>

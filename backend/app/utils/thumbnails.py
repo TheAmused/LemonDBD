@@ -29,7 +29,7 @@ class ThumbSpec:
 
 
 THUMB_SPECS: dict[str, ThumbSpec] = {
-    "avatars": ThumbSpec("avatars", (128, 256), 2.0),
+    "avatars": ThumbSpec("avatars", (128, 256, 512), 2.0),
     "maps": ThumbSpec("maps", (320,), 2.0),
     "chapters": ThumbSpec("chapters", (480,), 1.0),
     "realms": ThumbSpec("realms", (320,), 1.5),

@@ -295,7 +295,7 @@ export const ActiveTargetStage: React.FC<ActiveTargetStageProps> = ({
   return (
     <>
       <div className="w-full rounded-card p-2 min-h-49">
-        <div className={isTeam ? 'grid grid-cols-1 xl:grid-cols-2 gap-3 divide-y xl:divide-y-0 xl:divide-x divide-border-color' : ''}>
+        <div className={isTeam ? 'grid grid-cols-1 gap-5 divide-y divide-border-color [&>*:not(:last-child)]:pb-5 wide-2k:grid-cols-2 wide-2k:gap-3 wide-2k:divide-y-0 wide-2k:divide-x wide-2k:[&>*:not(:last-child)]:pb-0' : ''}>
           {players.map((player, index) => (
             <CompactPlayerBuild
               key={`${player.character}-${index}`}

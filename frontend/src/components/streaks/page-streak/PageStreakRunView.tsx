@@ -45,9 +45,10 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
   const { run, stats, completions, loading, busy, error, errorStatus, startRun, lockPages, submitResult, abandonRun } = usePageStreakRun(killer);
   // A killer the player does not have (typed into the address bar, or no longer owned) has no run to show.
   const killerUnavailable = errorStatus === 404;
+  const backHref = `/${locale}/streaks/killer/page-streak`;
   useEffect(() => {
-    if (killerUnavailable) router.replace(`/${locale}/streaks/killer/page-streak`);
-  }, [killerUnavailable, router, locale]);
+    if (killerUnavailable) router.replace(backHref);
+  }, [killerUnavailable, router, backHref]);
   const iconByPerk = React.useMemo(() => {
     const entries = Object.entries(run?.perk_icons ?? {});
     return Object.fromEntries(
@@ -108,10 +109,13 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
     <div className={run && run.status !== 'completed' ? 'pb-16' : ''}>
       <Confetti active={celebrating} />
 
-      <Link href={`/${locale}/streaks/killer/page-streak`} className={buttonClassName('secondary', 'sm', 'mt-4')}>
-        <ChevronIcon className="icon-sm rotate-180" aria-hidden="true" />
-        <span>{dict.streaks.back}</span>
-      </Link>
+      {/* With a run on screen the button lives in its header; before that (loading, an unavailable killer) it stands alone. */}
+      {(loading || killerUnavailable || !run) && (
+        <Link href={backHref} className={buttonClassName('secondary', 'sm', 'mt-4')}>
+          <ChevronIcon className="icon-sm rotate-180" aria-hidden="true" />
+          <span>{dict.streaks.back}</span>
+        </Link>
+      )}
 
       {error && !killerUnavailable && (
         <div className="mt-4">
@@ -138,6 +142,7 @@ export const PageStreakRunView: React.FC<PageStreakRunViewProps> = ({ killer }) 
             header={
               <RunHeader
                 run={run}
+                backHref={backHref}
                 onOpenAbandon={() => setConfirmingAbandon(true)}
                 onOpenRules={() => setIsRulesOpen(true)}
                 onOpenStats={() => setIsStatsOpen(true)}

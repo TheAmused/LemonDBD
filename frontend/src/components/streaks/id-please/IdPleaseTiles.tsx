@@ -38,7 +38,7 @@ export const IdPleaseCharacterTile: React.FC<{ character: IdPleaseCharacter; sid
           src={
             avatarThumbFromPath(
               staticUrl(character.avatar_local_path) || avatarUrlForCharacter(character.name, avatarFolder(side)),
-              128
+              512
             ) || undefined
           }
           alt=""
@@ -60,7 +60,7 @@ export const IdPleasePerkTile: React.FC<{ perk: IdPleasePerk; coordinate: PerkCo
       <div className={artFrame}>
         <PerkIcon
           perk={perk}
-          src={getIconThumbUrl(perkIconUrl(perk), 128) || undefined}
+          src={getIconThumbUrl(perkIconUrl(perk), 256) || undefined}
           alt=""
           imageClassName="h-full w-full object-cover"
           fallbackIcon={<PerkHexIcon className="icon-xl text-text-muted" aria-hidden="true" />}

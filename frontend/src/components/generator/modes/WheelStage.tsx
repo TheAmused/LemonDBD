@@ -7,6 +7,7 @@ import type { Perk, RoleCategory, DrawnSlot } from '@/types/perks';
 import type { ChaosMutator } from '@/types/chaos';
 import { getSlotInteraction } from '../lib/blindnessCurse';
 import { PerkSlot } from '../shared/PerkSlot';
+import { StagePrompt } from '../shared/StageIdle';
 import { useDictionary } from '@/context/DictionaryContext';
 import { useWheelStage } from './wheel/useWheelStage';
 
@@ -87,9 +88,7 @@ export const WheelStage: React.FC<WheelStageProps> = ({
 
   return (
     <div className="flex h-full w-full flex-1 flex-col items-center justify-center gap-2 sm:gap-3 pt-3 pb-1 sm:pt-4">
-      <p className="max-w-md text-center type-strong-fluid text-text-secondary px-3 line-clamp-2 sm:line-clamp-none">
-        {dict.generator.spinOrRollPrompt}
-      </p>
+      <StagePrompt>{dict.generator.spinOrRollPrompt}</StagePrompt>
 
       <div className="flex w-full flex-col items-center justify-center gap-2 sm:gap-3 xl:flex-row xl:items-center xl:justify-center xl:gap-6 2xl:gap-14 wide:gap-20 wide-2k:gap-28 wide-4k:gap-36">
         <div className="order-2 grid grid-cols-2 gap-2 sm:gap-3 xl:order-1 xl:grid-cols-1 xl:gap-4 2xl:gap-6 wide:gap-8 wide-2k:gap-10 wide-4k:gap-14">

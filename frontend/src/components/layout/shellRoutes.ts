@@ -92,7 +92,7 @@ export const ROUTE_SHELLS: ReadonlyArray<ShellRoute> = [
     },
   },
   { prefix: ['privacy-policy'], shell: LEGAL },
-  { prefix: ['randomizer'], shell: { padding: 'flush', mainClassName: 'min-h-dvh overflow-y-auto flex flex-col relative' } },
+  { prefix: ['randomizer'], shell: { padding: 'flush', mainClassName: 'min-h-screen-nav lg:min-h-dvh overflow-y-auto flex flex-col relative' } },
   { prefix: ['reset-password'], shell: false },  // a bare, centred form: no sidebar
   { prefix: ['rules'], shell: LEGAL },
   { prefix: ['settings'], shell: { padding: 'spacious', mainClassName: 'flex flex-col items-center justify-center min-h-screen-nav lg:min-h-dvh overflow-y-auto relative' } },

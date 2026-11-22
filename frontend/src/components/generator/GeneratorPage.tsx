@@ -299,7 +299,7 @@ export const GeneratorPage: React.FC<GeneratorPageProps> = ({ allPerks, onSelect
   const topRight = (
     // One row of one height: the toolbar buttons stretch to the Survivor/Killer toggle.
     <div className="flex flex-wrap items-stretch justify-center gap-2 sm:gap-3">
-      <RoleToggle role={role} onChange={handleRoleChange} className="mr-1" />
+      <RoleToggle role={role} onChange={handleRoleChange} className="max-sm:min-w-0 max-sm:flex-1 max-sm:shrink sm:mr-1" />
       <Toolbar
         noRepeatPerks={noRepeatPerks}
         onToggleNoRepeat={handleToggleNoRepeat}

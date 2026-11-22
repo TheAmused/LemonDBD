@@ -26,9 +26,11 @@ const GRID_SIZE_CLASSES: Record<'default' | 'large' | 'fill' | 'tarot' | 'compac
   large: 'h-32 w-32 sm:h-40 sm:w-40 md:h-44 md:w-44 lg:h-44 lg:w-44 xl:h-52 xl:w-52 2xl:h-60 2xl:w-60 wide:h-68 wide:w-68 wide:h-76 wide:w-76 wide-2k:h-88 wide-2k:w-88 wide-4k:h-96 wide-4k:w-96',
   fill: 'h-[min(88cqh,88cqw)] w-[min(88cqh,88cqw)] max-h-48 max-w-48',
   tarot: 'h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36 xl:h-48 xl:w-48 2xl:h-56 2xl:w-56 wide:h-64 wide:w-64 wide-2k:h-72 wide-2k:w-72 wide-4k:h-80 wide-4k:w-80',
-  compact: 'h-19.5 w-19.5 xs:h-21 xs:w-21 sm:h-24 sm:w-24 md:h-26 md:w-26',
+  compact: 'h-22 w-22 phone:h-24 phone:w-24 sm:h-28 sm:w-28',
   wheelFlank: 'h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-36 lg:w-36 xl:h-36 xl:w-36 2xl:h-44 2xl:w-44 wide:h-52! wide:w-52! wide-2k:h-60! wide-2k:w-60! wide-4k:h-72! wide-4k:w-72!',
 };
+
+const FIXED_SIZES: ReadonlyArray<keyof typeof GRID_SIZE_CLASSES> = ['default', 'large', 'wheelFlank'];
 
 /** The icon of a named fill card: leaves the lower part of the cell for the name. */
 const NAMED_ICON_CLASS = 'h-[min(64cqh,88cqw)] w-[min(64cqh,88cqw)] max-h-40 max-w-40 shrink-0';
@@ -62,6 +64,8 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
     perk.character === 'General' ||
     Boolean(perk.is_generic_counterpart);
   const isOwned = perk.is_owned !== false;
+  // On a fixed-size card the icon steps back a little when the character portrait sits in its corner, so the two do not overlap.
+  const showAvatar = Boolean(avatarSrc) && !avatarError && !isGeneral;
 
   const named = showName && size === 'fill';
   // Fixed-size cards (every size but fill) print the name inside their square, under a smaller icon.
@@ -119,7 +123,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
       >
         {coordinateLabel && (
           <Badge
-            tone="overlay" size="xs" plain className="top-0 left-0 top-1 left-1 absolute z-10 text-accent-amber"
+            tone="overlay" size="xs" plain className={`absolute z-10 text-accent-amber ${size === 'fill' ? 'top-1 left-1' : 'top-0 left-0 px-1 py-0'}`}
           >
             {coordinateLabel}
           </Badge>
@@ -138,17 +142,17 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
             <PerkIcon
               perk={perk}
               src={iconSrc}
-              className="h-full w-full"
+              className={`h-full w-full ${showAvatar && FIXED_SIZES.includes(size) ? 'origin-top scale-90' : ''}`}
               imageClassName={`h-full w-full object-contain filter drop-shadow-xl group-hover:drop-shadow-glow-red-sm transition-all duration-200 pointer-events-none ${muted ? 'grayscale' : ''}`}
             />
 
-            {avatarSrc && !avatarError && !isGeneral && (
+            {showAvatar && avatarSrc && (
               <div
                 className={`absolute bottom-0 right-0 overflow-hidden rounded-full pointer-events-none bg-bg-primary shadow-lg border border-border-color transition-[filter] duration-200 ${
                   muted ? 'grayscale ' : ''
                 }${
                   size === 'compact'
-                    ? 'h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7'
+                    ? 'h-7 w-7 sm:h-8 sm:w-8'
                     : size === 'tarot'
                       ? 'h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-8 lg:w-8 xl:h-10 xl:w-10 2xl:h-12 2xl:w-12 wide:h-14 wide:w-14'
                       : size === 'fill'
@@ -164,7 +168,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
                         ? named
                           ? 'h-[min(26cqh,26cqw)] w-[min(26cqh,26cqw)] max-h-12 max-w-12'
                           : 'h-[min(32cqh,32cqw)] w-[min(32cqh,32cqw)] max-h-14 max-w-14'
-                        : 'h-9 w-9 sm:h-11 sm:w-11 md:h-12 md:w-12 lg:h-13 lg:w-13'
+                        : 'h-8 w-8 sm:h-10 sm:w-10 md:h-11 md:w-11 lg:h-13 lg:w-13'
                 }`}
               >
                 <Img

@@ -9,8 +9,6 @@ import type { MapLandmark, MapLayout, MapLayoutFloor, MapPoint, MapRoom } from '
 
 /** One game tile is a 2x2 block of 8 m squares. */
 export const GAME_TILE_M = 16;
-/** How far inside the edge a clock number sits, in metres. */
-const CLOCK_INSET_M = 7;
 /** Clear floor every clock number keeps around it, in metres (labels are ~6 m tall). */
 const CLOCK_CLEARANCE_M = 4;
 /** Ray-march step when looking for the edge of the map, in metres. */
@@ -118,8 +116,6 @@ export interface ClockLabel {
 const LANDMARK_CLEARANCE_M = 4;
 /** Angles tried within an hour's sector when its own direction misses the floor, in degrees. */
 const SECTOR_OFFSETS = [0, 5, -5, 10, -10, 14, -14];
-/** How much further inwards a clock number may move to clear a landmark, in metres. */
-const LANDMARK_SEARCH_M = 10;
 /** On a floor with named rooms the numbers would sit on the names: they are printed this far outside the outline. */
 const OUTSIDE_M = 5;
 /** MID needs less clear floor on such a floor: its corridors are narrow. */

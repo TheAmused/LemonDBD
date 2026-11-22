@@ -39,7 +39,6 @@ const LOADOUT_SIZE = 4;
 
 interface ScatterItem extends DrawnSlot {
   id: string;
-  rotate: number;
   /** Desktop: the grid cell it lands in (percent of the scatter field) and its own random offset from the
    * cell centre, in -1..1 (see `scatterPoint`). */
   cellXPct: number;
@@ -49,7 +48,6 @@ interface ScatterItem extends DrawnSlot {
   /** Phone and tablet: where it lands (percent of the field), anywhere, see `chaosPoints`. */
   compactXPct: number;
   compactYPct: number;
-  scale: number;
   /** Where it flies in FROM (a delta from its landing spot), so it reads as
    * "thrown out of the crate" rather than fading in in place. */
   fromX: number;
@@ -194,9 +192,7 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
       const pool: ScatterItem[] = drawn.map((slot, i) => ({
         ...slot,
         id: slot.perk?.name || `${slot.page}-${slot.slot}`,
-        rotate: (Math.random() - 0.5) * 30,
         ...layout[i],
-        scale: 0.88 + Math.random() * 0.24,
         fromX: (Math.random() - 0.5) * 260,
         fromY: -220 - Math.random() * 80,
       }));
@@ -328,8 +324,8 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                       key={`mob-${item.id}`}
                       className="absolute -translate-x-1/2 -translate-y-1/2"
                       style={scatterPointStyle({ xPct: item.compactXPct, yPct: item.compactYPct }, compactField.marginPx)}
-                      initial={reduceMotion ? false : { opacity: 0, x: item.fromX * 0.5, y: item.fromY * 0.5, rotate: item.rotate, scale: 0.4 }}
-                      animate={{ opacity: 1, x: 0, y: 0, rotate: item.rotate, scale: 1 }}
+                      initial={reduceMotion ? false : { opacity: 0, x: item.fromX * 0.5, y: item.fromY * 0.5, scale: 0.4 }}
+                      animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
                       exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.3, transition: { duration: 0.25 } }}
                       transition={reduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 210, damping: 16 }}
                       whileTap={reduceMotion || locked ? undefined : { scale: 0.94 }}
@@ -356,11 +352,11 @@ export const LootCrateStage: React.FC<LootCrateStageProps> = ({
                   key={item.id}
                   className="absolute -translate-x-1/2 -translate-y-1/2 group"
                   style={scatterPointStyle(scatterPoint(item), SCATTER_EDGE_MARGIN_PX)}
-                  initial={reduceMotion ? false : { opacity: 0, x: item.fromX, y: item.fromY, rotate: item.rotate * 2.2, scale: 0.4 }}
-                  animate={{ opacity: 1, x: 0, y: 0, rotate: item.rotate, scale: item.scale }}
-                  exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.3, rotate: item.rotate + 50, transition: { duration: 0.25 } }}
+                  initial={reduceMotion ? false : { opacity: 0, x: item.fromX, y: item.fromY, scale: 0.4 }}
+                  animate={{ opacity: 1, x: 0, y: 0, scale: 1 }}
+                  exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.3, transition: { duration: 0.25 } }}
                   transition={reduceMotion ? { duration: 0.15 } : { type: 'spring', stiffness: 210, damping: 16 }}
-                  whileHover={reduceMotion ? undefined : { scale: item.scale * 1.1, rotate: 0, zIndex: 20 }}
+                  whileHover={reduceMotion ? undefined : { scale: 1.1, zIndex: 20 }}
                 >
                   <div className="relative">
                     <PerkSlot

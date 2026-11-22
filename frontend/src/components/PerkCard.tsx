@@ -65,7 +65,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
     perk.character === 'General' ||
     Boolean(perk.is_generic_counterpart);
   const isOwned = perk.is_owned !== false;
-  // On a fixed-size card the icon steps back a little when the character portrait sits in its corner, so the two do not overlap.
+  // On a fixed-size card the icon steps back a little when the character portrait sits in its corner, so the two do not overlap (by size, not by a scale transform: that resamples the picture and softens it).
   const showAvatar = Boolean(avatarSrc) && !avatarError && !isGeneral;
 
   const named = showName && size === 'fill';
@@ -143,7 +143,7 @@ export const PerkCard: React.FC<PerkCardProps> = ({ perk, onSelect, coordinate, 
             <PerkIcon
               perk={perk}
               src={iconSrc}
-              className={`h-full w-full ${showAvatar && FIXED_SIZES.includes(size) ? 'origin-top scale-90' : ''}`}
+              className={showAvatar && FIXED_SIZES.includes(size) ? 'h-11/12 w-11/12 self-start' : 'h-full w-full'}
               imageClassName={`h-full w-full object-contain filter drop-shadow-xl group-hover:drop-shadow-glow-red-sm transition-all duration-200 pointer-events-none ${muted ? 'grayscale' : ''}`}
             />
 

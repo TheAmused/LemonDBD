@@ -44,6 +44,7 @@ describe('tooltips on touch screens', () => {
 
     act(() => void mouse(wrapped));
     act(() => void fireEvent.mouseOut(global));
+    act(() => void fireEvent.mouseLeave(wrapped.parentElement as Element));
     act(() => void fireEvent.mouseEnter(wrapped.parentElement as Element));
     assert.ok(screen.getByRole('tooltip').textContent?.includes('Wrapper tip'));
   });

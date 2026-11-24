@@ -36,7 +36,15 @@ class TestAdminMultimodeKillswitchWorkflow:
 
         # The public list the frontend reads shows the switch and its reason at once.
         public = {m["mode"]: m for m in live_client.get("/api/v1/challenge-modes").get_json()["modes"]}
-        assert set(public) == {"gauntlet", "chaos", "history", "page_streak"}
+        assert set(public) == {
+            "gauntlet",
+            "chaos",
+            "history",
+            "page_streak",
+            "id_please",
+            "id_please_killer",
+            "id_please_survivor",
+        }
         assert public["chaos"]["is_enabled"] is False
         assert public["chaos"]["disabled_reason"] == "Temporary Chaos Maintenance"
 

@@ -27,9 +27,11 @@ class TestLiveAdminAPI:
         assert res_en.status_code == 200
         assert res_en.get_json()["character"]["is_disabled"] is False
 
+        import json
+
         logs = admin_client.get("/api/v1/admin/audit-logs").get_json()["logs"]
         disabled = next(entry for entry in logs if entry["action"] == "character_disabled" and entry["target_id"] == f"killer:{trapper['id']}")
-        assert '"reason":"Live Test Maintenance"' in disabled["details"]
+        assert json.loads(disabled["details"])["reason"] == "Live Test Maintenance"
         assert disabled["admin_username"] == "admin_live_tester"
 
         # Not an admin: no access.

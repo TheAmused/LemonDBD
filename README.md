@@ -81,15 +81,17 @@ Every variable is documented in [`.env.example`](./.env.example).
 
 ```bash
 # Backend (from backend/; unit tests use in-memory SQLite, no services needed)
-python -m pip install --require-hashes -r requirements.lock -r requirements-dev.txt
-python -m pytest tests/unit -q
+python -m pip install --require-hashes -r requirements.lock
+python -m pip install -r requirements-dev.txt
+ruff check .
+python -m pytest tests/unit tests/guards -q
 
 # Frontend (from frontend/)
 npm ci
-npx tsc --noEmit -p .
-npm run lint
-npm run check            # i18n, style and structure guards
-npm run test:unit
+npm run typecheck        # tsc --noEmit -p .
+npm run lint             # oxlint
+npm run test:guards      # i18n, style, lucide and structure guards
+npm run test:unit        # node:test unit suite (or `npm test` for unit + guards)
 npm run build
 
 # Everything, including the live suites against a running stack
@@ -98,19 +100,20 @@ python run_tests.py --help
 ./up.sh --perf smoke     # k6 load tests (needs k6 on PATH)
 ```
 
-CI ([`.github/workflows/ci.yml`](./.github/workflows/ci.yml)) runs the backend unit tests and the
-frontend type-check, lint, guards, unit tests and production build on every push and pull request.
+CI ([`.github/workflows/ci.yml`](./.github/workflows/ci.yml)) runs `ruff`, backend unit/guard tests, backend live tests (on PostgreSQL 18), and the frontend type-check, lint, guards, unit tests and production build on every push and pull request.
 
 ## Project layout
 
 ```
-backend/     Flask app (app/routes, app/services, app/models, app/schemas), migrations, tests
+backend/     Flask app (app/routes, app/services, app/models, app/schemas), migrations, tests, static assets
 frontend/    Next.js app (src/app/[locale], src/components, src/locales), tests
 nginx/       reverse proxy config and security headers
 docker/      tunnel notifier, CrowdSec and Postgres init
 k6/          load-test scenarios and suites
-docs/        feature plan and design notes
 ```
+
+Static multimedia assets (`avatars`, `chapters`, `icons`, `realms`, and tracked `maps` assets) live under
+`backend/app/static/`, while runtime caches (`audio/cache`, `**/_thumbs`) and `uploads/` are gitignored.
 
 ## Updating dependencies
 

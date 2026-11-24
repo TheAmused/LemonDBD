@@ -73,6 +73,7 @@ export const ROUTE_SHELLS: ReadonlyArray<ShellRoute> = [
   { prefix: ['achievements'], shell: { padding: 'spacious' } },
   // overflow-x-clip, not overflow-y-auto: an auto-scrolling <main> as tall as its content never scrolls, and a sticky bar inside it (Settings' save bar) then never sticks to the screen.
   { prefix: ['admin'], shell: { mainId: 'main-admin-content', mainClassName: 'overflow-x-clip' } },
+  { prefix: ['admin-entry'], shell: false },  // bare admin sign-in dialog: no sidebar
   { prefix: ['blocked'], shell: ERROR_SHELL },
   { prefix: ['characters'], shell: { mainClassName: 'relative overflow-y-auto' } },  // list + [slug] detail
   { prefix: ['forbidden'], shell: ERROR_SHELL },

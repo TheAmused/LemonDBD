@@ -74,6 +74,7 @@ def test_two_factor_key_only_falls_back_in_development(monkeypatch) -> None:
 
     import app.core.config as config_module
 
+    monkeypatch.setattr("dotenv.load_dotenv", lambda *a, **kw: False)
     monkeypatch.delenv("TWO_FACTOR_ENCRYPTION_KEY", raising=False)
     try:
         monkeypatch.setenv("FLASK_ENV", "production")
@@ -92,6 +93,7 @@ def test_cors_defaults_to_the_frontend_origin(monkeypatch) -> None:
 
     import app.core.config as config_module
 
+    monkeypatch.setattr("dotenv.load_dotenv", lambda *a, **kw: False)
     monkeypatch.delenv("CORS_ORIGINS", raising=False)
     monkeypatch.setenv("FRONTEND_URL", "https://lemondbd.example/")
     try:

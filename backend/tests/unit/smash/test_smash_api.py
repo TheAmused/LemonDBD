@@ -36,7 +36,7 @@ class TestSmashOrPassAPI:
         assert canon["total_votes"] == 0
         assert canon["is_active"] is True
         assert "theme_color" in canon
-        assert canon["name"] == "Dead by Daylight: Fog Canon"
+        assert canon["name"] == "Fog Canon"
         assert "name_i18n_key" not in canon
         assert "description_i18n_key" not in canon
 
@@ -44,7 +44,7 @@ class TestSmashOrPassAPI:
         res_pl = client.get("/api/v1/smash-or-pass/rosters?lang=pl")
         assert res_pl.status_code == 200
         canon_pl = next(r for r in res_pl.get_json()["data"] if r["slug"] == "canon")
-        assert canon_pl["name"] == "Dead by Daylight: Kanon Mgły"
+        assert canon_pl["name"] == "Kanon Mgły"
         assert canon_pl["description"] == "Oficjalne 98 postaci z mgły próby."
         assert "name_i18n_key" not in canon_pl
         assert "description_i18n_key" not in canon_pl

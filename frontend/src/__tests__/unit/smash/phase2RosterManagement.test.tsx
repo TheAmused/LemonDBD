@@ -106,7 +106,7 @@ describe('Phase 2: Roster Management Polish', () => {
       const nsfwBadge = view.container.querySelector('[data-testid="roster-nsfw-badge"]');
       assert.ok(nsfwBadge);
       // Both badges should coexist in top right
-      const topRightContainer = nsfwBadge.closest('.top-4');
+      const topRightContainer = nsfwBadge.closest('.right-2\\.5');
       assert.ok(topRightContainer);
       assert.ok(topRightContainer.textContent?.includes('ACTIVE') || topRightContainer.textContent?.includes('Active') || topRightContainer.textContent?.includes('NSFW'));
     });

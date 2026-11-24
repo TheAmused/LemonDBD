@@ -61,7 +61,7 @@ describe('matchShell', () => {
   it('the longest matching prefix wins, and a dynamic page inherits its parent', () => {
     assert.equal(spec(['characters', 'dwight_fairfield']), spec(['characters']));
     assert.equal(spec(['smash-or-pass', 'create']).padding, 'tight');
-    assert.equal(spec(['smash-or-pass']).padding, undefined);
+    assert.equal(spec(['smash-or-pass']).padding, 'tight');
     assert.equal(spec(['streaks', 'killer', 'page-streak', 'x']), spec(['streaks']));
   });
 

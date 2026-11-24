@@ -117,7 +117,7 @@ describe('badge gradients', () => {
     assert.equal(custom.className, '');
     assert.equal(custom.style?.backgroundImage, 'linear-gradient(135deg, #ff0044, #112233)');
     const preset = badgeGradientProps('from-accent-red to-bg-primary');
-    assert.equal(preset.className, 'bg-gradient-to-br from-accent-red to-bg-primary');
+    assert.equal(preset.className, 'gradient-badge bg-gradient-to-br from-accent-red to-bg-primary');
     assert.equal(preset.style, undefined);
   });
 

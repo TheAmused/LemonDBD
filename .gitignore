@@ -105,16 +105,12 @@ frontend/yarn-debug.log*
 frontend/yarn-error.log*
 frontend/pnpm-debug.log*
 
-backend/app/static/avatars/
-backend/app/static/chapters/
-backend/app/static/icons/
 # Map images: callouts and in-game photos are tracked, thumbnails are not.
 backend/app/static/maps/*
 !backend/app/static/maps/callouts/
 backend/app/static/maps/callouts/*
 !backend/app/static/maps/callouts/lemondbd/
 !backend/app/static/maps/photos/
-backend/app/static/realms/
 backend/app/static/uploads/
 backend/app/static/audio/cache/
 backend/app/static/audio/*.mp3

@@ -7,6 +7,7 @@ import type { EntityItem, RosterCustomLabels } from '@/types/smashOrPass';
 import { localizedProfile } from '@/utils/entityProfile';
 import { resolveWatermarks } from '@/utils/smashWatermarks';
 import { FitText } from '@/components/common/FitText';
+import { LoreWing } from './LoreWing';
 
 import { useDictionary } from '@/context/DictionaryContext';
 import { formatMessage } from '@/utils/i18nFormat';
@@ -40,11 +41,10 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
   const profile = localizedProfile(character.metadata, currentLoc);
 
   // Defaults for an entity: custom rosters never receive DBD canon fallbacks
-  const charTitle =
-    profile.archetype ||
-    (isCustom ? '' : isSurvivor ? t.loreTitleSurvivor : isKiller ? t.loreTitleKiller : '');
   const charTagline =
     profile.tagline || (isCustom ? '' : isSurvivor ? t.loreTaglineSurvivor : isKiller ? t.loreTaglineKiller : '');
+  // The simple roster creator has no tagline field, so there the dating vibe is what the author wrote.
+  const datingVibeText = charTagline || profile.dating_vibe;
 
   // Quote resolution: custom rosters only show explicit quotes, never canon DBD survivor/killer templates
   const charQuote =
@@ -56,8 +56,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
 
   // Localized Labels
   const loreLabels = dict.smashOrPass.loreLabels;
-  const datingArchetypeLabel =
-    customLabels?.dating_vibe || (profile.dating_vibe ? loreLabels.datingVibe : loreLabels.datingArchetype);
+  const datingVibeLabel = customLabels?.dating_vibe || loreLabels.datingVibe;
   const signatureQuoteLabel = customLabels?.quote || loreLabels.signatureQuote;
   const turnOnLabel = customLabels?.turn_on || loreLabels.turn_on;
   const dealbreakerLabel = customLabels?.dealbreaker || loreLabels.dealbreaker;
@@ -109,13 +108,11 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
       </div>
 
       {/* 2. LEFT FLANKING DOSSIER WING */}
-      <div className="pointer-events-none absolute left-2 sm:left-4 @hub-2xl/hub:left-6 top-below-smash-header bottom-12 hidden @hub-lg/hub:grid grid-rows-2 items-center gap-4 w-lore-column p-2 pt-3">
-        {/* Left Item 1: Trial Classification - Hidden for now */}
-
-        {/* Left Item 2: Dating Archetype (Tilt Right +2deg & Crimson Flare) */}
-        {Boolean(profile.dating_vibe || charTitle) && (
+      <LoreWing
+        side="left"
+        upper={Boolean(datingVibeText) && (
           <div
-            key={`title-${character.slug}`}
+            key={`tagline-${character.slug}`}
             data-lore-card=""
             className="pointer-events-auto anim-lore-dissolve transition-all duration-300 hover:scale-[1.02] @hub-2xl/hub:hover:scale-105 @hub-2xl/hub:hover:rotate-2 cursor-pointer group"
             style={{ animationDelay: '80ms' }}
@@ -127,23 +124,16 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
                 className="sr-only @hub-2xl/hub:not-sr-only @hub-2xl/hub:absolute @hub-2xl/hub:top-0 @hub-2xl/hub:-translate-y-1/2 @hub-2xl/hub:left-1/2 @hub-2xl/hub:-translate-x-1/2 @hub-2xl/hub:inline-flex @hub-2xl/hub:items-center @hub-2xl/hub:justify-center px-2.5 bg-bg-surface z-10 w-max max-w-gutter text-accent-red"
               >
                 <span className="type-label-2xs truncate whitespace-nowrap">
-                  {datingArchetypeLabel}
+                  {datingVibeLabel}
                 </span>
               </div>
-              <p className="text-sm font-black tracking-tight text-text-primary group-hover:text-accent-red transition-colors">
-                {profile.dating_vibe || charTitle}
+              <p className="text-xs text-text-muted line-clamp-4 leading-snug group-hover:text-text-secondary transition-colors">
+                {datingVibeText}
               </p>
-              {Boolean(charTagline) && (
-                <p className="text-xs text-text-muted line-clamp-2 leading-snug group-hover:text-text-secondary transition-colors mt-0.5">
-                  {charTagline}
-                </p>
-              )}
             </div>
           </div>
         )}
-
-        {/* Left Item 3: Turn On (Tilt Left -1deg & Emerald Glow) */}
-        {profile.turn_on && (
+        lower={profile.turn_on && (
           <div
             key={`turn-on-${character.slug}`}
             data-lore-card=""
@@ -166,14 +156,12 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
             </div>
           </div>
         )}
-      </div>
+      />
 
       {/* 3. RIGHT FLANKING DOSSIER WING */}
-      <div className="pointer-events-none absolute right-2 sm:right-4 @hub-2xl/hub:right-6 top-below-smash-header bottom-12 hidden @hub-lg/hub:grid grid-rows-2 items-center gap-4 w-lore-column p-2 pt-3">
-        {/* Right Item 1: Identity Profile - Hidden for now */}
-
-        {/* Right Item 2: Signature Quote (Tilt Left -1deg & Gold Halo) */}
-        {Boolean(charQuote) && (
+      <LoreWing
+        side="right"
+        upper={Boolean(charQuote) && (
           <div
             key={`quote-${character.slug}`}
             data-lore-card=""
@@ -196,9 +184,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
             </div>
           </div>
         )}
-
-        {/* Right Item 3: Dealbreaker (Tilt Right +1deg & Rose Glow) */}
-        {profile.dealbreaker && (
+        lower={profile.dealbreaker && (
           <div
             key={`dealbreaker-${character.slug}`}
             data-lore-card=""
@@ -221,7 +207,7 @@ export const FloatingLoreScattered: React.FC<FloatingLoreScatteredProps> = ({
             </div>
           </div>
         )}
-      </div>
+      />
     </div>
   );
 };

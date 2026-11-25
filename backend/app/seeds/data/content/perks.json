@@ -10546,6 +10546,201 @@
         "tracking",
         "chase"
       ]
+    },
+    {
+      "id": 322,
+      "name": "Best Gift Ever",
+      "role": "Survivor",
+      "survivor_id": 55,
+      "is_generic_counterpart": false,
+      "is_teachable": true,
+      "description": "At the start of the trial, you earn **4/5/6 Tokens**.\nThe first time you drop an Item of each type, spend **1 Token**, then the dropped item is consumed. Then, based on the item's type:\n• Flashlight: Whenever you stun the Killer, they are also blinded for **2s**.\n• Fog Vial: Whenever you fast-vault, for **5s**, your Scratch Marks disappear **50%** faster.\n• Key: You gain **+1** rummage on each chest.\n• Map: **Auras** you see for a duration last **+1s**.\n• Medkit: While healing another Survivor, you also gain healing progress at **25%** speed.\n• Toolbox: You see the **Auras** of the **3 Generators** closest to each other.\n> “If a demon enters this world in the flesh, a counterpoint must be appointed to stop it from becoming too powerful.” - Jonathan Shaw",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_BestGiftEver.png?dcd771",
+      "icon_local_path": "icons/survivors/Sienna Shaw/best_gift_ever.webp",
+      "translations": {
+        "de": {
+          "name": "Das allerbeste Geschenk",
+          "description": "Zu Beginn der Prüfung verdienst du **4/5/6 Zähler**.\nWenn du zum ersten Mal einen Gegenstand des jeweiligen Typs fallen lässt, gibst du 1 **Zähler** aus. Anschließend wird der fallen gelassene Gegenstand verbraucht. Je nach Typ des Gegenstands gilt dann Folgendes:\n• Taschenlampe: Wenn du den Killer betäubst, wird er auch **2 Sek.** lang geblendet.\n• Nebelfläschchen: Wenn du einen schnellen Sprung ausführst, verschwinden deine Kratzspuren **5 Sek.** lang um **50 %** schneller.\n• Schlüssel: Du erhältst bei jeder Truhe **+1** Durchwühlen-Versuch(e).\n• Karte: **Auren**, die du siehst, halten **1 Sek.** länger an.\n• Sani-Kasten: Während du einen anderen Überlebenden heilst, erhältst du gleichzeitig Heilungsfortschritt mit einer Geschwindigkeit von **25 %**.\n• Werkzeugkiste: Du siehst die **Auren** der **3 Generatoren**, die einander am nächsten liegen.\n> „Wenn ein Dämon leibhaftig in diese Welt kommt, muss ein Gegenpol bestimmt werden, damit er nicht zu mächtig wird.“ - Jonathan Shaw"
+        },
+        "es": {
+          "name": "El mejor regalo del mundo",
+          "description": "Al comienzo de la partida, obtienes **4/5/6** distintivos.\nLa primera vez que sueltes un objeto de cada tipo, gastas 1 distintivo y el objeto que hayas soltado se consume. Después, dependiendo del tipo de objeto:\n• Linterna: cada vez que aturdas al asesino, también quedará cegado durante **2 segundos**.\n• Vial de niebla: cada vez que realices un salto rápido, tus marcas de arañazos desaparecerán un **50 %** más rápido durante **5 segundos**.\n• Llave: podrás rebuscar **1** vez/veces más en cada cofre.\n• Mapa: las **auras** que veas durante un tiempo permanecerán visibles **1 segundos** más.\n• Botiquín: mientras cures a otro superviviente, también obtendrás progreso de curación a un **25 %** de velocidad.\n• Caja de herramientas: verás las **auras** de los **3 generadores** más cercanos entre sí.\n> \"Si un demonio entra en este mundo en carne y hueso, hay que designar un contrapeso que le impida volverse demasiado poderoso.\" - Jonathan Shaw"
+        },
+        "ja": {
+          "name": "最高の贈り物",
+          "description": "儀式開始時に**4/5/6**個の**トークン**を得る。\nそれぞれの種類のアイテムを初めて落としたとき、1個の**トークン**と落としたアイテムが消費され、アイテムの種類に応じた効果が発生する。\n• 懐中電灯：殺人鬼を怯ませたとき、その殺人鬼が**2秒**間、目眩まし状態にもなる。\n• 霧の小瓶：高速乗り越えを行ったとき、次の**5秒**間、自分の傷マークが消える速度が**50%**上昇する。\n• カギ：各チェストを追加で**1**回漁ることができる。\n• マップ：**オーラ**が視える持続時間が**1秒**延長される。\n• 医療キット：他の生存者を治療する間、自分も**25%**の速度で回復する。\n• 工具箱：互いに最も近い**発電機3**台の**オーラ**が視える。\n> 「悪魔が肉体を持ってこの世界に現れたなら、力を持ちすぎないように対抗する者が選ばれなければならない。」 - ジョナサン・ショー"
+        },
+        "pl": {
+          "name": "Najlepszy prezent w życiu",
+          "description": "Na początku próby otrzymujesz określoną liczbę **żetonów** (**4/5/6**).\nPo upuszczeniu po raz pierwszy przedmiotu każdego rodzaju, zużyj 1 **żeton**, a upuszczony przedmiot zostaje zużyty. Następnie, zależnie od rodzaju przedmiotu:\n• Latarka: Za każdym razem, gdy ogłuszysz zabójcę, ten zostaje również oślepiony na **2 s**.\n• Fiolka mgły: Za każdym razem, gdy wykonujesz szybki przeskok, przez **5 s** twoje czerwone zarysowania znikają **50%** szybciej.\n• Klucz: Zyskujesz **+1** do przeszukiwania każdej skrzyni.\n• Mapa: Aury, które widzisz przez określony czas, trwają **+1 s** dłużej.\n• Apteczka: Podczas leczenia innego ocalałego, otrzymujesz również postęp leczenia z **25%** prędkości.\n• Skrzynka z narzędziami: Widzisz **aury 3** najbliższych **generatorów**.\n> „Jeśli demon wejdzie na ten świat w ludzkim ciele, trzeba wyznaczyć przeciwwagę, która nie pozwoli mu zbytnio urosnąć w siłę.” - Jonathan Shaw"
+        }
+      },
+      "perk_types": [
+        "items"
+      ]
+    },
+    {
+      "id": 323,
+      "name": "Funny Business",
+      "role": "Killer",
+      "killer_id": 45,
+      "is_generic_counterpart": false,
+      "is_teachable": true,
+      "description": "Whenever you damage a **Generator**, you gain **10% Haste** for **10s** and one of the following occurs at random:\n• You retain your **10% Haste** for **5s** longer.\n• You get stunned for **2s**.\n• The affected **Generator** is blocked for **30s**.\n• Confetti! But nothing happens.\nCooldown: **60/50/40s**.\nThe same effect cannot happen twice in a row.\n> “Glass, insects, and razor blades, there's no telling what you might find.” - Clown Cafe Announcer",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_FunnyBusiness.png?1cae32",
+      "icon_local_path": "icons/killers/The Terrifier/funny_business.webp",
+      "translations": {
+        "de": {
+          "name": "Seltsame Machenschaften",
+          "description": "Wenn du einen **Generator** beschädigst, erhältst du **10 % Eile** für **10 Sek.** und einer der folgenden Fälle tritt zufällig ein:\n• Du behältst **10 % Eile** für **5 Sek.** länger.\n• Du wirst **2 Sek.** lang betäubt.\n• Der betroffene **Generator** ist **30 Sek.** lang blockiert.\n• Konfetti! Aber es passiert nichts.\nAbklingzeit: **60/50/40 Sek.**\nDerselbe Effekt kann nicht zweimal hintereinander auftreten.\n> „Glas, Insekten und Rasierklingen: Man weiß nie, was man findet.“ - Ansager im Clown Café"
+        },
+        "es": {
+          "name": "Triquiñuela",
+          "description": "Cada vez que dañes un **generador**, obtienes un **10 %** de **Celeridad** durante **10 segundos** y se produce al azar uno de los siguientes efectos:\n• Conservas tu **10 %** de **Celeridad** durante **5 segundos** más.\n• Sufres aturdimiento durante **2 segundos**.\n• El **generador** afectado queda bloqueado durante **30 segundos**.\n• ¡Confeti! Pero no pasa nada.\nTiempo de recarga: **60/50/40 segundos**.\nEl mismo efecto no puede ocurrir dos veces seguidas.\n> \"Cristales, insectos y cuchillas de afeitar: nunca se sabe lo que puedes encontrar.\" - Locutor del Clown Café"
+        },
+        "ja": {
+          "name": "悪ふざけ",
+          "description": "**発電機**にダメージを与えると、**10%**の**迅速**を**10秒**間得て、次のうちからランダムな効果が1つ発生する。\n• **10%**の**迅速**が**5秒**間延長する。\n• **2秒**間、怯まされる。\n• ダメージを与えた**発電機**が**30秒**間ブロックされる。\n• 紙吹雪が撒き散るが、ほかに何も起こらない。\nクールダウンは**60/50/40秒**。\n同じ効果が連続で発生することはない。\n> 「ガラスに虫にカミソリの刃。何が出てくるかはお楽しみ。」 - クラウン・カフェのアナウンサー"
+        },
+        "pl": {
+          "name": "Śmieszny biznes",
+          "description": "Za każdym razem, gdy uszkadzasz **generator**, zyskujesz **10%** efektu **Pośpiech** na **10 s** i następuje losowo jedno z poniższych:\n• Zachowujesz swoje **10%** efektu **Pośpiech** o **5 s** dłużej.\n• Otrzymujesz ogłuszenie na **2 s**.\n• Generator objęty efektem zostaje zablokowany na **30 s**.\n• Konfetti! Ale nic się nie dzieje.\nCzas odnawiania: **60/50/40 s**.\nTen sam efekt nie może wystąpić dwa razy z rzędu.\n> „Szkło, robaki i żyletki: nigdy nie wiadomo, co znajdziesz.” - Spiker Clown Cafe"
+        }
+      },
+      "perk_types": [
+        "generator",
+        "entity"
+      ]
+    },
+    {
+      "id": 324,
+      "name": "Kill Spree",
+      "role": "Killer",
+      "killer_id": 45,
+      "is_generic_counterpart": false,
+      "is_teachable": true,
+      "description": "When all remaining Survivors have **2** Hook States and all **Generators** are completed, you can kill Survivors.\nWhile killing a Survivor, both **Exit Gate** Switches are blocked. Whenever you finish killing a Survivor, this ends after **12/16/20s**.\n> “He’s killing them, one by one by one like cows.” - Cat Lady",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_KillSpree.png?e91831",
+      "icon_local_path": "icons/killers/The Terrifier/kill_spree.webp",
+      "translations": {
+        "de": {
+          "name": "Schlachtrausch",
+          "description": "Wenn alle verbleibenden Überlebenden **2** Hakenstatus haben und alle **Generatoren** vollständig repariert sind, kannst du Überlebende töten.\nWährend du einen Überlebenden tötest, sind beide Ausgangstorschalter blockiert. Nachdem du einen Überlebenden getötet hast, endet die Blockade nach **12/16/20 Sek.**\n> „Er tötet sie, einen nach dem anderen, wie Kühe.“ - Katzenlady"
+        },
+        "es": {
+          "name": "Oleada de asesinatos",
+          "description": "Cuando todos los supervivientes que sigan en pie tengan **2** estados de gancho y todos los **generadores** estén completados, podrás matar a los supervivientes.\nMientras mates a un superviviente, se bloquearán los dos interruptores de puerta de salida. Cuando termines de matar a un superviviente, esto terminará después de **12/16/20 segundos**.\n> \"Los está matando, uno a uno, como a vacas.\" - La mujer de los gatos"
+        },
+        "ja": {
+          "name": "連続殺人",
+          "description": "生き残った生存者全員が**2**回フックに吊るされ、**発電機**の修理がすべて完了している場合、生存者を殺害できる。\n生存者を殺害している間、両方の脱出ゲートのスイッチがブロックされる。この効果は、生存者を殺害したあと**12/16/20秒**間持続する。\n> 「あいつは牛みたいに、一人また一人と殺していくんだ。」 - 猫の女性"
+        },
+        "pl": {
+          "name": "Seryjne morderstwo",
+          "description": "Gdy wszyscy pozostali ocalali mają określoną liczbę (**2**) stanów haka i gdy wszystkie **generatory** są ukończone, możesz zabijać ocalałych.\nPodczas zabijania ocalałego, oba przełączniki bramy wyjściowej zostają zablokowane. Efekt kończy się po upływie **12/16/20 s** od zakończonego zabicia ocalałego.\n> „Zabija ich, jednego po drugim, jak krowy.” - Kocia dama"
+        }
+      },
+      "perk_types": [
+        "endgame"
+      ]
+    },
+    {
+      "id": 325,
+      "name": "Laughingstock",
+      "role": "Killer",
+      "killer_id": 45,
+      "is_generic_counterpart": false,
+      "is_teachable": true,
+      "description": "Survivors within **12m** of a completed **Generator**:\n• Gain **Exhausted**.\n• Gain **Oblivious**.\nWhen they leave this range, the effect ends after **3/4/5s**.\nYou see the **Auras** of completed **Generators**.\n> “Are you fucking kidding me? No, you’re not fine, you are so completely far from fine right now.” - Brooke",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_Laughingstock.png?7d6fcf",
+      "icon_local_path": "icons/killers/The Terrifier/laughingstock.webp",
+      "translations": {
+        "de": {
+          "name": "Witzfigur",
+          "description": "Für Überlebende in einem Umkreis von **12 Metern** von einem vollständig reparierten **Generator** gilt:\n• Sie erhalten **Erschöpfung**.\n• Sie erhalten **Ahnungslos**.\nWenn sie diesen Radius verlassen, endet der Effekt nach **3/4/5 Sek.**\nDu siehst die **Auren** von abgeschlossenen **Generatoren**.\n> „Willst du mich verdammt noch mal verarschen? Nein, dir geht es nicht gut, du bist gerade so weit davon entfernt, wie es nur geht.“ - Brooke"
+        },
+        "es": {
+          "name": "Hazmerreír",
+          "description": "Los supervivientes que estén en un radio de **12 metros** de un **generador** completado:\n• Sufren **Agotamiento**.\n• Sufren **Inconsciencia**.\nCuando salgan de este radio, el efecto terminará después de **3/4/5 segundos**.\nVes las **auras** de los **generadores** completados.\n> \"¿Me estás tomando el puto pelo? No, no estás bien, ahora mismo estás lejísimos de estar bien.\" - Brooke"
+        },
+        "ja": {
+          "name": "笑いもの",
+          "description": "生存者が修理の完了した**発電機**の**12メートル**以内にいる間：\n• **疲労**状態になる。\n• **無感覚**状態になる。\nこの効果は、生存者がこの範囲を出たあと**3/4/5秒**間持続する。\n修理の完了した**発電機**の**オーラ**があなたに視える。\n> 「冗談でしょ？いいえ、大丈夫じゃない。今のあなたは大丈夫とは程遠いんだから。」 - ブルック"
+        },
+        "pl": {
+          "name": "Pośmiewisko",
+          "description": "Ocalali w zasięgu **12 m** od ukończonego **generatora**:\n• Otrzymują efekt **Wyczerpany**.\n• Otrzymują efekt **Nieświadomy**.\nPo wyjściu poza ten zasięg, efekt kończy się po upływie **3/4/5 s**.\nWidzisz **aury** ukończonych **generatorów**.\n> „Chyba sobie, kurwa, żartujesz? Nie, nic nie jest w porządku, jesteś teraz tak daleko od tego, jak tylko się da.” - Brooke"
+        }
+      },
+      "perk_types": [
+        "generator",
+        "chase"
+      ]
+    },
+    {
+      "id": 326,
+      "name": "Shared Trauma",
+      "role": "Survivor",
+      "survivor_id": 55,
+      "is_generic_counterpart": false,
+      "is_teachable": true,
+      "description": "Whenever you take a protection hit, all Survivors within **12m** recover from **Exhausted** while running for **30/35/40s**.\nWithin **32m**, you see the **Auras** of **Exhausted** Survivors.\n> “What? I like her scars. I think they're cool.” - Gabbie Shaw",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_SharedTrauma.png?fe92e2",
+      "icon_local_path": "icons/survivors/Sienna Shaw/shared_trauma.webp",
+      "translations": {
+        "de": {
+          "name": "Gemeinsames Trauma",
+          "description": "Immer wenn du einen Schutztreffer einsteckst, gilt **30/35/40 Sek.** lang: Alle Überlebenden in einem Umkreis von **12 Metern** können sich von **Erschöpfung** erholen, während sie rennen.\nDu siehst die **Auren** von Überlebenden mit **Erschöpfung**-Effekt in einem Umkreis von **32 Metern**.\n> „Was denn? Ich mag ihre Narben. Ich finde sie cool.“ - Gabbie Shaw"
+        },
+        "es": {
+          "name": "Trauma compartido",
+          "description": "Cada vez que recibas un golpe por protección, todos los supervivientes que estén en un radio de **12 metros** se recuperan de **Agotamiento** mientras corren durante **30/35/40 segundos**.\nVes las **auras** de los supervivientes que sufran **Agotamiento** en un radio de **32 metros**.\n> \"¿Qué pasa? Me gustan sus cicatrices. Creo que molan.\" - Gabbie Shaw"
+        },
+        "ja": {
+          "name": "トラウマの共有",
+          "description": "味方の代わりに攻撃を受けると、**30/35/40秒**間、**12メートル**以内の生存者全員は走っている間も**疲労**から回復する。\n**32メートル**以内にいる**疲労**状態の生存者の**オーラ**があなたに視える。\n> 「何？あの人の傷跡、好きだよ。かっこいいと思う。」 - ギャビー・ショー"
+        },
+        "pl": {
+          "name": "Wspólna trauma",
+          "description": "Za każdym razem, gdy otrzymujesz uderzenie ochronne, przez **30/35/40 s** wszyscy ocalali w zasięgu **12 m** pozbywają się efektu **Wyczerpany** również podczas biegu.\nW zasięgu **32 m** widzisz **aury** ocalałych z efektem **Wyczerpany**.\n> „No co? Podobają mi się jej blizny. Uważam, że są super.” - Gabbie Shaw"
+        }
+      },
+      "perk_types": [
+        "exhaustion",
+        "tracking"
+      ]
+    },
+    {
+      "id": 327,
+      "name": "Valkyrie's Rage",
+      "role": "Survivor",
+      "survivor_id": 55,
+      "is_generic_counterpart": false,
+      "is_teachable": true,
+      "description": "After being chased for **40/35/30s**, the next time you **Pallet**-stun the Killer, they are stunned for **75%** longer.\n> “I hope that hurt, fucker!” - Sienna Shaw",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconsPerks_ValkyriesRage.png?22165a",
+      "icon_local_path": "icons/survivors/Sienna Shaw/valkyries_rage.webp",
+      "translations": {
+        "de": {
+          "name": "Zorn der Walküre",
+          "description": "Nachdem du **40/35/30 Sek.** lang verfolgt wurdest, wird der Killer beim nächsten Mal, wenn du ihn mit einer **Palette** betäubst, **75 %** länger betäubt.\n> „Ich hoffe, das hat wehgetan, du Wichser!“ - Sienna Shaw"
+        },
+        "es": {
+          "name": "Furia de la valquiria",
+          "description": "Después de que el asesino te persiga durante **40/35/30 segundos**, la próxima vez que lo aturdas con un **palé**, quedará aturdido un **75 %** más de tiempo.\n> \"¡Espero que te haya dolido, cabrón!\" - Sienna Shaw"
+        },
+        "ja": {
+          "name": "戦乙女の怒り",
+          "description": "**40/35/30秒**追跡されたあと、次に殺人鬼を**パレット**で怯ませたとき、怯みの効果が**75%**延長する。\n> 「痛かったでしょうね、このクソ野郎！」 - シエナ・ショー"
+        },
+        "pl": {
+          "name": "Gniew walkirii",
+          "description": "Po pościgu przez zabójcę przez **40/35/30 s**, następnym razem, gdy ogłuszysz zabójcę **paletą**, to ogłuszenie trwa o **75%** dłużej.\n> „Mam nadzieję, że zabolało, skurwielu!” - Sienna Shaw"
+        }
+      },
+      "perk_types": [
+        "chase"
+      ]
     }
   ]
 }

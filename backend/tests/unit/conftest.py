@@ -1,6 +1,7 @@
 # backend/tests/unit/conftest.py
 import os
 import pytest
+from pathlib import Path
 from typing import Generator
 from flask import Flask
 from flask.testing import FlaskClient
@@ -36,6 +37,26 @@ from app.core import redis_cache
 from app.core.config import TestingConfig
 from app.core.extensions import db
 from app.models import Chapter, Killer, Perk, Survivor, User
+from app.utils import thumbnails
+
+
+@pytest.fixture(scope="session", autouse=True)
+def keep_thumbnail_warmer_out_of_the_checkout() -> Generator[None, None, None]:
+    """Seeding and imports start a background thumbnail warmer. On the real app/static it writes
+    short-lived files into the checkout while other tests (the file length guard) walk it."""
+    checkout_static = (Path(thumbnails.__file__).resolve().parents[1] / "static").resolve()
+    real_warm = thumbnails.warm_all_thumbs
+
+    def warm_unless_checkout(
+        static_root: Path | None = None, prune_orphans: bool = False, workers: int = 4
+    ) -> dict[str, int]:
+        if thumbnails._resolve_static_root(static_root) == checkout_static:
+            return {"generated": 0, "skipped": 0, "pruned": 0, "failed": 0}
+        return real_warm(static_root, prune_orphans, workers)
+
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(thumbnails, "warm_all_thumbs", warm_unless_checkout)
+        yield
 
 
 @pytest.fixture(scope="session")

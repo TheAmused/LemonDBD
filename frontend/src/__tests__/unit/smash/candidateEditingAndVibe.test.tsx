@@ -248,20 +248,8 @@ describe('Candidate Editing and Dating Vibe', () => {
     });
   });
 
-  describe('FloatingLoreScattered dating_vibe rendering', () => {
-    it('displays charTitle when dating_vibe is empty', () => {
-      const view = render(
-        <FloatingLoreScattered
-          character={baseEntityItem}
-          locale="en"
-        />,
-        { wrapper: withDictionary() }
-      );
-
-      assert.ok(view.getByText('Lone Wolf'));
-    });
-
-    it('displays profile.dating_vibe when present', () => {
+  describe('FloatingLoreScattered Dating Vibe card', () => {
+    it('shows only the tagline, with no heading from dating_vibe or archetype', () => {
       const itemWithVibe: EntityItem = {
         ...baseEntityItem,
         metadata: {
@@ -278,7 +266,11 @@ describe('Candidate Editing and Dating Vibe', () => {
         { wrapper: withDictionary() }
       );
 
-      assert.ok(view.getByText('Chaotic Good Flirt'));
+      assert.ok(view.getByText(enDict.smashOrPass.loreLabels.datingVibe));
+      assert.ok(view.getByText('Test tagline'));
+      // A boolean check: diffing a DOM node in a failed strictEqual runs the test out of memory.
+      assert.ok(!view.queryByText('Chaotic Good Flirt'), 'the dating_vibe sentence must not be shown');
+      assert.ok(!view.queryByText('Lone Wolf'), 'the archetype title must not be shown');
     });
   });
 });

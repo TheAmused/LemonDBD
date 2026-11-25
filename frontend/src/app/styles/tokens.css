@@ -445,7 +445,10 @@
 
 /* Where the Smash lore sits around the card. */
 @utility top-lore { top: 44%; }
-@utility top-below-smash-header { top: calc(var(--smash-header) + var(--smash-drawer, 0rem) + 1rem); }
+/* The card above a watermark ends where a three line watermark (centred on top-lore) begins, and never starts above the header's room. */
+@utility lore-slot-upper { top: var(--smash-header); height: calc(44% - 12rem - var(--smash-header)); min-height: max-content; }
+/* The card below a watermark is centred in the lower half of the room under the filter drawer. */
+@utility lore-slot-lower { top: calc(50% + (var(--smash-header) + var(--smash-drawer, 0rem)) / 2 - 0.875rem); bottom: 3rem; }
 @utility inset-diamond-inner { inset: 14.65%; }
 
 /* Auto-fill grids of tiles, wider tiles on wider screens: xs, sm, md, lg, xl. */

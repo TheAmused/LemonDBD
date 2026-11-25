@@ -4,6 +4,7 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import React from 'react';
 import { render, withDictionary } from '../../helpers/dom';
+import enDict from '@/locales/en';
 import { RosterCarouselCard } from '@/components/smash-or-pass/roster-select/RosterCarouselCard';
 import { FloatingLoreScattered } from '@/components/smash-or-pass/FloatingLoreScattered';
 import { FitText } from '@/components/common/FitText';
@@ -127,7 +128,28 @@ describe('Phase 2: Roster Management Polish', () => {
   });
 
   describe('FloatingLoreScattered: Custom roster fallback isolation', () => {
-    it('does not render fake canon quote or fake canon archetype for custom roster entities without quotes', () => {
+    it('shows dating_vibe on the side card when a custom entity has no tagline (simple mode)', () => {
+      const customEntity = {
+        id: 'local:custom-1:e3',
+        roster_id: 'local:custom-1',
+        slug: 'airplane_737',
+        name: 'Boeing 737',
+        role: 'Plane',
+        gender: 'Vehicle',
+        metadata: {
+          dating_vibe: 'Window seat and a long layover',
+        },
+      } as unknown as EntityItem;
+
+      const view = render(
+        <FloatingLoreScattered character={customEntity} />,
+        { wrapper: withDictionary() }
+      );
+
+      assert.ok(view.container.textContent?.includes('Window seat and a long layover'));
+    });
+
+    it('does not render a fake canon quote or tagline for custom roster entities without them', () => {
       const customEntity = {
         id: 'local:custom-1:e1',
         roster_id: 'local:custom-1',
@@ -143,12 +165,12 @@ describe('Phase 2: Roster Management Polish', () => {
         { wrapper: withDictionary() }
       );
 
-      // Quote block and archetype block should not be rendered when optional fields are empty
+      // Quote and Dating Vibe cards should not be rendered when optional fields are empty
       const allText = view.container.textContent || '';
       assert.ok(!allText.includes('watching from the shadows'));
-      assert.ok(!allText.includes('Survivor in the Fog'));
-      assert.ok(!allText.includes('Ocalały we Mgle'));
-      // Neither fake archetype nor fake quote is rendered
+      assert.ok(!allText.includes(enDict.smashOrPass.loreTaglineSurvivor));
+      assert.ok(!allText.includes(enDict.smashOrPass.loreTaglineKiller));
+      // Neither a fake tagline nor a fake quote is rendered
       assert.strictEqual(view.container.querySelector('[data-lore-label]'), null);
     });
 

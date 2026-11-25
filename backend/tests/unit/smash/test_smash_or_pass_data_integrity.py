@@ -10,6 +10,8 @@ loader (`load_rosters_from_json_files`) actually produces, not a hardcoded
 per-file snapshot. Anyone who adds a 7th roster or edits an entity gets these
 checks for free.
 """
+from pathlib import Path
+
 import pytest
 from app.seeds.smash_roster_seeder import load_rosters_from_json_files
 from app.utils.lang import TRANSLATABLE_LOCALES
@@ -35,6 +37,17 @@ class TestSmashOrPassDataIntegrity:
             assert "description_i18n_key" not in r, f"{r['slug']}: obsolete description_i18n_key present"
             assert isinstance(r.get("is_nsfw", False), bool), f"{r['slug']}: is_nsfw not a bool"
             assert isinstance(r.get("is_active", True), bool), f"{r['slug']}: is_active not a bool"
+
+    def test_every_canon_portrait_exists_on_disk(self) -> None:
+        """Only canon: some themed rosters still point at pictures that were never added."""
+        _, entities_by_roster = load_rosters_from_json_files()
+        app_dir = Path(__file__).resolve().parents[3] / "app"
+        missing = [
+            e["media_url"]
+            for e in entities_by_roster["canon"]
+            if e.get("media_url", "").startswith("/static/") and not (app_dir / e["media_url"].lstrip("/")).is_file()
+        ]
+        assert not missing, f"canon portraits missing from app/static: {missing}"
 
     def test_no_duplicate_roster_slugs(self) -> None:
         rosters, _ = load_rosters_from_json_files()
@@ -164,8 +177,8 @@ class TestCanonRosterIntegrity:
         assert "canon" in entities_by_roster, "canon roster missing from loaded rosters"
         return entities_by_roster["canon"]
 
-    def test_canon_has_exactly_98_entities(self, canon_entities: list[dict]) -> None:
-        assert len(canon_entities) == 98, f"expected 98 entities in canon roster, found {len(canon_entities)}"
+    def test_canon_has_exactly_100_entities(self, canon_entities: list[dict]) -> None:
+        assert len(canon_entities) == 100, f"expected 100 entities in canon roster, found {len(canon_entities)}"
 
     def test_every_entity_has_required_identity_and_watermarks(self, canon_entities: list[dict]) -> None:
         for e in canon_entities:

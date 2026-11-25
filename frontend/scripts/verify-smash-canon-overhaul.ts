@@ -367,8 +367,8 @@ async function main() {
   console.log('🔍 Canon Roster Data Integrity Pre-Check');
   console.log('========================================');
   console.log(`Total Canon Entities: ${canonEntities.length}`);
-  if (canonEntities.length !== 98) {
-    throw new Error(`Expected exactly 98 characters in canon.json, found ${canonEntities.length}`);
+  if (canonEntities.length !== 100) {
+    throw new Error(`Expected exactly 100 characters in canon.json, found ${canonEntities.length}`);
   }
 
   // Spot-check iconic characters

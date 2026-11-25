@@ -32,7 +32,7 @@ class TestSmashOrPassAPI:
         }
 
         canon = next(r for r in json_data["data"] if r["slug"] == "canon")
-        assert canon["entity_count"] == 98
+        assert canon["entity_count"] == 100
         assert canon["total_votes"] == 0
         assert canon["is_active"] is True
         assert "theme_color" in canon
@@ -45,7 +45,7 @@ class TestSmashOrPassAPI:
         assert res_pl.status_code == 200
         canon_pl = next(r for r in res_pl.get_json()["data"] if r["slug"] == "canon")
         assert canon_pl["name"] == "Kanon Mgły"
-        assert canon_pl["description"] == "Oficjalne 98 postaci z mgły próby."
+        assert canon_pl["description"] == "Oficjalne 100 postaci z mgły próby."
         assert "name_i18n_key" not in canon_pl
         assert "description_i18n_key" not in canon_pl
 
@@ -58,8 +58,8 @@ class TestSmashOrPassAPI:
         feed_data = json_data["data"]
 
         assert feed_data["roster"]["slug"] == "canon"
-        assert feed_data["total_remaining"] == 98
-        assert len(feed_data["entities"]) == 98
+        assert feed_data["total_remaining"] == 100
+        assert len(feed_data["entities"]) == 100
 
         entity = feed_data["entities"][0]
         assert "id" in entity
@@ -78,7 +78,7 @@ class TestSmashOrPassAPI:
         assert res.status_code == 200
         feed_data = res.get_json()["data"]
         assert len(feed_data["entities"]) == 10
-        assert feed_data["total_remaining"] == 29
+        assert feed_data["total_remaining"] == 30
         assert all(
             e["role"] == "Survivor" and e["gender"] == "female"
             for e in feed_data["entities"]
@@ -101,7 +101,7 @@ class TestSmashOrPassAPI:
         )
         assert res_after.status_code == 200
         feed_after = res_after.get_json()["data"]
-        assert feed_after["total_remaining"] == 28
+        assert feed_after["total_remaining"] == 29
 
         remaining_ids = {e["id"] for e in feed_after["entities"]}
         assert first_entity["id"] not in remaining_ids
@@ -471,7 +471,7 @@ class TestSmashOrPassAPI:
         data = res.get_json()["data"]
 
         canon = next(r for r in data if r["slug"] == "canon")
-        assert canon["entity_count"] == 98
+        assert canon["entity_count"] == 100
         assert canon["total_votes"] == 2
 
         cyber = next(r for r in data if r["slug"] == "cyberpunk")
@@ -495,7 +495,7 @@ class TestSmashOrPassAPI:
         assert res_limit_5.status_code == 200
         data_5 = res_limit_5.get_json()["data"]
         assert len(data_5["entities"]) == 5
-        assert data_5["total_remaining"] == 98
+        assert data_5["total_remaining"] == 100
 
         # Role=Killer, Gender=male
         res_killer_male = client.get(

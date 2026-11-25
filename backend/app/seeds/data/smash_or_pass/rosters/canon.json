@@ -10,7 +10,7 @@
       "translations": {
         "pl": {
           "name": "Kanon Mgły",
-          "description": "Oficjalne 98 postaci z mgły próby."
+          "description": "Oficjalne 100 postaci z mgły próby."
         }
       },
       "cover_image_url": "/static/smash-or-pass/covers/canon.webp",
@@ -7912,6 +7912,150 @@
           "watermark_right": "YAZAR"
         },
         {
+          "slug": "sienna_shaw",
+          "name": "Sienna Shaw",
+          "role": "Survivor",
+          "gender": "female",
+          "media_url": "/static/avatars/survivors/sienna_shaw.webp",
+          "archetype": "The Armored Valkyrie Final Girl",
+          "bio": "Hand-forged Halloween Valkyrie armor, a blade sketched by her late father, and the kind of stubborn resilience that survives both Hartshorne Mall and a psychotic mime. Sienna does not just run from nightmares, she puts on wings, stands her ground, and swings back harder. Date her and you will never walk into a dimly lit mall alone again.",
+          "tagline": "Golden Valkyrie wings, a father's sword, and zero patience for killer clowns.",
+          "quote": "\"I am done running from what you made me.\"",
+          "meme": "Shows up in full golden Valkyrie armor, walks straight into a nightmare, and swings a broadsword at the clown.",
+          "turn_on": "Handcrafted cosplay armor, fierce loyalty, reliable friends, and people who actually listen when she warns them.",
+          "dealbreaker": "Creepy white greasepaint, tiny bike horns, unsolicited gifts in black trash bags, and leaving teammates behind.",
+          "dating_vibe": "Late-night sketchbooks, welding sparks on golden armor, and walking out of a burning mall hand in hand.",
+          "red_flags": [
+            "Still has apocalyptic nightmares about a children's TV show set that never aired.",
+            "Insists on wearing full Valkyrie battle armor to casual October house parties.",
+            "Carries a real broadsword in the trunk 'just in case' it is Halloween.",
+            "Refuses to let anyone touch her late father's sketchbook without permission.",
+            "Gets weirdly intense whenever someone honks a bicycle horn near her.",
+            "Has a literal blood feud with an unkillable mime who refuses to stay dead."
+          ],
+          "green_flags": [
+            "Will literally charge into a burning haunted house to pull her loved ones out.",
+            "Ridiculously talented costume maker who crafts battle-ready armor from scratch.",
+            "Always shows up prepared with custom-built gear and a backup plan.",
+            "Unbreakable final-girl willpower forged through fire, glass, and supernatural terror.",
+            "Can turn an ordinary Halloween costume into legitimate, battle-tested armor.",
+            "Fiercely protective of her family and anyone lucky enough to be in her circle."
+          ],
+          "chapter": "Terrifier",
+          "danger_level": "High",
+          "chaos_score": 75,
+          "translations": {
+            "de": {
+              "archetype": "Das gepanzerte Walküren-Final-Girl",
+              "bio": "Handgeschmiedete Halloween-Walkürenrüstung, eine Klinge aus den Skizzen ihres verstorbenen Vaters und eine sture Widerstandskraft, die sowohl die Hartshorne Mall als auch einen psychopathischen Pantomimen überlebt. Sienna rennt Albträumen nicht einfach davon, sie legt Flügel an, hält stand und schlägt härter zurück. Wer sie datet, betritt nie wieder allein ein schummriges Einkaufszentrum.",
+              "tagline": "Goldene Walkürenflügel, das Schwert ihres Vaters und null Geduld für Killer-Clowns.",
+              "quote": "\"Ich renne nicht länger vor dem weg, was du aus mir gemacht hast.\"",
+              "meme": "Taucht in voller goldener Walkürenrüstung auf, marschiert mitten in einen Albtraum und schwingt ein Breitschwert gegen den Clown.",
+              "turn_on": "Handgefertigte Cosplay-Rüstung, bedingungslose Loyalität, verlässliche Freunde und Leute, die zuhören, wenn sie warnt.",
+              "dealbreaker": "Gruselige weiße Schminke, winzige Fahrradklingeln, ungebetene Geschenke in schwarzen Müllsäcken und Teammates im Stich lassen.",
+              "dating_vibe": "Nächtliche Skizzenbücher, Schweißfunken auf goldener Rüstung und Hand in Hand aus einer brennenden Mall spazieren.",
+              "red_flags": [
+                "Hat immer noch apokalyptische Albträume von einer Kindersendung, die nie ausgestrahlt wurde.",
+                "Besteht darauf, zu lockeren Oktober-Hauspartys volle Walküren-Kampfrüstung zu tragen.",
+                "Hat 'nur für den Fall' ein echtes Breitschwert im Kofferraum liegen.",
+                "Lässt niemanden ohne Erlaubnis das Skizzenbuch ihres verstorbenen Vaters anfassen.",
+                "Wird unheimlich angespannt, sobald jemand in ihrer Nähe eine Fahrradhupe drückt.",
+                "Führt eine buchstäbliche Blutfehde mit einem untötbaren Pantomimen."
+              ],
+              "green_flags": [
+                "Stürmt buchstäblich in ein brennendes Spukhaus, um ihre Liebsten herauszuholen.",
+                "Unfassbar talentierte Kostümbildnerin, die kampftaugliche Rüstungen von Grund auf baut.",
+                "Erscheint immer bestens vorbereitet mit selbstgebauter Ausrüstung und Plan B.",
+                "Unzerbrechliche Final-Girl-Willenskraft, geschmiedet aus Feuer, Glas und übernatürlichem Terror.",
+                "Macht aus einem gewöhnlichen Halloween-Kostüm eine echte, kampferprobte Rüstung.",
+                "Beschützt ihre Familie und jeden, der das Glück hat, zu ihrem Kreis zu gehören."
+              ]
+            },
+            "es": {
+              "archetype": "La Final Girl Valquiria acorazada",
+              "bio": "Armadura de Valquiria forjada a mano para Halloween, una espada dibujada por su difunto padre y una resistencia tan terca que sobrevive tanto al centro comercial Hartshorne como a un mimo psicópata. Sienna no solo huye de las pesadillas, se pone las alas, planta cara y devuelve el golpe con más fuerza. Sal con ella y nunca volverás a entrar solo en un centro comercial a oscuras.",
+              "tagline": "Alas doradas de Valquiria, la espada de su padre y cero paciencia para payasos asesinos.",
+              "quote": "\"Ya me cansé de huir de lo que hiciste conmigo.\"",
+              "meme": "Aparece con su armadura dorada de Valquiria, entra directa en una pesadilla y blande un mandoble contra el payaso.",
+              "turn_on": "Armaduras de cosplay hechas a mano, lealtad feroz, amigos de fiar y gente que escucha sus advertencias.",
+              "dealbreaker": "Maquillaje blanco espeluznante, bocinas de bicicleta diminutas, regalos en bolsas de basura negras y abandonar al equipo.",
+              "dating_vibe": "Cuadernos de bocetos de madrugada, chispas de soldadura sobre armadura dorada y salir de la mano de un centro comercial en llamas.",
+              "red_flags": [
+                "Todavía tiene pesadillas apocalípticas con el plató de un programa infantil que nunca se emitió.",
+                "Insiste en llevar armadura completa de Valquiria a fiestas caseras informales de octubre.",
+                "Lleva una espada ancha real en el maletero 'por si acaso' es Halloween.",
+                "No deja que nadie toque el cuaderno de bocetos de su difunto padre sin permiso.",
+                "Se pone inquietantemente seria cada vez que alguien toca una bocina de bici cerca.",
+                "Tiene una vendetta literal contra un mimo inmortal que se niega a quedarse muerto."
+              ],
+              "green_flags": [
+                "Es capaz de entrar en una casa encantada en llamas para rescatar a los suyos.",
+                "Creadora de disfraces con un talento absurdo para forjar armaduras listas para el combate.",
+                "Siempre llega preparada con equipo artesanal y un plan de respaldo.",
+                "Voluntad inquebrantable de Final Girl forjada entre fuego, cristales y terror sobrenatural.",
+                "Convierte un simple disfraz de Halloween en una armadura auténtica lista para la batalla.",
+                "Ferozmente protectora con su familia y con cualquiera que entre en su círculo."
+              ]
+            },
+            "ja": {
+              "archetype": "鎧を纏う戦乙女のファイナル・ガール",
+              "bio": "亡き父のスケッチをもとに手作りしたハロウィンの戦乙女の鎧と剣、そしてハーツホーン・モールと狂気のパントマイマーの両方を生き延びる不屈の精神。シエナは悪夢から逃げるだけでは終わらない、翼を広げて踏みとどまり、より強い一撃を叩き返す。彼女と付き合えば、薄暗いモールに一人で入ることは二度とない。",
+              "tagline": "黄金の戦乙女の翼、父の剣、そして殺人ピエロへの忍耐ゼロ。",
+              "quote": "「あなたが作り出したものから逃げるのはもう終わり。」",
+              "meme": "黄金の戦乙女の鎧をフル装備で現れ、悪夢の真っ只中に踏み込み、ピエロに大剣を振り下ろす。",
+              "turn_on": "手作りのコスプレ鎧、揺るぎない忠誠心、頼れる仲間、そして警告をちゃんと聞く人。",
+              "dealbreaker": "不気味な白塗りメイク、小さな自転車のホーン、黒いゴミ袋に入った迷惑な贈り物、仲間を見捨てること。",
+              "dating_vibe": "深夜のスケッチブック、黄金の鎧に散る溶接の火花、燃え上がるモールから手を繋いで脱出すること。",
+              "red_flags": [
+                "放送されたことのない子供向け番組のセットの終末的な悪夢を今も見る。",
+                "気軽な10月のホームパーティーにもフル装備の戦乙女の鎧で行きたがる。",
+                "「念のため」と車のトランクに本物のブロードソードを積んでいる。",
+                "亡き父のスケッチブックには、許可なく誰にも触れさせない。",
+                "近くで自転車のラッパが鳴ると、目つきが一気に殺気立つ。",
+                "何度倒しても死なない不死身のパントマイマーと文字通りの血の因縁がある。"
+              ],
+              "green_flags": [
+                "大切な人を救うためなら、燃え盛るお化け屋敷にも文字通り飛び込んでいく。",
+                "戦闘に耐えうる鎧をゼロから作り上げる、とんでもない才能の衣装職人。",
+                "いつでも自作の装備と予備の計画を用意して現れる。",
+                "炎とガラスと超常の恐怖の中で鍛え上げられた、折れないファイナル・ガールの意志。",
+                "普通のハロウィン衣装を、実戦に耐える本物の鎧へと作り変えてしまう。",
+                "家族と自分の大切な仲間を命がけで守り抜く。"
+              ]
+            },
+            "pl": {
+              "archetype": "Opancerzona Walkiria Final Girl",
+              "bio": "Ręcznie wykuta halloweenowa zbroja Walkirii, miecz ze szkiców zmarłego ojca i upór tak twardy, że przetrwał zarówno galerię Hartshorne Mall, jak i psychopatycznego mima. Sienna nie tylko ucieka przed koszmarami, zakłada skrzydła, stawia opór i oddaje mocniej. Umów się z nią, a już nigdy nie wejdziesz sam do ciemnego centrum handlowego.",
+              "tagline": "Złote skrzydła Walkirii, miecz ojca i zero cierpliwości do morderczych klaunów.",
+              "quote": "\"Skończyłam z uciekaniem przed tym, kim mnie uczyniłeś.\"",
+              "meme": "Wpada w pełnej złotej zbroi Walkirii, wchodzi prosto w koszmar i zamachuje się mieczem dwuręcznym na klauna.",
+              "turn_on": "Ręcznie robiona zbroja cosplayowa, bezgraniczna lojalność, zaufani przyjaciele i ludzie, którzy słuchają jej ostrzeżeń.",
+              "dealbreaker": "Upiorny biały makijaż, małe trąbki rowerowe, niechciane prezenty w czarnych workach na śmieci i zostawianie drużyny.",
+              "dating_vibe": "Nocne szkicowniki, iskry spawarki na złotej zbroi i wspólne wyjście za rękę z płonącej galerii.",
+              "red_flags": [
+                "Wciąż ma apokaliptyczne koszmary o planie programu dla dzieci, który nigdy nie trafił na antenę.",
+                "Upiera się, by na zwykłe październikowe domówki przychodzić w pełnej zbroi bojowej Walkirii.",
+                "Wozi w bagażniku prawdziwy miecz dwuręczny 'na wszelki wypadek', gdyby był Halloween.",
+                "Nikomu nie pozwala dotknąć szkicownika zmarłego ojca bez wyraźnej zgody.",
+                "Robi się niepokojąco spięta, gdy ktoś w pobliżu naciśnie trąbkę rowerową.",
+                "Ma dosłowną krwawą wendetę z nieśmiertelnym mimem, który odmawia pozostania martwym."
+              ],
+              "green_flags": [
+                "Potrafi wbiec do płonącego domu strachów, żeby wyciągnąć z niego bliskich.",
+                "Absurdalnie utalentowana twórczyni kostiumów, która buduje bojową zbroję od zera.",
+                "Zawsze zjawia się przygotowana, z własnoręcznie wykonanym sprzętem i planem awaryjnym.",
+                "Niezłomna wola Final Girl wykuta w ogniu, szkle i nadprzyrodzonym terrorze.",
+                "Potrafi zamienić zwykły kostium na Halloween w prawdziwą, sprawdzoną w boju zbroję.",
+                "Zaciekle chroni swoją rodzinę i każdego, kto ma szczęście należeć do jej kręgu."
+              ]
+            }
+          },
+          "order_index": 54,
+          "real_name": "Sienna Shaw",
+          "watermark_left": "SIENNA",
+          "watermark_right": "SHAW"
+        },
+        {
           "slug": "the_huntress",
           "name": "The Huntress",
           "role": "Killer",
@@ -8055,7 +8199,7 @@
               ]
             }
           },
-          "order_index": 54,
+          "order_index": 55,
           "real_name": "Anna",
           "watermark_left": "THE HUNTRESS",
           "watermark_right": "ANNA"
@@ -8204,7 +8348,7 @@
               ]
             }
           },
-          "order_index": 55,
+          "order_index": 56,
           "real_name": "Rin Yamaoka",
           "watermark_left": "THE SPIRIT",
           "watermark_right": "RIN YAMAOKA"
@@ -8353,7 +8497,7 @@
               ]
             }
           },
-          "order_index": 56,
+          "order_index": 57,
           "real_name": "Adriana Imai",
           "watermark_left": "THE SKULL MERCHANT",
           "watermark_right": "ADRIANA IMAI"
@@ -8502,7 +8646,7 @@
               ]
             }
           },
-          "order_index": 57,
+          "order_index": 58,
           "real_name": "Amanda Young",
           "watermark_left": "THE PIG",
           "watermark_right": "AMANDA YOUNG"
@@ -8651,7 +8795,7 @@
               ]
             }
           },
-          "order_index": 58,
+          "order_index": 59,
           "real_name": "Adiris",
           "watermark_left": "THE PLAGUE",
           "watermark_right": "ADIRIS"
@@ -8800,7 +8944,7 @@
               ]
             }
           },
-          "order_index": 59,
+          "order_index": 60,
           "real_name": "Carmina Mora",
           "watermark_left": "THE ARTIST",
           "watermark_right": "CARMINA MORA"
@@ -8949,7 +9093,7 @@
               ]
             }
           },
-          "order_index": 60,
+          "order_index": 61,
           "real_name": "Sally Smithson",
           "watermark_left": "THE NURSE",
           "watermark_right": "SALLY SMITHSON"
@@ -9098,7 +9242,7 @@
               ]
             }
           },
-          "order_index": 61,
+          "order_index": 62,
           "real_name": "Sadako Yamamura",
           "watermark_left": "THE ONRYŌ",
           "watermark_right": "SADAKO"
@@ -9247,7 +9391,7 @@
               ]
             }
           },
-          "order_index": 62,
+          "order_index": 63,
           "real_name": "Lisa Sherwood",
           "watermark_left": "THE HAG",
           "watermark_right": "LISA SHERWOOD"
@@ -9396,7 +9540,7 @@
               ]
             }
           },
-          "order_index": 63,
+          "order_index": 64,
           "real_name": "Portia Maye",
           "watermark_left": "THE HOUNDMASTER",
           "watermark_right": "PORTIA MAYE"
@@ -9545,7 +9689,7 @@
               ]
             }
           },
-          "order_index": 64,
+          "order_index": 65,
           "real_name": "Burong Sukapat",
           "watermark_left": "THE KRASUE",
           "watermark_right": "BURONG"
@@ -9694,7 +9838,7 @@
               ]
             }
           },
-          "order_index": 65,
+          "order_index": 66,
           "real_name": "Charlotte & Victor Deshayes",
           "watermark_left": "THE TWINS",
           "watermark_right": "CHARLOTTE & VICTOR"
@@ -9843,7 +9987,7 @@
               ]
             }
           },
-          "order_index": 66,
+          "order_index": 67,
           "real_name": "Hak Ji-woon",
           "watermark_left": "THE TRICKSTER",
           "watermark_right": "JI-WOON HAK"
@@ -9992,7 +10136,7 @@
               ]
             }
           },
-          "order_index": 67,
+          "order_index": 68,
           "real_name": "Danny Johnson",
           "watermark_left": "THE GHOST FACE",
           "watermark_right": "DANNY JOHNSON"
@@ -10141,7 +10285,7 @@
               ]
             }
           },
-          "order_index": 68,
+          "order_index": 69,
           "real_name": "Pyramid Head",
           "watermark_left": "THE EXECUTIONER",
           "watermark_right": "PYRAMID HEAD"
@@ -10290,7 +10434,7 @@
               ]
             }
           },
-          "order_index": 69,
+          "order_index": 70,
           "real_name": "Albert Wesker",
           "watermark_left": "THE MASTERMIND",
           "watermark_right": "ALBERT WESKER"
@@ -10439,7 +10583,7 @@
               ]
             }
           },
-          "order_index": 70,
+          "order_index": 71,
           "real_name": "Michael Myers",
           "watermark_left": "THE SHAPE",
           "watermark_right": "MICHAEL MYERS"
@@ -10588,7 +10732,7 @@
               ]
             }
           },
-          "order_index": 71,
+          "order_index": 72,
           "real_name": "Dracula",
           "watermark_left": "THE DARK LORD",
           "watermark_right": "DRACULA"
@@ -10737,7 +10881,7 @@
               ]
             }
           },
-          "order_index": 72,
+          "order_index": 73,
           "real_name": "Frank Morrison, Julie Kostenko, Susie Lavoie & Joey Cadogan",
           "watermark_left": "THE LEGION",
           "watermark_right": "FRANK & SUSIE"
@@ -10886,7 +11030,7 @@
               ]
             }
           },
-          "order_index": 73,
+          "order_index": 74,
           "real_name": "Evan MacMillan",
           "watermark_left": "THE TRAPPER",
           "watermark_right": "EVAN MACMILLAN"
@@ -11035,7 +11179,7 @@
               ]
             }
           },
-          "order_index": 74,
+          "order_index": 75,
           "real_name": "Philip Ojomo",
           "watermark_left": "THE WRAITH",
           "watermark_right": "PHILIP OJOMO"
@@ -11184,7 +11328,7 @@
               ]
             }
           },
-          "order_index": 75,
+          "order_index": 76,
           "real_name": "Caleb Quinn",
           "watermark_left": "THE DEATHSLINGER",
           "watermark_right": "CALEB QUINN"
@@ -11333,7 +11477,7 @@
               ]
             }
           },
-          "order_index": 76,
+          "order_index": 77,
           "real_name": "Kazan Yamaoka",
           "watermark_left": "THE ONI",
           "watermark_right": "KAZAN YAMAOKA"
@@ -11482,7 +11626,7 @@
               ]
             }
           },
-          "order_index": 77,
+          "order_index": 78,
           "real_name": "Tarhos Kovács",
           "watermark_left": "THE KNIGHT",
           "watermark_right": "TARHOS KOVÁCS"
@@ -11631,7 +11775,7 @@
               ]
             }
           },
-          "order_index": 78,
+          "order_index": 79,
           "real_name": "Vecna",
           "watermark_left": "THE LICH",
           "watermark_right": "VECNA"
@@ -11780,7 +11924,7 @@
               ]
             }
           },
-          "order_index": 79,
+          "order_index": 80,
           "real_name": "Elliot Spencer",
           "watermark_left": "THE CENOBITE",
           "watermark_right": "PINHEAD"
@@ -11929,7 +12073,7 @@
               ]
             }
           },
-          "order_index": 80,
+          "order_index": 81,
           "real_name": "Max Thompson Jr.",
           "watermark_left": "THE HILLBILLY",
           "watermark_right": "MAX THOMPSON"
@@ -12078,7 +12222,7 @@
               ]
             }
           },
-          "order_index": 81,
+          "order_index": 82,
           "real_name": "Herman Carter",
           "watermark_left": "THE DOCTOR",
           "watermark_right": "HERMAN CARTER"
@@ -12227,7 +12371,7 @@
               ]
             }
           },
-          "order_index": 82,
+          "order_index": 83,
           "real_name": "Talbot Grimes",
           "watermark_left": "THE BLIGHT",
           "watermark_right": "TALBOT GRIMES"
@@ -12376,7 +12520,7 @@
               ]
             }
           },
-          "order_index": 83,
+          "order_index": 84,
           "real_name": "Leatherface (Bubba Sawyer)",
           "watermark_left": "THE CANNIBAL",
           "watermark_right": "LEATHERFACE"
@@ -12525,7 +12669,7 @@
               ]
             }
           },
-          "order_index": 84,
+          "order_index": 85,
           "real_name": "Kenneth Chase (Jeffrey Hawk)",
           "watermark_left": "THE CLOWN",
           "watermark_right": "JEFFREY HAWK"
@@ -12674,7 +12818,7 @@
               ]
             }
           },
-          "order_index": 85,
+          "order_index": 86,
           "real_name": "Nemesis T-Type",
           "watermark_left": "THE NEMESIS",
           "watermark_right": "NEMESIS T-TYPE"
@@ -12823,7 +12967,7 @@
               ]
             }
           },
-          "order_index": 86,
+          "order_index": 87,
           "real_name": "Freddy Krueger",
           "watermark_left": "THE NIGHTMARE",
           "watermark_right": "FREDDY KRUEGER"
@@ -12972,7 +13116,7 @@
               ]
             }
           },
-          "order_index": 87,
+          "order_index": 88,
           "real_name": "Charles Lee Ray",
           "watermark_left": "THE GOOD GUY",
           "watermark_right": "CHUCKY"
@@ -13121,7 +13265,7 @@
               ]
             }
           },
-          "order_index": 88,
+          "order_index": 89,
           "real_name": "Jason Voorhees",
           "watermark_left": "THE SLASHER",
           "watermark_right": "JASON VOORHEES"
@@ -13270,7 +13414,7 @@
               ]
             }
           },
-          "order_index": 89,
+          "order_index": 90,
           "real_name": "Henry Creel",
           "watermark_left": "THE FIRST",
           "watermark_right": "HENRY CREEL"
@@ -13414,7 +13558,7 @@
               ]
             }
           },
-          "order_index": 90,
+          "order_index": 91,
           "real_name": "Ken Kaneki",
           "watermark_left": "THE GHOUL",
           "watermark_right": "KEN KANEKI"
@@ -13558,7 +13702,7 @@
               ]
             }
           },
-          "order_index": 91,
+          "order_index": 92,
           "real_name": "Unnamed Celestial Enforcer",
           "watermark_left": "THE JUDGMENT",
           "watermark_right": "THE JUDGMENT"
@@ -13702,7 +13846,7 @@
               ]
             }
           },
-          "order_index": 92,
+          "order_index": 93,
           "real_name": "Specimen XX121",
           "watermark_left": "THE XENOMORPH",
           "watermark_right": "XX121"
@@ -13846,7 +13990,7 @@
               ]
             }
           },
-          "order_index": 93,
+          "order_index": 94,
           "real_name": "The Demogorgon",
           "watermark_left": "THE DEMOGORGON",
           "watermark_right": "DEMOGORGON"
@@ -13990,7 +14134,7 @@
               ]
             }
           },
-          "order_index": 94,
+          "order_index": 95,
           "real_name": "The Unknown",
           "watermark_left": "THE UNKNOWN",
           "watermark_right": "THE UNKNOWN"
@@ -14134,7 +14278,7 @@
               ]
             }
           },
-          "order_index": 95,
+          "order_index": 96,
           "real_name": "Manifestation of The Fold",
           "watermark_left": "THE DREDGE",
           "watermark_right": "THE DREDGE"
@@ -14278,7 +14422,7 @@
               ]
             }
           },
-          "order_index": 96,
+          "order_index": 97,
           "real_name": "HUX-A7-13",
           "watermark_left": "THE SINGULARITY",
           "watermark_right": "HUX-A7-13"
@@ -14422,10 +14566,154 @@
               ]
             }
           },
-          "order_index": 97,
+          "order_index": 98,
           "real_name": "William Afton",
           "watermark_left": "THE ANIMATRONIC",
           "watermark_right": "SPRINGTRAP"
+        },
+        {
+          "slug": "the_terrifier",
+          "name": "The Terrifier",
+          "role": "Killer",
+          "gender": "male",
+          "media_url": "/static/avatars/killers/the_terrifier.webp",
+          "archetype": "The Silent Trash-Bag Sadist",
+          "bio": "Dead-silent mime theatrics, sunflower sunglasses, and a bottomless black trash bag stuffed with acid bottles, flails, handguns, and a flamethrower. Art the Clown never utters a single word, he just honks a tiny bike horn, sets your generator on fire, and giggles soundlessly while picking which of his seven signature moris to perform next. Swipe right only if you enjoy slapstick comedy with fatal punchlines.",
+          "tagline": "Sunflower shades, a black trash bag of toys, and a silent laugh you will hear in your nightmares.",
+          "quote": "\"...\" (silent, unblinking grin + bike horn honk)",
+          "meme": "Pulls a literal flamethrower out of a garbage bag, torches the pallet, and honks his bike horn to celebrate.",
+          "turn_on": "Black-and-white greasepaint, novelty sunglasses, shiny torture toys, applause after a mori, and Halloween night.",
+          "dealbreaker": "People who interrupt his mime routine, Valkyrie swords, and anyone who says clowns aren't funny.",
+          "dating_vibe": "A late-night trip to Hartshorne Mall, matching sunflower glasses, and a surprise gift pulled from a heavy-duty trash bag.",
+          "red_flags": [
+            "Carries an entire arsenal, acid, flail, handgun, flamethrower, inside one soggy trash bag.",
+            "Never speaks a word, yet somehow manages to mock you louder than any talking killer.",
+            "Keeps seven different execution routines rehearsed for special occasions.",
+            "Honks a bicycle horn to track your heartbeat and ruin your stealth.",
+            "Will literally set your favorite generator on fire just for visual comedy.",
+            "Refuses to stay dead even when decapitated, burned, or dragged to hell."
+          ],
+          "green_flags": [
+            "Always brings a full bag of party favors and surprises to every hangout.",
+            "Expressive body language, you will never have to guess what he is thinking.",
+            "Committed to the bit twenty-four hours a day without ever breaking character.",
+            "Knows how to accessorize with iconic tiny top hats and sunflower sunglasses.",
+            "Great listener; literally never talks over you during dinner.",
+            "Turns every mundane errand at the mall into an unforgettable spectacle."
+          ],
+          "chapter": "Terrifier",
+          "danger_level": "Lethal",
+          "chaos_score": 98,
+          "translations": {
+            "de": {
+              "archetype": "Der stumme Müllsack-Sadist",
+              "bio": "Totenstille Pantomime, Sonnenblumen-Sonnenbrille und ein bodenloser schwarzer Müllsack voller Säureflaschen, Morgensterne, Pistolen und einem Flammenwerfer. Art the Clown sagt kein einziges Wort, er drückt nur auf eine winzige Fahrradhupe, setzt deinen Generator in Brand und kichert lautlos, während er überlegt, welchen seiner sieben Moris er als Nächstes vorführt. Nur nach rechts wischen, wenn du auf Slapstick mit tödlicher Pointe stehst.",
+              "tagline": "Sonnenblumenbrille, ein schwarzer Müllsack voller Spielzeug und ein lautloses Lachen aus deinen Albträumen.",
+              "quote": "\"...\" (stummes, starres Grinsen + Fahrradhupe)",
+              "meme": "Zieht einen echten Flammenwerfer aus einem Müllsack, fackelt die Palette ab und hupt zur Feier.",
+              "turn_on": "Schwarz-weiße Schminke, witzige Sonnenbrillen, glänzendes Folterspielzeug, Applaus nach einem Mori und die Halloween-Nacht.",
+              "dealbreaker": "Leute, die seine Pantomime unterbrechen, Walkürenschwerter und alle, die behaupten, Clowns seien nicht lustig.",
+              "dating_vibe": "Ein nächtlicher Ausflug in die Hartshorne Mall, passende Sonnenblumenbrillen und ein Überraschungsgeschenk aus einem Schwerlast-Müllsack.",
+              "red_flags": [
+                "Trägt ein ganzes Arsenal, Säure, Flegel, Pistole, Flammenwerfer, in einem einzigen Müllsack.",
+                "Sagt kein Wort und schafft es trotzdem, dich lauter auszulachen als jeder redende Killer.",
+                "Hat sieben verschiedene Hinrichtungsnummern für besondere Anlässe einstudiert.",
+                "Drückt eine Fahrradhupe, um deinen Herzschlag aufzuspüren und dein Schleichen zu ruinieren.",
+                "Setzt deinen Lieblingsgenerator buchstäblich nur für einen visuellen Gag in Brand.",
+                "Weigert sich zu sterben, selbst nach Enthauptung, Feuer oder Höllenfahrt."
+              ],
+              "green_flags": [
+                "Bringt zu jedem Treffen immer einen ganzen Sack voller Party-Überraschungen mit.",
+                "Ausdrucksstarke Körpersprache, du musst nie raten, was er gerade denkt.",
+                "Bleibt rund um die Uhr in seiner Rolle, ohne jemals aus dem Charakter zu fallen.",
+                "Weiß genau, wie man winzige Zylinder und Sonnenblumenbrillen kombiniert.",
+                "Hervorragender Zuhörer; fällt dir beim Abendessen buchstäblich nie ins Wort.",
+                "Verwandelt jeden langweiligen Einkaufsbummel in ein unvergessliches Spektakel."
+              ]
+            },
+            "es": {
+              "archetype": "El sádico silencioso de la bolsa de basura",
+              "bio": "Mímica sepulcral, gafas de girasol y una bolsa de basura negra sin fondo repleta de botellas de ácido, manguales, pistolas y un lanzallamas. Art the Clown no pronuncia ni una sola palabra: solo toca una bocina de bici diminuta, prende fuego a tu generador y se ríe en silencio mientras elige cuál de sus siete moris ejecutar ahora. Desliza a la derecha solo si te va el humor físico con remates mortales.",
+              "tagline": "Gafas de girasol, una bolsa negra de juguetes y una risa muda que oirás en tus pesadillas.",
+              "quote": "\"...\" (sonrisa muda sin parpadear + bocina de bici)",
+              "meme": "Saca un lanzallamas real de una bolsa de basura, incendia el palé y toca la bocina para celebrarlo.",
+              "turn_on": "Maquillaje blanco y negro, gafas llamativas, juguetes de tortura relucientes, aplausos tras un mori y la noche de Halloween.",
+              "dealbreaker": "Gente que interrumpe su número de mimo, espadas de Valquiria y cualquiera que diga que los payasos no dan risa.",
+              "dating_vibe": "Un paseo nocturno por Hartshorne Mall, gafas de girasol a juego y un regalo sorpresa sacado de una bolsa de basura reforzada.",
+              "red_flags": [
+                "Lleva todo un arsenal (ácido, mangual, pistola, lanzallamas) dentro de una sola bolsa de basura.",
+                "No dice ni mu y aun así se burla de ti más fuerte que cualquier asesino parlanchín.",
+                "Tiene ensayadas siete rutinas de ejecución distintas para ocasiones especiales.",
+                "Toca una bocina de bicicleta para rastrear tu pulso y arruinar tu sigilo.",
+                "Prende fuego a tu generador favorito literalmente solo por comedia visual.",
+                "Se niega a quedarse muerto incluso tras ser decapitado, quemado o arrastrado al infierno."
+              ],
+              "green_flags": [
+                "Siempre trae una bolsa llena de sorpresas y recuerdos a cada cita.",
+                "Lenguaje corporal expresivo: nunca tendrás que adivinar lo que está pensando.",
+                "Comprometido con el personaje las veinticuatro horas del día sin salirse nunca del papel.",
+                "Sabe combinar como nadie sombreritos de copa con gafas de girasol.",
+                "Excelente oyente; literalmente nunca te interrumpe durante la cena.",
+                "Convierte cualquier recado aburrido en el centro comercial en un espectáculo inolvidable."
+              ]
+            },
+            "ja": {
+              "archetype": "ゴミ袋を抱えた無言のサディスト",
+              "bio": "完全無言のパントマイム、ひまわりのサングラス、そして酸の瓶、フレイル、拳銃、火炎放射器が詰まった底なしの黒いゴミ袋。アート・ザ・クラウンは一言も喋らない。ただ小さな自転車のホーンを鳴らし、発電機に火をつけ、次にどの7種類のメメント・モリを披露するか無音でクスクス笑うだけ。致死オチのスラップスティックが好きなら右スワイプ。",
+              "tagline": "ひまわりサングラス、おもちゃ入りの黒いゴミ袋、そして悪夢に響く無音の笑い。",
+              "quote": "「……」（無言の瞬きしない笑顔＋自転車のホーン）",
+              "meme": "ゴミ袋から本物の火炎放射器を取り出し、パレットを焼き払い、祝いにホーンを鳴らす。",
+              "turn_on": "白黒のドーラン、おかしなサングラス、ピカピカの拷問道具、モリ後の拍手、そしてハロウィンの夜。",
+              "dealbreaker": "パントマイムの邪魔をする人、戦乙女の剣、そしてピエロは面白くないと言う人。",
+              "dating_vibe": "深夜のハーツホーン・モール散歩、お揃いのひまわりサングラス、丈夫なゴミ袋から出てくるサプライズプレゼント。",
+              "red_flags": [
+                "酸・フレイル・拳銃・火炎放射器という兵器庫丸ごとを、濡れたゴミ袋一つに詰め込んでいる。",
+                "一言も発しないのに、喋るキラーの誰よりも大音量でバカにしてくる。",
+                "特別な日のために7種類の処刑ルーティンを常にリハーサルしている。",
+                "自転車のホーンを鳴らして心拍を探知し、隠密行動を台無しにする。",
+                "見た目のおかしさのためだけに、お気に入りの発電機に本気で火をつける。",
+                "首を刎ねられても焼かれても地獄に引きずり込まれても、頑なに死なない。"
+              ],
+              "green_flags": [
+                "デートのたびに、パーティーグッズとサプライズが詰まった袋を持参してくれる。",
+                "ボディランゲージが豊かで、何を考えているか推測に困ることがない。",
+                "24時間365日、一度も素に戻らずキャラクターを貫き通すプロ意識。",
+                "極小シルクハットとひまわりサングラスの着こなしを完璧に心得ている。",
+                "最高の聞き上手。ディナー中にあなたの話を遮ることは文字通り絶対にない。",
+                "モールでの退屈な用事さえ、一生忘れられないスペクタクルに変えてくれる。"
+              ]
+            },
+            "pl": {
+              "archetype": "Niemy sadysta z workiem na śmieci",
+              "bio": "Śmiertelnie cicha pantomima, okulary w słoneczniki i bezdenny czarny worek na śmieci wypchany butelkami kwasu, kiścieniami, pistoletem i miotaczem ognia. Art the Clown nie wypowiada ani jednego słowa, po prostu trąbi małą trąbką rowerową, podpala twój generator i bezgłośnie chichocze, wybierając, które z siedmiu swoich mori wykonać jako następne. Przesuń w prawo tylko wtedy, gdy lubisz slapstick ze śmiertelną puentą.",
+              "tagline": "Okulary w słoneczniki, czarny worek pełen zabawek i niemy śmiech z twoich koszmarów.",
+              "quote": "\"...\" (niemy, nieruchomy uśmiech + trąbka rowerowa)",
+              "meme": "Wyciąga z worka na śmieci prawdziwy miotacz ognia, podpala paletę i trąbi na wiwat.",
+              "turn_on": "Czarno-biały makijaż, ekscentryczne okulary, lśniące zabawki do tortur, oklaski po mori i noc Halloween.",
+              "dealbreaker": "Ludzie przerywający jego pantomimę, miecze Walkirii i każdy, kto twierdzi, że klauni nie są śmieszni.",
+              "dating_vibe": "Nocny wypad do Hartshorne Mall, pasujące okulary w słoneczniki i prezent niespodzianka wyciągnięty z grubego worka na śmieci.",
+              "red_flags": [
+                "Nosi cały arsenał, kwas, kiścień, pistolet, miotacz ognia, w jednym przemoczonym worku na śmieci.",
+                "Nie mówi ani słowa, a mimo to potrafi wyśmiać cię głośniej niż każdy gadający zabójca.",
+                "Ma przećwiczonych siedem różnych układów egzekucji na specjalne okazje.",
+                "Trąbi rowerową trąbką, żeby namierzyć twoje tętno i zepsuć całe skradanie.",
+                "Dosłownie podpala twój ulubiony generator wyłącznie dla efektu komediowego.",
+                "Odmawia pozostania martwym nawet po ścięciu, spaleniu czy wciągnięciu do piekła."
+              ],
+              "green_flags": [
+                "Na każde spotkanie zawsze przynosi pełen worek imprezowych niespodzianek.",
+                "Wyrazista mowa ciała, nigdy nie musisz zgadywać, o czym właśnie myśli.",
+                "Oddany roli dwadzieścia cztery godziny na dobę, nigdy nie wychodzi z postaci.",
+                "Doskonale dobiera dodatki, łącząc maleńkie cylindry z okularami w słoneczniki.",
+                "Świetny słuchacz; dosłownie nigdy nie wchodzi ci w słowo przy kolacji.",
+                "Zamienia nawet zwykłe zakupy w galerii w niezapomniane widowisko."
+              ]
+            }
+          },
+          "order_index": 99,
+          "real_name": "Art the Clown",
+          "watermark_left": "THE TERRIFIER",
+          "watermark_right": "ART THE CLOWN"
         }
       ]
     }

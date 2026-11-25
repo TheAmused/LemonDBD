@@ -1128,25 +1128,25 @@
       "survivor_id": 4,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "You do not scare Crows or scream.\nYou bless and cleanse **Totems**, and **unlock Chests** silently and **8/9/10%** faster.",
+      "description": "You do not scare Crows or scream.\nYou bless and cleanse **Totems**, and **unlock Chests** silently and **23/24/25%** faster.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_calmSpirit.png",
       "icon_local_path": "icons/survivors/Jake Park/calm_spirit.webp",
       "translations": {
         "de": {
           "name": "Seelenruhe",
-          "description": "Du schreckst keine Krähen auf und schreist nicht.\nBeim Segnen und Zerstören von **Totems** sowie beim Aufschließen von **Truhen** bist du lautlos und **8/9/10%** schneller."
+          "description": "Du schreckst keine Krähen auf und schreist nicht.\nBeim Segnen und Zerstören von **Totems** sowie beim Aufschließen von **Truhen** bist du lautlos und **23/24/25%** schneller."
         },
         "es": {
           "name": "Espíritu calmado",
-          "description": "No asustas a los cuervos ni gritas.\n**Desbloqueas cofres** y bendices y purificas **tótems** sin hacer ruido y un **8/9/10%** más rápido."
+          "description": "No asustas a los cuervos ni gritas.\n**Desbloqueas cofres** y bendices y purificas **tótems** sin hacer ruido y un **23/24/25%** más rápido."
         },
         "ja": {
           "name": "魂の平穏",
-          "description": "あなたはカラスを怖がらせず、叫び声を上げない。\nチェストを開錠する音やトーテムを浄化または清める音がしなくなり、その速度が**8/9/10%**上昇する。"
+          "description": "あなたはカラスを怖がらせず、叫び声を上げない。\nチェストを開錠する音やトーテムを浄化または清める音がしなくなり、その速度が**23/24/25%**上昇する。"
         },
         "pl": {
           "name": "Spokojny Duch",
-          "description": "Nie płoszysz wron i nie krzyczysz.\nBłogosławisz i oczyszczasz **totemy** oraz **odblokowujesz skrzynie** po cichu i **8/9/10%** szybciej."
+          "description": "Nie płoszysz wron i nie krzyczysz.\nBłogosławisz i oczyszczasz **totemy** oraz **odblokowujesz skrzynie** po cichu i **23/24/25%** szybciej."
         }
       },
       "perk_types": [
@@ -1587,25 +1587,25 @@
       "role": "Survivor",
       "is_generic_counterpart": false,
       "is_teachable": false,
-      "description": "Whenever a **Generator** is completed, when the Killer gets within **24m** of you, for **13/14/15s**:\n• You see the **Auras** of **Pallets** and **Windows** within **32m**.\n• You see the **Auras** of other Survivors.\n• You see the Killer's **Aura**.\n> \"Slow down, don't rush and try not to worry so much! The best way to beat him is to know how he thinks.\" -Lost Tapes: Murf",
+      "description": "When the **trial** starts, and after a **Generator** is completed, you earn **1 Token**, up to **5**.\nWhen the Killer gets within **20m** of you, spend **1 Token**. Then, for the next **13/14/15s**:\n• You see the **Auras** of **Pallets** and **Windows** within **32m**.\n• You see the **Auras** of other Survivors.\n• You see the Killer's **Aura**.\n> \"Slow down, don't rush and try not to worry so much! The best way to beat him is to know how he thinks.\" -Lost Tapes: Murf",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_darkSense.png",
       "icon_local_path": "icons/survivors/General/dark_sense.webp",
       "translations": {
         "de": {
           "name": "Dunkle Wahrnehmung",
-          "description": "Immer wenn ein **Generator** vollständig repariert wurde und der Killer sich dir bis auf **24 Meter** nähert, gilt **13/14/15 Sek**. lang:\n• Du siehst die **Auren** von **Paletten** und **Fenstern** in einem Umkreis von **32 Metern**.\n• Du siehst die **Auren** anderer Überlebender.\n• Du siehst die **Aura** des Killers.\n> „Werde langsamer, überstürze nichts und versuche, dir nicht so viele Sorgen zu machen! Der beste Weg, ihn zu besiegen, ist, zu wissen, wie er denkt.“ – Verlorene Tonbänder, Murf"
+          "description": "Wenn die **Prüfung** beginnt und immer wenn ein **Generator** vollständig repariert wurde, erhältst du 1 Zähler, bis zu 5.\nWenn der Killer sich dir bis auf **20 Meter** nähert, verbrauchst du 1 Zähler. Dann gilt **13/14/15 Sek**. lang:\n• Du siehst die **Auren** von **Paletten** und **Fenstern** in einem Umkreis von **32 Metern**.\n• Du siehst die **Auren** anderer Überlebender.\n• Du siehst die **Aura** des Killers.\n> „Werde langsamer, überstürze nichts und versuche, dir nicht so viele Sorgen zu machen! Der beste Weg, ihn zu besiegen, ist, zu wissen, wie er denkt.“ – Verlorene Tonbänder, Murf"
         },
         "es": {
           "name": "Percepción oscura",
-          "description": "Cada vez que se completa un **generador**, cuando el asesino esté en un radio de **24 metros** de ti, durante **13/14/15 segundos**:\n• Verás las **auras** de los palés y las **ventanas** en un radio de **32 metros**.\n• Verás las **auras** de otros supervivientes.\n• Verás el **aura** del asesino.\n\"Relájate, no te apresures ¡y procura no preocuparte tanto! La mejor forma de combatirlo es saber cómo piensa\". (Cintas perdidas: Murf)"
+          "description": "Cuando comienza la partida, y cada vez que se completa un **generador**, obtienes 1 distintivo, hasta un máximo de 5.\nCuando el asesino esté en un radio de **20 metros** de ti, gastas 1 distintivo. A continuación, durante **13/14/15 segundos**:\n• Verás las **auras** de los palés y las **ventanas** en un radio de **32 metros**.\n• Verás las **auras** de otros supervivientes.\n• Verás el **aura** del asesino.\n\"Relájate, no te apresures ¡y procura no preocuparte tanto! La mejor forma de combatirlo es saber cómo piensa\". (Cintas perdidas: Murf)"
         },
         "ja": {
           "name": "闇の感覚",
-          "description": "発電機の修理が完了したあと、殺人鬼が自分の**24メートル**以内に入ると、**13/14/15秒**間：\n• **32メートル**以内のパレットと窓の**オーラ**があなたに視える。\n• 他の生存者の**オーラ**があなたに視える。\n• 殺人鬼の**オーラ**があなたに視える。\n「この年寄りの言葉を聞いていけ。速度を落とし、慌てず、そしてあまり心配しすぎないようにすることだ！ヤツを倒す一番いい方法は、ヤツの考え方を知ることだ」- マーフの失われたテープ"
+          "description": "儀式開始時と発電機の修理が完了するたびに、トークンを1個得る（5個まで）。\n殺人鬼が自分の**20メートル**以内に入るとトークンを1個消費し、**13/14/15秒**間：\n• **32メートル**以内のパレットと窓の**オーラ**があなたに視える。\n• 他の生存者の**オーラ**があなたに視える。\n• 殺人鬼の**オーラ**があなたに視える。\n「この年寄りの言葉を聞いていけ。速度を落とし、慌てず、そしてあまり心配しすぎないようにすることだ！ヤツを倒す一番いい方法は、ヤツの考え方を知ることだ」- マーフの失われたテープ"
         },
         "pl": {
           "name": "Mroczny Zmysł",
-          "description": "Za każdym razem po ukończeniu **generatora**, gdy zabójca znajdzie się w odległości **24 m** od ciebie, przez **13/14/15 s**:\n• Widzisz **aury** palet i okien w promieniu **32 m**.\n• Widzisz **aury** innych ocalałych.\n• Widzisz **aurę** zabójcy.\n> „Zwolnij, nie spiesz się i staraj się tyle nie martwić! Najlepszy sposób, by go pokonać, to wiedzieć jak myśli.\" – Zaginione taśmy, Murf"
+          "description": "Na początku próby oraz po ukończeniu **generatora** otrzymujesz żeton (1), maksymalnie 5.\nGdy zabójca znajdzie się w odległości **20 m** od ciebie, wydajesz żeton (1). Następnie przez **13/14/15 s**:\n• Widzisz **aury** palet i okien w promieniu **32 m**.\n• Widzisz **aury** innych ocalałych.\n• Widzisz **aurę** zabójcy.\n> „Zwolnij, nie spiesz się i staraj się tyle nie martwić! Najlepszy sposób, by go pokonać, to wiedzieć jak myśli.\" – Zaginione taśmy, Murf"
         }
       },
       "perk_types": [
@@ -4607,25 +4607,25 @@
       "role": "Survivor",
       "is_generic_counterpart": false,
       "is_teachable": false,
-      "description": "Other Survivors unhook you **90/95/100%** faster.\nWhenever you are unhooked, you gain **5%** more **Haste**.",
+      "description": "Other Survivors unhook you **65/70/75%** faster.\nWhenever you are unhooked, you gain **7%** more **Haste**.",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_slipperyMeat.png",
       "icon_local_path": "icons/survivors/General/slippery_meat.webp",
       "translations": {
         "de": {
           "name": "Gerissenes Fleisch",
-          "description": "Andere Überlebende retten dich **90/95/100%** schneller vom **Haken**.\nImmer wenn du vom **Haken** gerettet wirst, erhältst du **5%** mehr **Eile**."
+          "description": "Andere Überlebende retten dich **65/70/75%** schneller vom **Haken**.\nImmer wenn du vom **Haken** gerettet wirst, erhältst du **7%** mehr **Eile**."
         },
         "es": {
           "name": "Carne resbaladiza",
-          "description": "Los demás supervivientes te desenganchan un **90/95/100%** más rápido.\nCada vez que te desenganchen, obtendrás un **5%** más de **Celeridad**."
+          "description": "Los demás supervivientes te desenganchan un **65/70/75%** más rápido.\nCada vez que te desenganchen, obtendrás un **7%** más de **Celeridad**."
         },
         "ja": {
           "name": "ツルツルとした肉体",
-          "description": "他の生存者があなたをフックから救助する速度が**90/95/100%**上昇する。\nフックから救助されると、追加で**5%**の**迅速**を得る。"
+          "description": "他の生存者があなたをフックから救助する速度が**65/70/75%**上昇する。\nフックから救助されると、追加で**7%**の**迅速**を得る。"
         },
         "pl": {
           "name": "Śliskie Mięso",
-          "description": "Inni ocalali zdejmują cię z **haka** **90/95/100%** szybciej.\nZa każdym razem, gdy zostaniesz zdjęty z **haka**, zyskujesz **5%** więcej efektu **Pośpiech**."
+          "description": "Inni ocalali zdejmują cię z **haka** **65/70/75%** szybciej.\nZa każdym razem, gdy zostaniesz zdjęty z **haka**, zyskujesz **7%** więcej efektu **Pośpiech**."
         }
       },
       "perk_types": [
@@ -6433,25 +6433,25 @@
       "killer_id": 36,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "You basic-vault **Windows 15/20/25%** faster.\nYour basic-attack cooldown is **10%** shorter.\nWhenever you are **blinded** or **Pallet**-stunned, the duration is **25%** longer.\n> “Run all you want. I will not be denied.” -Vecna",
+      "description": "You basic-vault **Windows 15%** faster.\nYour successful basic-attack cooldown is **13/14/15%** shorter.\nWhenever you are **blinded** or **Pallet**-stunned, the duration is **15%** longer.\n> “Run all you want. I will not be denied.” -Vecna",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_darkArrogance.png",
       "icon_local_path": "icons/killers/The Lich/dark_arrogance.webp",
       "translations": {
         "de": {
           "name": "Düstere Arroganz",
-          "description": "Grundfähigkeit-Sprünge durch **Fenster** sind **15/20/25%** schneller.\nDie Abklingzeit deines Grundangriffs ist **10%** kürzer.\nImmer wenn du geblendet oder von einer **Palette** betäubt wirst, wird die Dauer um **25%** verlängert.\n> „Lauf nur, so viel du willst. Du kannst dich mir nicht verwehren.“ – Vecna"
+          "description": "Grundfähigkeit-Sprünge durch **Fenster** sind **15%** schneller.\nDie Abklingzeit deines erfolgreichen Grundangriffs ist **13/14/15%** kürzer.\nImmer wenn du geblendet oder von einer **Palette** betäubt wirst, wird die Dauer um **15%** verlängert.\n> „Lauf nur, so viel du willst. Du kannst dich mir nicht verwehren.“ – Vecna"
         },
         "es": {
           "name": "Arrogancia tenebrosa",
-          "description": "Realizas saltos básicos por **ventanas** un **15/20/25%** más rápido.\nEl tiempo de recarga de tu ataque básico se reduce un **10%**.\nCuando te cieguen o aturdan con un palé, la duración **aumentará** un **25%**.\n\"Corre cuanto quieras. No podrás huir de mi presencia\". (Vecna)"
+          "description": "Realizas saltos básicos por **ventanas** un **15%** más rápido.\nEl tiempo de recarga de tu ataque básico con éxito se reduce un **13/14/15%**.\nCuando te cieguen o aturdan con un palé, la duración **aumentará** un **15%**.\n\"Corre cuanto quieras. No podrás huir de mi presencia\". (Vecna)"
         },
         "ja": {
           "name": "闇の慢心",
-          "description": "窓の通常乗り越えの速度が**15/20/25%**上昇する。\n通常攻撃のクールダウンが**10%**短くなる。\n自分がパレットによる怯みや目眩ましを受けたとき、その持続時間が**25%**増加する。\n「走りたいだけ走ればいい。私から逃げることはできないだろうがな」- ヴェクナ"
+          "description": "窓の通常乗り越えの速度が**15%**上昇する。\n通常攻撃が命中したときのクールダウンが**13/14/15%**短くなる。\n自分がパレットによる怯みや目眩ましを受けたとき、その持続時間が**15%**増加する。\n「走りたいだけ走ればいい。私から逃げることはできないだろうがな」- ヴェクナ"
         },
         "pl": {
           "name": "Mroczna Arogancja",
-          "description": "Wykonujesz podstawowe przeskoki przez okna **15/20/25%** szybciej.\nCzas odnawiania twojego ataku podstawowego jest **10%** krótszy.\nZa każdym razem, gdy jesteś **oślepiony** lub ogłuszony **paletą**, trwa to **25%** dłużej.\n> „Biegnij do woli. Nikt mi nie odmówi”. – Vecna"
+          "description": "Wykonujesz podstawowe przeskoki przez okna **15%** szybciej.\nCzas odnawiania po twoim udanym ataku podstawowym jest **13/14/15%** krótszy.\nZa każdym razem, gdy jesteś **oślepiony** lub ogłuszony **paletą**, trwa to **15%** dłużej.\n> „Biegnij do woli. Nikt mi nie odmówi”. – Vecna"
         }
       },
       "perk_types": [
@@ -9242,25 +9242,25 @@
       "killer_id": 41,
       "is_generic_counterpart": false,
       "is_teachable": true,
-      "description": "The first time you **hook** each Survivor, you earn **1 Token**. For each Token:\n• Gain **4% Haste** while carrying Survivors.\n• **Hook** Survivors **4%** faster.\nWhen you have 4 Tokens, all Survivors:\n• Scream.\n• Gain **Exposed** for **80/85/90s**.\n> “Weeping Ginevra’s blood streams/The devil smells the weak.” -Fabbro Barone’s Ginevra",
+      "description": "The first time you **hook** each Survivor, you earn **1 Token**. For each Token:\n• Gain **4% Haste** while carrying Survivors.\n• **Hook** Survivors **4%** faster.\nWhen you have 4 Tokens, all Survivors:\n• Scream.\n• Gain **Exposed** for **60/65/70s**.\n> “Weeping Ginevra’s blood streams/The devil smells the weak.” -Fabbro Barone’s Ginevra",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_Ravenous.png",
       "icon_local_path": "icons/killers/The Krasue/ravenous.webp",
       "translations": {
         "de": {
           "name": "Heißhunger",
-          "description": "Beim ersten Festhaken jedes Überlebenden erhältst du 1 Zähler. Für jeden Zähler gilt:\n• Du erhältst **4% Eile**, während du Überlebende trägst.\n• Du hakst Überlebende **4%** schneller fest.\nWenn du 4 Zähler hast, gilt für alle Überlebenden:\n• Sie schreien.\n• Sie leiden **80/85/90 Sek**. lang unter **Gefährdet**.\n> „Das Blut der weinenden Ginevra fließt/der Teufel riecht die Schwachen.“ – Fabbro Barones „Ginevra“"
+          "description": "Beim ersten Festhaken jedes Überlebenden erhältst du 1 Zähler. Für jeden Zähler gilt:\n• Du erhältst **4% Eile**, während du Überlebende trägst.\n• Du hakst Überlebende **4%** schneller fest.\nWenn du 4 Zähler hast, gilt für alle Überlebenden:\n• Sie schreien.\n• Sie leiden **60/65/70 Sek**. lang unter **Gefährdet**.\n> „Das Blut der weinenden Ginevra fließt/der Teufel riecht die Schwachen.“ – Fabbro Barones „Ginevra“"
         },
         "es": {
           "name": "Voraz",
-          "description": "La primera vez que cuelgas a cada superviviente, obtendrás 1 distintivo. Por cada distintivo:\n• Obtienes un **4%** de **Celeridad** mientras cargues con supervivientes.\n• Cuelgas a los supervivientes un **4%** más rápido.\nCuando tengas 4 distintivos, todos los supervivientes:\n• Gritarán.\n• Sufrirán Vulnerabilidad durante **80/85/90 segundos**.\n\"La sangre de Ginevra llora en su fulgor / Y el diablo a los débiles les huele el temor\". (Fabbro Barone, \"Ginevra\")"
+          "description": "La primera vez que cuelgas a cada superviviente, obtendrás 1 distintivo. Por cada distintivo:\n• Obtienes un **4%** de **Celeridad** mientras cargues con supervivientes.\n• Cuelgas a los supervivientes un **4%** más rápido.\nCuando tengas 4 distintivos, todos los supervivientes:\n• Gritarán.\n• Sufrirán Vulnerabilidad durante **60/65/70 segundos**.\n\"La sangre de Ginevra llora en su fulgor / Y el diablo a los débiles les huele el temor\". (Fabbro Barone, \"Ginevra\")"
         },
         "ja": {
           "name": "貪欲",
-          "description": "各生存者を初めてフックに吊るしたとき、トークンを1個得る。トークン1個につき：\n• 生存者を担いでいる間、**4%**の**迅速**を得る。\n• 生存者をフックに吊るす速度が**4%**上昇する。\nトークンが4個に達すると、すべての生存者が：\n• 叫び声を上げる。\n• **80/85/90秒**間**無防備**状態になる。\n「涙を流すジネーヴラの血が流れる / 悪魔は弱者の匂いを嗅ぎつける」- ファブロ・バローネの『ジネーヴラ』"
+          "description": "各生存者を初めてフックに吊るしたとき、トークンを1個得る。トークン1個につき：\n• 生存者を担いでいる間、**4%**の**迅速**を得る。\n• 生存者をフックに吊るす速度が**4%**上昇する。\nトークンが4個に達すると、すべての生存者が：\n• 叫び声を上げる。\n• **60/65/70秒**間**無防備**状態になる。\n「涙を流すジネーヴラの血が流れる / 悪魔は弱者の匂いを嗅ぎつける」- ファブロ・バローネの『ジネーヴラ』"
         },
         "pl": {
           "name": "Wygłodniały",
-          "description": "Za każdym razem, gdy powiesisz danego ocalałego po raz pierwszy, otrzymujesz żeton (1). Za każdy żeton:\n• Otrzymujesz **4%** efektu **Pośpiech**, gdy niesiesz ocalałych.\n• Wieszasz ocalałych na **haku** **4%** szybciej.\nGdy zbierzesz 4 żetony, wszyscy ocalali:\n• Krzyczą.\n• Otrzymują efekt Narażony na **80/85/90 s**.\n> „Płynie krew płaczącej Ginewry / Diabeł wyczuwa słabych”. – „Ginewra”, Fabbro Barone"
+          "description": "Za każdym razem, gdy powiesisz danego ocalałego po raz pierwszy, otrzymujesz żeton (1). Za każdy żeton:\n• Otrzymujesz **4%** efektu **Pośpiech**, gdy niesiesz ocalałych.\n• Wieszasz ocalałych na **haku** **4%** szybciej.\nGdy zbierzesz 4 żetony, wszyscy ocalali:\n• Krzyczą.\n• Otrzymują efekt Narażony na **60/65/70 s**.\n> „Płynie krew płaczącej Ginewry / Diabeł wyczuwa słabych”. – „Ginewra”, Fabbro Barone"
         }
       },
       "perk_types": [
@@ -9478,25 +9478,25 @@
       "role": "Killer",
       "is_generic_counterpart": false,
       "is_teachable": false,
-      "description": "When the **trial** starts:\n• 4 random **Hooks** become **Scourge Hooks**.\n• The Basement **Hooks** become **Scourge Hooks**.\nWhile you are at least **24m** away from a Survivor on a **Scourge Hook**, **Generators** not being repaired regress at **150/175/200%** speed.\n> \"Then you will know that there is no escape. When hanging in the depths, you face the dark one.\"",
+      "description": "When the **trial** starts:\n• 4 random **Hooks** become **Scourge Hooks**.\n• The Basement **Hooks** become **Scourge Hooks**.\nWhile you are at least **24m** away from a Survivor on a **Scourge Hook**, **Generators** not being repaired regress at **200%** speed.\nWhen the Survivor is no longer hooked, this effect ends in **20/25/30s**.\n> \"Then you will know that there is no escape. When hanging in the depths, you face the dark one.\"",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_scourgeHookMonstrousShrine.png",
       "icon_local_path": "icons/killers/General/scourge_hook_monstrous_shrine.webp",
       "translations": {
         "de": {
           "name": "Geißelhaken: Monströser Schrein",
-          "description": "Wenn die **Prüfung** beginnt, gilt:\n• 4 zufällige **Haken** werden zu **Geißelhaken**.\n• Die Kellerhaken werden zu **Geißelhaken**.\nWenn du mindestens **24 Meter** von einem Überlebenden an einem **Geißelhaken** entfernt bist, bauen **Generatoren**, die nicht repariert werden, mit einer Geschwindigkeit von **150/175/200%** Fortschritt ab.\n> „Dann wirst du erkennen, dass es kein Entkommen gibt. In den Tiefen hängend, erblickst du den einen Dunklen.“"
+          "description": "Wenn die **Prüfung** beginnt, gilt:\n• 4 zufällige **Haken** werden zu **Geißelhaken**.\n• Die Kellerhaken werden zu **Geißelhaken**.\nWenn du mindestens **24 Meter** von einem Überlebenden an einem **Geißelhaken** entfernt bist, bauen **Generatoren**, die nicht repariert werden, mit einer Geschwindigkeit von **200%** Fortschritt ab.\nSobald der Überlebende nicht mehr am Haken hängt, endet dieser Effekt nach **20/25/30 Sek**.\n> „Dann wirst du erkennen, dass es kein Entkommen gibt. In den Tiefen hängend, erblickst du den einen Dunklen.“"
         },
         "es": {
           "name": "Gancho flagelante: Santuario monstruoso",
-          "description": "Cuando comienza la partida:\n• 4 **ganchos** aleatorios se convierten en **ganchos** flagelantes.\n• Los **ganchos** del sótano se convierten en **ganchos** flagelantes.\nMientras estés al menos a **24 metros** de distancia de un superviviente en un **gancho** flagelante, los **generadores** que no se estén reparando se revertirán a un **150/175/200%** de velocidad.\n> \"Entonces sabrás que no existe escapatoria. Al colgar en las profundidades, te enfrentas al ser oscuro\"."
+          "description": "Cuando comienza la partida:\n• 4 **ganchos** aleatorios se convierten en **ganchos** flagelantes.\n• Los **ganchos** del sótano se convierten en **ganchos** flagelantes.\nMientras estés al menos a **24 metros** de distancia de un superviviente en un **gancho** flagelante, los **generadores** que no se estén reparando se revertirán a un **200%** de velocidad.\nCuando el superviviente deja de estar colgado, este efecto termina pasados **20/25/30 segundos**.\n> \"Entonces sabrás que no existe escapatoria. Al colgar en las profundidades, te enfrentas al ser oscuro\"."
         },
         "ja": {
           "name": "悶絶のフック：異形の祭壇",
-          "description": "儀式開始時：\n• 4つのランダムなフックが**悶絶のフック**に変わる。\n• 地下室のフックが**悶絶のフック**に変わる。\nあなたが**悶絶のフック**に吊るされている生存者から**24メートル**以上離れている間、修理されていない発電機が**150/175/200%**の速度で後退する。\n「そこで君は絶対に逃げられないことを悟るだろう。地の底で吊り下げられたとき、君は闇そのものと対峙するのだ」"
+          "description": "儀式開始時：\n• 4つのランダムなフックが**悶絶のフック**に変わる。\n• 地下室のフックが**悶絶のフック**に変わる。\nあなたが**悶絶のフック**に吊るされている生存者から**24メートル**以上離れている間、修理されていない発電機が**200%**の速度で後退する。\nその生存者がフックに吊るされていない状態になると、この効果は**20/25/30秒**後に終了する。\n「そこで君は絶対に逃げられないことを悟るだろう。地の底で吊り下げられたとき、君は闇そのものと対峙するのだ」"
         },
         "pl": {
           "name": "Hak Plagi: Potworna Świątynia",
-          "description": "Na początku próby:\n• 4 losowe **haki** zmieniają się w **haki plagi**.\n• **Haki** znajdujące się w piwnicy zmieniają się w **haki plagi**.\nGdy jesteś oddalony przynajmniej **24 m** od ocalałego na **haku plagi**, **generatory**, które nie są naprawiane, psują się z prędkością **150/175/200%**.\n> „Wtedy będziesz wiedzieć, że nie ma ucieczki. Wisząc w otchłaniach, stawiasz czoło mrocznemu”."
+          "description": "Na początku próby:\n• 4 losowe **haki** zmieniają się w **haki plagi**.\n• **Haki** znajdujące się w piwnicy zmieniają się w **haki plagi**.\nGdy jesteś oddalony przynajmniej **24 m** od ocalałego na **haku plagi**, **generatory**, które nie są naprawiane, psują się z prędkością **200%**.\nGdy ocalały nie wisi już na haku, efekt ten kończy się po **20/25/30 s**.\n> „Wtedy będziesz wiedzieć, że nie ma ucieczki. Wisząc w otchłaniach, stawiasz czoło mrocznemu”."
         }
       },
       "perk_types": [
@@ -10489,25 +10489,25 @@
       "role": "Killer",
       "is_generic_counterpart": false,
       "is_teachable": false,
-      "description": "While within **28/26/24m** of a Survivor, you randomly hear *whispers*.\nWhile outside of **28/26/24m** of a Survivor, you gain **5% Haste**.\n> \"It's unclear as to the motivations of The Fog, but it is undeniable that it often takes the beast's side.\" -Notebook",
+      "description": "While within **28/26/24m** of a Survivor, you randomly hear *whispers*.\nWhile outside of **28/26/24m** of a Survivor, you gain **7% Haste**.\n> \"It's unclear as to the motivations of The Fog, but it is undeniable that it often takes the beast's side.\" -Notebook",
       "icon_url": "https://deadbydaylight.wiki.gg/images/IconPerks_whispers.png",
       "icon_local_path": "icons/killers/General/whispers.webp",
       "translations": {
         "de": {
           "name": "Geflüster",
-          "description": "Wenn du dich in einem Umkreis von **28/26/24 Metern** rund um einen Überlebenden befindest, hörst du zufällig Flüstern.\nWenn du dich außerhalb von **28/26/24 Metern** rund um einen Überlebenden befindest, erhältst du **5% Eile**.\n> „Die Beweggründe des Nebels sind unklar, aber es ist nicht von der Hand zu weisen, dass er sich oft auf die Seite der Bestie schlägt.“ – Notizbuch"
+          "description": "Wenn du dich in einem Umkreis von **28/26/24 Metern** rund um einen Überlebenden befindest, hörst du zufällig Flüstern.\nWenn du dich außerhalb von **28/26/24 Metern** rund um einen Überlebenden befindest, erhältst du **7% Eile**.\n> „Die Beweggründe des Nebels sind unklar, aber es ist nicht von der Hand zu weisen, dass er sich oft auf die Seite der Bestie schlägt.“ – Notizbuch"
         },
         "es": {
           "name": "Murmullos",
-          "description": "Mientras estés en un radio de **28/26/24 metros** de un superviviente, oirás *murmullos* aleatoriamente.\nMientras estés fuera de un radio de **28/26/24 metros** de un superviviente, obtendrás un **5%** de **Celeridad**.\n\"Las motivaciones de la niebla no están claras, pero resulta innegable que suele ponerse del lado de la bestia\". (Cuaderno)"
+          "description": "Mientras estés en un radio de **28/26/24 metros** de un superviviente, oirás *murmullos* aleatoriamente.\nMientras estés fuera de un radio de **28/26/24 metros** de un superviviente, obtendrás un **7%** de **Celeridad**.\n\"Las motivaciones de la niebla no están claras, pero resulta innegable que suele ponerse del lado de la bestia\". (Cuaderno)"
         },
         "ja": {
           "name": "囁き",
-          "description": "生存者から**28/26/24メートル**以内にいると、時々囁きが聞こえる。\n生存者から**28/26/24メートル**以内にいない間、**5%**の**迅速**を得る。\n「この霧が意思を持っているかどうかはわからないが、大抵あの怪物の味方をするのは確かだ」- 手帳"
+          "description": "生存者から**28/26/24メートル**以内にいると、時々囁きが聞こえる。\n生存者から**28/26/24メートル**以内にいない間、**7%**の**迅速**を得る。\n「この霧が意思を持っているかどうかはわからないが、大抵あの怪物の味方をするのは確かだ」- 手帳"
         },
         "pl": {
           "name": "Szepty",
-          "description": "Gdy jesteś w promieniu **28/26/24 m** od ocalałego, słyszysz losowo *szepty*.\nGdy jesteś poza promieniem **28/26/24 m** od ocalałego, otrzymujesz **5%** efektu **Pośpiech**.\n> „Nie jest do końca jasne, jakie są intencje Mgły, ale nie ulega wątpliwości, że często stoi ona po stronie bestii”. – Notatnik"
+          "description": "Gdy jesteś w promieniu **28/26/24 m** od ocalałego, słyszysz losowo *szepty*.\nGdy jesteś poza promieniem **28/26/24 m** od ocalałego, otrzymujesz **7%** efektu **Pośpiech**.\n> „Nie jest do końca jasne, jakie są intencje Mgły, ale nie ulega wątpliwości, że często stoi ona po stronie bestii”. – Notatnik"
         }
       },
       "perk_types": [

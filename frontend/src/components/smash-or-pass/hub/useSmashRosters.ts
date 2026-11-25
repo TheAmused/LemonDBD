@@ -18,7 +18,7 @@ const canonPlaceholder = (): RosterItem => ({
   id: 'canon',
   slug: 'canon',
   name: 'Fog Canon',
-  description: 'Official 98 Characters',
+  description: 'Official Characters',
   theme_color: defaultRosterThemeColor(),
   category: 'DBD Canon',
   is_nsfw: false,

@@ -23,8 +23,8 @@ from app.services.admin_control_service import (
 from app.services.content_moderation_service import (
     get_admin_reports,
     get_report_preview,
-    resolve_report,
 )
+from app.services.content_report_resolution import resolve_report
 from app.services.moderation_actions import (
     ModerationError,
     apply_sanction,

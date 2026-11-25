@@ -1,7 +1,8 @@
 # backend/tests/unit/maps/test_generate_map_images.py
 import pytest
 from PIL import Image
-from scripts.generate_map_images import PANEL_GAP_PX, get_clock_labels, point_on_floor, render_map_layout_to_image, room_box, slugify
+from scripts.generate_map_images import PANEL_GAP_PX, render_map_layout_to_image, slugify
+from scripts.map_geometry import get_clock_labels, point_on_floor, room_box
 
 
 @pytest.mark.unit

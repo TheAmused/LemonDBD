@@ -1,5 +1,7 @@
 # backend/tests/unit/admin/test_admin_challenge_reset.py
 """Admin view and reset of one user's challenge progress (GET/POST /api/v1/users/<id>/challenges...)."""
+import json
+
 import pytest
 from flask import Flask
 from flask.testing import FlaskClient
@@ -169,7 +171,8 @@ class TestAdminChallengeReset:
         assert "Wynik z exploita." in outbox[0].html and "sekcję Fair play" in outbox[0].body
         assert "/pl/terms-of-service#termination" in outbox[0].body
         log = db_session.query(AdminAuditLog).filter_by(action="user_challenge_reset").one()
-        assert '"emailed": true' in log.details and "Wynik z exploita." in log.details
+        details = json.loads(log.details)
+        assert details["emailed"] is True and details["note"] == "Wynik z exploita."
 
     def test_the_email_works_without_a_note_and_in_english_by_default(
         self, app: Flask, client: FlaskClient, admin: User, seeded: User

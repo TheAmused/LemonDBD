@@ -173,8 +173,12 @@ def _import_rosters(
                         if field in stat_row:
                             setattr(stat_obj, field, stat_row[field])
 
+                # Votes are replaced only by a payload that carries them (a backup). Roster seed files
+                # have no "votes" key, and re-importing an edited one must keep what players cast.
+                if "votes" not in e_row:
+                    continue
                 db.session.execute(delete(Vote).where(Vote.entity_id == entity_obj.id))
-                for vote_row in e_row.get("votes", []):
+                for vote_row in e_row["votes"] or []:
                     vote_login = vote_row.get("login") or vote_row.get("username")
                     vote = Vote(
                         entity_id=entity_obj.id,

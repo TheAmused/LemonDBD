@@ -35,12 +35,12 @@ class TestSmashSeederService:
         canon_roster = db_session.scalar(select(Roster).where(Roster.slug == "canon"))
         assert canon_roster is not None
         canon_entities = canon_roster.entities
-        assert len(canon_entities) == 98
+        assert len(canon_entities) == 100
 
         survivor_count = sum(1 for e in canon_entities if e.role == "Survivor")
         killer_count = sum(1 for e in canon_entities if e.role == "Killer")
-        assert survivor_count == 54
-        assert killer_count == 44
+        assert survivor_count == 55
+        assert killer_count == 45
 
         hoy_roster = db_session.scalar(select(Roster).where(Roster.slug == "hooked_on_you"))
         assert len(hoy_roster.entities) == 8
@@ -58,7 +58,7 @@ class TestSmashSeederService:
         assert len(gothic_roster.entities) == 10
 
         all_entities = db_session.scalars(select(Entity)).all()
-        assert len(all_entities) == 98 + 8 + 56 + 10 + 10 + 10
+        assert len(all_entities) == 100 + 8 + 56 + 10 + 10 + 10
 
         for entity in all_entities:
             assert entity.stat is not None
@@ -100,7 +100,7 @@ class TestSmashSeederService:
         assert "canon_gemini" not in {r["slug"] for r in all_rosters}
         canon = next((r for r in active_rosters if r["slug"] == "canon"), None)
         assert canon is not None
-        assert canon["entity_count"] == 98
+        assert canon["entity_count"] == 100
         assert canon["total_votes"] == 0
         assert canon["theme_color"] == "#ff0055"
         assert canon["name"] == "Fog Canon"
@@ -111,7 +111,7 @@ class TestSmashSeederService:
         # Test localized get_rosters
         canon_pl = service.get_rosters(active_only=True, lang="pl")[0]
         assert canon_pl["name"] == "Kanon Mgły"
-        assert canon_pl["description"] == "Oficjalne 98 postaci z mgły próby."
+        assert canon_pl["description"] == "Oficjalne 100 postaci z mgły próby."
 
     def test_service_get_feed_and_unvoted_filtering(self, db_session: Session) -> None:
         seed_smash_rosters()
@@ -119,7 +119,7 @@ class TestSmashSeederService:
 
         feed_res = service.get_feed(roster_slug="canon", limit=10)
         assert feed_res is not None
-        assert feed_res["total_remaining"] == 98
+        assert feed_res["total_remaining"] == 100
         feed = feed_res["entities"]
         assert len(feed) == 10
 
@@ -140,7 +140,7 @@ class TestSmashSeederService:
         feed_filtered_res = service.get_feed(
             roster_slug="canon", session_id="session_test_1", limit=10
         )
-        assert feed_filtered_res["total_remaining"] == 96
+        assert feed_filtered_res["total_remaining"] == 98
         filtered_ids = {e["id"] for e in feed_filtered_res["entities"]}
         assert first_entity["id"] not in filtered_ids
         assert second_entity["id"] not in filtered_ids
@@ -148,7 +148,7 @@ class TestSmashSeederService:
         feed_other_res = service.get_feed(
             roster_slug="canon", session_id="session_other", limit=10
         )
-        assert feed_other_res["total_remaining"] == 98
+        assert feed_other_res["total_remaining"] == 100
         other_ids = {e["id"] for e in feed_other_res["entities"]}
         assert first_entity["id"] in other_ids
         assert second_entity["id"] in other_ids
@@ -157,8 +157,8 @@ class TestSmashSeederService:
             roster_slug="canon", role="Survivor", gender="female", limit=50
         )
         female_survivors = female_survivors_res["entities"]
-        assert len(female_survivors) == 29
-        assert female_survivors_res["total_remaining"] == 29
+        assert len(female_survivors) == 30
+        assert female_survivors_res["total_remaining"] == 30
         assert all(e["role"] == "Survivor" and e["gender"] == "female" for e in female_survivors)
 
     def test_service_cast_vote_atomic_counts_and_rate(self, db_session: Session) -> None:
@@ -315,7 +315,7 @@ class TestSmashSeederService:
         assert len(editions) >= 2
 
         canon_chars = service.get_characters_with_stats(edition="canon")
-        assert len(canon_chars) == 98
+        assert len(canon_chars) == 100
         assert "character_slug" in canon_chars[0]
         assert "smash_rate" in canon_chars[0]
 

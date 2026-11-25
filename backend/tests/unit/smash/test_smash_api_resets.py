@@ -122,10 +122,10 @@ class TestSmashOrPassResetsAndSync:
             )
             assert res.status_code == 200
 
-        # Feed for guest excludes those 5 voted items (98 - 5 = 93 remaining)
+        # Feed for guest excludes those 5 voted items (100 - 5 = 95 remaining)
         res_feed = client.get(f"/api/v1/smash-or-pass/rosters/canon/feed?session_id={guest_sess}")
         assert res_feed.status_code == 200
-        assert res_feed.get_json()["data"]["total_remaining"] == 93
+        assert res_feed.get_json()["data"]["total_remaining"] == 95
 
         # BUT Global Hall of Fame / Leaderboard MUST have 0 total votes because guests don't count!
         res_lb = client.get("/api/v1/smash-or-pass/rosters/canon/leaderboard")
@@ -206,13 +206,13 @@ class TestSmashOrPassResetsAndSync:
             )
             assert res_v.status_code == 200
 
-        # 2. Verify feed shows 95 remaining (98 - 3)
+        # 2. Verify feed shows 97 remaining (100 - 3)
         res_feed = client.get(
             "/api/v1/smash-or-pass/rosters/canon/feed",
             headers={"Authorization": f"Bearer {token}"},
         )
         assert res_feed.status_code == 200
-        assert res_feed.get_json()["data"]["total_remaining"] == 95
+        assert res_feed.get_json()["data"]["total_remaining"] == 97
 
         # 3. Verify user votes endpoint returns 3 votes
         res_uv = client.get(
@@ -237,13 +237,13 @@ class TestSmashOrPassResetsAndSync:
         assert reset_data["status"] == "success"
         assert reset_data["reset_count"] == 3
 
-        # 6. Verify feed is completely restored to 98
+        # 6. Verify feed is completely restored to 100
         res_feed_after = client.get(
             "/api/v1/smash-or-pass/rosters/canon/feed",
             headers={"Authorization": f"Bearer {token}"},
         )
         assert res_feed_after.status_code == 200
-        assert res_feed_after.get_json()["data"]["total_remaining"] == 98
+        assert res_feed_after.get_json()["data"]["total_remaining"] == 100
 
         # 7. Verify user votes is empty (0)
         res_uv_after = client.get(

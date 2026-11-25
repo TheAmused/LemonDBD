@@ -164,8 +164,8 @@ class TestCanonRosterIntegrity:
         assert "canon" in entities_by_roster, "canon roster missing from loaded rosters"
         return entities_by_roster["canon"]
 
-    def test_canon_has_exactly_98_entities(self, canon_entities: list[dict]) -> None:
-        assert len(canon_entities) == 98, f"expected 98 entities in canon roster, found {len(canon_entities)}"
+    def test_canon_has_exactly_100_entities(self, canon_entities: list[dict]) -> None:
+        assert len(canon_entities) == 100, f"expected 100 entities in canon roster, found {len(canon_entities)}"
 
     def test_every_entity_has_required_identity_and_watermarks(self, canon_entities: list[dict]) -> None:
         for e in canon_entities:

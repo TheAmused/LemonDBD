@@ -35,8 +35,8 @@ class TestSmashOrPassLifecycle:
         init_feed_res = client.get("/api/v1/smash-or-pass/rosters/canon/feed", headers=auth_headers)
         assert init_feed_res.status_code == 200
         init_feed = init_feed_res.get_json()["data"]
-        assert init_feed["total_remaining"] == 98
-        assert len(init_feed["entities"]) == 98
+        assert init_feed["total_remaining"] == 100
+        assert len(init_feed["entities"]) == 100
 
         # --- STEP 2: ROUND 1 VOTES ---
         # Vote 1: smash on Ada Wong
@@ -64,11 +64,11 @@ class TestSmashOrPassLifecycle:
         assert v3.status_code == 200
 
         # --- STEP 3: STATS CHECK AFTER ROUND 1 ---
-        # Feed check: 3 voted entities must be excluded, total_remaining reduced to 95
+        # Feed check: 3 voted entities must be excluded, total_remaining reduced to 97
         feed_r1_res = client.get("/api/v1/smash-or-pass/rosters/canon/feed", headers=auth_headers)
         assert feed_r1_res.status_code == 200
         feed_r1 = feed_r1_res.get_json()["data"]
-        assert feed_r1["total_remaining"] == 95
+        assert feed_r1["total_remaining"] == 97
         remaining_slugs = {e["slug"] for e in feed_r1["entities"]}
         assert "ada_wong" not in remaining_slugs
         assert "the_trapper" not in remaining_slugs
@@ -132,11 +132,11 @@ class TestSmashOrPassLifecycle:
         assert uv_reset_res.get_json()["count"] == 0
         assert len(uv_reset_res.get_json()["data"]) == 0
 
-        # Feed must be fully restored: all 98 characters remaining
+        # Feed must be fully restored: all 100 characters remaining
         feed_reset_res = client.get("/api/v1/smash-or-pass/rosters/canon/feed", headers=auth_headers)
         assert feed_reset_res.status_code == 200
         feed_reset = feed_reset_res.get_json()["data"]
-        assert feed_reset["total_remaining"] == 98
+        assert feed_reset["total_remaining"] == 100
         restored_slugs = {e["slug"] for e in feed_reset["entities"]}
         assert "ada_wong" in restored_slugs
         assert "the_trapper" in restored_slugs
@@ -180,7 +180,7 @@ class TestSmashOrPassLifecycle:
         feed_r2_res = client.get("/api/v1/smash-or-pass/rosters/canon/feed", headers=auth_headers)
         assert feed_r2_res.status_code == 200
         feed_r2 = feed_r2_res.get_json()["data"]
-        assert feed_r2["total_remaining"] == 95
+        assert feed_r2["total_remaining"] == 97
 
         lb_r2_res = client.get("/api/v1/smash-or-pass/rosters/canon/leaderboard")
         assert lb_r2_res.status_code == 200
@@ -240,7 +240,7 @@ class TestSmashOrPassLifecycle:
         feed_res = client.get(f"/api/v1/smash-or-pass/rosters/canon/feed?session_id={session_id}")
         assert feed_res.status_code == 200
         feed_data = feed_res.get_json()["data"]
-        assert feed_data["total_remaining"] == 96
+        assert feed_data["total_remaining"] == 98
 
         # Guest votes endpoint returns 2
         uv_res = client.get(f"/api/v1/smash-or-pass/user-votes?session_id={session_id}")
@@ -252,9 +252,9 @@ class TestSmashOrPassLifecycle:
         assert reset_res.status_code == 200
         assert reset_res.get_json()["data"]["reset_count"] == 2
 
-        # Guest feed restored to 98
+        # Guest feed restored to 100
         feed_restored = client.get(f"/api/v1/smash-or-pass/rosters/canon/feed?session_id={session_id}")
-        assert feed_restored.get_json()["data"]["total_remaining"] == 98
+        assert feed_restored.get_json()["data"]["total_remaining"] == 100
 
         # 3. Guest re-votes: super_smash on Meg Thomas
         v3 = client.post(

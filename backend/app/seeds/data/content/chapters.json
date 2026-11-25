@@ -1407,6 +1407,33 @@
           "name": "Chór grzechu"
         }
       }
+    },
+    {
+      "id": 53,
+      "name": "Terrifier",
+      "release_date": "2026-11-24",
+      "release_year": 2026,
+      "is_licensed": true,
+      "dlc_type": "chapter",
+      "banner_url": "https://deadbydaylight.wiki.gg/images/Terrifier_main_header.png?6b6916",
+      "banner_local_path": "chapters/terrifier.webp",
+      "translations": {
+        "de": {
+          "name": "Terrifier"
+        },
+        "en": {
+          "name": "Terrifier"
+        },
+        "es": {
+          "name": "Terrifier"
+        },
+        "ja": {
+          "name": "テリファー"
+        },
+        "pl": {
+          "name": "Terrifier"
+        }
+      }
     }
   ]
 }

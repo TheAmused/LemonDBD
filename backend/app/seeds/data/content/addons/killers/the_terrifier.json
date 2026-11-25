@@ -1,0 +1,541 @@
+{
+  "version": "3.0",
+  "exported_at": "2026-11-25T00:00:00+00:00",
+  "source": "LemonDBD",
+  "target": "killer_addons",
+  "killer_addons": [
+    {
+      "id": 881,
+      "name": "Blackened Heart",
+      "killer_id": 45,
+      "description": "“A still-beating heart, dark and crawling with worms.”\nAfter **Taunting** a **Terrified** Survivor, the next time you down a Survivor with a **Toy**, that **Toy** gains 1 extra **Deadliness** point.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_BlackenedHeart.png?30b462",
+      "icon_local_path": "icons/addons/blackened_heart.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Geschwärztes Herz",
+          "description": "„Ein noch schlagendes Herz, dunkel und von Würmern befallen.“\nNachdem du einen **verängstigten** Überlebenden **verhöhnt** hast, erhält das **Spielzeug**, mit dem du das nächste Mal einen Überlebenden niederstreckst, 1 zusätzlichen **Tödlichkeits**punkt."
+        },
+        "es": {
+          "name": "Corazón ennegrecido",
+          "description": "\"Un corazón que aún late, oscuro y plagado de gusanos.\"\nDespués de **provocar** a un superviviente **aterrorizado**, la próxima vez que derribes a un superviviente con un **juguete**, este **juguete** obtiene 1 punto adicional de **letalidad**."
+        },
+        "ja": {
+          "name": "黒ずんだ心臓",
+          "description": "「黒ずみ、虫が湧いているが、鼓動を刻み続ける心臓。」\n**慄き**状態の生存者を**挑発**したあと、次に**オモチャ**を使って生存者を瀕死状態にしたとき、その**オモチャ**の**殺傷力**が1ポイント上がる。"
+        },
+        "pl": {
+          "name": "Poczerniałe serce",
+          "description": "„Wciąż bijące serce, ciemne i wypełnione pełzającymi robakami.”\nPo **Drwinie** z **Przerażonego** ocalałego, następnym razem po powaleniu ocalałego przy pomocy **Zabawki**, ta **Zabawka** zyskuje 1 dodatkowy punkt **Śmiertelności**."
+        }
+      }
+    },
+    {
+      "id": 882,
+      "name": "Bottle of Bleach",
+      "killer_id": 45,
+      "description": "“Causes agonizing pain when applied to wounds. And kills 99.9% of household bacteria!”\n**Decreases** **Torture**'s decay rate by **15%**.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_BottleOfBleach.png?19043d",
+      "icon_local_path": "icons/addons/bottle_of_bleach.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Bleichmittelbehälter",
+          "description": "„Verursacht qualvolle Schmerzen, wenn es auf Wunden aufgetragen wird. Tötet 99,9 % aller Haushaltsbakterien ab!“\n**Verringert** die Verfallsrate von **Marterung** um **15 %**."
+        },
+        "es": {
+          "name": "Botella de lejía",
+          "description": "\"Provoca un dolor insoportable al aplicarlo sobre heridas. ¡Y elimina el 99,9 % de las bacterias que puedes tener en casa!\"\n**Reduce** un **15 %** la velocidad de disminución de **tortura**."
+        },
+        "ja": {
+          "name": "漂白剤のボトル",
+          "description": "「傷口に塗ると激痛が走る。家の細菌も99.9%死滅させる。」\n**拷問**効果の解除が進む速度が**15%低下する**。"
+        },
+        "pl": {
+          "name": "Butelka z wybielaczem",
+          "description": "„Po aplikowaniu na rany powoduje agonalny ból. I zabija 99,9% domowych bakterii!”\n**Zmniejsza tempo zepsucia** **Torturowania** o **15%**."
+        }
+      }
+    },
+    {
+      "id": 883,
+      "name": "Allie's Scalp",
+      "killer_id": 45,
+      "description": "“The most horrifying moments start with a simple cut.”\nOnce per trial, downing a **Tortured** Survivor with a basic-attack applies **Terrified**.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_AlliesScalp.png?b33f18",
+      "icon_local_path": "icons/addons/allies_scalp.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Allies Kopfhaut",
+          "description": "„Die schrecklichsten Momente beginnen mit einem einfachen Schnitt.“\nWenn du einen **gemarterten** Überlebenden mit einem Grundangriff niederstreckst, wird er **verängstigt**. Dies gilt nur einmal pro Prüfung."
+        },
+        "es": {
+          "name": "Cuero cabelludo de Allie",
+          "description": "\"Los momentos más terroríficos comienzan con un simple corte.\"\nUna vez por partida, derribar con un ataque básico a un superviviente que sufra **Tortura** le aplica **Aterrorizado**."
+        },
+        "ja": {
+          "name": "アリーの頭皮",
+          "description": "「最も恐ろしい瞬間は、一つの切り傷から始まる。」\n儀式中に1回のみ、**拷問**効果を持つ生存者を通常攻撃で瀕死状態にすると、その生存者に**慄き**を与える。"
+        },
+        "pl": {
+          "name": "Skalp Allie",
+          "description": "„Najbardziej przerażające chwile zaczynają się od prostego cięcia.”\nRaz na próbę powalenie **Torturowanego** ocalałego za pomocą ataku podstawowego powoduje nałożenie efektu **Przerażenia**."
+        }
+      }
+    },
+    {
+      "id": 884,
+      "name": "Mike's Phone",
+      "killer_id": 45,
+      "description": "“It's busted, just like Mike's head.”\nHitting a non-regressing Generator with a **Toy** special-breaks it.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_MikesPhone.png?3da46f",
+      "icon_local_path": "icons/addons/mikes_phone.webp",
+      "rarity": "Common",
+      "translations": {
+        "de": {
+          "name": "Mikes Telefon",
+          "description": "„Es ist kaputt, genau wie Mikes Kopf.“\nWenn du einen Generator, der keinen Fortschritt abbaut, mit einem **Spielzeug** triffst, wird er beschädigt."
+        },
+        "es": {
+          "name": "Teléfono de Mike",
+          "description": "\"Está destrozado, igual que la cabeza de Mike.\"\nAlcanzar con un **juguete** un generador que no esté revirtiéndose lo daña."
+        },
+        "ja": {
+          "name": "マイクの携帯電話",
+          "description": "「マイクの頭と同じように叩き潰された携帯。」\n後退していない発電機に**オモチャ**を当てると、それを特殊破壊する。"
+        },
+        "pl": {
+          "name": "Telefon Mike’a",
+          "description": "„Jest roztrzaskany – zupełnie jak głowa Mike'a.”\nTrafienie generatora, którego postęp nie ulegał pogorszeniu, przy pomocy **Zabawki** uszkadza ten generator."
+        }
+      }
+    },
+    {
+      "id": 885,
+      "name": "Burnt Wings",
+      "killer_id": 45,
+      "description": "“Everything Sienna held dear went up in flames.”\n**Increases** the duration of Flames by **5 seconds**.\nWhen you **Torture** a Survivor, the **Bag of Toys** is guaranteed to contain the **Flamethrower** on the next search.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_BurntWings.png?4d47c4",
+      "icon_local_path": "icons/addons/burnt_wings.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Verbrannte Flügel",
+          "description": "„Alles, was Sienna etwas bedeutete, ging in Flammen auf.“\n**Erhöht** die Dauer der Flammen in der Umgebung um **5 Sek.**\nWenn du einen Überlebenden **marterst**, enthält der **Spielzeugbeutel** bei der nächsten Suche garantiert den **Flammenwerfer**."
+        },
+        "es": {
+          "name": "Alas quemadas",
+          "description": "\"Todo lo que Sienna quería quedó reducido a cenizas.\"\n**Aumenta** la duración de las llamas del entorno en **5 segundos**.\nCuando **tortures** a un superviviente, la **bolsa de juguetes** contendrá el **lanzallamas** en el siguiente registro."
+        },
+        "ja": {
+          "name": "焦げた翼",
+          "description": "「シエナが大切にしていたものは、すべて炎に包まれた。」\n炎の持続時間が**5秒間延長する**。\n生存者に**拷問**効果を与えたあと、次に**オモチャの袋**を開けたときに必ず**火炎放射器**が出現する。"
+        },
+        "pl": {
+          "name": "Spalone skrzydła",
+          "description": "„Wszystko, co było drogie dla Sienny, stanęło w płomieniach.”\n**Wydłuża** czas trwania Płomieni na otoczeniu o **5 s**.\nGdy **Torturujesz** ocalałego, **Torba z zabawkami** na pewno będzie zawierała **Miotacz ognia** podczas kolejnego przeszukania."
+        }
+      }
+    },
+    {
+      "id": 886,
+      "name": "Brooke's Pustule",
+      "killer_id": 45,
+      "description": "“A weeping blister that bubbled as acid ate through Brooke's face.”\nIncreases the size of the **Acid Puddle** by up to **100%** based on the distance the Acid falls, reaching its maximum after falling **6 meters**.\nWhen you **Torture** a Survivor, the **Bag of Toys** is guaranteed to contain the **Acid Bottle** on the next search.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_BrooksPustule.png?f5759e",
+      "icon_local_path": "icons/addons/brookes_pustule.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Brookes Pustel",
+          "description": "„Eine triefende Blase, die sich bildete, als sich die Säure durch Brookes Gesicht fraß.“\nVergrößert die **Säurepfütze** je nach Fallhöhe der Säure um bis zu **100 %**. Der Höchstwert wird nach **6 Metern** Fall erreicht.\nWenn du einen Überlebenden **marterst**, enthält der **Spielzeugbeutel** bei der nächsten Suche garantiert die **Säureflasche**."
+        },
+        "es": {
+          "name": "Pústula de Brooke",
+          "description": "\"Una ampolla supurante que borboteaba mientras el ácido devoraba el rostro de Brooke.\"\nAumenta el tamaño del **charco de ácido** hasta un **100 %** según la distancia que caiga el ácido, y alcanza el máximo tras caer **6 metros**.\nCuando **tortures** a un superviviente, la **bolsa de juguetes** contendrá el **frasco de ácido** en el siguiente registro."
+        },
+        "ja": {
+          "name": "ブルックの水膨れ",
+          "description": "「酸によって溶かされたブルックの顔にブツブツと水ぶくれが膨れ上がった。」\n酸が落下した距離に応じて、**酸の水たまり**の大きさが最大**100%**まで拡大する。**6メートル**以上落下すると、最大サイズに達する。\n生存者に**拷問**効果を与えたあと、次に**オモチャの袋**を開けたときに必ず**酸入りの瓶**が出現する。"
+        },
+        "pl": {
+          "name": "Krosta Brooke’a",
+          "description": "„Sączący się pęcherz, który bulgotał w miarę, jak kwas przeżerał twarz Brooke’a.”\nZwiększa rozmiar **Kałuży kwasu** nawet o **100%** w zależności od wysokości, z jakiej spada kwas. Maksimum osiąga po upadku z **6 m**.\nGdy **Torturujesz** ocalałego, **Torba z zabawkami** na pewno będzie zawierała **Butelkę z kwasem** podczas kolejnego przeszukania."
+        }
+      }
+    },
+    {
+      "id": 887,
+      "name": "Bloodstained Bullet",
+      "killer_id": 45,
+      "description": "“A bloody bullet that was lodged in Tara's corpse.”\nShooting a Survivor with the **Handgun** from farther than **16m** grants **10% Haste** for **10 seconds**.\nWhen you **Torture** a Survivor, the **Bag of Toys** is guaranteed to contain the **Handgun** on the next search.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_BloodstainedBullet.png?3a5bbe",
+      "icon_local_path": "icons/addons/bloodstained_bullet.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Blutbeschmierte Kugel",
+          "description": "„Eine blutige Kugel, die in Taras Leiche steckte.“\nWenn du einen Überlebenden mit der **Pistole** aus einer Entfernung von mehr als **16 Metern** triffst, erhältst du **10 Sek.** lang **10 %** Eile.\nWenn du einen Überlebenden **marterst**, enthält der **Spielzeugbeutel** bei der nächsten Suche garantiert die **Pistole**."
+        },
+        "es": {
+          "name": "Bala ensangrentada",
+          "description": "\"Una bala ensangrentada que quedó alojada en el cadáver de Tara.\"\nDisparar a un superviviente con la **pistola** desde más de **16 metros** otorga un **10 % de Celeridad** durante **10 segundos**.\nCuando **tortures** a un superviviente, la **bolsa de juguetes** contendrá la **pistola** en el siguiente registro."
+        },
+        "ja": {
+          "name": "血まみれの弾丸",
+          "description": "「タラの死体に深く撃ち込まれた血塗れの弾丸。」\n**16メートル**以上離れた場所から**拳銃**で生存者を撃つと、**10%**の**迅速**を**10秒間**得る。\n生存者に**拷問**効果を与えたあと、次に**オモチャの袋**を開けたときに必ず**拳銃**が出現する。"
+        },
+        "pl": {
+          "name": "Zakrwawiona kula",
+          "description": "„Zakrwawiona kula, która tkwiła w zwłokach Tary.”\nPostrzelenie ocalałego z **Pistoletu** z odległości większej niż **16 m** zapewnia efekt **10% Pośpiechu** na **10 s**.\nGdy **Torturujesz** ocalałego, **Torba z zabawkami** na pewno będzie zawierała **Pistolet** podczas kolejnego przeszukania."
+        }
+      }
+    },
+    {
+      "id": 888,
+      "name": "Sienna's Flesh",
+      "killer_id": 45,
+      "description": "“A strip of skin torn from Sienna during a brutal beating.”\n**Increases** the **Flail**'s maximum reach by **20%**.\nWhen you **Torture** a Survivor, the **Bag of Toys** is guaranteed to contain the **Flail** on the next search.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_SiennasFlesh.png?8b5364",
+      "icon_local_path": "icons/addons/siennas_flesh.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Siennas Fleisch",
+          "description": "„Ein Streifen Haut, der Sienna bei einem brutalen Angriff abgerissen wurde.“\n**Erhöht** die maximale Reichweite des **Flegels** um **20 %**.\nWenn du einen Überlebenden **marterst**, enthält der **Spielzeugbeutel** bei der nächsten Suche garantiert den **Flegel**."
+        },
+        "es": {
+          "name": "Carne de Sienna",
+          "description": "\"Una tira de piel arrancada a Sienna durante una paliza brutal.\"\n**Aumenta** el alcance máximo del **mangual** un **20 %**.\nCuando **tortures** a un superviviente, la **bolsa de juguetes** contendrá el **mangual** en el siguiente registro."
+        },
+        "ja": {
+          "name": "シエナの皮膚",
+          "description": "「残忍な暴行で引きちぎられたシエナの皮膚。」\n**フレイル**の最大射程範囲が**20%増加する**。\n生存者に**拷問**効果を与えたあと、次に**オモチャの袋**を開けたときに必ず**フレイル**が出現する。"
+        },
+        "pl": {
+          "name": "Skóra Sienny",
+          "description": "„Pas skóry zerwany z Sienny podczas brutalnego pobicia.”\n**Zwiększa** zasięg **Cepu** o **20%**.\nGdy **Torturujesz** ocalałego, **Torba z zabawkami** na pewno będzie zawierała **Cep** podczas kolejnego przeszukania."
+        }
+      }
+    },
+    {
+      "id": 889,
+      "name": "Shiny Tricycle",
+      "killer_id": 45,
+      "description": "“Three wheels means you'll maintain your balance on the bloodiest of floors.”\nWhen multiple Survivors are detected by the **Bike Horn**, reveal the **Aura** of all other Survivors for **5 seconds**.\nWhen you **Torture** a Survivor, the **Bag of Toys** is guaranteed to contain the **Bike Horn** on the next search.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ShinyTricycle.png?cfc2fc",
+      "icon_local_path": "icons/addons/shiny_tricycle.webp",
+      "rarity": "Uncommon",
+      "translations": {
+        "de": {
+          "name": "Glänzendes Dreirad",
+          "description": "„Mit drei Rädern behältst du selbst auf den blutigsten Böden mühelos das Gleichgewicht.“\nSobald die **Fahrradhupe** mehrere Überlebende entdeckt, werden die **Auren** aller anderen Überlebenden **5 Sek.** lang enthüllt.\nWenn du einen Überlebenden **marterst**, enthält der **Spielzeugbeutel** bei der nächsten Suche garantiert die **Fahrradhupe**."
+        },
+        "es": {
+          "name": "Triciclo reluciente",
+          "description": "\"Tres ruedas te permitirán mantener el equilibrio incluso sobre los suelos más ensangrentados.\"\nCuando la **bocina de bicicleta** detecte a varios supervivientes, revela el **aura** de todos los demás supervivientes durante **5 segundos**.\nCuando **tortures** a un superviviente, la **bolsa de juguetes** contendrá la **bocina de bicicleta** en el siguiente registro."
+        },
+        "ja": {
+          "name": "ピカピカの三輪車",
+          "description": "「車輪が3つあれば、血まみれの床でもバランスを保てる。」\n**自転車のホーン**で複数の生存者を探知したとき、他のすべての生存者の**オーラ**が**5秒間**表示される。\n生存者に**拷問**効果を与えたあと、次に**オモチャの袋**を開けたときに必ず**自転車のホーン**が出現する。"
+        },
+        "pl": {
+          "name": "Błyszczący trójkołowiec",
+          "description": "„Trzy koła oznaczają, że utrzymasz równowagę nawet na najbardziej zakrwawionych podłogach.”\nPo wykryciu wielu ocalałych przez **Klakson rowerowy**, ujawniasz **aury** wszystkich pozostałych ocalałych na **5 s**.\nGdy **Torturujesz** ocalałego, **Torba z zabawkami** na pewno będzie zawierała **Klakson rowerowy** podczas kolejnego przeszukania."
+        }
+      }
+    },
+    {
+      "id": 890,
+      "name": "Victoria's Eye",
+      "killer_id": 45,
+      "description": "“It's a bit digested but otherwise still good.”\nDirectly hitting a Survivor with **Fire** or **Acid** reveals their **Aura** for **5 seconds**.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_VictoriasEye.png?15ed19",
+      "icon_local_path": "icons/addons/victorias_eye.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Victorias Auge",
+          "description": "„Ist zwar etwas verdaut, aber ansonsten noch gut.“\nWenn du einen Überlebenden direkt mit **Feuer** oder **Säure** triffst, wird seine **Aura** **5 Sek.** lang sichtbar."
+        },
+        "es": {
+          "name": "Ojo de Victoria",
+          "description": "\"Está un poco... digerido, pero por lo demás sigue en buen estado.\"\nAlcanzar directamente a un superviviente con **fuego** o **ácido** revela su **aura** durante **5 segundos**."
+        },
+        "ja": {
+          "name": "ヴィクトリアの目玉",
+          "description": "「少し消化されているが、まだ使える。」\n**炎**または**酸**を直接生存者に当てると、その生存者の**オーラ**が**5秒間**表示される。"
+        },
+        "pl": {
+          "name": "Oko Victorii",
+          "description": "„Jest lekko strawione, ale poza tym wciąż dobre.”\nBezpośrednie trafienie ocalałego **Ogniem** lub **Kwasem** ujawnia ich **aury** na **5 s**."
+        }
+      }
+    },
+    {
+      "id": 891,
+      "name": "Dead Opossum",
+      "killer_id": 45,
+      "description": "“A lifeless carcass that still holds plenty of entertainment value.”\nHitting a healthy Survivor with the **Handgun** or **Flail** causes all other Survivors within **24m** to scream and reveal their location for **3 seconds**.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_DeadOpossum.png?77a97c",
+      "icon_local_path": "icons/addons/dead_opossum.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Totes Opossum",
+          "description": "„Ein lebloser Kadaver, der noch immer jede Menge Unterhaltungspotenzial besitzt.“\nWenn du einen gesunden Überlebenden mit der **Pistole** oder dem **Flegel** triffst, schreien alle anderen Überlebenden im Umkreis von **24 Metern** auf und verraten somit **3 Sek.** lang ihre Position."
+        },
+        "es": {
+          "name": "Zarigüeya muerta",
+          "description": "\"Un cadáver sin vida que aún puede proporcionar bastante entretenimiento.\"\nAlcanzar a un superviviente ileso con la **pistola** o el **mangual** hace que todos los demás supervivientes en un radio de **24 metros** griten y revelen su ubicación durante **3 segundos**."
+        },
+        "ja": {
+          "name": "オポッサムの死体",
+          "description": "「生気のない死体。娯楽としての価値は十分にある。」\n**拳銃**または**フレイル**の攻撃を無傷の生存者に当てると、**24メートル**以内の他のすべての生存者が叫び声を上げ、その位置が**3秒間**表示される。"
+        },
+        "pl": {
+          "name": "Martwy opos",
+          "description": "„Pozbawiona życia padlina, która wciąż dostarcza mnóstwa rozrywki.”\nTrafienie zdrowego ocalałego przy pomocy **Pistoletu** lub **Cepu** powoduje, że wszyscy pozostali ocalali w promieniu **24 m** krzyczą i ujawniają swoją lokalizację na **3 s**."
+        }
+      }
+    },
+    {
+      "id": 892,
+      "name": "Candy Head Bowl",
+      "killer_id": 45,
+      "description": "“Dig deep into Mom's skull and grab a treat.”\nWhen a Survivor is detected with the **Bike Horn**, reset the **Bag of Toys**' cooldown.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_CandyHeadBowl.png?cd93a1",
+      "icon_local_path": "icons/addons/candy_head_bowl.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Schädel-Süßigkeitenschale",
+          "description": "„Greif tief in Mamas Schädel und schnapp dir eine Leckerei.“\nWenn ein Überlebender mit der **Fahrradhupe** entdeckt wird, wird die Abklingzeit des **Spielzeugbeutels** zurückgesetzt."
+        },
+        "es": {
+          "name": "Cráneo para chuches",
+          "description": "\"Hunde bien la mano en el cráneo de mamá y coge una chuche.\"\nCuando la **bocina de bicicleta** detecte a un superviviente, restablece el tiempo de recarga de la **bolsa de juguetes**."
+        },
+        "ja": {
+          "name": "頭部のキャンディボウル",
+          "description": "「ママの頭蓋骨に手を突っ込んで、おやつを掴み取ろう。」\n**自転車のホーン**で生存者を探知すると、**オモチャの袋**のクールダウンが即座に終了する。"
+        },
+        "pl": {
+          "name": "Czaszka na cukierki",
+          "description": "„Sięgnij w głąb czaszki mamy i poczęstuj się smakołykiem.”\nGdy ocalały jest wykryty przy pomocy **Klaksonu rowerowego**, zresetuj czas odnawiania **Torby z zabawkami**."
+        }
+      }
+    },
+    {
+      "id": 893,
+      "name": "Thornton Salt",
+      "killer_id": 45,
+      "description": "“This calls for more than a pinch.”\nWhile injured Survivors are **Tortured**, they gain **Mangled** and **Hemorrhage**. These effects linger for **40 seconds** after **Torture** is removed.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ThorntonSalt.png?ef4e00",
+      "icon_local_path": "icons/addons/thornton_salt.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "name": "Thornton-Salz",
+          "description": "„Hier braucht es mehr als nur eine Prise.“\nWährend verletzte Überlebende **gemartert** werden, erhalten sie **Zerfleischt** und **Blutung**. Diese Effekte bleiben noch **40 Sek.** lang bestehen, nachdem **Marterung** beendet wurde."
+        },
+        "es": {
+          "name": "Sal de Thornton",
+          "description": "\"Esto requiere algo más que una pizca.\"\nMientras los supervivientes heridos sufran **Tortura**, también sufren **Laceración** y **Hemorragia**. Estos efectos se mantienen durante **40 segundos** después de que desaparezca **Tortura**."
+        },
+        "ja": {
+          "name": "ソーントンの塩",
+          "description": "「これは、ひとつまみでは物足りない。」\n負傷状態の生存者が**拷問**効果を持っている間、**重傷**と**出血**状態になる。これらの効果は**拷問**効果が解除されたあと**40秒間**持続する。"
+        },
+        "pl": {
+          "name": "Sól z Thornton",
+          "description": "„Przyda się więcej niż szczypta.”\nGdy ranni ocalali są **Torturowani**, zyskują efekty **Zmasakrowania** i **Krwotoku**. Te efekty wygasają **40 s** po usunięciu efektu **Torturowania**."
+        }
+      }
+    },
+    {
+      "id": 894,
+      "name": "Emily",
+      "killer_id": 45,
+      "description": "“A small porcelain doll that must be wondering where Mommy went.”\n**Toys** available in the **Bag of Toys** appear in a set order: **Bike Horn**, **Handgun**, **Flamethrower**, **Flail**, **Acid Bottle**.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_Emily.png?81dbf3",
+      "icon_local_path": "icons/addons/emily.webp",
+      "rarity": "Rare",
+      "translations": {
+        "de": {
+          "description": "„Eine kleine Porzellanpuppe, die sich bestimmt fragt, wo Mama ist.“\n**Die im Spielzeugbeutel** verfügbaren **Spielzeuge** erscheinen in einer festgelegten Reihenfolge: **Fahrradhupe**, **Pistole**, **Flammenwerfer**, **Flegel**, **Säureflasche**."
+        },
+        "es": {
+          "description": "\"Una pequeña muñeca de porcelana que debe preguntarse dónde está su mamá.\"\n**Los juguetes** disponibles en la **bolsa de juguetes** aparecen siempre en el mismo orden: **bocina de bicicleta**, **pistola**, **lanzallamas**, **mangual** y **frasco de ácido**."
+        },
+        "ja": {
+          "name": "エミリー",
+          "description": "「小さな磁器製の人形。「ママはどこへ行ったの？」と首をかしげている。」\n**オモチャの袋**に、**自転車のホーン**、**拳銃**、**火炎放射器**、**フレイル**、**酸入りの瓶**という順番で、2つの**オモチャ**が出現する。"
+        },
+        "pl": {
+          "description": "„Mała porcelanowa lalka, która musi się zastanawiać, gdzie poszła mama.”\n**Zabawki** dostępne w **Torbie z zabawkami** pojawiają się w określonej kolejności: **Klakson rowerowy**, **Pistolet**, **Miotacz ognia**, **Cep**, **Butelka z kwasem**."
+        }
+      }
+    },
+    {
+      "id": 895,
+      "name": "Wacky Jacks",
+      "killer_id": 45,
+      "description": "“110% of your recommended daily intake of sugar.”\nThe amount of **Deadliness** required for a **Toy** to reach **Maximum Deadliness** will not exceed **5** points.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_WackyJacks.png?556d07",
+      "icon_local_path": "icons/addons/wacky_jacks.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "description": "„110 % der empfohlenen Tagesdosis an Zucker.“\nDie Menge an **Tödlichkeit**, die benötigt wird, damit ein **Spielzeug** die **max. Tödlichkeit** erreicht, ist nicht höher als **5** Punkte."
+        },
+        "es": {
+          "description": "\"El 110 % de la ingesta diaria recomendada de azúcar.\"\nLa cantidad de **letalidad** necesaria para que un **juguete** alcance la **letalidad máxima** no superará los **5** puntos."
+        },
+        "ja": {
+          "name": "ワッキージャックス",
+          "description": "「1日の推奨糖質摂取量の110%が含まれる。」\n**おもちゃ**が**最大殺傷力**に達するのに必要なポイントが**5**ポイントを超えない。"
+        },
+        "pl": {
+          "name": "Zwariowane dynie",
+          "description": "„110% twojej zalecanej dziennej dawki cukru.”\nPoziom **Śmiertelności** wymagany dla **Zabawki**, aby osiągnąć **maksymalną Śmiertelność** nie przekroczy **5** punktów."
+        }
+      }
+    },
+    {
+      "id": 896,
+      "name": "Art Crispies",
+      "killer_id": 45,
+      "description": "“A surprise in every box!”\nWhenever you **Torture** a Survivor, you both gain a random amount of **Haste** between **5%** and **15%** for **5 seconds**.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ArtCrispies.png?d0d585",
+      "icon_local_path": "icons/addons/art_crispies.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "description": "„Eine Überraschung in jeder Packung!“\nJedes Mal, wenn du einen Überlebenden **marterst**, erhaltet ihr beide **5 Sek.** lang einen zufälligen **Eile**-Effekt zwischen **5 %** und **15 %**."
+        },
+        "es": {
+          "description": "\"¡Una sorpresa en cada caja!\"\nCada vez que **tortures** a un superviviente, ambos obtenéis una cantidad aleatoria de **Celeridad** de entre un **5 %** y un **15 %** durante **5 segundos**."
+        },
+        "ja": {
+          "name": "アートクリスピー",
+          "description": "「どの箱にもサプライズが詰まっている。」\n生存者に**拷問**効果を与えるたびに、自分とその生存者が**5%**～**15%**までのランダムな値の**迅速**を**5秒間**得る。"
+        },
+        "pl": {
+          "name": "Chrupki Arta",
+          "description": "„Niespodzianka w każdym pudełku!”\nZa każdym razem, gdy **Torturujesz** ocalałego, oboje zyskujecie losową liczbę **Pośpiechu** między **5%** i **15%** na **5 s**."
+        }
+      }
+    },
+    {
+      "id": 897,
+      "name": "Explosive Gift",
+      "killer_id": 45,
+      "description": "“A disarmingly joyful gift that's sure to be a blast.”\nFor each **Toy** with maximum **Deadliness**, reduce your Terror Radius by **12%**.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_ExplosiveGift.png?aaed6d",
+      "icon_local_path": "icons/addons/explosive_gift.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Explosives Geschenk",
+          "description": "„Ein harmlos wirkendes, erfreuliches Geschenk, bei dem garantiert die Funken fliegen.“\nFür jedes **Spielzeug** mit maximaler **Tödlichkeit** wird dein Terrorradius um **12 %** verringert."
+        },
+        "es": {
+          "name": "Regalo explosivo",
+          "description": "\"Un regalo de lo más alegre y desarmante que seguro que lo peta.\"\nPor cada **juguete** con la **letalidad** al máximo, reduce tu radio de terror un **12 %**."
+        },
+        "ja": {
+          "name": "爆弾入りのプレゼント",
+          "description": "「警戒心を打ち砕くほど楽しい贈り物。盛り上がること間違いなし。」\n最大**殺傷力**に達した**オモチャ**1つにつき、自分の脅威範囲が**12%**縮小する。"
+        },
+        "pl": {
+          "name": "Wybuchowy prezent",
+          "description": "„Rozbrajająco radosny prezent, dzięki któremu zabawa z pewnością będzie bombowa.”\nZa każdą **Zabawkę** z maksymalnym poziomem **Śmiertelności**, zmniejszasz swój zasięg terroru o **12%**."
+        }
+      }
+    },
+    {
+      "id": 898,
+      "name": "Jonathan's Skull",
+      "killer_id": 45,
+      "description": "“The bespectacled skull of Sienna's brother. Hilarious!”\nDamaging or **Torturing** a Survivor with a **Toy** grants a Token, up to **5**.\n**Taunting** spends all Tokens then, if at least **1** Token was spent, reveals the Auras of all Survivors within **10 meters** plus **5 meters** per Token for **6 seconds**.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_JonathansSkull.png?fa8424",
+      "icon_local_path": "icons/addons/jonathans_skull.webp",
+      "rarity": "Very Rare",
+      "translations": {
+        "de": {
+          "name": "Jonathans Schädel",
+          "description": "„Der bebrillte Schädel von Siennas Bruder. Wie lustig!“\nWenn du einen Überlebenden mit einem **Spielzeug** **marterst** oder ihm Schaden zufügst, erhältst du einen Zähler, bis zu max. **5**.\nDas **Verhöhnen** verbraucht alle Zähler und enthüllt (sofern mindestens **1** Zähler verbraucht wurde) **6 Sek.** lang die Auren aller Überlebenden im Umkreis von **10 Metern**, plus **5 Meter** pro Zähler."
+        },
+        "es": {
+          "name": "Cráneo de Jonathan",
+          "description": "\"El cráneo con gafas del hermano de Sienna. ¡Graciosísimo!\"\nHerir o **torturar** a un superviviente con un **juguete** otorga 1 distintivo, hasta un máximo de **5**.\n**Provocar** gasta todos los distintivos y, si se ha consumido al menos **1**, revela las auras de todos los supervivientes en un radio de **10 metros**, más **5 metros** por distintivo durante **6 segundos**."
+        },
+        "ja": {
+          "name": "ジョナサンの頭蓋骨",
+          "description": "「シエナの弟の眼鏡をかけた頭部。愉快極まりない！」\n**オモチャ**を使って生存者にダメージか**拷問**効果を与えると、トークンを1個得る（**5個**まで）。\n**挑発**のジェスチャーを行うと、すべてのトークンを消費する。トークンを1個以上消費した場合、**10メートル**（トークン1個につき、追加で**5メートル**）以内にいる生存者全員のオーラを**6秒間**表示する。"
+        },
+        "pl": {
+          "name": "Czaszka Jonathana",
+          "description": "„Czaszka brata Sienny z założonymi okularami. Boki zrywać!”\nZadanie obrażeń lub **Torturowanie** ocalałego z **Zabawką** zapewnia żeton (maksymalnie **5**).\n**Drwina** zużywa wszystkie żetony, a następnie, jeśli przynajmniej **1** żeton został zużyty, ujawnia aury wszystkich ocalałych w zasięgu **10 m** plus dodatkowe **5 m** za żeton, na **6 s**."
+        }
+      }
+    },
+    {
+      "id": 899,
+      "name": "Duct Tape",
+      "killer_id": 45,
+      "description": "“Made for restraining victims but could probably be used to keep things in place.”\nEquipping a **Toy** within **0.5 seconds** of opening the **Bag of Toys** reduces its cooldown by **4 seconds**.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_DuctTape.png?42890c",
+      "icon_local_path": "icons/addons/duct_tape.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Klebeband",
+          "description": "„Zum Fesseln von Opfern gedacht, aber wahrscheinlich auch dazu geeignet, um Dinge zu befestigen.“\nWenn du dich innerhalb von **0,5 Sek.** nach dem Öffnen des **Spielzeugbeutels** mit einem **Spielzeug** ausrüstest, verringert sich seine Abklingzeit um **4 Sek.**"
+        },
+        "es": {
+          "name": "Cinta americana",
+          "description": "\"Fabricada para inmovilizar víctimas, aunque seguramente también sirva para mantener otras cosas en su sitio.\"\nEquiparte con un **juguete** en los **0,5 segundos** posteriores a abrir la **bolsa de juguetes** reduce su tiempo de recarga en **4 segundos**."
+        },
+        "ja": {
+          "name": "粘着テープ",
+          "description": "「犠牲者を拘束するために作られた道具。物を固定するのにも使える。」\n**オモチャの袋**を開けてから**0.5秒以内**に**オモチャ**を選択すると、そのクールダウンが**4秒**短縮される。"
+        },
+        "pl": {
+          "name": "Uniwersalna taśma naprawcza",
+          "description": "„Stworzona po to, żeby krępować ofiary, ale równie dobrze sprawdzi się do trzymania rzeczy na swoim miejscu.”\nWyposażenie **Zabawki** w czasie **0,5 s** od otwarcia **Torby z zabawkami** skraca czas odnawiania o **4 s**."
+        }
+      }
+    },
+    {
+      "id": 900,
+      "name": "The Ninth Circle",
+      "killer_id": 45,
+      "description": "“Sadistic, creepy, and shockingly gory. What kind of person would be interested in this?”\nEach time you **Taunt** a **Terrified** Survivor for the first time, gain a Token, up to **4**.\nWhen the Exit Gates are powered, if you have **4 Tokens**, reduce the cooldown of the **Bag of Toys** to **1 second**.",
+      "icon_url": "https://deadbydaylight.wiki.gg/images/T_UI_iconAddon_TheNinthCircle.png?c1e5ac",
+      "icon_local_path": "icons/addons/the_ninth_circle.webp",
+      "rarity": "Ultra Rare",
+      "translations": {
+        "de": {
+          "name": "Der neunte Kreis",
+          "description": "„Sadistisch, unheimlich und erschreckend blutrünstig. Was für eine Person würde sich für so etwas interessieren?“\nJedes Mal, wenn du einen **verängstigten** Überlebenden zum ersten Mal **verhöhnst**, erhältst du einen Zähler, bis zu max. **4**.\nWenn die Ausgangstore mit Strom versorgt sind und du **4 Zähler** hast, wird die Abklingzeit des **Spielzeugbeutels** auf **1 Sek.** reduziert."
+        },
+        "es": {
+          "name": "The 9th Circle",
+          "description": "\"Sádico, inquietante y sorprendentemente sangriento. ¿A qué clase de persona podría interesarle algo así?\"\nCada vez que **provoques** a un superviviente **aterrorizado** por primera vez, obtienes 1 distintivo, hasta un máximo de **4**.\nCuando las puertas de salida reciban energía, si tienes **4 distintivos**, reduce el tiempo de recarga de la **bolsa de juguetes** a **1 segundo**."
+        },
+        "ja": {
+          "name": "ナインス・サークル",
+          "description": "「サディスティックで不気味で衝撃的なほど残虐。一体どんな人間がこれに興味を持つのだろう？」\n**慄き状態**になった各生存者を初めて**挑発**したとき、トークンを1個得る（**4個**まで）。\n脱出ゲートが通電した際にトークンを**4個**持っていると、**オモチャの袋**のクールダウンが**1秒**に短縮される。"
+        },
+        "pl": {
+          "name": "Dziewiąty krąg",
+          "description": "„Sadystyczne, przerażające i szokująco krwawe. Jaki typ człowieka w ogóle by się czymś takim zainteresował?”\nZa każdym razem, gdy wykonasz **Drwinę** z **Przerażonego** ocalałego po raz pierwszy, zyskujesz żeton (maksymalnie **4**). Gdy bramy wyjściowe są zasilane i gdy masz **4 żetony**, skraca czas odnawiania **Torby z zabawkami** do **1 s**."
+        }
+      }
+    }
+  ]
+}
